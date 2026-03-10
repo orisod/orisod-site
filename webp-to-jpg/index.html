@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>WEBP to JPG – Orisod</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#0b0f1a;
+color:white;
+text-align:center;
+padding-top:100px;
+}
+
+h1{
+font-size:40px;
+}
+
+button{
+padding:12px 20px;
+margin-top:20px;
+font-size:16px;
+cursor:pointer;
+}
+
+img{
+max-width:300px;
+margin-top:20px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>WEBP to JPG Converter</h1>
+
+<p>Upload a WEBP image and convert it to JPG.</p>
+
+<input type="file" id="fileInput" accept="image/webp">
+
+<br>
+
+<button onclick="convertImage()">Convert</button>
+
+<br>
+
+<canvas id="canvas" style="display:none;"></canvas>
+
+<br>
+
+<a id="downloadLink" style="display:none;color:white;">Download JPG</a>
+
+<script>
+
+function convertImage(){
+
+const fileInput = document.getElementById('fileInput');
+const file = fileInput.files[0];
+
+if(!file){
+alert("Please upload a WEBP image");
+return;
+}
+
+const img = new Image();
+const reader = new FileReader();
+
+reader.onload = function(e){
+img.src = e.target.result;
+};
+
+reader.readAsDataURL(file);
+
+img.onload = function(){
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+canvas.width = img.width;
+canvas.height = img.height;
+
+ctx.drawImage(img,0,0);
+
+const jpg = canvas.toDataURL("image/jpeg");
+
+const link = document.getElementById('downloadLink');
+
+link.href = jpg;
+link.download = "converted.jpg";
+link.style.display = "inline";
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
