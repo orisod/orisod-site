@@ -1,1 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
 
+<title>Image to PDF Converter – Free Online Tool | Orisod</title>
+
+<meta name="description" content="Convert images to PDF instantly. Free online image to PDF converter by Orisod. Works directly in your browser.">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+body{
+font-family:Arial, Helvetica, sans-serif;
+background:#0b0f1a;
+color:white;
+text-align:center;
+padding-top:80px;
+max-width:900px;
+margin:auto;
+}
+
+h1{
+font-size:42px;
+}
+
+h2{
+margin-top:50px;
+}
+
+button{
+padding:12px 20px;
+margin-top:20px;
+font-size:16px;
+cursor:pointer;
+}
+
+p{
+opacity:0.85;
+line-height:1.6;
+}
+
+.tool-box{
+margin-top:30px;
+margin-bottom:40px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Image to PDF Converter</h1>
+
+<p>Upload an image and convert it to PDF instantly.</p>
+
+<div class="tool-box">
+  <input type="file" id="fileInput" accept="image/*">
+  <br>
+  <button onclick="convertToPDF()">Convert</button>
+</div>
+
+<h2>Why convert an image to PDF?</h2>
+
+<p>
+Converting an image to PDF is useful when you need to send pictures as documents,
+print them more easily, or keep them in a universal format.
+</p>
+
+<h2>How to convert image to PDF</h2>
+
+<p>
+1. Upload your image.<br>
+2. Click convert.<br>
+3. The PDF downloads instantly.
+</p>
+
+<script>
+function convertToPDF() {
+  const fileInput = document.getElementById("fileInput");
+  const file = fileInput.files[0];
+
+  if (!file) {
+    alert("Please upload an image");
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = function(event) {
+    const img = new Image();
+
+    img.onload = function() {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+
+      canvas.width = img.width;
+      canvas.height = img.height;
+
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0);
+
+      const imageData = canvas.toDataURL("image/jpeg", 1.0);
+
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF({
+        orientation: img.width > img.height ? "landscape" : "portrait",
+        unit: "pt",
+        format: [img.width, img.height]
+      });
+
+      pdf.addImage(imageData, "JPEG", 0, 0, img.width, img.height);
+      pdf.save("converted.pdf");
+    };
+
+    img.src = event.target.result;
+  };
+
+  reader.readAsDataURL(file);
+}
+</script>
+
+</body>
+</html>
