@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Orisod</title>
+<title>Orisod – Free Online Image Tools</title>
 
 <style>
 
@@ -14,12 +14,13 @@ color:white;
 display:flex;
 justify-content:center;
 align-items:center;
-height:100vh;
+min-height:100vh;
 text-align:center;
+padding:40px 20px;
 }
 
 .container{
-max-width:600px;
+max-width:700px;
 }
 
 h1{
@@ -30,8 +31,30 @@ margin-bottom:10px;
 
 p{
 font-size:20px;
-opacity:0.7;
+opacity:0.8;
 margin-bottom:30px;
+}
+
+.tools{
+margin-top:30px;
+display:flex;
+flex-direction:column;
+gap:12px;
+}
+
+.tools a{
+text-decoration:none;
+background:#111827;
+border:1px solid #1f2937;
+padding:14px;
+border-radius:8px;
+color:white;
+font-size:18px;
+transition:0.2s;
+}
+
+.tools a:hover{
+background:#1f2937;
 }
 
 .footer{
@@ -50,12 +73,26 @@ margin-top:40px;
 <h1>ORISOD</h1>
 
 <p>
-Technology experiments, tools and ideas.
+Free online tools to convert, compress, and edit images.
 </p>
 
-<p>
-Building quietly.
-</p>
+<div class="tools">
+
+<a href="/webp-to-jpg">WEBP to JPG Converter</a>
+
+<a href="/heic-to-jpg">HEIC to JPG Converter</a>
+
+<a href="/resize-image">Resize Image</a>
+
+<a href="/png-to-jpg">PNG to JPG Converter</a>
+
+<a href="/jpg-to-pdf">JPG to PDF Converter</a>
+
+<a href="/compress-image">Compress Image</a>
+
+<a href="/tools">View All Tools</a>
+
+</div>
 
 <div class="footer">
 © Orisod Labs
