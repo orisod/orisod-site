@@ -1,1 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
 
+<title>JPG to WEBP Converter – Free Online Tool | Orisod</title>
+
+<meta name="description" content="Convert JPG images to WEBP instantly. Free online JPG to WEBP converter by Orisod. Works directly in your browser.">
+
+<style>
+body{
+font-family:Arial, Helvetica, sans-serif;
+background:#0b0f1a;
+color:white;
+text-align:center;
+padding-top:80px;
+max-width:900px;
+margin:auto;
+}
+
+h1{
+font-size:42px;
+}
+
+h2{
+margin-top:50px;
+}
+
+button{
+padding:12px 20px;
+margin-top:20px;
+font-size:16px;
+cursor:pointer;
+}
+
+p{
+opacity:0.85;
+line-height:1.6;
+}
+
+.tool-box{
+margin-top:30px;
+margin-bottom:40px;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>JPG to WEBP Converter</h1>
+
+<p>Upload a JPG image and convert it to WEBP instantly.</p>
+
+<div class="tool-box">
+
+<input type="file" id="fileInput" accept="image/jpeg,image/jpg">
+
+<br>
+
+<button onclick="convertImage()">Convert</button>
+
+<br><br>
+
+<a id="downloadLink" style="display:none;color:white;">Download WEBP</a>
+
+</div>
+
+<h2>Why convert JPG to WEBP?</h2>
+
+<p>
+WEBP images are often smaller than JPG files while maintaining good quality.
+They are commonly used to improve website performance.
+</p>
+
+<h2>How to convert JPG to WEBP</h2>
+
+<p>
+1. Upload your JPG image.<br>
+2. Click convert.<br>
+3. Download the WEBP file instantly.
+</p>
+
+<script>
+function convertImage(){
+  const fileInput = document.getElementById('fileInput');
+  const file = fileInput.files[0];
+
+  if(!file){
+    alert("Please upload a JPG image");
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = function(e){
+    const img = new Image();
+
+    img.onload = function(){
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      canvas.width = img.width;
+      canvas.height = img.height;
+
+      ctx.drawImage(img, 0, 0);
+
+      const webpData = canvas.toDataURL("image/webp");
+
+      const link = document.getElementById('downloadLink');
+      link.href = webpData;
+      link.download = "converted.webp";
+      link.style.display = "inline";
+    };
+
+    img.src = e.target.result;
+  };
+
+  reader.readAsDataURL(file);
+}
+</script>
+
+</body>
+</html>
