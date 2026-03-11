@@ -2,21 +2,29 @@
 <html>
 <head>
 <meta charset="UTF-8">
+
 <title>WEBP to JPG Converter – Free Online Tool | Orisod</title>
-  <meta name="description" content="Convert WEBP images to JPG instantly. Free online WEBP to JPG converter by Orisod. No upload required, works directly in your browser.">
+
+<meta name="description" content="Convert WEBP images to JPG instantly. Free online WEBP to JPG converter by Orisod. No upload required, works directly in your browser.">
 
 <style>
 
 body{
-font-family:Arial;
+font-family:Arial, Helvetica, sans-serif;
 background:#0b0f1a;
 color:white;
 text-align:center;
-padding-top:100px;
+padding-top:80px;
+max-width:900px;
+margin:auto;
 }
 
 h1{
-font-size:40px;
+font-size:42px;
+}
+
+h2{
+margin-top:50px;
 }
 
 button{
@@ -26,9 +34,19 @@ font-size:16px;
 cursor:pointer;
 }
 
+p{
+opacity:0.85;
+line-height:1.6;
+}
+
 img{
 max-width:300px;
 margin-top:20px;
+}
+
+.tool-box{
+margin-top:30px;
+margin-bottom:40px;
 }
 
 </style>
@@ -39,7 +57,9 @@ margin-top:20px;
 
 <h1>WEBP to JPG Converter</h1>
 
-<p>Upload a WEBP image and convert it to JPG.</p>
+<p>Upload a WEBP image and convert it to JPG instantly.</p>
+
+<div class="tool-box">
 
 <input type="file" id="fileInput" accept="image/webp">
 
@@ -47,13 +67,42 @@ margin-top:20px;
 
 <button onclick="convertImage()">Convert</button>
 
-<br>
+<br><br>
 
 <canvas id="canvas" style="display:none;"></canvas>
 
-<br>
-
 <a id="downloadLink" style="display:none;color:white;">Download JPG</a>
+
+</div>
+
+
+<h2>What is a WEBP file?</h2>
+
+<p>
+WEBP is an image format developed by Google that provides smaller file sizes
+while maintaining high image quality. Many websites use WEBP images to make
+pages load faster.
+</p>
+
+<p>
+However, not all applications support WEBP. That is why converting WEBP to JPG
+is often necessary.
+</p>
+
+
+<h2>How to convert WEBP to JPG</h2>
+
+<p>
+1. Upload your WEBP image.<br>
+2. Click the convert button.<br>
+3. Download the JPG file instantly.
+</p>
+
+<p>
+This converter works directly in your browser, which means your images never
+leave your computer.
+</p>
+
 
 <script>
 
