@@ -1,1 +1,179 @@
 
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>JPG to PDF Converter – Free Online Tool | Orisod</title>
+
+<meta name="description" content="Convert JPG images to PDF instantly. Free online JPG to PDF converter by Orisod. Works directly in your browser.">
+
+<style>
+
+body{
+font-family:Arial, Helvetica, sans-serif;
+background:#0b0f1a;
+color:white;
+text-align:center;
+padding-top:80px;
+max-width:900px;
+margin:auto;
+}
+
+h1{
+font-size:42px;
+}
+
+h2{
+margin-top:50px;
+}
+
+button{
+padding:12px 20px;
+margin-top:20px;
+font-size:16px;
+cursor:pointer;
+}
+
+p{
+opacity:0.85;
+line-height:1.6;
+}
+
+.tool-box{
+margin-top:30px;
+margin-bottom:40px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>JPG to PDF Converter</h1>
+
+<p>Upload a JPG image and convert it to PDF instantly.</p>
+
+<div class="tool-box">
+
+<input type="file" id="fileInput" accept="image/jpeg,image/jpg">
+
+<br>
+
+<button onclick="convertToPDF()">Convert</button>
+
+<br><br>
+
+<a id="downloadLink" style="display:none;color:white;">Download PDF</a>
+
+</div>
+
+<h2>Why convert JPG to PDF?</h2>
+
+<p>
+Converting JPG to PDF is useful when you need to share images as documents,
+print them more easily, or send them in a universal format.
+</p>
+
+<h2>How to convert JPG to PDF</h2>
+
+<p>
+1. Upload your JPG image.<br>
+2. Click convert.<br>
+3. Download the PDF file instantly.
+</p>
+
+<script>
+
+function convertToPDF(){
+
+const fileInput = document.getElementById('fileInput');
+const file = fileInput.files[0];
+
+if(!file){
+alert("Please upload a JPG image");
+return;
+}
+
+const reader = new FileReader();
+
+reader.onload = function(e){
+
+const img = new Image();
+
+img.onload = function(){
+
+const canvas = document.createElement('canvas');
+const ctx = canvas.getContext('2d');
+
+canvas.width = img.width;
+canvas.height = img.height;
+
+ctx.drawImage(img, 0, 0);
+
+const imageData = canvas.toDataURL("image/jpeg");
+
+const pdfContent = `
+%PDF-1.3
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${img.width} ${img.height}] /Contents 4 0 R /Resources << /XObject << /Im0 5 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 35 >>
+stream
+q
+${img.width} 0 0 ${img.height} 0 0 cm
+/Im0 Do
+Q
+endstream
+endobj
+5 0 obj
+<< /Type /XObject /Subtype /Image /Width ${img.width} /Height ${img.height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${atob(imageData.split(',')[1]).length} >>
+stream
+${atob(imageData.split(',')[1])}
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000010 00000 n 
+0000000060 00000 n 
+0000000117 00000 n 
+0000000243 00000 n 
+0000000330 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+${330 + atob(imageData.split(',')[1]).length}
+%%EOF
+`;
+
+const blob = new Blob([pdfContent], { type: 'application/pdf' });
+const url = URL.createObjectURL(blob);
+
+const link = document.getElementById('downloadLink');
+link.href = url;
+link.download = "converted.pdf";
+link.style.display = "inline";
+
+};
+
+img.src = e.target.result;
+
+};
+
+reader.readAsDataURL(file);
+
+}
+
+</script>
+
+</body>
+</html>
