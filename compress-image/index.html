@@ -1,1 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
 
+<title>Compress Image – Free Online Tool | Orisod</title>
+
+<meta name="description" content="Compress images online instantly. Reduce image file size directly in your browser with Orisod.">
+
+<style>
+body{
+font-family:Arial, Helvetica, sans-serif;
+background:#0b0f1a;
+color:white;
+text-align:center;
+padding-top:80px;
+max-width:900px;
+margin:auto;
+}
+
+h1{
+font-size:42px;
+}
+
+h2{
+margin-top:50px;
+}
+
+button{
+padding:12px 20px;
+margin-top:20px;
+font-size:16px;
+cursor:pointer;
+}
+
+input{
+padding:8px;
+margin:10px;
+}
+
+p{
+opacity:0.85;
+line-height:1.6;
+}
+
+.tool-box{
+margin-top:30px;
+margin-bottom:40px;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>Compress Image</h1>
+
+<p>Upload an image and reduce its file size instantly.</p>
+
+<div class="tool-box">
+
+<input type="file" id="fileInput" accept="image/*">
+
+<br>
+
+<label for="quality">Compression quality (0.1 to 1.0):</label><br>
+<input type="number" id="quality" min="0.1" max="1" step="0.1" value="0.7">
+
+<br>
+
+<button onclick="compressImage()">Compress</button>
+
+<br><br>
+
+<a id="downloadLink" style="display:none;color:white;">Download Compressed Image</a>
+
+</div>
+
+<h2>Why compress an image?</h2>
+
+<p>
+Compressed images take less storage space and load faster on websites.
+They are also easier to send by email or upload to forms.
+</p>
+
+<h2>How to compress an image</h2>
+
+<p>
+1. Upload your image.<br>
+2. Choose a compression quality.<br>
+3. Click compress and download the result.
+</p>
+
+<script>
+function compressImage(){
+  const fileInput = document.getElementById('fileInput');
+  const file = fileInput.files[0];
+
+  if(!file){
+    alert("Please upload an image");
+    return;
+  }
+
+  const quality = parseFloat(document.getElementById('quality').value);
+
+  if(isNaN(quality) || quality < 0.1 || quality > 1){
+    alert("Enter a quality between 0.1 and 1");
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = function(e){
+    const img = new Image();
+
+    img.onload = function(){
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      canvas.width = img.width;
+      canvas.height = img.height;
+
+      ctx.drawImage(img, 0, 0);
+
+      const compressedData = canvas.toDataURL("image/jpeg", quality);
+
+      const link = document.getElementById('downloadLink');
+      link.href = compressedData;
+      link.download = "compressed.jpg";
+      link.style.display = "inline";
+    };
+
+    img.src = e.target.result;
+  };
+
+  reader.readAsDataURL(file);
+}
+</script>
+
+</body>
+</html>
