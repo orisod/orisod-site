@@ -3,9 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Orisod – Free Online Image Tools</title>
-
+<meta name="description" content="Free online tools to convert, compress, and edit images. Fast, simple, and secure tools by Orisod.">
 <style>
-
 body{
 margin:0;
 font-family:Arial, Helvetica, sans-serif;
@@ -20,7 +19,7 @@ padding:40px 20px;
 }
 
 .container{
-max-width:700px;
+max-width:760px;
 }
 
 h1{
@@ -31,15 +30,65 @@ margin-bottom:10px;
 
 p{
 font-size:20px;
-opacity:0.8;
-margin-bottom:30px;
+opacity:0.85;
+margin-bottom:20px;
+line-height:1.5;
+}
+
+.sub{
+font-size:16px;
+opacity:0.7;
+max-width:640px;
+margin:0 auto 35px auto;
+}
+
+.buttons{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:12px;
+margin-top:30px;
+}
+
+.buttons a{
+text-decoration:none;
+background:#111827;
+border:1px solid #1f2937;
+padding:14px 18px;
+border-radius:8px;
+color:white;
+font-size:17px;
+transition:0.2s;
+}
+
+.buttons a:hover{
+background:#1f2937;
+}
+
+.primary{
+background:#2563eb !important;
+border-color:#2563eb !important;
+}
+
+.primary:hover{
+filter:brightness(1.08);
+}
+
+.featured{
+margin-top:45px;
+}
+
+.featured h2{
+font-size:26px;
+margin-bottom:18px;
 }
 
 .tools{
-margin-top:30px;
 display:flex;
 flex-direction:column;
 gap:12px;
+max-width:520px;
+margin:0 auto;
 }
 
 .tools a{
@@ -62,36 +111,33 @@ opacity:0.4;
 font-size:14px;
 margin-top:40px;
 }
-
 </style>
 </head>
-
 <body>
-
 <div class="container">
 
 <h1>ORISOD</h1>
 
-<p>
-Free online tools to convert, compress, and edit images.
-</p>
+<p>Free online image tools for everyday tasks.</p>
 
-<div class="tools">
+<div class="sub">
+Convert, compress, resize, and optimize images quickly with simple browser-based tools. No installs, no nonsense.
+</div>
 
-<a href="/webp-to-jpg">WEBP to JPG Converter</a>
-
-<a href="/heic-to-jpg">HEIC to JPG Converter</a>
-
-<a href="/resize-image">Resize Image</a>
-
-<a href="/png-to-jpg">PNG to JPG Converter</a>
-
-<a href="/jpg-to-pdf">JPG to PDF Converter</a>
-
+<div class="buttons">
+<a class="primary" href="/tools">View All Tools</a>
 <a href="/compress-image">Compress Image</a>
+<a href="/png-to-jpg">PNG to JPG</a>
+</div>
 
-<a href="/tools">View All Tools</a>
-
+<div class="featured">
+<h2>Featured Tools</h2>
+<div class="tools">
+<a href="/webp-to-jpg">WEBP to JPG Converter</a>
+<a href="/heic-to-jpg">HEIC to JPG Converter</a>
+<a href="/resize-image">Resize Image</a>
+<a href="/jpg-to-pdf">JPG to PDF Converter</a>
+</div>
 </div>
 
 <div class="footer">
@@ -99,6 +145,5 @@ Free online tools to convert, compress, and edit images.
 </div>
 
 </div>
-
 </body>
 </html>
