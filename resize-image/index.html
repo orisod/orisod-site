@@ -1,1 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
 
+<title>Resize Image – Free Online Tool | Orisod</title>
+
+<meta name="description" content="Resize images online instantly. Change width and height of any image directly in your browser with Orisod.">
+
+<style>
+
+body{
+font-family:Arial, Helvetica, sans-serif;
+background:#0b0f1a;
+color:white;
+text-align:center;
+padding-top:80px;
+max-width:900px;
+margin:auto;
+}
+
+h1{
+font-size:42px;
+}
+
+h2{
+margin-top:50px;
+}
+
+button{
+padding:12px 20px;
+margin-top:20px;
+font-size:16px;
+cursor:pointer;
+}
+
+input{
+padding:8px;
+margin:10px;
+}
+
+p{
+opacity:0.85;
+line-height:1.6;
+}
+
+.tool-box{
+margin-top:30px;
+margin-bottom:40px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Resize Image</h1>
+
+<p>Upload an image and change its size instantly.</p>
+
+<div class="tool-box">
+
+<input type="file" id="fileInput" accept="image/*">
+
+<br>
+
+<input type="number" id="width" placeholder="Width">
+<input type="number" id="height" placeholder="Height">
+
+<br>
+
+<button onclick="resizeImage()">Resize</button>
+
+<br><br>
+
+<canvas id="canvas" style="display:none;"></canvas>
+
+<a id="downloadLink" style="display:none;color:white;">Download Image</a>
+
+</div>
+
+
+<h2>Resize images easily</h2>
+
+<p>
+This tool allows you to change the width and height of your images
+directly in your browser. No upload required.
+</p>
+
+<p>
+It works with JPG, PNG, WEBP and other common image formats.
+</p>
+
+<script>
+
+function resizeImage(){
+
+const fileInput = document.getElementById('fileInput');
+const file = fileInput.files[0];
+
+if(!file){
+alert("Please upload an image");
+return;
+}
+
+const width = document.getElementById('width').value;
+const height = document.getElementById('height').value;
+
+if(!width || !height){
+alert("Enter width and height");
+return;
+}
+
+const img = new Image();
+const reader = new FileReader();
+
+reader.onload = function(e){
+img.src = e.target.result;
+};
+
+reader.readAsDataURL(file);
+
+img.onload = function(){
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+canvas.width = width;
+canvas.height = height;
+
+ctx.drawImage(img,0,0,width,height);
+
+const resized = canvas.toDataURL("image/jpeg");
+
+const link = document.getElementById('downloadLink');
+
+link.href = resized;
+link.download = "resized.jpg";
+link.style.display = "inline";
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
