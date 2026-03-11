@@ -1,1 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
 
+<title>HEIC to JPG Converter – Free Online Tool | Orisod</title>
+
+<meta name="description" content="Convert HEIC images to JPG instantly. Free online HEIC to JPG converter by Orisod. Works directly in your browser.">
+
+<style>
+
+body{
+font-family:Arial, Helvetica, sans-serif;
+background:#0b0f1a;
+color:white;
+text-align:center;
+padding-top:80px;
+max-width:900px;
+margin:auto;
+}
+
+h1{
+font-size:42px;
+}
+
+h2{
+margin-top:50px;
+}
+
+button{
+padding:12px 20px;
+margin-top:20px;
+font-size:16px;
+cursor:pointer;
+}
+
+p{
+opacity:0.85;
+line-height:1.6;
+}
+
+.tool-box{
+margin-top:30px;
+margin-bottom:40px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>HEIC to JPG Converter</h1>
+
+<p>Upload a HEIC image and convert it to JPG instantly.</p>
+
+<div class="tool-box">
+
+<input type="file" id="fileInput">
+
+<br>
+
+<button onclick="convertImage()">Convert</button>
+
+<br><br>
+
+<canvas id="canvas" style="display:none;"></canvas>
+
+<a id="downloadLink" style="display:none;color:white;">Download JPG</a>
+
+</div>
+
+<h2>What is a HEIC file?</h2>
+
+<p>
+HEIC is an image format used by Apple devices such as iPhones and iPads.
+It allows photos to have high quality while using less storage space.
+</p>
+
+<p>
+However, many computers and applications cannot open HEIC files easily,
+which is why converting HEIC to JPG is often necessary.
+</p>
+
+<h2>How to convert HEIC to JPG</h2>
+
+<p>
+1. Upload your HEIC image.<br>
+2. Click convert.<br>
+3. Download the JPG file instantly.
+</p>
+
+<script>
+
+function convertImage(){
+
+const fileInput = document.getElementById('fileInput');
+const file = fileInput.files[0];
+
+if(!file){
+alert("Please upload a HEIC image");
+return;
+}
+
+const img = new Image();
+const reader = new FileReader();
+
+reader.onload = function(e){
+img.src = e.target.result;
+};
+
+reader.readAsDataURL(file);
+
+img.onload = function(){
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+canvas.width = img.width;
+canvas.height = img.height;
+
+ctx.drawImage(img,0,0);
+
+const jpg = canvas.toDataURL("image/jpeg");
+
+const link = document.getElementById('downloadLink');
+
+link.href = jpg;
+link.download = "converted.jpg";
+link.style.display = "inline";
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
