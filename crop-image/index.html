@@ -1,1 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
 
+<title>Crop Image – Free Online Tool | Orisod</title>
+
+<meta name="description" content="Crop images online instantly. Select a portion of your image and download it with Orisod.">
+
+<style>
+body{
+font-family:Arial, Helvetica, sans-serif;
+background:#0b0f1a;
+color:white;
+text-align:center;
+padding-top:80px;
+max-width:900px;
+margin:auto;
+}
+
+h1{
+font-size:42px;
+}
+
+h2{
+margin-top:50px;
+}
+
+button{
+padding:12px 20px;
+margin-top:20px;
+font-size:16px;
+cursor:pointer;
+}
+
+input{
+padding:8px;
+margin:5px;
+width:80px;
+}
+
+p{
+opacity:0.85;
+line-height:1.6;
+}
+
+.tool-box{
+margin-top:30px;
+margin-bottom:40px;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>Crop Image</h1>
+
+<p>Upload an image and crop it instantly.</p>
+
+<div class="tool-box">
+
+<input type="file" id="fileInput" accept="image/*">
+
+<br><br>
+
+<input type="number" id="x" placeholder="X">
+<input type="number" id="y" placeholder="Y">
+<input type="number" id="width" placeholder="Width">
+<input type="number" id="height" placeholder="Height">
+
+<br>
+
+<button onclick="cropImage()">Crop</button>
+
+<br><br>
+
+<a id="downloadLink" style="display:none;color:white;">Download Cropped Image</a>
+
+</div>
+
+<h2>What does crop mean?</h2>
+
+<p>
+Cropping an image means selecting a specific area and removing the rest.
+This is useful for focusing on a subject or removing unwanted parts.
+</p>
+
+<h2>How to crop an image</h2>
+
+<p>
+1. Upload your image.<br>
+2. Enter X, Y, width and height.<br>
+3. Click crop and download the result.
+</p>
+
+<script>
+function cropImage(){
+
+const fileInput = document.getElementById('fileInput');
+const file = fileInput.files[0];
+
+if(!file){
+alert("Please upload an image");
+return;
+}
+
+const x = parseInt(document.getElementById('x').value);
+const y = parseInt(document.getElementById('y').value);
+const width = parseInt(document.getElementById('width').value);
+const height = parseInt(document.getElementById('height').value);
+
+if(isNaN(x) || isNaN(y) || isNaN(width) || isNaN(height)){
+alert("Enter valid crop values");
+return;
+}
+
+const reader = new FileReader();
+
+reader.onload = function(e){
+const img = new Image();
+
+img.onload = function(){
+const canvas = document.createElement('canvas');
+const ctx = canvas.getContext('2d');
+
+canvas.width = width;
+canvas.height = height;
+
+ctx.drawImage(img, x, y, width, height, 0, 0, width, height);
+
+const cropped = canvas.toDataURL("image/jpeg");
+
+const link = document.getElementById('downloadLink');
+link.href = cropped;
+link.download = "cropped.jpg";
+link.style.display = "inline";
+};
+
+img.src = e.target.result;
+};
+
+reader.readAsDataURL(file);
+
+}
+</script>
+
+</body>
+</html>
