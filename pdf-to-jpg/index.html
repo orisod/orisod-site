@@ -1,75 +1,307 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-
-<title>PDF to JPG Converter – Free Online Tool | Orisod</title>
-
-<meta name="description" content="Convert PDF pages to JPG images instantly. Free online PDF to JPG converter by Orisod.">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF to JPG Converter – Extract Images from PDF | Orisod</title>
+<meta name="description" content="Convert PDF pages into JPG images online for free. Fast, simple, and easy to use — everything happens in your browser, no files are uploaded.">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
 body{
-font-family:Arial, Helvetica, sans-serif;
-background:#0b0f1a;
-color:white;
-text-align:center;
-padding-top:80px;
-max-width:900px;
-margin:auto;
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  background:#0b0f1a;
+  color:white;
+  text-align:center;
+  padding:40px 20px;
 }
-
+.container{
+  max-width:800px;
+  margin:0 auto;
+}
 h1{
-font-size:42px;
+  font-size:48px;
+  margin-bottom:10px;
 }
-
-h2{
-margin-top:50px;
-}
-
-button{
-padding:12px 20px;
-margin-top:20px;
-font-size:16px;
-cursor:pointer;
-}
-
 p{
-opacity:0.85;
-line-height:1.6;
+  font-size:18px;
+  opacity:0.85;
+  max-width:700px;
+  margin:0 auto 25px auto;
+  line-height:1.6;
 }
-
-.tool-box{
-margin-top:30px;
-margin-bottom:40px;
+.box{
+  background:#111827;
+  border:1px solid #1f2937;
+  border-radius:10px;
+  padding:30px 20px;
+  margin-top:30px;
+}
+.dropzone{
+  border:2px dashed #374151;
+  border-radius:10px;
+  padding:30px 20px;
+  cursor:pointer;
+  transition:0.2s;
+}
+.dropzone:hover, .dropzone.dragover{
+  border-color:#2563eb;
+  background:#0f172a;
+}
+input[type="file"]{
+  display:none;
+}
+.quality-row{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  margin-top:20px;
+  font-size:14px;
+  opacity:0.85;
+}
+input[type="range"]{
+  width:200px;
+}
+button, .back{
+  display:inline-block;
+  margin-top:20px;
+  padding:14px 20px;
+  border:none;
+  border-radius:8px;
+  background:#2563eb;
+  color:white;
+  text-decoration:none;
+  font-size:16px;
+  cursor:pointer;
+}
+button:disabled{
+  opacity:0.4;
+  cursor:not-allowed;
+}
+button:hover:not(:disabled), .back:hover{
+  filter:brightness(1.08);
+}
+.note{
+  margin-top:20px;
+  font-size:14px;
+  opacity:0.6;
+}
+.results{
+  margin-top:25px;
+}
+.results-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));
+  gap:14px;
+  margin-top:15px;
+}
+.result-item{
+  background:#0f172a;
+  border:1px solid #1e293b;
+  border-radius:8px;
+  padding:10px;
+  font-size:13px;
+}
+.result-item img{
+  width:100%;
+  border-radius:4px;
+  margin-bottom:8px;
+  border:1px solid #1e293b;
+}
+.result-item a{
+  color:#60a5fa;
+  text-decoration:none;
+  font-weight:bold;
+}
+.result-item a:hover{
+  text-decoration:underline;
+}
+.download-all{
+  margin-top:20px;
+}
+.footer{
+  margin-top:50px;
+  font-size:14px;
+  opacity:0.4;
+}
+.error{
+  color:#f87171;
+  font-size:14px;
+  margin-top:10px;
+}
+.progress{
+  font-size:14px;
+  opacity:0.7;
+  margin-top:15px;
 }
 </style>
-
 </head>
-
 <body>
+<div class="container">
+  <h1>PDF to JPG Converter</h1>
+  <p>Convert PDF pages into high-quality JPG images quickly and easily. Everything happens locally in your browser — your files are never uploaded anywhere.</p>
 
-<h1>PDF to JPG Converter</h1>
+  <div class="box">
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📄 Click to select a PDF file or drag and drop it here</div>
+    </label>
+    <input type="file" id="fileInput" accept=".pdf">
 
-<p>Upload a PDF and convert its pages to JPG images.</p>
+    <div class="quality-row">
+      <label for="quality">Image quality: <span id="qualityValue">85</span>%</label>
+      <input type="range" id="quality" min="30" max="100" value="85">
+    </div>
 
-<div class="tool-box">
-  <p>Coming soon.</p>
+    <br>
+    <button id="convertBtn" disabled>Convert to JPG</button>
+    <div class="note">Upload one PDF and convert every page into a JPG image. Nothing leaves your device.</div>
+    <div class="error" id="errorMsg"></div>
+    <div class="progress" id="progressMsg"></div>
+
+    <div class="results" id="results">
+      <div class="results-grid" id="resultsGrid"></div>
+    </div>
+    <div class="download-all" id="downloadAllWrap" style="display:none;">
+      <button id="downloadAllBtn">Download All</button>
+    </div>
+  </div>
+
+  <a class="back" href="/tools">View All Tools</a>
+
+  <div class="footer">© Orisod Labs</div>
 </div>
 
-<h2>Why convert PDF to JPG?</h2>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
-<p>
-Converting PDF pages to JPG makes it easier to share pages as images,
-use them in presentations, or upload them where PDFs are not supported.
-</p>
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const convertBtn = document.getElementById('convertBtn');
+const qualitySlider = document.getElementById('quality');
+const qualityValue = document.getElementById('qualityValue');
+const resultsGrid = document.getElementById('resultsGrid');
+const errorMsg = document.getElementById('errorMsg');
+const progressMsg = document.getElementById('progressMsg');
+const downloadAllWrap = document.getElementById('downloadAllWrap');
+const downloadAllBtn = document.getElementById('downloadAllBtn');
 
-<h2>How to convert PDF to JPG</h2>
+let selectedFile = null;
+let convertedImages = [];
 
-<p>
-1. Upload your PDF.<br>
-2. Convert the pages.<br>
-3. Download the JPG images.
-</p>
+qualitySlider.addEventListener('input', () => {
+  qualityValue.textContent = qualitySlider.value;
+});
 
+fileInput.addEventListener('change', (e) => {
+  handleFile(e.target.files[0]);
+});
+
+dropzone.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  dropzone.classList.add('dragover');
+});
+dropzone.addEventListener('dragleave', () => {
+  dropzone.classList.remove('dragover');
+});
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  handleFile(e.dataTransfer.files[0]);
+});
+
+function handleFile(file) {
+  errorMsg.textContent = '';
+  if (!file || !/\.pdf$/i.test(file.name)) {
+    errorMsg.textContent = 'Please select a valid PDF file.';
+    return;
+  }
+  selectedFile = file;
+  dropzoneText.textContent = `✅ ${file.name} selected`;
+  convertBtn.disabled = false;
+  resultsGrid.innerHTML = '';
+  downloadAllWrap.style.display = 'none';
+}
+
+convertBtn.addEventListener('click', async () => {
+  if (!selectedFile) return;
+
+  convertBtn.disabled = true;
+  convertBtn.textContent = 'Converting...';
+  resultsGrid.innerHTML = '';
+  convertedImages = [];
+  errorMsg.textContent = '';
+  progressMsg.textContent = '';
+
+  const quality = parseInt(qualitySlider.value, 10) / 100;
+
+  try {
+    const arrayBuffer = await selectedFile.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    const baseName = selectedFile.name.replace(/\.pdf$/i, '');
+
+    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+      progressMsg.textContent = `Rendering page ${pageNum} of ${pdf.numPages}...`;
+
+      const page = await pdf.getPage(pageNum);
+      const viewport = page.getViewport({ scale: 2 });
+      const canvas = document.createElement('canvas');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      const ctx = canvas.getContext('2d');
+
+      await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+
+      const blob = await new Promise((resolve) => {
+        canvas.toBlob(resolve, 'image/jpeg', quality);
+      });
+
+      const name = pdf.numPages > 1 ? `${baseName}-page-${pageNum}.jpg` : `${baseName}.jpg`;
+      convertedImages.push({ name, blob });
+      addResultCard(name, blob);
+    }
+
+    progressMsg.textContent = `Done — ${pdf.numPages} page(s) converted.`;
+    if (convertedImages.length > 1) {
+      downloadAllWrap.style.display = 'block';
+    }
+  } catch (err) {
+    errorMsg.textContent = 'Could not process this PDF. Make sure the file is not corrupted or password-protected.';
+    progressMsg.textContent = '';
+  }
+
+  convertBtn.disabled = false;
+  convertBtn.textContent = 'Convert to JPG';
+});
+
+function addResultCard(name, blob) {
+  const url = URL.createObjectURL(blob);
+
+  const card = document.createElement('div');
+  card.className = 'result-item';
+  card.innerHTML = `<img src="${url}" alt="${name}"><div>${name}</div>`;
+
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = name;
+  link.textContent = 'Download';
+
+  card.appendChild(link);
+  resultsGrid.appendChild(card);
+}
+
+downloadAllBtn.addEventListener('click', () => {
+  convertedImages.forEach(({ name, blob }) => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+});
+</script>
 </body>
 </html>
