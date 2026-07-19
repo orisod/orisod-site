@@ -1,141 +1,157 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Compress Image – Free Online Tool | Orisod</title>
-
-<meta name="description" content="Compress images online instantly. Reduce image file size directly in your browser with Orisod.">
-
+<meta name="description" content="Compress images online for free. Reduce file size while keeping good quality — everything happens in your browser, no files are uploaded.">
 <style>
-body{
-font-family:Arial, Helvetica, sans-serif;
-background:#0b0f1a;
-color:white;
-text-align:center;
-padding-top:80px;
-max-width:900px;
-margin:auto;
-}
-
-h1{
-font-size:42px;
-}
-
-h2{
-margin-top:50px;
-}
-
-button{
-padding:12px 20px;
-margin-top:20px;
-font-size:16px;
-cursor:pointer;
-}
-
-input{
-padding:8px;
-margin:10px;
-}
-
-p{
-opacity:0.85;
-line-height:1.6;
-}
-
-.tool-box{
-margin-top:30px;
-margin-bottom:40px;
-}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:48px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:30px 20px;margin-top:30px;}
+.dropzone{border:2px dashed #374151;border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
+.dropzone:hover, .dropzone.dragover{border-color:#2563eb;background:#0f172a;}
+input[type="file"]{display:none;}
+.quality-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:20px;font-size:14px;opacity:0.85;}
+input[type="range"]{width:200px;}
+button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:#2563eb;color:white;text-decoration:none;font-size:16px;cursor:pointer;}
+button:disabled{opacity:0.4;cursor:not-allowed;}
+button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.note{margin-top:20px;font-size:14px;opacity:0.6;}
+.result{margin-top:20px;}
+.result img{max-width:100%;border-radius:6px;border:1px solid #1e293b;}
+.size-compare{margin-top:12px;font-size:14px;opacity:0.85;}
+.size-compare .saved{color:#4ade80;font-weight:bold;}
+.footer{margin-top:50px;font-size:14px;opacity:0.4;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+h2{margin-top:50px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;}
+.related a:hover{text-decoration:underline;}
 </style>
-
 </head>
-
 <body>
+<div class="container">
+  <h1>Compress Image</h1>
+  <p>Upload an image and reduce its file size instantly. Everything happens locally in your browser — your files are never uploaded anywhere.</p>
 
-<h1>Compress Image</h1>
+  <div class="box">
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Click to select an image or drag and drop it here</div>
+    </label>
+    <input type="file" id="fileInput" accept="image/*">
+    <div class="error" id="errorMsg"></div>
 
-<p>Upload an image and reduce its file size instantly.</p>
+    <div class="quality-row">
+      <label for="quality">Quality: <span id="qualityValue">70</span>%</label>
+      <input type="range" id="quality" min="10" max="100" value="70">
+    </div>
 
-<div class="tool-box">
+    <br>
+    <button id="compressBtn" disabled>Compress Image</button>
+    <div class="note">Supports JPG, PNG, WEBP and other common image formats.</div>
 
-<input type="file" id="fileInput" accept="image/*">
+    <div class="result" id="result"></div>
+  </div>
 
-<br>
+  <a class="back" href="/tools">View All Tools</a>
 
-<label for="quality">Compression quality (0.1 to 1.0):</label><br>
-<input type="number" id="quality" min="0.1" max="1" step="0.1" value="0.7">
+  <h2>Why compress an image?</h2>
+  <p>Compressed images take less storage space and load faster on websites. They are also easier to send by email or upload to forms with size limits.</p>
 
-<br>
+  <h2>Related tools</h2>
+  <div class="related">
+    <a href="/resize-image">Resize Image</a>
+    <a href="/crop-image">Crop Image</a>
+    <a href="/png-to-jpg">PNG to JPG</a>
+  </div>
 
-<button onclick="compressImage()">Compress</button>
-
-<br><br>
-
-<a id="downloadLink" style="display:none;color:white;">Download Compressed Image</a>
-
+  <div class="footer">© Orisod Labs</div>
 </div>
 
-<h2>Why compress an image?</h2>
-
-<p>
-Compressed images take less storage space and load faster on websites.
-They are also easier to send by email or upload to forms.
-</p>
-
-<h2>How to compress an image</h2>
-
-<p>
-1. Upload your image.<br>
-2. Choose a compression quality.<br>
-3. Click compress and download the result.
-</p>
-
 <script>
-function compressImage(){
-  const fileInput = document.getElementById('fileInput');
-  const file = fileInput.files[0];
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const errorMsg = document.getElementById('errorMsg');
+const qualitySlider = document.getElementById('quality');
+const qualityValue = document.getElementById('qualityValue');
+const compressBtn = document.getElementById('compressBtn');
+const resultEl = document.getElementById('result');
 
-  if(!file){
-    alert("Please upload an image");
+let img = null;
+let originalSize = 0;
+
+qualitySlider.addEventListener('input', () => { qualityValue.textContent = qualitySlider.value; });
+
+fileInput.addEventListener('change', (e) => { if (e.target.files[0]) loadFile(e.target.files[0]); });
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+});
+
+function loadFile(file) {
+  errorMsg.textContent = '';
+  if (!file.type.startsWith('image/')) {
+    errorMsg.textContent = 'Please select a valid image file.';
     return;
   }
-
-  const quality = parseFloat(document.getElementById('quality').value);
-
-  if(isNaN(quality) || quality < 0.1 || quality > 1){
-    alert("Enter a quality between 0.1 and 1");
-    return;
-  }
-
+  originalSize = file.size;
   const reader = new FileReader();
-
-  reader.onload = function(e){
-    const img = new Image();
-
-    img.onload = function(){
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-
-      canvas.width = img.width;
-      canvas.height = img.height;
-
-      ctx.drawImage(img, 0, 0);
-
-      const compressedData = canvas.toDataURL("image/jpeg", quality);
-
-      const link = document.getElementById('downloadLink');
-      link.href = compressedData;
-      link.download = "compressed.jpg";
-      link.style.display = "inline";
+  reader.onload = (e) => {
+    img = new Image();
+    img.onload = () => {
+      dropzoneText.textContent = `✅ ${file.name} loaded (${(originalSize / 1024).toFixed(1)} KB)`;
+      compressBtn.disabled = false;
+      resultEl.innerHTML = '';
     };
-
     img.src = e.target.result;
   };
-
   reader.readAsDataURL(file);
 }
-</script>
 
+compressBtn.addEventListener('click', () => {
+  if (!img) return;
+  const quality = parseInt(qualitySlider.value, 10) / 100;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = img.width;
+  canvas.height = img.height;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(img, 0, 0);
+
+  canvas.toBlob((blob) => {
+    if (!blob) {
+      errorMsg.textContent = 'Something went wrong compressing this image.';
+      return;
+    }
+    const url = URL.createObjectURL(blob);
+    const savedPct = Math.max(0, Math.round((1 - blob.size / originalSize) * 100));
+
+    resultEl.innerHTML = '';
+    const preview = document.createElement('img');
+    preview.src = url;
+    resultEl.appendChild(preview);
+
+    const sizeCompare = document.createElement('div');
+    sizeCompare.className = 'size-compare';
+    sizeCompare.innerHTML = `${(originalSize / 1024).toFixed(1)} KB → ${(blob.size / 1024).toFixed(1)} KB <span class="saved">(${savedPct}% smaller)</span>`;
+    resultEl.appendChild(sizeCompare);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'compressed.jpg';
+    link.className = 'back';
+    link.style.marginTop = '15px';
+    link.textContent = 'Download Compressed Image';
+    resultEl.appendChild(document.createElement('br'));
+    resultEl.appendChild(link);
+  }, 'image/jpeg', quality);
+});
+</script>
 </body>
 </html>
