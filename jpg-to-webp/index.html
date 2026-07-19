@@ -1,124 +1,298 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-
-<title>JPG to WEBP Converter – Free Online Tool | Orisod</title>
-
-<meta name="description" content="Convert JPG images to WEBP instantly. Free online JPG to WEBP converter by Orisod. Works directly in your browser.">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JPG to WEBP Converter – Convert JPG to WEBP Online | Orisod</title>
+<meta name="description" content="Convert JPG images to WEBP online for free. Get smaller files and better performance for websites. Everything happens in your browser — no files are uploaded.">
 <style>
 body{
-font-family:Arial, Helvetica, sans-serif;
-background:#0b0f1a;
-color:white;
-text-align:center;
-padding-top:80px;
-max-width:900px;
-margin:auto;
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  background:#0b0f1a;
+  color:white;
+  text-align:center;
+  padding:40px 20px;
 }
-
+.container{
+  max-width:800px;
+  margin:0 auto;
+}
 h1{
-font-size:42px;
+  font-size:48px;
+  margin-bottom:10px;
 }
-
-h2{
-margin-top:50px;
-}
-
-button{
-padding:12px 20px;
-margin-top:20px;
-font-size:16px;
-cursor:pointer;
-}
-
 p{
-opacity:0.85;
-line-height:1.6;
+  font-size:18px;
+  opacity:0.85;
+  max-width:700px;
+  margin:0 auto 25px auto;
+  line-height:1.6;
 }
-
-.tool-box{
-margin-top:30px;
-margin-bottom:40px;
+.box{
+  background:#111827;
+  border:1px solid #1f2937;
+  border-radius:10px;
+  padding:30px 20px;
+  margin-top:30px;
+}
+.dropzone{
+  border:2px dashed #374151;
+  border-radius:10px;
+  padding:30px 20px;
+  cursor:pointer;
+  transition:0.2s;
+}
+.dropzone:hover, .dropzone.dragover{
+  border-color:#2563eb;
+  background:#0f172a;
+}
+input[type="file"]{
+  display:none;
+}
+.quality-row{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  margin-top:20px;
+  font-size:14px;
+  opacity:0.85;
+}
+input[type="range"]{
+  width:200px;
+}
+button, .back{
+  display:inline-block;
+  margin-top:20px;
+  padding:14px 20px;
+  border:none;
+  border-radius:8px;
+  background:#2563eb;
+  color:white;
+  text-decoration:none;
+  font-size:16px;
+  cursor:pointer;
+}
+button:disabled{
+  opacity:0.4;
+  cursor:not-allowed;
+}
+button:hover:not(:disabled), .back:hover{
+  filter:brightness(1.08);
+}
+.note{
+  margin-top:20px;
+  font-size:14px;
+  opacity:0.6;
+}
+.results{
+  margin-top:25px;
+  text-align:left;
+}
+.result-item{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:#0f172a;
+  border:1px solid #1e293b;
+  border-radius:8px;
+  padding:12px 16px;
+  margin-bottom:10px;
+  font-size:14px;
+}
+.result-item a{
+  color:#60a5fa;
+  text-decoration:none;
+  font-weight:bold;
+}
+.result-item a:hover{
+  text-decoration:underline;
+}
+.download-all{
+  margin-top:15px;
+}
+.footer{
+  margin-top:50px;
+  font-size:14px;
+  opacity:0.4;
+}
+.error{
+  color:#f87171;
+  font-size:14px;
+  margin-top:10px;
 }
 </style>
-
 </head>
-
 <body>
+<div class="container">
+  <h1>JPG to WEBP Converter</h1>
+  <p>Convert JPG images to WEBP format online for free and reduce file size for faster websites. Everything happens locally in your browser — your files are never uploaded anywhere.</p>
 
-<h1>JPG to WEBP Converter</h1>
+  <div class="box">
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Click to select JPG files or drag and drop them here</div>
+    </label>
+    <input type="file" id="fileInput" accept=".jpg,.jpeg" multiple>
 
-<p>Upload a JPG image and convert it to WEBP instantly.</p>
+    <div class="quality-row">
+      <label for="quality">Quality: <span id="qualityValue">80</span>%</label>
+      <input type="range" id="quality" min="10" max="100" value="80">
+    </div>
 
-<div class="tool-box">
+    <br>
+    <button id="convertBtn" disabled>Convert to WEBP</button>
+    <div class="note">Supports JPG and JPEG files. Nothing leaves your device.</div>
+    <div class="error" id="errorMsg"></div>
 
-<input type="file" id="fileInput" accept="image/jpeg,image/jpg">
+    <div class="results" id="results"></div>
+    <div class="download-all" id="downloadAllWrap" style="display:none;">
+      <button id="downloadAllBtn">Download All</button>
+    </div>
+  </div>
 
-<br>
+  <a class="back" href="/tools">View All Tools</a>
 
-<button onclick="convertImage()">Convert</button>
-
-<br><br>
-
-<a id="downloadLink" style="display:none;color:white;">Download WEBP</a>
-
+  <div class="footer">© Orisod Labs</div>
 </div>
 
-<h2>Why convert JPG to WEBP?</h2>
-
-<p>
-WEBP images are often smaller than JPG files while maintaining good quality.
-They are commonly used to improve website performance.
-</p>
-
-<h2>How to convert JPG to WEBP</h2>
-
-<p>
-1. Upload your JPG image.<br>
-2. Click convert.<br>
-3. Download the WEBP file instantly.
-</p>
-
 <script>
-function convertImage(){
-  const fileInput = document.getElementById('fileInput');
-  const file = fileInput.files[0];
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const convertBtn = document.getElementById('convertBtn');
+const qualitySlider = document.getElementById('quality');
+const qualityValue = document.getElementById('qualityValue');
+const results = document.getElementById('results');
+const errorMsg = document.getElementById('errorMsg');
+const downloadAllWrap = document.getElementById('downloadAllWrap');
+const downloadAllBtn = document.getElementById('downloadAllBtn');
 
-  if(!file){
-    alert("Please upload a JPG image");
+let selectedFiles = [];
+let convertedBlobs = [];
+
+qualitySlider.addEventListener('input', () => {
+  qualityValue.textContent = qualitySlider.value;
+});
+
+fileInput.addEventListener('change', (e) => {
+  handleFiles(e.target.files);
+});
+
+dropzone.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  dropzone.classList.add('dragover');
+});
+dropzone.addEventListener('dragleave', () => {
+  dropzone.classList.remove('dragover');
+});
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  handleFiles(e.dataTransfer.files);
+});
+
+function handleFiles(fileList) {
+  errorMsg.textContent = '';
+  const valid = Array.from(fileList).filter(f => /\.(jpe?g)$/i.test(f.name));
+  if (valid.length === 0) {
+    errorMsg.textContent = 'Please select valid JPG or JPEG files.';
     return;
   }
-
-  const reader = new FileReader();
-
-  reader.onload = function(e){
-    const img = new Image();
-
-    img.onload = function(){
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-
-      canvas.width = img.width;
-      canvas.height = img.height;
-
-      ctx.drawImage(img, 0, 0);
-
-      const webpData = canvas.toDataURL("image/webp");
-
-      const link = document.getElementById('downloadLink');
-      link.href = webpData;
-      link.download = "converted.webp";
-      link.style.display = "inline";
-    };
-
-    img.src = e.target.result;
-  };
-
-  reader.readAsDataURL(file);
+  selectedFiles = valid;
+  dropzoneText.textContent = `✅ ${valid.length} file(s) selected — ${valid.map(f => f.name).join(', ')}`;
+  convertBtn.disabled = false;
+  results.innerHTML = '';
+  downloadAllWrap.style.display = 'none';
 }
-</script>
 
+convertBtn.addEventListener('click', async () => {
+  if (selectedFiles.length === 0) return;
+
+  convertBtn.disabled = true;
+  convertBtn.textContent = 'Converting...';
+  results.innerHTML = '';
+  convertedBlobs = [];
+  errorMsg.textContent = '';
+
+  const quality = parseInt(qualitySlider.value, 10) / 100;
+
+  for (const file of selectedFiles) {
+    try {
+      const blob = await convertToWebp(file, quality);
+      convertedBlobs.push({ name: file.name.replace(/\.(jpe?g)$/i, '.webp'), blob });
+      addResultRow(file.name, blob);
+    } catch (err) {
+      errorMsg.textContent = `Could not convert ${file.name}. Your browser may not support WEBP export.`;
+    }
+  }
+
+  convertBtn.disabled = false;
+  convertBtn.textContent = 'Convert to WEBP';
+
+  if (convertedBlobs.length > 1) {
+    downloadAllWrap.style.display = 'block';
+  }
+});
+
+function convertToWebp(file, quality) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+
+        canvas.toBlob((blob) => {
+          if (blob) {
+            resolve(blob);
+          } else {
+            reject(new Error('WEBP export not supported'));
+          }
+        }, 'image/webp', quality);
+      };
+      img.onerror = () => reject(new Error('Could not load image'));
+      img.src = e.target.result;
+    };
+    reader.onerror = () => reject(new Error('Could not read file'));
+    reader.readAsDataURL(file);
+  });
+}
+
+function addResultRow(originalName, blob) {
+  const url = URL.createObjectURL(blob);
+  const outName = originalName.replace(/\.(jpe?g)$/i, '.webp');
+  const sizeKb = (blob.size / 1024).toFixed(1);
+
+  const row = document.createElement('div');
+  row.className = 'result-item';
+  row.innerHTML = `<span>${outName} (${sizeKb} KB)</span>`;
+
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = outName;
+  link.textContent = 'Download';
+
+  row.appendChild(link);
+  results.appendChild(row);
+}
+
+downloadAllBtn.addEventListener('click', () => {
+  convertedBlobs.forEach(({ name, blob }) => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+});
+</script>
 </body>
 </html>
