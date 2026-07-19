@@ -1,156 +1,184 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PNG to JPG Converter – Free Online Tool | Orisod</title>
-
-<meta name="description" content="Convert PNG images to JPG instantly. Free online PNG to JPG converter by Orisod. Works directly in your browser.">
-
+<meta name="description" content="Convert PNG images to JPG online for free. Fast, simple, and works directly in your browser — no files are uploaded.">
 <style>
-
-body{
-font-family:Arial, Helvetica, sans-serif;
-background:#0b0f1a;
-color:white;
-text-align:center;
-padding-top:80px;
-max-width:900px;
-margin:auto;
-}
-
-h1{
-font-size:42px;
-}
-
-h2{
-margin-top:50px;
-}
-
-button{
-padding:12px 20px;
-margin-top:20px;
-font-size:16px;
-cursor:pointer;
-}
-
-p{
-opacity:0.85;
-line-height:1.6;
-}
-
-.tool-box{
-margin-top:30px;
-margin-bottom:40px;
-}
-
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:48px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:30px 20px;margin-top:30px;}
+.dropzone{border:2px dashed #374151;border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
+.dropzone:hover, .dropzone.dragover{border-color:#2563eb;background:#0f172a;}
+input[type="file"]{display:none;}
+button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:#2563eb;color:white;text-decoration:none;font-size:16px;cursor:pointer;}
+button:disabled{opacity:0.4;cursor:not-allowed;}
+button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.note{margin-top:20px;font-size:14px;opacity:0.6;}
+.results{margin-top:25px;text-align:left;}
+.result-item{display:flex;align-items:center;justify-content:space-between;background:#0f172a;border:1px solid #1e293b;border-radius:8px;padding:12px 16px;margin-bottom:10px;font-size:14px;}
+.result-item a{color:#60a5fa;text-decoration:none;font-weight:bold;}
+.result-item a:hover{text-decoration:underline;}
+.download-all{margin-top:15px;}
+.footer{margin-top:50px;font-size:14px;opacity:0.4;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+h2{margin-top:50px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;}
+.related a:hover{text-decoration:underline;}
 </style>
-
 </head>
-
-
-
 <body>
+<div class="container">
+  <h1>PNG to JPG Converter</h1>
+  <p>Convert PNG images to JPG format online for free. Everything happens locally in your browser — your files are never uploaded anywhere.</p>
 
-<h1>PNG to JPG Converter</h1>
+  <div class="box">
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Click to select PNG files or drag and drop them here</div>
+    </label>
+    <input type="file" id="fileInput" accept=".png" multiple>
 
-<p>Upload a PNG image and convert it to JPG instantly.</p>
+    <br>
+    <button id="convertBtn" disabled>Convert to JPG</button>
+    <div class="note">Supports one or multiple PNG files. Nothing leaves your device.</div>
+    <div class="error" id="errorMsg"></div>
 
-<div class="tool-box">
+    <div class="results" id="results"></div>
+    <div class="download-all" id="downloadAllWrap" style="display:none;">
+      <button id="downloadAllBtn">Download All</button>
+    </div>
+  </div>
 
-<input type="file" id="fileInput" accept="image/png">
+  <a class="back" href="/tools">View All Tools</a>
 
-<br>
+  <h2>What is a PNG file?</h2>
+  <p>PNG is a popular image format that supports transparency and high quality graphics. However, PNG files are often larger than JPG images. Converting PNG to JPG can reduce file size and make images easier to share.</p>
 
-<button onclick="convertImage()">Convert</button>
+  <h2>Related tools</h2>
+  <div class="related">
+    <a href="/webp-to-jpg">WEBP to JPG</a>
+    <a href="/jpg-to-pdf">JPG to PDF</a>
+    <a href="/compress-image">Compress Image</a>
+    <a href="/resize-image">Resize Image</a>
+    <a href="/png-to-webp">PNG to WEBP</a>
+    <a href="/crop-image">Crop Image</a>
+  </div>
 
-<br><br>
-
-<canvas id="canvas" style="display:none;"></canvas>
-
-<a id="downloadLink" style="display:none;color:white;">Download JPG</a>
-
+  <div class="footer">© Orisod Labs</div>
 </div>
 
-
-<h2>What is a PNG file?</h2>
-
-<p>
-PNG is a popular image format that supports transparency and high quality graphics.
-However, PNG files are often larger than JPG images.
-</p>
-
-<p>
-Converting PNG to JPG can reduce file size and make images easier to share.
-</p>
-
-
-<h2>How to convert PNG to JPG</h2>
-
-<p>
-1. Upload your PNG image.<br>
-2. Click convert.<br>
-3. Download the JPG file instantly.
-</p>
-
-<h2>Related tools</h2>
-
-<p>
-<a href="/webp-to-jpg">WEBP to JPG</a><br>
-<a href="/png-to-jpg">PNG to JPG</a><br>
-<a href="/jpg-to-pdf">JPG to PDF</a><br>
-<a href="/image-to-pdf">Image to PDF</a><br>
-<a href="/compress-image">Compress Image</a><br>
-<a href="/resize-image">Resize Image</a><br>
-<a href="/png-to-webp">PNG to WEBP</a><br>
-<a href="/jpg-to-webp">JPG to WEBP</a><br>
-<a href="/crop-image">Crop Image</a>
-</p>
-
 <script>
-
-function convertImage(){
-
 const fileInput = document.getElementById('fileInput');
-const file = fileInput.files[0];
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const convertBtn = document.getElementById('convertBtn');
+const results = document.getElementById('results');
+const errorMsg = document.getElementById('errorMsg');
+const downloadAllWrap = document.getElementById('downloadAllWrap');
+const downloadAllBtn = document.getElementById('downloadAllBtn');
 
-if(!file){
-alert("Please upload a PNG image");
-return;
+let selectedFiles = [];
+let convertedBlobs = [];
+
+fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  handleFiles(e.dataTransfer.files);
+});
+
+function handleFiles(fileList) {
+  errorMsg.textContent = '';
+  const valid = Array.from(fileList).filter(f => /\.png$/i.test(f.name));
+  if (valid.length === 0) {
+    errorMsg.textContent = 'Please select valid PNG files.';
+    return;
+  }
+  selectedFiles = valid;
+  dropzoneText.textContent = `✅ ${valid.length} file(s) selected — ${valid.map(f => f.name).join(', ')}`;
+  convertBtn.disabled = false;
+  results.innerHTML = '';
+  downloadAllWrap.style.display = 'none';
 }
 
-const img = new Image();
-const reader = new FileReader();
+convertBtn.addEventListener('click', async () => {
+  if (selectedFiles.length === 0) return;
+  convertBtn.disabled = true;
+  convertBtn.textContent = 'Converting...';
+  results.innerHTML = '';
+  convertedBlobs = [];
+  errorMsg.textContent = '';
 
-reader.onload = function(e){
-img.src = e.target.result;
-};
+  for (const file of selectedFiles) {
+    try {
+      const blob = await convertToJpg(file);
+      const name = file.name.replace(/\.png$/i, '.jpg');
+      convertedBlobs.push({ name, blob });
+      addResultRow(name, blob);
+    } catch (err) {
+      errorMsg.textContent = `Could not convert ${file.name}.`;
+    }
+  }
 
-reader.readAsDataURL(file);
+  convertBtn.disabled = false;
+  convertBtn.textContent = 'Convert to JPG';
+  if (convertedBlobs.length > 1) downloadAllWrap.style.display = 'block';
+});
 
-img.onload = function(){
-
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-
-canvas.width = img.width;
-canvas.height = img.height;
-
-ctx.drawImage(img,0,0);
-
-const jpg = canvas.toDataURL("image/jpeg");
-
-const link = document.getElementById('downloadLink');
-
-link.href = jpg;
-link.download = "converted.jpg";
-link.style.display = "inline";
-
+function convertToJpg(file) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0);
+        canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error('Conversion failed')), 'image/jpeg', 0.92);
+      };
+      img.onerror = () => reject(new Error('Could not load image'));
+      img.src = e.target.result;
+    };
+    reader.onerror = () => reject(new Error('Could not read file'));
+    reader.readAsDataURL(file);
+  });
 }
 
+function addResultRow(name, blob) {
+  const url = URL.createObjectURL(blob);
+  const sizeKb = (blob.size / 1024).toFixed(1);
+  const row = document.createElement('div');
+  row.className = 'result-item';
+  row.innerHTML = `<span>${name} (${sizeKb} KB)</span>`;
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = name;
+  link.textContent = 'Download';
+  row.appendChild(link);
+  results.appendChild(row);
 }
 
+downloadAllBtn.addEventListener('click', () => {
+  convertedBlobs.forEach(({ name, blob }) => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+});
 </script>
-
 </body>
 </html>
