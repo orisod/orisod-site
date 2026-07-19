@@ -1,149 +1,337 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Crop Image – Free Online Tool | Orisod</title>
-
-<meta name="description" content="Crop images online instantly. Select a portion of your image and download it with Orisod.">
-
+<meta name="description" content="Crop images online for free. Drag to select the area you want and download the result instantly. Everything happens in your browser — no files are uploaded.">
 <style>
 body{
-font-family:Arial, Helvetica, sans-serif;
-background:#0b0f1a;
-color:white;
-text-align:center;
-padding-top:80px;
-max-width:900px;
-margin:auto;
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  background:#0b0f1a;
+  color:white;
+  text-align:center;
+  padding:40px 20px;
 }
-
+.container{
+  max-width:800px;
+  margin:0 auto;
+}
 h1{
-font-size:42px;
+  font-size:48px;
+  margin-bottom:10px;
 }
-
-h2{
-margin-top:50px;
-}
-
-button{
-padding:12px 20px;
-margin-top:20px;
-font-size:16px;
-cursor:pointer;
-}
-
-input{
-padding:8px;
-margin:5px;
-width:80px;
-}
-
 p{
-opacity:0.85;
-line-height:1.6;
+  font-size:18px;
+  opacity:0.85;
+  max-width:700px;
+  margin:0 auto 25px auto;
+  line-height:1.6;
 }
-
-.tool-box{
-margin-top:30px;
-margin-bottom:40px;
+.box{
+  background:#111827;
+  border:1px solid #1f2937;
+  border-radius:10px;
+  padding:30px 20px;
+  margin-top:30px;
+}
+.dropzone{
+  border:2px dashed #374151;
+  border-radius:10px;
+  padding:30px 20px;
+  cursor:pointer;
+  transition:0.2s;
+}
+.dropzone:hover, .dropzone.dragover{
+  border-color:#2563eb;
+  background:#0f172a;
+}
+input[type="file"]{
+  display:none;
+}
+.editor{
+  display:none;
+  margin-top:20px;
+}
+.canvas-wrap{
+  position:relative;
+  display:inline-block;
+  max-width:100%;
+  touch-action:none;
+}
+#sourceCanvas{
+  max-width:100%;
+  display:block;
+  border-radius:6px;
+  border:1px solid #1e293b;
+}
+#selectionBox{
+  position:absolute;
+  border:2px solid #2563eb;
+  background:rgba(37, 99, 235, 0.15);
+  cursor:move;
+  display:none;
+}
+.dim-note{
+  margin-top:12px;
+  font-size:13px;
+  opacity:0.7;
+}
+button, .back{
+  display:inline-block;
+  margin-top:20px;
+  padding:14px 20px;
+  border:none;
+  border-radius:8px;
+  background:#2563eb;
+  color:white;
+  text-decoration:none;
+  font-size:16px;
+  cursor:pointer;
+}
+button:disabled{
+  opacity:0.4;
+  cursor:not-allowed;
+}
+button:hover:not(:disabled), .back:hover{
+  filter:brightness(1.08);
+}
+.note{
+  margin-top:20px;
+  font-size:14px;
+  opacity:0.6;
+}
+.result{
+  margin-top:20px;
+}
+.result img{
+  max-width:100%;
+  border-radius:6px;
+  border:1px solid #1e293b;
+}
+.footer{
+  margin-top:50px;
+  font-size:14px;
+  opacity:0.4;
+}
+.error{
+  color:#f87171;
+  font-size:14px;
+  margin-top:10px;
+}
+h2{
+  margin-top:50px;
+}
+.related a{
+  color:#60a5fa;
+  text-decoration:none;
+  display:block;
+  margin:6px 0;
+}
+.related a:hover{
+  text-decoration:underline;
 }
 </style>
-
 </head>
-
 <body>
+<div class="container">
+  <h1>Crop Image</h1>
+  <p>Upload an image, drag to select the area you want, and download the cropped result. Everything happens locally in your browser.</p>
 
-<h1>Crop Image</h1>
+  <div class="box">
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Click to select an image or drag and drop it here</div>
+    </label>
+    <input type="file" id="fileInput" accept="image/*">
+    <div class="error" id="errorMsg"></div>
 
-<p>Upload an image and crop it instantly.</p>
+    <div class="editor" id="editor">
+      <div class="canvas-wrap" id="canvasWrap">
+        <canvas id="sourceCanvas"></canvas>
+        <div id="selectionBox"></div>
+      </div>
+      <div class="dim-note" id="dimNote">Drag on the image to select the area to crop.</div>
+      <br>
+      <button id="cropBtn" disabled>Crop &amp; Download</button>
+    </div>
 
-<div class="tool-box">
+    <div class="result" id="result"></div>
+    <div class="note">Supports JPG, PNG, WEBP and other common image formats. Nothing leaves your device.</div>
+  </div>
 
-<input type="file" id="fileInput" accept="image/*">
+  <a class="back" href="/tools">View All Tools</a>
 
-<br><br>
+  <h2>What does crop mean?</h2>
+  <p>Cropping an image means selecting a specific area and removing the rest. This is useful for focusing on a subject, removing unwanted parts of a photo, or changing an image's aspect ratio.</p>
 
-<input type="number" id="x" placeholder="X">
-<input type="number" id="y" placeholder="Y">
-<input type="number" id="width" placeholder="Width">
-<input type="number" id="height" placeholder="Height">
+  <h2>Related tools</h2>
+  <div class="related">
+    <a href="/resize-image">Resize Image</a>
+    <a href="/compress-image">Compress Image</a>
+    <a href="/png-to-jpg">PNG to JPG</a>
+  </div>
 
-<br>
-
-<button onclick="cropImage()">Crop</button>
-
-<br><br>
-
-<a id="downloadLink" style="display:none;color:white;">Download Cropped Image</a>
-
+  <div class="footer">© Orisod Labs</div>
 </div>
 
-<h2>What does crop mean?</h2>
-
-<p>
-Cropping an image means selecting a specific area and removing the rest.
-This is useful for focusing on a subject or removing unwanted parts.
-</p>
-
-<h2>How to crop an image</h2>
-
-<p>
-1. Upload your image.<br>
-2. Enter X, Y, width and height.<br>
-3. Click crop and download the result.
-</p>
-
 <script>
-function cropImage(){
-
 const fileInput = document.getElementById('fileInput');
-const file = fileInput.files[0];
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const errorMsg = document.getElementById('errorMsg');
+const editor = document.getElementById('editor');
+const canvasWrap = document.getElementById('canvasWrap');
+const sourceCanvas = document.getElementById('sourceCanvas');
+const selectionBox = document.getElementById('selectionBox');
+const dimNote = document.getElementById('dimNote');
+const cropBtn = document.getElementById('cropBtn');
+const resultEl = document.getElementById('result');
 
-if(!file){
-alert("Please upload an image");
-return;
+let img = null;
+let scale = 1;
+let selection = null; // {x, y, w, h} in canvas display coordinates
+let dragStart = null;
+
+fileInput.addEventListener('change', (e) => {
+  if (e.target.files[0]) loadFile(e.target.files[0]);
+});
+
+dropzone.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  dropzone.classList.add('dragover');
+});
+dropzone.addEventListener('dragleave', () => {
+  dropzone.classList.remove('dragover');
+});
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+});
+
+function loadFile(file) {
+  errorMsg.textContent = '';
+  if (!file.type.startsWith('image/')) {
+    errorMsg.textContent = 'Please select a valid image file.';
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    img = new Image();
+    img.onload = () => {
+      dropzoneText.textContent = `✅ ${file.name} loaded`;
+      setupCanvas();
+      editor.style.display = 'block';
+      resultEl.innerHTML = '';
+      cropBtn.disabled = true;
+    };
+    img.onerror = () => {
+      errorMsg.textContent = 'Could not load this image.';
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
 }
 
-const x = parseInt(document.getElementById('x').value);
-const y = parseInt(document.getElementById('y').value);
-const width = parseInt(document.getElementById('width').value);
-const height = parseInt(document.getElementById('height').value);
+function setupCanvas() {
+  const maxWidth = Math.min(700, window.innerWidth - 80);
+  scale = Math.min(1, maxWidth / img.width);
 
-if(isNaN(x) || isNaN(y) || isNaN(width) || isNaN(height)){
-alert("Enter valid crop values");
-return;
+  sourceCanvas.width = img.width * scale;
+  sourceCanvas.height = img.height * scale;
+  const ctx = sourceCanvas.getContext('2d');
+  ctx.drawImage(img, 0, 0, sourceCanvas.width, sourceCanvas.height);
+
+  selection = null;
+  selectionBox.style.display = 'none';
+  dimNote.textContent = 'Drag on the image to select the area to crop.';
 }
 
-const reader = new FileReader();
-
-reader.onload = function(e){
-const img = new Image();
-
-img.onload = function(){
-const canvas = document.createElement('canvas');
-const ctx = canvas.getContext('2d');
-
-canvas.width = width;
-canvas.height = height;
-
-ctx.drawImage(img, x, y, width, height, 0, 0, width, height);
-
-const cropped = canvas.toDataURL("image/jpeg");
-
-const link = document.getElementById('downloadLink');
-link.href = cropped;
-link.download = "cropped.jpg";
-link.style.display = "inline";
-};
-
-img.src = e.target.result;
-};
-
-reader.readAsDataURL(file);
-
+function getPos(e) {
+  const rect = sourceCanvas.getBoundingClientRect();
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  const x = Math.max(0, Math.min(clientX - rect.left, sourceCanvas.width));
+  const y = Math.max(0, Math.min(clientY - rect.top, sourceCanvas.height));
+  return { x, y };
 }
+
+function startDrag(e) {
+  if (!img) return;
+  e.preventDefault();
+  dragStart = getPos(e);
+  selection = { x: dragStart.x, y: dragStart.y, w: 0, h: 0 };
+  selectionBox.style.display = 'block';
+  updateSelectionBox();
+}
+
+function moveDrag(e) {
+  if (!dragStart) return;
+  e.preventDefault();
+  const pos = getPos(e);
+  selection.x = Math.min(dragStart.x, pos.x);
+  selection.y = Math.min(dragStart.y, pos.y);
+  selection.w = Math.abs(pos.x - dragStart.x);
+  selection.h = Math.abs(pos.y - dragStart.y);
+  updateSelectionBox();
+}
+
+function endDrag() {
+  dragStart = null;
+  if (selection && selection.w > 5 && selection.h > 5) {
+    cropBtn.disabled = false;
+    const realW = Math.round(selection.w / scale);
+    const realH = Math.round(selection.h / scale);
+    dimNote.textContent = `Selection: ${realW} × ${realH} px`;
+  }
+}
+
+function updateSelectionBox() {
+  selectionBox.style.left = selection.x + 'px';
+  selectionBox.style.top = selection.y + 'px';
+  selectionBox.style.width = selection.w + 'px';
+  selectionBox.style.height = selection.h + 'px';
+}
+
+sourceCanvas.addEventListener('mousedown', startDrag);
+window.addEventListener('mousemove', moveDrag);
+window.addEventListener('mouseup', endDrag);
+sourceCanvas.addEventListener('touchstart', startDrag);
+window.addEventListener('touchmove', moveDrag);
+window.addEventListener('touchend', endDrag);
+
+cropBtn.addEventListener('click', () => {
+  if (!selection || !img) return;
+
+  const realX = Math.round(selection.x / scale);
+  const realY = Math.round(selection.y / scale);
+  const realW = Math.round(selection.w / scale);
+  const realH = Math.round(selection.h / scale);
+
+  const outCanvas = document.createElement('canvas');
+  outCanvas.width = realW;
+  outCanvas.height = realH;
+  const ctx = outCanvas.getContext('2d');
+  ctx.drawImage(img, realX, realY, realW, realH, 0, 0, realW, realH);
+
+  const dataUrl = outCanvas.toDataURL('image/jpeg', 0.95);
+
+  resultEl.innerHTML = '';
+  const preview = document.createElement('img');
+  preview.src = dataUrl;
+  resultEl.appendChild(preview);
+
+  const link = document.createElement('a');
+  link.href = dataUrl;
+  link.download = 'cropped.jpg';
+  link.className = 'back';
+  link.style.marginTop = '15px';
+  link.textContent = 'Download Cropped Image';
+  resultEl.appendChild(document.createElement('br'));
+  resultEl.appendChild(link);
+});
 </script>
-
 </body>
 </html>
