@@ -1,139 +1,311 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HEIC to JPG Converter – Free Online Tool | Orisod</title>
-
-<meta name="description" content="Convert HEIC images to JPG instantly. Free online HEIC to JPG converter by Orisod. Works directly in your browser.">
-
+<meta name="description" content="Convert HEIC images from iPhone to JPG online for free. Fast, simple, and works directly in your browser — no files are uploaded.">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/heic2any/0.0.4/heic2any.min.js"></script>
 <style>
-
 body{
-font-family:Arial, Helvetica, sans-serif;
-background:#0b0f1a;
-color:white;
-text-align:center;
-padding-top:80px;
-max-width:900px;
-margin:auto;
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  background:#0b0f1a;
+  color:white;
+  text-align:center;
+  padding:40px 20px;
 }
-
+.container{
+  max-width:800px;
+  margin:0 auto;
+}
 h1{
-font-size:42px;
+  font-size:48px;
+  margin-bottom:10px;
 }
-
-h2{
-margin-top:50px;
-}
-
-button{
-padding:12px 20px;
-margin-top:20px;
-font-size:16px;
-cursor:pointer;
-}
-
 p{
-opacity:0.85;
-line-height:1.6;
+  font-size:18px;
+  opacity:0.85;
+  max-width:700px;
+  margin:0 auto 25px auto;
+  line-height:1.6;
 }
-
-.tool-box{
-margin-top:30px;
-margin-bottom:40px;
+.box{
+  background:#111827;
+  border:1px solid #1f2937;
+  border-radius:10px;
+  padding:30px 20px;
+  margin-top:30px;
 }
-
+.dropzone{
+  border:2px dashed #374151;
+  border-radius:10px;
+  padding:30px 20px;
+  cursor:pointer;
+  transition:0.2s;
+}
+.dropzone:hover, .dropzone.dragover{
+  border-color:#2563eb;
+  background:#0f172a;
+}
+input[type="file"]{
+  display:none;
+}
+.quality-row{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  margin-top:20px;
+  font-size:14px;
+  opacity:0.85;
+}
+input[type="range"]{
+  width:200px;
+}
+button, .back{
+  display:inline-block;
+  margin-top:20px;
+  padding:14px 20px;
+  border:none;
+  border-radius:8px;
+  background:#2563eb;
+  color:white;
+  text-decoration:none;
+  font-size:16px;
+  cursor:pointer;
+}
+button:disabled{
+  opacity:0.4;
+  cursor:not-allowed;
+}
+button:hover:not(:disabled), .back:hover{
+  filter:brightness(1.08);
+}
+.note{
+  margin-top:20px;
+  font-size:14px;
+  opacity:0.6;
+}
+.results{
+  margin-top:25px;
+  text-align:left;
+}
+.result-item{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:#0f172a;
+  border:1px solid #1e293b;
+  border-radius:8px;
+  padding:12px 16px;
+  margin-bottom:10px;
+  font-size:14px;
+}
+.result-item a{
+  color:#60a5fa;
+  text-decoration:none;
+  font-weight:bold;
+}
+.result-item a:hover{
+  text-decoration:underline;
+}
+.download-all{
+  margin-top:15px;
+}
+.footer{
+  margin-top:50px;
+  font-size:14px;
+  opacity:0.4;
+}
+.error{
+  color:#f87171;
+  font-size:14px;
+  margin-top:10px;
+}
+.progress{
+  font-size:14px;
+  opacity:0.7;
+  margin-top:15px;
+}
+h2{
+  margin-top:50px;
+}
+.related a{
+  color:#60a5fa;
+  text-decoration:none;
+  display:block;
+  margin:6px 0;
+}
+.related a:hover{
+  text-decoration:underline;
+}
 </style>
-
 </head>
-
 <body>
+<div class="container">
+  <h1>HEIC to JPG Converter</h1>
+  <p>Convert HEIC images from your iPhone or iPad to JPG online for free. Everything happens locally in your browser — your files are never uploaded anywhere.</p>
 
-<h1>HEIC to JPG Converter</h1>
+  <div class="box">
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Click to select HEIC files or drag and drop them here</div>
+    </label>
+    <input type="file" id="fileInput" accept=".heic,.heif" multiple>
 
-<p>Upload a HEIC image and convert it to JPG instantly.</p>
+    <div class="quality-row">
+      <label for="quality">Quality: <span id="qualityValue">85</span>%</label>
+      <input type="range" id="quality" min="30" max="100" value="85">
+    </div>
 
-<div class="tool-box">
+    <br>
+    <button id="convertBtn" disabled>Convert to JPG</button>
+    <div class="note">Supports HEIC and HEIF files (the format used by iPhone photos). Nothing leaves your device.</div>
+    <div class="error" id="errorMsg"></div>
+    <div class="progress" id="progressMsg"></div>
 
-<input type="file" id="fileInput">
+    <div class="results" id="results"></div>
+    <div class="download-all" id="downloadAllWrap" style="display:none;">
+      <button id="downloadAllBtn">Download All</button>
+    </div>
+  </div>
 
-<br>
+  <a class="back" href="/tools">View All Tools</a>
 
-<button onclick="convertImage()">Convert</button>
+  <h2>What is a HEIC file?</h2>
+  <p>HEIC is the image format used by default on iPhones and iPads. It keeps high image quality while using less storage space than JPG. Many computers, websites, and apps outside the Apple ecosystem cannot open HEIC files directly, which is why converting to JPG is often necessary.</p>
 
-<br><br>
+  <h2>Related tools</h2>
+  <div class="related">
+    <a href="/webp-to-jpg">WEBP to JPG</a>
+    <a href="/png-to-jpg">PNG to JPG</a>
+    <a href="/compress-image">Compress Image</a>
+    <a href="/resize-image">Resize Image</a>
+  </div>
 
-<canvas id="canvas" style="display:none;"></canvas>
-
-<a id="downloadLink" style="display:none;color:white;">Download JPG</a>
-
+  <div class="footer">© Orisod Labs</div>
 </div>
 
-<h2>What is a HEIC file?</h2>
-
-<p>
-HEIC is an image format used by Apple devices such as iPhones and iPads.
-It allows photos to have high quality while using less storage space.
-</p>
-
-<p>
-However, many computers and applications cannot open HEIC files easily,
-which is why converting HEIC to JPG is often necessary.
-</p>
-
-<h2>How to convert HEIC to JPG</h2>
-
-<p>
-1. Upload your HEIC image.<br>
-2. Click convert.<br>
-3. Download the JPG file instantly.
-</p>
-
 <script>
-
-function convertImage(){
-
 const fileInput = document.getElementById('fileInput');
-const file = fileInput.files[0];
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const convertBtn = document.getElementById('convertBtn');
+const qualitySlider = document.getElementById('quality');
+const qualityValue = document.getElementById('qualityValue');
+const results = document.getElementById('results');
+const errorMsg = document.getElementById('errorMsg');
+const progressMsg = document.getElementById('progressMsg');
+const downloadAllWrap = document.getElementById('downloadAllWrap');
+const downloadAllBtn = document.getElementById('downloadAllBtn');
 
-if(!file){
-alert("Please upload a HEIC image");
-return;
+let selectedFiles = [];
+let convertedBlobs = [];
+
+qualitySlider.addEventListener('input', () => {
+  qualityValue.textContent = qualitySlider.value;
+});
+
+fileInput.addEventListener('change', (e) => {
+  handleFiles(e.target.files);
+});
+
+dropzone.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  dropzone.classList.add('dragover');
+});
+dropzone.addEventListener('dragleave', () => {
+  dropzone.classList.remove('dragover');
+});
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  handleFiles(e.dataTransfer.files);
+});
+
+function handleFiles(fileList) {
+  errorMsg.textContent = '';
+  const valid = Array.from(fileList).filter(f => /\.(heic|heif)$/i.test(f.name));
+  if (valid.length === 0) {
+    errorMsg.textContent = 'Please select valid HEIC or HEIF files.';
+    return;
+  }
+  selectedFiles = valid;
+  dropzoneText.textContent = `✅ ${valid.length} file(s) selected — ${valid.map(f => f.name).join(', ')}`;
+  convertBtn.disabled = false;
+  results.innerHTML = '';
+  downloadAllWrap.style.display = 'none';
 }
 
-const img = new Image();
-const reader = new FileReader();
+convertBtn.addEventListener('click', async () => {
+  if (selectedFiles.length === 0) return;
 
-reader.onload = function(e){
-img.src = e.target.result;
-};
+  convertBtn.disabled = true;
+  convertBtn.textContent = 'Converting...';
+  results.innerHTML = '';
+  convertedBlobs = [];
+  errorMsg.textContent = '';
+  progressMsg.textContent = '';
 
-reader.readAsDataURL(file);
+  const quality = parseInt(qualitySlider.value, 10) / 100;
 
-img.onload = function(){
+  for (let i = 0; i < selectedFiles.length; i++) {
+    const file = selectedFiles[i];
+    progressMsg.textContent = `Converting ${i + 1} of ${selectedFiles.length}...`;
 
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
+    try {
+      const jpgBlob = await heic2any({
+        blob: file,
+        toType: 'image/jpeg',
+        quality: quality
+      });
 
-canvas.width = img.width;
-canvas.height = img.height;
+      const finalBlob = Array.isArray(jpgBlob) ? jpgBlob[0] : jpgBlob;
+      const name = file.name.replace(/\.(heic|heif)$/i, '.jpg');
+      convertedBlobs.push({ name, blob: finalBlob });
+      addResultRow(name, finalBlob);
+    } catch (err) {
+      errorMsg.textContent = `Could not convert ${file.name}. The file may be corrupted or in an unsupported variant of HEIC.`;
+    }
+  }
 
-ctx.drawImage(img,0,0);
+  progressMsg.textContent = convertedBlobs.length > 0 ? `Done — ${convertedBlobs.length} file(s) converted.` : '';
+  convertBtn.disabled = false;
+  convertBtn.textContent = 'Convert to JPG';
 
-const jpg = canvas.toDataURL("image/jpeg");
+  if (convertedBlobs.length > 1) {
+    downloadAllWrap.style.display = 'block';
+  }
+});
 
-const link = document.getElementById('downloadLink');
+function addResultRow(name, blob) {
+  const url = URL.createObjectURL(blob);
+  const sizeKb = (blob.size / 1024).toFixed(1);
 
-link.href = jpg;
-link.download = "converted.jpg";
-link.style.display = "inline";
+  const row = document.createElement('div');
+  row.className = 'result-item';
+  row.innerHTML = `<span>${name} (${sizeKb} KB)</span>`;
 
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = name;
+  link.textContent = 'Download';
+
+  row.appendChild(link);
+  results.appendChild(row);
 }
 
-}
-
+downloadAllBtn.addEventListener('click', () => {
+  convertedBlobs.forEach(({ name, blob }) => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+});
 </script>
-
 </body>
 </html>
