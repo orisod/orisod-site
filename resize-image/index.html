@@ -1,149 +1,169 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Resize Image – Free Online Tool | Orisod</title>
-
-<meta name="description" content="Resize images online instantly. Change width and height of any image directly in your browser with Orisod.">
-
+<meta name="description" content="Resize images online for free. Change width and height instantly — everything happens in your browser, no files are uploaded.">
 <style>
-
-body{
-font-family:Arial, Helvetica, sans-serif;
-background:#0b0f1a;
-color:white;
-text-align:center;
-padding-top:80px;
-max-width:900px;
-margin:auto;
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:48px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:30px 20px;margin-top:30px;}
+.dropzone{border:2px dashed #374151;border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
+.dropzone:hover, .dropzone.dragover{border-color:#2563eb;background:#0f172a;}
+input[type="file"]{display:none;}
+.dims-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:20px;flex-wrap:wrap;}
+.dims-row input[type="number"]{
+  width:110px;padding:10px;border-radius:6px;border:1px solid #374151;background:#0f172a;color:white;font-size:14px;
 }
-
-h1{
-font-size:42px;
-}
-
-h2{
-margin-top:50px;
-}
-
-button{
-padding:12px 20px;
-margin-top:20px;
-font-size:16px;
-cursor:pointer;
-}
-
-input{
-padding:8px;
-margin:10px;
-}
-
-p{
-opacity:0.85;
-line-height:1.6;
-}
-
-.tool-box{
-margin-top:30px;
-margin-bottom:40px;
-}
-
+.lock-row{margin-top:10px;font-size:13px;opacity:0.8;display:flex;align-items:center;justify-content:center;gap:8px;}
+button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:#2563eb;color:white;text-decoration:none;font-size:16px;cursor:pointer;}
+button:disabled{opacity:0.4;cursor:not-allowed;}
+button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.note{margin-top:20px;font-size:14px;opacity:0.6;}
+.result{margin-top:20px;}
+.result img{max-width:100%;border-radius:6px;border:1px solid #1e293b;}
+.footer{margin-top:50px;font-size:14px;opacity:0.4;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+h2{margin-top:50px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;}
+.related a:hover{text-decoration:underline;}
 </style>
-
 </head>
-
 <body>
+<div class="container">
+  <h1>Resize Image</h1>
+  <p>Upload an image and change its width and height instantly. Everything happens locally in your browser — your files are never uploaded anywhere.</p>
 
-<h1>Resize Image</h1>
+  <div class="box">
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Click to select an image or drag and drop it here</div>
+    </label>
+    <input type="file" id="fileInput" accept="image/*">
+    <div class="error" id="errorMsg"></div>
 
-<p>Upload an image and change its size instantly.</p>
+    <div class="dims-row">
+      <input type="number" id="width" placeholder="Width (px)">
+      <span>×</span>
+      <input type="number" id="height" placeholder="Height (px)">
+    </div>
+    <div class="lock-row">
+      <input type="checkbox" id="lockRatio" checked>
+      <label for="lockRatio">Keep aspect ratio</label>
+    </div>
 
-<div class="tool-box">
+    <br>
+    <button id="resizeBtn" disabled>Resize Image</button>
+    <div class="note">Supports JPG, PNG, WEBP and other common image formats.</div>
 
-<input type="file" id="fileInput" accept="image/*">
+    <div class="result" id="result"></div>
+  </div>
 
-<br>
+  <a class="back" href="/tools">View All Tools</a>
 
-<input type="number" id="width" placeholder="Width">
-<input type="number" id="height" placeholder="Height">
+  <h2>Resize images easily</h2>
+  <p>This tool lets you change the width and height of your images directly in your browser. Works with JPG, PNG, WEBP and other common formats — no upload required.</p>
 
-<br>
+  <h2>Related tools</h2>
+  <div class="related">
+    <a href="/crop-image">Crop Image</a>
+    <a href="/compress-image">Compress Image</a>
+    <a href="/png-to-jpg">PNG to JPG</a>
+  </div>
 
-<button onclick="resizeImage()">Resize</button>
-
-<br><br>
-
-<canvas id="canvas" style="display:none;"></canvas>
-
-<a id="downloadLink" style="display:none;color:white;">Download Image</a>
-
+  <div class="footer">© Orisod Labs</div>
 </div>
 
-
-<h2>Resize images easily</h2>
-
-<p>
-This tool allows you to change the width and height of your images
-directly in your browser. No upload required.
-</p>
-
-<p>
-It works with JPG, PNG, WEBP and other common image formats.
-</p>
-
 <script>
-
-function resizeImage(){
-
 const fileInput = document.getElementById('fileInput');
-const file = fileInput.files[0];
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const errorMsg = document.getElementById('errorMsg');
+const widthInput = document.getElementById('width');
+const heightInput = document.getElementById('height');
+const lockRatio = document.getElementById('lockRatio');
+const resizeBtn = document.getElementById('resizeBtn');
+const resultEl = document.getElementById('result');
 
-if(!file){
-alert("Please upload an image");
-return;
+let img = null;
+let ratio = 1;
+
+fileInput.addEventListener('change', (e) => {
+  if (e.target.files[0]) loadFile(e.target.files[0]);
+});
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+});
+
+function loadFile(file) {
+  errorMsg.textContent = '';
+  if (!file.type.startsWith('image/')) {
+    errorMsg.textContent = 'Please select a valid image file.';
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    img = new Image();
+    img.onload = () => {
+      dropzoneText.textContent = `✅ ${file.name} loaded (${img.width} × ${img.height})`;
+      ratio = img.width / img.height;
+      widthInput.value = img.width;
+      heightInput.value = img.height;
+      resizeBtn.disabled = false;
+      resultEl.innerHTML = '';
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
 }
 
-const width = document.getElementById('width').value;
-const height = document.getElementById('height').value;
+widthInput.addEventListener('input', () => {
+  if (lockRatio.checked && widthInput.value) {
+    heightInput.value = Math.round(widthInput.value / ratio);
+  }
+});
+heightInput.addEventListener('input', () => {
+  if (lockRatio.checked && heightInput.value) {
+    widthInput.value = Math.round(heightInput.value * ratio);
+  }
+});
 
-if(!width || !height){
-alert("Enter width and height");
-return;
-}
+resizeBtn.addEventListener('click', () => {
+  const w = parseInt(widthInput.value, 10);
+  const h = parseInt(heightInput.value, 10);
+  if (!img || !w || !h || w <= 0 || h <= 0) {
+    errorMsg.textContent = 'Enter a valid width and height.';
+    return;
+  }
 
-const img = new Image();
-const reader = new FileReader();
+  const canvas = document.createElement('canvas');
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(img, 0, 0, w, h);
+  const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
 
-reader.onload = function(e){
-img.src = e.target.result;
-};
+  resultEl.innerHTML = '';
+  const preview = document.createElement('img');
+  preview.src = dataUrl;
+  resultEl.appendChild(preview);
+  resultEl.appendChild(document.createElement('br'));
 
-reader.readAsDataURL(file);
-
-img.onload = function(){
-
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-
-canvas.width = width;
-canvas.height = height;
-
-ctx.drawImage(img,0,0,width,height);
-
-const resized = canvas.toDataURL("image/jpeg");
-
-const link = document.getElementById('downloadLink');
-
-link.href = resized;
-link.download = "resized.jpg";
-link.style.display = "inline";
-
-}
-
-}
-
+  const link = document.createElement('a');
+  link.href = dataUrl;
+  link.download = 'resized.jpg';
+  link.className = 'back';
+  link.style.marginTop = '15px';
+  link.textContent = 'Download Resized Image';
+  resultEl.appendChild(link);
+});
 </script>
-
 </body>
 </html>
