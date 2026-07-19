@@ -1,124 +1,259 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-
-<title>Image to PDF Converter – Free Online Tool | Orisod</title>
-
-<meta name="description" content="Convert images to PDF instantly. Free online image to PDF converter by Orisod. Works directly in your browser.">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image to PDF Converter – Convert Images to PDF Online | Orisod</title>
+<meta name="description" content="Convert images like JPG, PNG, and WEBP into a single PDF file online for free. Everything happens in your browser — no files are uploaded.">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 <style>
 body{
-font-family:Arial, Helvetica, sans-serif;
-background:#0b0f1a;
-color:white;
-text-align:center;
-padding-top:80px;
-max-width:900px;
-margin:auto;
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  background:#0b0f1a;
+  color:white;
+  text-align:center;
+  padding:40px 20px;
 }
-
+.container{
+  max-width:800px;
+  margin:0 auto;
+}
 h1{
-font-size:42px;
+  font-size:48px;
+  margin-bottom:10px;
 }
-
-h2{
-margin-top:50px;
-}
-
-button{
-padding:12px 20px;
-margin-top:20px;
-font-size:16px;
-cursor:pointer;
-}
-
 p{
-opacity:0.85;
-line-height:1.6;
+  font-size:18px;
+  opacity:0.85;
+  max-width:700px;
+  margin:0 auto 25px auto;
+  line-height:1.6;
 }
-
-.tool-box{
-margin-top:30px;
-margin-bottom:40px;
+.box{
+  background:#111827;
+  border:1px solid #1f2937;
+  border-radius:10px;
+  padding:30px 20px;
+  margin-top:30px;
+}
+.dropzone{
+  border:2px dashed #374151;
+  border-radius:10px;
+  padding:30px 20px;
+  cursor:pointer;
+  transition:0.2s;
+}
+.dropzone:hover, .dropzone.dragover{
+  border-color:#2563eb;
+  background:#0f172a;
+}
+input[type="file"]{
+  display:none;
+}
+.file-list{
+  margin-top:18px;
+  text-align:left;
+}
+.file-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:#0f172a;
+  border:1px solid #1e293b;
+  border-radius:8px;
+  padding:8px 14px;
+  margin-bottom:8px;
+  font-size:14px;
+}
+.file-row button{
+  margin:0;
+  padding:4px 10px;
+  font-size:12px;
+  background:#374151;
+}
+button, .back{
+  display:inline-block;
+  margin-top:20px;
+  padding:14px 20px;
+  border:none;
+  border-radius:8px;
+  background:#2563eb;
+  color:white;
+  text-decoration:none;
+  font-size:16px;
+  cursor:pointer;
+}
+button:disabled{
+  opacity:0.4;
+  cursor:not-allowed;
+}
+button:hover:not(:disabled), .back:hover{
+  filter:brightness(1.08);
+}
+.note{
+  margin-top:20px;
+  font-size:14px;
+  opacity:0.6;
+}
+.footer{
+  margin-top:50px;
+  font-size:14px;
+  opacity:0.4;
+}
+.error{
+  color:#f87171;
+  font-size:14px;
+  margin-top:10px;
 }
 </style>
 </head>
-
 <body>
+<div class="container">
+  <h1>Image to PDF Converter</h1>
+  <p>Convert images like JPG, PNG, and WEBP into a single PDF file quickly and for free. Everything happens locally in your browser — your files are never uploaded anywhere.</p>
 
-<h1>Image to PDF Converter</h1>
+  <div class="box">
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Click to select images or drag and drop them here</div>
+    </label>
+    <input type="file" id="fileInput" accept=".jpg,.jpeg,.png,.webp" multiple>
 
-<p>Upload an image and convert it to PDF instantly.</p>
+    <div class="file-list" id="fileList"></div>
 
-<div class="tool-box">
-  <input type="file" id="fileInput" accept="image/*">
-  <br>
-  <button onclick="convertToPDF()">Convert</button>
+    <br>
+    <button id="convertBtn" disabled>Convert to PDF</button>
+    <div class="note">Supports JPG, PNG and WEBP. Each image becomes one page, in the order selected.</div>
+    <div class="error" id="errorMsg"></div>
+  </div>
+
+  <a class="back" href="/tools">View All Tools</a>
+
+  <div class="footer">© Orisod Labs</div>
 </div>
 
-<h2>Why convert an image to PDF?</h2>
-
-<p>
-Converting an image to PDF is useful when you need to send pictures as documents,
-print them more easily, or keep them in a universal format.
-</p>
-
-<h2>How to convert image to PDF</h2>
-
-<p>
-1. Upload your image.<br>
-2. Click convert.<br>
-3. The PDF downloads instantly.
-</p>
-
 <script>
-function convertToPDF() {
-  const fileInput = document.getElementById("fileInput");
-  const file = fileInput.files[0];
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const fileListEl = document.getElementById('fileList');
+const convertBtn = document.getElementById('convertBtn');
+const errorMsg = document.getElementById('errorMsg');
 
-  if (!file) {
-    alert("Please upload an image");
+let selectedFiles = [];
+
+fileInput.addEventListener('change', (e) => {
+  addFiles(e.target.files);
+});
+
+dropzone.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  dropzone.classList.add('dragover');
+});
+dropzone.addEventListener('dragleave', () => {
+  dropzone.classList.remove('dragover');
+});
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  addFiles(e.dataTransfer.files);
+});
+
+function addFiles(fileList) {
+  errorMsg.textContent = '';
+  const valid = Array.from(fileList).filter(f => /\.(jpe?g|png|webp)$/i.test(f.name));
+  if (valid.length === 0) {
+    errorMsg.textContent = 'Please select valid JPG, PNG or WEBP files.';
     return;
   }
+  selectedFiles = selectedFiles.concat(valid);
+  renderFileList();
+  convertBtn.disabled = selectedFiles.length === 0;
+}
 
-  const reader = new FileReader();
+function renderFileList() {
+  dropzoneText.textContent = selectedFiles.length > 0
+    ? `📁 Click to add more images (${selectedFiles.length} selected)`
+    : '📁 Click to select images or drag and drop them here';
 
-  reader.onload = function(event) {
-    const img = new Image();
+  fileListEl.innerHTML = '';
+  selectedFiles.forEach((file, index) => {
+    const row = document.createElement('div');
+    row.className = 'file-row';
+    row.innerHTML = `<span>${index + 1}. ${file.name}</span>`;
 
-    img.onload = function() {
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-
-      canvas.width = img.width;
-      canvas.height = img.height;
-
-      ctx.fillStyle = "#ffffff";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, 0, 0);
-
-      const imageData = canvas.toDataURL("image/jpeg", 1.0);
-
-      const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF({
-        orientation: img.width > img.height ? "landscape" : "portrait",
-        unit: "pt",
-        format: [img.width, img.height]
-      });
-
-      pdf.addImage(imageData, "JPEG", 0, 0, img.width, img.height);
-      pdf.save("converted.pdf");
+    const removeBtn = document.createElement('button');
+    removeBtn.textContent = 'Remove';
+    removeBtn.onclick = () => {
+      selectedFiles.splice(index, 1);
+      renderFileList();
+      convertBtn.disabled = selectedFiles.length === 0;
     };
 
-    img.src = event.target.result;
-  };
+    row.appendChild(removeBtn);
+    fileListEl.appendChild(row);
+  });
+}
 
-  reader.readAsDataURL(file);
+convertBtn.addEventListener('click', async () => {
+  if (selectedFiles.length === 0) return;
+
+  convertBtn.disabled = true;
+  convertBtn.textContent = 'Converting...';
+  errorMsg.textContent = '';
+
+  try {
+    const { jsPDF } = window.jspdf;
+    let pdf = null;
+
+    for (let i = 0; i < selectedFiles.length; i++) {
+      const file = selectedFiles[i];
+      const { dataUrl, width, height } = await loadImage(file);
+
+      if (i === 0) {
+        pdf = new jsPDF({
+          orientation: width > height ? 'landscape' : 'portrait',
+          unit: 'pt',
+          format: [width, height]
+        });
+      } else {
+        pdf.addPage([width, height], width > height ? 'landscape' : 'portrait');
+      }
+
+      pdf.addImage(dataUrl, 'JPEG', 0, 0, width, height);
+    }
+
+    pdf.save('converted.pdf');
+  } catch (err) {
+    errorMsg.textContent = 'Something went wrong converting your images. Please try again.';
+  }
+
+  convertBtn.disabled = false;
+  convertBtn.textContent = 'Convert to PDF';
+});
+
+function loadImage(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0);
+        resolve({ dataUrl: canvas.toDataURL('image/jpeg', 0.95), width: img.width, height: img.height });
+      };
+      img.onerror = () => reject(new Error('Could not load image'));
+      img.src = e.target.result;
+    };
+    reader.onerror = () => reject(new Error('Could not read file'));
+    reader.readAsDataURL(file);
+  });
 }
 </script>
-
 </body>
 </html>
