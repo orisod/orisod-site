@@ -1,120 +1,164 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JPG to PDF Converter – Free Online Tool | Orisod</title>
-
-<meta name="description" content="Convert JPG images to PDF instantly. Free online JPG to PDF converter by Orisod. Works directly in your browser.">
-
+<meta name="description" content="Convert JPG images to PDF online for free. Fast, simple, and works directly in your browser — no files are uploaded.">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 <style>
-body{
-font-family:Arial, Helvetica, sans-serif;
-background:#0b0f1a;
-color:white;
-text-align:center;
-padding-top:80px;
-max-width:900px;
-margin:auto;
-}
-
-h1{
-font-size:42px;
-}
-
-h2{
-margin-top:50px;
-}
-
-button{
-padding:12px 20px;
-margin-top:20px;
-font-size:16px;
-cursor:pointer;
-}
-
-p{
-opacity:0.85;
-line-height:1.6;
-}
-
-.tool-box{
-margin-top:30px;
-margin-bottom:40px;
-}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:48px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:30px 20px;margin-top:30px;}
+.dropzone{border:2px dashed #374151;border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
+.dropzone:hover, .dropzone.dragover{border-color:#2563eb;background:#0f172a;}
+input[type="file"]{display:none;}
+.file-list{margin-top:18px;text-align:left;}
+.file-row{display:flex;align-items:center;justify-content:space-between;background:#0f172a;border:1px solid #1e293b;border-radius:8px;padding:8px 14px;margin-bottom:8px;font-size:14px;}
+.file-row button{margin:0;padding:4px 10px;font-size:12px;background:#374151;}
+button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:#2563eb;color:white;text-decoration:none;font-size:16px;cursor:pointer;}
+button:disabled{opacity:0.4;cursor:not-allowed;}
+button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.note{margin-top:20px;font-size:14px;opacity:0.6;}
+.footer{margin-top:50px;font-size:14px;opacity:0.4;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+h2{margin-top:50px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;}
+.related a:hover{text-decoration:underline;}
 </style>
-
 </head>
-
 <body>
+<div class="container">
+  <h1>JPG to PDF Converter</h1>
+  <p>Convert JPG images into a single PDF file quickly and for free. Everything happens locally in your browser — your files are never uploaded anywhere.</p>
 
-<h1>JPG to PDF Converter</h1>
+  <div class="box">
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Click to select JPG files or drag and drop them here</div>
+    </label>
+    <input type="file" id="fileInput" accept=".jpg,.jpeg" multiple>
 
-<p>Upload a JPG image and convert it to PDF instantly.</p>
+    <div class="file-list" id="fileList"></div>
 
-<div class="tool-box">
+    <br>
+    <button id="convertBtn" disabled>Convert to PDF</button>
+    <div class="note">Each image becomes one page, in the order selected. Nothing leaves your device.</div>
+    <div class="error" id="errorMsg"></div>
+  </div>
 
-<input type="file" id="fileInput" accept="image/jpeg,image/jpg">
+  <a class="back" href="/tools">View All Tools</a>
 
-<br>
+  <h2>Why convert JPG to PDF?</h2>
+  <p>Converting JPG to PDF is useful when you need to share images as documents, print them more easily, or send them in a universal format that looks the same on any device.</p>
 
-<button onclick="convertToPDF()">Convert</button>
+  <h2>Related tools</h2>
+  <div class="related">
+    <a href="/image-to-pdf">Image to PDF</a>
+    <a href="/pdf-to-jpg">PDF to JPG</a>
+    <a href="/compress-image">Compress Image</a>
+  </div>
 
-<br><br>
-
+  <div class="footer">© Orisod Labs</div>
 </div>
 
-<h2>Why convert JPG to PDF?</h2>
-
-<p>
-Converting JPG to PDF is useful when you need to share images as documents,
-print them more easily, or send them in a universal format.
-</p>
-
-<h2>How to convert JPG to PDF</h2>
-
-<p>
-1. Upload your JPG image.<br>
-2. Click convert.<br>
-3. The PDF downloads instantly.
-</p>
-
 <script>
-async function convertToPDF(){
-  const fileInput = document.getElementById('fileInput');
-  const file = fileInput.files[0];
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const fileListEl = document.getElementById('fileList');
+const convertBtn = document.getElementById('convertBtn');
+const errorMsg = document.getElementById('errorMsg');
 
-  if(!file){
-    alert("Please upload a JPG image");
+let selectedFiles = [];
+
+fileInput.addEventListener('change', (e) => addFiles(e.target.files));
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  addFiles(e.dataTransfer.files);
+});
+
+function addFiles(fileList) {
+  errorMsg.textContent = '';
+  const valid = Array.from(fileList).filter(f => /\.(jpe?g)$/i.test(f.name));
+  if (valid.length === 0) {
+    errorMsg.textContent = 'Please select valid JPG files.';
     return;
   }
+  selectedFiles = selectedFiles.concat(valid);
+  renderFileList();
+  convertBtn.disabled = selectedFiles.length === 0;
+}
 
-  const reader = new FileReader();
+function renderFileList() {
+  dropzoneText.textContent = selectedFiles.length > 0
+    ? `📁 Click to add more images (${selectedFiles.length} selected)`
+    : '📁 Click to select JPG files or drag and drop them here';
 
-  reader.onload = function(e){
-    const img = new Image();
-
-    img.onload = function(){
-      const { jsPDF } = window.jspdf;
-
-      const pdf = new jsPDF({
-        orientation: img.width > img.height ? 'landscape' : 'portrait',
-        unit: 'px',
-        format: [img.width, img.height]
-      });
-
-      pdf.addImage(e.target.result, 'JPEG', 0, 0, img.width, img.height);
-      pdf.save('converted.pdf');
+  fileListEl.innerHTML = '';
+  selectedFiles.forEach((file, index) => {
+    const row = document.createElement('div');
+    row.className = 'file-row';
+    row.innerHTML = `<span>${index + 1}. ${file.name}</span>`;
+    const removeBtn = document.createElement('button');
+    removeBtn.textContent = 'Remove';
+    removeBtn.onclick = () => {
+      selectedFiles.splice(index, 1);
+      renderFileList();
+      convertBtn.disabled = selectedFiles.length === 0;
     };
+    row.appendChild(removeBtn);
+    fileListEl.appendChild(row);
+  });
+}
 
-    img.src = e.target.result;
-  };
+convertBtn.addEventListener('click', async () => {
+  if (selectedFiles.length === 0) return;
+  convertBtn.disabled = true;
+  convertBtn.textContent = 'Converting...';
+  errorMsg.textContent = '';
 
-  reader.readAsDataURL(file);
+  try {
+    const { jsPDF } = window.jspdf;
+    let pdf = null;
+
+    for (let i = 0; i < selectedFiles.length; i++) {
+      const { dataUrl, width, height } = await loadImage(selectedFiles[i]);
+      if (i === 0) {
+        pdf = new jsPDF({ orientation: width > height ? 'landscape' : 'portrait', unit: 'pt', format: [width, height] });
+      } else {
+        pdf.addPage([width, height], width > height ? 'landscape' : 'portrait');
+      }
+      pdf.addImage(dataUrl, 'JPEG', 0, 0, width, height);
+    }
+
+    pdf.save('converted.pdf');
+  } catch (err) {
+    errorMsg.textContent = 'Something went wrong converting your images. Please try again.';
+  }
+
+  convertBtn.disabled = false;
+  convertBtn.textContent = 'Convert to PDF';
+});
+
+function loadImage(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => resolve({ dataUrl: e.target.result, width: img.width, height: img.height });
+      img.onerror = () => reject(new Error('Could not load image'));
+      img.src = e.target.result;
+    };
+    reader.onerror = () => reject(new Error('Could not read file'));
+    reader.readAsDataURL(file);
+  });
 }
 </script>
-
 </body>
 </html>
