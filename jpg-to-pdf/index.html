@@ -33,7 +33,12 @@ button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
 .footer{margin-top:50px;font-size:14px;opacity:0.4;}
 .error{color:#f87171;font-size:14px;margin-top:10px;}
 h2{margin-top:50px;}
-.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;text-align:center;}
 .related a:hover{text-decoration:underline;}
 </style>
 </head>
@@ -59,8 +64,39 @@ h2{margin-top:50px;}
   <a class="back" href="/" style="background:#374151; margin-right:10px;">🏠 Home</a>
   <a class="back" href="/tools">View All Tools</a>
 
-  <h2>Why convert JPG to PDF?</h2>
-  <p>Converting JPG to PDF is useful when you need to share images as documents, print them more easily, or send them in a universal format that looks the same on any device.</p>
+  <div class="seo-content">
+    <h2>What does this tool do?</h2>
+    <p>This tool combines one or more JPG images into a single PDF document, one image per page, in the order you select them. It's a quick way to turn photos, scanned pages, or receipts into a single shareable, printable file.</p>
+
+    <h2>When should you use it?</h2>
+    <ul>
+      <li>You have several photos of a document and need one combined file</li>
+      <li>You want a format that prints and displays consistently on any device</li>
+      <li>A form or application requires a PDF instead of separate image files</li>
+      <li>You need to archive scanned receipts or pages as a single document</li>
+    </ul>
+
+    <h2>Why use Orisod for this?</h2>
+    <p>The conversion happens entirely in your browser using jsPDF — your images are never uploaded to a server. You can add multiple images, reorder or remove them before converting, and each page automatically matches the image's orientation.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <div class="q">Can I combine multiple JPGs into one PDF?</div>
+      <div>Yes, add as many images as you need — each becomes its own page, in the order you selected them.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Can I reorder or remove images before converting?</div>
+      <div>Yes, use the "Remove" button next to each file in the list to adjust your selection before converting.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Is my image uploaded to a server?</div>
+      <div>No, the entire conversion happens locally in your browser using JavaScript.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Does the PDF keep the original image quality?</div>
+      <div>Yes, each image is embedded into its page at its original resolution.</div>
+    </div>
+  </div>
 
   <h2>Related tools</h2>
   <div class="related">
