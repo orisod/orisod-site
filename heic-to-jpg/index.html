@@ -139,11 +139,17 @@ button:hover:not(:disabled), .back:hover{
 h2{
   margin-top:50px;
 }
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
 .related a{
   color:#60a5fa;
   text-decoration:none;
   display:block;
   margin:6px 0;
+  text-align:center;
 }
 .related a:hover{
   text-decoration:underline;
@@ -181,8 +187,39 @@ h2{
   <a class="back" href="/" style="background:#374151; margin-right:10px;">🏠 Home</a>
   <a class="back" href="/tools">View All Tools</a>
 
-  <h2>What is a HEIC file?</h2>
-  <p>HEIC is the image format used by default on iPhones and iPads. It keeps high image quality while using less storage space than JPG. Many computers, websites, and apps outside the Apple ecosystem cannot open HEIC files directly, which is why converting to JPG is often necessary.</p>
+  <div class="seo-content">
+    <h2>What is a HEIC file?</h2>
+    <p>HEIC is the image format used by default on iPhones and iPads since iOS 11. It keeps high image quality while using roughly half the storage space of an equivalent JPG. The tradeoff is compatibility — many Windows computers, websites, and apps outside the Apple ecosystem can't open HEIC files directly, which is why converting to JPG is often necessary.</p>
+
+    <h2>When should you use this tool?</h2>
+    <ul>
+      <li>You transferred iPhone photos to a Windows PC and they won't open</li>
+      <li>A website or form rejects your photo because it doesn't support HEIC</li>
+      <li>You want to share a photo with someone whose device can't display HEIC</li>
+      <li>You need to edit the photo in software that only accepts JPG or PNG</li>
+    </ul>
+
+    <h2>Why use Orisod for this?</h2>
+    <p>This tool decodes real HEIC image data directly in your browser using a dedicated decoding library — it's not a fake converter that just renames the file. Your photos are never uploaded to a server. You can convert multiple photos at once, adjust the output quality, and download everything together.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <div class="q">Why won't my iPhone photos open on my computer?</div>
+      <div>Windows and many older programs don't natively support the HEIC format. Converting to JPG makes the photo viewable and editable everywhere.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Will I lose photo quality converting to JPG?</div>
+      <div>At quality settings above 80%, the difference is generally not noticeable. You can adjust the quality slider to balance size and sharpness.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Are my photos uploaded to a server?</div>
+      <div>No. The decoding and conversion both happen locally in your browser — your photos never leave your device.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Does this also work with HEIF files?</div>
+      <div>Yes, HEIF (the general container format) and HEIC (Apple's specific variant) are both supported.</div>
+    </div>
+  </div>
 
   <h2>Related tools</h2>
   <div class="related">
