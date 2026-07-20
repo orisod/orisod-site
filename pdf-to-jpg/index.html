@@ -143,6 +143,14 @@ button:hover:not(:disabled), .back:hover{
   opacity:0.7;
   margin-top:15px;
 }
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;text-align:center;}
+.related a:hover{text-decoration:underline;}
 </style>
 </head>
 <body>
@@ -177,6 +185,47 @@ button:hover:not(:disabled), .back:hover{
 
   <a class="back" href="/" style="background:#374151; margin-right:10px;">🏠 Home</a>
   <a class="back" href="/tools">View All Tools</a>
+
+  <div class="seo-content">
+    <h2>What does this tool do?</h2>
+    <p>This tool converts every page of a PDF document into a separate JPG image. It's useful when you need to share a document as pictures, insert a page into a slide deck, post it on social media, or work with a page in an image editor that doesn't support PDFs.</p>
+
+    <h2>When should you use it?</h2>
+    <ul>
+      <li>You need to post a document or page as an image on social media</li>
+      <li>You want to insert a PDF page into a presentation or design tool</li>
+      <li>A form or website only accepts image uploads, not PDFs</li>
+      <li>You want a quick visual preview of every page without opening a PDF reader</li>
+    </ul>
+
+    <h2>Why use Orisod for this?</h2>
+    <p>The conversion happens entirely in your browser using PDF.js — the same rendering engine behind Chrome's built-in PDF viewer. Your document is never uploaded to a server. You can adjust the output image quality, preview every page before downloading, and download all pages at once with a single click.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <div class="q">Does this work with multi-page PDFs?</div>
+      <div>Yes. Every page in your PDF is converted into its own JPG image, and you can download them individually or all together.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Is my PDF uploaded to a server?</div>
+      <div>No. The entire conversion runs locally in your browser — the file never leaves your device.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Can I control the image quality?</div>
+      <div>Yes, use the quality slider before converting to balance image sharpness against file size.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Does this work with scanned or password-protected PDFs?</div>
+      <div>Scanned PDFs (image-based) convert normally. Password-protected PDFs need to be unlocked first, since the browser can't read encrypted content.</div>
+    </div>
+  </div>
+
+  <h2>Related tools</h2>
+  <div class="related">
+    <a href="/image-to-pdf">Image to PDF</a>
+    <a href="/jpg-to-pdf">JPG to PDF</a>
+    <a href="/compress-image">Compress Image</a>
+  </div>
 
   <div class="footer">© Orisod Labs</div>
 </div>
