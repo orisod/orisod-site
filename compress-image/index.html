@@ -35,7 +35,12 @@ button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
 .footer{margin-top:50px;font-size:14px;opacity:0.4;}
 .error{color:#f87171;font-size:14px;margin-top:10px;}
 h2{margin-top:50px;}
-.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;text-align:center;}
 .related a:hover{text-decoration:underline;}
 </style>
 </head>
@@ -66,8 +71,39 @@ h2{margin-top:50px;}
   <a class="back" href="/" style="background:#374151; margin-right:10px;">🏠 Home</a>
   <a class="back" href="/tools">View All Tools</a>
 
-  <h2>Why compress an image?</h2>
-  <p>Compressed images take less storage space and load faster on websites. They are also easier to send by email or upload to forms with size limits.</p>
+  <div class="seo-content">
+    <h2>What is image compression?</h2>
+    <p>Image compression reduces the file size of a photo by simplifying the data used to store it. This tool uses lossy compression, meaning some fine detail is discarded in exchange for a much smaller file — at moderate settings, the difference is usually invisible to the eye but the size savings are significant.</p>
+
+    <h2>When should you use this tool?</h2>
+    <ul>
+      <li>Your photo is too large to attach to an email or upload to a form</li>
+      <li>You want your website to load faster by using smaller image files</li>
+      <li>You need to fit more photos into limited cloud storage</li>
+      <li>You're sending images over a slow or limited connection</li>
+    </ul>
+
+    <h2>Why use Orisod for this?</h2>
+    <p>You control the exact quality level with a slider, and see the before/after file size comparison immediately after compressing — no guessing. Everything runs locally in your browser, so your photo is never uploaded to a server.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <div class="q">Is my image uploaded to a server?</div>
+      <div>No, compression happens entirely in your browser using the Canvas API — the file never leaves your device.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Does compressing reduce visible quality?</div>
+      <div>At quality settings above 65-70%, most people can't tell the difference visually, even though the file is significantly smaller. Lower settings trade more visible quality for smaller size.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">What's the difference between compressing and resizing?</div>
+      <div>Compressing reduces file size while keeping the same pixel dimensions. Resizing changes the actual width and height. You can use both together for maximum size reduction.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">What image formats are supported?</div>
+      <div>JPG, PNG, WEBP and other common formats your browser can read.</div>
+    </div>
+  </div>
 
   <h2>Related tools</h2>
   <div class="related">
