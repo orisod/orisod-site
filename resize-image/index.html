@@ -36,7 +36,12 @@ button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
 .footer{margin-top:50px;font-size:14px;opacity:0.4;}
 .error{color:#f87171;font-size:14px;margin-top:10px;}
 h2{margin-top:50px;}
-.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;text-align:center;}
 .related a:hover{text-decoration:underline;}
 </style>
 </head>
@@ -72,8 +77,39 @@ h2{margin-top:50px;}
   <a class="back" href="/" style="background:#374151; margin-right:10px;">🏠 Home</a>
   <a class="back" href="/tools">View All Tools</a>
 
-  <h2>Resize images easily</h2>
-  <p>This tool lets you change the width and height of your images directly in your browser. Works with JPG, PNG, WEBP and other common formats — no upload required.</p>
+  <div class="seo-content">
+    <h2>What does resizing an image mean?</h2>
+    <p>Resizing changes the pixel dimensions of an image — its width and height — either scaling it down to a smaller size or up to a larger one. It's different from cropping: resizing keeps the entire image visible, just at a different scale, while cropping removes parts of it.</p>
+
+    <h2>When should you use this tool?</h2>
+    <ul>
+      <li>A website, form, or platform requires an exact pixel size (e.g. profile picture, banner)</li>
+      <li>Your photo is too large in file size and you want to shrink its dimensions</li>
+      <li>You need a smaller thumbnail version of a larger image</li>
+      <li>You're preparing images for print at a specific size</li>
+    </ul>
+
+    <h2>Why use Orisod for this?</h2>
+    <p>This tool lets you resize by entering exact pixel values, with an option to lock the aspect ratio so your image doesn't look stretched or squished. Everything happens locally in your browser — your image is never uploaded to a server.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <div class="q">Will resizing distort my image?</div>
+      <div>Only if you change width and height independently without keeping the aspect ratio. Keep "Keep aspect ratio" checked to avoid stretching.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Can I make an image larger without losing quality?</div>
+      <div>You can enlarge an image, but since no new detail is created, very large increases may look softer or blurrier than the original.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Is my image uploaded anywhere?</div>
+      <div>No, resizing happens locally in your browser using the Canvas API — the file never leaves your device.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">What formats does this support?</div>
+      <div>JPG, PNG, WEBP and most other common image formats supported by your browser.</div>
+    </div>
+  </div>
 
   <h2>Related tools</h2>
   <div class="related">
