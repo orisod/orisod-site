@@ -2,103 +2,190 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Orisod Tools</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All Tools – Free Online Image & PDF Tools | Orisod</title>
+<meta name="description" content="Browse all free online tools by Orisod: convert, compress, resize, crop and optimize images and PDFs. Everything runs in your browser.">
 <style>
 body{
-    background:#020617;
-    color:white;
-    font-family:Arial, Helvetica, sans-serif;
-    text-align:center;
-    padding:60px 20px;
+  margin:0;
+  background:#0b0f1a;
+  color:white;
+  font-family:Arial, Helvetica, sans-serif;
+  text-align:center;
+  padding:50px 20px 70px 20px;
 }
-
+.top-nav{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin-bottom:40px;
+}
+.nav-link{
+  padding:10px 18px;
+  border-radius:8px;
+  background:#111827;
+  border:1px solid #1f2937;
+  color:white;
+  text-decoration:none;
+  font-size:14px;
+  transition:0.2s;
+}
+.nav-link:hover{
+  background:#1e293b;
+}
 h1{
-    font-size:48px;
-    margin-bottom:10px;
+  font-size:44px;
+  margin-bottom:10px;
 }
-
 .subtitle{
-    color:#cbd5f5;
-    margin-bottom:50px;
+  color:#94a3b8;
+  font-size:18px;
+  margin-bottom:50px;
 }
-
-.tools{
-    max-width:600px;
-    margin:auto;
+.category-title{
+  text-align:left;
+  max-width:1000px;
+  margin:0 auto;
+  font-size:20px;
+  color:#60a5fa;
+  margin-top:50px;
+  margin-bottom:16px;
+  padding-left:4px;
 }
-
-.tool{
-    display:block;
-    background:#0f172a;
-    border:1px solid #1e293b;
-    padding:18px;
-    margin:12px 0;
-    border-radius:8px;
-    text-decoration:none;
-    color:white;
-    font-size:20px;
-    transition:0.2s;
+.category-title:first-of-type{
+  margin-top:0;
 }
-
-.tool:hover{
-    background:#1e293b;
+.grid{
+  max-width:1000px;
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+  gap:16px;
+}
+.card{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:10px;
+  background:#111827;
+  border:1px solid #1f2937;
+  border-radius:12px;
+  padding:22px 20px;
+  text-decoration:none;
+  color:white;
+  text-align:left;
+  transition:0.2s;
+}
+.card:hover{
+  background:#1a2436;
+  border-color:#2563eb;
+  transform:translateY(-2px);
+}
+.card .icon{
+  font-size:28px;
+}
+.card .name{
+  font-size:17px;
+  font-weight:bold;
+}
+.card .desc{
+  font-size:13px;
+  color:#94a3b8;
+  line-height:1.4;
+}
+.footer{
+  margin-top:70px;
+  font-size:14px;
+  opacity:0.4;
 }
 </style>
 </head>
-
 <body>
 
-<h1>Orisod Tools</h1>
-<p class="subtitle">Free online tools built by Orisod.</p>
+<div class="top-nav">
+  <a class="nav-link" href="/">🏠 Home</a>
+</div>
 
-<div class="tools">
+<h1>All Tools</h1>
+<p class="subtitle">Free online tools to convert, compress, crop and edit images and PDFs — right in your browser.</p>
 
-<a class="tool" href="/webp-to-jpg">
-WEBP to JPG Converter
-</a>
+<div class="category-title">🖼️ Image Tools</div>
+<div class="grid">
 
-<a class="tool" href="/heic-to-jpg">
-HEIC to JPG Converter
-</a>
+  <a class="card" href="/webp-to-jpg">
+    <div class="icon">🔄</div>
+    <div class="name">WEBP to JPG</div>
+    <div class="desc">Convert WEBP images to JPG format.</div>
+  </a>
 
-<a class="tool" href="/resize-image">
-Resize Image
-</a>
+  <a class="card" href="/heic-to-jpg">
+    <div class="icon">📱</div>
+    <div class="name">HEIC to JPG</div>
+    <div class="desc">Convert iPhone HEIC photos to JPG.</div>
+  </a>
 
-<a class="tool" href="/png-to-jpg">
-PNG to JPG Converter
-</a>
+  <a class="card" href="/png-to-jpg">
+    <div class="icon">🔄</div>
+    <div class="name">PNG to JPG</div>
+    <div class="desc">Convert PNG images to JPG format.</div>
+  </a>
 
-<a class="tool" href="/jpg-to-pdf">
-JPG to PDF Converter
-</a>
+  <a class="card" href="/png-to-webp">
+    <div class="icon">🪶</div>
+    <div class="name">PNG to WEBP</div>
+    <div class="desc">Shrink PNG files with WEBP.</div>
+  </a>
 
-<a class="tool" href="/image-to-pdf">
-Image to PDF Converter
-</a>
+  <a class="card" href="/jpg-to-webp">
+    <div class="icon">🪶</div>
+    <div class="name">JPG to WEBP</div>
+    <div class="desc">Shrink JPG files with WEBP.</div>
+  </a>
 
-<a class="tool" href="/compress-image">
-Compress Image
-</a>
+  <a class="card" href="/resize-image">
+    <div class="icon">📐</div>
+    <div class="name">Resize Image</div>
+    <div class="desc">Change image width and height.</div>
+  </a>
 
-<a class="tool" href="/pdf-to-jpg">
-PDF to JPG Converter
-</a>
+  <a class="card" href="/crop-image">
+    <div class="icon">✂️</div>
+    <div class="name">Crop Image</div>
+    <div class="desc">Drag to select and crop any area.</div>
+  </a>
 
-<a class="tool" href="/png-to-webp">
-PNG to WEBP Converter
-</a>
-
-<a class="tool" href="/jpg-to-webp">
-JPG to WEBP Converter
-</a>
-
-<a class="tool" href="/crop-image">
-Crop Image
-</a>
+  <a class="card" href="/compress-image">
+    <div class="icon">📦</div>
+    <div class="name">Compress Image</div>
+    <div class="desc">Reduce file size, keep quality.</div>
+  </a>
 
 </div>
+
+<div class="category-title">📄 PDF Tools</div>
+<div class="grid">
+
+  <a class="card" href="/jpg-to-pdf">
+    <div class="icon">📄</div>
+    <div class="name">JPG to PDF</div>
+    <div class="desc">Turn JPG images into a PDF file.</div>
+  </a>
+
+  <a class="card" href="/image-to-pdf">
+    <div class="icon">📄</div>
+    <div class="name">Image to PDF</div>
+    <div class="desc">Combine any images into one PDF.</div>
+  </a>
+
+  <a class="card" href="/pdf-to-jpg">
+    <div class="icon">🖼️</div>
+    <div class="name">PDF to JPG</div>
+    <div class="desc">Extract PDF pages as JPG images.</div>
+  </a>
+
+</div>
+
+<div class="footer">© Orisod Labs</div>
 
 </body>
 </html>
