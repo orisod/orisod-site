@@ -34,7 +34,12 @@ button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
 .footer{margin-top:50px;font-size:14px;opacity:0.4;}
 .error{color:#f87171;font-size:14px;margin-top:10px;}
 h2{margin-top:50px;}
-.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;text-align:center;}
 .related a:hover{text-decoration:underline;}
 </style>
 </head>
@@ -63,8 +68,39 @@ h2{margin-top:50px;}
   <a class="back" href="/" style="background:#374151; margin-right:10px;">🏠 Home</a>
   <a class="back" href="/tools">View All Tools</a>
 
-  <h2>What is a PNG file?</h2>
-  <p>PNG is a popular image format that supports transparency and high quality graphics. However, PNG files are often larger than JPG images. Converting PNG to JPG can reduce file size and make images easier to share.</p>
+  <div class="seo-content">
+    <h2>What is a PNG file?</h2>
+    <p>PNG is a popular image format that supports transparency and lossless quality, which makes it great for graphics, logos, and screenshots. However, PNG files are often much larger than JPG images of the same photo, since JPG uses efficient compression designed for photographic content.</p>
+
+    <h2>When should you use this tool?</h2>
+    <ul>
+      <li>A website or form only accepts JPG uploads, not PNG</li>
+      <li>Your PNG photo file is too large and needs to be smaller</li>
+      <li>You want consistent, smaller file sizes across a photo collection</li>
+      <li>You need to email or message an image with size restrictions</li>
+    </ul>
+
+    <h2>Why use Orisod for this?</h2>
+    <p>This tool converts one or several PNG files to JPG at once, entirely in your browser — your images are never uploaded to a server. Any transparency in the original PNG is replaced with a white background, matching how JPG files normally look.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <div class="q">What happens to transparent areas in my PNG?</div>
+      <div>Since JPG doesn't support transparency, transparent areas are filled with a white background during conversion.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Will the converted JPG look different?</div>
+      <div>For photos, the visual difference is usually minimal. For graphics with sharp edges or text, JPG compression can introduce slight softness compared to PNG.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Are my files uploaded anywhere?</div>
+      <div>No, conversion happens locally in your browser using JavaScript.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Can I convert multiple PNGs at once?</div>
+      <div>Yes, select or drag multiple files and download them individually or all together.</div>
+    </div>
+  </div>
 
   <h2>Related tools</h2>
   <div class="related">
