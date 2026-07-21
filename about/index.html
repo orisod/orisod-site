@@ -69,7 +69,16 @@ a.inline:hover{text-decoration:underline;}
 <p>We're actively adding new tools and improving the existing ones based on what people actually need. If there's a tool you wish existed, or something that could work better, we'd like to hear about it.</p>
 
 <h2>Contact</h2>
-<p>Questions, feedback, or suggestions? Reach us at <a class="inline" href="mailto:orisod.lab@gmail.com">orisod.lab@gmail.com</a>.</p>
+<p>Questions, feedback, or suggestions? Reach us at <a class="inline" id="contactEmail" href="#">this address</a>.</p>
+<script>
+  (function(){
+    var user = 'orisod.lab';
+    var domain = 'gmail.com';
+    var link = document.getElementById('contactEmail');
+    link.href = 'mailto:' + user + '@' + domain;
+    link.textContent = user + '@' + domain;
+  })();
+</script>
 
 </div>
 
