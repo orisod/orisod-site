@@ -14,6 +14,7 @@
 <title>PDF to JPG Converter – Extract Images from PDF | Orisod</title>
 <meta name="description" content="Convert PDF pages into JPG images online for free. Fast, simple, and easy to use — everything happens in your browser, no files are uploaded.">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
 body{
   margin:0;
@@ -110,6 +111,50 @@ button:hover:not(:disabled), .back:hover{
   border-radius:8px;
   padding:10px;
   font-size:13px;
+  position:relative;
+}
+.result-item .select-check{
+  position:absolute;
+  top:8px;
+  left:8px;
+  width:18px;
+  height:18px;
+  cursor:pointer;
+  z-index:2;
+}
+.selection-controls{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:20px;
+  font-size:14px;
+}
+.selection-controls input[type="text"]{
+  padding:8px 10px;
+  border-radius:6px;
+  border:1px solid #374151;
+  background:#0f172a;
+  color:white;
+  font-size:13px;
+  width:140px;
+}
+.selection-controls button{
+  margin:0;
+  padding:8px 14px;
+  font-size:13px;
+  background:#374151;
+}
+.selection-controls button:hover:not(:disabled){
+  filter:brightness(1.15);
+}
+.download-row{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:20px;
 }
 .result-item img{
   width:100%;
@@ -178,8 +223,21 @@ h2{margin-top:50px;font-size:22px;}
     <div class="results" id="results">
       <div class="results-grid" id="resultsGrid"></div>
     </div>
-    <div class="download-all" id="downloadAllWrap" style="display:none;">
-      <button id="downloadAllBtn">Download All</button>
+
+    <div class="selection-controls" id="selectionControls" style="display:none;">
+      <button id="selectAllBtn">Select All</button>
+      <button id="selectNoneBtn">Select None</button>
+      <input type="text" id="rangeInput" placeholder="e.g. 1-3, 5">
+      <button id="applyRangeBtn">Select Range</button>
+    </div>
+
+    <div class="download-row">
+      <div id="downloadAllWrap" style="display:none;">
+        <button id="downloadAllBtn">Download All (ZIP)</button>
+      </div>
+      <div id="downloadSelectedWrap" style="display:none;">
+        <button id="downloadSelectedBtn">Download Selected</button>
+      </div>
     </div>
   </div>
 
@@ -204,7 +262,7 @@ h2{margin-top:50px;font-size:22px;}
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Does this work with multi-page PDFs?</div>
-      <div>Yes. Every page in your PDF is converted into its own JPG image, and you can download them individually or all together.</div>
+      <div>Yes. Every page in your PDF is converted into its own JPG image. You can download individual pages, select a specific range (like "2-5, 8"), or download everything at once as a ZIP file.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my PDF uploaded to a server?</div>
@@ -244,9 +302,16 @@ const errorMsg = document.getElementById('errorMsg');
 const progressMsg = document.getElementById('progressMsg');
 const downloadAllWrap = document.getElementById('downloadAllWrap');
 const downloadAllBtn = document.getElementById('downloadAllBtn');
+const selectionControls = document.getElementById('selectionControls');
+const selectAllBtn = document.getElementById('selectAllBtn');
+const selectNoneBtn = document.getElementById('selectNoneBtn');
+const rangeInput = document.getElementById('rangeInput');
+const applyRangeBtn = document.getElementById('applyRangeBtn');
+const downloadSelectedWrap = document.getElementById('downloadSelectedWrap');
+const downloadSelectedBtn = document.getElementById('downloadSelectedBtn');
 
 let selectedFile = null;
-let convertedImages = [];
+let convertedImages = []; // { name, blob, page, checkbox }
 
 qualitySlider.addEventListener('input', () => {
   qualityValue.textContent = qualitySlider.value;
@@ -280,6 +345,8 @@ function handleFile(file) {
   convertBtn.disabled = false;
   resultsGrid.innerHTML = '';
   downloadAllWrap.style.display = 'none';
+  selectionControls.style.display = 'none';
+  downloadSelectedWrap.style.display = 'none';
 }
 
 convertBtn.addEventListener('click', async () => {
@@ -291,6 +358,8 @@ convertBtn.addEventListener('click', async () => {
   convertedImages = [];
   errorMsg.textContent = '';
   progressMsg.textContent = '';
+  selectionControls.style.display = 'none';
+  downloadSelectedWrap.style.display = 'none';
 
   const quality = parseInt(qualitySlider.value, 10) / 100;
 
@@ -316,13 +385,16 @@ convertBtn.addEventListener('click', async () => {
       });
 
       const name = pdf.numPages > 1 ? `${baseName}-page-${pageNum}.jpg` : `${baseName}.jpg`;
-      convertedImages.push({ name, blob });
-      addResultCard(name, blob);
+      const item = { name, blob, page: pageNum };
+      convertedImages.push(item);
+      addResultCard(item);
     }
 
     progressMsg.textContent = `Done — ${pdf.numPages} page(s) converted.`;
     if (convertedImages.length > 1) {
       downloadAllWrap.style.display = 'block';
+      selectionControls.style.display = 'flex';
+      updateDownloadSelectedVisibility();
     }
   } catch (err) {
     errorMsg.textContent = 'Could not process this PDF. Make sure the file is not corrupted or password-protected.';
@@ -333,33 +405,124 @@ convertBtn.addEventListener('click', async () => {
   convertBtn.textContent = 'Convert to JPG';
 });
 
-function addResultCard(name, blob) {
-  const url = URL.createObjectURL(blob);
+function addResultCard(item) {
+  const url = URL.createObjectURL(item.blob);
 
   const card = document.createElement('div');
   card.className = 'result-item';
-  card.innerHTML = `<img src="${url}" alt="${name}"><div>${name}</div>`;
+
+  const checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
+  checkbox.className = 'select-check';
+  checkbox.addEventListener('change', updateDownloadSelectedVisibility);
+  item.checkbox = checkbox;
+
+  card.appendChild(checkbox);
+  card.insertAdjacentHTML('beforeend', `<img src="${url}" alt="${item.name}"><div>${item.name}</div>`);
 
   const link = document.createElement('a');
   link.href = url;
-  link.download = name;
+  link.download = item.name;
   link.textContent = 'Download';
 
   card.appendChild(link);
   resultsGrid.appendChild(card);
 }
 
-downloadAllBtn.addEventListener('click', () => {
-  convertedImages.forEach(({ name, blob }) => {
-    const url = URL.createObjectURL(blob);
+function updateDownloadSelectedVisibility() {
+  const anySelected = convertedImages.some(img => img.checkbox && img.checkbox.checked);
+  downloadSelectedWrap.style.display = anySelected ? 'block' : 'none';
+}
+
+selectAllBtn.addEventListener('click', () => {
+  convertedImages.forEach(img => { if (img.checkbox) img.checkbox.checked = true; });
+  updateDownloadSelectedVisibility();
+});
+
+selectNoneBtn.addEventListener('click', () => {
+  convertedImages.forEach(img => { if (img.checkbox) img.checkbox.checked = false; });
+  updateDownloadSelectedVisibility();
+});
+
+applyRangeBtn.addEventListener('click', () => {
+  const raw = rangeInput.value.trim();
+  errorMsg.textContent = '';
+  if (!raw) return;
+
+  const pagesToSelect = new Set();
+  const parts = raw.split(',');
+
+  for (const part of parts) {
+    const trimmed = part.trim();
+    if (!trimmed) continue;
+    if (trimmed.includes('-')) {
+      const [startStr, endStr] = trimmed.split('-');
+      const start = parseInt(startStr, 10);
+      const end = parseInt(endStr, 10);
+      if (isNaN(start) || isNaN(end) || start < 1 || end < start) {
+        errorMsg.textContent = `Invalid range: "${trimmed}"`;
+        continue;
+      }
+      for (let p = start; p <= end; p++) pagesToSelect.add(p);
+    } else {
+      const num = parseInt(trimmed, 10);
+      if (isNaN(num) || num < 1) {
+        errorMsg.textContent = `Invalid page number: "${trimmed}"`;
+        continue;
+      }
+      pagesToSelect.add(num);
+    }
+  }
+
+  convertedImages.forEach(img => {
+    if (img.checkbox) img.checkbox.checked = pagesToSelect.has(img.page);
+  });
+  updateDownloadSelectedVisibility();
+});
+
+downloadAllBtn.addEventListener('click', async () => {
+  await downloadAsZip(convertedImages, selectedFile ? selectedFile.name.replace(/\.pdf$/i, '') : 'pages');
+});
+
+downloadSelectedBtn.addEventListener('click', async () => {
+  const selected = convertedImages.filter(img => img.checkbox && img.checkbox.checked);
+  if (selected.length === 0) return;
+
+  if (selected.length === 1) {
+    const item = selected[0];
+    const url = URL.createObjectURL(item.blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = name;
+    a.download = item.name;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-  });
+    return;
+  }
+
+  const baseName = selectedFile ? selectedFile.name.replace(/\.pdf$/i, '') : 'pages';
+  await downloadAsZip(selected, baseName + '-selected');
 });
+
+async function downloadAsZip(items, zipBaseName) {
+  if (!window.JSZip) {
+    errorMsg.textContent = 'Could not create ZIP file. Please try again.';
+    return;
+  }
+  const zip = new JSZip();
+  items.forEach(({ name, blob }) => {
+    zip.file(name, blob);
+  });
+
+  const content = await zip.generateAsync({ type: 'blob' });
+  const url = URL.createObjectURL(content);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${zipBaseName}.zip`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
 </script>
 </body>
 </html>
