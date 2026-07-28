@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Border/Frame to Image – Free Online Tool | Orisod</title>
+<meta name="description" content="Add a colored border or frame around your image, free and online. Adjust width, color, and corner rounding — everything runs in your browser.">
+<style>
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:44px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:30px 20px;margin-top:30px;}
+.dropzone{border:2px dashed #374151;border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
+.dropzone:hover, .dropzone.dragover{border-color:#2563eb;background:#0f172a;}
+input[type="file"]{display:none;}
+.controls{margin-top:20px;display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap;font-size:14px;opacity:0.9;}
+.controls label{display:flex;align-items:center;gap:8px;}
+input[type="range"]{width:160px;}
+input[type="color"]{padding:2px;width:44px;height:32px;border-radius:6px;border:1px solid #374151;background:#0f172a;}
+.preview-wrap{margin-top:20px;}
+#previewCanvas{max-width:100%;border-radius:6px;}
+button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:#2563eb;color:white;text-decoration:none;font-size:16px;cursor:pointer;}
+button:disabled{opacity:0.4;cursor:not-allowed;}
+button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.note{margin-top:20px;font-size:14px;opacity:0.6;}
+.footer{margin-top:50px;font-size:14px;opacity:0.4;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;text-align:center;}
+.related a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Add Border/Frame to Image</h1>
+  <p>Add a colored border around your photo — adjust the thickness, color, and rounding to taste. Everything happens locally in your browser.</p>
+
+  <div class="box">
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Click to select an image or drag and drop it here</div>
+    </label>
+    <input type="file" id="fileInput" accept="image/*">
+    <div class="error" id="errorMsg"></div>
+
+    <div class="controls" id="controls" style="display:none;">
+      <label>Width: <input type="range" id="widthSlider" min="0" max="100" value="20"> <span id="widthValue">20</span>px</label>
+      <label>Color: <input type="color" id="colorInput" value="#ffffff"></label>
+      <label>Corner radius: <input type="range" id="radiusSlider" min="0" max="50" value="0"> <span id="radiusValue">0</span>px</label>
+    </div>
+
+    <div class="preview-wrap" id="previewWrap" style="display:none;">
+      <canvas id="previewCanvas"></canvas>
+    </div>
+
+    <br>
+    <button id="downloadBtn" style="display:none;">Download Image</button>
+    <div class="note">Supports JPG, PNG, WEBP and other common image formats.</div>
+  </div>
+
+  <a class="back" href="/" style="background:#374151; margin-right:10px;">🏠 Home</a>
+  <a class="back" href="/tools">View All Tools</a>
+
+  <div class="seo-content">
+    <h2>What does this tool do?</h2>
+    <p>This tool adds a solid-colored border around your image, with adjustable thickness and optional rounded outer corners. It's a simple way to give a photo a framed, polished look before sharing or printing.</p>
+
+    <h2>When should you use this tool?</h2>
+    <ul>
+      <li>You want a clean frame around a photo before posting it</li>
+      <li>You're preparing images for a printed collage or photo album</li>
+      <li>You need consistent, uniform borders across a set of images</li>
+      <li>You want to add brand-colored padding around a product photo</li>
+    </ul>
+
+    <h2>Why use Orisod for this?</h2>
+    <p>Adjust the border width, color, and corner rounding with a live preview before downloading. Everything happens locally in your browser using the Canvas API — your photo is never uploaded to a server.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <div class="q">Does the border change the image's original dimensions?</div>
+      <div>Yes, the border is added around the image, so the final output is larger than the original by the border width on each side.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Can I make the border transparent?</div>
+      <div>Currently the border is always a solid color you choose. For a transparent-background image, use our Round Image Corners tool instead.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Is my image uploaded anywhere?</div>
+      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">What formats does this support?</div>
+      <div>JPG, PNG, WEBP and other common image formats your browser can read.</div>
+    </div>
+  </div>
+
+  <h2>Related tools</h2>
+  <div class="related">
+    <a href="/round-image-corners">Round Image Corners</a>
+    <a href="/resize-image">Resize Image</a>
+    <a href="/crop-image">Crop Image</a>
+  </div>
+
+  <div class="footer">© Orisod Labs</div>
+</div>
+
+<script>
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const errorMsg = document.getElementById('errorMsg');
+const controls = document.getElementById('controls');
+const widthSlider = document.getElementById('widthSlider');
+const widthValue = document.getElementById('widthValue');
+const colorInput = document.getElementById('colorInput');
+const radiusSlider = document.getElementById('radiusSlider');
+const radiusValue = document.getElementById('radiusValue');
+const previewWrap = document.getElementById('previewWrap');
+const previewCanvas = document.getElementById('previewCanvas');
+const downloadBtn = document.getElementById('downloadBtn');
+
+let img = null;
+
+fileInput.addEventListener('change', (e) => { if (e.target.files[0]) loadFile(e.target.files[0]); });
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+});
+
+function loadFile(file) {
+  errorMsg.textContent = '';
+  if (!file.type.startsWith('image/')) {
+    errorMsg.textContent = 'Please select a valid image file.';
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    img = new Image();
+    img.onload = () => {
+      dropzoneText.textContent = `✅ ${file.name} loaded`;
+      controls.style.display = 'flex';
+      previewWrap.style.display = 'block';
+      downloadBtn.style.display = 'inline-block';
+      renderPreview();
+    };
+    img.onerror = () => { errorMsg.textContent = 'Could not load this image.'; };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+widthSlider.addEventListener('input', () => { widthValue.textContent = widthSlider.value; renderPreview(); });
+colorInput.addEventListener('input', renderPreview);
+radiusSlider.addEventListener('input', () => { radiusValue.textContent = radiusSlider.value; renderPreview(); });
+
+function buildOutputCanvas() {
+  const border = parseInt(widthSlider.value, 10);
+  const radius = parseInt(radiusSlider.value, 10);
+  const color = colorInput.value;
+
+  const outW = img.naturalWidth + border * 2;
+  const outH = img.naturalHeight + border * 2;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = outW;
+  canvas.height = outH;
+  const ctx = canvas.getContext('2d');
+
+  if (radius > 0) {
+    drawRoundedRectPath(ctx, 0, 0, outW, outH, radius);
+    ctx.clip();
+  }
+
+  ctx.fillStyle = color;
+  ctx.fillRect(0, 0, outW, outH);
+  ctx.drawImage(img, border, border);
+
+  return canvas;
+}
+
+function drawRoundedRectPath(ctx, x, y, w, h, r) {
+  r = Math.min(r, w / 2, h / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.arcTo(x + w, y, x + w, y + r, r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+  ctx.lineTo(x + r, y + h);
+  ctx.arcTo(x, y + h, x, y + h - r, r);
+  ctx.lineTo(x, y + r);
+  ctx.arcTo(x, y, x + r, y, r);
+  ctx.closePath();
+}
+
+function renderPreview() {
+  if (!img) return;
+  const canvas = buildOutputCanvas();
+  const maxPreview = 450;
+  const scale = Math.min(1, maxPreview / Math.max(canvas.width, canvas.height));
+
+  previewCanvas.width = canvas.width * scale;
+  previewCanvas.height = canvas.height * scale;
+  const ctx = previewCanvas.getContext('2d');
+  ctx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
+  ctx.drawImage(canvas, 0, 0, previewCanvas.width, previewCanvas.height);
+}
+
+downloadBtn.addEventListener('click', () => {
+  if (!img) return;
+  const canvas = buildOutputCanvas();
+  const dataUrl = canvas.toDataURL('image/png');
+  const a = document.createElement('a');
+  a.href = dataUrl;
+  a.download = 'framed-image.png';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+});
+</script>
+</body>
+</html>
