@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Watermark Adder – Free Online Tool | Orisod</title>
+<meta name="description" content="Add a text watermark to your image, free and online. Choose position, size, color, opacity, or tile it across the whole photo — everything runs in your browser.">
+<style>
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:44px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:30px 20px;margin-top:30px;}
+.dropzone{border:2px dashed #374151;border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
+.dropzone:hover, .dropzone.dragover{border-color:#2563eb;background:#0f172a;}
+input[type="file"]{display:none;}
+.controls{margin-top:20px;text-align:left;display:none;}
+.opt-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;font-size:14px;flex-wrap:wrap;}
+.opt-row label{min-width:100px;opacity:0.85;text-align:left;}
+.opt-row input[type="text"]{
+  flex:1;min-width:180px;padding:10px;border-radius:6px;border:1px solid #374151;background:#0f172a;color:white;font-size:14px;
+}
+input[type="range"]{width:160px;}
+input[type="color"]{padding:2px;width:44px;height:32px;border-radius:6px;border:1px solid #374151;background:#0f172a;}
+.mode-row{display:flex;gap:8px;justify-content:center;margin-bottom:14px;}
+.mode-btn{padding:8px 16px;border-radius:6px;border:1px solid #374151;background:#111827;color:white;cursor:pointer;font-size:13px;}
+.mode-btn.active{background:#2563eb;border-color:#2563eb;}
+.position-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:6px;width:180px;}
+.pos-btn{padding:8px;border-radius:6px;border:1px solid #374151;background:#0f172a;color:white;cursor:pointer;font-size:11px;text-align:center;}
+.pos-btn.active{background:#2563eb;border-color:#2563eb;}
+.preview-wrap{margin-top:20px;}
+#previewCanvas{max-width:100%;border-radius:6px;border:1px solid #1e293b;}
+button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:#2563eb;color:white;text-decoration:none;font-size:16px;cursor:pointer;}
+button:disabled{opacity:0.4;cursor:not-allowed;}
+button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.note{margin-top:20px;font-size:14px;opacity:0.6;}
+.footer{margin-top:50px;font-size:14px;opacity:0.4;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;text-align:center;}
+.related a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Watermark Adder</h1>
+  <p>Add a text watermark to your photo — single placement or repeated across the whole image. Everything happens locally in your browser.</p>
+
+  <div class="box">
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Click to select an image or drag and drop it here</div>
+    </label>
+    <input type="file" id="fileInput" accept="image/*">
+    <div class="error" id="errorMsg"></div>
+
+    <div class="controls" id="controls">
+      <div class="opt-row">
+        <label>Text:</label>
+        <input type="text" id="textInput" value="© Your Name" placeholder="Watermark text">
+      </div>
+
+      <div class="mode-row">
+        <div class="mode-btn active" data-mode="single">Single Position</div>
+        <div class="mode-btn" data-mode="tiled">Repeated (Tiled)</div>
+      </div>
+
+      <div class="opt-row" id="positionRow">
+        <label>Position:</label>
+        <div class="position-grid">
+          <div class="pos-btn" data-pos="top-left">↖</div>
+          <div class="pos-btn" data-pos="top-center">↑</div>
+          <div class="pos-btn" data-pos="top-right">↗</div>
+          <div class="pos-btn" data-pos="middle-left">←</div>
+          <div class="pos-btn active" data-pos="middle-center">●</div>
+          <div class="pos-btn" data-pos="middle-right">→</div>
+          <div class="pos-btn" data-pos="bottom-left">↙</div>
+          <div class="pos-btn" data-pos="bottom-center">↓</div>
+          <div class="pos-btn" data-pos="bottom-right">↘</div>
+        </div>
+      </div>
+
+      <div class="opt-row">
+        <label>Font size:</label>
+        <input type="range" id="sizeSlider" min="12" max="120" value="36"><span id="sizeValue">36</span>px
+      </div>
+      <div class="opt-row">
+        <label>Opacity:</label>
+        <input type="range" id="opacitySlider" min="5" max="100" value="40"><span id="opacityValue">40</span>%
+      </div>
+      <div class="opt-row">
+        <label>Color:</label>
+        <input type="color" id="colorInput" value="#ffffff">
+      </div>
+    </div>
+
+    <div class="preview-wrap" id="previewWrap" style="display:none;">
+      <canvas id="previewCanvas"></canvas>
+    </div>
+
+    <br>
+    <button id="downloadBtn" style="display:none;">Download Image</button>
+    <div class="note">Supports JPG, PNG, WEBP and other common image formats.</div>
+  </div>
+
+  <a class="back" href="/" style="background:#374151; margin-right:10px;">🏠 Home</a>
+  <a class="back" href="/tools">View All Tools</a>
+
+  <div class="seo-content">
+    <h2>What does this tool do?</h2>
+    <p>This tool overlays custom text onto your image, either as a single watermark in one position or repeated diagonally across the entire photo — a common way to discourage unauthorized use of a photo while still allowing it to be viewed and shared.</p>
+
+    <h2>When should you use this tool?</h2>
+    <ul>
+      <li>You're sharing photography samples publicly and want your name attached</li>
+      <li>You need to mark a document or image as a draft, sample, or confidential</li>
+      <li>You want to protect a photo from being reused without credit</li>
+      <li>You're branding a set of images with a consistent watermark</li>
+    </ul>
+
+    <h2>Why use Orisod for this?</h2>
+    <p>Choose a single position or a repeated tiled pattern for stronger coverage, and adjust text, size, opacity, and color with a live preview. Everything happens locally in your browser using the Canvas API — your photo is never uploaded to a server.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <div class="q">What's the difference between single and tiled watermarks?</div>
+      <div>Single places your text once in a chosen corner or center. Tiled repeats the text diagonally across the whole image, making it much harder to crop out — common for protecting photography samples.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Can I make the watermark subtle?</div>
+      <div>Yes, lower the opacity slider for a lighter, less intrusive watermark, or increase it for a bolder, more visible one.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Is my image uploaded anywhere?</div>
+      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Can I add a logo image instead of text?</div>
+      <div>This tool currently supports text watermarks only. For adding a logo image, use an image editor or check back as we add more tools.</div>
+    </div>
+  </div>
+
+  <h2>Related tools</h2>
+  <div class="related">
+    <a href="/image-color-filters">Image Color Filters</a>
+    <a href="/add-border-to-image">Add Border to Image</a>
+    <a href="/compress-image">Compress Image</a>
+  </div>
+
+  <div class="footer">© Orisod Labs</div>
+</div>
+
+<script>
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const errorMsg = document.getElementById('errorMsg');
+const controls = document.getElementById('controls');
+const textInput = document.getElementById('textInput');
+const positionRow = document.getElementById('positionRow');
+const sizeSlider = document.getElementById('sizeSlider');
+const sizeValue = document.getElementById('sizeValue');
+const opacitySlider = document.getElementById('opacitySlider');
+const opacityValue = document.getElementById('opacityValue');
+const colorInput = document.getElementById('colorInput');
+const previewWrap = document.getElementById('previewWrap');
+const previewCanvas = document.getElementById('previewCanvas');
+const downloadBtn = document.getElementById('downloadBtn');
+
+let img = null;
+let currentMode = 'single';
+let currentPosition = 'middle-center';
+
+fileInput.addEventListener('change', (e) => { if (e.target.files[0]) loadFile(e.target.files[0]); });
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+});
+
+function loadFile(file) {
+  errorMsg.textContent = '';
+  if (!file.type.startsWith('image/')) {
+    errorMsg.textContent = 'Please select a valid image file.';
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    img = new Image();
+    img.onload = () => {
+      dropzoneText.textContent = `✅ ${file.name} loaded`;
+      controls.style.display = 'block';
+      previewWrap.style.display = 'block';
+      downloadBtn.style.display = 'inline-block';
+      renderPreview();
+    };
+    img.onerror = () => { errorMsg.textContent = 'Could not load this image.'; };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+document.querySelectorAll('.mode-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentMode = btn.dataset.mode;
+    positionRow.style.display = currentMode === 'single' ? 'flex' : 'none';
+    renderPreview();
+  });
+});
+
+document.querySelectorAll('.pos-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.pos-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentPosition = btn.dataset.pos;
+    renderPreview();
+  });
+});
+
+[textInput, sizeSlider, opacitySlider, colorInput].forEach(el => {
+  el.addEventListener('input', () => {
+    sizeValue.textContent = sizeSlider.value;
+    opacityValue.textContent = opacitySlider.value;
+    renderPreview();
+  });
+});
+
+function buildOutputCanvas() {
+  const canvas = document.createElement('canvas');
+  canvas.width = img.naturalWidth;
+  canvas.height = img.naturalHeight;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(img, 0, 0);
+
+  const text = textInput.value || '';
+  const fontSize = parseInt(sizeSlider.value, 10);
+  const opacity = parseInt(opacitySlider.value, 10) / 100;
+  const color = colorInput.value;
+
+  ctx.font = `bold ${fontSize}px Arial`;
+  ctx.fillStyle = hexToRgba(color, opacity);
+  ctx.textBaseline = 'middle';
+
+  if (currentMode === 'single') {
+    const textWidth = ctx.measureText(text).width;
+    const margin = fontSize * 0.6;
+    let x, y;
+
+    if (currentPosition.includes('left')) x = margin;
+    else if (currentPosition.includes('right')) x = canvas.width - textWidth - margin;
+    else x = (canvas.width - textWidth) / 2;
+
+    if (currentPosition.includes('top')) y = margin + fontSize / 2;
+    else if (currentPosition.includes('bottom')) y = canvas.height - margin - fontSize / 2;
+    else y = canvas.height / 2;
+
+    ctx.fillText(text, x, y);
+  } else {
+    ctx.save();
+    ctx.translate(canvas.width / 2, canvas.height / 2);
+    ctx.rotate(-Math.PI / 6);
+    ctx.translate(-canvas.width / 2, -canvas.height / 2);
+
+    const textWidth = ctx.measureText(text).width;
+    const stepX = textWidth + fontSize * 2;
+    const stepY = fontSize * 3;
+    const diag = Math.sqrt(canvas.width ** 2 + canvas.height ** 2);
+
+    for (let y = -diag; y < diag; y += stepY) {
+      for (let x = -diag; x < diag; x += stepX) {
+        ctx.fillText(text, x, y);
+      }
+    }
+    ctx.restore();
+  }
+
+  return canvas;
+}
+
+function hexToRgba(hex, alpha) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+function renderPreview() {
+  if (!img) return;
+  const canvas = buildOutputCanvas();
+  const maxPreview = 500;
+  const scale = Math.min(1, maxPreview / Math.max(canvas.width, canvas.height));
+
+  previewCanvas.width = canvas.width * scale;
+  previewCanvas.height = canvas.height * scale;
+  const ctx = previewCanvas.getContext('2d');
+  ctx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
+  ctx.drawImage(canvas, 0, 0, previewCanvas.width, previewCanvas.height);
+}
+
+downloadBtn.addEventListener('click', () => {
+  if (!img) return;
+  const canvas = buildOutputCanvas();
+  const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+  const a = document.createElement('a');
+  a.href = dataUrl;
+  a.download = 'watermarked-image.jpg';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+});
+</script>
+</body>
+</html>
