@@ -52,7 +52,7 @@ h1{
 }
 .category-title{
   text-align:left;
-  max-width:1000px;
+  max-width:1100px;
   margin:0 auto;
   font-size:20px;
   color:#60a5fa;
@@ -64,21 +64,21 @@ h1{
   margin-top:0;
 }
 .grid{
-  max-width:1000px;
+  max-width:1100px;
   margin:0 auto;
   display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
-  gap:16px;
+  grid-template-columns:repeat(auto-fill, minmax(170px, 1fr));
+  gap:12px;
 }
 .card{
   display:flex;
   flex-direction:column;
   align-items:flex-start;
-  gap:10px;
+  gap:6px;
   background:#111827;
   border:1px solid #1f2937;
-  border-radius:12px;
-  padding:22px 20px;
+  border-radius:10px;
+  padding:14px 16px;
   text-decoration:none;
   color:white;
   text-align:left;
@@ -90,16 +90,21 @@ h1{
   transform:translateY(-2px);
 }
 .card .icon{
-  font-size:28px;
+  font-size:20px;
 }
 .card .name{
-  font-size:17px;
+  font-size:14px;
   font-weight:bold;
+  line-height:1.3;
 }
 .card .desc{
-  font-size:13px;
+  font-size:12px;
   color:#94a3b8;
-  line-height:1.4;
+  line-height:1.3;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  width:100%;
 }
 .footer{
   margin-top:70px;
