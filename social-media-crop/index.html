@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Social Media Image Cropper – Free Online Tool | Orisod</title>
+<meta name="description" content="Crop images to the exact size for Instagram, YouTube, Twitter/X, Facebook, LinkedIn and TikTok. Free, browser-based, no uploads.">
+<style>
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:44px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:30px 20px;margin-top:30px;}
+.preset-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));
+  gap:10px;
+  margin-bottom:24px;
+  text-align:left;
+}
+.preset-btn{
+  background:#0f172a;
+  border:1px solid #1e293b;
+  border-radius:8px;
+  padding:12px 14px;
+  color:white;
+  cursor:pointer;
+  font-size:13px;
+  transition:0.2s;
+  text-align:left;
+}
+.preset-btn:hover{border-color:#2563eb;}
+.preset-btn.active{border-color:#2563eb;background:#1a2436;}
+.preset-btn .dims{opacity:0.6;font-size:12px;display:block;margin-top:2px;}
+.dropzone{border:2px dashed #374151;border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
+.dropzone:hover, .dropzone.dragover{border-color:#2563eb;background:#0f172a;}
+input[type="file"]{display:none;}
+.editor{display:none;margin-top:20px;}
+.canvas-wrap{position:relative;display:inline-block;max-width:100%;touch-action:none;}
+#sourceCanvas{max-width:100%;display:block;border-radius:6px;border:1px solid #1e293b;}
+#selectionBox{
+  position:absolute;
+  border:2px solid #2563eb;
+  background:rgba(37, 99, 235, 0.15);
+  cursor:move;
+  display:none;
+}
+.dim-note{margin-top:12px;font-size:13px;opacity:0.7;}
+button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:#2563eb;color:white;text-decoration:none;font-size:16px;cursor:pointer;}
+button:disabled{opacity:0.4;cursor:not-allowed;}
+button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.note{margin-top:20px;font-size:14px;opacity:0.6;}
+.result{margin-top:20px;}
+.result img{max-width:100%;border-radius:6px;border:1px solid #1e293b;}
+.footer{margin-top:50px;font-size:14px;opacity:0.4;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;text-align:center;}
+.related a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Social Media Image Cropper</h1>
+  <p>Pick a platform, drag to select the area, and download an image sized exactly right. Everything happens locally in your browser.</p>
+
+  <div class="box">
+    <div class="preset-grid" id="presetGrid"></div>
+
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Click to select an image or drag and drop it here</div>
+    </label>
+    <input type="file" id="fileInput" accept="image/*">
+    <div class="error" id="errorMsg"></div>
+
+    <div class="editor" id="editor">
+      <div class="canvas-wrap" id="canvasWrap">
+        <canvas id="sourceCanvas"></canvas>
+        <div id="selectionBox"></div>
+      </div>
+      <div class="dim-note" id="dimNote">Drag on the image to select the area to crop.</div>
+      <br>
+      <button id="cropBtn" disabled>Crop &amp; Download</button>
+    </div>
+
+    <div class="result" id="result"></div>
+    <div class="note">Supports JPG, PNG, WEBP and other common image formats. Nothing leaves your device.</div>
+  </div>
+
+  <a class="back" href="/" style="background:#374151; margin-right:10px;">🏠 Home</a>
+  <a class="back" href="/tools">View All Tools</a>
+
+  <div class="seo-content">
+    <h2>What does this tool do?</h2>
+    <p>Every social platform expects a different image size and aspect ratio — a square for an Instagram post, a tall 9:16 frame for Stories, a wide banner for LinkedIn. This tool locks your crop selection to the exact ratio each platform needs, then resizes the result to that platform's recommended pixel dimensions, so your image looks right instead of getting stretched or awkwardly cropped after upload.</p>
+
+    <h2>When should you use this tool?</h2>
+    <ul>
+      <li>You're posting a photo to Instagram, TikTok, YouTube, or another platform and want it to display correctly</li>
+      <li>You noticed your uploaded image looks cropped oddly or blurry because the platform resized it automatically</li>
+      <li>You're creating a banner or cover photo and need the exact required dimensions</li>
+      <li>You want to batch-prepare the same photo for multiple platforms with different ratios</li>
+    </ul>
+
+    <h2>Why use Orisod for this?</h2>
+    <p>Pick a platform preset first, then your crop selection automatically locks to that exact ratio as you drag — no guessing or manual math. The final image is resized to the platform's standard pixel dimensions. Everything happens locally in your browser, so your photo is never uploaded to a server.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <div class="q">Will my image be stretched to fit the preset?</div>
+      <div>No, the selection area itself is locked to the correct ratio while you drag, so nothing gets stretched — only the exact area you select is used, then resized to the platform's standard pixel size.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">What if my photo is too small for the preset's pixel size?</div>
+      <div>The tool will still crop to the correct ratio and scale up to the target size, though very small source images may look softer when enlarged significantly.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Can I use this for platforms not listed?</div>
+      <div>These presets cover the most common formats. For a custom ratio, use the regular Crop Image tool instead.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Is my image uploaded anywhere?</div>
+      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+    </div>
+  </div>
+
+  <h2>Related tools</h2>
+  <div class="related">
+    <a href="/crop-image">Crop Image</a>
+    <a href="/resize-image">Resize Image</a>
+    <a href="/compress-image">Compress Image</a>
+  </div>
+
+  <div class="footer">© Orisod Labs</div>
+</div>
+
+<script>
+const PRESETS = [
+  { name: 'Instagram Post', ratioW: 1, ratioH: 1, outW: 1080, outH: 1080 },
+  { name: 'Instagram Story / Reel', ratioW: 9, ratioH: 16, outW: 1080, outH: 1920 },
+  { name: 'Instagram Portrait', ratioW: 4, ratioH: 5, outW: 1080, outH: 1350 },
+  { name: 'TikTok Video Cover', ratioW: 9, ratioH: 16, outW: 1080, outH: 1920 },
+  { name: 'YouTube Thumbnail', ratioW: 16, ratioH: 9, outW: 1280, outH: 720 },
+  { name: 'Twitter / X Header', ratioW: 3, ratioH: 1, outW: 1500, outH: 500 },
+  { name: 'Facebook Cover', ratioW: 205, ratioH: 78, outW: 820, outH: 312 },
+  { name: 'LinkedIn Banner', ratioW: 4, ratioH: 1, outW: 1584, outH: 396 }
+];
+
+const presetGrid = document.getElementById('presetGrid');
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const errorMsg = document.getElementById('errorMsg');
+const editor = document.getElementById('editor');
+const sourceCanvas = document.getElementById('sourceCanvas');
+const selectionBox = document.getElementById('selectionBox');
+const dimNote = document.getElementById('dimNote');
+const cropBtn = document.getElementById('cropBtn');
+const resultEl = document.getElementById('result');
+
+let currentPreset = PRESETS[0];
+let img = null;
+let scale = 1;
+let selection = null;
+let dragStart = null;
+
+PRESETS.forEach((preset, index) => {
+  const btn = document.createElement('div');
+  btn.className = 'preset-btn' + (index === 0 ? ' active' : '');
+  btn.innerHTML = `${preset.name}<span class="dims">${preset.outW} × ${preset.outH}px</span>`;
+  btn.addEventListener('click', () => {
+    currentPreset = preset;
+    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selection = null;
+    selectionBox.style.display = 'none';
+    cropBtn.disabled = true;
+    dimNote.textContent = 'Drag on the image to select the area to crop.';
+  });
+  presetGrid.appendChild(btn);
+});
+
+fileInput.addEventListener('change', (e) => { if (e.target.files[0]) loadFile(e.target.files[0]); });
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+});
+
+function loadFile(file) {
+  errorMsg.textContent = '';
+  if (!file.type.startsWith('image/')) {
+    errorMsg.textContent = 'Please select a valid image file.';
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    img = new Image();
+    img.onload = () => {
+      dropzoneText.textContent = `✅ ${file.name} loaded`;
+      setupCanvas();
+      editor.style.display = 'block';
+      resultEl.innerHTML = '';
+      cropBtn.disabled = true;
+    };
+    img.onerror = () => { errorMsg.textContent = 'Could not load this image.'; };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function setupCanvas() {
+  const maxWidth = Math.min(700, window.innerWidth - 80);
+  const maxHeight = 480;
+  scale = Math.min(1, maxWidth / img.width, maxHeight / img.height);
+  sourceCanvas.width = img.width * scale;
+  sourceCanvas.height = img.height * scale;
+  const ctx = sourceCanvas.getContext('2d');
+  ctx.drawImage(img, 0, 0, sourceCanvas.width, sourceCanvas.height);
+
+  selection = null;
+  selectionBox.style.display = 'none';
+  dimNote.textContent = 'Drag on the image to select the area to crop.';
+}
+
+function getPos(e) {
+  const rect = sourceCanvas.getBoundingClientRect();
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  const x = Math.max(0, Math.min(clientX - rect.left, sourceCanvas.width));
+  const y = Math.max(0, Math.min(clientY - rect.top, sourceCanvas.height));
+  return { x, y };
+}
+
+function startDrag(e) {
+  if (!img) return;
+  e.preventDefault();
+  dragStart = getPos(e);
+  selection = { x: dragStart.x, y: dragStart.y, w: 0, h: 0 };
+  selectionBox.style.display = 'block';
+  updateSelectionBox();
+}
+
+function moveDrag(e) {
+  if (!dragStart) return;
+  e.preventDefault();
+  const pos = getPos(e);
+  const ratio = currentPreset.ratioW / currentPreset.ratioH;
+
+  const dx = pos.x - dragStart.x;
+  const dy = pos.y - dragStart.y;
+  const absDx = Math.abs(dx);
+  const absDy = Math.abs(dy);
+
+  let w, h;
+  if (absDx / ratio >= absDy) {
+    w = absDx;
+    h = w / ratio;
+  } else {
+    h = absDy;
+    w = h * ratio;
+  }
+
+  let x = dx >= 0 ? dragStart.x : dragStart.x - w;
+  let y = dy >= 0 ? dragStart.y : dragStart.y - h;
+
+  // Clamp to canvas bounds while preserving the aspect ratio.
+  if (x < 0) { w += x; x = 0; h = w / ratio; }
+  if (y < 0) { h += y; y = 0; w = h * ratio; }
+  if (x + w > sourceCanvas.width) { w = sourceCanvas.width - x; h = w / ratio; }
+  if (y + h > sourceCanvas.height) { h = sourceCanvas.height - y; w = h * ratio; }
+
+  selection = { x, y, w, h };
+  updateSelectionBox();
+}
+
+function endDrag() {
+  dragStart = null;
+  if (selection && selection.w > 5 && selection.h > 5) {
+    cropBtn.disabled = false;
+    const realW = Math.round(selection.w / scale);
+    const realH = Math.round(selection.h / scale);
+    dimNote.textContent = `Selection: ${realW} × ${realH} px → will be resized to ${currentPreset.outW} × ${currentPreset.outH}px`;
+  }
+}
+
+function updateSelectionBox() {
+  selectionBox.style.left = selection.x + 'px';
+  selectionBox.style.top = selection.y + 'px';
+  selectionBox.style.width = selection.w + 'px';
+  selectionBox.style.height = selection.h + 'px';
+}
+
+sourceCanvas.addEventListener('mousedown', startDrag);
+window.addEventListener('mousemove', moveDrag);
+window.addEventListener('mouseup', endDrag);
+sourceCanvas.addEventListener('touchstart', startDrag);
+window.addEventListener('touchmove', moveDrag);
+window.addEventListener('touchend', endDrag);
+
+cropBtn.addEventListener('click', () => {
+  if (!selection || !img) return;
+
+  const realX = Math.round(selection.x / scale);
+  const realY = Math.round(selection.y / scale);
+  const realW = Math.round(selection.w / scale);
+  const realH = Math.round(selection.h / scale);
+
+  const outCanvas = document.createElement('canvas');
+  outCanvas.width = currentPreset.outW;
+  outCanvas.height = currentPreset.outH;
+  const ctx = outCanvas.getContext('2d');
+  ctx.drawImage(img, realX, realY, realW, realH, 0, 0, currentPreset.outW, currentPreset.outH);
+
+  const dataUrl = outCanvas.toDataURL('image/jpeg', 0.95);
+
+  resultEl.innerHTML = '';
+  const preview = document.createElement('img');
+  preview.src = dataUrl;
+  resultEl.appendChild(preview);
+
+  const presetSlug = currentPreset.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  const link = document.createElement('a');
+  link.href = dataUrl;
+  link.download = `${presetSlug}.jpg`;
+  link.className = 'back';
+  link.style.marginTop = '15px';
+  link.textContent = 'Download Image';
+  resultEl.appendChild(document.createElement('br'));
+  resultEl.appendChild(link);
+});
+</script>
+</body>
+</html>
