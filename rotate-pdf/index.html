@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rotate PDF Pages – Free Online Tool | Orisod</title>
+<meta name="description" content="Rotate all or specific pages of a PDF online for free. Works directly in your browser — no files are uploaded.">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<style>
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:44px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:30px 20px;margin-top:30px;}
+.dropzone{border:2px dashed #374151;border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
+.dropzone:hover, .dropzone.dragover{border-color:#2563eb;background:#0f172a;}
+input[type="file"]{display:none;}
+.page-info{margin-top:16px;font-size:14px;opacity:0.75;}
+.rotate-options{margin-top:20px;text-align:left;}
+.option-card{background:#0f172a;border:1px solid #1e293b;border-radius:8px;padding:18px;margin-bottom:14px;}
+.option-card h3{margin:0 0 8px 0;font-size:15px;}
+.option-card p{margin:0 0 12px 0;font-size:13px;opacity:0.7;text-align:left;}
+.option-card input[type="text"]{
+  padding:10px;border-radius:6px;border:1px solid #374151;background:#0f172a;color:white;font-size:14px;width:160px;
+}
+.angle-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.angle-btn{padding:8px 14px;border-radius:6px;border:1px solid #374151;background:#111827;color:white;cursor:pointer;font-size:13px;}
+.angle-btn.active{background:#2563eb;border-color:#2563eb;}
+button, .back{display:inline-block;margin-top:12px;padding:12px 18px;border:none;border-radius:8px;background:#2563eb;color:white;text-decoration:none;font-size:15px;cursor:pointer;}
+button:disabled{opacity:0.4;cursor:not-allowed;}
+button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.back{padding:14px 20px;margin-top:20px;font-size:16px;}
+.note{margin-top:20px;font-size:14px;opacity:0.6;}
+.footer{margin-top:50px;font-size:14px;opacity:0.4;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+.progress{font-size:14px;opacity:0.7;margin-top:10px;}
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;text-align:center;}
+.related a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Rotate PDF Pages</h1>
+  <p>Rotate all pages or just specific ones in a PDF. Everything happens locally in your browser — your file is never uploaded anywhere.</p>
+
+  <div class="box">
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Click to select a PDF or drag and drop it here</div>
+    </label>
+    <input type="file" id="fileInput" accept=".pdf">
+    <div class="error" id="errorMsg"></div>
+    <div class="page-info" id="pageInfo"></div>
+
+    <div class="rotate-options" id="rotateOptions" style="display:none;">
+      <div class="option-card">
+        <h3>Rotation angle</h3>
+        <div class="angle-row">
+          <div class="angle-btn active" data-angle="90">90° Right</div>
+          <div class="angle-btn" data-angle="-90">90° Left</div>
+          <div class="angle-btn" data-angle="180">180°</div>
+        </div>
+      </div>
+
+      <div class="option-card">
+        <h3>Which pages?</h3>
+        <p>Leave blank to rotate every page, or enter specific pages/ranges (e.g. "1-2, 4").</p>
+        <input type="text" id="pagesInput" placeholder="All pages (or e.g. 1-2, 4)">
+      </div>
+
+      <button id="rotateBtn">Rotate &amp; Download</button>
+    </div>
+
+    <div class="progress" id="progressMsg"></div>
+  </div>
+
+  <a class="back" href="/" style="background:#374151; margin-right:10px;">🏠 Home</a>
+  <a class="back" href="/tools">View All Tools</a>
+
+  <div class="seo-content">
+    <h2>What does this tool do?</h2>
+    <p>This tool rotates pages inside a PDF by 90°, 180°, or 270°, either across the whole document or only the specific pages you choose. The underlying PDF content stays exactly as it was — text remains selectable and searchable, only the page orientation changes.</p>
+
+    <h2>When should you use it?</h2>
+    <ul>
+      <li>A scanned document has one or more pages that came out sideways or upside down</li>
+      <li>You combined pages from different sources with mismatched orientations</li>
+      <li>Only some pages in a document need rotating, not all of them</li>
+      <li>You need to fix orientation before printing or sharing a document</li>
+    </ul>
+
+    <h2>Why use Orisod for this?</h2>
+    <p>You can rotate every page at once, or target specific pages/ranges while leaving the rest untouched. The rotation happens entirely in your browser using pdf-lib — your document is never uploaded to a server, and the text stays fully selectable.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <div class="q">Does this affect text selectability?</div>
+      <div>No, this only changes the page's rotation metadata — the actual PDF content, including selectable text, stays exactly as it was.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Can I rotate only some pages?</div>
+      <div>Yes, enter specific page numbers or ranges (like "1-2, 4"), and only those pages will be rotated — the rest stay untouched.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Can I rotate in both directions?</div>
+      <div>Yes, choose 90° right, 90° left, or a full 180° flip.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Is my PDF uploaded to a server?</div>
+      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+    </div>
+  </div>
+
+  <h2>Related tools</h2>
+  <div class="related">
+    <a href="/merge-pdf">Merge PDF</a>
+    <a href="/split-pdf">Split PDF</a>
+    <a href="/rotate-image">Rotate Image</a>
+  </div>
+
+  <div class="footer">© Orisod Labs</div>
+</div>
+
+<script>
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const errorMsg = document.getElementById('errorMsg');
+const pageInfo = document.getElementById('pageInfo');
+const rotateOptions = document.getElementById('rotateOptions');
+const pagesInput = document.getElementById('pagesInput');
+const rotateBtn = document.getElementById('rotateBtn');
+const progressMsg = document.getElementById('progressMsg');
+
+let selectedFile = null;
+let totalPages = 0;
+let selectedAngle = 90;
+
+document.querySelectorAll('.angle-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.angle-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedAngle = parseInt(btn.dataset.angle, 10);
+  });
+});
+
+fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  handleFile(e.dataTransfer.files[0]);
+});
+
+async function handleFile(file) {
+  errorMsg.textContent = '';
+  progressMsg.textContent = '';
+  if (!file || !/\.pdf$/i.test(file.name)) {
+    errorMsg.textContent = 'Please select a valid PDF file.';
+    return;
+  }
+
+  try {
+    const { PDFDocument } = PDFLib;
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await PDFDocument.load(arrayBuffer);
+    totalPages = pdf.getPageCount();
+    selectedFile = file;
+
+    dropzoneText.textContent = `✅ ${file.name} loaded`;
+    pageInfo.textContent = `This PDF has ${totalPages} page${totalPages !== 1 ? 's' : ''}.`;
+    rotateOptions.style.display = 'block';
+  } catch (err) {
+    errorMsg.textContent = 'Could not read this PDF. It may be corrupted or password-protected.';
+    rotateOptions.style.display = 'none';
+    pageInfo.textContent = '';
+  }
+}
+
+function parsePageSelection(raw, maxPage) {
+  if (!raw.trim()) {
+    return Array.from({ length: maxPage }, (_, i) => i + 1);
+  }
+  const pages = new Set();
+  const parts = raw.split(',');
+  for (const part of parts) {
+    const trimmed = part.trim();
+    if (!trimmed) continue;
+    if (trimmed.includes('-')) {
+      const [startStr, endStr] = trimmed.split('-');
+      const start = parseInt(startStr, 10);
+      const end = parseInt(endStr, 10);
+      if (isNaN(start) || isNaN(end) || start < 1 || end > maxPage || end < start) {
+        throw new Error(`Invalid range: "${trimmed}"`);
+      }
+      for (let p = start; p <= end; p++) pages.add(p);
+    } else {
+      const num = parseInt(trimmed, 10);
+      if (isNaN(num) || num < 1 || num > maxPage) {
+        throw new Error(`Invalid page number: "${trimmed}"`);
+      }
+      pages.add(num);
+    }
+  }
+  return Array.from(pages);
+}
+
+rotateBtn.addEventListener('click', async () => {
+  errorMsg.textContent = '';
+  progressMsg.textContent = '';
+  rotateBtn.disabled = true;
+  rotateBtn.textContent = 'Rotating...';
+
+  try {
+    const pagesToRotate = parsePageSelection(pagesInput.value, totalPages);
+    const { PDFDocument, degrees } = PDFLib;
+    const arrayBuffer = await selectedFile.arrayBuffer();
+    const pdf = await PDFDocument.load(arrayBuffer);
+    const pages = pdf.getPages();
+
+    pagesToRotate.forEach((pageNum) => {
+      const page = pages[pageNum - 1];
+      const current = page.getRotation().angle;
+      page.setRotation(degrees(current + selectedAngle));
+    });
+
+    const bytes = await pdf.save();
+    const blob = new Blob([bytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const baseName = selectedFile.name.replace(/\.pdf$/i, '');
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${baseName}-rotated.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    progressMsg.textContent = `Done — ${pagesToRotate.length} page(s) rotated.`;
+  } catch (err) {
+    errorMsg.textContent = err.message || 'Could not rotate this PDF.';
+  }
+
+  rotateBtn.disabled = false;
+  rotateBtn.textContent = 'Rotate & Download';
+});
+</script>
+</body>
+</html>
