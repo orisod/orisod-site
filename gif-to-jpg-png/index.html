@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GIF to JPG/PNG Converter – Free Online Tool | Orisod</title>
+<meta name="description" content="Extract the first frame of a GIF as a JPG or PNG image, free and online. Works directly in your browser — no files are uploaded.">
+<style>
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:44px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:30px 20px;margin-top:30px;}
+.dropzone{border:2px dashed #374151;border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
+.dropzone:hover, .dropzone.dragover{border-color:#2563eb;background:#0f172a;}
+input[type="file"]{display:none;}
+.format-row{display:flex;justify-content:center;gap:10px;margin-top:20px;}
+.format-btn{padding:10px 18px;border-radius:8px;border:1px solid #1f2937;background:#0f172a;color:white;cursor:pointer;font-size:14px;transition:0.2s;}
+.format-btn.active{background:#2563eb;border-color:#2563eb;}
+.result{margin-top:20px;}
+.result img{max-width:100%;border-radius:6px;border:1px solid #1e293b;}
+button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:#2563eb;color:white;text-decoration:none;font-size:16px;cursor:pointer;}
+button:disabled{opacity:0.4;cursor:not-allowed;}
+button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.note{margin-top:20px;font-size:14px;opacity:0.6;}
+.footer{margin-top:50px;font-size:14px;opacity:0.4;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;text-align:center;}
+.related a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>GIF to JPG/PNG Converter</h1>
+  <p>Extract the first frame of a GIF as a still JPG or PNG image. Everything happens locally in your browser — your file is never uploaded anywhere.</p>
+
+  <div class="box">
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Click to select a GIF or drag and drop it here</div>
+    </label>
+    <input type="file" id="fileInput" accept=".gif">
+    <div class="error" id="errorMsg"></div>
+
+    <div class="format-row">
+      <div class="format-btn active" id="jpgBtn">JPG</div>
+      <div class="format-btn" id="pngBtn">PNG</div>
+    </div>
+
+    <br>
+    <button id="convertBtn" disabled>Extract First Frame</button>
+    <div class="note">This extracts the first frame only, as a still image — not the full animation.</div>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <a class="back" href="/" style="background:#374151; margin-right:10px;">🏠 Home</a>
+  <a class="back" href="/tools">View All Tools</a>
+
+  <div class="seo-content">
+    <h2>What does this tool do?</h2>
+    <p>This tool takes the first frame of an animated (or static) GIF and saves it as a regular JPG or PNG still image. It's useful when you only need a single representative image from a GIF, not the full animation.</p>
+
+    <h2>When should you use this tool?</h2>
+    <ul>
+      <li>You need a static thumbnail or preview image from an animated GIF</li>
+      <li>A platform doesn't accept GIF uploads, only JPG or PNG</li>
+      <li>You want to use just one frame of a GIF in a document or design</li>
+      <li>You need a smaller file size than the original animated GIF</li>
+    </ul>
+
+    <h2>Why use Orisod for this?</h2>
+    <p>The extraction happens entirely in your browser — your GIF is never uploaded to a server. Choose PNG to preserve transparency, or JPG for a smaller, more universally compatible file.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <div class="q">Can I extract a frame other than the first one?</div>
+      <div>Not currently — this tool extracts only the first frame of the GIF.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Will this convert the whole animation?</div>
+      <div>No, the output is a single still image, not an animated file.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Should I choose JPG or PNG?</div>
+      <div>Choose PNG if your GIF has transparency you want to keep, or JPG for smaller file size.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Is my file uploaded anywhere?</div>
+      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+    </div>
+  </div>
+
+  <h2>Related tools</h2>
+  <div class="related">
+    <a href="/png-to-jpg">PNG to JPG</a>
+    <a href="/compress-image">Compress Image</a>
+    <a href="/resize-image">Resize Image</a>
+  </div>
+
+  <div class="footer">© Orisod Labs</div>
+</div>
+
+<script>
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const errorMsg = document.getElementById('errorMsg');
+const convertBtn = document.getElementById('convertBtn');
+const result = document.getElementById('result');
+const jpgBtn = document.getElementById('jpgBtn');
+const pngBtn = document.getElementById('pngBtn');
+
+let selectedFile = null;
+let outputFormat = 'jpg';
+
+jpgBtn.addEventListener('click', () => {
+  outputFormat = 'jpg';
+  jpgBtn.classList.add('active');
+  pngBtn.classList.remove('active');
+});
+pngBtn.addEventListener('click', () => {
+  outputFormat = 'png';
+  pngBtn.classList.add('active');
+  jpgBtn.classList.remove('active');
+});
+
+fileInput.addEventListener('change', (e) => { if (e.target.files[0]) handleFile(e.target.files[0]); });
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+});
+
+function handleFile(file) {
+  errorMsg.textContent = '';
+  result.innerHTML = '';
+  if (!/\.gif$/i.test(file.name)) {
+    errorMsg.textContent = 'Please select a valid GIF file.';
+    return;
+  }
+  selectedFile = file;
+  dropzoneText.textContent = `✅ ${file.name} selected`;
+  convertBtn.disabled = false;
+}
+
+convertBtn.addEventListener('click', () => {
+  if (!selectedFile) return;
+  errorMsg.textContent = '';
+  result.innerHTML = '';
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = new Image();
+    img.onload = () => {
+      // Drawing immediately on load captures the first frame of the GIF.
+      const canvas = document.createElement('canvas');
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      const ctx = canvas.getContext('2d');
+      if (outputFormat === 'jpg') {
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+      ctx.drawImage(img, 0, 0);
+
+      const mimeType = outputFormat === 'jpg' ? 'image/jpeg' : 'image/png';
+      const quality = outputFormat === 'jpg' ? 0.92 : undefined;
+      const dataUrl = canvas.toDataURL(mimeType, quality);
+
+      const preview = document.createElement('img');
+      preview.src = dataUrl;
+      result.appendChild(preview);
+      result.appendChild(document.createElement('br'));
+
+      const baseName = selectedFile.name.replace(/\.gif$/i, '');
+      const link = document.createElement('a');
+      link.href = dataUrl;
+      link.download = `${baseName}.${outputFormat}`;
+      link.className = 'back';
+      link.style.marginTop = '15px';
+      link.textContent = 'Download Image';
+      result.appendChild(link);
+    };
+    img.onerror = () => { errorMsg.textContent = 'Could not read this GIF file.'; };
+    img.src = e.target.result;
+  };
+  reader.onerror = () => { errorMsg.textContent = 'Could not read this file.'; };
+  reader.readAsDataURL(selectedFile);
+});
+</script>
+</body>
+</html>
