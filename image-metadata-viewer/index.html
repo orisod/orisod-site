@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Metadata Viewer – Free Online Tool | Orisod</title>
+<meta name="description" content="View the hidden EXIF metadata in a photo — camera, date, GPS location, and settings — free and online. Nothing is uploaded, everything runs in your browser.">
+<style>
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:44px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:30px 20px;margin-top:30px;}
+.dropzone{border:2px dashed #374151;border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
+.dropzone:hover, .dropzone.dragover{border-color:#2563eb;background:#0f172a;}
+input[type="file"]{display:none;}
+.meta-table{margin-top:24px;text-align:left;width:100%;border-collapse:collapse;font-size:14px;}
+.meta-table tr{border-bottom:1px solid #1e293b;}
+.meta-table td{padding:10px 8px;}
+.meta-table td:first-child{opacity:0.65;width:40%;}
+.meta-table td:last-child{font-weight:bold;}
+.meta-table a{color:#60a5fa;text-decoration:none;}
+.meta-table a:hover{text-decoration:underline;}
+.section-label{margin-top:24px;margin-bottom:8px;font-size:14px;opacity:0.6;text-align:left;text-transform:uppercase;letter-spacing:0.5px;}
+.none-found{margin-top:20px;font-size:15px;opacity:0.7;}
+.privacy-note{
+  margin-top:24px;background:#0f172a;border:1px solid #1e293b;border-radius:8px;padding:14px 18px;text-align:left;font-size:13px;opacity:0.8;
+}
+.privacy-note a{color:#60a5fa;text-decoration:none;}
+.note{margin-top:20px;font-size:14px;opacity:0.6;}
+.footer{margin-top:50px;font-size:14px;opacity:0.4;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;text-align:center;}
+.related a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Image Metadata Viewer</h1>
+  <p>Upload a photo to see its hidden EXIF metadata — camera model, date taken, GPS location, and shooting settings. Everything happens locally in your browser.</p>
+
+  <div class="box">
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Click to select a photo or drag and drop it here</div>
+    </label>
+    <input type="file" id="fileInput" accept="image/*">
+    <div class="error" id="errorMsg"></div>
+
+    <div id="metaContainer"></div>
+  </div>
+
+  <a class="back" href="/" style="background:#374151; margin-right:10px;">🏠 Home</a>
+  <a class="back" href="/tools">View All Tools</a>
+
+  <div class="seo-content">
+    <h2>What is EXIF metadata?</h2>
+    <p>Most photos from phones and cameras embed hidden data inside the file — called EXIF metadata. This can include the camera or phone model, the exact date and time the photo was taken, GPS coordinates, and shooting settings like aperture, shutter speed, and ISO. None of it is visible when you look at the photo, but it's there in the file.</p>
+
+    <h2>When should you use this tool?</h2>
+    <ul>
+      <li>You want to check if a photo reveals a GPS location before sharing it</li>
+      <li>You're curious what camera or settings were used to take a photo</li>
+      <li>You need to verify the exact date and time a photo was taken</li>
+      <li>You're deciding whether a photo needs its metadata removed before posting</li>
+    </ul>
+
+    <h2>Why use Orisod for this?</h2>
+    <p>This tool reads and displays the metadata directly in your browser — your photo is never uploaded to a server. If you find something you'd rather not share, our <a href="/exif-remover" style="color:#60a5fa;">EXIF Remover</a> tool can strip it out completely.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <div class="q">Why does this photo show no metadata?</div>
+      <div>Many platforms (social media, messaging apps) strip EXIF data automatically when you upload or share a photo, so a re-downloaded copy often has none left.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Can I remove the metadata this tool shows?</div>
+      <div>Yes, use our EXIF Remover tool afterward to strip all detected metadata from the photo.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Is my photo uploaded to a server?</div>
+      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Does this work with PNG or WEBP files?</div>
+      <div>This tool is built for JPEG's standard EXIF format, which is by far the most common source of this kind of metadata. PNG and WEBP rarely carry EXIF data.</div>
+    </div>
+  </div>
+
+  <h2>Related tools</h2>
+  <div class="related">
+    <a href="/exif-remover">EXIF Remover</a>
+    <a href="/compress-image">Compress Image</a>
+    <a href="/resize-image">Resize Image</a>
+  </div>
+
+  <div class="footer">© Orisod Labs</div>
+</div>
+
+<script>
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const errorMsg = document.getElementById('errorMsg');
+const metaContainer = document.getElementById('metaContainer');
+
+fileInput.addEventListener('change', (e) => { if (e.target.files[0]) loadFile(e.target.files[0]); });
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+});
+
+async function loadFile(file) {
+  errorMsg.textContent = '';
+  metaContainer.innerHTML = '';
+  if (!file.type.startsWith('image/')) {
+    errorMsg.textContent = 'Please select a valid image file.';
+    return;
+  }
+  dropzoneText.textContent = `✅ ${file.name} loaded`;
+
+  const arrayBuffer = await file.arrayBuffer();
+  const metadata = parseExif(arrayBuffer);
+  renderMetadata(metadata, file);
+}
+
+function renderMetadata(metadata, file) {
+  metaContainer.innerHTML = '';
+
+  const rows = [];
+  if (metadata) {
+    if (metadata.make || metadata.model) {
+      rows.push(['Camera', [metadata.make, metadata.model].filter(Boolean).join(' ')]);
+    }
+    if (metadata.dateTime) rows.push(['Date taken', metadata.dateTime]);
+    if (metadata.software) rows.push(['Software', metadata.software]);
+    if (metadata.orientation !== undefined) rows.push(['Orientation', metadata.orientation]);
+    if (metadata.exposureTime) rows.push(['Shutter speed', metadata.exposureTime]);
+    if (metadata.fNumber) rows.push(['Aperture', `f/${metadata.fNumber}`]);
+    if (metadata.iso) rows.push(['ISO', metadata.iso]);
+    if (metadata.focalLength) rows.push(['Focal length', `${metadata.focalLength}mm`]);
+  }
+
+  if (rows.length > 0) {
+    const label = document.createElement('div');
+    label.className = 'section-label';
+    label.textContent = 'Camera & shooting details';
+    metaContainer.appendChild(label);
+
+    const table = document.createElement('table');
+    table.className = 'meta-table';
+    rows.forEach(([key, val]) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${key}</td><td>${val}</td>`;
+      table.appendChild(tr);
+    });
+    metaContainer.appendChild(table);
+  }
+
+  if (metadata && metadata.gpsLat !== undefined && metadata.gpsLon !== undefined) {
+    const label = document.createElement('div');
+    label.className = 'section-label';
+    label.textContent = 'Location';
+    metaContainer.appendChild(label);
+
+    const table = document.createElement('table');
+    table.className = 'meta-table';
+    const mapsUrl = `https://www.google.com/maps?q=${metadata.gpsLat},${metadata.gpsLon}`;
+    table.innerHTML = `
+      <tr><td>GPS coordinates</td><td>${metadata.gpsLat.toFixed(5)}, ${metadata.gpsLon.toFixed(5)}</td></tr>
+      <tr><td>View on map</td><td><a href="${mapsUrl}" target="_blank" rel="noopener">Open in Google Maps</a></td></tr>
+    `;
+    metaContainer.appendChild(table);
+  }
+
+  if (rows.length === 0 && !(metadata && metadata.gpsLat !== undefined)) {
+    const none = document.createElement('div');
+    none.className = 'none-found';
+    none.textContent = 'No EXIF metadata was found in this image. This is common for screenshots, edited images, or photos that have already been shared through social media or messaging apps.';
+    metaContainer.appendChild(none);
+  } else {
+    const note = document.createElement('div');
+    note.className = 'privacy-note';
+    note.innerHTML = `Want to share this photo without this information attached? Use our <a href="/exif-remover">EXIF Remover</a> tool to strip it out.`;
+    metaContainer.appendChild(note);
+  }
+}
+
+// EXIF parser — reads JPEG APP1 segment for common tags, including camera settings from the Exif SubIFD.
+function parseExif(arrayBuffer) {
+  const view = new DataView(arrayBuffer);
+  if (view.byteLength < 4 || view.getUint16(0, false) !== 0xFFD8) return null;
+
+  let offset = 2;
+  const length = view.byteLength;
+
+  while (offset < length - 1) {
+    if (view.getUint8(offset) !== 0xFF) break;
+    const marker = view.getUint8(offset + 1);
+
+    if (marker === 0xE1) {
+      const segLength = view.getUint16(offset + 2, false);
+      const segStart = offset + 4;
+      if (view.getUint32(segStart, false) !== 0x45786966) {
+        offset += 2 + segLength;
+        continue;
+      }
+      const tiffOffset = segStart + 6;
+      return readTiff(view, tiffOffset);
+    } else if (marker === 0xD8 || marker === 0xD9) {
+      offset += 2;
+    } else {
+      const segLength = view.getUint16(offset + 2, false);
+      offset += 2 + segLength;
+    }
+  }
+  return null;
+}
+
+function readTiff(view, tiffStart) {
+  const byteOrder = view.getUint16(tiffStart, false);
+  const little = byteOrder === 0x4949;
+  const firstIfdOffset = view.getUint32(tiffStart + 4, little);
+
+  const result = {};
+  let gpsIfdOffset = null;
+  let exifIfdOffset = null;
+
+  readIfd(view, tiffStart, tiffStart + firstIfdOffset, little, (tag, value) => {
+    if (tag === 0x010F) result.make = value;
+    else if (tag === 0x0110) result.model = value;
+    else if (tag === 0x0132) result.dateTime = value;
+    else if (tag === 0x0112) result.orientation = value;
+    else if (tag === 0x0131) result.software = value;
+    else if (tag === 0x8825) gpsIfdOffset = value;
+    else if (tag === 0x8769) exifIfdOffset = value;
+  });
+
+  if (exifIfdOffset) {
+    readIfd(view, tiffStart, tiffStart + exifIfdOffset, little, (tag, value) => {
+      if (tag === 0x9003 && !result.dateTime) result.dateTime = value;
+      else if (tag === 0x829A) result.exposureTime = formatExposure(value);
+      else if (tag === 0x829D) result.fNumber = typeof value === 'number' ? value.toFixed(1) : value;
+      else if (tag === 0x8827) result.iso = value;
+      else if (tag === 0x920A) result.focalLength = typeof value === 'number' ? Math.round(value) : value;
+    });
+  }
+
+  if (gpsIfdOffset) {
+    const gpsData = {};
+    readIfd(view, tiffStart, tiffStart + gpsIfdOffset, little, (tag, value) => {
+      gpsData[tag] = value;
+    });
+
+    if (gpsData[2] && gpsData[1] && gpsData[4] && gpsData[3]) {
+      const lat = dmsToDecimal(gpsData[2]);
+      const lon = dmsToDecimal(gpsData[4]);
+      result.gpsLat = gpsData[1] === 'S' ? -lat : lat;
+      result.gpsLon = gpsData[3] === 'W' ? -lon : lon;
+    }
+  }
+
+  return result;
+}
+
+function formatExposure(value) {
+  if (typeof value !== 'number' || value <= 0) return value;
+  if (value >= 1) return `${value.toFixed(1)}s`;
+  return `1/${Math.round(1 / value)}s`;
+}
+
+function dmsToDecimal(dms) {
+  if (!Array.isArray(dms) || dms.length < 3) return 0;
+  return dms[0] + dms[1] / 60 + dms[2] / 3600;
+}
+
+function readIfd(view, tiffStart, ifdOffset, little, callback) {
+  try {
+    const numEntries = view.getUint16(ifdOffset, little);
+    for (let i = 0; i < numEntries; i++) {
+      const entryOffset = ifdOffset + 2 + i * 12;
+      const tag = view.getUint16(entryOffset, little);
+      const type = view.getUint16(entryOffset + 2, little);
+      const count = view.getUint32(entryOffset + 4, little);
+      const valueOffset = entryOffset + 8;
+
+      let value;
+      if (type === 2) {
+        const strOffset = count > 4 ? tiffStart + view.getUint32(valueOffset, little) : valueOffset;
+        let str = '';
+        for (let j = 0; j < count - 1; j++) {
+          const c = view.getUint8(strOffset + j);
+          if (c === 0) break;
+          str += String.fromCharCode(c);
+        }
+        value = str;
+      } else if (type === 3) {
+        value = count === 1 ? view.getUint16(valueOffset, little) : null;
+      } else if (type === 4) {
+        value = view.getUint32(valueOffset, little);
+      } else if (type === 5) {
+        const dataOffset = tiffStart + view.getUint32(valueOffset, little);
+        if (count === 3) {
+          const vals = [];
+          for (let k = 0; k < 3; k++) {
+            const num = view.getUint32(dataOffset + k * 8, little);
+            const den = view.getUint32(dataOffset + k * 8 + 4, little);
+            vals.push(den !== 0 ? num / den : 0);
+          }
+          value = vals;
+        } else {
+          const num = view.getUint32(dataOffset, little);
+          const den = view.getUint32(dataOffset + 4, little);
+          value = den !== 0 ? num / den : 0;
+        }
+      } else if (type === 1 && count === 1) {
+        value = String.fromCharCode(view.getUint8(valueOffset));
+      } else {
+        value = null;
+      }
+
+      if (value !== null && value !== undefined) {
+        callback(tag, value);
+      }
+    }
+  } catch (e) {
+    // Malformed EXIF data — return whatever was successfully parsed so far.
+  }
+}
+</script>
+</body>
+</html>
