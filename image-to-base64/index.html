@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image to Base64 Converter – Free Online Tool | Orisod</title>
+<meta name="description" content="Convert an image to a Base64 data URI, or decode Base64 back into an image. Free, browser-based, no uploads — useful for developers.">
+<style>
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:44px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.tabs{display:flex;justify-content:center;gap:10px;margin-top:20px;}
+.tab-btn{padding:10px 20px;border-radius:8px;border:1px solid #1f2937;background:#111827;color:white;cursor:pointer;font-size:14px;transition:0.2s;}
+.tab-btn.active{background:#2563eb;border-color:#2563eb;}
+.box{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:30px 20px;margin-top:20px;}
+.dropzone{border:2px dashed #374151;border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
+.dropzone:hover, .dropzone.dragover{border-color:#2563eb;background:#0f172a;}
+input[type="file"]{display:none;}
+textarea{
+  width:100%;
+  max-width:700px;
+  box-sizing:border-box;
+  min-height:160px;
+  margin-top:20px;
+  padding:14px;
+  border-radius:8px;
+  border:1px solid #374151;
+  background:#0f172a;
+  color:#e2e8f0;
+  font-family:monospace;
+  font-size:12px;
+  resize:vertical;
+}
+button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:#2563eb;color:white;text-decoration:none;font-size:16px;cursor:pointer;}
+button:disabled{opacity:0.4;cursor:not-allowed;}
+button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.note{margin-top:20px;font-size:14px;opacity:0.6;}
+.result{margin-top:20px;}
+.result img{max-width:100%;border-radius:6px;border:1px solid #1e293b;}
+.footer{margin-top:50px;font-size:14px;opacity:0.4;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+.copied-msg{color:#4ade80;font-size:13px;margin-top:8px;display:none;}
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;text-align:center;}
+.related a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Image to Base64 Converter</h1>
+  <p>Convert an image into a Base64 data URI for embedding in HTML/CSS, or decode a Base64 string back into an image. Everything runs locally in your browser.</p>
+
+  <div class="tabs">
+    <button class="tab-btn active" id="encodeTab">Image → Base64</button>
+    <button class="tab-btn" id="decodeTab">Base64 → Image</button>
+  </div>
+
+  <div class="box" id="encodePanel">
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Click to select an image or drag and drop it here</div>
+    </label>
+    <input type="file" id="fileInput" accept="image/*">
+    <div class="error" id="encodeError"></div>
+
+    <textarea id="base64Output" readonly placeholder="Your Base64 output will appear here..."></textarea>
+    <br>
+    <button id="copyBtn" style="display:none;">Copy to Clipboard</button>
+    <div class="copied-msg" id="copiedMsg">✅ Copied to clipboard!</div>
+    <div class="note">Supports JPG, PNG, WEBP and other common image formats.</div>
+  </div>
+
+  <div class="box" id="decodePanel" style="display:none;">
+    <textarea id="base64Input" placeholder="Paste a Base64 string here (with or without the data:image/...;base64, prefix)..."></textarea>
+    <br>
+    <button id="decodeBtn">Decode to Image</button>
+    <div class="error" id="decodeError"></div>
+    <div class="result" id="decodeResult"></div>
+  </div>
+
+  <a class="back" href="/" style="background:#374151; margin-right:10px;">🏠 Home</a>
+  <a class="back" href="/tools">View All Tools</a>
+
+  <div class="seo-content">
+    <h2>What is Base64 image encoding?</h2>
+    <p>Base64 is a way of representing binary data (like an image file) as plain text. Encoding an image as Base64 lets you embed it directly inside HTML, CSS, or JSON — as a "data URI" — instead of linking to a separate image file. This is common for small icons, inline email images, or avoiding extra HTTP requests.</p>
+
+    <h2>When should you use this tool?</h2>
+    <ul>
+      <li>You're embedding a small image directly into HTML or CSS without a separate file</li>
+      <li>You need to include an image inside a JSON payload or API request</li>
+      <li>You're building an email template that requires inline images</li>
+      <li>You have a Base64 string and need to see or download the actual image it represents</li>
+    </ul>
+
+    <h2>Why use Orisod for this?</h2>
+    <p>Both directions — encoding and decoding — happen entirely in your browser using JavaScript. Your image or Base64 data is never sent to a server. The output includes the full data URI prefix, ready to paste directly into an <code>&lt;img src="..."&gt;</code> tag or CSS <code>background-image</code>.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <div class="q">Does Base64 encoding increase file size?</div>
+      <div>Yes, Base64 text is roughly 33% larger than the original binary file, which is why it's best suited for small images, not large photos.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Can I paste a Base64 string without the "data:image/..." prefix?</div>
+      <div>Yes, the decoder will attempt to detect the image type automatically if you paste just the raw Base64 characters.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Is my image or Base64 data uploaded anywhere?</div>
+      <div>No, both encoding and decoding happen locally in your browser using JavaScript.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">What image formats are supported?</div>
+      <div>JPG, PNG, WEBP, GIF, and most other common formats your browser can read.</div>
+    </div>
+  </div>
+
+  <h2>Related tools</h2>
+  <div class="related">
+    <a href="/compress-image">Compress Image</a>
+    <a href="/resize-image">Resize Image</a>
+    <a href="/png-to-jpg">PNG to JPG</a>
+  </div>
+
+  <div class="footer">© Orisod Labs</div>
+</div>
+
+<script>
+const encodeTab = document.getElementById('encodeTab');
+const decodeTab = document.getElementById('decodeTab');
+const encodePanel = document.getElementById('encodePanel');
+const decodePanel = document.getElementById('decodePanel');
+
+encodeTab.addEventListener('click', () => {
+  encodeTab.classList.add('active');
+  decodeTab.classList.remove('active');
+  encodePanel.style.display = 'block';
+  decodePanel.style.display = 'none';
+});
+decodeTab.addEventListener('click', () => {
+  decodeTab.classList.add('active');
+  encodeTab.classList.remove('active');
+  decodePanel.style.display = 'block';
+  encodePanel.style.display = 'none';
+});
+
+// --- Encode: Image to Base64 ---
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const encodeError = document.getElementById('encodeError');
+const base64Output = document.getElementById('base64Output');
+const copyBtn = document.getElementById('copyBtn');
+const copiedMsg = document.getElementById('copiedMsg');
+
+fileInput.addEventListener('change', (e) => { if (e.target.files[0]) loadFile(e.target.files[0]); });
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+});
+
+function loadFile(file) {
+  encodeError.textContent = '';
+  copiedMsg.style.display = 'none';
+  if (!file.type.startsWith('image/')) {
+    encodeError.textContent = 'Please select a valid image file.';
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    dropzoneText.textContent = `✅ ${file.name} loaded`;
+    base64Output.value = e.target.result;
+    copyBtn.style.display = 'inline-block';
+  };
+  reader.onerror = () => { encodeError.textContent = 'Could not read this file.'; };
+  reader.readAsDataURL(file);
+}
+
+copyBtn.addEventListener('click', () => {
+  base64Output.select();
+  navigator.clipboard.writeText(base64Output.value).then(() => {
+    copiedMsg.style.display = 'block';
+    setTimeout(() => { copiedMsg.style.display = 'none'; }, 2000);
+  }).catch(() => {
+    document.execCommand('copy');
+    copiedMsg.style.display = 'block';
+    setTimeout(() => { copiedMsg.style.display = 'none'; }, 2000);
+  });
+});
+
+// --- Decode: Base64 to Image ---
+const base64Input = document.getElementById('base64Input');
+const decodeBtn = document.getElementById('decodeBtn');
+const decodeError = document.getElementById('decodeError');
+const decodeResult = document.getElementById('decodeResult');
+
+decodeBtn.addEventListener('click', () => {
+  decodeError.textContent = '';
+  decodeResult.innerHTML = '';
+
+  let raw = base64Input.value.trim();
+  if (!raw) {
+    decodeError.textContent = 'Paste a Base64 string first.';
+    return;
+  }
+
+  let dataUrl;
+  if (raw.startsWith('data:image/')) {
+    dataUrl = raw;
+  } else {
+    raw = raw.replace(/\s/g, '');
+    dataUrl = `data:image/png;base64,${raw}`;
+  }
+
+  const img = new Image();
+  img.onload = () => {
+    decodeResult.innerHTML = '';
+    const preview = document.createElement('img');
+    preview.src = dataUrl;
+    decodeResult.appendChild(preview);
+    decodeResult.appendChild(document.createElement('br'));
+
+    const link = document.createElement('a');
+    link.href = dataUrl;
+    link.download = 'decoded-image.png';
+    link.className = 'back';
+    link.style.marginTop = '15px';
+    link.textContent = 'Download Image';
+    decodeResult.appendChild(link);
+  };
+  img.onerror = () => {
+    decodeError.textContent = 'Could not decode this as a valid image. Check that the Base64 string is complete and correctly formatted.';
+  };
+  img.src = dataUrl;
+});
+</script>
+</body>
+</html>
