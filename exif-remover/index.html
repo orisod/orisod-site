@@ -219,6 +219,8 @@ removeBtn.addEventListener('click', () => {
     const mimeType = isJpeg ? 'image/jpeg' : 'image/png';
     const ext = isJpeg ? 'jpg' : 'png';
     const quality = isJpeg ? 0.95 : undefined;
+    const originalBaseName = currentFile.name.replace(/\.[^/.]+$/, '');
+    const downloadName = `${originalBaseName} - Clean.${ext}`;
 
     canvas.toBlob((blob) => {
       if (!blob) {
@@ -238,7 +240,7 @@ removeBtn.addEventListener('click', () => {
 
       const link = document.createElement('a');
       link.href = url;
-      link.download = `clean.${ext}`;
+      link.download = downloadName;
       link.className = 'back';
       link.style.marginTop = '15px';
       link.textContent = 'Download Clean Photo';
