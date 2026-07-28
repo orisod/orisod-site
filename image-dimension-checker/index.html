@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Dimension Checker – Free Online Tool | Orisod</title>
+<meta name="description" content="Check an image's exact pixel dimensions, file size, format, DPI, and aspect ratio, free and online. Nothing is uploaded, everything runs in your browser.">
+<style>
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:44px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:30px 20px;margin-top:30px;}
+.dropzone{border:2px dashed #374151;border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
+.dropzone:hover, .dropzone.dragover{border-color:#2563eb;background:#0f172a;}
+input[type="file"]{display:none;}
+.preview-thumb{margin-top:20px;}
+.preview-thumb img{max-width:100%;max-height:260px;border-radius:6px;border:1px solid #1e293b;}
+.info-table{margin-top:20px;text-align:left;width:100%;border-collapse:collapse;font-size:14px;}
+.info-table tr{border-bottom:1px solid #1e293b;}
+.info-table td{padding:10px 8px;}
+.info-table td:first-child{opacity:0.65;width:45%;}
+.info-table td:last-child{font-weight:bold;}
+.note{margin-top:20px;font-size:14px;opacity:0.6;}
+.footer{margin-top:50px;font-size:14px;opacity:0.4;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+.back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:#2563eb;color:white;text-decoration:none;font-size:16px;}
+.back:hover{filter:brightness(1.08);}
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;text-align:center;}
+.related a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Image Dimension Checker</h1>
+  <p>Upload an image to see its exact pixel dimensions, file size, format, aspect ratio, and DPI when available. Everything happens locally in your browser.</p>
+
+  <div class="box">
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Click to select an image or drag and drop it here</div>
+    </label>
+    <input type="file" id="fileInput" accept="image/*">
+    <div class="error" id="errorMsg"></div>
+
+    <div class="preview-thumb" id="previewThumb" style="display:none;">
+      <img id="previewImg" alt="Preview">
+    </div>
+
+    <table class="info-table" id="infoTable" style="display:none;"></table>
+  </div>
+
+  <a class="back" href="/" style="background:#374151; margin-right:10px;">🏠 Home</a>
+  <a class="back" href="/tools">View All Tools</a>
+
+  <div class="seo-content">
+    <h2>What does this tool do?</h2>
+    <p>This tool reads and displays the technical details of an image file: its exact width and height in pixels, file size, format, aspect ratio, and — when the file includes it — DPI (dots per inch) resolution. It's a quick way to confirm exactly what you're working with before uploading or printing an image.</p>
+
+    <h2>When should you use this tool?</h2>
+    <ul>
+      <li>A form or platform requires specific pixel dimensions and you need to check if your image qualifies</li>
+      <li>You're preparing an image for print and need to confirm its DPI</li>
+      <li>You want to quickly compare the aspect ratio of an image against a target ratio</li>
+      <li>You need the exact file size before attaching it somewhere with size limits</li>
+    </ul>
+
+    <h2>Why use Orisod for this?</h2>
+    <p>All the details are read directly from the file locally in your browser — nothing is uploaded to a server. If the file includes DPI metadata (common in JPEG and PNG files prepared for print), it will be shown; otherwise the tool tells you it wasn't found rather than guessing.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <div class="q">Why does DPI show as "not found" for some images?</div>
+      <div>Not every image file stores a DPI value — many web images and screenshots simply don't include it. When present, it's usually meant for print reference rather than screen display.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">What's the difference between pixel dimensions and DPI?</div>
+      <div>Pixel dimensions (like 1920×1080) are the actual number of pixels in the image. DPI describes how densely those pixels are meant to be printed per inch — the same pixel image can be printed larger or smaller depending on DPI.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Is my image uploaded anywhere?</div>
+      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">What formats are supported?</div>
+      <div>JPG, PNG, WEBP, GIF, and other common formats your browser can read. DPI detection currently works for JPEG and PNG files.</div>
+    </div>
+  </div>
+
+  <h2>Related tools</h2>
+  <div class="related">
+    <a href="/color-picker-from-image">Color Picker from Image</a>
+    <a href="/resize-image">Resize Image</a>
+    <a href="/compress-image">Compress Image</a>
+  </div>
+
+  <div class="footer">© Orisod Labs</div>
+</div>
+
+<script>
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const errorMsg = document.getElementById('errorMsg');
+const previewThumb = document.getElementById('previewThumb');
+const previewImg = document.getElementById('previewImg');
+const infoTable = document.getElementById('infoTable');
+
+fileInput.addEventListener('change', (e) => { if (e.target.files[0]) loadFile(e.target.files[0]); });
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+});
+
+async function loadFile(file) {
+  errorMsg.textContent = '';
+  if (!file.type.startsWith('image/')) {
+    errorMsg.textContent = 'Please select a valid image file.';
+    return;
+  }
+  dropzoneText.textContent = `✅ ${file.name} loaded`;
+
+  const arrayBuffer = await file.arrayBuffer();
+  const dpi = detectDpi(arrayBuffer, file.type);
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = new Image();
+    img.onload = () => {
+      previewImg.src = e.target.result;
+      previewThumb.style.display = 'block';
+      renderInfo(file, img.naturalWidth, img.naturalHeight, dpi);
+    };
+    img.onerror = () => { errorMsg.textContent = 'Could not load this image.'; };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
+
+function renderInfo(file, width, height, dpi) {
+  const divisor = gcd(width, height) || 1;
+  const ratioW = width / divisor;
+  const ratioH = height / divisor;
+  const sizeKb = file.size / 1024;
+  const sizeDisplay = sizeKb > 1024 ? `${(sizeKb / 1024).toFixed(2)} MB` : `${sizeKb.toFixed(1)} KB`;
+
+  const rows = [
+    ['Dimensions', `${width} × ${height} px`],
+    ['File size', sizeDisplay],
+    ['Format', file.type || 'Unknown'],
+    ['Aspect ratio', `${ratioW}:${ratioH}`],
+    ['DPI', dpi ? `${dpi} dpi` : 'Not found in file']
+  ];
+
+  infoTable.innerHTML = '';
+  rows.forEach(([key, val]) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${key}</td><td>${val}</td>`;
+    infoTable.appendChild(tr);
+  });
+  infoTable.style.display = 'table';
+}
+
+// Detects DPI from JPEG APP0 (JFIF) segment or PNG pHYs chunk.
+function detectDpi(arrayBuffer, mimeType) {
+  const view = new DataView(arrayBuffer);
+
+  if (mimeType === 'image/jpeg' && view.getUint16(0, false) === 0xFFD8) {
+    let offset = 2;
+    while (offset < view.byteLength - 1) {
+      if (view.getUint8(offset) !== 0xFF) break;
+      const marker = view.getUint8(offset + 1);
+      if (marker === 0xE0) {
+        const units = view.getUint8(offset + 11);
+        const xDensity = view.getUint16(offset + 12, false);
+        if (units === 1 && xDensity > 0) return xDensity; // units=1 means DPI
+        return null;
+      } else if (marker === 0xD8) {
+        offset += 2;
+      } else {
+        const segLength = view.getUint16(offset + 2, false);
+        offset += 2 + segLength;
+      }
+    }
+  }
+
+  if (mimeType === 'image/png') {
+    const pngSig = view.getUint32(0, false);
+    if (pngSig === 0x89504e47) {
+      let offset = 8;
+      while (offset < view.byteLength - 8) {
+        const chunkLength = view.getUint32(offset, false);
+        const chunkType = String.fromCharCode(
+          view.getUint8(offset + 4), view.getUint8(offset + 5),
+          view.getUint8(offset + 6), view.getUint8(offset + 7)
+        );
+        if (chunkType === 'pHYs') {
+          const ppuX = view.getUint32(offset + 8, false);
+          const unit = view.getUint8(offset + 16);
+          if (unit === 1) return Math.round(ppuX * 0.0254);
+          return null;
+        }
+        offset += 12 + chunkLength;
+      }
+    }
+  }
+
+  return null;
+}
+</script>
+</body>
+</html>
