@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SVG to PNG Converter – Free Online Tool | Orisod</title>
+<meta name="description" content="Convert SVG files to PNG at any resolution, free and online. Works directly in your browser — no files are uploaded.">
+<style>
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:48px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:30px 20px;margin-top:30px;}
+.dropzone{border:2px dashed #374151;border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
+.dropzone:hover, .dropzone.dragover{border-color:#2563eb;background:#0f172a;}
+input[type="file"]{display:none;}
+.preview-wrap{margin-top:20px;background:white;border-radius:8px;padding:16px;display:inline-block;max-width:100%;}
+.preview-wrap img{max-width:100%;max-height:300px;display:block;margin:0 auto;}
+.size-row{display:flex;justify-content:center;align-items:center;gap:12px;margin-top:20px;font-size:14px;opacity:0.85;flex-wrap:wrap;}
+.size-row select{padding:8px;border-radius:6px;border:1px solid #374151;background:#0f172a;color:white;}
+.dims-display{font-size:13px;opacity:0.65;margin-top:8px;}
+button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:#2563eb;color:white;text-decoration:none;font-size:16px;cursor:pointer;}
+button:disabled{opacity:0.4;cursor:not-allowed;}
+button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.note{margin-top:20px;font-size:14px;opacity:0.6;}
+.footer{margin-top:50px;font-size:14px;opacity:0.4;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;text-align:center;}
+.related a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>SVG to PNG Converter</h1>
+  <p>Convert an SVG file to a PNG image at the resolution you need. Everything happens locally in your browser — your file is never uploaded anywhere.</p>
+
+  <div class="box">
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Click to select an SVG file or drag and drop it here</div>
+    </label>
+    <input type="file" id="fileInput" accept=".svg,image/svg+xml">
+    <div class="error" id="errorMsg"></div>
+
+    <div id="previewWrap" style="display:none;">
+      <div class="preview-wrap"><img id="previewImg" alt="SVG preview"></div>
+      <div class="dims-display" id="dimsDisplay"></div>
+    </div>
+
+    <div class="size-row" id="sizeRow" style="display:none;">
+      <label>Output scale:
+        <select id="scaleSelect">
+          <option value="1">1× (original size)</option>
+          <option value="2" selected>2×</option>
+          <option value="4">4×</option>
+          <option value="8">8×</option>
+        </select>
+      </label>
+    </div>
+
+    <br>
+    <button id="convertBtn" disabled>Convert to PNG</button>
+    <div class="note">SVGs are vector graphics, so you can export at a higher resolution than the original without losing quality.</div>
+  </div>
+
+  <a class="back" href="/" style="background:#374151; margin-right:10px;">🏠 Home</a>
+  <a class="back" href="/tools">View All Tools</a>
+
+  <div class="seo-content">
+    <h2>What is the difference between SVG and PNG?</h2>
+    <p>SVG is a vector format — it describes shapes with math instead of pixels, so it scales to any size without losing quality. PNG is a pixel-based (raster) format, which is required by tools, platforms, and older software that don't support vector graphics. Converting SVG to PNG lets you use vector artwork anywhere a raster image is expected.</p>
+
+    <h2>When should you use this tool?</h2>
+    <ul>
+      <li>A platform or tool doesn't accept SVG uploads, only PNG or JPG</li>
+      <li>You need a fixed-resolution image for a presentation, document, or social post</li>
+      <li>You're using an icon or logo from an SVG source but need a raster version</li>
+      <li>You want a specific pixel size output from a scalable vector graphic</li>
+    </ul>
+
+    <h2>Why use Orisod for this?</h2>
+    <p>Since SVGs are vector-based, you can export at 1×, 2×, 4×, or 8× the original size without any quality loss — the conversion happens locally in your browser, and your file is never uploaded to a server.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <div class="q">Will the PNG look blurry if I scale it up?</div>
+      <div>No, since SVG is vector-based, scaling up before conversion produces a crisp, high-resolution PNG rather than a blurry enlargement.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Does this preserve transparency?</div>
+      <div>Yes, any transparent areas in your SVG are preserved in the resulting PNG.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Are my files uploaded anywhere?</div>
+      <div>No, the entire conversion happens locally in your browser using JavaScript.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Does this work with any SVG file?</div>
+      <div>It works with standard SVG files. Some SVGs referencing external resources or using unusual embedded scripts may not render exactly as intended.</div>
+    </div>
+  </div>
+
+  <h2>Related tools</h2>
+  <div class="related">
+    <a href="/favicon-generator">Favicon Generator</a>
+    <a href="/resize-image">Resize Image</a>
+    <a href="/png-to-jpg">PNG to JPG</a>
+  </div>
+
+  <div class="footer">© Orisod Labs</div>
+</div>
+
+<script>
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const errorMsg = document.getElementById('errorMsg');
+const previewWrap = document.getElementById('previewWrap');
+const previewImg = document.getElementById('previewImg');
+const dimsDisplay = document.getElementById('dimsDisplay');
+const sizeRow = document.getElementById('sizeRow');
+const scaleSelect = document.getElementById('scaleSelect');
+const convertBtn = document.getElementById('convertBtn');
+
+let svgText = null;
+let svgWidth = 300;
+let svgHeight = 300;
+let originalFileName = 'image';
+
+fileInput.addEventListener('change', (e) => { if (e.target.files[0]) loadFile(e.target.files[0]); });
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+});
+
+function loadFile(file) {
+  errorMsg.textContent = '';
+  if (!/\.svg$/i.test(file.name) && file.type !== 'image/svg+xml') {
+    errorMsg.textContent = 'Please select a valid SVG file.';
+    return;
+  }
+
+  originalFileName = file.name.replace(/\.svg$/i, '');
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    svgText = e.target.result;
+    parseSvgDimensions(svgText);
+
+    const blob = new Blob([svgText], { type: 'image/svg+xml' });
+    const url = URL.createObjectURL(blob);
+    previewImg.onload = () => {
+      dropzoneText.textContent = `✅ ${file.name} loaded`;
+      previewWrap.style.display = 'block';
+      sizeRow.style.display = 'flex';
+      convertBtn.disabled = false;
+      dimsDisplay.textContent = `Original size: ${svgWidth} × ${svgHeight}px`;
+    };
+    previewImg.onerror = () => {
+      errorMsg.textContent = 'Could not render this SVG file. It may be invalid or use unsupported features.';
+    };
+    previewImg.src = url;
+  };
+  reader.onerror = () => { errorMsg.textContent = 'Could not read this file.'; };
+  reader.readAsText(file);
+}
+
+function parseSvgDimensions(text) {
+  const widthMatch = text.match(/width="([\d.]+)/);
+  const heightMatch = text.match(/height="([\d.]+)/);
+  const viewBoxMatch = text.match(/viewBox="[\d.\-]+\s+[\d.\-]+\s+([\d.]+)\s+([\d.]+)/);
+
+  if (widthMatch && heightMatch) {
+    svgWidth = Math.round(parseFloat(widthMatch[1]));
+    svgHeight = Math.round(parseFloat(heightMatch[1]));
+  } else if (viewBoxMatch) {
+    svgWidth = Math.round(parseFloat(viewBoxMatch[1]));
+    svgHeight = Math.round(parseFloat(viewBoxMatch[2]));
+  } else {
+    svgWidth = 300;
+    svgHeight = 300;
+  }
+}
+
+convertBtn.addEventListener('click', () => {
+  if (!svgText) return;
+  errorMsg.textContent = '';
+
+  const scale = parseInt(scaleSelect.value, 10);
+  const outW = svgWidth * scale;
+  const outH = svgHeight * scale;
+
+  const blob = new Blob([svgText], { type: 'image/svg+xml' });
+  const url = URL.createObjectURL(blob);
+  const img = new Image();
+
+  img.onload = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = outW;
+    canvas.height = outH;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, outW, outH);
+    URL.revokeObjectURL(url);
+
+    canvas.toBlob((pngBlob) => {
+      if (!pngBlob) {
+        errorMsg.textContent = 'Could not generate the PNG file.';
+        return;
+      }
+      const downloadUrl = URL.createObjectURL(pngBlob);
+      const a = document.createElement('a');
+      a.href = downloadUrl;
+      a.download = `${originalFileName}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }, 'image/png');
+  };
+  img.onerror = () => {
+    errorMsg.textContent = 'Could not convert this SVG.';
+  };
+  img.src = url;
+});
+</script>
+</body>
+</html>
