@@ -283,7 +283,8 @@ function loadFile(file) {
 
 function setupCanvas() {
   const maxWidth = Math.min(700, window.innerWidth - 80);
-  scale = Math.min(1, maxWidth / img.width);
+  const maxHeight = 480;
+  scale = Math.min(1, maxWidth / img.width, maxHeight / img.height);
 
   sourceCanvas.width = img.width * scale;
   sourceCanvas.height = img.height * scale;
