@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Split PDF – Free Online Tool | Orisod</title>
+<meta name="description" content="Split a PDF into separate files by page range or extract individual pages online for free. Works directly in your browser — no files are uploaded.">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:48px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:30px 20px;margin-top:30px;}
+.dropzone{border:2px dashed #374151;border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
+.dropzone:hover, .dropzone.dragover{border-color:#2563eb;background:#0f172a;}
+input[type="file"]{display:none;}
+.page-info{margin-top:16px;font-size:14px;opacity:0.75;}
+.split-options{margin-top:24px;text-align:left;}
+.option-card{background:#0f172a;border:1px solid #1e293b;border-radius:8px;padding:18px;margin-bottom:14px;}
+.option-card h3{margin:0 0 8px 0;font-size:15px;}
+.option-card p{margin:0 0 12px 0;font-size:13px;opacity:0.7;text-align:left;}
+.option-card input[type="text"]{
+  padding:10px;border-radius:6px;border:1px solid #374151;background:#0f172a;color:white;font-size:14px;width:200px;
+}
+button, .back{display:inline-block;margin-top:10px;padding:12px 18px;border:none;border-radius:8px;background:#2563eb;color:white;text-decoration:none;font-size:15px;cursor:pointer;}
+button:disabled{opacity:0.4;cursor:not-allowed;}
+button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.back{padding:14px 20px;margin-top:20px;font-size:16px;}
+.note{margin-top:20px;font-size:14px;opacity:0.6;}
+.footer{margin-top:50px;font-size:14px;opacity:0.4;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+.progress{font-size:14px;opacity:0.7;margin-top:10px;}
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;text-align:center;}
+.related a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Split PDF</h1>
+  <p>Extract a page range into its own PDF, or split every page into a separate file. Everything happens locally in your browser — your file is never uploaded anywhere.</p>
+
+  <div class="box">
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Click to select a PDF or drag and drop it here</div>
+    </label>
+    <input type="file" id="fileInput" accept=".pdf">
+    <div class="error" id="errorMsg"></div>
+    <div class="page-info" id="pageInfo"></div>
+
+    <div class="split-options" id="splitOptions" style="display:none;">
+      <div class="option-card">
+        <h3>Extract a page range</h3>
+        <p>Enter pages or ranges (e.g. "1-3, 5") to create a single new PDF with just those pages, in that order.</p>
+        <input type="text" id="rangeInput" placeholder="e.g. 1-3, 5">
+        <br>
+        <button id="extractBtn">Extract Range</button>
+      </div>
+
+      <div class="option-card">
+        <h3>Split into individual pages</h3>
+        <p>Creates one PDF file per page and downloads them all as a ZIP.</p>
+        <button id="splitAllBtn">Split All Pages (ZIP)</button>
+      </div>
+    </div>
+
+    <div class="progress" id="progressMsg"></div>
+  </div>
+
+  <a class="back" href="/" style="background:#374151; margin-right:10px;">🏠 Home</a>
+  <a class="back" href="/tools">View All Tools</a>
+
+  <div class="seo-content">
+    <h2>What does this tool do?</h2>
+    <p>This tool lets you pull specific pages out of a PDF, either as a single new document containing just the pages you choose, or by splitting every page into its own separate PDF file. The original document's text, images, and formatting are preserved exactly — nothing is rasterized or converted to an image.</p>
+
+    <h2>When should you use it?</h2>
+    <ul>
+      <li>You only need to share a few pages from a longer document, not the whole thing</li>
+      <li>You want to separate chapters, sections, or invoices bundled into one large PDF</li>
+      <li>You need to remove pages you don't want to include when sharing</li>
+      <li>You're archiving each page of a document as its own file</li>
+    </ul>
+
+    <h2>Why use Orisod for this?</h2>
+    <p>The splitting happens entirely in your browser using pdf-lib — your PDF is never uploaded to a server. You can extract a specific range as one file, or split the entire document into individual page files packaged as a single ZIP download.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <div class="q">Does splitting affect the quality of my PDF?</div>
+      <div>No. The tool extracts the actual PDF pages without converting them to images, so text stays selectable and quality is unchanged.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Can I extract pages that aren't in order?</div>
+      <div>Yes, list them in the order you want, for example "5, 1-3" will put page 5 first, followed by pages 1 through 3.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">What happens if I split a 50-page PDF into individual pages?</div>
+      <div>You'll get a ZIP file containing 50 separate one-page PDF files, each keeping the original page's exact content.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Is my file uploaded to a server?</div>
+      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+    </div>
+  </div>
+
+  <h2>Related tools</h2>
+  <div class="related">
+    <a href="/merge-pdf">Merge PDF</a>
+    <a href="/pdf-to-jpg">PDF to JPG</a>
+    <a href="/image-to-pdf">Image to PDF</a>
+  </div>
+
+  <div class="footer">© Orisod Labs</div>
+</div>
+
+<script>
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const errorMsg = document.getElementById('errorMsg');
+const pageInfo = document.getElementById('pageInfo');
+const splitOptions = document.getElementById('splitOptions');
+const rangeInput = document.getElementById('rangeInput');
+const extractBtn = document.getElementById('extractBtn');
+const splitAllBtn = document.getElementById('splitAllBtn');
+const progressMsg = document.getElementById('progressMsg');
+
+let selectedFile = null;
+let totalPages = 0;
+
+fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  handleFile(e.dataTransfer.files[0]);
+});
+
+async function handleFile(file) {
+  errorMsg.textContent = '';
+  progressMsg.textContent = '';
+  if (!file || !/\.pdf$/i.test(file.name)) {
+    errorMsg.textContent = 'Please select a valid PDF file.';
+    return;
+  }
+
+  try {
+    const { PDFDocument } = PDFLib;
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await PDFDocument.load(arrayBuffer);
+    totalPages = pdf.getPageCount();
+    selectedFile = file;
+
+    dropzoneText.textContent = `✅ ${file.name} loaded`;
+    pageInfo.textContent = `This PDF has ${totalPages} page${totalPages !== 1 ? 's' : ''}.`;
+    splitOptions.style.display = 'block';
+  } catch (err) {
+    errorMsg.textContent = 'Could not read this PDF. It may be corrupted or password-protected.';
+    splitOptions.style.display = 'none';
+    pageInfo.textContent = '';
+  }
+}
+
+function parseRanges(raw, maxPage) {
+  const pages = [];
+  const parts = raw.split(',');
+  for (const part of parts) {
+    const trimmed = part.trim();
+    if (!trimmed) continue;
+    if (trimmed.includes('-')) {
+      const [startStr, endStr] = trimmed.split('-');
+      const start = parseInt(startStr, 10);
+      const end = parseInt(endStr, 10);
+      if (isNaN(start) || isNaN(end) || start < 1 || end > maxPage || end < start) {
+        throw new Error(`Invalid range: "${trimmed}"`);
+      }
+      for (let p = start; p <= end; p++) pages.push(p);
+    } else {
+      const num = parseInt(trimmed, 10);
+      if (isNaN(num) || num < 1 || num > maxPage) {
+        throw new Error(`Invalid page number: "${trimmed}"`);
+      }
+      pages.push(num);
+    }
+  }
+  return pages;
+}
+
+extractBtn.addEventListener('click', async () => {
+  errorMsg.textContent = '';
+  progressMsg.textContent = '';
+  const raw = rangeInput.value.trim();
+  if (!raw) {
+    errorMsg.textContent = 'Enter a page range, e.g. "1-3, 5".';
+    return;
+  }
+
+  extractBtn.disabled = true;
+  extractBtn.textContent = 'Extracting...';
+
+  try {
+    const pages = parseRanges(raw, totalPages);
+    const { PDFDocument } = PDFLib;
+    const arrayBuffer = await selectedFile.arrayBuffer();
+    const sourcePdf = await PDFDocument.load(arrayBuffer);
+    const newPdf = await PDFDocument.create();
+
+    const pageIndices = pages.map(p => p - 1);
+    const copiedPages = await newPdf.copyPages(sourcePdf, pageIndices);
+    copiedPages.forEach((page) => newPdf.addPage(page));
+
+    const bytes = await newPdf.save();
+    const blob = new Blob([bytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const baseName = selectedFile.name.replace(/\.pdf$/i, '');
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${baseName}-extracted.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    progressMsg.textContent = `Done — ${pages.length} page(s) extracted.`;
+  } catch (err) {
+    errorMsg.textContent = err.message || 'Could not extract these pages.';
+  }
+
+  extractBtn.disabled = false;
+  extractBtn.textContent = 'Extract Range';
+});
+
+splitAllBtn.addEventListener('click', async () => {
+  errorMsg.textContent = '';
+  progressMsg.textContent = '';
+  splitAllBtn.disabled = true;
+  splitAllBtn.textContent = 'Splitting...';
+
+  try {
+    const { PDFDocument } = PDFLib;
+    const arrayBuffer = await selectedFile.arrayBuffer();
+    const sourcePdf = await PDFDocument.load(arrayBuffer);
+    const baseName = selectedFile.name.replace(/\.pdf$/i, '');
+    const zip = new JSZip();
+
+    for (let i = 0; i < totalPages; i++) {
+      progressMsg.textContent = `Processing page ${i + 1} of ${totalPages}...`;
+      const newPdf = await PDFDocument.create();
+      const [copiedPage] = await newPdf.copyPages(sourcePdf, [i]);
+      newPdf.addPage(copiedPage);
+      const bytes = await newPdf.save();
+      zip.file(`${baseName}-page-${i + 1}.pdf`, bytes);
+    }
+
+    progressMsg.textContent = 'Packaging ZIP file...';
+    const content = await zip.generateAsync({ type: 'blob' });
+    const url = URL.createObjectURL(content);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${baseName}-split.zip`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    progressMsg.textContent = `Done — ${totalPages} pages split into separate files.`;
+  } catch (err) {
+    errorMsg.textContent = 'Could not split this PDF.';
+    progressMsg.textContent = '';
+  }
+
+  splitAllBtn.disabled = false;
+  splitAllBtn.textContent = 'Split All Pages (ZIP)';
+});
+</script>
+</body>
+</html>
