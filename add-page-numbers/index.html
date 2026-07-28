@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF Page Organizer – Free Online Tool | Orisod</title>
+<meta name="description" content="Reorder or delete pages in a PDF with a visual drag-and-drop editor, free and online. Works directly in your browser — no files are uploaded.">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<style>
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
+.container{max-width:900px;margin:0 auto;}
+h1{font-size:44px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:30px 20px;margin-top:30px;}
+.dropzone{border:2px dashed #374151;border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
+.dropzone:hover, .dropzone.dragover{border-color:#2563eb;background:#0f172a;}
+input[type="file"]{display:none;}
+.pages-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(120px, 1fr));
+  gap:14px;
+  margin-top:24px;
+}
+.page-card{
+  background:#0f172a;
+  border:2px solid #1e293b;
+  border-radius:8px;
+  padding:8px;
+  cursor:grab;
+  transition:0.15s;
+  position:relative;
+}
+.page-card.dragging{opacity:0.4;}
+.page-card.drag-over{border-color:#2563eb;}
+.page-card img{width:100%;border-radius:4px;display:block;background:white;}
+.page-card .page-label{font-size:12px;margin-top:6px;opacity:0.75;}
+.page-card .delete-btn{
+  position:absolute;top:4px;right:4px;
+  background:#dc2626;color:white;border:none;border-radius:4px;
+  width:22px;height:22px;font-size:12px;cursor:pointer;line-height:1;
+  display:flex;align-items:center;justify-content:center;padding:0;margin:0;
+}
+button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:#2563eb;color:white;text-decoration:none;font-size:16px;cursor:pointer;}
+button:disabled{opacity:0.4;cursor:not-allowed;}
+button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.note{margin-top:20px;font-size:14px;opacity:0.6;}
+.footer{margin-top:50px;font-size:14px;opacity:0.4;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+.progress{font-size:14px;opacity:0.7;margin-top:10px;}
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;text-align:center;}
+.related a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>PDF Page Organizer</h1>
+  <p>Drag to reorder pages, or delete the ones you don't need — then download the reorganized PDF. Everything happens locally in your browser.</p>
+
+  <div class="box">
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Click to select a PDF or drag and drop it here</div>
+    </label>
+    <input type="file" id="fileInput" accept=".pdf">
+    <div class="error" id="errorMsg"></div>
+    <div class="progress" id="progressMsg"></div>
+
+    <div class="pages-grid" id="pagesGrid"></div>
+
+    <br>
+    <button id="saveBtn" style="display:none;">Save Reorganized PDF</button>
+    <div class="note">Drag any page thumbnail to reorder it. Click the ✕ on a page to remove it.</div>
+  </div>
+
+  <a class="back" href="/" style="background:#374151; margin-right:10px;">🏠 Home</a>
+  <a class="back" href="/tools">View All Tools</a>
+
+  <div class="seo-content">
+    <h2>What does this tool do?</h2>
+    <p>This tool shows every page of your PDF as a thumbnail you can drag into a new order, or delete entirely, before saving a rebuilt document. The underlying PDF content stays exactly as it was — text remains selectable, only the page order and count change.</p>
+
+    <h2>When should you use it?</h2>
+    <ul>
+      <li>Pages in a scanned document came out in the wrong order</li>
+      <li>You need to remove a blank, duplicate, or irrelevant page from a PDF</li>
+      <li>You're assembling a document and need to rearrange sections visually</li>
+      <li>You want to see every page at a glance before deciding what to keep</li>
+    </ul>
+
+    <h2>Why use Orisod for this?</h2>
+    <p>You see an actual thumbnail of every page, not just a page number, which makes it much easier to reorder or delete the right ones. Everything happens locally in your browser using PDF.js and pdf-lib — your document is never uploaded to a server.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <div class="q">Does this affect text selectability?</div>
+      <div>No, the actual PDF page content is preserved exactly — only the order and which pages are included change.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Can I delete more than one page?</div>
+      <div>Yes, click the ✕ on as many pages as you want to remove before saving.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">What if I want to undo a deletion?</div>
+      <div>Reload the page and upload your PDF again to start over from the original.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Is my PDF uploaded to a server?</div>
+      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+    </div>
+  </div>
+
+  <h2>Related tools</h2>
+  <div class="related">
+    <a href="/merge-pdf">Merge PDF</a>
+    <a href="/rotate-pdf">Rotate PDF Pages</a>
+    <a href="/add-page-numbers">Add Page Numbers</a>
+  </div>
+
+  <div class="footer">© Orisod Labs</div>
+</div>
+
+<script>
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const errorMsg = document.getElementById('errorMsg');
+const progressMsg = document.getElementById('progressMsg');
+const pagesGrid = document.getElementById('pagesGrid');
+const saveBtn = document.getElementById('saveBtn');
+
+let selectedFile = null;
+let pageOrder = []; // array of original page indices (0-based), in current order
+
+fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  handleFile(e.dataTransfer.files[0]);
+});
+
+async function handleFile(file) {
+  errorMsg.textContent = '';
+  pagesGrid.innerHTML = '';
+  saveBtn.style.display = 'none';
+
+  if (!file || !/\.pdf$/i.test(file.name)) {
+    errorMsg.textContent = 'Please select a valid PDF file.';
+    return;
+  }
+  selectedFile = file;
+  dropzoneText.textContent = `✅ ${file.name} loaded`;
+
+  try {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
+    pageOrder = [];
+
+    for (let i = 1; i <= pdf.numPages; i++) {
+      progressMsg.textContent = `Rendering thumbnail ${i} of ${pdf.numPages}...`;
+      const page = await pdf.getPage(i);
+      const viewport = page.getViewport({ scale: 0.3 });
+      const canvas = document.createElement('canvas');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      const ctx = canvas.getContext('2d');
+      await page.render({ canvasContext: ctx, viewport }).promise;
+
+      pageOrder.push(i - 1);
+      addPageCard(i - 1, canvas.toDataURL('image/jpeg', 0.7), i);
+    }
+
+    progressMsg.textContent = '';
+    saveBtn.style.display = 'inline-block';
+  } catch (err) {
+    errorMsg.textContent = 'Could not read this PDF. It may be corrupted or password-protected.';
+    progressMsg.textContent = '';
+  }
+}
+
+let draggedCard = null;
+
+function addPageCard(originalIndex, thumbnailDataUrl, displayNum) {
+  const card = document.createElement('div');
+  card.className = 'page-card';
+  card.draggable = true;
+  card.dataset.originalIndex = originalIndex;
+
+  card.innerHTML = `
+    <button class="delete-btn" title="Remove this page">✕</button>
+    <img src="${thumbnailDataUrl}" alt="Page ${displayNum}">
+    <div class="page-label">Page ${displayNum}</div>
+  `;
+
+  card.querySelector('.delete-btn').addEventListener('click', () => {
+    pageOrder = pageOrder.filter(idx => idx !== originalIndex);
+    card.remove();
+  });
+
+  card.addEventListener('dragstart', () => {
+    draggedCard = card;
+    card.classList.add('dragging');
+  });
+  card.addEventListener('dragend', () => {
+    card.classList.remove('dragging');
+    draggedCard = null;
+    updatePageOrderFromDom();
+  });
+  card.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    card.classList.add('drag-over');
+  });
+  card.addEventListener('dragleave', () => {
+    card.classList.remove('drag-over');
+  });
+  card.addEventListener('drop', (e) => {
+    e.preventDefault();
+    card.classList.remove('drag-over');
+    if (draggedCard && draggedCard !== card) {
+      const allCards = Array.from(pagesGrid.children);
+      const draggedIdx = allCards.indexOf(draggedCard);
+      const targetIdx = allCards.indexOf(card);
+      if (draggedIdx < targetIdx) {
+        card.after(draggedCard);
+      } else {
+        card.before(draggedCard);
+      }
+    }
+  });
+
+  pagesGrid.appendChild(card);
+}
+
+function updatePageOrderFromDom() {
+  pageOrder = Array.from(pagesGrid.children).map(card => parseInt(card.dataset.originalIndex, 10));
+}
+
+saveBtn.addEventListener('click', async () => {
+  if (!selectedFile || pageOrder.length === 0) {
+    errorMsg.textContent = 'No pages left to save.';
+    return;
+  }
+
+  saveBtn.disabled = true;
+  saveBtn.textContent = 'Saving...';
+  errorMsg.textContent = '';
+
+  try {
+    const { PDFDocument } = PDFLib;
+    const arrayBuffer = await selectedFile.arrayBuffer();
+    const sourcePdf = await PDFDocument.load(arrayBuffer);
+    const newPdf = await PDFDocument.create();
+
+    const copiedPages = await newPdf.copyPages(sourcePdf, pageOrder);
+    copiedPages.forEach((page) => newPdf.addPage(page));
+
+    const bytes = await newPdf.save();
+    const blob = new Blob([bytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const baseName = selectedFile.name.replace(/\.pdf$/i, '');
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${baseName}-organized.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  } catch (err) {
+    errorMsg.textContent = 'Could not save the reorganized PDF.';
+  }
+
+  saveBtn.disabled = false;
+  saveBtn.textContent = 'Save Reorganized PDF';
+});
+</script>
+</body>
+</html>
