@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blur Faces / Blur Area Tool – Free Online Tool | Orisod</title>
+<meta name="description" content="Drag to select and blur any area of an image — faces, license plates, or private details. Free, browser-based, no uploads.">
+<style>
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:44px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:30px 20px;margin-top:30px;}
+.dropzone{border:2px dashed #374151;border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
+.dropzone:hover, .dropzone.dragover{border-color:#2563eb;background:#0f172a;}
+input[type="file"]{display:none;}
+.canvas-wrap{position:relative;display:inline-block;max-width:100%;margin-top:20px;touch-action:none;}
+#sourceCanvas{max-width:100%;display:block;border-radius:6px;border:1px solid #1e293b;cursor:crosshair;}
+.region-box{position:absolute;border:2px solid #dc2626;background:rgba(220,38,38,0.2);pointer-events:none;}
+.controls-row{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:16px;flex-wrap:wrap;font-size:14px;opacity:0.9;}
+input[type="range"]{width:160px;}
+.action-row{display:flex;justify-content:center;gap:10px;margin-top:16px;flex-wrap:wrap;}
+.action-btn{padding:10px 16px;border-radius:8px;border:1px solid #374151;background:#374151;color:white;cursor:pointer;font-size:13px;}
+.action-btn:hover{filter:brightness(1.15);}
+.region-count{margin-top:10px;font-size:13px;opacity:0.7;}
+button.primary, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:#2563eb;color:white;text-decoration:none;font-size:16px;cursor:pointer;}
+button.primary:disabled{opacity:0.4;cursor:not-allowed;}
+button.primary:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.note{margin-top:20px;font-size:14px;opacity:0.6;}
+.footer{margin-top:50px;font-size:14px;opacity:0.4;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;text-align:center;}
+.related a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Blur Faces / Blur Area Tool</h1>
+  <p>Drag to select one or more areas — faces, license plates, or any private detail — and pixelate them before sharing. Everything happens locally in your browser.</p>
+
+  <div class="box">
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Click to select an image or drag and drop it here</div>
+    </label>
+    <input type="file" id="fileInput" accept="image/*">
+    <div class="error" id="errorMsg"></div>
+
+    <div class="canvas-wrap" id="canvasWrap" style="display:none;">
+      <canvas id="sourceCanvas"></canvas>
+      <div id="regionsOverlay"></div>
+    </div>
+
+    <div class="controls-row" id="controlsRow" style="display:none;">
+      <label for="intensitySlider">Blur strength: <span id="intensityValue">12</span></label>
+      <input type="range" id="intensitySlider" min="4" max="30" value="12">
+    </div>
+
+    <div class="action-row" id="actionRow" style="display:none;">
+      <div class="action-btn" id="undoBtn">Undo Last Selection</div>
+      <div class="action-btn" id="clearBtn">Clear All</div>
+    </div>
+    <div class="region-count" id="regionCount"></div>
+
+    <br>
+    <button class="primary" id="applyBtn" disabled style="display:none;">Apply Blur & Download</button>
+    <div class="note">Drag on the image to select an area. Add as many areas as you need before applying.</div>
+  </div>
+
+  <a class="back" href="/" style="background:#374151; margin-right:10px;">🏠 Home</a>
+  <a class="back" href="/tools">View All Tools</a>
+
+  <div class="seo-content">
+    <h2>What does this tool do?</h2>
+    <p>This tool lets you drag to select one or more rectangular areas on an image and pixelate them — a reliable way to obscure faces, license plates, addresses, or any other detail you don't want visible before sharing a photo.</p>
+
+    <h2>When should you use this tool?</h2>
+    <ul>
+      <li>You're sharing a photo publicly and need to hide a bystander's face</li>
+      <li>A screenshot contains a license plate, address, or account number you want to redact</li>
+      <li>You need to protect someone's identity while still showing the rest of the photo</li>
+      <li>You want to obscure a specific detail without cropping out the whole area</li>
+    </ul>
+
+    <h2>Why use Orisod for this?</h2>
+    <p>This tool uses pixelation rather than a soft blur, which is the more reliable method for privacy redaction — a light blur can sometimes be reversed, while pixelation permanently discards the original detail. You can select multiple areas, adjust the blur strength, and everything happens locally in your browser — your photo is never uploaded to a server.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <div class="q">Does this automatically detect faces?</div>
+      <div>No, you manually drag to select the area you want to blur — this gives you full control over exactly what gets obscured, including things that aren't faces, like license plates or documents.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Can I blur more than one area?</div>
+      <div>Yes, drag to select as many areas as you need before clicking "Apply Blur & Download."</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Is pixelation reversible?</div>
+      <div>No, pixelation permanently discards the pixel detail in that area — unlike some blur filters, there's no way to recover the original image content from the pixelated result.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Is my photo uploaded anywhere?</div>
+      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+    </div>
+  </div>
+
+  <h2>Related tools</h2>
+  <div class="related">
+    <a href="/exif-remover">EXIF Remover</a>
+    <a href="/crop-image">Crop Image</a>
+    <a href="/compress-image">Compress Image</a>
+  </div>
+
+  <div class="footer">© Orisod Labs</div>
+</div>
+
+<script>
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const errorMsg = document.getElementById('errorMsg');
+const canvasWrap = document.getElementById('canvasWrap');
+const sourceCanvas = document.getElementById('sourceCanvas');
+const regionsOverlay = document.getElementById('regionsOverlay');
+const controlsRow = document.getElementById('controlsRow');
+const intensitySlider = document.getElementById('intensitySlider');
+const intensityValue = document.getElementById('intensityValue');
+const actionRow = document.getElementById('actionRow');
+const undoBtn = document.getElementById('undoBtn');
+const clearBtn = document.getElementById('clearBtn');
+const regionCount = document.getElementById('regionCount');
+const applyBtn = document.getElementById('applyBtn');
+
+let img = null;
+let scale = 1;
+let regions = []; // in canvas-display coordinates {x,y,w,h}
+let dragStart = null;
+let currentDragBox = null;
+
+fileInput.addEventListener('change', (e) => { if (e.target.files[0]) loadFile(e.target.files[0]); });
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+});
+
+function loadFile(file) {
+  errorMsg.textContent = '';
+  if (!file.type.startsWith('image/')) {
+    errorMsg.textContent = 'Please select a valid image file.';
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    img = new Image();
+    img.onload = () => {
+      dropzoneText.textContent = `✅ ${file.name} loaded`;
+      setupCanvas();
+      canvasWrap.style.display = 'inline-block';
+      controlsRow.style.display = 'flex';
+      actionRow.style.display = 'flex';
+      applyBtn.style.display = 'inline-block';
+      regions = [];
+      updateRegionCount();
+      renderRegionOverlays();
+    };
+    img.onerror = () => { errorMsg.textContent = 'Could not load this image.'; };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function setupCanvas() {
+  const maxWidth = Math.min(700, window.innerWidth - 80);
+  const maxHeight = 480;
+  scale = Math.min(1, maxWidth / img.width, maxHeight / img.height);
+  sourceCanvas.width = img.width * scale;
+  sourceCanvas.height = img.height * scale;
+  const ctx = sourceCanvas.getContext('2d');
+  ctx.drawImage(img, 0, 0, sourceCanvas.width, sourceCanvas.height);
+}
+
+function getPos(e) {
+  const rect = sourceCanvas.getBoundingClientRect();
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  const x = Math.max(0, Math.min(clientX - rect.left, sourceCanvas.width));
+  const y = Math.max(0, Math.min(clientY - rect.top, sourceCanvas.height));
+  return { x, y };
+}
+
+function startDrag(e) {
+  if (!img) return;
+  e.preventDefault();
+  dragStart = getPos(e);
+}
+
+function moveDrag(e) {
+  if (!dragStart) return;
+  e.preventDefault();
+  const pos = getPos(e);
+  const x = Math.min(dragStart.x, pos.x);
+  const y = Math.min(dragStart.y, pos.y);
+  const w = Math.abs(pos.x - dragStart.x);
+  const h = Math.abs(pos.y - dragStart.y);
+
+  if (!currentDragBox) {
+    currentDragBox = document.createElement('div');
+    currentDragBox.className = 'region-box';
+    regionsOverlay.appendChild(currentDragBox);
+  }
+  currentDragBox.style.left = x + 'px';
+  currentDragBox.style.top = y + 'px';
+  currentDragBox.style.width = w + 'px';
+  currentDragBox.style.height = h + 'px';
+}
+
+function endDrag() {
+  if (!dragStart || !currentDragBox) { dragStart = null; return; }
+
+  const rect = currentDragBox.getBoundingClientRect();
+  const canvasRect = sourceCanvas.getBoundingClientRect();
+  const w = parseFloat(currentDragBox.style.width);
+  const h = parseFloat(currentDragBox.style.height);
+
+  if (w > 5 && h > 5) {
+    regions.push({
+      x: parseFloat(currentDragBox.style.left),
+      y: parseFloat(currentDragBox.style.top),
+      w, h
+    });
+  }
+
+  currentDragBox = null;
+  dragStart = null;
+  updateRegionCount();
+  renderRegionOverlays();
+}
+
+sourceCanvas.addEventListener('mousedown', startDrag);
+window.addEventListener('mousemove', moveDrag);
+window.addEventListener('mouseup', endDrag);
+sourceCanvas.addEventListener('touchstart', startDrag);
+window.addEventListener('touchmove', moveDrag);
+window.addEventListener('touchend', endDrag);
+
+function renderRegionOverlays() {
+  regionsOverlay.innerHTML = '';
+  regions.forEach((r) => {
+    const box = document.createElement('div');
+    box.className = 'region-box';
+    box.style.left = r.x + 'px';
+    box.style.top = r.y + 'px';
+    box.style.width = r.w + 'px';
+    box.style.height = r.h + 'px';
+    regionsOverlay.appendChild(box);
+  });
+}
+
+function updateRegionCount() {
+  regionCount.textContent = regions.length === 0
+    ? 'No areas selected yet.'
+    : `${regions.length} area${regions.length > 1 ? 's' : ''} selected.`;
+  applyBtn.disabled = regions.length === 0;
+}
+
+undoBtn.addEventListener('click', () => {
+  regions.pop();
+  updateRegionCount();
+  renderRegionOverlays();
+});
+clearBtn.addEventListener('click', () => {
+  regions = [];
+  updateRegionCount();
+  renderRegionOverlays();
+});
+
+intensitySlider.addEventListener('input', () => {
+  intensityValue.textContent = intensitySlider.value;
+});
+
+function pixelateRegion(ctx, x, y, w, h, blockSize) {
+  const imageData = ctx.getImageData(x, y, w, h);
+  const data = imageData.data;
+
+  for (let by = 0; by < h; by += blockSize) {
+    for (let bx = 0; bx < w; bx += blockSize) {
+      let r = 0, g = 0, b = 0, a = 0, count = 0;
+      const blockW = Math.min(blockSize, w - bx);
+      const blockH = Math.min(blockSize, h - by);
+
+      for (let dy = 0; dy < blockH; dy++) {
+        for (let dx = 0; dx < blockW; dx++) {
+          const idx = ((by + dy) * w + (bx + dx)) * 4;
+          r += data[idx]; g += data[idx + 1]; b += data[idx + 2]; a += data[idx + 3];
+          count++;
+        }
+      }
+      r = Math.round(r / count); g = Math.round(g / count); b = Math.round(b / count); a = Math.round(a / count);
+
+      for (let dy = 0; dy < blockH; dy++) {
+        for (let dx = 0; dx < blockW; dx++) {
+          const idx = ((by + dy) * w + (bx + dx)) * 4;
+          data[idx] = r; data[idx + 1] = g; data[idx + 2] = b; data[idx + 3] = a;
+        }
+      }
+    }
+  }
+
+  ctx.putImageData(imageData, x, y);
+}
+
+applyBtn.addEventListener('click', () => {
+  if (!img || regions.length === 0) return;
+
+  const outCanvas = document.createElement('canvas');
+  outCanvas.width = img.naturalWidth;
+  outCanvas.height = img.naturalHeight;
+  const ctx = outCanvas.getContext('2d');
+  ctx.drawImage(img, 0, 0);
+
+  const blockSize = Math.max(2, parseInt(intensitySlider.value, 10));
+
+  regions.forEach((r) => {
+    const realX = Math.round(r.x / scale);
+    const realY = Math.round(r.y / scale);
+    const realW = Math.round(r.w / scale);
+    const realH = Math.round(r.h / scale);
+    pixelateRegion(ctx, realX, realY, realW, realH, blockSize);
+  });
+
+  const dataUrl = outCanvas.toDataURL('image/jpeg', 0.95);
+  const a = document.createElement('a');
+  a.href = dataUrl;
+  a.download = 'blurred-image.jpg';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+});
+</script>
+</body>
+</html>
