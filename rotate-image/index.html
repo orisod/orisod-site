@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rotate Image – Free Online Tool | Orisod</title>
+<meta name="description" content="Rotate or flip an image online for free. Rotate 90°, 180°, or flip horizontally/vertically — everything runs in your browser, no files are uploaded.">
+<style>
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:48px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:30px 20px;margin-top:30px;}
+.dropzone{border:2px dashed #374151;border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
+.dropzone:hover, .dropzone.dragover{border-color:#2563eb;background:#0f172a;}
+input[type="file"]{display:none;}
+.controls-row{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:20px;}
+.controls-row button{margin:0;padding:12px 16px;font-size:14px;background:#374151;border:none;border-radius:8px;color:white;cursor:pointer;transition:0.2s;}
+.controls-row button:hover{filter:brightness(1.15);}
+.preview{margin-top:24px;}
+.preview img{max-width:100%;max-height:400px;border-radius:6px;border:1px solid #1e293b;}
+button.primary, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:#2563eb;color:white;text-decoration:none;font-size:16px;cursor:pointer;}
+button.primary:disabled{opacity:0.4;cursor:not-allowed;}
+button.primary:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.note{margin-top:20px;font-size:14px;opacity:0.6;}
+.footer{margin-top:50px;font-size:14px;opacity:0.4;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;text-align:center;}
+.related a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Rotate Image</h1>
+  <p>Rotate or flip your image instantly. Everything happens locally in your browser — your file is never uploaded anywhere.</p>
+
+  <div class="box">
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Click to select an image or drag and drop it here</div>
+    </label>
+    <input type="file" id="fileInput" accept="image/*">
+    <div class="error" id="errorMsg"></div>
+
+    <div class="controls-row" id="controlsRow" style="display:none;">
+      <button id="rotateLeftBtn">↺ Rotate Left 90°</button>
+      <button id="rotateRightBtn">↻ Rotate Right 90°</button>
+      <button id="rotate180Btn">⟳ Rotate 180°</button>
+      <button id="flipHBtn">⇋ Flip Horizontal</button>
+      <button id="flipVBtn">⇕ Flip Vertical</button>
+      <button id="resetBtn">Reset</button>
+    </div>
+
+    <div class="preview" id="preview"></div>
+
+    <br>
+    <button class="primary" id="downloadBtn" style="display:none;">Download Image</button>
+    <div class="note">Supports JPG, PNG, WEBP and other common image formats.</div>
+  </div>
+
+  <a class="back" href="/" style="background:#374151; margin-right:10px;">🏠 Home</a>
+  <a class="back" href="/tools">View All Tools</a>
+
+  <div class="seo-content">
+    <h2>What does rotating or flipping an image mean?</h2>
+    <p>Rotating turns the image around its center by a fixed angle (90°, 180°, or 270°), while flipping mirrors it horizontally or vertically. Both are common fixes for photos that were taken sideways, upside down, or need to be mirrored for a specific layout.</p>
+
+    <h2>When should you use this tool?</h2>
+    <ul>
+      <li>A photo from your phone or camera appears sideways or upside down</li>
+      <li>You need a mirrored version of an image for a design or print layout</li>
+      <li>A scanned document came out rotated and needs correcting</li>
+      <li>You want to quickly fix orientation before using the image elsewhere</li>
+    </ul>
+
+    <h2>Why use Orisod for this?</h2>
+    <p>You can combine multiple rotations and flips before downloading — for example, rotate 90° and then flip horizontally — and preview the result instantly. Everything runs locally in your browser using the Canvas API, so your photo is never uploaded to a server.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <div class="q">Does rotating reduce image quality?</div>
+      <div>No, rotating and flipping by 90°/180° increments doesn't lose any image data or quality.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Can I combine a rotation with a flip?</div>
+      <div>Yes, apply as many rotations and flips as you need before downloading — each one applies on top of the last.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Can I undo a rotation?</div>
+      <div>Use the "Reset" button to return to the original image and start over.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Is my image uploaded anywhere?</div>
+      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+    </div>
+  </div>
+
+  <h2>Related tools</h2>
+  <div class="related">
+    <a href="/crop-image">Crop Image</a>
+    <a href="/resize-image">Resize Image</a>
+    <a href="/compress-image">Compress Image</a>
+  </div>
+
+  <div class="footer">© Orisod Labs</div>
+</div>
+
+<script>
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const errorMsg = document.getElementById('errorMsg');
+const controlsRow = document.getElementById('controlsRow');
+const preview = document.getElementById('preview');
+const downloadBtn = document.getElementById('downloadBtn');
+
+let originalImg = null;
+let currentRotation = 0; // 0, 90, 180, 270
+let flipH = false;
+let flipV = false;
+
+fileInput.addEventListener('change', (e) => { if (e.target.files[0]) loadFile(e.target.files[0]); });
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+});
+
+function loadFile(file) {
+  errorMsg.textContent = '';
+  if (!file.type.startsWith('image/')) {
+    errorMsg.textContent = 'Please select a valid image file.';
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    originalImg = new Image();
+    originalImg.onload = () => {
+      dropzoneText.textContent = `✅ ${file.name} loaded`;
+      currentRotation = 0;
+      flipH = false;
+      flipV = false;
+      controlsRow.style.display = 'flex';
+      downloadBtn.style.display = 'inline-block';
+      renderPreview();
+    };
+    originalImg.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function renderPreview() {
+  const canvas = buildCanvas();
+  preview.innerHTML = '';
+  const img = document.createElement('img');
+  img.src = canvas.toDataURL('image/png');
+  preview.appendChild(img);
+}
+
+function buildCanvas() {
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+
+  const swapDims = currentRotation === 90 || currentRotation === 270;
+  canvas.width = swapDims ? originalImg.height : originalImg.width;
+  canvas.height = swapDims ? originalImg.width : originalImg.height;
+
+  ctx.save();
+  ctx.translate(canvas.width / 2, canvas.height / 2);
+  ctx.rotate((currentRotation * Math.PI) / 180);
+  ctx.scale(flipH ? -1 : 1, flipV ? -1 : 1);
+  ctx.drawImage(originalImg, -originalImg.width / 2, -originalImg.height / 2);
+  ctx.restore();
+
+  return canvas;
+}
+
+document.getElementById('rotateLeftBtn').addEventListener('click', () => {
+  currentRotation = (currentRotation + 270) % 360;
+  renderPreview();
+});
+document.getElementById('rotateRightBtn').addEventListener('click', () => {
+  currentRotation = (currentRotation + 90) % 360;
+  renderPreview();
+});
+document.getElementById('rotate180Btn').addEventListener('click', () => {
+  currentRotation = (currentRotation + 180) % 360;
+  renderPreview();
+});
+document.getElementById('flipHBtn').addEventListener('click', () => {
+  flipH = !flipH;
+  renderPreview();
+});
+document.getElementById('flipVBtn').addEventListener('click', () => {
+  flipV = !flipV;
+  renderPreview();
+});
+document.getElementById('resetBtn').addEventListener('click', () => {
+  currentRotation = 0;
+  flipH = false;
+  flipV = false;
+  renderPreview();
+});
+
+downloadBtn.addEventListener('click', () => {
+  if (!originalImg) return;
+  const canvas = buildCanvas();
+  const dataUrl = canvas.toDataURL('image/png');
+  const a = document.createElement('a');
+  a.href = dataUrl;
+  a.download = 'rotated.png';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+});
+</script>
+</body>
+</html>
