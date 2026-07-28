@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WEBP to PNG Converter – Free Online Tool | Orisod</title>
+<meta name="description" content="Convert WEBP images to PNG online for free, keeping transparency intact. Works directly in your browser — no files are uploaded.">
+<style>
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:48px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:30px 20px;margin-top:30px;}
+.dropzone{border:2px dashed #374151;border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
+.dropzone:hover, .dropzone.dragover{border-color:#2563eb;background:#0f172a;}
+input[type="file"]{display:none;}
+button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:#2563eb;color:white;text-decoration:none;font-size:16px;cursor:pointer;}
+button:disabled{opacity:0.4;cursor:not-allowed;}
+button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.note{margin-top:20px;font-size:14px;opacity:0.6;}
+.results{margin-top:25px;text-align:left;}
+.result-item{display:flex;align-items:center;justify-content:space-between;background:#0f172a;border:1px solid #1e293b;border-radius:8px;padding:12px 16px;margin-bottom:10px;font-size:14px;}
+.result-item a{color:#60a5fa;text-decoration:none;font-weight:bold;}
+.result-item a:hover{text-decoration:underline;}
+.download-all{margin-top:15px;}
+.footer{margin-top:50px;font-size:14px;opacity:0.4;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;text-align:center;}
+.related a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>WEBP to PNG Converter</h1>
+  <p>Convert WEBP images to PNG format online for free, keeping transparency intact. Everything happens locally in your browser — your files are never uploaded anywhere.</p>
+
+  <div class="box">
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Click to select WEBP files or drag and drop them here</div>
+    </label>
+    <input type="file" id="fileInput" accept=".webp" multiple>
+
+    <br>
+    <button id="convertBtn" disabled>Convert to PNG</button>
+    <div class="note">Supports one or multiple WEBP files. Transparency is preserved. Nothing leaves your device.</div>
+    <div class="error" id="errorMsg"></div>
+
+    <div class="results" id="results"></div>
+    <div class="download-all" id="downloadAllWrap" style="display:none;">
+      <button id="downloadAllBtn">Download All</button>
+    </div>
+  </div>
+
+  <a class="back" href="/" style="background:#374151; margin-right:10px;">🏠 Home</a>
+  <a class="back" href="/tools">View All Tools</a>
+
+  <div class="seo-content">
+    <h2>What is a WEBP file?</h2>
+    <p>WEBP is a modern image format developed by Google that offers small file sizes with high quality, including support for transparency. PNG is older but far more universally supported — some design tools, older software, and specific workflows still require PNG, which is why converting from WEBP is sometimes necessary.</p>
+
+    <h2>When should you use this tool?</h2>
+    <ul>
+      <li>A design tool or editor doesn't support opening WEBP files directly</li>
+      <li>You need a transparent PNG for a project that requires that specific format</li>
+      <li>You downloaded a WEBP graphic and need to use it somewhere that only accepts PNG</li>
+      <li>You want a lossless copy of an image for further editing</li>
+    </ul>
+
+    <h2>Why use Orisod for this?</h2>
+    <p>This tool converts one or several WEBP files to PNG at once, entirely in your browser — your images are never uploaded to a server. Any transparency in the original WEBP is fully preserved in the resulting PNG.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <div class="q">Will transparency be preserved?</div>
+      <div>Yes, unlike converting to JPG, PNG fully supports transparency, so any transparent areas in your WEBP file will carry over correctly.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Will the file size increase?</div>
+      <div>Usually yes — PNG files tend to be larger than WEBP for the same image, since WEBP uses more efficient compression.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Are my files uploaded anywhere?</div>
+      <div>No, the conversion happens locally in your browser using JavaScript.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Can I convert multiple WEBP files at once?</div>
+      <div>Yes, select or drag multiple files and download them individually or all together.</div>
+    </div>
+  </div>
+
+  <h2>Related tools</h2>
+  <div class="related">
+    <a href="/webp-to-jpg">WEBP to JPG</a>
+    <a href="/png-to-webp">PNG to WEBP</a>
+    <a href="/compress-image">Compress Image</a>
+  </div>
+
+  <div class="footer">© Orisod Labs</div>
+</div>
+
+<script>
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const convertBtn = document.getElementById('convertBtn');
+const results = document.getElementById('results');
+const errorMsg = document.getElementById('errorMsg');
+const downloadAllWrap = document.getElementById('downloadAllWrap');
+const downloadAllBtn = document.getElementById('downloadAllBtn');
+
+let selectedFiles = [];
+let convertedBlobs = [];
+
+fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  handleFiles(e.dataTransfer.files);
+});
+
+function handleFiles(fileList) {
+  errorMsg.textContent = '';
+  const valid = Array.from(fileList).filter(f => /\.webp$/i.test(f.name));
+  if (valid.length === 0) {
+    errorMsg.textContent = 'Please select valid WEBP files.';
+    return;
+  }
+  selectedFiles = valid;
+  dropzoneText.textContent = `✅ ${valid.length} file(s) selected — ${valid.map(f => f.name).join(', ')}`;
+  convertBtn.disabled = false;
+  results.innerHTML = '';
+  downloadAllWrap.style.display = 'none';
+}
+
+convertBtn.addEventListener('click', async () => {
+  if (selectedFiles.length === 0) return;
+  convertBtn.disabled = true;
+  convertBtn.textContent = 'Converting...';
+  results.innerHTML = '';
+  convertedBlobs = [];
+  errorMsg.textContent = '';
+
+  for (const file of selectedFiles) {
+    try {
+      const blob = await convertToPng(file);
+      const name = file.name.replace(/\.webp$/i, '.png');
+      convertedBlobs.push({ name, blob });
+      addResultRow(name, blob);
+    } catch (err) {
+      errorMsg.textContent = `Could not convert ${file.name}.`;
+    }
+  }
+
+  convertBtn.disabled = false;
+  convertBtn.textContent = 'Convert to PNG';
+  if (convertedBlobs.length > 1) downloadAllWrap.style.display = 'block';
+});
+
+function convertToPng(file) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error('Conversion failed')), 'image/png');
+      };
+      img.onerror = () => reject(new Error('Could not load image'));
+      img.src = e.target.result;
+    };
+    reader.onerror = () => reject(new Error('Could not read file'));
+    reader.readAsDataURL(file);
+  });
+}
+
+function addResultRow(name, blob) {
+  const url = URL.createObjectURL(blob);
+  const sizeKb = (blob.size / 1024).toFixed(1);
+  const row = document.createElement('div');
+  row.className = 'result-item';
+  row.innerHTML = `<span>${name} (${sizeKb} KB)</span>`;
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = name;
+  link.textContent = 'Download';
+  row.appendChild(link);
+  results.appendChild(row);
+}
+
+downloadAllBtn.addEventListener('click', () => {
+  convertedBlobs.forEach(({ name, blob }) => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+});
+</script>
+</body>
+</html>
