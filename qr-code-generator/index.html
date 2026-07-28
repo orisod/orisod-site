@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR Code Generator – Free Online Tool | Orisod</title>
+<meta name="description" content="Generate a QR code from any text or URL, free and instant. Works directly in your browser — no data is sent anywhere.">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:48px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:30px 20px;margin-top:30px;}
+input[type="text"]{
+  width:100%;
+  max-width:500px;
+  box-sizing:border-box;
+  padding:14px;
+  border-radius:8px;
+  border:1px solid #374151;
+  background:#0f172a;
+  color:white;
+  font-size:15px;
+}
+.options-row{display:flex;justify-content:center;align-items:center;gap:14px;flex-wrap:wrap;margin-top:18px;font-size:14px;opacity:0.85;}
+.options-row select, .options-row input[type="color"]{
+  padding:8px;border-radius:6px;border:1px solid #374151;background:#0f172a;color:white;
+}
+button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:#2563eb;color:white;text-decoration:none;font-size:16px;cursor:pointer;}
+button:disabled{opacity:0.4;cursor:not-allowed;}
+button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.note{margin-top:20px;font-size:14px;opacity:0.6;}
+.result{margin-top:24px;}
+#qrCanvasWrap{display:inline-block;padding:16px;background:white;border-radius:8px;}
+.footer{margin-top:50px;font-size:14px;opacity:0.4;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;text-align:center;}
+.related a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>QR Code Generator</h1>
+  <p>Turn any link or text into a scannable QR code, instantly. Everything happens locally in your browser — nothing you type is sent anywhere.</p>
+
+  <div class="box">
+    <input type="text" id="textInput" placeholder="Enter a URL or any text...">
+
+    <div class="options-row">
+      <label>Size:
+        <select id="sizeSelect">
+          <option value="200">200×200</option>
+          <option value="300" selected>300×300</option>
+          <option value="500">500×500</option>
+          <option value="800">800×800</option>
+        </select>
+      </label>
+      <label>Color: <input type="color" id="colorInput" value="#000000"></label>
+    </div>
+
+    <br>
+    <button id="generateBtn">Generate QR Code</button>
+    <div class="error" id="errorMsg"></div>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <a class="back" href="/" style="background:#374151; margin-right:10px;">🏠 Home</a>
+  <a class="back" href="/tools">View All Tools</a>
+
+  <div class="seo-content">
+    <h2>What is a QR code?</h2>
+    <p>A QR code is a square barcode that stores text or a link, which any phone camera can scan to open instantly. They're commonly used on business cards, posters, menus, and product packaging to send people to a website or piece of information without typing anything.</p>
+
+    <h2>When should you use this tool?</h2>
+    <ul>
+      <li>You want to share a link on a printed flyer, poster, or business card</li>
+      <li>You're setting up a Wi-Fi network name/password, contact info, or event link people can scan</li>
+      <li>You need a quick way to transfer a short piece of text between devices</li>
+      <li>You want a custom-colored QR code to match your branding</li>
+    </ul>
+
+    <h2>Why use Orisod for this?</h2>
+    <p>The QR code is generated entirely in your browser — the text or link you type is never sent to a server. You can choose the output size and color before downloading as a PNG image.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <div class="q">Is there a limit to how much text I can encode?</div>
+      <div>QR codes can hold a few thousand characters, but shorter content (like a URL) scans faster and more reliably. Very long text may produce a denser, harder-to-scan code.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Do QR codes expire?</div>
+      <div>No, a QR code generated here never expires — it's a static image encoding your exact text, not a redirect service.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Is what I type sent to a server?</div>
+      <div>No, the QR code is generated locally in your browser using JavaScript — nothing you enter is transmitted anywhere.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Can I change the color of the QR code?</div>
+      <div>Yes, use the color picker before generating. For best scan reliability, keep good contrast against a light background.</div>
+    </div>
+  </div>
+
+  <h2>Related tools</h2>
+  <div class="related">
+    <a href="/image-to-base64">Image to Base64</a>
+    <a href="/favicon-generator">Favicon Generator</a>
+    <a href="/resize-image">Resize Image</a>
+  </div>
+
+  <div class="footer">© Orisod Labs</div>
+</div>
+
+<script>
+const textInput = document.getElementById('textInput');
+const sizeSelect = document.getElementById('sizeSelect');
+const colorInput = document.getElementById('colorInput');
+const generateBtn = document.getElementById('generateBtn');
+const errorMsg = document.getElementById('errorMsg');
+const result = document.getElementById('result');
+
+generateBtn.addEventListener('click', () => {
+  errorMsg.textContent = '';
+  result.innerHTML = '';
+
+  const text = textInput.value.trim();
+  if (!text) {
+    errorMsg.textContent = 'Enter some text or a URL first.';
+    return;
+  }
+
+  const size = parseInt(sizeSelect.value, 10);
+  const color = colorInput.value;
+
+  const wrap = document.createElement('div');
+  wrap.id = 'qrCanvasWrap';
+  result.appendChild(wrap);
+
+  try {
+    new QRCode(wrap, {
+      text: text,
+      width: size,
+      height: size,
+      colorDark: color,
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+
+    setTimeout(() => {
+      const canvas = wrap.querySelector('canvas');
+      const img = wrap.querySelector('img');
+      const dataUrl = canvas ? canvas.toDataURL('image/png') : (img ? img.src : null);
+
+      if (dataUrl) {
+        const link = document.createElement('a');
+        link.href = dataUrl;
+        link.download = 'qrcode.png';
+        link.className = 'back';
+        link.textContent = 'Download QR Code';
+        result.appendChild(document.createElement('br'));
+        result.appendChild(link);
+      }
+    }, 100);
+  } catch (err) {
+    errorMsg.textContent = 'Could not generate a QR code for this text.';
+  }
+});
+</script>
+</body>
+</html>
