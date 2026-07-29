@@ -13,8 +13,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Favicon Generator – Free Online Tool | Orisod</title>
 <meta name="description" content="Generate a complete favicon package (favicon.ico plus all standard sizes) from any image, free and online. Everything runs in your browser, no uploads.">
+<link rel="alternate" hreflang="en" href="https://orisod.com/favicon-generator">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/favicon-generator">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/favicon-generator">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
+.lang-switch{position:fixed;top:16px;right:16px;display:flex;gap:6px;z-index:100;}
+.lang-flag{font-size:13px;padding:6px 10px;border-radius:6px;text-decoration:none;color:#94a3b8;background:#111827;border:1px solid #1f2937;}
+.lang-flag.active{color:white;border-color:#2563eb;cursor:default;}
 body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
 .container{max-width:800px;margin:0 auto;}
 h1{font-size:48px;margin-bottom:10px;}
@@ -46,6 +52,10 @@ pre{background:#0f172a;border:1px solid #1e293b;border-radius:8px;padding:14px;t
 </style>
 </head>
 <body>
+<div class="lang-switch">
+  <span class="lang-flag active">EN</span>
+  <a class="lang-flag" href="/es/favicon-generator">ES</a>
+</div>
 <div class="container">
   <h1>Favicon Generator</h1>
   <p>Upload a square image (a logo works best) and get a complete favicon package — favicon.ico plus every standard size for browsers, iOS, and Android. Everything happens locally in your browser.</p>

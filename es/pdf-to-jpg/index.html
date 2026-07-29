@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Convertidor de PDF a JPG – Extrae imágenes de un PDF | Orisod</title>
+<meta name="description" content="Convierte páginas de PDF en imágenes JPG en línea y gratis. Rápido, simple y fácil de usar — todo ocurre en tu navegador, no se sube ningún archivo.">
+<link rel="alternate" hreflang="en" href="https://orisod.com/pdf-to-jpg">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/pdf-to-jpg">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/pdf-to-jpg">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+.lang-switch{position:fixed;top:16px;right:16px;display:flex;gap:6px;z-index:100;}
+.lang-flag{font-size:13px;padding:6px 10px;border-radius:6px;text-decoration:none;color:#94a3b8;background:#111827;border:1px solid #1f2937;}
+.lang-flag.active{color:white;border-color:#2563eb;cursor:default;}
+body{
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  background:#0b0f1a;
+  color:white;
+  text-align:center;
+  padding:40px 20px;
+}
+.container{
+  max-width:800px;
+  margin:0 auto;
+}
+h1{
+  font-size:48px;
+  margin-bottom:10px;
+}
+p{
+  font-size:18px;
+  opacity:0.85;
+  max-width:700px;
+  margin:0 auto 25px auto;
+  line-height:1.6;
+}
+.box{
+  background:#111827;
+  border:1px solid #1f2937;
+  border-radius:10px;
+  padding:30px 20px;
+  margin-top:30px;
+}
+.dropzone{
+  border:2px dashed #374151;
+  border-radius:10px;
+  padding:30px 20px;
+  cursor:pointer;
+  transition:0.2s;
+}
+.dropzone:hover, .dropzone.dragover{
+  border-color:#2563eb;
+  background:#0f172a;
+}
+input[type="file"]{
+  display:none;
+}
+.quality-row{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  margin-top:20px;
+  font-size:14px;
+  opacity:0.85;
+}
+input[type="range"]{
+  width:200px;
+}
+button, .back{
+  display:inline-block;
+  margin-top:20px;
+  padding:14px 20px;
+  border:none;
+  border-radius:8px;
+  background:#2563eb;
+  color:white;
+  text-decoration:none;
+  font-size:16px;
+  cursor:pointer;
+}
+button:disabled{
+  opacity:0.4;
+  cursor:not-allowed;
+}
+button:hover:not(:disabled), .back:hover{
+  filter:brightness(1.08);
+}
+.note{
+  margin-top:20px;
+  font-size:14px;
+  opacity:0.6;
+}
+.results{
+  margin-top:25px;
+}
+.results-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));
+  gap:14px;
+  margin-top:15px;
+}
+.result-item{
+  background:#0f172a;
+  border:1px solid #1e293b;
+  border-radius:8px;
+  padding:10px;
+  font-size:13px;
+  position:relative;
+}
+.result-item .select-check{
+  position:absolute;
+  top:8px;
+  left:8px;
+  width:18px;
+  height:18px;
+  cursor:pointer;
+  z-index:2;
+}
+.selection-controls{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:20px;
+  font-size:14px;
+}
+.selection-controls input[type="text"]{
+  padding:8px 10px;
+  border-radius:6px;
+  border:1px solid #374151;
+  background:#0f172a;
+  color:white;
+  font-size:13px;
+  width:140px;
+}
+.selection-controls button{
+  margin:0;
+  padding:8px 14px;
+  font-size:13px;
+  background:#374151;
+}
+.selection-controls button:hover:not(:disabled){
+  filter:brightness(1.15);
+}
+.download-row{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:20px;
+}
+.result-item img{
+  width:100%;
+  border-radius:4px;
+  margin-bottom:8px;
+  border:1px solid #1e293b;
+}
+.result-item a{
+  color:#60a5fa;
+  text-decoration:none;
+  font-weight:bold;
+}
+.result-item a:hover{
+  text-decoration:underline;
+}
+.download-all{
+  margin-top:20px;
+}
+.footer{
+  margin-top:50px;
+  font-size:14px;
+  opacity:0.4;
+}
+.error{
+  color:#f87171;
+  font-size:14px;
+  margin-top:10px;
+}
+.progress{
+  font-size:14px;
+  opacity:0.7;
+  margin-top:15px;
+}
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;text-align:center;}
+.related a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="lang-switch">
+  <a class="lang-flag" href="/pdf-to-jpg">EN</a>
+  <span class="lang-flag active">ES</span>
+</div>
+<div class="container">
+  <h1>Convertidor de PDF a JPG</h1>
+  <p>Convierte páginas de PDF en imágenes JPG de alta calidad de forma rápida y sencilla. Todo ocurre localmente en tu navegador — tus archivos nunca se suben a ningún lugar.</p>
+
+  <div class="box">
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📄 Haz clic para seleccionar un archivo PDF o arrástralo aquí</div>
+    </label>
+    <input type="file" id="fileInput" accept=".pdf">
+
+    <div class="quality-row">
+      <label for="quality">Calidad de imagen: <span id="qualityValue">85</span>%</label>
+      <input type="range" id="quality" min="30" max="100" value="85">
+    </div>
+
+    <br>
+    <button id="convertBtn" disabled>Convertir a JPG</button>
+    <div class="note">Sube un PDF y convierte cada página en una imagen JPG. Nada sale de tu dispositivo.</div>
+    <div class="error" id="errorMsg"></div>
+    <div class="progress" id="progressMsg"></div>
+
+    <div class="results" id="results">
+      <div class="results-grid" id="resultsGrid"></div>
+    </div>
+
+    <div class="selection-controls" id="selectionControls" style="display:none;">
+      <button id="selectAllBtn">Seleccionar todo</button>
+      <button id="selectNoneBtn">Deseleccionar todo</button>
+      <input type="text" id="rangeInput" placeholder="p. ej. 1-3, 5">
+      <button id="applyRangeBtn">Seleccionar rango</button>
+    </div>
+
+    <div class="download-row">
+      <div id="downloadAllWrap" style="display:none;">
+        <button id="downloadAllBtn">Descargar todo (ZIP)</button>
+      </div>
+      <div id="downloadSelectedWrap" style="display:none;">
+        <button id="downloadSelectedBtn">Descargar seleccionadas</button>
+      </div>
+    </div>
+  </div>
+
+  <a class="back" href="/es/" style="background:#374151; margin-right:10px;">🏠 Inicio</a>
+  <a class="back" href="/es/tools">Ver todas las herramientas</a>
+
+  <div class="seo-content">
+    <h2>¿Qué hace esta herramienta?</h2>
+    <p>Esta herramienta convierte cada página de un documento PDF en una imagen JPG independiente. Es útil cuando necesitas compartir un documento como imágenes, insertar una página en una presentación, publicarla en redes sociales o trabajar con una página en un editor de imágenes que no admite PDF.</p>
+
+    <h2>¿Cuándo deberías usarla?</h2>
+    <ul>
+      <li>Necesitas publicar un documento o página como imagen en redes sociales</li>
+      <li>Quieres insertar una página de PDF en una presentación o herramienta de diseño</li>
+      <li>Un formulario o sitio web solo acepta imágenes, no PDF</li>
+      <li>Quieres una vista previa rápida de cada página sin abrir un lector de PDF</li>
+    </ul>
+
+    <h2>¿Por qué usar Orisod para esto?</h2>
+    <p>La conversión ocurre completamente en tu navegador usando PDF.js — el mismo motor de renderizado del visor de PDF integrado en Chrome. Tu documento nunca se sube a un servidor. Puedes ajustar la calidad de la imagen de salida, previsualizar cada página antes de descargar y descargar todas las páginas de una vez con un solo clic.</p>
+
+    <h2>Preguntas frecuentes</h2>
+    <div class="faq-item">
+      <div class="q">¿Funciona con PDF de varias páginas?</div>
+      <div>Sí. Cada página de tu PDF se convierte en su propia imagen JPG. Puedes descargar páginas individuales, seleccionar un rango específico (como "2-5, 8") o descargar todo de una vez como archivo ZIP.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Se sube mi PDF a un servidor?</div>
+      <div>No. Toda la conversión se ejecuta localmente en tu navegador — el archivo nunca sale de tu dispositivo.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Puedo controlar la calidad de la imagen?</div>
+      <div>Sí, usa el control de calidad antes de convertir para equilibrar la nitidez de la imagen con el tamaño del archivo.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Funciona con PDF escaneados o protegidos con contraseña?</div>
+      <div>Los PDF escaneados (basados en imágenes) se convierten con normalidad. Los PDF protegidos con contraseña deben desbloquearse primero, ya que el navegador no puede leer contenido cifrado.</div>
+    </div>
+  </div>
+
+  <h2>Herramientas relacionadas</h2>
+  <div class="related">
+    <a href="/es/image-to-pdf">Imagen a PDF</a>
+    <a href="/es/jpg-to-pdf">JPG a PDF</a>
+    <a href="/es/compress-image">Comprimir imagen</a>
+  </div>
+
+  <div class="footer">© Orisod Labs · <a href="/es/about" style="color:#94a3b8;">Acerca de</a> · <a href="/es/privacy" style="color:#94a3b8;">Privacidad</a></div>
+</div>
+
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const convertBtn = document.getElementById('convertBtn');
+const qualitySlider = document.getElementById('quality');
+const qualityValue = document.getElementById('qualityValue');
+const resultsGrid = document.getElementById('resultsGrid');
+const errorMsg = document.getElementById('errorMsg');
+const progressMsg = document.getElementById('progressMsg');
+const downloadAllWrap = document.getElementById('downloadAllWrap');
+const downloadAllBtn = document.getElementById('downloadAllBtn');
+const selectionControls = document.getElementById('selectionControls');
+const selectAllBtn = document.getElementById('selectAllBtn');
+const selectNoneBtn = document.getElementById('selectNoneBtn');
+const rangeInput = document.getElementById('rangeInput');
+const applyRangeBtn = document.getElementById('applyRangeBtn');
+const downloadSelectedWrap = document.getElementById('downloadSelectedWrap');
+const downloadSelectedBtn = document.getElementById('downloadSelectedBtn');
+
+let selectedFile = null;
+let convertedImages = []; // { name, blob, page, checkbox }
+
+qualitySlider.addEventListener('input', () => {
+  qualityValue.textContent = qualitySlider.value;
+});
+
+fileInput.addEventListener('change', (e) => {
+  handleFile(e.target.files[0]);
+});
+
+dropzone.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  dropzone.classList.add('dragover');
+});
+dropzone.addEventListener('dragleave', () => {
+  dropzone.classList.remove('dragover');
+});
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  handleFile(e.dataTransfer.files[0]);
+});
+
+function handleFile(file) {
+  errorMsg.textContent = '';
+  if (!file || !/\.pdf$/i.test(file.name)) {
+    errorMsg.textContent = 'Selecciona un archivo PDF válido.';
+    return;
+  }
+  selectedFile = file;
+  dropzoneText.textContent = `✅ ${file.name} seleccionado`;
+  convertBtn.disabled = false;
+  resultsGrid.innerHTML = '';
+  downloadAllWrap.style.display = 'none';
+  selectionControls.style.display = 'none';
+  downloadSelectedWrap.style.display = 'none';
+}
+
+convertBtn.addEventListener('click', async () => {
+  if (!selectedFile) return;
+
+  convertBtn.disabled = true;
+  convertBtn.textContent = 'Convirtiendo...';
+  resultsGrid.innerHTML = '';
+  convertedImages = [];
+  errorMsg.textContent = '';
+  progressMsg.textContent = '';
+  selectionControls.style.display = 'none';
+  downloadSelectedWrap.style.display = 'none';
+
+  const quality = parseInt(qualitySlider.value, 10) / 100;
+
+  try {
+    const arrayBuffer = await selectedFile.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    const baseName = selectedFile.name.replace(/\.pdf$/i, '');
+
+    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+      progressMsg.textContent = `Procesando página ${pageNum} de ${pdf.numPages}...`;
+
+      const page = await pdf.getPage(pageNum);
+      const viewport = page.getViewport({ scale: 2 });
+      const canvas = document.createElement('canvas');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      const ctx = canvas.getContext('2d');
+
+      await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+
+      const blob = await new Promise((resolve) => {
+        canvas.toBlob(resolve, 'image/jpeg', quality);
+      });
+
+      const name = pdf.numPages > 1 ? `${baseName}-page-${pageNum}.jpg` : `${baseName}.jpg`;
+      const item = { name, blob, page: pageNum };
+      convertedImages.push(item);
+      addResultCard(item);
+    }
+
+    progressMsg.textContent = `Listo — ${pdf.numPages} página(s) convertidas.`;
+    if (convertedImages.length > 1) {
+      downloadAllWrap.style.display = 'block';
+      selectionControls.style.display = 'flex';
+      updateDownloadSelectedVisibility();
+    }
+  } catch (err) {
+    errorMsg.textContent = 'No se pudo procesar este PDF. Asegúrate de que el archivo no esté dañado o protegido con contraseña.';
+    progressMsg.textContent = '';
+  }
+
+  convertBtn.disabled = false;
+  convertBtn.textContent = 'Convertir a JPG';
+});
+
+function addResultCard(item) {
+  const url = URL.createObjectURL(item.blob);
+
+  const card = document.createElement('div');
+  card.className = 'result-item';
+
+  const checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
+  checkbox.className = 'select-check';
+  checkbox.addEventListener('change', updateDownloadSelectedVisibility);
+  item.checkbox = checkbox;
+
+  card.appendChild(checkbox);
+  card.insertAdjacentHTML('beforeend', `<img src="${url}" alt="${item.name}"><div>${item.name}</div>`);
+
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = item.name;
+  link.textContent = 'Descargar';
+
+  card.appendChild(link);
+  resultsGrid.appendChild(card);
+}
+
+function updateDownloadSelectedVisibility() {
+  const anySelected = convertedImages.some(img => img.checkbox && img.checkbox.checked);
+  downloadSelectedWrap.style.display = anySelected ? 'block' : 'none';
+}
+
+selectAllBtn.addEventListener('click', () => {
+  convertedImages.forEach(img => { if (img.checkbox) img.checkbox.checked = true; });
+  updateDownloadSelectedVisibility();
+});
+
+selectNoneBtn.addEventListener('click', () => {
+  convertedImages.forEach(img => { if (img.checkbox) img.checkbox.checked = false; });
+  updateDownloadSelectedVisibility();
+});
+
+applyRangeBtn.addEventListener('click', () => {
+  const raw = rangeInput.value.trim();
+  errorMsg.textContent = '';
+  if (!raw) return;
+
+  const pagesToSelect = new Set();
+  const parts = raw.split(',');
+
+  for (const part of parts) {
+    const trimmed = part.trim();
+    if (!trimmed) continue;
+    if (trimmed.includes('-')) {
+      const [startStr, endStr] = trimmed.split('-');
+      const start = parseInt(startStr, 10);
+      const end = parseInt(endStr, 10);
+      if (isNaN(start) || isNaN(end) || start < 1 || end < start) {
+        errorMsg.textContent = `Rango no válido: "${trimmed}"`;
+        continue;
+      }
+      for (let p = start; p <= end; p++) pagesToSelect.add(p);
+    } else {
+      const num = parseInt(trimmed, 10);
+      if (isNaN(num) || num < 1) {
+        errorMsg.textContent = `Número de página no válido: "${trimmed}"`;
+        continue;
+      }
+      pagesToSelect.add(num);
+    }
+  }
+
+  convertedImages.forEach(img => {
+    if (img.checkbox) img.checkbox.checked = pagesToSelect.has(img.page);
+  });
+  updateDownloadSelectedVisibility();
+});
+
+downloadAllBtn.addEventListener('click', async () => {
+  await downloadAsZip(convertedImages, selectedFile ? selectedFile.name.replace(/\.pdf$/i, '') : 'pages');
+});
+
+downloadSelectedBtn.addEventListener('click', async () => {
+  const selected = convertedImages.filter(img => img.checkbox && img.checkbox.checked);
+  if (selected.length === 0) return;
+
+  if (selected.length === 1) {
+    const item = selected[0];
+    const url = URL.createObjectURL(item.blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = item.name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    return;
+  }
+
+  const baseName = selectedFile ? selectedFile.name.replace(/\.pdf$/i, '') : 'pages';
+  await downloadAsZip(selected, baseName + '-selected');
+});
+
+async function downloadAsZip(items, zipBaseName) {
+  if (!window.JSZip) {
+    errorMsg.textContent = 'No se pudo crear el archivo ZIP. Inténtalo de nuevo.';
+    return;
+  }
+  const zip = new JSZip();
+  items.forEach(({ name, blob }) => {
+    zip.file(name, blob);
+  });
+
+  const content = await zip.generateAsync({ type: 'blob' });
+  const url = URL.createObjectURL(content);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${zipBaseName}.zip`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+</script>
+</body>
+</html>

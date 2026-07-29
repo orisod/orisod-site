@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recortador para Redes Sociales – Herramienta Gratuita en Línea | Orisod</title>
+<meta name="description" content="Recorta imágenes al tamaño exacto para Instagram, YouTube, Twitter/X, Facebook, LinkedIn y TikTok. Gratis, en el navegador, sin subidas.">
+<link rel="alternate" hreflang="en" href="https://orisod.com/social-media-crop">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/social-media-crop">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/social-media-crop">
+<style>
+.lang-switch{position:fixed;top:16px;right:16px;display:flex;gap:6px;z-index:100;}
+.lang-flag{font-size:13px;padding:6px 10px;border-radius:6px;text-decoration:none;color:#94a3b8;background:#111827;border:1px solid #1f2937;}
+.lang-flag.active{color:white;border-color:#2563eb;cursor:default;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:44px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:30px 20px;margin-top:30px;}
+.preset-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));
+  gap:10px;
+  margin-bottom:24px;
+  text-align:left;
+}
+.preset-btn{
+  background:#0f172a;
+  border:1px solid #1e293b;
+  border-radius:8px;
+  padding:12px 14px;
+  color:white;
+  cursor:pointer;
+  font-size:13px;
+  transition:0.2s;
+  text-align:left;
+}
+.preset-btn:hover{border-color:#2563eb;}
+.preset-btn.active{border-color:#2563eb;background:#1a2436;}
+.preset-btn .dims{opacity:0.6;font-size:12px;display:block;margin-top:2px;}
+.dropzone{border:2px dashed #374151;border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
+.dropzone:hover, .dropzone.dragover{border-color:#2563eb;background:#0f172a;}
+input[type="file"]{display:none;}
+.editor{display:none;margin-top:20px;}
+.canvas-wrap{position:relative;display:inline-block;max-width:100%;touch-action:none;}
+#sourceCanvas{max-width:100%;display:block;border-radius:6px;border:1px solid #1e293b;}
+#selectionBox{
+  position:absolute;
+  border:2px solid #2563eb;
+  background:rgba(37, 99, 235, 0.15);
+  cursor:move;
+  display:none;
+}
+.dim-note{margin-top:12px;font-size:13px;opacity:0.7;}
+button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:#2563eb;color:white;text-decoration:none;font-size:16px;cursor:pointer;}
+button:disabled{opacity:0.4;cursor:not-allowed;}
+button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.note{margin-top:20px;font-size:14px;opacity:0.6;}
+.result{margin-top:20px;}
+.result img{max-width:100%;border-radius:6px;border:1px solid #1e293b;}
+.footer{margin-top:50px;font-size:14px;opacity:0.4;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;text-align:center;}
+.related a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="lang-switch">
+  <a class="lang-flag" href="/social-media-crop">EN</a>
+  <span class="lang-flag active">ES</span>
+</div>
+<div class="container">
+  <h1>Recortador para Redes Sociales</h1>
+  <p>Elige una plataforma, arrastra para seleccionar el área y descarga una imagen con el tamaño exacto. Todo ocurre localmente en tu navegador.</p>
+
+  <div class="box">
+    <div class="preset-grid" id="presetGrid"></div>
+
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Haz clic para seleccionar una imagen o arrástrala aquí</div>
+    </label>
+    <input type="file" id="fileInput" accept="image/*">
+    <div class="error" id="errorMsg"></div>
+
+    <div class="editor" id="editor">
+      <div class="canvas-wrap" id="canvasWrap">
+        <canvas id="sourceCanvas"></canvas>
+        <div id="selectionBox"></div>
+      </div>
+      <div class="dim-note" id="dimNote">Arrastra sobre la imagen para seleccionar el área a recortar.</div>
+      <br>
+      <button id="cropBtn" disabled>Recortar y Descargar</button>
+    </div>
+
+    <div class="result" id="result"></div>
+    <div class="note">Compatible con JPG, PNG, WEBP y otros formatos de imagen comunes. Nada sale de tu dispositivo.</div>
+  </div>
+
+  <a class="back" href="/es/" style="background:#374151; margin-right:10px;">🏠 Inicio</a>
+  <a class="back" href="/es/tools">Ver todas las herramientas</a>
+
+  <div class="seo-content">
+    <h2>¿Qué hace esta herramienta?</h2>
+    <p>Cada red social espera un tamaño y proporción de imagen diferente — un cuadrado para una publicación de Instagram, un formato vertical 9:16 para Historias, un banner ancho para LinkedIn. Esta herramienta fija tu selección de recorte a la proporción exacta que necesita cada plataforma, y luego redimensiona el resultado a las dimensiones en píxeles recomendadas por esa plataforma, para que tu imagen se vea bien en lugar de estirarse o recortarse de forma extraña después de subirla.</p>
+
+    <h2>¿Cuándo deberías usar esta herramienta?</h2>
+    <ul>
+      <li>Vas a publicar una foto en Instagram, TikTok, YouTube u otra plataforma y quieres que se vea correctamente</li>
+      <li>Notaste que tu imagen subida se ve recortada de forma extraña o borrosa porque la plataforma la redimensionó automáticamente</li>
+      <li>Estás creando un banner o foto de portada y necesitas las dimensiones exactas requeridas</li>
+      <li>Quieres preparar la misma foto para varias plataformas con diferentes proporciones</li>
+    </ul>
+
+    <h2>¿Por qué usar Orisod para esto?</h2>
+    <p>Elige primero un preset de plataforma, y tu selección de recorte se fija automáticamente a esa proporción exacta mientras arrastras — sin adivinar ni hacer cálculos manuales. La imagen final se redimensiona a las dimensiones estándar en píxeles de la plataforma. Todo ocurre localmente en tu navegador, así que tu foto nunca se sube a un servidor.</p>
+
+    <h2>Preguntas frecuentes</h2>
+    <div class="faq-item">
+      <div class="q">¿Se estirará mi imagen para ajustarse al preset?</div>
+      <div>No, el área de selección en sí está fija a la proporción correcta mientras arrastras, así que nada se estira — solo se usa el área exacta que seleccionas, y luego se redimensiona al tamaño estándar en píxeles de la plataforma.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Qué pasa si mi foto es demasiado pequeña para el tamaño en píxeles del preset?</div>
+      <div>La herramienta igual recortará a la proporción correcta y ampliará al tamaño objetivo, aunque las imágenes de origen muy pequeñas pueden verse más suaves al ampliarse significativamente.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Puedo usar esto para plataformas que no aparecen en la lista?</div>
+      <div>Estos presets cubren los formatos más comunes. Para una proporción personalizada, usa la herramienta normal de Recortar Imagen.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Se sube mi imagen a algún lugar?</div>
+      <div>No, todo el proceso ocurre localmente en tu navegador usando JavaScript.</div>
+    </div>
+  </div>
+
+  <h2>Herramientas relacionadas</h2>
+  <div class="related">
+    <a href="/es/crop-image">Recortar imagen</a>
+    <a href="/es/resize-image">Redimensionar imagen</a>
+    <a href="/es/compress-image">Comprimir imagen</a>
+  </div>
+
+  <div class="footer">© Orisod Labs</div>
+</div>
+
+<script>
+const PRESETS = [
+  { name: 'Publicación de Instagram', ratioW: 1, ratioH: 1, outW: 1080, outH: 1080 },
+  { name: 'Historia / Reel de Instagram', ratioW: 9, ratioH: 16, outW: 1080, outH: 1920 },
+  { name: 'Instagram Vertical', ratioW: 4, ratioH: 5, outW: 1080, outH: 1350 },
+  { name: 'Portada de Video de TikTok', ratioW: 9, ratioH: 16, outW: 1080, outH: 1920 },
+  { name: 'Miniatura de YouTube', ratioW: 16, ratioH: 9, outW: 1280, outH: 720 },
+  { name: 'Encabezado de Twitter / X', ratioW: 3, ratioH: 1, outW: 1500, outH: 500 },
+  { name: 'Portada de Facebook', ratioW: 205, ratioH: 78, outW: 820, outH: 312 },
+  { name: 'Banner de LinkedIn', ratioW: 4, ratioH: 1, outW: 1584, outH: 396 }
+];
+
+const presetGrid = document.getElementById('presetGrid');
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const errorMsg = document.getElementById('errorMsg');
+const editor = document.getElementById('editor');
+const sourceCanvas = document.getElementById('sourceCanvas');
+const selectionBox = document.getElementById('selectionBox');
+const dimNote = document.getElementById('dimNote');
+const cropBtn = document.getElementById('cropBtn');
+const resultEl = document.getElementById('result');
+
+let currentPreset = PRESETS[0];
+let img = null;
+let scale = 1;
+let selection = null;
+let dragStart = null;
+
+PRESETS.forEach((preset, index) => {
+  const btn = document.createElement('div');
+  btn.className = 'preset-btn' + (index === 0 ? ' active' : '');
+  btn.innerHTML = `${preset.name}<span class="dims">${preset.outW} × ${preset.outH}px</span>`;
+  btn.addEventListener('click', () => {
+    currentPreset = preset;
+    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selection = null;
+    selectionBox.style.display = 'none';
+    cropBtn.disabled = true;
+    dimNote.textContent = 'Arrastra sobre la imagen para seleccionar el área a recortar.';
+  });
+  presetGrid.appendChild(btn);
+});
+
+fileInput.addEventListener('change', (e) => { if (e.target.files[0]) loadFile(e.target.files[0]); });
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+});
+
+function loadFile(file) {
+  errorMsg.textContent = '';
+  if (!file.type.startsWith('image/')) {
+    errorMsg.textContent = 'Por favor selecciona un archivo de imagen válido.';
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    img = new Image();
+    img.onload = () => {
+      dropzoneText.textContent = `✅ ${file.name} cargado`;
+      setupCanvas();
+      editor.style.display = 'block';
+      resultEl.innerHTML = '';
+      cropBtn.disabled = true;
+    };
+    img.onerror = () => { errorMsg.textContent = 'No se pudo cargar esta imagen.'; };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function setupCanvas() {
+  const maxWidth = Math.min(700, window.innerWidth - 80);
+  const maxHeight = 480;
+  scale = Math.min(1, maxWidth / img.width, maxHeight / img.height);
+  sourceCanvas.width = img.width * scale;
+  sourceCanvas.height = img.height * scale;
+  const ctx = sourceCanvas.getContext('2d');
+  ctx.drawImage(img, 0, 0, sourceCanvas.width, sourceCanvas.height);
+
+  selection = null;
+  selectionBox.style.display = 'none';
+  dimNote.textContent = 'Arrastra sobre la imagen para seleccionar el área a recortar.';
+}
+
+function getPos(e) {
+  const rect = sourceCanvas.getBoundingClientRect();
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  const x = Math.max(0, Math.min(clientX - rect.left, sourceCanvas.width));
+  const y = Math.max(0, Math.min(clientY - rect.top, sourceCanvas.height));
+  return { x, y };
+}
+
+function startDrag(e) {
+  if (!img) return;
+  e.preventDefault();
+  dragStart = getPos(e);
+  selection = { x: dragStart.x, y: dragStart.y, w: 0, h: 0 };
+  selectionBox.style.display = 'block';
+  updateSelectionBox();
+}
+
+function moveDrag(e) {
+  if (!dragStart) return;
+  e.preventDefault();
+  const pos = getPos(e);
+  const ratio = currentPreset.ratioW / currentPreset.ratioH;
+
+  const dx = pos.x - dragStart.x;
+  const dy = pos.y - dragStart.y;
+  const absDx = Math.abs(dx);
+  const absDy = Math.abs(dy);
+
+  let w, h;
+  if (absDx / ratio >= absDy) {
+    w = absDx;
+    h = w / ratio;
+  } else {
+    h = absDy;
+    w = h * ratio;
+  }
+
+  let x = dx >= 0 ? dragStart.x : dragStart.x - w;
+  let y = dy >= 0 ? dragStart.y : dragStart.y - h;
+
+  // Clamp to canvas bounds while preserving the aspect ratio.
+  if (x < 0) { w += x; x = 0; h = w / ratio; }
+  if (y < 0) { h += y; y = 0; w = h * ratio; }
+  if (x + w > sourceCanvas.width) { w = sourceCanvas.width - x; h = w / ratio; }
+  if (y + h > sourceCanvas.height) { h = sourceCanvas.height - y; w = h * ratio; }
+
+  selection = { x, y, w, h };
+  updateSelectionBox();
+}
+
+function endDrag() {
+  dragStart = null;
+  if (selection && selection.w > 5 && selection.h > 5) {
+    cropBtn.disabled = false;
+    const realW = Math.round(selection.w / scale);
+    const realH = Math.round(selection.h / scale);
+    dimNote.textContent = `Selección: ${realW} × ${realH} px → se redimensionará a ${currentPreset.outW} × ${currentPreset.outH}px`;
+  }
+}
+
+function updateSelectionBox() {
+  selectionBox.style.left = selection.x + 'px';
+  selectionBox.style.top = selection.y + 'px';
+  selectionBox.style.width = selection.w + 'px';
+  selectionBox.style.height = selection.h + 'px';
+}
+
+sourceCanvas.addEventListener('mousedown', startDrag);
+window.addEventListener('mousemove', moveDrag);
+window.addEventListener('mouseup', endDrag);
+sourceCanvas.addEventListener('touchstart', startDrag);
+window.addEventListener('touchmove', moveDrag);
+window.addEventListener('touchend', endDrag);
+
+cropBtn.addEventListener('click', () => {
+  if (!selection || !img) return;
+
+  const realX = Math.round(selection.x / scale);
+  const realY = Math.round(selection.y / scale);
+  const realW = Math.round(selection.w / scale);
+  const realH = Math.round(selection.h / scale);
+
+  const outCanvas = document.createElement('canvas');
+  outCanvas.width = currentPreset.outW;
+  outCanvas.height = currentPreset.outH;
+  const ctx = outCanvas.getContext('2d');
+  ctx.drawImage(img, realX, realY, realW, realH, 0, 0, currentPreset.outW, currentPreset.outH);
+
+  const dataUrl = outCanvas.toDataURL('image/jpeg', 0.95);
+
+  resultEl.innerHTML = '';
+  const preview = document.createElement('img');
+  preview.src = dataUrl;
+  resultEl.appendChild(preview);
+
+  const presetSlug = currentPreset.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  const link = document.createElement('a');
+  link.href = dataUrl;
+  link.download = `${presetSlug}.jpg`;
+  link.className = 'back';
+  link.style.marginTop = '15px';
+  link.textContent = 'Descargar Imagen';
+  resultEl.appendChild(document.createElement('br'));
+  resultEl.appendChild(link);
+});
+</script>
+</body>
+</html>

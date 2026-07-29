@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Difuminar caras / área – Herramienta gratuita en línea | Orisod</title>
+<meta name="description" content="Arrastra para seleccionar y difuminar cualquier área de una imagen — caras, matrículas o datos privados. Gratis, en el navegador, sin subir archivos.">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blur-area-tool">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blur-area-tool">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blur-area-tool">
+<style>
+.lang-switch{position:fixed;top:16px;right:16px;display:flex;gap:6px;z-index:100;}
+.lang-flag{font-size:13px;padding:6px 10px;border-radius:6px;text-decoration:none;color:#94a3b8;background:#111827;border:1px solid #1f2937;}
+.lang-flag.active{color:white;border-color:#2563eb;cursor:default;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:44px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:30px 20px;margin-top:30px;}
+.dropzone{border:2px dashed #374151;border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
+.dropzone:hover, .dropzone.dragover{border-color:#2563eb;background:#0f172a;}
+input[type="file"]{display:none;}
+.canvas-wrap{position:relative;display:inline-block;max-width:100%;margin-top:20px;touch-action:none;}
+#sourceCanvas{max-width:100%;display:block;border-radius:6px;border:1px solid #1e293b;cursor:crosshair;}
+.region-box{position:absolute;border:2px solid #dc2626;background:rgba(220,38,38,0.2);pointer-events:none;}
+.controls-row{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:16px;flex-wrap:wrap;font-size:14px;opacity:0.9;}
+input[type="range"]{width:160px;}
+.action-row{display:flex;justify-content:center;gap:10px;margin-top:16px;flex-wrap:wrap;}
+.action-btn{padding:10px 16px;border-radius:8px;border:1px solid #374151;background:#374151;color:white;cursor:pointer;font-size:13px;}
+.action-btn:hover{filter:brightness(1.15);}
+.region-count{margin-top:10px;font-size:13px;opacity:0.7;}
+button.primary, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:#2563eb;color:white;text-decoration:none;font-size:16px;cursor:pointer;}
+button.primary:disabled{opacity:0.4;cursor:not-allowed;}
+button.primary:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.note{margin-top:20px;font-size:14px;opacity:0.6;}
+.footer{margin-top:50px;font-size:14px;opacity:0.4;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;text-align:center;}
+.related a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="lang-switch">
+  <a class="lang-flag" href="/blur-area-tool">EN</a>
+  <span class="lang-flag active">ES</span>
+</div>
+<div class="container">
+  <h1>Difuminar caras / área</h1>
+  <p>Arrastra para seleccionar una o más áreas — caras, matrículas o cualquier detalle privado — y pixélalas antes de compartir. Todo ocurre localmente en tu navegador.</p>
+
+  <div class="box">
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Haz clic para seleccionar una imagen o arrástrala aquí</div>
+    </label>
+    <input type="file" id="fileInput" accept="image/*">
+    <div class="error" id="errorMsg"></div>
+
+    <div class="canvas-wrap" id="canvasWrap" style="display:none;">
+      <canvas id="sourceCanvas"></canvas>
+      <div id="regionsOverlay"></div>
+    </div>
+
+    <div class="controls-row" id="controlsRow" style="display:none;">
+      <label for="intensitySlider">Intensidad del difuminado: <span id="intensityValue">12</span></label>
+      <input type="range" id="intensitySlider" min="4" max="30" value="12">
+    </div>
+
+    <div class="action-row" id="actionRow" style="display:none;">
+      <div class="action-btn" id="undoBtn">Deshacer última selección</div>
+      <div class="action-btn" id="clearBtn">Borrar todo</div>
+    </div>
+    <div class="region-count" id="regionCount"></div>
+
+    <br>
+    <button class="primary" id="applyBtn" disabled style="display:none;">Aplicar difuminado y descargar</button>
+    <div class="note">Arrastra sobre la imagen para seleccionar un área. Añade tantas áreas como necesites antes de aplicar.</div>
+  </div>
+
+  <a class="back" href="/es/" style="background:#374151; margin-right:10px;">🏠 Inicio</a>
+  <a class="back" href="/es/tools">Ver todas las herramientas</a>
+
+  <div class="seo-content">
+    <h2>¿Qué hace esta herramienta?</h2>
+    <p>Esta herramienta te permite arrastrar para seleccionar una o más áreas rectangulares en una imagen y pixelarlas — una forma fiable de ocultar caras, matrículas, direcciones o cualquier otro detalle que no quieras que se vea antes de compartir una foto.</p>
+
+    <h2>¿Cuándo deberías usar esta herramienta?</h2>
+    <ul>
+      <li>Compartes una foto públicamente y necesitas ocultar la cara de alguien que aparece de fondo</li>
+      <li>Una captura de pantalla contiene una matrícula, dirección o número de cuenta que quieres tapar</li>
+      <li>Necesitas proteger la identidad de alguien sin dejar de mostrar el resto de la foto</li>
+      <li>Quieres ocultar un detalle específico sin recortar toda el área</li>
+    </ul>
+
+    <h2>¿Por qué usar Orisod para esto?</h2>
+    <p>Esta herramienta usa pixelado en lugar de un difuminado suave, que es el método más fiable para ocultar información privada — un difuminado ligero a veces se puede revertir, mientras que el pixelado descarta permanentemente el detalle original. Puedes seleccionar varias áreas, ajustar la intensidad y todo ocurre localmente en tu navegador — tu foto nunca se sube a un servidor.</p>
+
+    <h2>Preguntas frecuentes</h2>
+    <div class="faq-item">
+      <div class="q">¿Detecta caras automáticamente?</div>
+      <div>No, tú arrastras manualmente para seleccionar el área que quieres difuminar — esto te da control total sobre exactamente qué se oculta, incluidas cosas que no son caras, como matrículas o documentos.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Puedo difuminar más de un área?</div>
+      <div>Sí, arrastra para seleccionar tantas áreas como necesites antes de hacer clic en "Aplicar difuminado y descargar".</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Se puede revertir el pixelado?</div>
+      <div>No, el pixelado descarta permanentemente el detalle de los píxeles en esa área — a diferencia de algunos filtros de difuminado, no hay forma de recuperar el contenido original de la imagen a partir del resultado pixelado.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Se sube mi foto a algún lugar?</div>
+      <div>No, todo el proceso ocurre localmente en tu navegador usando JavaScript.</div>
+    </div>
+  </div>
+
+  <h2>Herramientas relacionadas</h2>
+  <div class="related">
+    <a href="/es/exif-remover">Eliminar EXIF</a>
+    <a href="/es/crop-image">Recortar imagen</a>
+    <a href="/es/compress-image">Comprimir imagen</a>
+  </div>
+
+  <div class="footer">© Orisod Labs</div>
+</div>
+
+<script>
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const errorMsg = document.getElementById('errorMsg');
+const canvasWrap = document.getElementById('canvasWrap');
+const sourceCanvas = document.getElementById('sourceCanvas');
+const regionsOverlay = document.getElementById('regionsOverlay');
+const controlsRow = document.getElementById('controlsRow');
+const intensitySlider = document.getElementById('intensitySlider');
+const intensityValue = document.getElementById('intensityValue');
+const actionRow = document.getElementById('actionRow');
+const undoBtn = document.getElementById('undoBtn');
+const clearBtn = document.getElementById('clearBtn');
+const regionCount = document.getElementById('regionCount');
+const applyBtn = document.getElementById('applyBtn');
+
+let img = null;
+let scale = 1;
+let regions = []; // in canvas-display coordinates {x,y,w,h}
+let dragStart = null;
+let currentDragBox = null;
+
+fileInput.addEventListener('change', (e) => { if (e.target.files[0]) loadFile(e.target.files[0]); });
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+});
+
+function loadFile(file) {
+  errorMsg.textContent = '';
+  if (!file.type.startsWith('image/')) {
+    errorMsg.textContent = 'Selecciona un archivo de imagen válido.';
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    img = new Image();
+    img.onload = () => {
+      dropzoneText.textContent = `✅ ${file.name} cargado`;
+      setupCanvas();
+      canvasWrap.style.display = 'inline-block';
+      controlsRow.style.display = 'flex';
+      actionRow.style.display = 'flex';
+      applyBtn.style.display = 'inline-block';
+      regions = [];
+      updateRegionCount();
+      renderRegionOverlays();
+    };
+    img.onerror = () => { errorMsg.textContent = 'No se pudo cargar esta imagen.'; };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function setupCanvas() {
+  const maxWidth = Math.min(700, window.innerWidth - 80);
+  const maxHeight = 480;
+  scale = Math.min(1, maxWidth / img.width, maxHeight / img.height);
+  sourceCanvas.width = img.width * scale;
+  sourceCanvas.height = img.height * scale;
+  const ctx = sourceCanvas.getContext('2d');
+  ctx.drawImage(img, 0, 0, sourceCanvas.width, sourceCanvas.height);
+}
+
+function getPos(e) {
+  const rect = sourceCanvas.getBoundingClientRect();
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  const x = Math.max(0, Math.min(clientX - rect.left, sourceCanvas.width));
+  const y = Math.max(0, Math.min(clientY - rect.top, sourceCanvas.height));
+  return { x, y };
+}
+
+function startDrag(e) {
+  if (!img) return;
+  e.preventDefault();
+  dragStart = getPos(e);
+}
+
+function moveDrag(e) {
+  if (!dragStart) return;
+  e.preventDefault();
+  const pos = getPos(e);
+  const x = Math.min(dragStart.x, pos.x);
+  const y = Math.min(dragStart.y, pos.y);
+  const w = Math.abs(pos.x - dragStart.x);
+  const h = Math.abs(pos.y - dragStart.y);
+
+  if (!currentDragBox) {
+    currentDragBox = document.createElement('div');
+    currentDragBox.className = 'region-box';
+    regionsOverlay.appendChild(currentDragBox);
+  }
+  currentDragBox.style.left = x + 'px';
+  currentDragBox.style.top = y + 'px';
+  currentDragBox.style.width = w + 'px';
+  currentDragBox.style.height = h + 'px';
+}
+
+function endDrag() {
+  if (!dragStart || !currentDragBox) { dragStart = null; return; }
+
+  const rect = currentDragBox.getBoundingClientRect();
+  const canvasRect = sourceCanvas.getBoundingClientRect();
+  const w = parseFloat(currentDragBox.style.width);
+  const h = parseFloat(currentDragBox.style.height);
+
+  if (w > 5 && h > 5) {
+    regions.push({
+      x: parseFloat(currentDragBox.style.left),
+      y: parseFloat(currentDragBox.style.top),
+      w, h
+    });
+  }
+
+  currentDragBox = null;
+  dragStart = null;
+  updateRegionCount();
+  renderRegionOverlays();
+}
+
+sourceCanvas.addEventListener('mousedown', startDrag);
+window.addEventListener('mousemove', moveDrag);
+window.addEventListener('mouseup', endDrag);
+sourceCanvas.addEventListener('touchstart', startDrag);
+window.addEventListener('touchmove', moveDrag);
+window.addEventListener('touchend', endDrag);
+
+function renderRegionOverlays() {
+  regionsOverlay.innerHTML = '';
+  regions.forEach((r) => {
+    const box = document.createElement('div');
+    box.className = 'region-box';
+    box.style.left = r.x + 'px';
+    box.style.top = r.y + 'px';
+    box.style.width = r.w + 'px';
+    box.style.height = r.h + 'px';
+    regionsOverlay.appendChild(box);
+  });
+}
+
+function updateRegionCount() {
+  regionCount.textContent = regions.length === 0
+    ? 'Todavía no hay áreas seleccionadas.'
+    : `${regions.length} área${regions.length > 1 ? 's' : ''} seleccionada${regions.length > 1 ? 's' : ''}.`;
+  applyBtn.disabled = regions.length === 0;
+}
+
+undoBtn.addEventListener('click', () => {
+  regions.pop();
+  updateRegionCount();
+  renderRegionOverlays();
+});
+clearBtn.addEventListener('click', () => {
+  regions = [];
+  updateRegionCount();
+  renderRegionOverlays();
+});
+
+intensitySlider.addEventListener('input', () => {
+  intensityValue.textContent = intensitySlider.value;
+});
+
+function pixelateRegion(ctx, x, y, w, h, blockSize) {
+  const imageData = ctx.getImageData(x, y, w, h);
+  const data = imageData.data;
+
+  for (let by = 0; by < h; by += blockSize) {
+    for (let bx = 0; bx < w; bx += blockSize) {
+      let r = 0, g = 0, b = 0, a = 0, count = 0;
+      const blockW = Math.min(blockSize, w - bx);
+      const blockH = Math.min(blockSize, h - by);
+
+      for (let dy = 0; dy < blockH; dy++) {
+        for (let dx = 0; dx < blockW; dx++) {
+          const idx = ((by + dy) * w + (bx + dx)) * 4;
+          r += data[idx]; g += data[idx + 1]; b += data[idx + 2]; a += data[idx + 3];
+          count++;
+        }
+      }
+      r = Math.round(r / count); g = Math.round(g / count); b = Math.round(b / count); a = Math.round(a / count);
+
+      for (let dy = 0; dy < blockH; dy++) {
+        for (let dx = 0; dx < blockW; dx++) {
+          const idx = ((by + dy) * w + (bx + dx)) * 4;
+          data[idx] = r; data[idx + 1] = g; data[idx + 2] = b; data[idx + 3] = a;
+        }
+      }
+    }
+  }
+
+  ctx.putImageData(imageData, x, y);
+}
+
+applyBtn.addEventListener('click', () => {
+  if (!img || regions.length === 0) return;
+
+  const outCanvas = document.createElement('canvas');
+  outCanvas.width = img.naturalWidth;
+  outCanvas.height = img.naturalHeight;
+  const ctx = outCanvas.getContext('2d');
+  ctx.drawImage(img, 0, 0);
+
+  const blockSize = Math.max(2, parseInt(intensitySlider.value, 10));
+
+  regions.forEach((r) => {
+    const realX = Math.round(r.x / scale);
+    const realY = Math.round(r.y / scale);
+    const realW = Math.round(r.w / scale);
+    const realH = Math.round(r.h / scale);
+    pixelateRegion(ctx, realX, realY, realW, realH, blockSize);
+  });
+
+  const dataUrl = outCanvas.toDataURL('image/jpeg', 0.95);
+  const a = document.createElement('a');
+  a.href = dataUrl;
+  a.download = 'blurred-image.jpg';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+});
+</script>
+</body>
+</html>

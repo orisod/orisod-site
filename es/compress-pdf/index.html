@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comprimir PDF – Herramienta gratuita en línea | Orisod</title>
+<meta name="description" content="Reduce el tamaño de archivo de un PDF gratis. Ideal para PDF escaneados o con muchas imágenes. Funciona directamente en tu navegador — no se sube ningún archivo.">
+<link rel="alternate" hreflang="en" href="https://orisod.com/compress-pdf">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/compress-pdf">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/compress-pdf">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+.lang-switch{position:fixed;top:16px;right:16px;display:flex;gap:6px;z-index:100;}
+.lang-flag{font-size:13px;padding:6px 10px;border-radius:6px;text-decoration:none;color:#94a3b8;background:#111827;border:1px solid #1f2937;}
+.lang-flag.active{color:white;border-color:#2563eb;cursor:default;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:48px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:30px 20px;margin-top:30px;}
+.disclaimer{
+  background:#1f1a0f;
+  border:1px solid #78350f;
+  border-radius:8px;
+  padding:14px 18px;
+  margin-bottom:22px;
+  text-align:left;
+  font-size:14px;
+  color:#fbbf24;
+  line-height:1.6;
+}
+.dropzone{border:2px dashed #374151;border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
+.dropzone:hover, .dropzone.dragover{border-color:#2563eb;background:#0f172a;}
+input[type="file"]{display:none;}
+.quality-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:20px;font-size:14px;opacity:0.85;}
+input[type="range"]{width:200px;}
+button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:#2563eb;color:white;text-decoration:none;font-size:16px;cursor:pointer;}
+button:disabled{opacity:0.4;cursor:not-allowed;}
+button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.note{margin-top:20px;font-size:14px;opacity:0.6;}
+.footer{margin-top:50px;font-size:14px;opacity:0.4;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+.progress{font-size:14px;opacity:0.7;margin-top:10px;}
+.size-compare{margin-top:12px;font-size:14px;opacity:0.85;}
+.size-compare .saved{color:#4ade80;font-weight:bold;}
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;text-align:center;}
+.related a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="lang-switch">
+  <a class="lang-flag" href="/compress-pdf">EN</a>
+  <span class="lang-flag active">ES</span>
+</div>
+<div class="container">
+  <h1>Comprimir PDF</h1>
+  <p>Reduce el tamaño de archivo de un PDF. Funciona mejor con documentos escaneados o PDF con muchas imágenes. Todo ocurre localmente en tu navegador.</p>
+
+  <div class="box">
+    <div class="disclaimer">
+      ⚠️ <strong>Bueno saberlo antes de empezar:</strong> esta herramienta funciona convirtiendo cada página en una imagen comprimida y reconstruyendo el PDF a partir de esas imágenes. Esto reduce bien el tamaño en páginas escaneadas o documentos con muchas fotos, pero el PDF resultante <strong>ya no tendrá texto seleccionable ni buscable</strong>. Si tu PDF es sobre todo texto y necesitas que siga siendo buscable, esta puede no ser la herramienta adecuada.
+    </div>
+
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Haz clic para seleccionar un PDF o arrástralo aquí</div>
+    </label>
+    <input type="file" id="fileInput" accept=".pdf">
+    <div class="error" id="errorMsg"></div>
+
+    <div class="quality-row">
+      <label for="quality">Nivel de compresión: <span id="qualityValue">60</span>%</label>
+      <input type="range" id="quality" min="20" max="90" value="60">
+    </div>
+
+    <br>
+    <button id="compressBtn" disabled>Comprimir PDF</button>
+    <div class="note">Más alto = mejor calidad, archivo más grande. Más bajo = archivo más pequeño, más compresión.</div>
+    <div class="progress" id="progressMsg"></div>
+    <div class="size-compare" id="sizeCompare"></div>
+  </div>
+
+  <a class="back" href="/es/" style="background:#374151; margin-right:10px;">🏠 Inicio</a>
+  <a class="back" href="/es/tools">Ver todas las herramientas</a>
+
+  <div class="seo-content">
+    <h2>¿Qué hace esta herramienta?</h2>
+    <p>Esta herramienta reduce el tamaño de un PDF renderizando cada página como una imagen comprimida y reconstruyendo el documento a partir de esas imágenes, de forma similar a comprimir una foto. Es más eficaz en documentos escaneados, PDF con muchas fotos, o cualquier cosa donde las páginas ya son esencialmente imágenes — la reducción de tamaño puede ser significativa.</p>
+
+    <h2>¿Cuándo deberías usarla?</h2>
+    <ul>
+      <li>Tienes un documento escaneado demasiado grande para enviar por correo o subir</li>
+      <li>Tu PDF está lleno de fotos y el tamaño de archivo es excesivo</li>
+      <li>No necesitas seleccionar, copiar ni buscar el texto del documento</li>
+      <li>Un formulario o plataforma tiene un límite estricto de tamaño para subir PDF</li>
+    </ul>
+
+    <h2>¿Por qué usar Orisod para esto?</h2>
+    <p>Controlas el nivel de compresión con un deslizador y ves la comparación de tamaño antes/después al instante. Todo ocurre localmente en tu navegador usando PDF.js y jsPDF — tu documento nunca se sube a un servidor.</p>
+
+    <h2>Preguntas frecuentes</h2>
+    <div class="faq-item">
+      <div class="q">¿Perderé la capacidad de seleccionar texto?</div>
+      <div>Sí. Como esta herramienta convierte las páginas en imágenes comprimidas para lograr una reducción de tamaño real, el PDF resultante se basa en imágenes y el texto ya no es seleccionable ni buscable.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Es adecuada para un informe o contrato con mucho texto?</div>
+      <div>No es lo ideal — si necesitas mantener el texto seleccionable y buscable, esta herramienta no es la opción correcta. Funciona mejor con páginas escaneadas o documentos que ya son esencialmente imágenes.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Cuánto se reducirá mi archivo?</div>
+      <div>Varía mucho según tu PDF original y el nivel de compresión que elijas, pero los documentos escaneados o con muchas imágenes suelen reducirse significativamente.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Se sube mi PDF a un servidor?</div>
+      <div>No, todo el proceso ocurre localmente en tu navegador usando JavaScript.</div>
+    </div>
+  </div>
+
+  <h2>Herramientas relacionadas</h2>
+  <div class="related">
+    <a href="/es/merge-pdf">Unir PDF</a>
+    <a href="/es/split-pdf">Dividir PDF</a>
+    <a href="/es/compress-image">Comprimir imagen</a>
+  </div>
+
+  <div class="footer">© Orisod Labs</div>
+</div>
+
+<script>
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const errorMsg = document.getElementById('errorMsg');
+const qualitySlider = document.getElementById('quality');
+const qualityValue = document.getElementById('qualityValue');
+const compressBtn = document.getElementById('compressBtn');
+const progressMsg = document.getElementById('progressMsg');
+const sizeCompare = document.getElementById('sizeCompare');
+
+let selectedFile = null;
+
+qualitySlider.addEventListener('input', () => { qualityValue.textContent = qualitySlider.value; });
+
+fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  handleFile(e.dataTransfer.files[0]);
+});
+
+function handleFile(file) {
+  errorMsg.textContent = '';
+  sizeCompare.textContent = '';
+  if (!file || !/\.pdf$/i.test(file.name)) {
+    errorMsg.textContent = 'Selecciona un archivo PDF válido.';
+    return;
+  }
+  selectedFile = file;
+  dropzoneText.textContent = `✅ ${file.name} seleccionado (${(file.size / 1024).toFixed(1)} KB)`;
+  compressBtn.disabled = false;
+}
+
+compressBtn.addEventListener('click', async () => {
+  if (!selectedFile) return;
+  compressBtn.disabled = true;
+  compressBtn.textContent = 'Comprimiendo...';
+  errorMsg.textContent = '';
+  sizeCompare.textContent = '';
+  progressMsg.textContent = '';
+
+  const quality = parseInt(qualitySlider.value, 10) / 100;
+  const originalSize = selectedFile.size;
+
+  try {
+    const arrayBuffer = await selectedFile.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    const { jsPDF } = window.jspdf;
+    let outPdf = null;
+
+    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+      progressMsg.textContent = `Procesando página ${pageNum} de ${pdf.numPages}...`;
+
+      const page = await pdf.getPage(pageNum);
+      const viewport = page.getViewport({ scale: 1.5 });
+      const canvas = document.createElement('canvas');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      const ctx = canvas.getContext('2d');
+      await page.render({ canvasContext: ctx, viewport }).promise;
+
+      const dataUrl = canvas.toDataURL('image/jpeg', quality);
+      const orientation = viewport.width > viewport.height ? 'landscape' : 'portrait';
+
+      if (pageNum === 1) {
+        outPdf = new jsPDF({ orientation, unit: 'pt', format: [viewport.width, viewport.height] });
+      } else {
+        outPdf.addPage([viewport.width, viewport.height], orientation);
+      }
+      outPdf.addImage(dataUrl, 'JPEG', 0, 0, viewport.width, viewport.height);
+    }
+
+    const outBlob = outPdf.output('blob');
+    const newSize = outBlob.size;
+    const url = URL.createObjectURL(outBlob);
+    const baseName = selectedFile.name.replace(/\.pdf$/i, '');
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${baseName}-compressed.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    const savedPct = Math.max(0, Math.round((1 - newSize / originalSize) * 100));
+    progressMsg.textContent = 'Listo — PDF comprimido descargado.';
+    sizeCompare.innerHTML = `${(originalSize / 1024).toFixed(1)} KB → ${(newSize / 1024).toFixed(1)} KB <span class="saved">(${savedPct}% más pequeño)</span>`;
+  } catch (err) {
+    errorMsg.textContent = 'No se pudo procesar este PDF. Asegúrate de que no esté dañado ni protegido con contraseña.';
+    progressMsg.textContent = '';
+  }
+
+  compressBtn.disabled = false;
+  compressBtn.textContent = 'Comprimir PDF';
+});
+</script>
+</body>
+</html>

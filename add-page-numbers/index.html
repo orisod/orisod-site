@@ -11,47 +11,39 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PDF Page Organizer – Free Online Tool | Orisod</title>
-<meta name="description" content="Reorder or delete pages in a PDF with a visual drag-and-drop editor, free and online. Works directly in your browser — no files are uploaded.">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<title>Add Page Numbers to PDF – Free Online Tool | Orisod</title>
+<meta name="description" content="Stamp page numbers onto a PDF online for free. Choose the position and starting number — works directly in your browser, no files are uploaded.">
+<link rel="alternate" hreflang="en" href="https://orisod.com/add-page-numbers">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/add-page-numbers">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/add-page-numbers">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <style>
+.lang-switch{position:fixed;top:16px;right:16px;display:flex;gap:6px;z-index:100;}
+.lang-flag{font-size:13px;padding:6px 10px;border-radius:6px;text-decoration:none;color:#94a3b8;background:#111827;border:1px solid #1f2937;}
+.lang-flag.active{color:white;border-color:#2563eb;cursor:default;}
 body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
-.container{max-width:900px;margin:0 auto;}
+.container{max-width:800px;margin:0 auto;}
 h1{font-size:44px;margin-bottom:10px;}
 p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
 .box{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:30px 20px;margin-top:30px;}
 .dropzone{border:2px dashed #374151;border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
 .dropzone:hover, .dropzone.dragover{border-color:#2563eb;background:#0f172a;}
 input[type="file"]{display:none;}
-.pages-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill, minmax(120px, 1fr));
-  gap:14px;
-  margin-top:24px;
+.page-info{margin-top:16px;font-size:14px;opacity:0.75;}
+.number-options{margin-top:20px;text-align:left;}
+.option-card{background:#0f172a;border:1px solid #1e293b;border-radius:8px;padding:18px;margin-bottom:14px;}
+.option-card h3{margin:0 0 8px 0;font-size:15px;}
+.option-card p{margin:0 0 12px 0;font-size:13px;opacity:0.7;text-align:left;}
+.position-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:8px;max-width:360px;margin:10px auto 0 auto;}
+.position-btn{padding:10px 8px;border-radius:6px;border:1px solid #374151;background:#111827;color:white;cursor:pointer;font-size:12px;text-align:center;}
+.position-btn.active{background:#2563eb;border-color:#2563eb;}
+.option-card input[type="number"]{
+  padding:10px;border-radius:6px;border:1px solid #374151;background:#0f172a;color:white;font-size:14px;width:100px;
 }
-.page-card{
-  background:#0f172a;
-  border:2px solid #1e293b;
-  border-radius:8px;
-  padding:8px;
-  cursor:grab;
-  transition:0.15s;
-  position:relative;
-}
-.page-card.dragging{opacity:0.4;}
-.page-card.drag-over{border-color:#2563eb;}
-.page-card img{width:100%;border-radius:4px;display:block;background:white;}
-.page-card .page-label{font-size:12px;margin-top:6px;opacity:0.75;}
-.page-card .delete-btn{
-  position:absolute;top:4px;right:4px;
-  background:#dc2626;color:white;border:none;border-radius:4px;
-  width:22px;height:22px;font-size:12px;cursor:pointer;line-height:1;
-  display:flex;align-items:center;justify-content:center;padding:0;margin:0;
-}
-button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:#2563eb;color:white;text-decoration:none;font-size:16px;cursor:pointer;}
+button, .back{display:inline-block;margin-top:12px;padding:12px 18px;border:none;border-radius:8px;background:#2563eb;color:white;text-decoration:none;font-size:15px;cursor:pointer;}
 button:disabled{opacity:0.4;cursor:not-allowed;}
 button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.back{padding:14px 20px;margin-top:20px;font-size:16px;}
 .note{margin-top:20px;font-size:14px;opacity:0.6;}
 .footer{margin-top:50px;font-size:14px;opacity:0.4;}
 .error{color:#f87171;font-size:14px;margin-top:10px;}
@@ -67,9 +59,13 @@ h2{margin-top:50px;font-size:22px;}
 </style>
 </head>
 <body>
+<div class="lang-switch">
+  <span class="lang-flag active">EN</span>
+  <a class="lang-flag" href="/es/add-page-numbers">ES</a>
+</div>
 <div class="container">
-  <h1>PDF Page Organizer</h1>
-  <p>Drag to reorder pages, or delete the ones you don't need — then download the reorganized PDF. Everything happens locally in your browser.</p>
+  <h1>Add Page Numbers</h1>
+  <p>Stamp page numbers onto every page of a PDF. Choose the position and starting number — everything happens locally in your browser.</p>
 
   <div class="box">
     <label class="dropzone" id="dropzone" for="fileInput">
@@ -77,13 +73,31 @@ h2{margin-top:50px;font-size:22px;}
     </label>
     <input type="file" id="fileInput" accept=".pdf">
     <div class="error" id="errorMsg"></div>
+    <div class="page-info" id="pageInfo"></div>
+
+    <div class="number-options" id="numberOptions" style="display:none;">
+      <div class="option-card">
+        <h3>Position</h3>
+        <div class="position-grid">
+          <div class="position-btn" data-pos="top-left">Top Left</div>
+          <div class="position-btn" data-pos="top-center">Top Center</div>
+          <div class="position-btn" data-pos="top-right">Top Right</div>
+          <div class="position-btn" data-pos="bottom-left">Bottom Left</div>
+          <div class="position-btn active" data-pos="bottom-center">Bottom Center</div>
+          <div class="position-btn" data-pos="bottom-right">Bottom Right</div>
+        </div>
+      </div>
+
+      <div class="option-card">
+        <h3>Starting number</h3>
+        <p>The first page will show this number, counting up from there.</p>
+        <input type="number" id="startNumberInput" min="0" value="1">
+      </div>
+
+      <button id="addNumbersBtn">Add Page Numbers &amp; Download</button>
+    </div>
+
     <div class="progress" id="progressMsg"></div>
-
-    <div class="pages-grid" id="pagesGrid"></div>
-
-    <br>
-    <button id="saveBtn" style="display:none;">Save Reorganized PDF</button>
-    <div class="note">Drag any page thumbnail to reorder it. Click the ✕ on a page to remove it.</div>
   </div>
 
   <a class="back" href="/" style="background:#374151; margin-right:10px;">🏠 Home</a>
@@ -91,31 +105,31 @@ h2{margin-top:50px;font-size:22px;}
 
   <div class="seo-content">
     <h2>What does this tool do?</h2>
-    <p>This tool shows every page of your PDF as a thumbnail you can drag into a new order, or delete entirely, before saving a rebuilt document. The underlying PDF content stays exactly as it was — text remains selectable, only the page order and count change.</p>
+    <p>This tool stamps a page number onto every page of your PDF, at the position you choose, starting from whatever number you set. The underlying PDF content stays exactly as it was — text remains selectable, only a number is added to each page.</p>
 
     <h2>When should you use it?</h2>
     <ul>
-      <li>Pages in a scanned document came out in the wrong order</li>
-      <li>You need to remove a blank, duplicate, or irrelevant page from a PDF</li>
-      <li>You're assembling a document and need to rearrange sections visually</li>
-      <li>You want to see every page at a glance before deciding what to keep</li>
+      <li>You're preparing a document for printing and readers need to reference specific pages</li>
+      <li>You're assembling a report, contract, or manuscript that needs page references</li>
+      <li>Your document doesn't start at page 1 (for example, it continues from another document) and you need a custom starting number</li>
+      <li>You want page numbers in a specific corner instead of wherever a printer defaults to</li>
     </ul>
 
     <h2>Why use Orisod for this?</h2>
-    <p>You see an actual thumbnail of every page, not just a page number, which makes it much easier to reorder or delete the right ones. Everything happens locally in your browser using PDF.js and pdf-lib — your document is never uploaded to a server.</p>
+    <p>You choose exactly where the number goes and where counting starts, then see it applied to every page in one step. Everything happens locally in your browser using pdf-lib — your document is never uploaded to a server.</p>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Does this affect text selectability?</div>
-      <div>No, the actual PDF page content is preserved exactly — only the order and which pages are included change.</div>
+      <div>No, the existing PDF content is preserved exactly — only a page number is drawn onto each page.</div>
     </div>
     <div class="faq-item">
-      <div class="q">Can I delete more than one page?</div>
-      <div>Yes, click the ✕ on as many pages as you want to remove before saving.</div>
+      <div class="q">Can I start counting from a number other than 1?</div>
+      <div>Yes, set any starting number and the count will continue upward from there across the document.</div>
     </div>
     <div class="faq-item">
-      <div class="q">What if I want to undo a deletion?</div>
-      <div>Reload the page and upload your PDF again to start over from the original.</div>
+      <div class="q">Can I choose where the number appears?</div>
+      <div>Yes, pick from six positions — top or bottom, left, center, or right.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my PDF uploaded to a server?</div>
@@ -126,11 +140,11 @@ h2{margin-top:50px;font-size:22px;}
   <h2>Related tools</h2>
   <div class="related">
     <a href="/merge-pdf">Merge PDF</a>
+    <a href="/pdf-page-organizer">PDF Page Organizer</a>
     <a href="/rotate-pdf">Rotate PDF Pages</a>
-    <a href="/add-page-numbers">Add Page Numbers</a>
   </div>
 
-  <div class="footer">© Orisod Labs</div>
+  <div class="footer">© Orisod Labs · <a href="/about" style="color:#94a3b8;">About</a> · <a href="/privacy" style="color:#94a3b8;">Privacy</a></div>
 </div>
 
 <script>
@@ -138,12 +152,23 @@ const fileInput = document.getElementById('fileInput');
 const dropzone = document.getElementById('dropzone');
 const dropzoneText = document.getElementById('dropzoneText');
 const errorMsg = document.getElementById('errorMsg');
+const pageInfo = document.getElementById('pageInfo');
+const numberOptions = document.getElementById('numberOptions');
+const startNumberInput = document.getElementById('startNumberInput');
+const addNumbersBtn = document.getElementById('addNumbersBtn');
 const progressMsg = document.getElementById('progressMsg');
-const pagesGrid = document.getElementById('pagesGrid');
-const saveBtn = document.getElementById('saveBtn');
 
 let selectedFile = null;
-let pageOrder = []; // array of original page indices (0-based), in current order
+let totalPages = 0;
+let selectedPosition = 'bottom-center';
+
+document.querySelectorAll('.position-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.position-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedPosition = btn.dataset.pos;
+  });
+});
 
 fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
 dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
@@ -156,136 +181,89 @@ dropzone.addEventListener('drop', (e) => {
 
 async function handleFile(file) {
   errorMsg.textContent = '';
-  pagesGrid.innerHTML = '';
-  saveBtn.style.display = 'none';
-
+  progressMsg.textContent = '';
   if (!file || !/\.pdf$/i.test(file.name)) {
     errorMsg.textContent = 'Please select a valid PDF file.';
     return;
   }
-  selectedFile = file;
-  dropzoneText.textContent = `✅ ${file.name} loaded`;
-
-  try {
-    const arrayBuffer = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
-    pageOrder = [];
-
-    for (let i = 1; i <= pdf.numPages; i++) {
-      progressMsg.textContent = `Rendering thumbnail ${i} of ${pdf.numPages}...`;
-      const page = await pdf.getPage(i);
-      const viewport = page.getViewport({ scale: 0.3 });
-      const canvas = document.createElement('canvas');
-      canvas.width = viewport.width;
-      canvas.height = viewport.height;
-      const ctx = canvas.getContext('2d');
-      await page.render({ canvasContext: ctx, viewport }).promise;
-
-      pageOrder.push(i - 1);
-      addPageCard(i - 1, canvas.toDataURL('image/jpeg', 0.7), i);
-    }
-
-    progressMsg.textContent = '';
-    saveBtn.style.display = 'inline-block';
-  } catch (err) {
-    errorMsg.textContent = 'Could not read this PDF. It may be corrupted or password-protected.';
-    progressMsg.textContent = '';
-  }
-}
-
-let draggedCard = null;
-
-function addPageCard(originalIndex, thumbnailDataUrl, displayNum) {
-  const card = document.createElement('div');
-  card.className = 'page-card';
-  card.draggable = true;
-  card.dataset.originalIndex = originalIndex;
-
-  card.innerHTML = `
-    <button class="delete-btn" title="Remove this page">✕</button>
-    <img src="${thumbnailDataUrl}" alt="Page ${displayNum}">
-    <div class="page-label">Page ${displayNum}</div>
-  `;
-
-  card.querySelector('.delete-btn').addEventListener('click', () => {
-    pageOrder = pageOrder.filter(idx => idx !== originalIndex);
-    card.remove();
-  });
-
-  card.addEventListener('dragstart', () => {
-    draggedCard = card;
-    card.classList.add('dragging');
-  });
-  card.addEventListener('dragend', () => {
-    card.classList.remove('dragging');
-    draggedCard = null;
-    updatePageOrderFromDom();
-  });
-  card.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    card.classList.add('drag-over');
-  });
-  card.addEventListener('dragleave', () => {
-    card.classList.remove('drag-over');
-  });
-  card.addEventListener('drop', (e) => {
-    e.preventDefault();
-    card.classList.remove('drag-over');
-    if (draggedCard && draggedCard !== card) {
-      const allCards = Array.from(pagesGrid.children);
-      const draggedIdx = allCards.indexOf(draggedCard);
-      const targetIdx = allCards.indexOf(card);
-      if (draggedIdx < targetIdx) {
-        card.after(draggedCard);
-      } else {
-        card.before(draggedCard);
-      }
-    }
-  });
-
-  pagesGrid.appendChild(card);
-}
-
-function updatePageOrderFromDom() {
-  pageOrder = Array.from(pagesGrid.children).map(card => parseInt(card.dataset.originalIndex, 10));
-}
-
-saveBtn.addEventListener('click', async () => {
-  if (!selectedFile || pageOrder.length === 0) {
-    errorMsg.textContent = 'No pages left to save.';
-    return;
-  }
-
-  saveBtn.disabled = true;
-  saveBtn.textContent = 'Saving...';
-  errorMsg.textContent = '';
 
   try {
     const { PDFDocument } = PDFLib;
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await PDFDocument.load(arrayBuffer);
+    totalPages = pdf.getPageCount();
+    selectedFile = file;
+
+    dropzoneText.textContent = `✅ ${file.name} loaded`;
+    pageInfo.textContent = `This PDF has ${totalPages} page${totalPages !== 1 ? 's' : ''}.`;
+    numberOptions.style.display = 'block';
+  } catch (err) {
+    errorMsg.textContent = 'Could not read this PDF. It may be corrupted or password-protected.';
+    numberOptions.style.display = 'none';
+    pageInfo.textContent = '';
+  }
+}
+
+function getPosition(position, pageWidth, pageHeight, textWidth, fontSize) {
+  const margin = 24;
+  let x, y;
+
+  if (position.endsWith('left')) x = margin;
+  else if (position.endsWith('right')) x = pageWidth - textWidth - margin;
+  else x = (pageWidth - textWidth) / 2;
+
+  if (position.startsWith('top')) y = pageHeight - margin - fontSize;
+  else y = margin;
+
+  return { x, y };
+}
+
+addNumbersBtn.addEventListener('click', async () => {
+  errorMsg.textContent = '';
+  progressMsg.textContent = '';
+  addNumbersBtn.disabled = true;
+  addNumbersBtn.textContent = 'Adding numbers...';
+
+  try {
+    const startNumber = parseInt(startNumberInput.value, 10);
+    if (isNaN(startNumber)) {
+      throw new Error('Please enter a valid starting number.');
+    }
+
+    const { PDFDocument, StandardFonts } = PDFLib;
     const arrayBuffer = await selectedFile.arrayBuffer();
-    const sourcePdf = await PDFDocument.load(arrayBuffer);
-    const newPdf = await PDFDocument.create();
+    const pdf = await PDFDocument.load(arrayBuffer);
+    const font = await pdf.embedFont(StandardFonts.Helvetica);
+    const fontSize = 11;
+    const pages = pdf.getPages();
 
-    const copiedPages = await newPdf.copyPages(sourcePdf, pageOrder);
-    copiedPages.forEach((page) => newPdf.addPage(page));
+    pages.forEach((page, i) => {
+      const label = String(startNumber + i);
+      const { width, height } = page.getSize();
+      const textWidth = font.widthOfTextAtSize(label, fontSize);
+      const { x, y } = getPosition(selectedPosition, width, height, textWidth, fontSize);
+      page.drawText(label, { x, y, size: fontSize, font });
+    });
 
-    const bytes = await newPdf.save();
+    const bytes = await pdf.save();
     const blob = new Blob([bytes], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
     const baseName = selectedFile.name.replace(/\.pdf$/i, '');
 
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${baseName}-organized.pdf`;
+    a.download = `${baseName}-numbered.pdf`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
+
+    progressMsg.textContent = `Done — page numbers added to ${pages.length} page(s).`;
   } catch (err) {
-    errorMsg.textContent = 'Could not save the reorganized PDF.';
+    errorMsg.textContent = err.message || 'Could not add page numbers to this PDF.';
   }
 
-  saveBtn.disabled = false;
-  saveBtn.textContent = 'Save Reorganized PDF';
+  addNumbersBtn.disabled = false;
+  addNumbersBtn.textContent = 'Add Page Numbers & Download';
 });
 </script>
 </body>

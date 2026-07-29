@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Añadir números de página a un PDF – Herramienta gratuita | Orisod</title>
+<meta name="description" content="Numera las páginas de un PDF gratis, en línea. Elige la posición y el número inicial — funciona directamente en tu navegador, no se sube ningún archivo.">
+<link rel="alternate" hreflang="en" href="https://orisod.com/add-page-numbers">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/add-page-numbers">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/add-page-numbers">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<style>
+.lang-switch{position:fixed;top:16px;right:16px;display:flex;gap:6px;z-index:100;}
+.lang-flag{font-size:13px;padding:6px 10px;border-radius:6px;text-decoration:none;color:#94a3b8;background:#111827;border:1px solid #1f2937;}
+.lang-flag.active{color:white;border-color:#2563eb;cursor:default;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:44px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:30px 20px;margin-top:30px;}
+.dropzone{border:2px dashed #374151;border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
+.dropzone:hover, .dropzone.dragover{border-color:#2563eb;background:#0f172a;}
+input[type="file"]{display:none;}
+.page-info{margin-top:16px;font-size:14px;opacity:0.75;}
+.number-options{margin-top:20px;text-align:left;}
+.option-card{background:#0f172a;border:1px solid #1e293b;border-radius:8px;padding:18px;margin-bottom:14px;}
+.option-card h3{margin:0 0 8px 0;font-size:15px;}
+.option-card p{margin:0 0 12px 0;font-size:13px;opacity:0.7;text-align:left;}
+.position-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:8px;max-width:360px;margin:10px auto 0 auto;}
+.position-btn{padding:10px 8px;border-radius:6px;border:1px solid #374151;background:#111827;color:white;cursor:pointer;font-size:12px;text-align:center;}
+.position-btn.active{background:#2563eb;border-color:#2563eb;}
+.option-card input[type="number"]{
+  padding:10px;border-radius:6px;border:1px solid #374151;background:#0f172a;color:white;font-size:14px;width:100px;
+}
+button, .back{display:inline-block;margin-top:12px;padding:12px 18px;border:none;border-radius:8px;background:#2563eb;color:white;text-decoration:none;font-size:15px;cursor:pointer;}
+button:disabled{opacity:0.4;cursor:not-allowed;}
+button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.back{padding:14px 20px;margin-top:20px;font-size:16px;}
+.note{margin-top:20px;font-size:14px;opacity:0.6;}
+.footer{margin-top:50px;font-size:14px;opacity:0.4;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+.progress{font-size:14px;opacity:0.7;margin-top:10px;}
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;text-align:center;}
+.related a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="lang-switch">
+  <a class="lang-flag" href="/add-page-numbers">EN</a>
+  <span class="lang-flag active">ES</span>
+</div>
+<div class="container">
+  <h1>Añadir números de página</h1>
+  <p>Numera todas las páginas de un PDF. Elige la posición y el número inicial — todo ocurre localmente en tu navegador.</p>
+
+  <div class="box">
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Haz clic para seleccionar un PDF o arrástralo aquí</div>
+    </label>
+    <input type="file" id="fileInput" accept=".pdf">
+    <div class="error" id="errorMsg"></div>
+    <div class="page-info" id="pageInfo"></div>
+
+    <div class="number-options" id="numberOptions" style="display:none;">
+      <div class="option-card">
+        <h3>Posición</h3>
+        <div class="position-grid">
+          <div class="position-btn" data-pos="top-left">Arriba izquierda</div>
+          <div class="position-btn" data-pos="top-center">Arriba centro</div>
+          <div class="position-btn" data-pos="top-right">Arriba derecha</div>
+          <div class="position-btn" data-pos="bottom-left">Abajo izquierda</div>
+          <div class="position-btn active" data-pos="bottom-center">Abajo centro</div>
+          <div class="position-btn" data-pos="bottom-right">Abajo derecha</div>
+        </div>
+      </div>
+
+      <div class="option-card">
+        <h3>Número inicial</h3>
+        <p>La primera página mostrará este número, y el conteo seguirá a partir de ahí.</p>
+        <input type="number" id="startNumberInput" min="0" value="1">
+      </div>
+
+      <button id="addNumbersBtn">Añadir números y descargar</button>
+    </div>
+
+    <div class="progress" id="progressMsg"></div>
+  </div>
+
+  <a class="back" href="/es/" style="background:#374151; margin-right:10px;">🏠 Inicio</a>
+  <a class="back" href="/es/tools">Ver todas las herramientas</a>
+
+  <div class="seo-content">
+    <h2>¿Qué hace esta herramienta?</h2>
+    <p>Esta herramienta estampa un número de página en cada página de tu PDF, en la posición que elijas, comenzando desde el número que establezcas. El contenido del PDF permanece exactamente igual — el texto sigue siendo seleccionable, solo se añade un número a cada página.</p>
+
+    <h2>¿Cuándo deberías usarla?</h2>
+    <ul>
+      <li>Estás preparando un documento para imprimir y los lectores necesitan referenciar páginas específicas</li>
+      <li>Estás armando un informe, contrato o manuscrito que necesita referencias de página</li>
+      <li>Tu documento no empieza en la página 1 (por ejemplo, continúa desde otro documento) y necesitas un número inicial personalizado</li>
+      <li>Quieres los números de página en una esquina específica en lugar de donde los pone una impresora por defecto</li>
+    </ul>
+
+    <h2>¿Por qué usar Orisod para esto?</h2>
+    <p>Eliges exactamente dónde va el número y desde dónde empieza el conteo, y lo ves aplicado a todas las páginas en un solo paso. Todo ocurre localmente en tu navegador usando pdf-lib — tu documento nunca se sube a un servidor.</p>
+
+    <h2>Preguntas frecuentes</h2>
+    <div class="faq-item">
+      <div class="q">¿Esto afecta la selección de texto?</div>
+      <div>No, el contenido existente del PDF se conserva exactamente igual — solo se dibuja un número de página en cada página.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Puedo empezar a contar desde un número distinto de 1?</div>
+      <div>Sí, establece cualquier número inicial y el conteo seguirá subiendo desde ahí a lo largo del documento.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Puedo elegir dónde aparece el número?</div>
+      <div>Sí, elige entre seis posiciones — arriba o abajo, izquierda, centro o derecha.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Mi PDF se sube a un servidor?</div>
+      <div>No, todo el proceso ocurre localmente en tu navegador usando JavaScript.</div>
+    </div>
+  </div>
+
+  <h2>Herramientas relacionadas</h2>
+  <div class="related">
+    <a href="/es/merge-pdf">Unir PDF</a>
+    <a href="/es/pdf-page-organizer">Organizador de páginas PDF</a>
+    <a href="/es/rotate-pdf">Rotar páginas de PDF</a>
+  </div>
+
+  <div class="footer">© Orisod Labs · <a href="/es/about" style="color:#94a3b8;">Acerca de</a> · <a href="/es/privacy" style="color:#94a3b8;">Privacidad</a></div>
+</div>
+
+<script>
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const errorMsg = document.getElementById('errorMsg');
+const pageInfo = document.getElementById('pageInfo');
+const numberOptions = document.getElementById('numberOptions');
+const startNumberInput = document.getElementById('startNumberInput');
+const addNumbersBtn = document.getElementById('addNumbersBtn');
+const progressMsg = document.getElementById('progressMsg');
+
+let selectedFile = null;
+let totalPages = 0;
+let selectedPosition = 'bottom-center';
+
+document.querySelectorAll('.position-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.position-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedPosition = btn.dataset.pos;
+  });
+});
+
+fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  handleFile(e.dataTransfer.files[0]);
+});
+
+async function handleFile(file) {
+  errorMsg.textContent = '';
+  progressMsg.textContent = '';
+  if (!file || !/\.pdf$/i.test(file.name)) {
+    errorMsg.textContent = 'Selecciona un archivo PDF válido.';
+    return;
+  }
+
+  try {
+    const { PDFDocument } = PDFLib;
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await PDFDocument.load(arrayBuffer);
+    totalPages = pdf.getPageCount();
+    selectedFile = file;
+
+    dropzoneText.textContent = `✅ ${file.name} cargado`;
+    pageInfo.textContent = `Este PDF tiene ${totalPages} página${totalPages !== 1 ? 's' : ''}.`;
+    numberOptions.style.display = 'block';
+  } catch (err) {
+    errorMsg.textContent = 'No se pudo leer este PDF. Puede estar dañado o protegido con contraseña.';
+    numberOptions.style.display = 'none';
+    pageInfo.textContent = '';
+  }
+}
+
+function getPosition(position, pageWidth, pageHeight, textWidth, fontSize) {
+  const margin = 24;
+  let x, y;
+
+  if (position.endsWith('left')) x = margin;
+  else if (position.endsWith('right')) x = pageWidth - textWidth - margin;
+  else x = (pageWidth - textWidth) / 2;
+
+  if (position.startsWith('top')) y = pageHeight - margin - fontSize;
+  else y = margin;
+
+  return { x, y };
+}
+
+addNumbersBtn.addEventListener('click', async () => {
+  errorMsg.textContent = '';
+  progressMsg.textContent = '';
+  addNumbersBtn.disabled = true;
+  addNumbersBtn.textContent = 'Añadiendo números...';
+
+  try {
+    const startNumber = parseInt(startNumberInput.value, 10);
+    if (isNaN(startNumber)) {
+      throw new Error('Introduce un número inicial válido.');
+    }
+
+    const { PDFDocument, StandardFonts } = PDFLib;
+    const arrayBuffer = await selectedFile.arrayBuffer();
+    const pdf = await PDFDocument.load(arrayBuffer);
+    const font = await pdf.embedFont(StandardFonts.Helvetica);
+    const fontSize = 11;
+    const pages = pdf.getPages();
+
+    pages.forEach((page, i) => {
+      const label = String(startNumber + i);
+      const { width, height } = page.getSize();
+      const textWidth = font.widthOfTextAtSize(label, fontSize);
+      const { x, y } = getPosition(selectedPosition, width, height, textWidth, fontSize);
+      page.drawText(label, { x, y, size: fontSize, font });
+    });
+
+    const bytes = await pdf.save();
+    const blob = new Blob([bytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const baseName = selectedFile.name.replace(/\.pdf$/i, '');
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${baseName}-numbered.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    progressMsg.textContent = `Listo — números añadidos a ${pages.length} página(s).`;
+  } catch (err) {
+    errorMsg.textContent = err.message || 'No se pudieron añadir los números de página a este PDF.';
+  }
+
+  addNumbersBtn.disabled = false;
+  addNumbersBtn.textContent = 'Añadir números y descargar';
+});
+</script>
+</body>
+</html>

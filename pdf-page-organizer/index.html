@@ -13,9 +13,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PDF Page Organizer – Free Online Tool | Orisod</title>
 <meta name="description" content="Reorder or delete pages in a PDF with a visual drag-and-drop editor, free and online. Works directly in your browser — no files are uploaded.">
+<link rel="alternate" hreflang="en" href="https://orisod.com/pdf-page-organizer">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/pdf-page-organizer">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/pdf-page-organizer">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <style>
+.lang-switch{position:fixed;top:16px;right:16px;display:flex;gap:6px;z-index:100;}
+.lang-flag{font-size:13px;padding:6px 10px;border-radius:6px;text-decoration:none;color:#94a3b8;background:#111827;border:1px solid #1f2937;}
+.lang-flag.active{color:white;border-color:#2563eb;cursor:default;}
 body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
 .container{max-width:900px;margin:0 auto;}
 h1{font-size:44px;margin-bottom:10px;}
@@ -67,6 +73,10 @@ h2{margin-top:50px;font-size:22px;}
 </style>
 </head>
 <body>
+<div class="lang-switch">
+  <span class="lang-flag active">EN</span>
+  <a class="lang-flag" href="/es/pdf-page-organizer">ES</a>
+</div>
 <div class="container">
   <h1>PDF Page Organizer</h1>
   <p>Drag to reorder pages, or delete the ones you don't need — then download the reorganized PDF. Everything happens locally in your browser.</p>

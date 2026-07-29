@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conversor de GIF a JPG/PNG – Herramienta gratuita en línea | Orisod</title>
+<meta name="description" content="Extrae el primer fotograma de un GIF como imagen JPG o PNG, gratis y en línea. Funciona directamente en tu navegador — no se sube ningún archivo.">
+<link rel="alternate" hreflang="en" href="https://orisod.com/gif-to-jpg-png">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/gif-to-jpg-png">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/gif-to-jpg-png">
+<style>
+.lang-switch{position:fixed;top:16px;right:16px;display:flex;gap:6px;z-index:100;}
+.lang-flag{font-size:13px;padding:6px 10px;border-radius:6px;text-decoration:none;color:#94a3b8;background:#111827;border:1px solid #1f2937;}
+.lang-flag.active{color:white;border-color:#2563eb;cursor:default;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:44px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:30px 20px;margin-top:30px;}
+.dropzone{border:2px dashed #374151;border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
+.dropzone:hover, .dropzone.dragover{border-color:#2563eb;background:#0f172a;}
+input[type="file"]{display:none;}
+.format-row{display:flex;justify-content:center;gap:10px;margin-top:20px;}
+.format-btn{padding:10px 18px;border-radius:8px;border:1px solid #1f2937;background:#0f172a;color:white;cursor:pointer;font-size:14px;transition:0.2s;}
+.format-btn.active{background:#2563eb;border-color:#2563eb;}
+.result{margin-top:20px;}
+.result img{max-width:100%;border-radius:6px;border:1px solid #1e293b;}
+button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:#2563eb;color:white;text-decoration:none;font-size:16px;cursor:pointer;}
+button:disabled{opacity:0.4;cursor:not-allowed;}
+button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.note{margin-top:20px;font-size:14px;opacity:0.6;}
+.footer{margin-top:50px;font-size:14px;opacity:0.4;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;text-align:center;}
+.related a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="lang-switch">
+  <a class="lang-flag" href="/gif-to-jpg-png">EN</a>
+  <span class="lang-flag active">ES</span>
+</div>
+<div class="container">
+  <h1>Conversor de GIF a JPG/PNG</h1>
+  <p>Extrae el primer fotograma de un GIF como una imagen fija JPG o PNG. Todo ocurre localmente en tu navegador — tu archivo nunca se sube a ningún lugar.</p>
+
+  <div class="box">
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Haz clic para seleccionar un GIF o arrástralo aquí</div>
+    </label>
+    <input type="file" id="fileInput" accept=".gif">
+    <div class="error" id="errorMsg"></div>
+
+    <div class="format-row">
+      <div class="format-btn active" id="jpgBtn">JPG</div>
+      <div class="format-btn" id="pngBtn">PNG</div>
+    </div>
+
+    <br>
+    <button id="convertBtn" disabled>Extraer primer fotograma</button>
+    <div class="note">Esto extrae solo el primer fotograma, como una imagen fija — no la animación completa.</div>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <a class="back" href="/es/" style="background:#374151; margin-right:10px;">🏠 Inicio</a>
+  <a class="back" href="/es/tools">Ver todas las herramientas</a>
+
+  <div class="seo-content">
+    <h2>¿Qué hace esta herramienta?</h2>
+    <p>Esta herramienta toma el primer fotograma de un GIF (animado o estático) y lo guarda como una imagen fija JPG o PNG normal. Es útil cuando solo necesitas una imagen representativa de un GIF, no la animación completa.</p>
+
+    <h2>¿Cuándo deberías usar esta herramienta?</h2>
+    <ul>
+      <li>Necesitas una miniatura o imagen de vista previa estática de un GIF animado</li>
+      <li>Una plataforma no acepta subir GIF, solo JPG o PNG</li>
+      <li>Quieres usar solo un fotograma de un GIF en un documento o diseño</li>
+      <li>Necesitas un tamaño de archivo menor que el GIF animado original</li>
+    </ul>
+
+    <h2>¿Por qué usar Orisod para esto?</h2>
+    <p>La extracción ocurre completamente en tu navegador — tu GIF nunca se sube a un servidor. Elige PNG para conservar la transparencia, o JPG para un archivo más pequeño y compatible con todo.</p>
+
+    <h2>Preguntas frecuentes</h2>
+    <div class="faq-item">
+      <div class="q">¿Puedo extraer un fotograma distinto al primero?</div>
+      <div>Actualmente no — esta herramienta extrae únicamente el primer fotograma del GIF.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Esto convertirá toda la animación?</div>
+      <div>No, el resultado es una única imagen fija, no un archivo animado.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Debería elegir JPG o PNG?</div>
+      <div>Elige PNG si tu GIF tiene transparencia que quieres conservar, o JPG para un tamaño de archivo menor.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Mi archivo se sube a algún lugar?</div>
+      <div>No, todo el proceso ocurre localmente en tu navegador usando JavaScript.</div>
+    </div>
+  </div>
+
+  <h2>Herramientas relacionadas</h2>
+  <div class="related">
+    <a href="/es/png-to-jpg">PNG a JPG</a>
+    <a href="/es/compress-image">Comprimir imagen</a>
+    <a href="/es/resize-image">Redimensionar imagen</a>
+  </div>
+
+  <div class="footer">© Orisod Labs</div>
+</div>
+
+<script>
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const errorMsg = document.getElementById('errorMsg');
+const convertBtn = document.getElementById('convertBtn');
+const result = document.getElementById('result');
+const jpgBtn = document.getElementById('jpgBtn');
+const pngBtn = document.getElementById('pngBtn');
+
+let selectedFile = null;
+let outputFormat = 'jpg';
+
+jpgBtn.addEventListener('click', () => {
+  outputFormat = 'jpg';
+  jpgBtn.classList.add('active');
+  pngBtn.classList.remove('active');
+});
+pngBtn.addEventListener('click', () => {
+  outputFormat = 'png';
+  pngBtn.classList.add('active');
+  jpgBtn.classList.remove('active');
+});
+
+fileInput.addEventListener('change', (e) => { if (e.target.files[0]) handleFile(e.target.files[0]); });
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+});
+
+function handleFile(file) {
+  errorMsg.textContent = '';
+  result.innerHTML = '';
+  if (!/\.gif$/i.test(file.name)) {
+    errorMsg.textContent = 'Selecciona un archivo GIF válido.';
+    return;
+  }
+  selectedFile = file;
+  dropzoneText.textContent = `✅ ${file.name} seleccionado`;
+  convertBtn.disabled = false;
+}
+
+convertBtn.addEventListener('click', () => {
+  if (!selectedFile) return;
+  errorMsg.textContent = '';
+  result.innerHTML = '';
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = new Image();
+    img.onload = () => {
+      // Drawing immediately on load captures the first frame of the GIF.
+      const canvas = document.createElement('canvas');
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      const ctx = canvas.getContext('2d');
+      if (outputFormat === 'jpg') {
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+      ctx.drawImage(img, 0, 0);
+
+      const mimeType = outputFormat === 'jpg' ? 'image/jpeg' : 'image/png';
+      const quality = outputFormat === 'jpg' ? 0.92 : undefined;
+      const dataUrl = canvas.toDataURL(mimeType, quality);
+
+      const preview = document.createElement('img');
+      preview.src = dataUrl;
+      result.appendChild(preview);
+      result.appendChild(document.createElement('br'));
+
+      const baseName = selectedFile.name.replace(/\.gif$/i, '');
+      const link = document.createElement('a');
+      link.href = dataUrl;
+      link.download = `${baseName}.${outputFormat}`;
+      link.className = 'back';
+      link.style.marginTop = '15px';
+      link.textContent = 'Descargar imagen';
+      result.appendChild(link);
+    };
+    img.onerror = () => { errorMsg.textContent = 'No se pudo leer este archivo GIF.'; };
+    img.src = e.target.result;
+  };
+  reader.onerror = () => { errorMsg.textContent = 'No se pudo leer este archivo.'; };
+  reader.readAsDataURL(selectedFile);
+});
+</script>
+</body>
+</html>

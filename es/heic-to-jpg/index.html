@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Convertidor de HEIC a JPG – Herramienta gratuita en línea | Orisod</title>
+<meta name="description" content="Convierte imágenes HEIC de iPhone a JPG en línea gratis. Rápido, simple y funciona directamente en tu navegador — no se sube ningún archivo.">
+<link rel="alternate" hreflang="en" href="https://orisod.com/heic-to-jpg">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/heic-to-jpg">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/heic-to-jpg">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/heic2any/0.0.4/heic2any.min.js"></script>
+<style>
+.lang-switch{position:fixed;top:16px;right:16px;display:flex;gap:6px;z-index:100;}
+.lang-flag{font-size:13px;padding:6px 10px;border-radius:6px;text-decoration:none;color:#94a3b8;background:#111827;border:1px solid #1f2937;}
+.lang-flag.active{color:white;border-color:#2563eb;cursor:default;}
+body{
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  background:#0b0f1a;
+  color:white;
+  text-align:center;
+  padding:40px 20px;
+}
+.container{
+  max-width:800px;
+  margin:0 auto;
+}
+h1{
+  font-size:48px;
+  margin-bottom:10px;
+}
+p{
+  font-size:18px;
+  opacity:0.85;
+  max-width:700px;
+  margin:0 auto 25px auto;
+  line-height:1.6;
+}
+.box{
+  background:#111827;
+  border:1px solid #1f2937;
+  border-radius:10px;
+  padding:30px 20px;
+  margin-top:30px;
+}
+.dropzone{
+  border:2px dashed #374151;
+  border-radius:10px;
+  padding:30px 20px;
+  cursor:pointer;
+  transition:0.2s;
+}
+.dropzone:hover, .dropzone.dragover{
+  border-color:#2563eb;
+  background:#0f172a;
+}
+input[type="file"]{
+  display:none;
+}
+.quality-row{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  margin-top:20px;
+  font-size:14px;
+  opacity:0.85;
+}
+input[type="range"]{
+  width:200px;
+}
+button, .back{
+  display:inline-block;
+  margin-top:20px;
+  padding:14px 20px;
+  border:none;
+  border-radius:8px;
+  background:#2563eb;
+  color:white;
+  text-decoration:none;
+  font-size:16px;
+  cursor:pointer;
+}
+button:disabled{
+  opacity:0.4;
+  cursor:not-allowed;
+}
+button:hover:not(:disabled), .back:hover{
+  filter:brightness(1.08);
+}
+.note{
+  margin-top:20px;
+  font-size:14px;
+  opacity:0.6;
+}
+.results{
+  margin-top:25px;
+  text-align:left;
+}
+.result-item{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:#0f172a;
+  border:1px solid #1e293b;
+  border-radius:8px;
+  padding:12px 16px;
+  margin-bottom:10px;
+  font-size:14px;
+}
+.result-item a{
+  color:#60a5fa;
+  text-decoration:none;
+  font-weight:bold;
+}
+.result-item a:hover{
+  text-decoration:underline;
+}
+.download-all{
+  margin-top:15px;
+}
+.footer{
+  margin-top:50px;
+  font-size:14px;
+  opacity:0.4;
+}
+.error{
+  color:#f87171;
+  font-size:14px;
+  margin-top:10px;
+}
+.progress{
+  font-size:14px;
+  opacity:0.7;
+  margin-top:15px;
+}
+h2{
+  margin-top:50px;
+}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related a{
+  color:#60a5fa;
+  text-decoration:none;
+  display:block;
+  margin:6px 0;
+  text-align:center;
+}
+.related a:hover{
+  text-decoration:underline;
+}
+</style>
+</head>
+<body>
+<div class="lang-switch">
+  <a class="lang-flag" href="/heic-to-jpg">EN</a>
+  <span class="lang-flag active">ES</span>
+</div>
+<div class="container">
+  <h1>Convertidor de HEIC a JPG</h1>
+  <p>Convierte imágenes HEIC de tu iPhone o iPad a JPG en línea gratis. Todo ocurre localmente en tu navegador — tus archivos nunca se suben a ningún lugar.</p>
+
+  <div class="box">
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Haz clic para seleccionar archivos HEIC o arrástralos aquí</div>
+    </label>
+    <input type="file" id="fileInput" accept=".heic,.heif" multiple>
+
+    <div class="quality-row">
+      <label for="quality">Calidad: <span id="qualityValue">85</span>%</label>
+      <input type="range" id="quality" min="30" max="100" value="85">
+    </div>
+
+    <br>
+    <button id="convertBtn" disabled>Convertir a JPG</button>
+    <div class="note">Compatible con archivos HEIC y HEIF (el formato usado por las fotos de iPhone). Nada sale de tu dispositivo.</div>
+    <div class="error" id="errorMsg"></div>
+    <div class="progress" id="progressMsg"></div>
+
+    <div class="results" id="results"></div>
+    <div class="download-all" id="downloadAllWrap" style="display:none;">
+      <button id="downloadAllBtn">Descargar todo</button>
+    </div>
+  </div>
+
+  <a class="back" href="/es/" style="background:#374151; margin-right:10px;">🏠 Inicio</a>
+  <a class="back" href="/es/tools">Ver todas las herramientas</a>
+
+  <div class="seo-content">
+    <h2>¿Qué es un archivo HEIC?</h2>
+    <p>HEIC es el formato de imagen usado por defecto en iPhones y iPads desde iOS 11. Mantiene una alta calidad de imagen usando aproximadamente la mitad del espacio de almacenamiento que un JPG equivalente. La contrapartida es la compatibilidad — muchos ordenadores Windows, sitios web y apps fuera del ecosistema Apple no pueden abrir archivos HEIC directamente, por lo que convertir a JPG suele ser necesario.</p>
+
+    <h2>¿Cuándo deberías usar esta herramienta?</h2>
+    <ul>
+      <li>Transferiste fotos de iPhone a un PC con Windows y no se abren</li>
+      <li>Un sitio web o formulario rechaza tu foto porque no admite HEIC</li>
+      <li>Quieres compartir una foto con alguien cuyo dispositivo no puede mostrar HEIC</li>
+      <li>Necesitas editar la foto en un programa que solo acepta JPG o PNG</li>
+    </ul>
+
+    <h2>¿Por qué usar Orisod para esto?</h2>
+    <p>Esta herramienta decodifica datos reales de imagen HEIC directamente en tu navegador usando una biblioteca de decodificación dedicada — no es un conversor falso que solo renombra el archivo. Tus fotos nunca se suben a un servidor. Puedes convertir varias fotos a la vez, ajustar la calidad de salida y descargarlo todo junto.</p>
+
+    <h2>Preguntas frecuentes</h2>
+    <div class="faq-item">
+      <div class="q">¿Por qué no se abren mis fotos de iPhone en mi ordenador?</div>
+      <div>Windows y muchos programas antiguos no admiten de forma nativa el formato HEIC. Convertir a JPG hace que la foto sea visible y editable en cualquier lugar.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Perderé calidad de foto al convertir a JPG?</div>
+      <div>Con ajustes de calidad superiores al 80%, la diferencia generalmente no es perceptible. Puedes ajustar el control deslizante de calidad para equilibrar tamaño y nitidez.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Se suben mis fotos a un servidor?</div>
+      <div>No. Tanto la decodificación como la conversión ocurren localmente en tu navegador — tus fotos nunca salen de tu dispositivo.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Esto también funciona con archivos HEIF?</div>
+      <div>Sí, tanto HEIF (el formato contenedor general) como HEIC (la variante específica de Apple) son compatibles.</div>
+    </div>
+  </div>
+
+  <h2>Herramientas relacionadas</h2>
+  <div class="related">
+    <a href="/es/webp-to-jpg">WEBP a JPG</a>
+    <a href="/es/png-to-jpg">PNG a JPG</a>
+    <a href="/es/compress-image">Comprimir imagen</a>
+    <a href="/es/resize-image">Redimensionar imagen</a>
+  </div>
+
+  <div class="footer">© Orisod Labs · <a href="/es/about" style="color:#94a3b8;">Acerca de</a> · <a href="/es/privacy" style="color:#94a3b8;">Privacidad</a></div>
+</div>
+
+<script>
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const convertBtn = document.getElementById('convertBtn');
+const qualitySlider = document.getElementById('quality');
+const qualityValue = document.getElementById('qualityValue');
+const results = document.getElementById('results');
+const errorMsg = document.getElementById('errorMsg');
+const progressMsg = document.getElementById('progressMsg');
+const downloadAllWrap = document.getElementById('downloadAllWrap');
+const downloadAllBtn = document.getElementById('downloadAllBtn');
+
+let selectedFiles = [];
+let convertedBlobs = [];
+
+qualitySlider.addEventListener('input', () => {
+  qualityValue.textContent = qualitySlider.value;
+});
+
+fileInput.addEventListener('change', (e) => {
+  handleFiles(e.target.files);
+});
+
+dropzone.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  dropzone.classList.add('dragover');
+});
+dropzone.addEventListener('dragleave', () => {
+  dropzone.classList.remove('dragover');
+});
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  handleFiles(e.dataTransfer.files);
+});
+
+function handleFiles(fileList) {
+  errorMsg.textContent = '';
+  const valid = Array.from(fileList).filter(f => /\.(heic|heif)$/i.test(f.name));
+  if (valid.length === 0) {
+    errorMsg.textContent = 'Selecciona archivos HEIC o HEIF válidos.';
+    return;
+  }
+  selectedFiles = valid;
+  dropzoneText.textContent = `✅ ${valid.length} archivo(s) seleccionado(s) — ${valid.map(f => f.name).join(', ')}`;
+  convertBtn.disabled = false;
+  results.innerHTML = '';
+  downloadAllWrap.style.display = 'none';
+}
+
+convertBtn.addEventListener('click', async () => {
+  if (selectedFiles.length === 0) return;
+
+  convertBtn.disabled = true;
+  convertBtn.textContent = 'Convirtiendo...';
+  results.innerHTML = '';
+  convertedBlobs = [];
+  errorMsg.textContent = '';
+  progressMsg.textContent = '';
+
+  const quality = parseInt(qualitySlider.value, 10) / 100;
+
+  for (let i = 0; i < selectedFiles.length; i++) {
+    const file = selectedFiles[i];
+    progressMsg.textContent = `Convirtiendo ${i + 1} de ${selectedFiles.length}...`;
+
+    try {
+      const jpgBlob = await heic2any({
+        blob: file,
+        toType: 'image/jpeg',
+        quality: quality
+      });
+
+      const finalBlob = Array.isArray(jpgBlob) ? jpgBlob[0] : jpgBlob;
+      const name = file.name.replace(/\.(heic|heif)$/i, '.jpg');
+      convertedBlobs.push({ name, blob: finalBlob });
+      addResultRow(name, finalBlob);
+    } catch (err) {
+      errorMsg.textContent = `No se pudo convertir ${file.name}. Es posible que el archivo esté dañado o sea una variante de HEIC no compatible.`;
+    }
+  }
+
+  progressMsg.textContent = convertedBlobs.length > 0 ? `Listo — ${convertedBlobs.length} archivo(s) convertido(s).` : '';
+  convertBtn.disabled = false;
+  convertBtn.textContent = 'Convertir a JPG';
+
+  if (convertedBlobs.length > 1) {
+    downloadAllWrap.style.display = 'block';
+  }
+});
+
+function addResultRow(name, blob) {
+  const url = URL.createObjectURL(blob);
+  const sizeKb = (blob.size / 1024).toFixed(1);
+
+  const row = document.createElement('div');
+  row.className = 'result-item';
+  row.innerHTML = `<span>${name} (${sizeKb} KB)</span>`;
+
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = name;
+  link.textContent = 'Descargar';
+
+  row.appendChild(link);
+  results.appendChild(row);
+}
+
+downloadAllBtn.addEventListener('click', () => {
+  convertedBlobs.forEach(({ name, blob }) => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+});
+</script>
+</body>
+</html>

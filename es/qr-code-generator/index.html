@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generador de códigos QR – Herramienta gratuita en línea | Orisod</title>
+<meta name="description" content="Genera un código QR a partir de cualquier texto o URL, gratis e instantáneo. Funciona directamente en tu navegador — no se envían datos a ningún lugar.">
+<link rel="alternate" hreflang="en" href="https://orisod.com/qr-code-generator">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/qr-code-generator">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/qr-code-generator">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+.lang-switch{position:fixed;top:16px;right:16px;display:flex;gap:6px;z-index:100;}
+.lang-flag{font-size:13px;padding:6px 10px;border-radius:6px;text-decoration:none;color:#94a3b8;background:#111827;border:1px solid #1f2937;}
+.lang-flag.active{color:white;border-color:#2563eb;cursor:default;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:48px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:30px 20px;margin-top:30px;}
+input[type="text"]{
+  width:100%;
+  max-width:500px;
+  box-sizing:border-box;
+  padding:14px;
+  border-radius:8px;
+  border:1px solid #374151;
+  background:#0f172a;
+  color:white;
+  font-size:15px;
+}
+.options-row{display:flex;justify-content:center;align-items:center;gap:14px;flex-wrap:wrap;margin-top:18px;font-size:14px;opacity:0.85;}
+.options-row select, .options-row input[type="color"]{
+  padding:8px;border-radius:6px;border:1px solid #374151;background:#0f172a;color:white;
+}
+button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:#2563eb;color:white;text-decoration:none;font-size:16px;cursor:pointer;}
+button:disabled{opacity:0.4;cursor:not-allowed;}
+button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.note{margin-top:20px;font-size:14px;opacity:0.6;}
+.result{margin-top:24px;}
+#qrCanvasWrap{display:inline-block;padding:16px;background:white;border-radius:8px;}
+.footer{margin-top:50px;font-size:14px;opacity:0.4;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;text-align:center;}
+.related a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="lang-switch">
+  <a class="lang-flag" href="/qr-code-generator">EN</a>
+  <span class="lang-flag active">ES</span>
+</div>
+<div class="container">
+  <h1>Generador de códigos QR</h1>
+  <p>Convierte cualquier enlace o texto en un código QR escaneable, al instante. Todo ocurre localmente en tu navegador — nada de lo que escribes se envía a ningún lugar.</p>
+
+  <div class="box">
+    <input type="text" id="textInput" placeholder="Escribe una URL o cualquier texto...">
+
+    <div class="options-row">
+      <label>Tamaño:
+        <select id="sizeSelect">
+          <option value="200">200×200</option>
+          <option value="300" selected>300×300</option>
+          <option value="500">500×500</option>
+          <option value="800">800×800</option>
+        </select>
+      </label>
+      <label>Color: <input type="color" id="colorInput" value="#000000"></label>
+    </div>
+
+    <br>
+    <button id="generateBtn">Generar código QR</button>
+    <div class="error" id="errorMsg"></div>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <a class="back" href="/es/" style="background:#374151; margin-right:10px;">🏠 Inicio</a>
+  <a class="back" href="/es/tools">Ver todas las herramientas</a>
+
+  <div class="seo-content">
+    <h2>¿Qué es un código QR?</h2>
+    <p>Un código QR es un código de barras cuadrado que almacena texto o un enlace, que cualquier cámara de teléfono puede escanear para abrirlo al instante. Se usan comúnmente en tarjetas de presentación, carteles, menús y empaques de productos para dirigir a las personas a un sitio web o información sin necesidad de escribir nada.</p>
+
+    <h2>¿Cuándo deberías usar esta herramienta?</h2>
+    <ul>
+      <li>Quieres compartir un enlace en un folleto impreso, cartel o tarjeta de presentación</li>
+      <li>Estás configurando el nombre/contraseña de una red Wi-Fi, información de contacto o un enlace de evento que la gente pueda escanear</li>
+      <li>Necesitas una forma rápida de transferir un texto corto entre dispositivos</li>
+      <li>Quieres un código QR de color personalizado que combine con tu marca</li>
+    </ul>
+
+    <h2>¿Por qué usar Orisod para esto?</h2>
+    <p>El código QR se genera completamente en tu navegador — el texto o enlace que escribes nunca se envía a un servidor. Puedes elegir el tamaño y color de salida antes de descargarlo como imagen PNG.</p>
+
+    <h2>Preguntas frecuentes</h2>
+    <div class="faq-item">
+      <div class="q">¿Hay un límite de cuánto texto puedo codificar?</div>
+      <div>Los códigos QR pueden contener unos pocos miles de caracteres, pero el contenido más corto (como una URL) se escanea más rápido y con más fiabilidad. Un texto muy largo puede producir un código más denso y difícil de escanear.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Los códigos QR caducan?</div>
+      <div>No, un código QR generado aquí nunca caduca — es una imagen estática que codifica tu texto exacto, no un servicio de redirección.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Se envía a un servidor lo que escribo?</div>
+      <div>No, el código QR se genera localmente en tu navegador usando JavaScript — nada de lo que ingreses se transmite a ningún lugar.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Puedo cambiar el color del código QR?</div>
+      <div>Sí, usa el selector de color antes de generarlo. Para una mejor fiabilidad de escaneo, mantén buen contraste sobre un fondo claro.</div>
+    </div>
+  </div>
+
+  <h2>Herramientas relacionadas</h2>
+  <div class="related">
+    <a href="/es/image-to-base64">Imagen a Base64</a>
+    <a href="/es/favicon-generator">Generador de favicon</a>
+    <a href="/es/resize-image">Redimensionar imagen</a>
+  </div>
+
+  <div class="footer">© Orisod Labs</div>
+</div>
+
+<script>
+const textInput = document.getElementById('textInput');
+const sizeSelect = document.getElementById('sizeSelect');
+const colorInput = document.getElementById('colorInput');
+const generateBtn = document.getElementById('generateBtn');
+const errorMsg = document.getElementById('errorMsg');
+const result = document.getElementById('result');
+
+generateBtn.addEventListener('click', () => {
+  errorMsg.textContent = '';
+  result.innerHTML = '';
+
+  const text = textInput.value.trim();
+  if (!text) {
+    errorMsg.textContent = 'Escribe primero algún texto o URL.';
+    return;
+  }
+
+  const size = parseInt(sizeSelect.value, 10);
+  const color = colorInput.value;
+
+  const wrap = document.createElement('div');
+  wrap.id = 'qrCanvasWrap';
+  result.appendChild(wrap);
+
+  try {
+    new QRCode(wrap, {
+      text: text,
+      width: size,
+      height: size,
+      colorDark: color,
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+
+    setTimeout(() => {
+      const canvas = wrap.querySelector('canvas');
+      const img = wrap.querySelector('img');
+      const dataUrl = canvas ? canvas.toDataURL('image/png') : (img ? img.src : null);
+
+      if (dataUrl) {
+        const link = document.createElement('a');
+        link.href = dataUrl;
+        link.download = 'qrcode.png';
+        link.className = 'back';
+        link.textContent = 'Descargar código QR';
+        result.appendChild(document.createElement('br'));
+        result.appendChild(link);
+      }
+    }, 100);
+  } catch (err) {
+    errorMsg.textContent = 'No se pudo generar un código QR para este texto.';
+  }
+});
+</script>
+</body>
+</html>

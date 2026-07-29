@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generador de favicon – Herramienta gratuita en línea | Orisod</title>
+<meta name="description" content="Genera un paquete completo de favicon (favicon.ico más todos los tamaños estándar) a partir de cualquier imagen, gratis y en línea. Todo se ejecuta en tu navegador, sin subidas.">
+<link rel="alternate" hreflang="en" href="https://orisod.com/favicon-generator">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/favicon-generator">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/favicon-generator">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+.lang-switch{position:fixed;top:16px;right:16px;display:flex;gap:6px;z-index:100;}
+.lang-flag{font-size:13px;padding:6px 10px;border-radius:6px;text-decoration:none;color:#94a3b8;background:#111827;border:1px solid #1f2937;}
+.lang-flag.active{color:white;border-color:#2563eb;cursor:default;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:48px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:30px 20px;margin-top:30px;}
+.dropzone{border:2px dashed #374151;border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
+.dropzone:hover, .dropzone.dragover{border-color:#2563eb;background:#0f172a;}
+input[type="file"]{display:none;}
+.preview-row{display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap;margin-top:20px;}
+.preview-row .size-item{text-align:center;font-size:12px;opacity:0.75;}
+.preview-row img{display:block;margin:0 auto 6px auto;border-radius:4px;border:1px solid #1e293b;background:white;}
+button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:#2563eb;color:white;text-decoration:none;font-size:16px;cursor:pointer;}
+button:disabled{opacity:0.4;cursor:not-allowed;}
+button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.note{margin-top:20px;font-size:14px;opacity:0.6;}
+.footer{margin-top:50px;font-size:14px;opacity:0.4;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+.progress{font-size:14px;opacity:0.7;margin-top:10px;}
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;text-align:center;}
+.related a:hover{text-decoration:underline;}
+code{background:#0f172a;padding:2px 6px;border-radius:4px;font-size:13px;}
+pre{background:#0f172a;border:1px solid #1e293b;border-radius:8px;padding:14px;text-align:left;overflow-x:auto;font-size:12px;line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="lang-switch">
+  <a class="lang-flag" href="/favicon-generator">EN</a>
+  <span class="lang-flag active">ES</span>
+</div>
+<div class="container">
+  <h1>Generador de favicon</h1>
+  <p>Sube una imagen cuadrada (un logo funciona mejor) y obtén un paquete completo de favicon — favicon.ico más todos los tamaños estándar para navegadores, iOS y Android. Todo ocurre localmente en tu navegador.</p>
+
+  <div class="box">
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Haz clic para seleccionar una imagen o arrástrala aquí</div>
+    </label>
+    <input type="file" id="fileInput" accept="image/*">
+    <div class="error" id="errorMsg"></div>
+
+    <div class="preview-row" id="previewRow" style="display:none;"></div>
+
+    <br>
+    <button id="generateBtn" disabled>Generar paquete de favicon (ZIP)</button>
+    <div class="note">Las imágenes cuadradas funcionan mejor. Las imágenes no cuadradas se recortarán a un cuadrado centrado.</div>
+    <div class="progress" id="progressMsg"></div>
+  </div>
+
+  <a class="back" href="/es/" style="background:#374151; margin-right:10px;">🏠 Inicio</a>
+  <a class="back" href="/es/tools">Ver todas las herramientas</a>
+
+  <div class="seo-content">
+    <h2>¿Qué hace esta herramienta?</h2>
+    <p>Esta herramienta toma una imagen y genera todos los tamaños de favicon que necesita un sitio web moderno: un archivo <code>favicon.ico</code> real de múltiples resoluciones, PNG independientes para pestañas del navegador, un icono Apple touch para pantallas de inicio de iOS e iconos de Android Chrome — todo empaquetado en un solo ZIP, junto con el fragmento HTML para añadirlos a tu sitio.</p>
+
+    <h2>¿Cuándo deberías usar esta herramienta?</h2>
+    <ul>
+      <li>Estás lanzando un sitio web nuevo y necesitas un favicon que funcione en todos los navegadores y dispositivos</li>
+      <li>Tu favicon actual solo tiene un tamaño y se ve borroso en algunos dispositivos</li>
+      <li>Quieres que tu sitio muestre un icono correcto al guardarlo en la pantalla de inicio de iOS o Android</li>
+      <li>Rediseñaste tu logo y necesitas regenerar todos los tamaños de favicon</li>
+    </ul>
+
+    <h2>¿Por qué usar Orisod para esto?</h2>
+    <p>El favicon.ico que genera esta herramienta es un archivo ICO real de varios tamaños (16×16 y 32×32 incrustados juntos), no solo un PNG renombrado — así que se muestra correctamente en todas las pestañas del navegador. Todo se genera localmente en tu navegador, y tu imagen nunca se sube a un servidor.</p>
+
+    <h2>Preguntas frecuentes</h2>
+    <div class="faq-item">
+      <div class="q">¿Qué tamaños incluye el paquete?</div>
+      <div>favicon.ico (16×16 + 32×32 combinados), favicon-16x16.png, favicon-32x32.png, apple-touch-icon.png (180×180), android-chrome-192x192.png y android-chrome-512x512.png.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Qué pasa si mi imagen no es cuadrada?</div>
+      <div>Se recortará automáticamente a un cuadrado centrado antes de generar los distintos tamaños, así que nada se verá estirado.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Cómo añado esto a mi sitio web?</div>
+      <div>Sube los archivos a la carpeta raíz de tu sitio y añade el fragmento HTML incluido en el ZIP a la sección &lt;head&gt; de tu página.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Se sube mi imagen a algún lugar?</div>
+      <div>No, todo el proceso ocurre localmente en tu navegador usando JavaScript.</div>
+    </div>
+  </div>
+
+  <h2>Herramientas relacionadas</h2>
+  <div class="related">
+    <a href="/es/resize-image">Redimensionar imagen</a>
+    <a href="/es/crop-image">Recortar imagen</a>
+    <a href="/es/compress-image">Comprimir imagen</a>
+  </div>
+
+  <div class="footer">© Orisod Labs</div>
+</div>
+
+<script>
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const errorMsg = document.getElementById('errorMsg');
+const previewRow = document.getElementById('previewRow');
+const generateBtn = document.getElementById('generateBtn');
+const progressMsg = document.getElementById('progressMsg');
+
+const SIZES = [16, 32, 180, 192, 512];
+let sourceImg = null;
+
+fileInput.addEventListener('change', (e) => { if (e.target.files[0]) loadFile(e.target.files[0]); });
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+});
+
+function loadFile(file) {
+  errorMsg.textContent = '';
+  if (!file.type.startsWith('image/')) {
+    errorMsg.textContent = 'Selecciona un archivo de imagen válido.';
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    sourceImg = new Image();
+    sourceImg.onload = () => {
+      dropzoneText.textContent = `✅ ${file.name} cargado`;
+      generateBtn.disabled = false;
+      renderPreviews();
+    };
+    sourceImg.onerror = () => { errorMsg.textContent = 'No se pudo cargar esta imagen.'; };
+    sourceImg.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function squareCanvas(size) {
+  const canvas = document.createElement('canvas');
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext('2d');
+
+  const srcSize = Math.min(sourceImg.width, sourceImg.height);
+  const srcX = (sourceImg.width - srcSize) / 2;
+  const srcY = (sourceImg.height - srcSize) / 2;
+
+  ctx.drawImage(sourceImg, srcX, srcY, srcSize, srcSize, 0, 0, size, size);
+  return canvas;
+}
+
+function renderPreviews() {
+  previewRow.innerHTML = '';
+  previewRow.style.display = 'flex';
+  [16, 32, 180].forEach((size) => {
+    const canvas = squareCanvas(size);
+    const item = document.createElement('div');
+    item.className = 'size-item';
+    const img = document.createElement('img');
+    img.src = canvas.toDataURL('image/png');
+    img.style.width = Math.min(size, 64) + 'px';
+    img.style.height = Math.min(size, 64) + 'px';
+    item.appendChild(img);
+    item.appendChild(document.createTextNode(`${size}×${size}`));
+    previewRow.appendChild(item);
+  });
+}
+
+function canvasToPngArrayBuffer(canvas) {
+  return new Promise((resolve, reject) => {
+    canvas.toBlob((blob) => {
+      if (!blob) { reject(new Error('Could not generate PNG')); return; }
+      blob.arrayBuffer().then(resolve).catch(reject);
+    }, 'image/png');
+  });
+}
+
+// Builds a valid multi-image .ico file by embedding PNG data directly
+// (the modern ICO format supported by Windows Vista+ and all browsers).
+function buildIco(pngBuffers) {
+  const count = pngBuffers.length;
+  const headerSize = 6;
+  const dirEntrySize = 16;
+  const dirSize = dirEntrySize * count;
+  let dataOffset = headerSize + dirSize;
+
+  const totalSize = dataOffset + pngBuffers.reduce((sum, buf) => sum + buf.byteLength, 0);
+  const out = new Uint8Array(totalSize);
+  const view = new DataView(out.buffer);
+
+  view.setUint16(0, 0, true);   // reserved
+  view.setUint16(2, 1, true);   // type = icon
+  view.setUint16(4, count, true);
+
+  let offset = dataOffset;
+  pngBuffers.forEach((buf, i) => {
+    const entryOffset = headerSize + i * dirEntrySize;
+    const size = SIZES_FOR_ICO[i];
+    view.setUint8(entryOffset, size >= 256 ? 0 : size);      // width
+    view.setUint8(entryOffset + 1, size >= 256 ? 0 : size);  // height
+    view.setUint8(entryOffset + 2, 0);   // color count
+    view.setUint8(entryOffset + 3, 0);   // reserved
+    view.setUint16(entryOffset + 4, 1, true);  // planes
+    view.setUint16(entryOffset + 6, 32, true); // bit count
+    view.setUint32(entryOffset + 8, buf.byteLength, true); // size of image data
+    view.setUint32(entryOffset + 12, offset, true);         // offset of image data
+
+    out.set(new Uint8Array(buf), offset);
+    offset += buf.byteLength;
+  });
+
+  return out;
+}
+
+const SIZES_FOR_ICO = [16, 32];
+
+generateBtn.addEventListener('click', async () => {
+  if (!sourceImg) return;
+  errorMsg.textContent = '';
+  generateBtn.disabled = true;
+  generateBtn.textContent = 'Generando...';
+
+  try {
+    const zip = new JSZip();
+
+    progressMsg.textContent = 'Generando favicon.ico...';
+    const icoPngBuffers = [];
+    for (const size of SIZES_FOR_ICO) {
+      const canvas = squareCanvas(size);
+      const buf = await canvasToPngArrayBuffer(canvas);
+      icoPngBuffers.push(buf);
+    }
+    const icoBytes = buildIco(icoPngBuffers);
+    zip.file('favicon.ico', icoBytes);
+
+    const namedSizes = [
+      { size: 16, name: 'favicon-16x16.png' },
+      { size: 32, name: 'favicon-32x32.png' },
+      { size: 180, name: 'apple-touch-icon.png' },
+      { size: 192, name: 'android-chrome-192x192.png' },
+      { size: 512, name: 'android-chrome-512x512.png' }
+    ];
+
+    for (const { size, name } of namedSizes) {
+      progressMsg.textContent = `Generando ${name}...`;
+      const canvas = squareCanvas(size);
+      const buf = await canvasToPngArrayBuffer(canvas);
+      zip.file(name, buf);
+    }
+
+    const htmlSnippet = `<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png">`;
+    zip.file('favicon-html-snippet.txt', htmlSnippet);
+
+    progressMsg.textContent = 'Empaquetando archivo ZIP...';
+    const content = await zip.generateAsync({ type: 'blob' });
+    const url = URL.createObjectURL(content);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'favicon-package.zip';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    progressMsg.textContent = 'Listo — paquete de favicon descargado.';
+  } catch (err) {
+    errorMsg.textContent = 'Algo salió mal al generar el paquete de favicon.';
+    progressMsg.textContent = '';
+  }
+
+  generateBtn.disabled = false;
+  generateBtn.textContent = 'Generar paquete de favicon (ZIP)';
+});
+</script>
+</body>
+</html>

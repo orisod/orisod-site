@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dividir PDF – Herramienta gratuita en línea | Orisod</title>
+<meta name="description" content="Divide un PDF en archivos separados por rango de páginas o extrae páginas individuales gratis. Funciona directamente en tu navegador — no se sube ningún archivo.">
+<link rel="alternate" hreflang="en" href="https://orisod.com/split-pdf">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/split-pdf">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/split-pdf">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+.lang-switch{position:fixed;top:16px;right:16px;display:flex;gap:6px;z-index:100;}
+.lang-flag{font-size:13px;padding:6px 10px;border-radius:6px;text-decoration:none;color:#94a3b8;background:#111827;border:1px solid #1f2937;}
+.lang-flag.active{color:white;border-color:#2563eb;cursor:default;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:48px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:30px 20px;margin-top:30px;}
+.dropzone{border:2px dashed #374151;border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
+.dropzone:hover, .dropzone.dragover{border-color:#2563eb;background:#0f172a;}
+input[type="file"]{display:none;}
+.page-info{margin-top:16px;font-size:14px;opacity:0.75;}
+.split-options{margin-top:24px;text-align:left;}
+.option-card{background:#0f172a;border:1px solid #1e293b;border-radius:8px;padding:18px;margin-bottom:14px;}
+.option-card h3{margin:0 0 8px 0;font-size:15px;}
+.option-card p{margin:0 0 12px 0;font-size:13px;opacity:0.7;text-align:left;}
+.option-card input[type="text"]{
+  padding:10px;border-radius:6px;border:1px solid #374151;background:#0f172a;color:white;font-size:14px;width:200px;
+}
+button, .back{display:inline-block;margin-top:10px;padding:12px 18px;border:none;border-radius:8px;background:#2563eb;color:white;text-decoration:none;font-size:15px;cursor:pointer;}
+button:disabled{opacity:0.4;cursor:not-allowed;}
+button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.back{padding:14px 20px;margin-top:20px;font-size:16px;}
+.note{margin-top:20px;font-size:14px;opacity:0.6;}
+.footer{margin-top:50px;font-size:14px;opacity:0.4;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+.progress{font-size:14px;opacity:0.7;margin-top:10px;}
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;text-align:center;}
+.related a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="lang-switch">
+  <a class="lang-flag" href="/split-pdf">EN</a>
+  <span class="lang-flag active">ES</span>
+</div>
+<div class="container">
+  <h1>Dividir PDF</h1>
+  <p>Extrae un rango de páginas en su propio PDF, o divide cada página en un archivo separado. Todo ocurre localmente en tu navegador — tu archivo nunca se sube a ningún lado.</p>
+
+  <div class="box">
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Haz clic para seleccionar un PDF o arrástralo aquí</div>
+    </label>
+    <input type="file" id="fileInput" accept=".pdf">
+    <div class="error" id="errorMsg"></div>
+    <div class="page-info" id="pageInfo"></div>
+
+    <div class="split-options" id="splitOptions" style="display:none;">
+      <div class="option-card">
+        <h3>Extraer un rango de páginas</h3>
+        <p>Introduce páginas o rangos (p. ej. "1-3, 5") para crear un nuevo PDF solo con esas páginas, en ese orden.</p>
+        <input type="text" id="rangeInput" placeholder="p. ej. 1-3, 5">
+        <br>
+        <button id="extractBtn">Extraer rango</button>
+      </div>
+
+      <div class="option-card">
+        <h3>Dividir en páginas individuales</h3>
+        <p>Crea un archivo PDF por cada página y los descarga todos como un ZIP.</p>
+        <button id="splitAllBtn">Dividir todas las páginas (ZIP)</button>
+      </div>
+    </div>
+
+    <div class="progress" id="progressMsg"></div>
+  </div>
+
+  <a class="back" href="/es/" style="background:#374151; margin-right:10px;">🏠 Inicio</a>
+  <a class="back" href="/es/tools">Ver todas las herramientas</a>
+
+  <div class="seo-content">
+    <h2>¿Qué hace esta herramienta?</h2>
+    <p>Esta herramienta te permite extraer páginas específicas de un PDF, ya sea como un nuevo documento con solo las páginas que elijas, o dividiendo cada página en su propio archivo PDF separado. El texto, las imágenes y el formato del documento original se conservan exactamente — nada se convierte en imagen.</p>
+
+    <h2>¿Cuándo deberías usarla?</h2>
+    <ul>
+      <li>Solo necesitas compartir algunas páginas de un documento más largo, no todo</li>
+      <li>Quieres separar capítulos, secciones o facturas agrupadas en un solo PDF grande</li>
+      <li>Necesitas eliminar páginas que no quieres incluir al compartir</li>
+      <li>Estás archivando cada página de un documento como un archivo independiente</li>
+    </ul>
+
+    <h2>¿Por qué usar Orisod para esto?</h2>
+    <p>La división ocurre completamente en tu navegador usando pdf-lib — tu PDF nunca se sube a un servidor. Puedes extraer un rango específico como un solo archivo, o dividir todo el documento en archivos de página individuales empaquetados en un único ZIP.</p>
+
+    <h2>Preguntas frecuentes</h2>
+    <div class="faq-item">
+      <div class="q">¿Dividir afecta la calidad de mi PDF?</div>
+      <div>No. La herramienta extrae las páginas reales del PDF sin convertirlas en imágenes, así que el texto sigue siendo seleccionable y la calidad no cambia.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Puedo extraer páginas que no estén en orden?</div>
+      <div>Sí, enuméralas en el orden que quieras; por ejemplo, "5, 1-3" pondrá primero la página 5, seguida de las páginas 1 a 3.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Qué pasa si divido un PDF de 50 páginas en páginas individuales?</div>
+      <div>Obtendrás un archivo ZIP con 50 archivos PDF separados de una página cada uno, conservando el contenido exacto de la página original.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Se sube mi archivo a un servidor?</div>
+      <div>No, todo el proceso ocurre localmente en tu navegador usando JavaScript.</div>
+    </div>
+  </div>
+
+  <h2>Herramientas relacionadas</h2>
+  <div class="related">
+    <a href="/es/merge-pdf">Unir PDF</a>
+    <a href="/es/pdf-to-jpg">PDF a JPG</a>
+    <a href="/es/image-to-pdf">Imagen a PDF</a>
+  </div>
+
+  <div class="footer">© Orisod Labs</div>
+</div>
+
+<script>
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const errorMsg = document.getElementById('errorMsg');
+const pageInfo = document.getElementById('pageInfo');
+const splitOptions = document.getElementById('splitOptions');
+const rangeInput = document.getElementById('rangeInput');
+const extractBtn = document.getElementById('extractBtn');
+const splitAllBtn = document.getElementById('splitAllBtn');
+const progressMsg = document.getElementById('progressMsg');
+
+let selectedFile = null;
+let totalPages = 0;
+
+fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  handleFile(e.dataTransfer.files[0]);
+});
+
+async function handleFile(file) {
+  errorMsg.textContent = '';
+  progressMsg.textContent = '';
+  if (!file || !/\.pdf$/i.test(file.name)) {
+    errorMsg.textContent = 'Selecciona un archivo PDF válido.';
+    return;
+  }
+
+  try {
+    const { PDFDocument } = PDFLib;
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await PDFDocument.load(arrayBuffer);
+    totalPages = pdf.getPageCount();
+    selectedFile = file;
+
+    dropzoneText.textContent = `✅ ${file.name} cargado`;
+    pageInfo.textContent = `Este PDF tiene ${totalPages} página${totalPages !== 1 ? 's' : ''}.`;
+    splitOptions.style.display = 'block';
+  } catch (err) {
+    errorMsg.textContent = 'No se pudo leer este PDF. Puede estar dañado o protegido con contraseña.';
+    splitOptions.style.display = 'none';
+    pageInfo.textContent = '';
+  }
+}
+
+function parseRanges(raw, maxPage) {
+  const pages = [];
+  const parts = raw.split(',');
+  for (const part of parts) {
+    const trimmed = part.trim();
+    if (!trimmed) continue;
+    if (trimmed.includes('-')) {
+      const [startStr, endStr] = trimmed.split('-');
+      const start = parseInt(startStr, 10);
+      const end = parseInt(endStr, 10);
+      if (isNaN(start) || isNaN(end) || start < 1 || end > maxPage || end < start) {
+        throw new Error(`Rango no válido: "${trimmed}"`);
+      }
+      for (let p = start; p <= end; p++) pages.push(p);
+    } else {
+      const num = parseInt(trimmed, 10);
+      if (isNaN(num) || num < 1 || num > maxPage) {
+        throw new Error(`Número de página no válido: "${trimmed}"`);
+      }
+      pages.push(num);
+    }
+  }
+  return pages;
+}
+
+extractBtn.addEventListener('click', async () => {
+  errorMsg.textContent = '';
+  progressMsg.textContent = '';
+  const raw = rangeInput.value.trim();
+  if (!raw) {
+    errorMsg.textContent = 'Introduce un rango de páginas, p. ej. "1-3, 5".';
+    return;
+  }
+
+  extractBtn.disabled = true;
+  extractBtn.textContent = 'Extrayendo...';
+
+  try {
+    const pages = parseRanges(raw, totalPages);
+    const { PDFDocument } = PDFLib;
+    const arrayBuffer = await selectedFile.arrayBuffer();
+    const sourcePdf = await PDFDocument.load(arrayBuffer);
+    const newPdf = await PDFDocument.create();
+
+    const pageIndices = pages.map(p => p - 1);
+    const copiedPages = await newPdf.copyPages(sourcePdf, pageIndices);
+    copiedPages.forEach((page) => newPdf.addPage(page));
+
+    const bytes = await newPdf.save();
+    const blob = new Blob([bytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const baseName = selectedFile.name.replace(/\.pdf$/i, '');
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${baseName}-extracted.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    progressMsg.textContent = `Listo — ${pages.length} página(s) extraída(s).`;
+  } catch (err) {
+    errorMsg.textContent = err.message || 'No se pudieron extraer estas páginas.';
+  }
+
+  extractBtn.disabled = false;
+  extractBtn.textContent = 'Extraer rango';
+});
+
+splitAllBtn.addEventListener('click', async () => {
+  errorMsg.textContent = '';
+  progressMsg.textContent = '';
+  splitAllBtn.disabled = true;
+  splitAllBtn.textContent = 'Dividiendo...';
+
+  try {
+    const { PDFDocument } = PDFLib;
+    const arrayBuffer = await selectedFile.arrayBuffer();
+    const sourcePdf = await PDFDocument.load(arrayBuffer);
+    const baseName = selectedFile.name.replace(/\.pdf$/i, '');
+    const zip = new JSZip();
+
+    for (let i = 0; i < totalPages; i++) {
+      progressMsg.textContent = `Procesando página ${i + 1} de ${totalPages}...`;
+      const newPdf = await PDFDocument.create();
+      const [copiedPage] = await newPdf.copyPages(sourcePdf, [i]);
+      newPdf.addPage(copiedPage);
+      const bytes = await newPdf.save();
+      zip.file(`${baseName}-page-${i + 1}.pdf`, bytes);
+    }
+
+    progressMsg.textContent = 'Empaquetando archivo ZIP...';
+    const content = await zip.generateAsync({ type: 'blob' });
+    const url = URL.createObjectURL(content);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${baseName}-split.zip`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    progressMsg.textContent = `Listo — ${totalPages} páginas divididas en archivos separados.`;
+  } catch (err) {
+    errorMsg.textContent = 'No se pudo dividir este PDF.';
+    progressMsg.textContent = '';
+  }
+
+  splitAllBtn.disabled = false;
+  splitAllBtn.textContent = 'Dividir todas las páginas (ZIP)';
+});
+</script>
+</body>
+</html>

@@ -13,8 +13,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rotate PDF Pages – Free Online Tool | Orisod</title>
 <meta name="description" content="Rotate all or specific pages of a PDF online for free. Works directly in your browser — no files are uploaded.">
+<link rel="alternate" hreflang="en" href="https://orisod.com/rotate-pdf">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/rotate-pdf">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/rotate-pdf">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <style>
+.lang-switch{position:fixed;top:16px;right:16px;display:flex;gap:6px;z-index:100;}
+.lang-flag{font-size:13px;padding:6px 10px;border-radius:6px;text-decoration:none;color:#94a3b8;background:#111827;border:1px solid #1f2937;}
+.lang-flag.active{color:white;border-color:#2563eb;cursor:default;}
 body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
 .container{max-width:800px;margin:0 auto;}
 h1{font-size:44px;margin-bottom:10px;}
@@ -53,6 +59,10 @@ h2{margin-top:50px;font-size:22px;}
 </style>
 </head>
 <body>
+<div class="lang-switch">
+  <span class="lang-flag active">EN</span>
+  <a class="lang-flag" href="/es/rotate-pdf">ES</a>
+</div>
 <div class="container">
   <h1>Rotate PDF Pages</h1>
   <p>Rotate all pages or just specific ones in a PDF. Everything happens locally in your browser — your file is never uploaded anywhere.</p>

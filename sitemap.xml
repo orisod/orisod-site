@@ -6,6 +6,11 @@
 <url><loc>https://orisod.com/about</loc><lastmod>2026-07-28</lastmod><priority>0.5</priority></url>
 <url><loc>https://orisod.com/privacy</loc><lastmod>2026-07-28</lastmod><priority>0.3</priority></url>
 
+<url><loc>https://orisod.com/es/</loc><lastmod>2026-07-29</lastmod><priority>1.0</priority></url>
+<url><loc>https://orisod.com/es/tools</loc><lastmod>2026-07-29</lastmod><priority>0.9</priority></url>
+<url><loc>https://orisod.com/es/about</loc><lastmod>2026-07-29</lastmod><priority>0.5</priority></url>
+<url><loc>https://orisod.com/es/privacy</loc><lastmod>2026-07-29</lastmod><priority>0.3</priority></url>
+
 <url><loc>https://orisod.com/webp-to-jpg</loc><lastmod>2026-07-28</lastmod><priority>0.8</priority></url>
 <url><loc>https://orisod.com/heic-to-jpg</loc><lastmod>2026-07-28</lastmod><priority>0.8</priority></url>
 <url><loc>https://orisod.com/png-to-jpg</loc><lastmod>2026-07-28</lastmod><priority>0.8</priority></url>
@@ -35,7 +40,7 @@
 <url><loc>https://orisod.com/compress-pdf</loc><lastmod>2026-07-28</lastmod><priority>0.7</priority></url>
 <url><loc>https://orisod.com/rotate-pdf</loc><lastmod>2026-07-28</lastmod><priority>0.7</priority></url>
 <url><loc>https://orisod.com/pdf-page-organizer</loc><lastmod>2026-07-28</lastmod><priority>0.7</priority></url>
-<url><loc>https://orisod.com/add-page-numbers</loc><lastmod>2026-07-28</lastmod><priority>0.7</priority></url>
+<url><loc>https://orisod.com/add-page-numbers</loc><lastmod>2026-07-29</lastmod><priority>0.7</priority></url>
 
 <url><loc>https://orisod.com/exif-remover</loc><lastmod>2026-07-28</lastmod><priority>0.7</priority></url>
 <url><loc>https://orisod.com/image-metadata-viewer</loc><lastmod>2026-07-28</lastmod><priority>0.6</priority></url>
@@ -44,5 +49,44 @@
 <url><loc>https://orisod.com/image-to-base64</loc><lastmod>2026-07-28</lastmod><priority>0.6</priority></url>
 <url><loc>https://orisod.com/color-picker-from-image</loc><lastmod>2026-07-28</lastmod><priority>0.6</priority></url>
 <url><loc>https://orisod.com/image-dimension-checker</loc><lastmod>2026-07-28</lastmod><priority>0.6</priority></url>
+
+<url><loc>https://orisod.com/es/webp-to-jpg</loc><lastmod>2026-07-29</lastmod><priority>0.8</priority></url>
+<url><loc>https://orisod.com/es/heic-to-jpg</loc><lastmod>2026-07-29</lastmod><priority>0.8</priority></url>
+<url><loc>https://orisod.com/es/png-to-jpg</loc><lastmod>2026-07-29</lastmod><priority>0.8</priority></url>
+<url><loc>https://orisod.com/es/png-to-webp</loc><lastmod>2026-07-29</lastmod><priority>0.8</priority></url>
+<url><loc>https://orisod.com/es/jpg-to-webp</loc><lastmod>2026-07-29</lastmod><priority>0.8</priority></url>
+<url><loc>https://orisod.com/es/webp-to-png</loc><lastmod>2026-07-29</lastmod><priority>0.8</priority></url>
+<url><loc>https://orisod.com/es/avif-to-jpg-png</loc><lastmod>2026-07-29</lastmod><priority>0.7</priority></url>
+<url><loc>https://orisod.com/es/gif-to-jpg-png</loc><lastmod>2026-07-29</lastmod><priority>0.7</priority></url>
+<url><loc>https://orisod.com/es/bmp-to-jpg-png</loc><lastmod>2026-07-29</lastmod><priority>0.7</priority></url>
+<url><loc>https://orisod.com/es/svg-to-png</loc><lastmod>2026-07-29</lastmod><priority>0.7</priority></url>
+<url><loc>https://orisod.com/es/resize-image</loc><lastmod>2026-07-29</lastmod><priority>0.8</priority></url>
+<url><loc>https://orisod.com/es/crop-image</loc><lastmod>2026-07-29</lastmod><priority>0.8</priority></url>
+<url><loc>https://orisod.com/es/compress-image</loc><lastmod>2026-07-29</lastmod><priority>0.8</priority></url>
+<url><loc>https://orisod.com/es/rotate-image</loc><lastmod>2026-07-29</lastmod><priority>0.7</priority></url>
+<url><loc>https://orisod.com/es/social-media-crop</loc><lastmod>2026-07-29</lastmod><priority>0.7</priority></url>
+<url><loc>https://orisod.com/es/round-image-corners</loc><lastmod>2026-07-29</lastmod><priority>0.7</priority></url>
+<url><loc>https://orisod.com/es/add-border-to-image</loc><lastmod>2026-07-29</lastmod><priority>0.6</priority></url>
+<url><loc>https://orisod.com/es/image-color-filters</loc><lastmod>2026-07-29</lastmod><priority>0.6</priority></url>
+<url><loc>https://orisod.com/es/watermark-adder</loc><lastmod>2026-07-29</lastmod><priority>0.7</priority></url>
+<url><loc>https://orisod.com/es/blur-area-tool</loc><lastmod>2026-07-29</lastmod><priority>0.7</priority></url>
+
+<url><loc>https://orisod.com/es/jpg-to-pdf</loc><lastmod>2026-07-29</lastmod><priority>0.8</priority></url>
+<url><loc>https://orisod.com/es/image-to-pdf</loc><lastmod>2026-07-29</lastmod><priority>0.8</priority></url>
+<url><loc>https://orisod.com/es/pdf-to-jpg</loc><lastmod>2026-07-29</lastmod><priority>0.8</priority></url>
+<url><loc>https://orisod.com/es/merge-pdf</loc><lastmod>2026-07-29</lastmod><priority>0.8</priority></url>
+<url><loc>https://orisod.com/es/split-pdf</loc><lastmod>2026-07-29</lastmod><priority>0.8</priority></url>
+<url><loc>https://orisod.com/es/compress-pdf</loc><lastmod>2026-07-29</lastmod><priority>0.7</priority></url>
+<url><loc>https://orisod.com/es/rotate-pdf</loc><lastmod>2026-07-29</lastmod><priority>0.7</priority></url>
+<url><loc>https://orisod.com/es/pdf-page-organizer</loc><lastmod>2026-07-29</lastmod><priority>0.7</priority></url>
+<url><loc>https://orisod.com/es/add-page-numbers</loc><lastmod>2026-07-29</lastmod><priority>0.7</priority></url>
+
+<url><loc>https://orisod.com/es/exif-remover</loc><lastmod>2026-07-29</lastmod><priority>0.7</priority></url>
+<url><loc>https://orisod.com/es/image-metadata-viewer</loc><lastmod>2026-07-29</lastmod><priority>0.6</priority></url>
+<url><loc>https://orisod.com/es/favicon-generator</loc><lastmod>2026-07-29</lastmod><priority>0.7</priority></url>
+<url><loc>https://orisod.com/es/qr-code-generator</loc><lastmod>2026-07-29</lastmod><priority>0.7</priority></url>
+<url><loc>https://orisod.com/es/image-to-base64</loc><lastmod>2026-07-29</lastmod><priority>0.6</priority></url>
+<url><loc>https://orisod.com/es/color-picker-from-image</loc><lastmod>2026-07-29</lastmod><priority>0.6</priority></url>
+<url><loc>https://orisod.com/es/image-dimension-checker</loc><lastmod>2026-07-29</lastmod><priority>0.6</priority></url>
 
 </urlset>

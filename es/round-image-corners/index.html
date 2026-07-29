@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redondear Bordes / Recorte Circular – Herramienta Gratuita en Línea | Orisod</title>
+<meta name="description" content="Redondea los bordes de una imagen o recórtala en forma de círculo, gratis y en línea. Ideal para avatares y fotos de perfil — todo se ejecuta en tu navegador.">
+<link rel="alternate" hreflang="en" href="https://orisod.com/round-image-corners">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/round-image-corners">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/round-image-corners">
+<style>
+.lang-switch{position:fixed;top:16px;right:16px;display:flex;gap:6px;z-index:100;}
+.lang-flag{font-size:13px;padding:6px 10px;border-radius:6px;text-decoration:none;color:#94a3b8;background:#111827;border:1px solid #1f2937;}
+.lang-flag.active{color:white;border-color:#2563eb;cursor:default;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:44px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:30px 20px;margin-top:30px;}
+.dropzone{border:2px dashed #374151;border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
+.dropzone:hover, .dropzone.dragover{border-color:#2563eb;background:#0f172a;}
+input[type="file"]{display:none;}
+.shape-row{display:flex;justify-content:center;gap:10px;margin-top:20px;}
+.shape-btn{padding:10px 18px;border-radius:8px;border:1px solid #1f2937;background:#0f172a;color:white;cursor:pointer;font-size:14px;transition:0.2s;}
+.shape-btn.active{background:#2563eb;border-color:#2563eb;}
+.radius-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:20px;font-size:14px;opacity:0.85;}
+input[type="range"]{width:200px;}
+.preview-wrap{margin-top:20px;}
+#previewCanvas{
+  max-width:100%;
+  border-radius:6px;
+  background-image:
+    linear-gradient(45deg, #374151 25%, transparent 25%),
+    linear-gradient(-45deg, #374151 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #374151 75%),
+    linear-gradient(-45deg, transparent 75%, #374151 75%);
+  background-size:16px 16px;
+  background-position:0 0, 0 8px, 8px -8px, -8px 0px;
+}
+button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:#2563eb;color:white;text-decoration:none;font-size:16px;cursor:pointer;}
+button:disabled{opacity:0.4;cursor:not-allowed;}
+button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.note{margin-top:20px;font-size:14px;opacity:0.6;}
+.footer{margin-top:50px;font-size:14px;opacity:0.4;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;text-align:center;}
+.related a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="lang-switch">
+  <a class="lang-flag" href="/round-image-corners">EN</a>
+  <span class="lang-flag active">ES</span>
+</div>
+<div class="container">
+  <h1>Redondear Bordes / Recorte Circular</h1>
+  <p>Redondea los bordes de tu imagen, o recórtala en un círculo perfecto. Ideal para fotos de perfil y avatares. Todo ocurre localmente en tu navegador.</p>
+
+  <div class="box">
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Haz clic para seleccionar una imagen o arrástrala aquí</div>
+    </label>
+    <input type="file" id="fileInput" accept="image/*">
+    <div class="error" id="errorMsg"></div>
+
+    <div class="shape-row" id="shapeRow" style="display:none;">
+      <div class="shape-btn active" id="roundedBtn">Bordes Redondeados</div>
+      <div class="shape-btn" id="circleBtn">Círculo</div>
+    </div>
+
+    <div class="radius-row" id="radiusRow" style="display:none;">
+      <label for="radiusSlider">Radio de esquina: <span id="radiusValue">30</span>%</label>
+      <input type="range" id="radiusSlider" min="0" max="50" value="30">
+    </div>
+
+    <div class="preview-wrap" id="previewWrap" style="display:none;">
+      <canvas id="previewCanvas"></canvas>
+    </div>
+
+    <br>
+    <button id="downloadBtn" style="display:none;">Descargar PNG</button>
+    <div class="note">El resultado es un PNG transparente — la forma que elijas se conserva, todo lo que quede fuera se vuelve transparente.</div>
+  </div>
+
+  <a class="back" href="/es/" style="background:#374151; margin-right:10px;">🏠 Inicio</a>
+  <a class="back" href="/es/tools">Ver todas las herramientas</a>
+
+  <div class="seo-content">
+    <h2>¿Qué hace esta herramienta?</h2>
+    <p>Esta herramienta enmascara tu imagen con esquinas redondeadas o un círculo perfecto, haciendo transparente todo lo que quede fuera de esa forma. Es el aspecto estándar para fotos de perfil, avatares e íconos de aplicaciones en la mayoría de las plataformas.</p>
+
+    <h2>¿Cuándo deberías usar esta herramienta?</h2>
+    <ul>
+      <li>Necesitas una foto de perfil circular para redes sociales, Slack o una app de mensajería</li>
+      <li>Estás diseñando una interfaz y quieres un estilo consistente de esquinas redondeadas para miniaturas</li>
+      <li>Quieres una imagen con fondo transparente en forma de círculo o cuadrado redondeado</li>
+      <li>Estás preparando un ícono de app o insignia con esquinas suaves</li>
+    </ul>
+
+    <h2>¿Por qué usar Orisod para esto?</h2>
+    <p>Cambia entre esquinas redondeadas (con radio ajustable) y un recorte circular completo, con vista previa en vivo antes de descargar. El resultado es un PNG transparente, listo para colocar sobre cualquier fondo. Todo ocurre localmente en tu navegador — tu foto nunca se sube a un servidor.</p>
+
+    <h2>Preguntas frecuentes</h2>
+    <div class="faq-item">
+      <div class="q">¿El fondo será transparente?</div>
+      <div>Sí, el área fuera de la forma seleccionada (círculo o esquinas redondeadas) se vuelve completamente transparente en el PNG descargado.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Puedo controlar qué tan redondeadas son las esquinas?</div>
+      <div>Sí, usa el control deslizante de radio para ajustar desde esquinas apenas redondeadas hasta casi circulares.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿El recorte circular usa toda la imagen?</div>
+      <div>El círculo se basa en el menor entre el ancho o el alto de la imagen, centrado — así que si tu foto no es cuadrada, parte del lado más largo se recortará.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Se sube mi foto a algún lugar?</div>
+      <div>No, todo el proceso ocurre localmente en tu navegador usando JavaScript.</div>
+    </div>
+  </div>
+
+  <h2>Herramientas relacionadas</h2>
+  <div class="related">
+    <a href="/es/add-border-to-image">Añadir marco a imagen</a>
+    <a href="/es/crop-image">Recortar imagen</a>
+    <a href="/es/resize-image">Redimensionar imagen</a>
+  </div>
+
+  <div class="footer">© Orisod Labs</div>
+</div>
+
+<script>
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const errorMsg = document.getElementById('errorMsg');
+const shapeRow = document.getElementById('shapeRow');
+const roundedBtn = document.getElementById('roundedBtn');
+const circleBtn = document.getElementById('circleBtn');
+const radiusRow = document.getElementById('radiusRow');
+const radiusSlider = document.getElementById('radiusSlider');
+const radiusValue = document.getElementById('radiusValue');
+const previewWrap = document.getElementById('previewWrap');
+const previewCanvas = document.getElementById('previewCanvas');
+const downloadBtn = document.getElementById('downloadBtn');
+
+let img = null;
+let currentShape = 'rounded';
+
+fileInput.addEventListener('change', (e) => { if (e.target.files[0]) loadFile(e.target.files[0]); });
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+});
+
+function loadFile(file) {
+  errorMsg.textContent = '';
+  if (!file.type.startsWith('image/')) {
+    errorMsg.textContent = 'Por favor selecciona un archivo de imagen válido.';
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    img = new Image();
+    img.onload = () => {
+      dropzoneText.textContent = `✅ ${file.name} cargado`;
+      shapeRow.style.display = 'flex';
+      previewWrap.style.display = 'block';
+      downloadBtn.style.display = 'inline-block';
+      updateShapeUI();
+      renderPreview();
+    };
+    img.onerror = () => { errorMsg.textContent = 'No se pudo cargar esta imagen.'; };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+roundedBtn.addEventListener('click', () => {
+  currentShape = 'rounded';
+  updateShapeUI();
+  renderPreview();
+});
+circleBtn.addEventListener('click', () => {
+  currentShape = 'circle';
+  updateShapeUI();
+  renderPreview();
+});
+radiusSlider.addEventListener('input', () => {
+  radiusValue.textContent = radiusSlider.value;
+  renderPreview();
+});
+
+function updateShapeUI() {
+  roundedBtn.classList.toggle('active', currentShape === 'rounded');
+  circleBtn.classList.toggle('active', currentShape === 'circle');
+  radiusRow.style.display = currentShape === 'rounded' ? 'flex' : 'none';
+}
+
+function drawShapePath(ctx, w, h) {
+  ctx.beginPath();
+  if (currentShape === 'circle') {
+    const r = Math.min(w, h) / 2;
+    ctx.arc(w / 2, h / 2, r, 0, Math.PI * 2);
+  } else {
+    const radiusPct = parseInt(radiusSlider.value, 10) / 100;
+    const r = Math.min(w, h) * radiusPct;
+    ctx.moveTo(r, 0);
+    ctx.lineTo(w - r, 0);
+    ctx.arcTo(w, 0, w, r, r);
+    ctx.lineTo(w, h - r);
+    ctx.arcTo(w, h, w - r, h, r);
+    ctx.lineTo(r, h);
+    ctx.arcTo(0, h, 0, h - r, r);
+    ctx.lineTo(0, r);
+    ctx.arcTo(0, 0, r, 0, r);
+  }
+  ctx.closePath();
+}
+
+function buildOutputCanvas() {
+  let w = img.naturalWidth;
+  let h = img.naturalHeight;
+  let sx = 0, sy = 0;
+
+  if (currentShape === 'circle') {
+    const size = Math.min(w, h);
+    sx = (w - size) / 2;
+    sy = (h - size) / 2;
+    w = size;
+    h = size;
+  }
+
+  const canvas = document.createElement('canvas');
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext('2d');
+
+  drawShapePath(ctx, w, h);
+  ctx.clip();
+
+  if (currentShape === 'circle') {
+    ctx.drawImage(img, sx, sy, w, h, 0, 0, w, h);
+  } else {
+    ctx.drawImage(img, 0, 0);
+  }
+
+  return canvas;
+}
+
+function renderPreview() {
+  if (!img) return;
+  const canvas = buildOutputCanvas();
+  const maxPreview = 400;
+  const scale = Math.min(1, maxPreview / Math.max(canvas.width, canvas.height));
+
+  previewCanvas.width = canvas.width * scale;
+  previewCanvas.height = canvas.height * scale;
+  const ctx = previewCanvas.getContext('2d');
+  ctx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
+  ctx.drawImage(canvas, 0, 0, previewCanvas.width, previewCanvas.height);
+}
+
+downloadBtn.addEventListener('click', () => {
+  if (!img) return;
+  const canvas = buildOutputCanvas();
+  const dataUrl = canvas.toDataURL('image/png');
+  const a = document.createElement('a');
+  a.href = dataUrl;
+  a.download = currentShape === 'circle' ? 'circle-crop.png' : 'rounded-image.png';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+});
+</script>
+</body>
+</html>

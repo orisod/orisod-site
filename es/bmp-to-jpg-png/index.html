@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conversor de BMP a JPG/PNG – Herramienta gratuita en línea | Orisod</title>
+<meta name="description" content="Convierte imágenes BMP a JPG o PNG en línea gratis. Funciona directamente en tu navegador — no se sube ningún archivo.">
+<link rel="alternate" hreflang="en" href="https://orisod.com/bmp-to-jpg-png">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/bmp-to-jpg-png">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/bmp-to-jpg-png">
+<style>
+.lang-switch{position:fixed;top:16px;right:16px;display:flex;gap:6px;z-index:100;}
+.lang-flag{font-size:13px;padding:6px 10px;border-radius:6px;text-decoration:none;color:#94a3b8;background:#111827;border:1px solid #1f2937;}
+.lang-flag.active{color:white;border-color:#2563eb;cursor:default;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:44px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:30px 20px;margin-top:30px;}
+.dropzone{border:2px dashed #374151;border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
+.dropzone:hover, .dropzone.dragover{border-color:#2563eb;background:#0f172a;}
+input[type="file"]{display:none;}
+.format-row{display:flex;justify-content:center;gap:10px;margin-top:20px;}
+.format-btn{padding:10px 18px;border-radius:8px;border:1px solid #1f2937;background:#0f172a;color:white;cursor:pointer;font-size:14px;transition:0.2s;}
+.format-btn.active{background:#2563eb;border-color:#2563eb;}
+button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:#2563eb;color:white;text-decoration:none;font-size:16px;cursor:pointer;}
+button:disabled{opacity:0.4;cursor:not-allowed;}
+button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.note{margin-top:20px;font-size:14px;opacity:0.6;}
+.results{margin-top:25px;text-align:left;}
+.result-item{display:flex;align-items:center;justify-content:space-between;background:#0f172a;border:1px solid #1e293b;border-radius:8px;padding:12px 16px;margin-bottom:10px;font-size:14px;}
+.result-item a{color:#60a5fa;text-decoration:none;font-weight:bold;}
+.result-item a:hover{text-decoration:underline;}
+.download-all{margin-top:15px;}
+.footer{margin-top:50px;font-size:14px;opacity:0.4;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;text-align:center;}
+.related a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="lang-switch">
+  <a class="lang-flag" href="/bmp-to-jpg-png">EN</a>
+  <span class="lang-flag active">ES</span>
+</div>
+<div class="container">
+  <h1>Conversor de BMP a JPG/PNG</h1>
+  <p>Convierte imágenes BMP a formato JPG o PNG en línea gratis. Todo ocurre localmente en tu navegador — tus archivos nunca se suben a ningún lugar.</p>
+
+  <div class="box">
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Haz clic para seleccionar archivos BMP o arrástralos aquí</div>
+    </label>
+    <input type="file" id="fileInput" accept=".bmp" multiple>
+    <div class="error" id="errorMsg"></div>
+
+    <div class="format-row">
+      <div class="format-btn active" id="jpgBtn">JPG</div>
+      <div class="format-btn" id="pngBtn">PNG</div>
+    </div>
+
+    <br>
+    <button id="convertBtn" disabled>Convertir</button>
+    <div class="note">Compatible con uno o varios archivos BMP.</div>
+
+    <div class="results" id="results"></div>
+    <div class="download-all" id="downloadAllWrap" style="display:none;">
+      <button id="downloadAllBtn">Descargar todo</button>
+    </div>
+  </div>
+
+  <a class="back" href="/es/" style="background:#374151; margin-right:10px;">🏠 Inicio</a>
+  <a class="back" href="/es/tools">Ver todas las herramientas</a>
+
+  <div class="seo-content">
+    <h2>¿Qué es un archivo BMP?</h2>
+    <p>BMP (mapa de bits) es un formato de imagen más antiguo y sin comprimir que produce archivos muy grandes comparado con los formatos modernos. Todavía lo generan algunas herramientas de Windows y software heredado, pero rara vez se usa para compartir imágenes o en la web debido a su tamaño — por eso es común convertirlo a JPG o PNG.</p>
+
+    <h2>¿Cuándo deberías usar esta herramienta?</h2>
+    <ul>
+      <li>Tienes un archivo BMP de un programa antiguo o una herramienta de captura de pantalla y necesitas un formato más pequeño</li>
+      <li>Un sitio web o plataforma no acepta subir archivos BMP</li>
+      <li>Quieres compartir la imagen sin el gran tamaño de archivo que produce BMP</li>
+      <li>Necesitas editar la imagen en un software que no admite BMP</li>
+    </ul>
+
+    <h2>¿Por qué usar Orisod para esto?</h2>
+    <p>Esta herramienta convierte uno o varios archivos BMP a JPG o PNG a la vez, todo dentro de tu navegador — tus imágenes nunca se suben a un servidor. JPG te da un archivo mucho más pequeño, mientras que PNG conserva calidad sin pérdida y cualquier transparencia.</p>
+
+    <h2>Preguntas frecuentes</h2>
+    <div class="faq-item">
+      <div class="q">¿Por qué mi archivo BMP es mucho más grande que otros formatos?</div>
+      <div>BMP normalmente almacena los datos de la imagen sin comprimir, lo que hace que el tamaño del archivo sea mucho mayor que JPG o PNG para la misma imagen.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Debería elegir JPG o PNG?</div>
+      <div>Elige JPG para el tamaño de archivo más pequeño, o PNG si necesitas calidad sin pérdida o transparencia.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Mis archivos se suben a algún lugar?</div>
+      <div>No, la conversión ocurre localmente en tu navegador usando JavaScript.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Puedo convertir varios archivos BMP a la vez?</div>
+      <div>Sí, selecciona o arrastra varios archivos y descárgalos individualmente o todos juntos.</div>
+    </div>
+  </div>
+
+  <h2>Herramientas relacionadas</h2>
+  <div class="related">
+    <a href="/es/png-to-jpg">PNG a JPG</a>
+    <a href="/es/compress-image">Comprimir imagen</a>
+    <a href="/es/resize-image">Redimensionar imagen</a>
+  </div>
+
+  <div class="footer">© Orisod Labs</div>
+</div>
+
+<script>
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const convertBtn = document.getElementById('convertBtn');
+const results = document.getElementById('results');
+const errorMsg = document.getElementById('errorMsg');
+const downloadAllWrap = document.getElementById('downloadAllWrap');
+const downloadAllBtn = document.getElementById('downloadAllBtn');
+const jpgBtn = document.getElementById('jpgBtn');
+const pngBtn = document.getElementById('pngBtn');
+
+let selectedFiles = [];
+let convertedBlobs = [];
+let outputFormat = 'jpg';
+
+jpgBtn.addEventListener('click', () => {
+  outputFormat = 'jpg';
+  jpgBtn.classList.add('active');
+  pngBtn.classList.remove('active');
+});
+pngBtn.addEventListener('click', () => {
+  outputFormat = 'png';
+  pngBtn.classList.add('active');
+  jpgBtn.classList.remove('active');
+});
+
+fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  handleFiles(e.dataTransfer.files);
+});
+
+function handleFiles(fileList) {
+  errorMsg.textContent = '';
+  const valid = Array.from(fileList).filter(f => /\.bmp$/i.test(f.name));
+  if (valid.length === 0) {
+    errorMsg.textContent = 'Selecciona archivos BMP válidos.';
+    return;
+  }
+  selectedFiles = valid;
+  dropzoneText.textContent = `✅ ${valid.length} archivo(s) seleccionado(s) — ${valid.map(f => f.name).join(', ')}`;
+  convertBtn.disabled = false;
+  results.innerHTML = '';
+  downloadAllWrap.style.display = 'none';
+}
+
+convertBtn.addEventListener('click', async () => {
+  if (selectedFiles.length === 0) return;
+  convertBtn.disabled = true;
+  convertBtn.textContent = 'Convirtiendo...';
+  results.innerHTML = '';
+  convertedBlobs = [];
+  errorMsg.textContent = '';
+
+  for (const file of selectedFiles) {
+    try {
+      const blob = await convertFile(file);
+      const name = file.name.replace(/\.bmp$/i, `.${outputFormat}`);
+      convertedBlobs.push({ name, blob });
+      addResultRow(name, blob);
+    } catch (err) {
+      errorMsg.textContent = `No se pudo convertir ${file.name}.`;
+    }
+  }
+
+  convertBtn.disabled = false;
+  convertBtn.textContent = 'Convertir';
+  if (convertedBlobs.length > 1) downloadAllWrap.style.display = 'block';
+});
+
+function convertFile(file) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        const ctx = canvas.getContext('2d');
+        if (outputFormat === 'jpg') {
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+        ctx.drawImage(img, 0, 0);
+        const mimeType = outputFormat === 'jpg' ? 'image/jpeg' : 'image/png';
+        const quality = outputFormat === 'jpg' ? 0.92 : undefined;
+        canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error('Conversion failed')), mimeType, quality);
+      };
+      img.onerror = () => reject(new Error('Could not load image'));
+      img.src = e.target.result;
+    };
+    reader.onerror = () => reject(new Error('Could not read file'));
+    reader.readAsDataURL(file);
+  });
+}
+
+function addResultRow(name, blob) {
+  const url = URL.createObjectURL(blob);
+  const sizeKb = (blob.size / 1024).toFixed(1);
+  const row = document.createElement('div');
+  row.className = 'result-item';
+  row.innerHTML = `<span>${name} (${sizeKb} KB)</span>`;
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = name;
+  link.textContent = 'Descargar';
+  row.appendChild(link);
+  results.appendChild(row);
+}
+
+downloadAllBtn.addEventListener('click', () => {
+  convertedBlobs.forEach(({ name, blob }) => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+});
+</script>
+</body>
+</html>

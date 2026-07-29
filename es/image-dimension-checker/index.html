@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verificador de dimensiones de imagen – Herramienta gratuita en línea | Orisod</title>
+<meta name="description" content="Consulta las dimensiones exactas en píxeles, tamaño de archivo, formato, DPI y proporción de una imagen, gratis y en línea. Nada se sube, todo se ejecuta en tu navegador.">
+<link rel="alternate" hreflang="en" href="https://orisod.com/image-dimension-checker">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/image-dimension-checker">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/image-dimension-checker">
+<style>
+.lang-switch{position:fixed;top:16px;right:16px;display:flex;gap:6px;z-index:100;}
+.lang-flag{font-size:13px;padding:6px 10px;border-radius:6px;text-decoration:none;color:#94a3b8;background:#111827;border:1px solid #1f2937;}
+.lang-flag.active{color:white;border-color:#2563eb;cursor:default;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:44px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:30px 20px;margin-top:30px;}
+.dropzone{border:2px dashed #374151;border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
+.dropzone:hover, .dropzone.dragover{border-color:#2563eb;background:#0f172a;}
+input[type="file"]{display:none;}
+.preview-thumb{margin-top:20px;}
+.preview-thumb img{max-width:100%;max-height:260px;border-radius:6px;border:1px solid #1e293b;}
+.info-table{margin-top:20px;text-align:left;width:100%;border-collapse:collapse;font-size:14px;}
+.info-table tr{border-bottom:1px solid #1e293b;}
+.info-table td{padding:10px 8px;}
+.info-table td:first-child{opacity:0.65;width:45%;}
+.info-table td:last-child{font-weight:bold;}
+.note{margin-top:20px;font-size:14px;opacity:0.6;}
+.footer{margin-top:50px;font-size:14px;opacity:0.4;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+.back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:#2563eb;color:white;text-decoration:none;font-size:16px;}
+.back:hover{filter:brightness(1.08);}
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;text-align:center;}
+.related a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="lang-switch">
+  <a class="lang-flag" href="/image-dimension-checker">EN</a>
+  <span class="lang-flag active">ES</span>
+</div>
+<div class="container">
+  <h1>Verificador de dimensiones de imagen</h1>
+  <p>Sube una imagen para ver sus dimensiones exactas en píxeles, tamaño de archivo, formato, proporción y DPI cuando esté disponible. Todo ocurre localmente en tu navegador.</p>
+
+  <div class="box">
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Haz clic para seleccionar una imagen o arrástrala aquí</div>
+    </label>
+    <input type="file" id="fileInput" accept="image/*">
+    <div class="error" id="errorMsg"></div>
+
+    <div class="preview-thumb" id="previewThumb" style="display:none;">
+      <img id="previewImg" alt="Vista previa">
+    </div>
+
+    <table class="info-table" id="infoTable" style="display:none;"></table>
+  </div>
+
+  <a class="back" href="/es/" style="background:#374151; margin-right:10px;">🏠 Inicio</a>
+  <a class="back" href="/es/tools">Ver todas las herramientas</a>
+
+  <div class="seo-content">
+    <h2>¿Qué hace esta herramienta?</h2>
+    <p>Esta herramienta lee y muestra los detalles técnicos de un archivo de imagen: su ancho y alto exactos en píxeles, tamaño de archivo, formato, proporción y — cuando el archivo lo incluye — resolución DPI (puntos por pulgada). Es una forma rápida de confirmar exactamente con qué estás trabajando antes de subir o imprimir una imagen.</p>
+
+    <h2>¿Cuándo deberías usar esta herramienta?</h2>
+    <ul>
+      <li>Un formulario o plataforma requiere dimensiones específicas en píxeles y necesitas comprobar si tu imagen cumple</li>
+      <li>Estás preparando una imagen para imprimir y necesitas confirmar su DPI</li>
+      <li>Quieres comparar rápidamente la proporción de una imagen con una proporción objetivo</li>
+      <li>Necesitas el tamaño exacto del archivo antes de adjuntarlo en algún lugar con límites de tamaño</li>
+    </ul>
+
+    <h2>¿Por qué usar Orisod para esto?</h2>
+    <p>Todos los detalles se leen directamente del archivo, localmente en tu navegador — nada se sube a un servidor. Si el archivo incluye metadatos de DPI (común en archivos JPEG y PNG preparados para imprimir), se mostrará; de lo contrario, la herramienta te indica que no se encontró en lugar de adivinar.</p>
+
+    <h2>Preguntas frecuentes</h2>
+    <div class="faq-item">
+      <div class="q">¿Por qué el DPI aparece como "no encontrado" en algunas imágenes?</div>
+      <div>No todos los archivos de imagen almacenan un valor de DPI — muchas imágenes web y capturas de pantalla simplemente no lo incluyen. Cuando está presente, suele ser una referencia para impresión más que para visualización en pantalla.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Cuál es la diferencia entre dimensiones en píxeles y DPI?</div>
+      <div>Las dimensiones en píxeles (como 1920×1080) son la cantidad real de píxeles en la imagen. El DPI describe qué tan densamente se pretende imprimir esos píxeles por pulgada — la misma imagen en píxeles se puede imprimir más grande o más pequeña según el DPI.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Se sube mi imagen a algún lugar?</div>
+      <div>No, todo el proceso ocurre localmente en tu navegador usando JavaScript.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Qué formatos son compatibles?</div>
+      <div>JPG, PNG, WEBP, GIF y otros formatos comunes que tu navegador pueda leer. La detección de DPI actualmente funciona para archivos JPEG y PNG.</div>
+    </div>
+  </div>
+
+  <h2>Herramientas relacionadas</h2>
+  <div class="related">
+    <a href="/es/color-picker-from-image">Selector de color de imagen</a>
+    <a href="/es/resize-image">Redimensionar imagen</a>
+    <a href="/es/compress-image">Comprimir imagen</a>
+  </div>
+
+  <div class="footer">© Orisod Labs</div>
+</div>
+
+<script>
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const errorMsg = document.getElementById('errorMsg');
+const previewThumb = document.getElementById('previewThumb');
+const previewImg = document.getElementById('previewImg');
+const infoTable = document.getElementById('infoTable');
+
+fileInput.addEventListener('change', (e) => { if (e.target.files[0]) loadFile(e.target.files[0]); });
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+});
+
+async function loadFile(file) {
+  errorMsg.textContent = '';
+  if (!file.type.startsWith('image/')) {
+    errorMsg.textContent = 'Selecciona un archivo de imagen válido.';
+    return;
+  }
+  dropzoneText.textContent = `✅ ${file.name} cargado`;
+
+  const arrayBuffer = await file.arrayBuffer();
+  const dpi = detectDpi(arrayBuffer, file.type);
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = new Image();
+    img.onload = () => {
+      previewImg.src = e.target.result;
+      previewThumb.style.display = 'block';
+      renderInfo(file, img.naturalWidth, img.naturalHeight, dpi);
+    };
+    img.onerror = () => { errorMsg.textContent = 'No se pudo cargar esta imagen.'; };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
+
+function renderInfo(file, width, height, dpi) {
+  const divisor = gcd(width, height) || 1;
+  const ratioW = width / divisor;
+  const ratioH = height / divisor;
+  const sizeKb = file.size / 1024;
+  const sizeDisplay = sizeKb > 1024 ? `${(sizeKb / 1024).toFixed(2)} MB` : `${sizeKb.toFixed(1)} KB`;
+
+  const rows = [
+    ['Dimensiones', `${width} × ${height} px`],
+    ['Tamaño de archivo', sizeDisplay],
+    ['Formato', file.type || 'Desconocido'],
+    ['Proporción', `${ratioW}:${ratioH}`],
+    ['DPI', dpi ? `${dpi} dpi` : 'No encontrado en el archivo']
+  ];
+
+  infoTable.innerHTML = '';
+  rows.forEach(([key, val]) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${key}</td><td>${val}</td>`;
+    infoTable.appendChild(tr);
+  });
+  infoTable.style.display = 'table';
+}
+
+// Detects DPI from JPEG APP0 (JFIF) segment or PNG pHYs chunk.
+function detectDpi(arrayBuffer, mimeType) {
+  const view = new DataView(arrayBuffer);
+
+  if (mimeType === 'image/jpeg' && view.getUint16(0, false) === 0xFFD8) {
+    let offset = 2;
+    while (offset < view.byteLength - 1) {
+      if (view.getUint8(offset) !== 0xFF) break;
+      const marker = view.getUint8(offset + 1);
+      if (marker === 0xE0) {
+        const units = view.getUint8(offset + 11);
+        const xDensity = view.getUint16(offset + 12, false);
+        if (units === 1 && xDensity > 0) return xDensity; // units=1 means DPI
+        return null;
+      } else if (marker === 0xD8) {
+        offset += 2;
+      } else {
+        const segLength = view.getUint16(offset + 2, false);
+        offset += 2 + segLength;
+      }
+    }
+  }
+
+  if (mimeType === 'image/png') {
+    const pngSig = view.getUint32(0, false);
+    if (pngSig === 0x89504e47) {
+      let offset = 8;
+      while (offset < view.byteLength - 8) {
+        const chunkLength = view.getUint32(offset, false);
+        const chunkType = String.fromCharCode(
+          view.getUint8(offset + 4), view.getUint8(offset + 5),
+          view.getUint8(offset + 6), view.getUint8(offset + 7)
+        );
+        if (chunkType === 'pHYs') {
+          const ppuX = view.getUint32(offset + 8, false);
+          const unit = view.getUint8(offset + 16);
+          if (unit === 1) return Math.round(ppuX * 0.0254);
+          return null;
+        }
+        offset += 12 + chunkLength;
+      }
+    }
+  }
+
+  return null;
+}
+</script>
+</body>
+</html>

@@ -13,8 +13,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>QR Code Generator – Free Online Tool | Orisod</title>
 <meta name="description" content="Generate a QR code from any text or URL, free and instant. Works directly in your browser — no data is sent anywhere.">
+<link rel="alternate" hreflang="en" href="https://orisod.com/qr-code-generator">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/qr-code-generator">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/qr-code-generator">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
+.lang-switch{position:fixed;top:16px;right:16px;display:flex;gap:6px;z-index:100;}
+.lang-flag{font-size:13px;padding:6px 10px;border-radius:6px;text-decoration:none;color:#94a3b8;background:#111827;border:1px solid #1f2937;}
+.lang-flag.active{color:white;border-color:#2563eb;cursor:default;}
 body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
 .container{max-width:800px;margin:0 auto;}
 h1{font-size:48px;margin-bottom:10px;}
@@ -54,6 +60,10 @@ h2{margin-top:50px;font-size:22px;}
 </style>
 </head>
 <body>
+<div class="lang-switch">
+  <span class="lang-flag active">EN</span>
+  <a class="lang-flag" href="/es/qr-code-generator">ES</a>
+</div>
 <div class="container">
   <h1>QR Code Generator</h1>
   <p>Turn any link or text into a scannable QR code, instantly. Everything happens locally in your browser — nothing you type is sent anywhere.</p>
