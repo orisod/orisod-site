@@ -1,5 +1,9 @@
 # Orisod — Project Context for Claude Code
 
+## Permanent rule
+
+**Always run `git pull` at the start of every session before making changes**, since manual edits sometimes happen directly on GitHub's web editor.
+
 ## What this project is
 
 Orisod (orisod.com) is a free, browser-based toolkit for images and PDFs — think a lighter, privacy-first alternative to iLovePDF/TinyWow. Static HTML site, deployed via GitHub Pages, folder-based routing (`/tool-name/index.html`).
@@ -22,12 +26,57 @@ Orisod (orisod.com) is a free, browser-based toolkit for images and PDFs — thi
 
 ## Visual design system (must stay consistent across every page)
 
-- Background `#0b0f1a`, text `white`, font `Arial, Helvetica, sans-serif`
+- Background `#0b0f1a`, text `white`, font `Arial, Helvetica, sans-serif` (dark theme values — see **Theming** below for the light-theme equivalents and how colors are now expressed as CSS custom properties, not raw hex)
 - Primary blue button: `background:#2563eb`
 - Tool card/box: `background:#111827; border:1px solid #1f2937; border-radius:10px`
 - Dropzone pattern: dashed border `#374151`, hover state `border-color:#2563eb`
 - Footer: `© Orisod Labs` (home/tools pages also link to About/Privacy)
-- Every tool page has: dropzone at top (no scroll needed to start converting) → tool UI → 🏠 Home + View All Tools buttons → SEO content section (what it does / when to use / why Orisod / 4 FAQs) → Related tools (2-3 links) → footer
+- Every tool page has: dropzone at top (no scroll needed to start converting) → tool UI → site-wide top nav (see **Site-wide navigation**) → SEO content section (what it does / when to use / why Orisod / 4 FAQs) → Related tools (2-3 links) → footer
+
+## Logo & favicon
+
+Logo removed for now — the PNG (navy background, metallic blue "ORISOD" 
+text) doesn't have a transparent background, so it looked broken in the 
+nav and hero. Reverted to plain text branding ("ORISOD" or "Orisod Labs") 
+in both locations until a proper transparent-background version exists 
+(ideally SVG). Do not re-attempt logo integration until explicitly requested.
+
+Favicon files stay as-is (already generated, unaffected by this).
+
+## Site-wide navigation
+
+- Every page (all tool pages, Home, All Tools, About, Privacy, both languages) shares one consolidated top nav bar: **logo** (left, links to Home) — **category links** "All Tools | Image Tools | PDF Tools | Utility Tools" (center) — **language switch + theme toggle** (right).
+- This single bar replaced three older, separate patterns: the floating top-right EN/ES box, the per-page "🏠 Home | View All Tools" button row on tool pages, and the old "🏠 Home | All Tools" top-nav on About/Privacy/All Tools pages. Don't reintroduce any of those.
+- Category links are plain click-through links — **no hover-triggered dropdowns**, that was explicitly rejected as bad UX.
+- Highlighting rule: on a tool page, the category that tool belongs to renders as **highlighted blue, non-clickable plain text** (you're already there); the other two categories stay normal clickable links. On Home, all three category names render in their normal, non-highlighted link state (neutral — Home doesn't belong to one category). "All Tools" itself is never highlighted.
+- **Exception — the All Tools page (`/tools`) itself:** the shared nav bar there omits every category link, including "All Tools" — only logo (left) and language switch + theme toggle (right) remain, with nothing in between. This is because the page's own filter pills (see below) already cover "All Tools | Image Tools | PDF Tools | Utility Tools", and "All Tools" itself is redundant since it's the page you're already on. Every other page keeps the full 4-link nav.
+- The All Tools page additionally has its own **click-based filter pills** (not part of the shared nav bar): "All (36) | Image Tools (20) | PDF Tools (9) | Utility Tools (7)". Clicking a pill filters/scrolls to that category; clicking "All" shows everything grouped by category and sorted alphabetically within each group (deliberately different from iLovePDF, whose "All" view loses category grouping).
+
+## Theming (light/dark)
+
+- Two themes only: dark (default) and light. A sun/moon toggle button lives in the nav bar; it sets `data-theme="light"` (or removes it for dark) on `<html>` and persists the choice in `localStorage` (key `orisod-theme`). A tiny inline script at the very top of `<head>` reads that value and applies it before first paint, to avoid a flash of the wrong theme.
+- Colors are expressed as CSS custom properties defined in `:root` (dark values) and overridden under `:root[data-theme="light"]` — never hardcode a raw hex for something that should flip between themes. Core variables: `--bg`, `--text`, `--card-bg`, `--border`, `--accent`, `--muted-text`, `--dropzone-border`.
+- When adding new UI to any page, use the existing variables rather than introducing new hardcoded colors, so it stays correct in both themes automatically.
+- **`.theme-toggle` CSS must be self-contained, including an explicit `margin:0`.** Every tool page defines its own generic `button, .back{...}` rule for that tool's action button (e.g. "Compress Image"), and that bare `button` element selector applies to *every* `<button>` on the page — including the nav's `<button class="theme-toggle">`. Class selectors on `.theme-toggle` (like `display`, `padding`, `background`) already win over the element selector on specificity, but `margin` is a property the tool's generic `button` rule sets and `.theme-toggle` didn't use to set, so it fell through unopposed and visibly misaligned the toggle relative to the EN/ES pills next to it. The standard `.theme-toggle` rule now is: `box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;` — and `.lang-flag` uses the matching box model (`box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;...`) so both sit on an identical height/baseline regardless of being an `<a>`/`<span>` vs a `<button>`. When propagating the nav to a tool page, always use these exact rules rather than copying the tool page's pre-existing `.lang-flag`/theme styles verbatim.
+
+## Nav/theming propagation — status: done
+
+The shared nav bar + light/dark theming (see **Site-wide navigation** and 
+**Theming** above) has been propagated to every page: Home, All Tools, 
+About, Privacy, and all 36 tools in both English and Spanish (72 tool 
+pages total). Two bugs surfaced and were fixed during this rollout, kept 
+here as a record so they don't get reintroduced:
+
+- **/tools nav links:** it originally showed only "All Tools" instead of 
+  all 4 links — since fixed, then further revised per the `/tools` 
+  exception documented in Site-wide navigation (that page's top nav now 
+  omits category links entirely, since the filter pills below duplicate 
+  them).
+- **`.theme-toggle` misalignment:** on tool pages specifically (not the 
+  base pages), the toggle button sat visibly lower than the EN/ES pills 
+  next to it. Root cause and the permanent fix are documented in the 
+  Theming section's `.theme-toggle` bullet — every propagated page now 
+  uses that exact CSS.
 
 ## Site structure as of now
 
@@ -56,8 +105,8 @@ Orisod (orisod.com) is a free, browser-based toolkit for images and PDFs — thi
   <link rel="alternate" hreflang="x-default" href="https://orisod.com/compress-image">
   ```
 - **Critical:** each Spanish (or future-language) page only needs to reference English + itself — never needs to know about other languages. Only the English version needs a new `hreflang` line added when a brand-new language launches. This keeps the system from becoming O(n²) as languages are added.
-- Language switcher: fixed position top-right, text labels "EN" / "ES" (not flags — flags don't map cleanly to languages). The current language is a non-clickable `<span class="lang-flag active">`, the other is a clickable `<a>`.
-- **Status:** Spanish (`/es/`) home, tools, about, and privacy pages are done. The 36 tool pages still need Spanish versions — this is the current in-progress task.
+- Language switcher: lives in the right side of the site-wide top nav bar (see **Site-wide navigation**), text labels "EN" / "ES" (not flags — flags don't map cleanly to languages). The current language is a non-clickable `<span class="lang-flag active">`, the other is a clickable `<a>`.
+- **Status:** Spanish (`/es/`) home, tools, about, privacy, and all 36 tool pages are done and live, including the shared nav/theming pattern (see **Nav/theming propagation** above). No pages are currently pending translation.
 - Future languages under consideration (only add if Analytics shows real traffic demand from that country): French, German, Russian, Hebrew (RTL — needs separate CSS handling), Hindi.
 
 ## SEO conventions

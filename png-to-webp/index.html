@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
 <script>
@@ -17,17 +26,38 @@
 <link rel="alternate" hreflang="es" href="https://orisod.com/es/png-to-webp">
 <link rel="alternate" hreflang="x-default" href="https://orisod.com/png-to-webp">
 <style>
-.lang-switch{position:fixed;top:16px;right:16px;display:flex;gap:6px;z-index:100;}
-.lang-flag{font-size:13px;padding:6px 10px;border-radius:6px;text-decoration:none;color:#94a3b8;background:#111827;border:1px solid #1f2937;}
-.lang-flag.active{color:white;border-color:#2563eb;cursor:default;}
-body{
-  margin:0;
-  font-family:Arial, Helvetica, sans-serif;
-  background:#0b0f1a;
-  color:white;
-  text-align:center;
-  padding:40px 20px;
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
 }
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:40px 20px 60px 20px;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
 .container{
   max-width:800px;
   margin:0 auto;
@@ -44,23 +74,20 @@ p{
   line-height:1.6;
 }
 .box{
-  background:#111827;
-  border:1px solid #1f2937;
+  background:var(--card-bg);
+  border:1px solid var(--border);
   border-radius:10px;
   padding:30px 20px;
   margin-top:30px;
 }
 .dropzone{
-  border:2px dashed #374151;
+  border:2px dashed var(--dropzone-border);
   border-radius:10px;
   padding:30px 20px;
   cursor:pointer;
   transition:0.2s;
 }
-.dropzone:hover, .dropzone.dragover{
-  border-color:#2563eb;
-  background:#0f172a;
-}
+.dropzone:hover, .dropzone.dragover{border-color:var(--accent);}
 input[type="file"]{
   display:none;
 }
@@ -82,7 +109,7 @@ button, .back{
   padding:14px 20px;
   border:none;
   border-radius:8px;
-  background:#2563eb;
+  background:var(--accent);
   color:white;
   text-decoration:none;
   font-size:16px;
@@ -104,12 +131,12 @@ button:hover:not(:disabled), .back:hover{
   margin-top:25px;
   text-align:left;
 }
-.result-item{
+.result-item{color:#fff;
   display:flex;
   align-items:center;
   justify-content:space-between;
   background:#0f172a;
-  border:1px solid #1e293b;
+  border:1px solid var(--border);
   border-radius:8px;
   padding:12px 16px;
   margin-bottom:10px;
@@ -147,10 +174,23 @@ h2{margin-top:50px;font-size:22px;}
 </style>
 </head>
 <body>
-<div class="lang-switch">
-  <span class="lang-flag active">EN</span>
-  <a class="lang-flag" href="/es/png-to-webp">ES</a>
-</div>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/tools">All Tools</a>
+    <span class="active-category">Image Tools</span>
+    <a href="/tools#pdf">PDF Tools</a>
+    <a href="/tools#utility">Utility Tools</a>
+  </nav>
+  <div class="site-nav-right">
+    <span class="lang-flag active">EN</span>
+    <a class="lang-flag" href="/es/png-to-webp">ES</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
+  </div>
+</header>
+
+<main>
 <div class="container">
   <h1>PNG to WEBP Converter</h1>
   <p>Convert PNG images to WEBP format to reduce file size while keeping high quality. Everything happens locally in your browser — your files are never uploaded anywhere.</p>
@@ -176,9 +216,6 @@ h2{margin-top:50px;font-size:22px;}
       <button id="downloadAllBtn">Download All</button>
     </div>
   </div>
-
-  <a class="back" href="/" style="background:#374151; margin-right:10px;">🏠 Home</a>
-  <a class="back" href="/tools">View All Tools</a>
 
   <div class="seo-content">
     <h2>What is PNG to WEBP conversion?</h2>
@@ -221,8 +258,31 @@ h2{margin-top:50px;font-size:22px;}
     <a href="/png-to-jpg">PNG to JPG</a>
   </div>
 
-  <div class="footer">© Orisod Labs · <a href="/about" style="color:#94a3b8;">About</a> · <a href="/privacy" style="color:#94a3b8;">Privacy</a></div>
+  <div class="footer">© Orisod Labs · <a href="/about" style="color:var(--muted-text);">About</a> · <a href="/privacy" style="color:var(--muted-text);">Privacy</a></div>
 </div>
+
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
 
 <script>
 const fileInput = document.getElementById('fileInput');

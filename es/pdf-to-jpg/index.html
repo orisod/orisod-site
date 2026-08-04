@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
 <script>
@@ -19,17 +28,38 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
-.lang-switch{position:fixed;top:16px;right:16px;display:flex;gap:6px;z-index:100;}
-.lang-flag{font-size:13px;padding:6px 10px;border-radius:6px;text-decoration:none;color:#94a3b8;background:#111827;border:1px solid #1f2937;}
-.lang-flag.active{color:white;border-color:#2563eb;cursor:default;}
-body{
-  margin:0;
-  font-family:Arial, Helvetica, sans-serif;
-  background:#0b0f1a;
-  color:white;
-  text-align:center;
-  padding:40px 20px;
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
 }
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:40px 20px 60px 20px;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
 .container{
   max-width:800px;
   margin:0 auto;
@@ -46,23 +76,20 @@ p{
   line-height:1.6;
 }
 .box{
-  background:#111827;
-  border:1px solid #1f2937;
+  background:var(--card-bg);
+  border:1px solid var(--border);
   border-radius:10px;
   padding:30px 20px;
   margin-top:30px;
 }
 .dropzone{
-  border:2px dashed #374151;
+  border:2px dashed var(--dropzone-border);
   border-radius:10px;
   padding:30px 20px;
   cursor:pointer;
   transition:0.2s;
 }
-.dropzone:hover, .dropzone.dragover{
-  border-color:#2563eb;
-  background:#0f172a;
-}
+.dropzone:hover, .dropzone.dragover{border-color:var(--accent);}
 input[type="file"]{
   display:none;
 }
@@ -84,7 +111,7 @@ button, .back{
   padding:14px 20px;
   border:none;
   border-radius:8px;
-  background:#2563eb;
+  background:var(--accent);
   color:white;
   text-decoration:none;
   font-size:16px;
@@ -111,9 +138,9 @@ button:hover:not(:disabled), .back:hover{
   gap:14px;
   margin-top:15px;
 }
-.result-item{
+.result-item{color:#fff;
   background:#0f172a;
-  border:1px solid #1e293b;
+  border:1px solid var(--border);
   border-radius:8px;
   padding:10px;
   font-size:13px;
@@ -166,7 +193,7 @@ button:hover:not(:disabled), .back:hover{
   width:100%;
   border-radius:4px;
   margin-bottom:8px;
-  border:1px solid #1e293b;
+  border:1px solid var(--border);
 }
 .result-item a{
   color:#60a5fa;
@@ -205,10 +232,23 @@ h2{margin-top:50px;font-size:22px;}
 </style>
 </head>
 <body>
-<div class="lang-switch">
-  <a class="lang-flag" href="/pdf-to-jpg">EN</a>
-  <span class="lang-flag active">ES</span>
-</div>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/es/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/es/tools">Todas las Herramientas</a>
+    <a href="/es/tools#image">Herramientas de Imagen</a>
+    <span class="active-category">Herramientas PDF</span>
+    <a href="/es/tools#utility">Herramientas de Utilidad</a>
+  </nav>
+  <div class="site-nav-right">
+    <a class="lang-flag" href="/pdf-to-jpg">EN</a>
+    <span class="lang-flag active">ES</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+  </div>
+</header>
+
+<main>
 <div class="container">
   <h1>Convertidor de PDF a JPG</h1>
   <p>Convierte páginas de PDF en imágenes JPG de alta calidad de forma rápida y sencilla. Todo ocurre localmente en tu navegador — tus archivos nunca se suben a ningún lugar.</p>
@@ -251,9 +291,6 @@ h2{margin-top:50px;font-size:22px;}
     </div>
   </div>
 
-  <a class="back" href="/es/" style="background:#374151; margin-right:10px;">🏠 Inicio</a>
-  <a class="back" href="/es/tools">Ver todas las herramientas</a>
-
   <div class="seo-content">
     <h2>¿Qué hace esta herramienta?</h2>
     <p>Esta herramienta convierte cada página de un documento PDF en una imagen JPG independiente. Es útil cuando necesitas compartir un documento como imágenes, insertar una página en una presentación, publicarla en redes sociales o trabajar con una página en un editor de imágenes que no admite PDF.</p>
@@ -295,8 +332,31 @@ h2{margin-top:50px;font-size:22px;}
     <a href="/es/compress-image">Comprimir imagen</a>
   </div>
 
-  <div class="footer">© Orisod Labs · <a href="/es/about" style="color:#94a3b8;">Acerca de</a> · <a href="/es/privacy" style="color:#94a3b8;">Privacidad</a></div>
+  <div class="footer">© Orisod Labs · <a href="/es/about" style="color:var(--muted-text);">Acerca de</a> · <a href="/es/privacy" style="color:var(--muted-text);">Privacidad</a></div>
 </div>
+
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
 
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";

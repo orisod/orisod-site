@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
 <script>
@@ -17,45 +26,62 @@
 <link rel="alternate" hreflang="es" href="https://orisod.com/es/tools">
 <link rel="alternate" hreflang="x-default" href="https://orisod.com/tools">
 <style>
-.lang-switch{position:fixed;top:16px;right:16px;display:flex;gap:6px;z-index:100;}
-.lang-flag{font-size:13px;padding:6px 10px;border-radius:6px;text-decoration:none;color:#94a3b8;background:#111827;border:1px solid #1f2937;}
-.lang-flag.active{color:white;border-color:#2563eb;cursor:default;}
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
 body{
   margin:0;
-  background:#0b0f1a;
-  color:white;
+  background:var(--bg);
+  color:var(--text);
   font-family:Arial, Helvetica, sans-serif;
   text-align:center;
-  padding:50px 20px 70px 20px;
+  transition:background 0.2s, color 0.2s;
 }
-.top-nav{
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  margin-bottom:40px;
-}
-.nav-link{
-  padding:10px 18px;
-  border-radius:8px;
-  background:#111827;
-  border:1px solid #1f2937;
-  color:white;
-  text-decoration:none;
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links span{cursor:default;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:40px 20px 70px 20px;}
+h1{font-size:44px;margin-bottom:10px;}
+.subtitle{color:var(--muted-text);font-size:18px;margin-bottom:30px;}
+.filter-pills{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:50px;}
+.pill{
+  font-family:inherit;
   font-size:14px;
+  padding:9px 16px;
+  border-radius:20px;
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  color:var(--muted-text);
+  cursor:pointer;
   transition:0.2s;
 }
-.nav-link:hover{
-  background:#1e293b;
-}
-h1{
-  font-size:44px;
-  margin-bottom:10px;
-}
-.subtitle{
-  color:#94a3b8;
-  font-size:18px;
-  margin-bottom:50px;
-}
+.pill:hover{border-color:var(--accent);color:var(--text);}
+.pill.active{background:var(--accent);border-color:var(--accent);color:white;}
 .category-title{
   text-align:left;
   max-width:1100px;
@@ -66,7 +92,7 @@ h1{
   margin-bottom:16px;
   padding-left:4px;
 }
-.category-title:first-of-type{
+.category-section:first-of-type .category-title{
   margin-top:0;
 }
 .grid{
@@ -81,18 +107,17 @@ h1{
   flex-direction:column;
   align-items:flex-start;
   gap:6px;
-  background:#111827;
-  border:1px solid #1f2937;
+  background:var(--card-bg);
+  border:1px solid var(--border);
   border-radius:10px;
   padding:14px 16px;
   text-decoration:none;
-  color:white;
+  color:var(--text);
   text-align:left;
   transition:0.2s;
 }
 .card:hover{
-  background:#1a2436;
-  border-color:#2563eb;
+  border-color:var(--accent);
   transform:translateY(-2px);
 }
 .card .icon{
@@ -105,7 +130,7 @@ h1{
 }
 .card .desc{
   font-size:12px;
-  color:#94a3b8;
+  color:var(--muted-text);
   line-height:1.3;
   white-space:nowrap;
   overflow:hidden;
@@ -121,31 +146,88 @@ h1{
 </head>
 <body>
 
-<div class="lang-switch">
-  <a class="lang-flag" href="/tools">EN</a>
-  <span class="lang-flag active">ES</span>
-</div>
+<header class="site-nav">
+  <a class="site-nav-logo" href="/es/">Orisod</a>
+  <div class="site-nav-right">
+    <a class="lang-flag" href="/tools">EN</a>
+    <span class="lang-flag active">ES</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+  </div>
+</header>
 
-<div class="top-nav">
-  <a class="nav-link" href="/es/">🏠 Inicio</a>
-</div>
-
+<main>
 <h1>Todas las herramientas</h1>
 <p class="subtitle">Herramientas gratuitas en línea para convertir, comprimir, recortar y editar imágenes y PDF — directamente en tu navegador.</p>
 
+<div class="filter-pills">
+  <button class="pill" data-filter="all">Todas (36)</button>
+  <button class="pill" data-filter="image">Herramientas de Imagen (20)</button>
+  <button class="pill" data-filter="pdf">Herramientas PDF (9)</button>
+  <button class="pill" data-filter="utility">Herramientas de Utilidad (7)</button>
+</div>
+
+<section class="category-section" data-category="image">
 <div class="category-title">🖼️ Herramientas de imagen</div>
 <div class="grid">
 
-  <a class="card" href="/es/webp-to-jpg">
+  <a class="card" href="/es/add-border-to-image">
+    <div class="icon">🖼️</div>
+    <div class="name">Añadir marco a imagen</div>
+    <div class="desc">Añade un marco de color alrededor de una foto.</div>
+  </a>
+
+  <a class="card" href="/es/avif-to-jpg-png">
     <div class="icon">🔄</div>
-    <div class="name">WEBP a JPG</div>
-    <div class="desc">Convierte imágenes WEBP a formato JPG.</div>
+    <div class="name">AVIF a JPG/PNG</div>
+    <div class="desc">Convierte imágenes AVIF modernas.</div>
+  </a>
+
+  <a class="card" href="/es/blur-area-tool">
+    <div class="icon">🔲</div>
+    <div class="name">Difuminar caras / área</div>
+    <div class="desc">Pixela caras o detalles privados.</div>
+  </a>
+
+  <a class="card" href="/es/bmp-to-jpg-png">
+    <div class="icon">🔄</div>
+    <div class="name">BMP a JPG/PNG</div>
+    <div class="desc">Reduce archivos BMP sin comprimir.</div>
+  </a>
+
+  <a class="card" href="/es/compress-image">
+    <div class="icon">📦</div>
+    <div class="name">Comprimir imagen</div>
+    <div class="desc">Reduce el tamaño del archivo sin perder calidad.</div>
+  </a>
+
+  <a class="card" href="/es/crop-image">
+    <div class="icon">✂️</div>
+    <div class="name">Recortar imagen</div>
+    <div class="desc">Arrastra para seleccionar y recortar cualquier área.</div>
+  </a>
+
+  <a class="card" href="/es/gif-to-jpg-png">
+    <div class="icon">🎞️</div>
+    <div class="name">GIF a JPG/PNG</div>
+    <div class="desc">Extrae el primer fotograma de un GIF.</div>
   </a>
 
   <a class="card" href="/es/heic-to-jpg">
     <div class="icon">📱</div>
     <div class="name">HEIC a JPG</div>
     <div class="desc">Convierte fotos HEIC de iPhone a JPG.</div>
+  </a>
+
+  <a class="card" href="/es/image-color-filters">
+    <div class="icon">🎨</div>
+    <div class="name">Filtros de color</div>
+    <div class="desc">Blanco y negro, sepia, brillo, contraste.</div>
+  </a>
+
+  <a class="card" href="/es/jpg-to-webp">
+    <div class="icon">📉</div>
+    <div class="name">JPG a WEBP</div>
+    <div class="desc">Reduce archivos JPG con WEBP.</div>
   </a>
 
   <a class="card" href="/es/png-to-jpg">
@@ -160,58 +242,10 @@ h1{
     <div class="desc">Reduce archivos PNG con WEBP.</div>
   </a>
 
-  <a class="card" href="/es/jpg-to-webp">
-    <div class="icon">📉</div>
-    <div class="name">JPG a WEBP</div>
-    <div class="desc">Reduce archivos JPG con WEBP.</div>
-  </a>
-
-  <a class="card" href="/es/webp-to-png">
-    <div class="icon">🔄</div>
-    <div class="name">WEBP a PNG</div>
-    <div class="desc">Convierte WEBP a PNG conservando la transparencia.</div>
-  </a>
-
-  <a class="card" href="/es/avif-to-jpg-png">
-    <div class="icon">🔄</div>
-    <div class="name">AVIF a JPG/PNG</div>
-    <div class="desc">Convierte imágenes AVIF modernas.</div>
-  </a>
-
-  <a class="card" href="/es/gif-to-jpg-png">
-    <div class="icon">🎞️</div>
-    <div class="name">GIF a JPG/PNG</div>
-    <div class="desc">Extrae el primer fotograma de un GIF.</div>
-  </a>
-
-  <a class="card" href="/es/bmp-to-jpg-png">
-    <div class="icon">🔄</div>
-    <div class="name">BMP a JPG/PNG</div>
-    <div class="desc">Reduce archivos BMP sin comprimir.</div>
-  </a>
-
-  <a class="card" href="/es/svg-to-png">
-    <div class="icon">🎨</div>
-    <div class="name">SVG a PNG</div>
-    <div class="desc">Convierte un SVG vectorial a PNG rasterizado.</div>
-  </a>
-
   <a class="card" href="/es/resize-image">
     <div class="icon">📐</div>
     <div class="name">Redimensionar imagen</div>
     <div class="desc">Cambia el ancho y el alto de la imagen.</div>
-  </a>
-
-  <a class="card" href="/es/crop-image">
-    <div class="icon">✂️</div>
-    <div class="name">Recortar imagen</div>
-    <div class="desc">Arrastra para seleccionar y recortar cualquier área.</div>
-  </a>
-
-  <a class="card" href="/es/compress-image">
-    <div class="icon">📦</div>
-    <div class="name">Comprimir imagen</div>
-    <div class="desc">Reduce el tamaño del archivo sin perder calidad.</div>
   </a>
 
   <a class="card" href="/es/rotate-image">
@@ -220,28 +254,22 @@ h1{
     <div class="desc">Rota o voltea una imagen al instante.</div>
   </a>
 
-  <a class="card" href="/es/social-media-crop">
-    <div class="icon">📲</div>
-    <div class="name">Recorte para redes sociales</div>
-    <div class="desc">Recorta para Instagram, YouTube y más.</div>
-  </a>
-
   <a class="card" href="/es/round-image-corners">
     <div class="icon">⭕</div>
     <div class="name">Redondear bordes / Recorte circular</div>
     <div class="desc">Redondea bordes o recorta en forma de círculo.</div>
   </a>
 
-  <a class="card" href="/es/add-border-to-image">
-    <div class="icon">🖼️</div>
-    <div class="name">Añadir marco a imagen</div>
-    <div class="desc">Añade un marco de color alrededor de una foto.</div>
+  <a class="card" href="/es/social-media-crop">
+    <div class="icon">📲</div>
+    <div class="name">Recorte para redes sociales</div>
+    <div class="desc">Recorta para Instagram, YouTube y más.</div>
   </a>
 
-  <a class="card" href="/es/image-color-filters">
+  <a class="card" href="/es/svg-to-png">
     <div class="icon">🎨</div>
-    <div class="name">Filtros de color</div>
-    <div class="desc">Blanco y negro, sepia, brillo, contraste.</div>
+    <div class="name">SVG a PNG</div>
+    <div class="desc">Convierte un SVG vectorial a PNG rasterizado.</div>
   </a>
 
   <a class="card" href="/es/watermark-adder">
@@ -250,45 +278,29 @@ h1{
     <div class="desc">Añade una marca de agua de texto a una foto.</div>
   </a>
 
-  <a class="card" href="/es/blur-area-tool">
-    <div class="icon">🔲</div>
-    <div class="name">Difuminar caras / área</div>
-    <div class="desc">Pixela caras o detalles privados.</div>
+  <a class="card" href="/es/webp-to-jpg">
+    <div class="icon">🔄</div>
+    <div class="name">WEBP a JPG</div>
+    <div class="desc">Convierte imágenes WEBP a formato JPG.</div>
+  </a>
+
+  <a class="card" href="/es/webp-to-png">
+    <div class="icon">🔄</div>
+    <div class="name">WEBP a PNG</div>
+    <div class="desc">Convierte WEBP a PNG conservando la transparencia.</div>
   </a>
 
 </div>
+</section>
 
+<section class="category-section" data-category="pdf">
 <div class="category-title">📄 Herramientas de PDF</div>
 <div class="grid">
 
-  <a class="card" href="/es/jpg-to-pdf">
-    <div class="icon">📄</div>
-    <div class="name">JPG a PDF</div>
-    <div class="desc">Convierte imágenes JPG en un archivo PDF.</div>
-  </a>
-
-  <a class="card" href="/es/image-to-pdf">
-    <div class="icon">📄</div>
-    <div class="name">Imagen a PDF</div>
-    <div class="desc">Combina cualquier imagen en un solo PDF.</div>
-  </a>
-
-  <a class="card" href="/es/pdf-to-jpg">
-    <div class="icon">🖼️</div>
-    <div class="name">PDF a JPG</div>
-    <div class="desc">Extrae páginas de un PDF como imágenes JPG.</div>
-  </a>
-
-  <a class="card" href="/es/merge-pdf">
-    <div class="icon">➕</div>
-    <div class="name">Unir PDF</div>
-    <div class="desc">Combina varios PDF en uno solo.</div>
-  </a>
-
-  <a class="card" href="/es/split-pdf">
-    <div class="icon">✂️</div>
-    <div class="name">Dividir PDF</div>
-    <div class="desc">Extrae un rango o divide cada página.</div>
+  <a class="card" href="/es/add-page-numbers">
+    <div class="icon">🔢</div>
+    <div class="name">Añadir números de página</div>
+    <div class="desc">Numera las páginas de un PDF.</div>
   </a>
 
   <a class="card" href="/es/compress-pdf">
@@ -297,10 +309,22 @@ h1{
     <div class="desc">Reduce PDF escaneados o con muchas imágenes.</div>
   </a>
 
-  <a class="card" href="/es/rotate-pdf">
-    <div class="icon">🔃</div>
-    <div class="name">Rotar páginas de PDF</div>
-    <div class="desc">Rota todas las páginas o solo algunas.</div>
+  <a class="card" href="/es/image-to-pdf">
+    <div class="icon">📄</div>
+    <div class="name">Imagen a PDF</div>
+    <div class="desc">Combina cualquier imagen en un solo PDF.</div>
+  </a>
+
+  <a class="card" href="/es/jpg-to-pdf">
+    <div class="icon">📄</div>
+    <div class="name">JPG a PDF</div>
+    <div class="desc">Convierte imágenes JPG en un archivo PDF.</div>
+  </a>
+
+  <a class="card" href="/es/merge-pdf">
+    <div class="icon">➕</div>
+    <div class="name">Unir PDF</div>
+    <div class="desc">Combina varios PDF en uno solo.</div>
   </a>
 
   <a class="card" href="/es/pdf-page-organizer">
@@ -309,27 +333,41 @@ h1{
     <div class="desc">Arrastra para reordenar o eliminar páginas.</div>
   </a>
 
-  <a class="card" href="/es/add-page-numbers">
-    <div class="icon">🔢</div>
-    <div class="name">Añadir números de página</div>
-    <div class="desc">Numera las páginas de un PDF.</div>
+  <a class="card" href="/es/pdf-to-jpg">
+    <div class="icon">🖼️</div>
+    <div class="name">PDF a JPG</div>
+    <div class="desc">Extrae páginas de un PDF como imágenes JPG.</div>
+  </a>
+
+  <a class="card" href="/es/rotate-pdf">
+    <div class="icon">🔃</div>
+    <div class="name">Rotar páginas de PDF</div>
+    <div class="desc">Rota todas las páginas o solo algunas.</div>
+  </a>
+
+  <a class="card" href="/es/split-pdf">
+    <div class="icon">✂️</div>
+    <div class="name">Dividir PDF</div>
+    <div class="desc">Extrae un rango o divide cada página.</div>
   </a>
 
 </div>
+</section>
 
+<section class="category-section" data-category="utility">
 <div class="category-title">🛠️ Herramientas de utilidad</div>
 <div class="grid">
+
+  <a class="card" href="/es/color-picker-from-image">
+    <div class="icon">🎨</div>
+    <div class="name">Selector de color de imagen</div>
+    <div class="desc">Haz clic en un píxel para obtener su HEX/RGB.</div>
+  </a>
 
   <a class="card" href="/es/exif-remover">
     <div class="icon">🔒</div>
     <div class="name">Eliminar EXIF</div>
     <div class="desc">Elimina los metadatos ocultos de una foto.</div>
-  </a>
-
-  <a class="card" href="/es/image-metadata-viewer">
-    <div class="icon">🔍</div>
-    <div class="name">Ver metadatos de imagen</div>
-    <div class="desc">Consulta la cámara, fecha y datos GPS de una foto.</div>
   </a>
 
   <a class="card" href="/es/favicon-generator">
@@ -338,10 +376,16 @@ h1{
     <div class="desc">Genera un paquete completo de favicon.ico.</div>
   </a>
 
-  <a class="card" href="/es/qr-code-generator">
-    <div class="icon">🔳</div>
-    <div class="name">Generador de códigos QR</div>
-    <div class="desc">Convierte un enlace o texto en un código QR.</div>
+  <a class="card" href="/es/image-dimension-checker">
+    <div class="icon">📏</div>
+    <div class="name">Verificador de dimensiones</div>
+    <div class="desc">Consulta tamaño, formato, DPI y proporción.</div>
+  </a>
+
+  <a class="card" href="/es/image-metadata-viewer">
+    <div class="icon">🔍</div>
+    <div class="name">Ver metadatos de imagen</div>
+    <div class="desc">Consulta la cámara, fecha y datos GPS de una foto.</div>
   </a>
 
   <a class="card" href="/es/image-to-base64">
@@ -350,21 +394,61 @@ h1{
     <div class="desc">Codifica/decodifica imágenes en Base64.</div>
   </a>
 
-  <a class="card" href="/es/color-picker-from-image">
-    <div class="icon">🎨</div>
-    <div class="name">Selector de color de imagen</div>
-    <div class="desc">Haz clic en un píxel para obtener su HEX/RGB.</div>
-  </a>
-
-  <a class="card" href="/es/image-dimension-checker">
-    <div class="icon">📏</div>
-    <div class="name">Verificador de dimensiones</div>
-    <div class="desc">Consulta tamaño, formato, DPI y proporción.</div>
+  <a class="card" href="/es/qr-code-generator">
+    <div class="icon">🔳</div>
+    <div class="name">Generador de códigos QR</div>
+    <div class="desc">Convierte un enlace o texto en un código QR.</div>
   </a>
 
 </div>
+</section>
 
-<div class="footer">© Orisod Labs · <a href="/es/about" style="color:#94a3b8;">Acerca de</a> · <a href="/es/privacy" style="color:#94a3b8;">Privacidad</a></div>
+<div class="footer">© Orisod Labs · <a href="/es/about" style="color:var(--muted-text);">Acerca de</a> · <a href="/es/privacy" style="color:var(--muted-text);">Privacidad</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+
+(function(){
+  var pills = document.querySelectorAll('.pill');
+  var sections = document.querySelectorAll('.category-section');
+  function applyFilter(filter){
+    sections.forEach(function(sec){
+      sec.style.display = (filter === 'all' || sec.dataset.category === filter) ? '' : 'none';
+    });
+    pills.forEach(function(p){
+      p.classList.toggle('active', p.dataset.filter === filter);
+    });
+  }
+  pills.forEach(function(p){
+    p.addEventListener('click', function(){
+      var f = p.dataset.filter;
+      applyFilter(f);
+      var url = f === 'all' ? '/es/tools' : '/es/tools#' + f;
+      history.replaceState(null, '', url);
+    });
+  });
+  var initial = window.location.hash.replace('#', '');
+  applyFilter(['image', 'pdf', 'utility'].includes(initial) ? initial : 'all');
+})();
+</script>
 
 </body>
 </html>

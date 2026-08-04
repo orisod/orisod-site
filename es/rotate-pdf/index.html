@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
 <script>
@@ -18,29 +27,57 @@
 <link rel="alternate" hreflang="x-default" href="https://orisod.com/rotate-pdf">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <style>
-.lang-switch{position:fixed;top:16px;right:16px;display:flex;gap:6px;z-index:100;}
-.lang-flag{font-size:13px;padding:6px 10px;border-radius:6px;text-decoration:none;color:#94a3b8;background:#111827;border:1px solid #1f2937;}
-.lang-flag.active{color:white;border-color:#2563eb;cursor:default;}
-body{margin:0;font-family:Arial, Helvetica, sans-serif;background:#0b0f1a;color:white;text-align:center;padding:40px 20px;}
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:40px 20px 60px 20px;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
 .container{max-width:800px;margin:0 auto;}
 h1{font-size:44px;margin-bottom:10px;}
 p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
-.box{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:30px 20px;margin-top:30px;}
-.dropzone{border:2px dashed #374151;border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
-.dropzone:hover, .dropzone.dragover{border-color:#2563eb;background:#0f172a;}
+.box{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:30px 20px;margin-top:30px;}
+.dropzone{border:2px dashed var(--dropzone-border);border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
+.dropzone:hover, .dropzone.dragover{border-color:var(--accent);}
 input[type="file"]{display:none;}
 .page-info{margin-top:16px;font-size:14px;opacity:0.75;}
 .rotate-options{margin-top:20px;text-align:left;}
-.option-card{background:#0f172a;border:1px solid #1e293b;border-radius:8px;padding:18px;margin-bottom:14px;}
+.option-card{color:#fff;background:#0f172a;border:1px solid var(--border);border-radius:8px;padding:18px;margin-bottom:14px;}
 .option-card h3{margin:0 0 8px 0;font-size:15px;}
 .option-card p{margin:0 0 12px 0;font-size:13px;opacity:0.7;text-align:left;}
 .option-card input[type="text"]{
   padding:10px;border-radius:6px;border:1px solid #374151;background:#0f172a;color:white;font-size:14px;width:160px;
 }
 .angle-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
-.angle-btn{padding:8px 14px;border-radius:6px;border:1px solid #374151;background:#111827;color:white;cursor:pointer;font-size:13px;}
-.angle-btn.active{background:#2563eb;border-color:#2563eb;}
-button, .back{display:inline-block;margin-top:12px;padding:12px 18px;border:none;border-radius:8px;background:#2563eb;color:white;text-decoration:none;font-size:15px;cursor:pointer;}
+.angle-btn{padding:8px 14px;border-radius:6px;border:1px solid #374151;background:var(--card-bg);color:white;cursor:pointer;font-size:13px;}
+.angle-btn.active{background:var(--accent);border-color:#2563eb;}
+button, .back{display:inline-block;margin-top:12px;padding:12px 18px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:15px;cursor:pointer;}
 button:disabled{opacity:0.4;cursor:not-allowed;}
 button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
 .back{padding:14px 20px;margin-top:20px;font-size:16px;}
@@ -59,10 +96,23 @@ h2{margin-top:50px;font-size:22px;}
 </style>
 </head>
 <body>
-<div class="lang-switch">
-  <a class="lang-flag" href="/rotate-pdf">EN</a>
-  <span class="lang-flag active">ES</span>
-</div>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/es/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/es/tools">Todas las Herramientas</a>
+    <a href="/es/tools#image">Herramientas de Imagen</a>
+    <span class="active-category">Herramientas PDF</span>
+    <a href="/es/tools#utility">Herramientas de Utilidad</a>
+  </nav>
+  <div class="site-nav-right">
+    <a class="lang-flag" href="/rotate-pdf">EN</a>
+    <span class="lang-flag active">ES</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+  </div>
+</header>
+
+<main>
 <div class="container">
   <h1>Rotar páginas de PDF</h1>
   <p>Rota todas las páginas o solo algunas en un PDF. Todo ocurre localmente en tu navegador — tu archivo nunca se sube a ningún lado.</p>
@@ -96,9 +146,6 @@ h2{margin-top:50px;font-size:22px;}
 
     <div class="progress" id="progressMsg"></div>
   </div>
-
-  <a class="back" href="/es/" style="background:#374151; margin-right:10px;">🏠 Inicio</a>
-  <a class="back" href="/es/tools">Ver todas las herramientas</a>
 
   <div class="seo-content">
     <h2>¿Qué hace esta herramienta?</h2>
@@ -143,6 +190,29 @@ h2{margin-top:50px;font-size:22px;}
 
   <div class="footer">© Orisod Labs</div>
 </div>
+
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
 
 <script>
 const fileInput = document.getElementById('fileInput');
