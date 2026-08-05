@@ -22,9 +22,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Image Metadata Viewer – Free Online Tool | Orisod</title>
 <meta name="description" content="View the hidden EXIF metadata in a photo — camera, date, GPS location, and settings — free and online. Nothing is uploaded, everything runs in your browser.">
-<link rel="alternate" hreflang="en" href="https://orisod.com/image-metadata-viewer">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/image-metadata-viewer">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/image-metadata-viewer">
+<link rel="canonical" href="https://orisod.com/image-metadata-viewer/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/image-metadata-viewer/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/image-metadata-viewer/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/image-metadata-viewer/">
 <style>
 :root{
   --bg:#0b0f1a;
@@ -96,14 +97,14 @@ h2{margin-top:50px;font-size:22px;}
 <header class="site-nav">
   <a class="site-nav-logo" href="/">Orisod</a>
   <nav class="site-nav-links">
-    <a href="/tools">All Tools</a>
-    <a href="/tools#image">Image Tools</a>
-    <a href="/tools#pdf">PDF Tools</a>
+    <a href="/tools/">All Tools</a>
+    <a href="/tools/#image">Image Tools</a>
+    <a href="/tools/#pdf">PDF Tools</a>
     <span class="active-category">Utility Tools</span>
   </nav>
   <div class="site-nav-right">
     <span class="lang-flag active">EN</span>
-    <a class="lang-flag" href="/es/image-metadata-viewer">ES</a>
+    <a class="lang-flag" href="/es/image-metadata-viewer/">ES</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
   </div>
 </header>
@@ -136,7 +137,7 @@ h2{margin-top:50px;font-size:22px;}
     </ul>
 
     <h2>Why use Orisod for this?</h2>
-    <p>This tool reads and displays the metadata directly in your browser — your photo is never uploaded to a server. If you find something you'd rather not share, our <a href="/exif-remover" style="color:#60a5fa;">EXIF Remover</a> tool can strip it out completely.</p>
+    <p>This tool reads and displays the metadata directly in your browser — your photo is never uploaded to a server. If you find something you'd rather not share, our <a href="/exif-remover/" style="color:#60a5fa;">EXIF Remover</a> tool can strip it out completely.</p>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
@@ -159,9 +160,9 @@ h2{margin-top:50px;font-size:22px;}
 
   <h2>Related tools</h2>
   <div class="related">
-    <a href="/exif-remover">EXIF Remover</a>
-    <a href="/compress-image">Compress Image</a>
-    <a href="/resize-image">Resize Image</a>
+    <a href="/exif-remover/">EXIF Remover</a>
+    <a href="/compress-image/">Compress Image</a>
+    <a href="/resize-image/">Resize Image</a>
   </div>
 
   <div class="footer">© Orisod Labs</div>
@@ -277,7 +278,7 @@ function renderMetadata(metadata, file) {
   } else {
     const note = document.createElement('div');
     note.className = 'privacy-note';
-    note.innerHTML = `Want to share this photo without this information attached? Use our <a href="/exif-remover">EXIF Remover</a> tool to strip it out.`;
+    note.innerHTML = `Want to share this photo without this information attached? Use our <a href="/exif-remover/">EXIF Remover</a> tool to strip it out.`;
     metaContainer.appendChild(note);
   }
 }
