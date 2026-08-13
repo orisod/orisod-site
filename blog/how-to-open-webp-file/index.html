@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Open a WebP File on Any Device | Orisod Blog</title>
+<meta name="description" content="Downloaded a .webp image and it won't open in Preview, Photos, or an older app? Here's why, and the two ways to actually open it.">
+<link rel="canonical" href="https://orisod.com/blog/how-to-open-webp-file/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/how-to-open-webp-file/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/how-to-open-webp-file/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/how-to-open-webp-file/">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
+.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
+.compare-table th{background:var(--card-bg);}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/tools/">All Tools</a>
+    <a href="/tools/#image">Image Tools</a>
+    <a href="/tools/#pdf">PDF Tools</a>
+    <a href="/tools/#utility">Utility Tools</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <span class="lang-flag active">EN</span>
+    <a class="lang-flag" href="/es/blog/how-to-open-webp-file/">ES</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>How to Open a WebP File on Any Device</h1>
+<p class="intro">You saved an image from a website, and instead of opening normally it just... doesn't. The file is a .webp, and whatever app you double-clicked it with has no idea what to do with it. Here's why that happens and how to fix it.</p>
+
+<div class="article-body">
+
+<h2>Why the file won't open</h2>
+<p>WebP is a relatively modern image format, and while every current web browser displays it natively without issue, plenty of desktop and mobile software hasn't caught up. Older versions of Windows Photo Viewer, some versions of macOS Preview, older photo-editing software, and various third-party apps simply don't have a WebP decoder built in. The file itself isn't broken or corrupted — the app you're trying to open it with just doesn't recognize the format.</p>
+
+<h2>Where you're most likely to run into this</h2>
+<ul>
+  <li><strong>Saving an image from a website</strong> — many sites now serve WebP by default, so a routine "save image" can hand you a format your default photo viewer doesn't expect.</li>
+  <li><strong>Receiving a WebP file from someone else</strong> — a screenshot tool, a messaging app, or another person's browser may have saved or forwarded it in WebP without either of you choosing that on purpose.</li>
+  <li><strong>Opening it in older design or editing software</strong> — some image editors added WebP support later than browsers did, so an outdated version may still lack it.</li>
+</ul>
+
+<h2>Option one: update or switch your viewer</h2>
+<p>On a fairly recent operating system, the built-in photo viewer usually already supports WebP, or a free update or extension adds support. On Windows, a WebP codec extension from the Microsoft Store fixes this for the default Photos app. On a Mac, recent versions of Preview handle WebP natively; only older macOS versions have trouble. This route means you can keep working with the original WebP file as-is, which is worth doing if you plan to keep using it on the web where WebP's smaller size is an advantage.</p>
+
+<h2>Option two: convert it to a format that just works</h2>
+<p>If updating software isn't practical — you don't have admin rights, you're on a device you don't control, or you just need the image to open right now — converting the WebP file to PNG (or JPG) sidesteps the problem entirely. PNG is a natural target for this specifically because it preserves transparency if the original WebP had any, matching WebP's own capability rather than losing it, which converting to JPG would do.</p>
+
+<h2>Which option makes more sense</h2>
+<p>If it's a one-off image you need to open right now, converting is faster and doesn't require installing anything. If you're routinely receiving or working with WebP files, updating your software to support the format natively saves you from repeating the conversion every time. Most people end up doing a bit of both: converting when they urgently need a specific file to open, and eventually updating their software once the friction becomes annoying enough.</p>
+
+<h2>What about opening WebP on a phone?</h2>
+<p>Both modern Android and iOS handle WebP fine in their default photo apps and browsers — this issue shows up almost entirely on desktop software, particularly older versions of Windows or macOS, or standalone apps that haven't been updated recently. If a WebP file opens fine on your phone but not your computer, that's a strong sign the fix is on the computer side, not the file.</p>
+
+<h2>Converting WebP to PNG</h2>
+<p>Converting is quick and doesn't require identifying which specific app or update you'd need — drop the WebP file in, and get back a PNG that opens in absolutely anything, transparency included if the original had it.</p>
+
+<h2>Quick answers</h2>
+<p><strong>Is a WebP file that won't open actually corrupted?</strong> Almost never — the far more common explanation is simply that the software you're using doesn't have WebP support yet, not that anything is wrong with the file.</p>
+<p><strong>Will converting WebP to PNG lose the transparency?</strong> No — PNG supports transparency just like WebP does, so a transparent WebP converts to a transparent PNG with nothing lost on that front.</p>
+<p><strong>Why did I get a WebP file when I didn't ask for one?</strong> Many websites now serve images as WebP by default for performance reasons, so a normal "save image" from a browser increasingly hands you a WebP file whether you intended that or not.</p>
+
+<div class="cta-box">
+  <h3>Convert Your WebP File Now</h3>
+  <p>Orisod's WebP to PNG converter runs entirely in your browser — drop in your WebP file and get back a PNG that opens anywhere, transparency preserved, no software update required.</p>
+  <a class="cta-button" href="/webp-to-png/">Convert WebP to PNG →</a>
+</div>
+
+<p>A WebP file that won't open isn't a dead end — it's either a quick software update away from working, or a few seconds away from becoming a PNG that opens absolutely anywhere without asking any questions.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Related articles</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/blog/blur-face-in-photo/">
+      <h3>How to Blur a Face or Sensitive Info in a Photo</h3>
+      <p>How to blur out faces or sensitive details before sharing a photo publicly.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/watermark-photos-guide/">
+      <h3>How to Watermark Your Photos to Protect Your Work</h3>
+      <p>How to protect shared photos with a watermark without ruining the image.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/black-and-white-photo-filter/">
+      <h3>How to Turn a Photo Black and White (or Add a Color Filter)</h3>
+      <p>What actually changes when a photo goes black and white, and how to do it right.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/blog/">← Back to Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/about/" style="color:var(--muted-text);">About</a> · <a href="/privacy/" style="color:var(--muted-text);">Privacy</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

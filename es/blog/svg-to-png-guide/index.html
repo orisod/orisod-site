@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SVG a PNG: Cuándo Necesitas una Imagen de Tamaño Fijo en Lugar de Vector | Blog de Orisod</title>
+<meta name="description" content="SVG se escala infinitamente sin perder calidad, entonces ¿por qué convertirlo a PNG? Aquí está la distinción entre vector y raster, y cuándo te ves obligado a rasterizar.">
+<link rel="canonical" href="https://orisod.com/es/blog/svg-to-png-guide/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/svg-to-png-guide/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/svg-to-png-guide/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/svg-to-png-guide/">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
+.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
+.compare-table th{background:var(--card-bg);}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/es/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/es/tools/">Todas las Herramientas</a>
+    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/#pdf">Herramientas PDF</a>
+    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <a class="lang-flag" href="/blog/svg-to-png-guide/">EN</a>
+    <span class="lang-flag active">ES</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>SVG a PNG: Cuándo Necesitas una Imagen de Tamaño Fijo en Lugar de Vector</h1>
+<p class="intro">Si SVG es el mejor formato — infinitamente escalable, tamaño de archivo diminuto, nítido a cualquier nivel de zoom — ¿por qué convertirlo alguna vez a PNG? La respuesta está en una diferencia fundamental de cómo cada formato almacena una imagen.</p>
+
+<div class="article-body">
+
+<h2>Vector vs raster: la diferencia principal</h2>
+<p>Un PNG (como un JPG o cualquier formato de foto típico) es una imagen raster — almacena una cuadrícula fija de píxeles individuales, cada uno con su propio color. Acércate lo suficiente y eventualmente verás los cuadrados individuales, porque hay un límite fijo a la cantidad de detalle almacenado. Un SVG es una imagen vectorial en cambio — almacena instrucciones matemáticas para dibujar formas, líneas y curvas, lo que significa que puede renderizarse a cualquier tamaño, desde un icono diminuto hasta un cartel del tamaño de un edificio, y redibujarse con nitidez cada vez sin pixelación, nunca.</p>
+
+<h2>Por qué SVG suena estrictamente mejor — y por qué no siempre es utilizable</h2>
+<p>Para logotipos, iconos y formas gráficas limpias, SVG genuinamente es el mejor formato en casi todos los aspectos: menor tamaño de archivo, escalabilidad infinita, y a menudo texto y colores editables incluso después. El problema es que mucho software, plataformas y casos de uso simplemente no aceptan SVG en absoluto, o necesitan una imagen de píxeles fijos por alguna razón específica. Ahí es donde convertir a PNG se vuelve necesario — no porque PNG sea mejor, sino porque la situación requiere un archivo raster.</p>
+
+<h2>Situaciones comunes que te obligan a rasterizar</h2>
+<ul>
+  <li><strong>Formularios de subida y plataformas que rechazan SVG</strong> por completo, a menudo por razones de seguridad — los archivos SVG técnicamente pueden contener código incrustado, así que algunas plataformas simplemente no permiten el formato en absoluto.</li>
+  <li><strong>Software o sistemas antiguos</strong> que nunca se construyeron para renderizar gráficos vectoriales y solo entienden imágenes basadas en píxeles.</li>
+  <li><strong>Clientes de correo electrónico</strong>, muchos de los cuales no renderizan SVG de forma confiable o en absoluto, haciendo que una versión PNG de un logotipo sea la opción más segura para una firma de correo.</li>
+  <li><strong>Componer sobre una foto o video</strong>, donde el software de edición trabaja en píxeles y necesita que el gráfico se suministre como una capa raster.</li>
+  <li><strong>Plataformas de redes sociales</strong>, que casi universalmente esperan subidas de imágenes raster, no archivos vectoriales.</li>
+</ul>
+
+<h2>La contrapartida que aceptas</h2>
+<p>Una vez que un SVG se convierte a PNG, deja de ser infinitamente escalable — lo has fijado a un tamaño de píxeles específico, y agrandar ese PNG más tarde mostrará el mismo suavizado o pixelación que agrandar cualquier otra imagen raster. Este es el único costo real de rasterizar: estás cambiando la ventaja principal de SVG por compatibilidad. La solución práctica es exportar a un tamaño mayor del que necesitas actualmente, dándote algo de margen antes de que la pérdida de calidad se vuelva visible.</p>
+
+<h2>Elegir el tamaño de salida correcto</h2>
+<p>Ya que el PNG queda ahora fijo a las dimensiones que exportaste, piensa con anticipación en el tamaño más grande que realmente vas a necesitar — un logotipo destinado a un cartel impreso grande necesita una exportación PNG mucho más grande que uno destinado a un pequeño favicon de sitio web. En caso de duda, exportar más grande de lo necesario cuesta casi nada y deja margen para reducir después sin ninguna pérdida de calidad, mientras que agrandar un PNG pequeño mostrará suavizado visible.</p>
+
+<h2>Un ejemplo real rápido</h2>
+<p>Digamos que diseñaste un logotipo como SVG, perfecto para tu sitio web ya que se mantiene nítido en cualquier tamaño de pantalla y resolución. Ahora necesitas ese mismo logotipo para una firma de correo, una plantilla de tarjeta de presentación impresa construida en software que no lee SVG, y una subida de foto de perfil de red social que solo acepta JPG o PNG. Ninguno de esos tres destinos puede usar el SVG original directamente — cada uno necesita su propia exportación PNG del tamaño apropiado, lo cual es normal y esperado, no una señal de que hiciste algo mal al diseñarlo como SVG en primer lugar.</p>
+
+<h2>Convertir SVG a PNG</h2>
+<p>Convertir es rápido — sube el SVG, y obtén de vuelta un PNG con el tamaño que elijas, con cualquier transparencia del gráfico vectorial original preservada en la salida raster.</p>
+
+<h2>Respuestas rápidas</h2>
+<p><strong>¿Convertir SVG a PNG pierde calidad?</strong> No al tamaño que exportas — el PNG será nítido a ese tamaño específico. La pérdida solo se vuelve visible si más tarde intentas agrandar ese PNG más allá de sus dimensiones de exportación originales.</p>
+<p><strong>¿Puedo recuperar el SVG a partir de un PNG convertido?</strong> No — rasterizar es un viaje de un solo sentido. Guarda el archivo SVG original a salvo por si necesitas volver a exportarlo a otro tamaño después.</p>
+<p><strong>¿Por qué algunas plataformas bloquean específicamente las subidas de SVG?</strong> Los archivos SVG pueden contener scripts incrustados, lo que crea un riesgo de seguridad en plataformas que muestran archivos subidos por usuarios a otros — muchas simplemente no permiten el formato para evitar ese riesgo por completo, sin importar si un archivo en particular es realmente dañino.</p>
+
+<div class="cta-box">
+  <h3>Convierte SVG a PNG Ahora</h3>
+  <p>El conversor de SVG a PNG de Orisod funciona completamente en tu navegador — sube tu SVG, elige tu tamaño, y obtén de vuelta un PNG nítido, transparencia incluida.</p>
+  <a class="cta-button" href="/es/svg-to-png/">Convertir SVG a PNG →</a>
+</div>
+
+<p>SVG no está siendo reemplazado por PNG — resuelven problemas distintos. Convertir es simplemente lo que haces cuando la situación frente a ti específicamente pide píxeles en lugar de matemáticas.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Artículos relacionados</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/es/blog/blur-face-in-photo/">
+      <h3>Cómo Difuminar una Cara o Información Sensible en una Foto</h3>
+      <p>Cómo difuminar caras o detalles sensibles antes de compartir una foto públicamente.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/watermark-photos-guide/">
+      <h3>Cómo Poner Marca de Agua a Tus Fotos para Proteger Tu Trabajo</h3>
+      <p>Cómo proteger fotos compartidas con una marca de agua sin arruinar la imagen.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/black-and-white-photo-filter/">
+      <h3>Cómo Volver una Foto Blanco y Negro (o Añadir un Filtro de Color)</h3>
+      <p>Qué cambia realmente al convertir una foto a blanco y negro, y cómo hacerlo bien.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/es/blog/">← Volver al Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/es/about/" style="color:var(--muted-text);">Acerca de</a> · <a href="/es/privacy/" style="color:var(--muted-text);">Privacidad</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

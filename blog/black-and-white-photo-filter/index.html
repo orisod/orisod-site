@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Turn a Photo Black and White (or Add a Color Filter) | Orisod Blog</title>
+<meta name="description" content="Black and white photography isn't just a photo with the color turned down. Here's what actually changes when you convert to B&W, and how to do it (or apply other color filters) online.">
+<link rel="canonical" href="https://orisod.com/blog/black-and-white-photo-filter/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/black-and-white-photo-filter/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/black-and-white-photo-filter/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/black-and-white-photo-filter/">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
+.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
+.compare-table th{background:var(--card-bg);}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/tools/">All Tools</a>
+    <a href="/tools/#image">Image Tools</a>
+    <a href="/tools/#pdf">PDF Tools</a>
+    <a href="/tools/#utility">Utility Tools</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <span class="lang-flag active">EN</span>
+    <a class="lang-flag" href="/es/blog/black-and-white-photo-filter/">ES</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>How to Turn a Photo Black and White (or Add a Color Filter)</h1>
+<p class="intro">Black and white conversion is one of the oldest photo edits there is, and it's still one of the most requested — for a moody portrait, a classic print aesthetic, or just because a busy, colorful background is distracting from the subject. Here's what's actually happening when you convert a photo, and how to do it in seconds.</p>
+
+<div class="article-body">
+
+<h2>What "black and white" actually removes</h2>
+<p>A proper black and white conversion removes a photo's hue and saturation — the color information — while keeping its luminance, meaning how light or dark each part of the image is. That's different from just "turning down the saturation slider," which can leave a flat, muddy-looking gray image if the conversion doesn't carefully preserve the original brightness relationships between different colors. A well-converted black and white photo still has strong contrast and depth; it's just expressed in shades of gray instead of color.</p>
+
+<h2>Why people still shoot or convert to black and white</h2>
+<ul>
+  <li><strong>Removing color as a distraction</strong> — a subject can get lost in a visually busy or clashing-colored background; black and white shifts attention to shape, light, and expression instead.</li>
+  <li><strong>A timeless or classic aesthetic</strong> — black and white photography has an established visual language that reads as intentional and artistic rather than casual.</li>
+  <li><strong>Emphasizing texture and contrast</strong> — architecture, portraits, and dramatic lighting often look more striking without color competing for attention.</li>
+  <li><strong>Fixing a photo with bad or inconsistent color</strong> — a photo shot under mixed or unflattering lighting sometimes looks better in black and white than trying to color-correct it.</li>
+</ul>
+
+<h2>Beyond black and white: other color filters</h2>
+<p>Black and white is one end of a broader set of color adjustments. Sepia applies a warm brown-toned monochrome look, often used for a vintage or nostalgic feel. Brightness and contrast adjustments change how light/dark and how punchy an image looks without removing color entirely. These are simpler, single-value adjustments compared to something like full color grading, but they cover the vast majority of what people actually want when they say they want to "fix" or "stylize" a photo quickly.</p>
+
+<h2>A quick note on why the same photo can convert differently</h2>
+<p>Two different black and white conversion methods can produce visibly different results from the exact same color photo, because they weight the original colors differently when converting to gray. A conversion that treats red and blue as equally "bright" will look different from one that mimics how a black and white film stock historically responded to those same colors — which is why some tools offer more than one black and white "look" rather than a single flat desaturation.</p>
+
+<h2>How to apply it</h2>
+<p>A browser-based color filter tool applies the conversion instantly — upload the photo, pick black and white (or another filter like sepia, brightness, or contrast), and preview the result before downloading. No editing software or manual channel adjustments required — you can compare the converted version against the original before committing to the download, and try more than one filter until something actually fits the photo.</p>
+
+<h2>When to keep both versions</h2>
+<p>Since converting to black and white permanently discards the color information from that copy of the file, it's worth keeping the original color photo alongside the converted version rather than overwriting it. This matters more than it might seem — a photo that reads as striking in black and white might, months later, turn out to have been more useful in color for a different purpose (a print, a different platform, a client request), and there's no way to recover color detail from an already-converted file.</p>
+
+<h2>Quick answers</h2>
+<p><strong>Can I undo a black and white conversion later?</strong> Not from the converted file itself — converting to black and white discards the color data permanently, so keep your original color photo if you might want it back later.</p>
+<p><strong>Does black and white work well on every photo?</strong> Not universally — photos that rely heavily on color for their impact (a colorful sunset, a bright floral pattern) can lose some of what made them interesting, while photos with strong shapes, contrast, or texture often benefit.</p>
+<p><strong>What's the difference between black and white and just lowering saturation?</strong> A dedicated conversion is tuned to preserve proper contrast and tonal range across colors; naively dropping saturation to zero can sometimes look flatter or muddier than an intentional black and white conversion.</p>
+
+<div class="cta-box">
+  <h3>Apply a Black and White or Color Filter</h3>
+  <p>Orisod's color filter tool converts to black and white, sepia, or adjusts brightness and contrast instantly — all processed locally in your browser, nothing uploaded.</p>
+  <a class="cta-button" href="/image-color-filters/">Apply a Color Filter →</a>
+</div>
+
+<p>Whether you're chasing a classic look or just want a distracting background to stop competing with your subject, a black and white conversion is one of the fastest edits that meaningfully changes how a photo feels.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Related articles</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/blog/blur-face-in-photo/">
+      <h3>How to Blur a Face or Sensitive Info in a Photo</h3>
+      <p>How to blur out faces or sensitive details before sharing a photo publicly.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/watermark-photos-guide/">
+      <h3>How to Watermark Your Photos to Protect Your Work</h3>
+      <p>How to protect shared photos with a watermark without ruining the image.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/add-photo-border-online/">
+      <h3>How to Add a Frame or Border to Your Photos Online</h3>
+      <p>A simple border can make a casual photo look intentional — here's how to add one.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/blog/">← Back to Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/about/" style="color:var(--muted-text);">About</a> · <a href="/privacy/" style="color:var(--muted-text);">Privacy</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

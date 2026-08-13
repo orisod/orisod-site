@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cómo Hacer un Archivo PDF Más Pequeño Sin Perder Calidad | Blog de Orisod</title>
+<meta name="description" content="Un PDF que pesa mucho más de lo que debería casi siempre es por las imágenes que contiene, no por el texto. Aquí te explicamos qué está ocupando realmente el espacio, y cómo reducirlo correctamente.">
+<link rel="canonical" href="https://orisod.com/es/blog/compress-pdf-without-losing-quality/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/compress-pdf-without-losing-quality/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/compress-pdf-without-losing-quality/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/compress-pdf-without-losing-quality/">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
+.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
+.compare-table th{background:var(--card-bg);}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/es/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/es/tools/">Todas las Herramientas</a>
+    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/#pdf">Herramientas PDF</a>
+    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <a class="lang-flag" href="/blog/compress-pdf-without-losing-quality/">EN</a>
+    <span class="lang-flag active">ES</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>Cómo Hacer un Archivo PDF Más Pequeño Sin Perder Calidad</h1>
+<p class="intro">Un PDF que debería pesar unos cientos de KB de alguna forma llega a los 40MB y no se adjunta a un correo. Aquí te explicamos qué está ocupando realmente todo ese espacio, y cómo reducirlo sin que el documento se vuelva borroso.</p>
+
+<div class="article-body">
+
+<h2>El texto casi nunca hace grande a un PDF</h2>
+<p>Es una suposición común que un documento largo es un archivo grande, pero el texto es sorprendentemente eficiente de almacenar — un PDF de cien páginas de texto puro suele ser más pequeño que una sola foto de alta resolución. Cuando un PDF crece a decenas de megabytes, la causa real casi siempre son las imágenes incrustadas: páginas escaneadas, fotos, o gráficos de alta resolución dentro del documento a una resolución mucho más alta de la que el PDF realmente necesita para mostrarlas.</p>
+
+<h2>De dónde vienen esas imágenes de tamaño excesivo</h2>
+<ul>
+  <li><strong>Documentos escaneados.</strong> Un escáner ajustado a un DPI alto captura cada página como una imagen grande y detallada — a menudo mucho más detalle del necesario para un documento que solo se leerá en pantalla o se imprimirá a tamaño normal.</li>
+  <li><strong>Páginas fotografiadas con el teléfono.</strong> Una cámara de teléfono moderna produce imágenes de varios megapíxeles, y cuando varias de ellas se combinan en un PDF, el tamaño del archivo se acumula rápido.</li>
+  <li><strong>Gráficos sin comprimir.</strong> Gráficos, diagramas o fotos pegados en un documento a resolución completa en lugar de ajustados apropiadamente al tamaño de la página.</li>
+</ul>
+
+<h2>Qué hace realmente la compresión dentro de un PDF</h2>
+<p>Comprimir un PDF significa volver a codificar las imágenes incrustadas a una resolución menor o con una compresión más eficiente, dejando intactos el texto, las fuentes y la estructura del documento. Es la misma idea subyacente que comprimir una foto independiente — el detalle visualmente redundante en cada imagen incrustada se reduce, y como ese detalle suele ser invisible a un tamaño normal de visualización o impresión de todas formas, el tamaño baja drásticamente sin cambio perceptible en cómo se ve el documento. El diseño, el número de páginas y el texto se mantienen exactamente como estaban antes de comprimir.</p>
+
+<h2>Por qué "sin perder calidad" es realista aquí</h2>
+<p>Como el tamaño de archivo de un PDF está dominado por la resolución de imagen más que por el detalle visual genuino, normalmente hay mucho margen para comprimir antes de que la pérdida de calidad se vuelva visible. Una página escaneada capturada a 600 DPI pero que solo se verá en pantalla o se imprimirá a tamaño normal lleva mucha más resolución de la que nadie percibirá jamás — comprimirla a un nivel más razonable elimina datos redundantes, no nitidez visible.</p>
+
+<h2>Lo que la compresión no soluciona</h2>
+<p>La compresión reduce los datos de imagen, pero no elimina páginas, no borra contenido innecesario, ni reestructura un documento genuinamente enorme. Si un PDF es enorme porque contiene 300 páginas de escaneos a resolución completa que realmente se necesitan todas, la compresión ayuda pero no hace milagros — en ese caso, combinar la compresión con eliminar cualquier página verdaderamente innecesaria da un mejor resultado que la compresión sola.</p>
+
+<h2>Un objetivo práctico</h2>
+<p>La mayoría de los PDF cotidianos — informes, formularios, documentos escaneados — se comprimen cómodamente a una fracción de su tamaño original, a menudo entre 60 y 90% más pequeños, mientras siguen siendo perfectamente legibles en pantalla y en papel. Si un archivo necesita caber en un límite de adjunto de correo o un límite de subida estricto, eso normalmente está bien al alcance sin ninguna contrapartida visible.</p>
+
+<h2>Un ejemplo concreto</h2>
+<p>Un contrato de 15 páginas escaneado a alta resolución podría pesar 35MB — muy por encima del límite de 25MB de adjuntos de Gmail. Comprimido correctamente, ese mismo archivo suele bajar a algo entre 3MB y 6MB, cómodamente por debajo de cualquier límite de correo, mientras cada línea de texto y firma se mantiene exactamente tan legible como en el escaneo original. Los 30MB que desaparecieron nunca fueron detalle visible para empezar — eran resolución que el documento nunca necesitó.</p>
+
+<h2>Respuestas rápidas</h2>
+<p><strong>¿Comprimir un PDF afecta al texto?</strong> No — la compresión se dirige a las imágenes incrustadas; el texto seleccionable y las fuentes se dejan como estaban.</p>
+<p><strong>¿Puedo comprimir un PDF que ya se comprimió una vez?</strong> Sí, pero comprimir repetidamente el mismo archivo puede empezar a mostrar pérdida de calidad visible, similar a volver a guardar un JPG varias veces — comprime desde el archivo original cuando sea posible.</p>
+<p><strong>¿Un PDF más pequeño significa menos páginas?</strong> No — la compresión no elimina páginas ni contenido, solo la resolución de las imágenes que ya están dentro de ellas.</p>
+
+<div class="cta-box">
+  <h3>Comprime Tu PDF Ahora</h3>
+  <p>El compresor de PDF de Orisod reduce documentos escaneados y con muchas imágenes manteniendo intactos el texto y el diseño — completamente en tu navegador, sin subir nada a un servidor.</p>
+  <a class="cta-button" href="/es/compress-pdf/">Comprimir un PDF →</a>
+</div>
+
+<p>El tamaño de archivo de un PDF casi siempre se debe a las imágenes que contiene, no al documento en sí — una vez que las comprimes correctamente, un archivo que no cabía en un correo cabe con espacio de sobra, y nada sobre cómo se lee o imprime el documento cambia en realidad.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Artículos relacionados</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/es/blog/add-page-numbers-to-pdf/">
+      <h3>Cómo Añadir Números de Página a un PDF</h3>
+      <p>Cómo añadir números de página secuenciales a un documento PDF terminado.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/reorder-delete-pdf-pages/">
+      <h3>Cómo Reordenar o Eliminar Páginas en un PDF</h3>
+      <p>Cómo arreglar el orden de páginas de un PDF escaneado o eliminar una página en blanco.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/rotate-pdf-pages/">
+      <h3>Cómo Rotar Páginas en un PDF (Gratis, Sin Programas)</h3>
+      <p>Por qué las páginas escaneadas salen de lado, y cómo rotarlas sin volver a escanear.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/es/blog/">← Volver al Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/es/about/" style="color:var(--muted-text);">Acerca de</a> · <a href="/es/privacy/" style="color:var(--muted-text);">Privacidad</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

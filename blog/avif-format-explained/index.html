@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AVIF Format Explained: How to Open and Convert These Files | Orisod Blog</title>
+<meta name="description" content="AVIF is an even newer, more efficient image format than WebP — but with narrower support. Here's what it is, why some files won't open, and how to convert them.">
+<link rel="canonical" href="https://orisod.com/blog/avif-format-explained/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/avif-format-explained/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/avif-format-explained/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/avif-format-explained/">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
+.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
+.compare-table th{background:var(--card-bg);}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/tools/">All Tools</a>
+    <a href="/tools/#image">Image Tools</a>
+    <a href="/tools/#pdf">PDF Tools</a>
+    <a href="/tools/#utility">Utility Tools</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <span class="lang-flag active">EN</span>
+    <a class="lang-flag" href="/es/blog/avif-format-explained/">ES</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>AVIF Format Explained: How to Open and Convert These Files</h1>
+<p class="intro">If WebP already felt unfamiliar, AVIF is the next format in line — newer, even more efficient, and even less consistently supported. Here's what it actually is and what to do when a .avif file won't open.</p>
+
+<div class="article-body">
+
+<h2>What is AVIF?</h2>
+<p>AVIF (AV1 Image File Format) is an image format built on the same compression technology as the AV1 video codec — an open, royalty-free standard developed by a coalition that includes Google, Netflix, and Mozilla, among others. Its whole purpose is squeezing image data into the smallest possible file at a given quality level, and by most benchmarks it currently does that better than WebP, which in turn already beats JPG.</p>
+
+<h2>How much smaller is AVIF, really?</h2>
+<p>Depending on the image and the compression settings used, AVIF files often come in 20-50% smaller than an equivalent WebP file, and sometimes 50% or more smaller than JPG at comparable visual quality. For a website with heavy image traffic, that's a substantial bandwidth saving on top of what switching to WebP alone would already provide.</p>
+
+<h2>Why AVIF compatibility is narrower than WebP's</h2>
+<p>AVIF is newer, and format support takes time to spread through the entire software ecosystem — browsers, operating systems, photo viewers, editing tools, and everything in between. Every major modern browser now supports AVIF for viewing images on the web, but plenty of desktop software, older devices, and offline tools haven't caught up yet. This is the same compatibility curve WebP went through a few years earlier, just at an earlier point in the process.</p>
+
+<h2>Where you'll actually run into AVIF files</h2>
+<ul>
+  <li><strong>Saving images from performance-conscious websites</strong> — sites chasing every bit of load-time improvement have started serving AVIF to browsers that support it.</li>
+  <li><strong>Some newer phone cameras and apps</strong> — a handful of devices and photo apps have started offering AVIF as a storage option, similar to how iPhones defaulted to HEIC.</li>
+  <li><strong>Design and stock photo platforms experimenting with smaller formats</strong> — some are offering AVIF downloads to reduce their own bandwidth costs.</li>
+</ul>
+
+<h2>Why an AVIF file might not open for you</h2>
+<p>The same story as any newer format: the software you're using to open the file — an older photo viewer, an editing tool that hasn't updated, an offline app — simply doesn't have an AVIF decoder yet. The file itself is fine; it's a compatibility gap, not a broken download. This is worth remembering before assuming a download failed or a file got corrupted — nine times out of ten with a newer image format, the file is completely intact and the app just hasn't caught up yet.</p>
+
+<h2>Should you worry about AVIF becoming the new HEIC problem?</h2>
+<p>It's a fair comparison — both are efficient formats that occasionally show up unannounced and cause a "why won't this open" moment. The difference is that AVIF's growth is being driven by websites optimizing for speed rather than a single company defaulting every device to it overnight, the way Apple did with HEIC on iPhone. That means AVIF files show up more gradually and less predictably, but the fix is identical either way: convert to something universal when you need the file to work right now, and don't worry about it further.</p>
+
+<h2>AVIF vs WebP vs JPG at a glance</h2>
+<table class="compare-table">
+  <tr><th></th><th>AVIF</th><th>WebP</th><th>JPG</th></tr>
+  <tr><td>Relative file size</td><td>Smallest</td><td>Small</td><td>Largest</td></tr>
+  <tr><td>Software support</td><td>Growing, still limited</td><td>Broad</td><td>Universal</td></tr>
+  <tr><td>Best for</td><td>Cutting-edge web performance</td><td>General web use</td><td>Maximum compatibility</td></tr>
+</table>
+
+<h2>Converting AVIF to something universal</h2>
+<p>Rather than tracking down updates for every piece of software you might open the file with, converting the AVIF file to JPG or PNG sidesteps the issue in one step — you get a file that opens absolutely anywhere, at the (usually modest) cost of a larger file size than the AVIF original.</p>
+
+<h2>Quick answers</h2>
+<p><strong>Is AVIF better than WebP?</strong> By most measures of compression efficiency, yes, slightly — but WebP currently has broader software support, so which one is "better" depends on whether file size or compatibility matters more for your situation.</p>
+<p><strong>Will AVIF eventually replace JPG the way WebP is trying to?</strong> It's trending that direction as support spreads, but JPG's near-universal compatibility means it won't disappear from general use anytime soon.</p>
+<p><strong>Does converting AVIF to JPG lose much quality?</strong> There's a small re-encoding step, same as any format conversion, but at a reasonable quality setting it's not something you'll notice by eye.</p>
+
+<div class="cta-box">
+  <h3>Convert Your AVIF File Now</h3>
+  <p>Orisod's AVIF converter runs entirely in your browser — drop in your AVIF file and get back a JPG or PNG that opens anywhere, no waiting on software updates.</p>
+  <a class="cta-button" href="/avif-to-jpg-png/">Convert AVIF to JPG/PNG →</a>
+</div>
+
+<p>AVIF is a genuine step forward in compression efficiency, and its compatibility gaps will keep closing the way WebP's did. Until then, converting is the fastest way past a file that won't open.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Related articles</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/blog/blur-face-in-photo/">
+      <h3>How to Blur a Face or Sensitive Info in a Photo</h3>
+      <p>How to blur out faces or sensitive details before sharing a photo publicly.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/watermark-photos-guide/">
+      <h3>How to Watermark Your Photos to Protect Your Work</h3>
+      <p>How to protect shared photos with a watermark without ruining the image.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/black-and-white-photo-filter/">
+      <h3>How to Turn a Photo Black and White (or Add a Color Filter)</h3>
+      <p>What actually changes when a photo goes black and white, and how to do it right.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/blog/">← Back to Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/about/" style="color:var(--muted-text);">About</a> · <a href="/privacy/" style="color:var(--muted-text);">Privacy</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

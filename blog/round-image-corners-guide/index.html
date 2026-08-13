@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Round the Corners of an Image (No Design Software) | Orisod Blog</title>
+<meta name="description" content="Need a rounded-corner or circular version of a photo — for an avatar, an app icon, or a card layout — without opening a design program? Here's how, and why CSS alone isn't always enough.">
+<link rel="canonical" href="https://orisod.com/blog/round-image-corners-guide/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/round-image-corners-guide/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/round-image-corners-guide/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/round-image-corners-guide/">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
+.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
+.compare-table th{background:var(--card-bg);}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/tools/">All Tools</a>
+    <a href="/tools/#image">Image Tools</a>
+    <a href="/tools/#pdf">PDF Tools</a>
+    <a href="/tools/#utility">Utility Tools</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <span class="lang-flag active">EN</span>
+    <a class="lang-flag" href="/es/blog/round-image-corners-guide/">ES</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>How to Round the Corners of an Image (No Design Software)</h1>
+<p class="intro">Rounded corners and circular crops show up constantly — profile avatars, app icons, product cards — and while it looks like a simple visual tweak, actually producing a standalone rounded image file (not just a rounded display on a webpage) trips people up more than expected.</p>
+
+<div class="article-body">
+
+<h2>Where rounded corners and circle crops actually show up</h2>
+<ul>
+  <li><strong>Profile avatars</strong> — most platforms display user photos in a circle, and having the source image pre-cropped avoids the platform doing an unpredictable auto-crop.</li>
+  <li><strong>App icons</strong> — many app store and home screen icon guidelines expect (or auto-apply) rounded-square corners at a specific radius.</li>
+  <li><strong>Product and content cards</strong> — a rounded-corner thumbnail feels more modern and matches most current UI design conventions.</li>
+  <li><strong>Print materials</strong> — rounded photo corners are a common finishing touch for physical prints, cards, and badges.</li>
+</ul>
+
+<h2>Why CSS rounding isn't always the answer</h2>
+<p>If you're placing an image on a website, CSS's <code>border-radius</code> can visually round its corners without touching the actual file — the underlying image stays a plain rectangle, and the browser just clips how it's displayed. That works fine as long as the image only ever lives inside that one webpage. It breaks down the moment you need an actual rounded file: uploading a profile picture to a platform that doesn't apply its own rounding, exporting an icon for an app store, attaching an image to an email, or printing it — none of those contexts run your CSS, so a rectangular file stays rectangular.</p>
+
+<h2>What "rounding" a file actually means</h2>
+<p>To produce a genuinely rounded image, the corners (or everything outside a circle) need to actually become transparent pixels, not just visually hidden — which means the output has to be a format that supports transparency, like PNG, rather than JPG. A rounded image saved as JPG can't have transparent corners at all; JPG will fill them with a solid color instead, usually white, which looks fine on a white background and visibly wrong on anything else.</p>
+
+<h2>Circle crop vs rounded rectangle</h2>
+<p>A circle crop removes everything outside a circular boundary — the standard shape for avatars and profile photos. A rounded rectangle keeps the image's original shape but softens just the four corners by a chosen radius — more common for cards, thumbnails, and icons where you still want a mostly-rectangular image. Both rely on the same transparency mechanism under the hood; the difference is just the shape of the mask applied.</p>
+
+<h2>How to do it without design software</h2>
+<p>A browser-based rounding tool applies the mask for you — you upload the image, choose a circle crop or a corner radius, and export a PNG with the correct areas made transparent. No layers, no manual masking, no design software license required; the whole process is selecting a shape and downloading the result — and because the output is a real file rather than a display trick, it looks correct the moment it's uploaded anywhere, on any background.</p>
+
+<h2>Choosing a corner radius that actually looks right</h2>
+<p>A small radius (a gentle softening of otherwise sharp corners) reads as modern and subtle, and works well for cards and thumbnails where you still want a clearly rectangular image. A large radius pushes toward looking almost circular at the corners, which suits smaller elements like icons more than large photos, where an aggressive radius can look unintentional rather than stylish. There's no fixed rule, but matching the radius to how the image will actually be displayed — small and dense in a grid vs large and standalone — usually guides the right choice.</p>
+
+<h2>Quick answers</h2>
+<p><strong>Can I round the corners of a JPG?</strong> Not directly while keeping it a JPG — the output needs to be saved as PNG (or another format supporting transparency) for the rounded areas to actually be transparent rather than filled with a background color.</p>
+<p><strong>Will a rounded PNG look right on any background?</strong> Yes — because the corners are genuinely transparent pixels, the image will show whatever background color or image sits behind it, unlike a JPG with a faked rounded look.</p>
+<p><strong>Is a circle crop the same process as rounding corners?</strong> Functionally yes — both apply a transparency mask to the image, just with a different shape (a full circle vs four rounded corners on an otherwise rectangular image).</p>
+
+<div class="cta-box">
+  <h3>Round Corners or Circle-Crop an Image</h3>
+  <p>Orisod's rounding tool exports a proper transparent PNG — circle crop or custom corner radius — entirely in your browser, with nothing uploaded to a server.</p>
+  <a class="cta-button" href="/round-image-corners/">Round Image Corners →</a>
+</div>
+
+<p>If an image needs to look rounded everywhere it's used — not just on one webpage with the right CSS — the corners need to actually be transparent in the file itself, not faked with a style rule.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Related articles</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/blog/blur-face-in-photo/">
+      <h3>How to Blur a Face or Sensitive Info in a Photo</h3>
+      <p>How to blur out faces or sensitive details before sharing a photo publicly.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/watermark-photos-guide/">
+      <h3>How to Watermark Your Photos to Protect Your Work</h3>
+      <p>How to protect shared photos with a watermark without ruining the image.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/black-and-white-photo-filter/">
+      <h3>How to Turn a Photo Black and White (or Add a Color Filter)</h3>
+      <p>What actually changes when a photo goes black and white, and how to do it right.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/blog/">← Back to Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/about/" style="color:var(--muted-text);">About</a> · <a href="/privacy/" style="color:var(--muted-text);">Privacy</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

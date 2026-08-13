@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PNG to WebP: How Much Smaller Do Your Images Get? | Orisod Blog</title>
+<meta name="description" content="Converting a PNG to WebP can shrink it dramatically — but by how much depends on whether you keep it lossless. Here's the real numbers and when PNG is still the right call.">
+<link rel="canonical" href="https://orisod.com/blog/png-to-webp/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/png-to-webp/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/png-to-webp/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/png-to-webp/">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
+.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
+.compare-table th{background:var(--card-bg);}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/tools/">All Tools</a>
+    <a href="/tools/#image">Image Tools</a>
+    <a href="/tools/#pdf">PDF Tools</a>
+    <a href="/tools/#utility">Utility Tools</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <span class="lang-flag active">EN</span>
+    <a class="lang-flag" href="/es/blog/png-to-webp/">ES</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>PNG to WebP: How Much Smaller Do Your Images Get?</h1>
+<p class="intro">If you've ever wondered how much space you'd actually save converting a PNG to WebP, the honest answer is “it depends” — but with real numbers behind it, not a vague guess.</p>
+
+<div class="article-body">
+
+<h2>What is WebP, quickly</h2>
+<p>WebP is a modern image format built by Google that can do everything PNG does — including lossless compression and full transparency support — but generally squeezes the same pixels into a smaller file. It can also do lossy compression, similar to JPG, for even bigger savings when you don't need every pixel preserved exactly.</p>
+
+<h2>How much smaller does a PNG actually get as WebP?</h2>
+<p>Converted losslessly — meaning every pixel stays identical, nothing is discarded — a PNG typically shrinks by around 20-30% as WebP. A 500KB PNG screenshot might come out around 350-400KB, with zero visible or measurable difference. Convert the same file to lossy WebP instead, and the savings jump dramatically: that same 500KB PNG can often drop under 100KB at a quality setting where the difference is still not noticeable to the eye. The gap is even bigger for PNGs of photographs, since PNG's lossless compression was never well suited to photographic detail in the first place.</p>
+
+<h2>Does WebP keep the transparency?</h2>
+<p>Yes — this is one of WebP's biggest advantages over JPG. WebP supports a full alpha channel, exactly like PNG, so a transparent PNG logo or graphic converts to WebP with its transparency fully intact. JPG can't do this at all, which is why WebP (not JPG) is the real modern alternative to PNG for anything that needs a see-through background.</p>
+
+<h2>When PNG still wins despite the size cost</h2>
+<ul>
+  <li><strong>Guaranteed universal compatibility.</strong> PNG is supported absolutely everywhere, including older software and specific print or design pipelines that may not accept WebP.</li>
+  <li><strong>A workflow built around PNG.</strong> If downstream tools, a CMS, or a print process specifically expects PNG files, converting adds a step rather than saving one.</li>
+  <li><strong>You need a format nobody will ever question.</strong> WebP has excellent support now, but PNG has zero compatibility risk anywhere, on anything, ever.</li>
+</ul>
+
+<h2>When it's worth converting</h2>
+<p>The clearest case is website performance — smaller image files mean faster page loads, and that adds up fast across a site with dozens of images. It's also worth it when you're managing a large asset library and storage space matters, or when you need to share a big batch of PNG graphics somewhere with a size limit. For a single one-off PNG you're using once, the savings usually aren't worth the extra step — it's when the same choice repeats hundreds or thousands of times that the size difference actually shows up.</p>
+
+<h2>A concrete example</h2>
+<p>Say you run a site with 40 product photos saved as PNG because the original files had transparent backgrounds, averaging 600KB each — that's roughly 24MB of image data for one page. Converted to lossless WebP, the same set drops to somewhere around 17-19MB, with every pixel identical. Allow lossy WebP instead, and the same 24MB could realistically shrink to 6-8MB, a difference a visitor on a slow connection will actually feel. Multiply that by every page on a catalog site and the total bandwidth saved becomes substantial.</p>
+
+<h2>Converting PNG to WebP</h2>
+<p>Converting is a quick, one-way operation — upload or drag in your PNG files, and get back WebP versions at a fraction of the size, transparency preserved. If you later need to go back the other way (say, a design tool that only accepts PNG), that conversion is just as quick, though be aware you're re-encoding rather than perfectly reconstructing any detail a lossy pass may have discarded.</p>
+
+<h2>Quick answers</h2>
+<p><strong>Will converting PNG to WebP always shrink the file?</strong> Almost always, yes — even lossless WebP compression tends to outperform PNG's, though the size drop is much larger if you allow lossy compression.</p>
+<p><strong>Is lossy WebP noticeably worse looking than PNG?</strong> At a reasonable quality setting, no — the difference is generally invisible at normal viewing sizes, similar to how JPG compression works on photos.</p>
+<p><strong>Should I convert every PNG on my website to WebP?</strong> For images used repeatedly or in large numbers, it's usually worth it. For a handful of small icons, the savings are real but marginal.</p>
+
+<div class="cta-box">
+  <h3>Convert PNG to WebP Now</h3>
+  <p>Orisod's PNG to WebP converter runs entirely in your browser — drop in your PNG files and get back smaller WebP versions with transparency intact, no upload to a server.</p>
+  <a class="cta-button" href="/png-to-webp/">Convert PNG to WebP →</a>
+</div>
+
+<p>The size savings from converting PNG to WebP are real and easy to verify for yourself — the only real decision is whether your use case needs PNG's universal compatibility more than it needs the smaller file. For most web use, the smaller file wins.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Related articles</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/blog/blur-face-in-photo/">
+      <h3>How to Blur a Face or Sensitive Info in a Photo</h3>
+      <p>How to blur out faces or sensitive details before sharing a photo publicly.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/watermark-photos-guide/">
+      <h3>How to Watermark Your Photos to Protect Your Work</h3>
+      <p>How to protect shared photos with a watermark without ruining the image.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/black-and-white-photo-filter/">
+      <h3>How to Turn a Photo Black and White (or Add a Color Filter)</h3>
+      <p>What actually changes when a photo goes black and white, and how to do it right.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/blog/">← Back to Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/about/" style="color:var(--muted-text);">About</a> · <a href="/privacy/" style="color:var(--muted-text);">Privacy</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

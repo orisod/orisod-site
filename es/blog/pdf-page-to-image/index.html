@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cómo Convertir una Página de PDF en Imagen | Blog de Orisod</title>
+<meta name="description" content="¿Necesitas una página de PDF como JPG o PNG — para una presentación, un sitio web o un foro? Aquí te explicamos por qué una página de PDF no es ya una imagen, y cómo funciona realmente la conversión.">
+<link rel="canonical" href="https://orisod.com/es/blog/pdf-page-to-image/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/pdf-page-to-image/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/pdf-page-to-image/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/pdf-page-to-image/">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
+.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
+.compare-table th{background:var(--card-bg);}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/es/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/es/tools/">Todas las Herramientas</a>
+    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/#pdf">Herramientas PDF</a>
+    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <a class="lang-flag" href="/blog/pdf-page-to-image/">EN</a>
+    <span class="lang-flag active">ES</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>Cómo Convertir una Página de PDF en Imagen</h1>
+<p class="intro">Necesitas una página específica de un PDF para ponerla en una presentación, un sitio web o un foro — algún lugar que espera un JPG o PNG, no un adjunto PDF. Aquí te explicamos por qué eso no es tan simple como parece, y cómo obtener una imagen limpia de una página de PDF.</p>
+
+<div class="article-body">
+
+<h2>Una página de PDF no es ya una imagen</h2>
+<p>Esto confunde a la gente: un PDF se ve como una foto plana de una página cuando lo visualizas, así que parece que ya debería "ser" una imagen que simplemente podrías guardar. Pero la mayoría de los PDF en realidad están construidos con texto, fuentes y gráficos vectoriales — instrucciones de cómo dibujar la página, no una cuadrícula de píxeles. Por eso el texto de un PDF se mantiene nítido a cualquier nivel de zoom y por qué puedes seleccionarlo y copiarlo. Para convertir eso en un JPG o PNG, algo tiene que renderizar esas instrucciones en una cuadrícula real de píxeles primero — un proceso llamado rasterización.</p>
+
+<h2>Qué hace realmente la rasterización</h2>
+<p>Rasterizar una página de PDF significa renderizarla a una resolución específica y producir una imagen rasterizada plana — el mismo tipo de cuadrícula de píxeles del que está hecha una foto de cámara. Una vez que eso ocurre, el resultado se comporta como cualquier otra imagen: se puede redimensionar, incrustar, comprimir o subir a cualquier lugar donde se acepten imágenes, pero pierde la precisión de texto y vectores que tenía el PDF original. No hay vuelta atrás de una imagen a texto seleccionable sin un paso separado de OCR.</p>
+
+<h2>Dónde aparece esto</h2>
+<ul>
+  <li><strong>Presentaciones.</strong> Poner una sola página o gráfico de un informe PDF directamente en una diapositiva, donde el software espera un archivo de imagen, no un PDF.</li>
+  <li><strong>Sitios web y publicaciones de blog.</strong> Incrustar una página de un documento como elemento visual, de la misma forma que incrustarías una captura de pantalla.</li>
+  <li><strong>Foros y apps de mensajería.</strong> Muchas plataformas muestran vistas previas de imágenes en línea pero solo permiten adjuntar PDF como un enlace de descarga separado — convertir la página en imagen hace que aparezca directamente en la conversación.</li>
+  <li><strong>Miniaturas y vistas previas.</strong> Generar una imagen de vista previa que represente un documento PDF, como una miniatura de portada.</li>
+</ul>
+
+<h2>La resolución importa más de lo que crees</h2>
+<p>Como la rasterización renderiza la página a una resolución específica, la nitidez de la imagen resultante depende completamente de ese ajuste — renderiza demasiado pequeño, y el texto que era perfectamente nítido en el PDF se vuelve visiblemente borroso o pixelado como imagen. Un buen conversor te permite elegir una resolución más alta cuando el resultado necesita mantenerse legible, especialmente para páginas con texto pequeño o detalle fino como gráficos y diagramas.</p>
+
+<h2>Elegir entre JPG y PNG para el resultado</h2>
+<p>Si la página es principalmente una foto o tiene gradientes de color complejos, JPG normalmente da un archivo más pequeño sin pérdida de calidad visible. Si la página es principalmente texto, arte lineal, o un diagrama con bordes definidos, PNG se mantiene mejor, evitando el aspecto suave y ligeramente borroso que puede introducir la compresión JPG alrededor de líneas finas y texto pequeño — la misma disyuntiva que aplica al elegir entre ambos formatos en general.</p>
+
+<h2>¿Una página o todo el documento?</h2>
+<p>La mayoría de los PDF que alguien necesita convertir tienen más de una página, pero la necesidad real suele ser solo una página específica — la portada, un gráfico particular, una página de firma. Un buen conversor te permite elegir páginas individuales en lugar de forzarte a convertir todo y luego descartar el resto, ahorrándote tener que revisar una carpeta de imágenes que no necesitas.</p>
+
+<h2>Una verificación rápida antes de convertir</h2>
+<p>Si tu objetivo en realidad es reutilizar el texto de la página — citar un párrafo, editar una tabla, copiar una lista — convertir a imagen es la herramienta equivocada por completo, ya que ese paso descarta el texto seleccionable. Convertir a imagen solo tiene sentido cuando lo que necesitas es la apariencia visual de la página, no su contenido subyacente.</p>
+
+<h2>Respuestas rápidas</h2>
+<p><strong>¿Convertir una página de PDF en imagen mantiene el texto buscable?</strong> No — una vez rasterizada, la página es una imagen plana, y cualquier texto en ella ya no es seleccionable ni buscable a menos que le apliques OCR por separado.</p>
+<p><strong>¿La imagen se verá exactamente como la página del PDF?</strong> Visualmente sí, a una resolución suficientemente alta — lo que cambia es la estructura subyacente (píxeles en lugar de instrucciones de texto/vector), no la apariencia.</p>
+<p><strong>¿Puedo convertir todas las páginas de un PDF en imágenes a la vez?</strong> Sí, la mayoría de los conversores admiten conversión por lotes, produciendo una imagen por página si eso es lo que necesitas en lugar de elegir páginas individualmente.</p>
+
+<div class="cta-box">
+  <h3>Convierte una Página de PDF en Imagen</h3>
+  <p>El conversor de PDF a JPG de Orisod renderiza cualquier página de un PDF como una imagen nítida, completamente en tu navegador — elige la página y resolución que necesites, sin subir nada a un servidor.</p>
+  <a class="cta-button" href="/es/pdf-to-jpg/">Convertir PDF a JPG →</a>
+</div>
+
+<p>Una página de PDF se convierte en una imagen usable en el momento en que se renderiza a una resolución suficientemente alta — después de eso, encaja en una diapositiva, una página web o una publicación de foro exactamente como cualquier otra imagen.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Artículos relacionados</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/es/blog/add-page-numbers-to-pdf/">
+      <h3>Cómo Añadir Números de Página a un PDF</h3>
+      <p>Cómo añadir números de página secuenciales a un documento PDF terminado.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/reorder-delete-pdf-pages/">
+      <h3>Cómo Reordenar o Eliminar Páginas en un PDF</h3>
+      <p>Cómo arreglar el orden de páginas de un PDF escaneado o eliminar una página en blanco.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/rotate-pdf-pages/">
+      <h3>Cómo Rotar Páginas en un PDF (Gratis, Sin Programas)</h3>
+      <p>Por qué las páginas escaneadas salen de lado, y cómo rotarlas sin volver a escanear.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/es/blog/">← Volver al Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/es/about/" style="color:var(--muted-text);">Acerca de</a> · <a href="/es/privacy/" style="color:var(--muted-text);">Privacidad</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

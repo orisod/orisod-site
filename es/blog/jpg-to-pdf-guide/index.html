@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cómo Convertir un JPG en PDF en Segundos | Blog de Orisod</title>
+<meta name="description" content="Un formulario o correo pide un PDF pero solo tienes una foto. Aquí te explicamos por qué ocurre ese desajuste, qué cambia realmente al convertir, y cómo hacerlo en segundos.">
+<link rel="canonical" href="https://orisod.com/es/blog/jpg-to-pdf-guide/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/jpg-to-pdf-guide/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/jpg-to-pdf-guide/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/jpg-to-pdf-guide/">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
+.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
+.compare-table th{background:var(--card-bg);}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/es/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/es/tools/">Todas las Herramientas</a>
+    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/#pdf">Herramientas PDF</a>
+    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <a class="lang-flag" href="/blog/jpg-to-pdf-guide/">EN</a>
+    <span class="lang-flag active">ES</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>Cómo Convertir un JPG en PDF en Segundos</h1>
+<p class="intro">Fotografiaste un recibo, un formulario firmado o una nota en una pizarra, y ahora algo te pide un PDF en lugar de un JPG. Aquí te explicamos por qué ese desajuste ocurre todo el tiempo, y cómo solucionarlo en segundos.</p>
+
+<div class="article-body">
+
+<h2>Por qué no siempre aceptan JPG donde piden PDF</h2>
+<p>Muchos procesos oficiales — sistemas de reembolso de gastos, formularios gubernamentales, portales de inscripción escolar, solicitudes de empleo — están construidos alrededor del PDF como "el formato del documento", no el JPG. Un JPG se trata como una foto sin más, mientras que un PDF se trata como un documento, y muchos sistemas de recepción solo aceptan el segundo aunque el contenido en sí, una página fotografiada, sea idéntico de cualquier forma. No hiciste nada mal al tomar una foto en lugar de escanear — el sistema simplemente está aplicando un formato que no fue diseñado para flexibilizar.</p>
+
+<h2>Qué ocurre realmente al convertir</h2>
+<p>Una conversión de JPG a PDF envuelve la imagen dentro de un contenedor PDF con un tamaño de página definido, así que el archivo resultante se abre como cualquier otro PDF — mismo visor, mismo comportamiento de impresión, misma estructura de páginas — aunque lo que hay dentro sigue siendo solo la foto con la que empezaste. Nada del contenido real de píxeles de la foto cambia; la conversión trata realmente de empaquetado, no de transformación.</p>
+
+<h2>Un caso de uso común: convertir una foto en algo oficial</h2>
+<p>Fotografías un recibo o un formulario firmado con el teléfono porque no tienes un escáner a mano, y luego necesitas adjuntarlo a un correo o enviarlo por un formulario que dice específicamente "solo PDF". Convertir la foto cierra esa brecha en segundos sin necesidad de buscar un escáner o una impresora con función de escaneo.</p>
+
+<h2>Varias fotos, un archivo — un trabajo relacionado pero distinto</h2>
+<p>Convertir un solo JPG es un trabajo distinto a combinar varias fotos en un solo PDF de varias páginas — eso es un proceso separado. Esto trata específicamente de tomar una imagen y producir un PDF válido e independiente a partir de ella, que es la necesidad más común cuando solo tienes una página fotografiada o una captura de pantalla que necesita existir como PDF.</p>
+
+<h2>Qué revisar antes de convertir</h2>
+<ul>
+  <li><strong>Orientación.</strong> Una foto de lado se mantiene de lado en el PDF resultante a menos que la rotes primero — la conversión no adivina cuál lado es "arriba".</li>
+  <li><strong>Comportamiento del tamaño de página.</strong> Algunos conversores ajustan la imagen a un tamaño de página estándar (como Carta o A4) con márgenes alrededor; otros ajustan la página del PDF exactamente a las dimensiones propias de la imagen. Cuál necesitas depende de si el archivo debe imprimirse limpiamente en una impresora estándar o simplemente necesita existir como PDF digital.</li>
+  <li><strong>Calidad de la imagen.</strong> Una foto borrosa o mal iluminada se verá exactamente igual de borrosa dentro del PDF — la conversión no mejora ni limpia la imagen de origen.</li>
+</ul>
+
+<h2>¿Cambia mucho el tamaño del archivo?</h2>
+<p>No drásticamente — un PDF que envuelve un solo JPG termina cerca del tamaño de archivo original de la foto más una pequeña cantidad adicional por la estructura propia del PDF. Esto es distinto a un PDF escaneado de varias páginas, donde el tamaño del archivo se acumula página por página; un PDF de una sola foto se mantiene aproximadamente proporcional a esa única imagen que contiene.</p>
+
+<h2>Respuestas rápidas</h2>
+<p><strong>¿Convertir a PDF reduce la calidad de la imagen?</strong> No de forma inherente — los datos de la imagen en sí no se recomprimen ni degradan, solo se envuelven dentro de un contenedor PDF.</p>
+<p><strong>¿Puedo convertir varios JPG en PDF separados a la vez?</strong> Sí, la conversión por lotes puede producir un PDF independiente por cada imagen si eso es lo que necesitas, en lugar de combinarlos.</p>
+<p><strong>¿El PDF resultante será editable como texto?</strong> No — como el contenido es una foto, no texto escrito, no hay nada que seleccionar, buscar o editar, exactamente igual que el JPG original.</p>
+
+<div class="cta-box">
+  <h3>Convierte Tu JPG a PDF Ahora</h3>
+  <p>El conversor de JPG a PDF de Orisod funciona completamente en tu navegador — suelta tu foto y obtén un PDF estándar en segundos, sin que nada se suba a un servidor.</p>
+  <a class="cta-button" href="/es/jpg-to-pdf/">Convertir JPG a PDF →</a>
+</div>
+
+<p>Cada vez que un formulario insista en un PDF y solo tengas una foto, convertir toma menos tiempo que buscar un escáner — y el resultado se abre exactamente igual que cualquier otro PDF.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Artículos relacionados</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/es/blog/add-page-numbers-to-pdf/">
+      <h3>Cómo Añadir Números de Página a un PDF</h3>
+      <p>Cómo añadir números de página secuenciales a un documento PDF terminado.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/reorder-delete-pdf-pages/">
+      <h3>Cómo Reordenar o Eliminar Páginas en un PDF</h3>
+      <p>Cómo arreglar el orden de páginas de un PDF escaneado o eliminar una página en blanco.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/rotate-pdf-pages/">
+      <h3>Cómo Rotar Páginas en un PDF (Gratis, Sin Programas)</h3>
+      <p>Por qué las páginas escaneadas salen de lado, y cómo rotarlas sin volver a escanear.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/es/blog/">← Volver al Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/es/about/" style="color:var(--muted-text);">Acerca de</a> · <a href="/es/privacy/" style="color:var(--muted-text);">Privacidad</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

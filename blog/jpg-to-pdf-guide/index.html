@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Turn a JPG Into a PDF in Seconds | Orisod Blog</title>
+<meta name="description" content="A form or email wants a PDF but all you have is a photo. Here's why that mismatch happens, what actually changes when you convert, and how to do it in seconds.">
+<link rel="canonical" href="https://orisod.com/blog/jpg-to-pdf-guide/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/jpg-to-pdf-guide/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/jpg-to-pdf-guide/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/jpg-to-pdf-guide/">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
+.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
+.compare-table th{background:var(--card-bg);}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/tools/">All Tools</a>
+    <a href="/tools/#image">Image Tools</a>
+    <a href="/tools/#pdf">PDF Tools</a>
+    <a href="/tools/#utility">Utility Tools</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <span class="lang-flag active">EN</span>
+    <a class="lang-flag" href="/es/blog/jpg-to-pdf-guide/">ES</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>How to Turn a JPG Into a PDF in Seconds</h1>
+<p class="intro">You photographed a receipt, a signed form, or a whiteboard note, and now something wants a PDF instead of a JPG. Here's why that mismatch happens constantly, and how to fix it in seconds.</p>
+
+<div class="article-body">
+
+<h2>Why JPG isn't always accepted where PDF is expected</h2>
+<p>Plenty of official processes — expense reimbursement systems, government forms, school enrollment portals, job applications — are built around PDF as "the document format," not JPG. A JPG gets treated as a raw photo, while a PDF gets treated as a document, and a lot of intake systems only accept the latter even though the underlying content, a photographed page, is identical either way. You didn't do anything wrong by taking a photo instead of scanning — the system is just enforcing a format it wasn't designed to bend on.</p>
+
+<h2>What actually happens when you convert</h2>
+<p>A JPG-to-PDF conversion wraps the image inside a PDF container at a defined page size, so the resulting file opens like any other PDF — same viewer, same printing behavior, same page structure — even though what's inside is still just the photo you started with. Nothing about the photo's actual pixel content changes; the conversion is really about packaging, not transformation.</p>
+
+<h2>A common use case: turning a photographed document into something official</h2>
+<p>You snap a photo of a receipt or a signed form with your phone because a scanner isn't within reach, and then you need to attach it to an email or submit it through a form that specifically says "PDF only." Converting the photo closes that gap in seconds without needing to track down a scanner or a printer with scanning built in.</p>
+
+<h2>Multiple photos, one file — a related but different job</h2>
+<p>Converting a single JPG is a different job from combining several photos into one multi-page PDF — that's its own separate process. This is specifically about taking one image and producing a valid, standalone PDF from it, which is the more common need when you just have one photographed page or one screenshot that needs to exist as a PDF.</p>
+
+<h2>What to check before you convert</h2>
+<ul>
+  <li><strong>Orientation.</strong> A sideways photo stays sideways in the resulting PDF unless you rotate it first — the conversion doesn't guess which way is "up."</li>
+  <li><strong>Page size behavior.</strong> Some converters fit the image onto a standard page size (like Letter or A4) with margins around it; others size the PDF page exactly to the image's own dimensions. Which one you want depends on whether the file needs to print cleanly on a standard printer or just needs to exist as a digital PDF.</li>
+  <li><strong>Image quality.</strong> A blurry or poorly lit photo will look exactly as blurry inside the PDF — conversion doesn't sharpen or clean up the source image.</li>
+</ul>
+
+<h2>Does the file size change much?</h2>
+<p>Not dramatically — a PDF wrapping a single JPG ends up close to the original photo's file size plus a small amount of overhead for the PDF structure itself. This is different from a scanned multi-page PDF, where file size adds up page by page; a single-photo PDF stays roughly proportional to the one image inside it.</p>
+
+<h2>Does it print the same way?</h2>
+<p>Once wrapped in a PDF, the file behaves exactly like any other PDF at print time — it opens in a PDF viewer, respects your printer's page settings, and prints the same way a scanned document would. This is actually part of why people convert in the first place: a raw JPG opened in an image viewer doesn't always offer the same predictable print layout that a PDF does.</p>
+
+<h2>Quick answers</h2>
+<p><strong>Does converting to PDF reduce the image quality?</strong> Not inherently — the image data itself isn't being recompressed or degraded, just wrapped inside a PDF container.</p>
+<p><strong>Can I convert more than one JPG into separate PDFs at once?</strong> Yes, batch conversion can produce one standalone PDF per image if that's what you need, rather than combining them.</p>
+<p><strong>Will the resulting PDF be editable as text?</strong> No — since the content is a photo, not typed text, there's nothing to select, search, or edit, exactly the same as the original JPG.</p>
+<p><strong>What if I actually have several photos, not one?</strong> If you need multiple photos combined into a single multi-page PDF rather than one photo as one PDF, that's a related but separate process worth checking out specifically.</p>
+
+<div class="cta-box">
+  <h3>Convert Your JPG to PDF Now</h3>
+  <p>Orisod's JPG to PDF converter runs entirely in your browser — drop in your photo and get back a standard PDF in seconds, with nothing uploaded to a server.</p>
+  <a class="cta-button" href="/jpg-to-pdf/">Convert JPG to PDF →</a>
+</div>
+
+<p>Whenever a form insists on a PDF and all you have is a photo, converting takes less time than finding a scanner — and the result opens exactly the way any other PDF does.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Related articles</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/blog/add-page-numbers-to-pdf/">
+      <h3>How to Add Page Numbers to a PDF</h3>
+      <p>How to add sequential page numbers to a finished PDF document.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/reorder-delete-pdf-pages/">
+      <h3>How to Reorder or Delete Pages in a PDF</h3>
+      <p>How to fix a scanned PDF's page order or remove a stray blank page.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/rotate-pdf-pages/">
+      <h3>How to Rotate Pages in a PDF (Free, No Software)</h3>
+      <p>Why scanned pages come out sideways, and how to rotate them without rescanning.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/blog/">← Back to Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/about/" style="color:var(--muted-text);">About</a> · <a href="/privacy/" style="color:var(--muted-text);">Privacy</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

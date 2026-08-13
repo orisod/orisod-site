@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cómo Añadir Números de Página a un PDF | Blog de Orisod</title>
+<meta name="description" content="Un informe, contrato o manuscrito necesita números de página secuenciales y no los tiene. Aquí te explicamos por qué los números de página importan más de lo que parece, y cómo añadirlos a un PDF que no los tiene.">
+<link rel="canonical" href="https://orisod.com/es/blog/add-page-numbers-to-pdf/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/add-page-numbers-to-pdf/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/add-page-numbers-to-pdf/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/add-page-numbers-to-pdf/">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
+.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
+.compare-table th{background:var(--card-bg);}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/es/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/es/tools/">Todas las Herramientas</a>
+    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/#pdf">Herramientas PDF</a>
+    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <a class="lang-flag" href="/blog/add-page-numbers-to-pdf/">EN</a>
+    <span class="lang-flag active">ES</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>Cómo Añadir Números de Página a un PDF</h1>
+<p class="intro">Un documento está terminado, formateado y listo para enviar — excepto que no tiene números de página, y quien lo reciba los necesita para referenciar secciones específicas. Aquí te explicamos por qué esa petición aparece tan seguido, y cómo añadir números a un PDF que no los tiene.</p>
+
+<div class="article-body">
+
+<h2>Por qué los números de página importan más de lo que parece</h2>
+<p>En un documento que alguien lee en pantalla, desplazarse se siente continuo y los números de página pueden parecer innecesarios. Pero en el momento en que un documento se imprime, se referencia en una reunión, o se cita en otro documento ("ver página 14"), los números de página dejan de ser decorativos y se convierten en la única forma confiable de señalar a alguien un lugar específico. Documentos legales, artículos académicos, informes empresariales y manuscritos dependen todos de los números de página exactamente por esta razón — sin ellos, referirse a "la página con la tabla de presupuesto" es mucho menos preciso que referirse a la página 14.</p>
+
+<h2>Por qué un PDF terminado a menudo no los tiene</h2>
+<p>Los números de página normalmente son algo que el autor del documento original añade mientras escribe — en un procesador de texto, en software de diseño de páginas, o como parte de una plantilla. Pero muchos PDF nunca pasaron por ese paso: un documento escaneado no tiene función de numeración de páginas para empezar, un PDF exportado a veces pierde la configuración de encabezado/pie de página que incluía numeración, o un documento se armó combinando varios archivos separados que cada uno estaba paginado individualmente (o no paginado en absoluto). En cada caso, te quedas con un PDF terminado y sin una forma fácil de volver atrás y exportarlo de nuevo con números incluidos.</p>
+
+<h2>Qué hace realmente añadir números de página a un PDF existente</h2>
+<p>En lugar de requerir que vuelvas al documento fuente original, una herramienta de numeración de páginas estampa números directamente en cada página del PDF tal como existe ahora mismo — leyendo el total de páginas, y luego añadiendo el número correspondiente a cada página en secuencia. Esto funciona sin importar si el PDF original vino de un procesador de texto, un escáner, o una combinación de varios archivos separados, ya que opera sobre el PDF terminado en lugar de necesitar acceso a lo que sea que lo creó.</p>
+
+<h2>Opciones de ubicación</h2>
+<p>Los números de página se colocan convencionalmente en uno de unos pocos lugares consistentes: la parte inferior central es la más común y la menos propensa a superponerse con contenido existente, la esquina inferior (izquierda o derecha) es común en libros e informes formales, y ocasionalmente la esquina superior para documentos con mucho contenido cerca de la parte inferior de cada página. La ubicación correcta depende sobre todo de dónde el contenido existente de la página deje espacio libre, y de igualar la convención que espera ese tipo de documento — un escrito legal y un libro de fotos no siguen las mismas normas.</p>
+
+<h2>Número inicial y formato</h2>
+<p>No todos los documentos deberían empezar a contar en "1" en su primera página física — un informe con portada e índice a menudo quiere que la numeración comience en la primera página de contenido, con la portada sin numerar o numerada por separado con números romanos. Una herramienta flexible de numeración de páginas te permite fijar el número inicial y saltar una cantidad determinada de páginas al principio, en lugar de forzar la numeración secuencial desde la página uno sin importar qué.</p>
+
+<h2>¿Esto afecta algo más del documento?</h2>
+<p>No — añadir números de página solo estampa contenido nuevo en el margen de cada página; no toca el texto, las imágenes ni el diseño ya existentes en la página. Es un cambio aditivo, no una edición de lo que ya está ahí, así que no hay riesgo de alterar contenido que ya está finalizado.</p>
+
+<h2>Un ejemplo concreto</h2>
+<p>Un manuscrito de 60 páginas se arma combinando tres secciones escritas por separado, y ninguna de las tres tenía numeración consistente para empezar. En lugar de volver a abrir cada documento original, corregir su numeración, exportar de nuevo, y combinar otra vez, estampar números directamente sobre el archivo ya combinado de 60 páginas produce en una sola pasada un único documento numerado correcta y continuamente.</p>
+
+<h2>Respuestas rápidas</h2>
+<p><strong>¿Puedo empezar a numerar desde una página distinta a la primera?</strong> Sí, la mayoría de las herramientas te permiten fijar una página y número de inicio, así que una portada o índice puede quedar sin numerar.</p>
+<p><strong>¿Los números de página se superpondrán con contenido existente?</strong> No si se colocan en una ubicación — como el margen inferior — que normalmente se mantiene despejada en documentos formateados; vale la pena una revisión rápida en documentos con páginas inusualmente llenas.</p>
+<p><strong>¿Esto funciona en PDF escaneados?</strong> Sí — como la numeración se estampa sobre la página tal como existe actualmente, funciona igual sin importar si el contenido subyacente son imágenes escaneadas o texto escrito.</p>
+
+<div class="cta-box">
+  <h3>Añade Números de Página a Tu PDF</h3>
+  <p>La herramienta de numeración de páginas de Orisod estampa números secuenciales en cualquier PDF, con control sobre la ubicación y la página de inicio — completamente en tu navegador, sin subir nada a un servidor.</p>
+  <a class="cta-button" href="/es/add-page-numbers/">Añadir Números de Página →</a>
+</div>
+
+<p>Un documento sin números de página no está roto, pero es más difícil de referenciar con precisión — añadirlos toma un minuto y convierte “la página con el gráfico” en “la página 14”, que es exactamente el punto.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Artículos relacionados</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/es/blog/reorder-delete-pdf-pages/">
+      <h3>Cómo Reordenar o Eliminar Páginas en un PDF</h3>
+      <p>Cómo arreglar el orden de páginas de un PDF escaneado o eliminar una página en blanco.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/rotate-pdf-pages/">
+      <h3>Cómo Rotar Páginas en un PDF (Gratis, Sin Programas)</h3>
+      <p>Por qué las páginas escaneadas salen de lado, y cómo rotarlas sin volver a escanear.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/compress-pdf-without-losing-quality/">
+      <h3>Cómo Hacer un Archivo PDF Más Pequeño Sin Perder Calidad</h3>
+      <p>Qué hace realmente que un PDF sea enorme, y cómo reducirlo sin dañar la calidad.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/es/blog/">← Volver al Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/es/about/" style="color:var(--muted-text);">Acerca de</a> · <a href="/es/privacy/" style="color:var(--muted-text);">Privacidad</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

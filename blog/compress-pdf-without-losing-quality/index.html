@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Make a PDF File Smaller Without Losing Quality | Orisod Blog</title>
+<meta name="description" content="A PDF that's way bigger than it should be is almost always the images inside it, not the text. Here's what's actually taking up the space, and how to shrink it properly.">
+<link rel="canonical" href="https://orisod.com/blog/compress-pdf-without-losing-quality/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/compress-pdf-without-losing-quality/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/compress-pdf-without-losing-quality/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/compress-pdf-without-losing-quality/">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
+.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
+.compare-table th{background:var(--card-bg);}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/tools/">All Tools</a>
+    <a href="/tools/#image">Image Tools</a>
+    <a href="/tools/#pdf">PDF Tools</a>
+    <a href="/tools/#utility">Utility Tools</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <span class="lang-flag active">EN</span>
+    <a class="lang-flag" href="/es/blog/compress-pdf-without-losing-quality/">ES</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>How to Make a PDF File Smaller Without Losing Quality</h1>
+<p class="intro">A PDF that should be a few hundred KB somehow weighs in at 40MB and won't attach to an email. Here's what's actually taking up all that space, and how to bring it down without turning the document blurry.</p>
+
+<div class="article-body">
+
+<h2>Text almost never makes a PDF big</h2>
+<p>It's a common assumption that a long document is a big file, but text is remarkably efficient to store — a hundred-page PDF of pure typed text is often smaller than a single high-resolution photo. When a PDF balloons to tens of megabytes, the actual cause is almost always embedded images: scanned pages, photos, or high-resolution graphics sitting inside the document at a much higher resolution than the PDF actually needs to display them at. This is worth knowing before you start deleting pages or reducing content in an attempt to shrink a file — the fix usually has nothing to do with how much is in the document.</p>
+
+<h2>Where those oversized images come from</h2>
+<ul>
+  <li><strong>Scanned documents.</strong> A scanner set to a high DPI captures each page as a large, detailed image — often far more detail than needed for a document that will only ever be read on a screen or printed at normal size.</li>
+  <li><strong>Phone-photographed pages.</strong> A modern phone camera produces multi-megapixel images, and when several of those get combined into a PDF, the file size adds up fast.</li>
+  <li><strong>Uncompressed graphics.</strong> Charts, diagrams, or photos pasted into a document at full resolution rather than sized appropriately for the page.</li>
+</ul>
+
+<h2>What compression actually does inside a PDF</h2>
+<p>Compressing a PDF means re-encoding the embedded images at a lower resolution or with more efficient compression, while leaving the text, fonts, and document structure untouched. This is the same underlying idea as compressing a standalone photo — the visually redundant detail in each embedded image gets reduced, and because that detail is often invisible at normal viewing or printing size anyway, the size drops dramatically with no noticeable change in how the document looks. The layout, page count, and text all stay exactly as they were before compression.</p>
+
+<h2>Why "without losing quality" is realistic here</h2>
+<p>Because PDF file size is dominated by image resolution rather than genuine visual detail, there's usually a lot of room to compress before quality loss becomes visible. A scanned page captured at 600 DPI but only ever viewed on a screen or printed at a normal size is carrying far more resolution than anyone will ever perceive — compressing it down to a more reasonable level removes redundant data, not visible sharpness.</p>
+
+<h2>What compression won't fix</h2>
+<p>Compression reduces image data, but it doesn't remove pages, doesn't delete unnecessary content, and doesn't restructure a genuinely enormous document. If a PDF is huge because it contains 300 pages of full-resolution scans that are all actually needed, compression helps but won't work miracles — in that case, pairing compression with removing any truly unnecessary pages gets a better result than compression alone.</p>
+
+<h2>A practical target</h2>
+<p>Most everyday PDFs — reports, forms, scanned documents — compress down comfortably to a fraction of their original size, often 60-90% smaller, while remaining perfectly legible on screen and in print. If a file needs to fit an email attachment limit or a strict upload cap, that's usually well within reach without any visible trade-off.</p>
+
+<h2>A concrete example</h2>
+<p>A 15-page contract scanned at high resolution might land at 35MB — well over Gmail's 25MB attachment limit. Compressed properly, that same file often drops to somewhere between 3MB and 6MB, comfortably under any email limit, while every line of text and signature remains exactly as legible as it was in the original scan. The 30MB that disappeared was never visible detail to begin with — it was resolution the document never needed in the first place.</p>
+
+<h2>Quick answers</h2>
+<p><strong>Will compressing a PDF affect the text?</strong> No — compression targets the embedded images; selectable text and fonts are left as they were.</p>
+<p><strong>Can I compress a PDF that's already been compressed once?</strong> Yes, but repeated compression on the same file can start to show visible quality loss, similar to re-saving a JPG multiple times — compress from the original source when possible.</p>
+<p><strong>Does a smaller PDF mean fewer pages?</strong> No — compression doesn't remove pages or content, only the resolution of the images already inside them.</p>
+
+<div class="cta-box">
+  <h3>Compress Your PDF Now</h3>
+  <p>Orisod's PDF compressor shrinks scanned and image-heavy PDFs while keeping the text and layout intact — entirely in your browser, with nothing uploaded to a server.</p>
+  <a class="cta-button" href="/compress-pdf/">Compress a PDF →</a>
+</div>
+
+<p>A PDF's file size almost always comes down to the images inside it, not the document itself — once you compress those properly, a file that wouldn't attach to an email fits with room to spare, and nothing about how the document reads or prints actually changes.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Related articles</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/blog/add-page-numbers-to-pdf/">
+      <h3>How to Add Page Numbers to a PDF</h3>
+      <p>How to add sequential page numbers to a finished PDF document.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/reorder-delete-pdf-pages/">
+      <h3>How to Reorder or Delete Pages in a PDF</h3>
+      <p>How to fix a scanned PDF's page order or remove a stray blank page.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/rotate-pdf-pages/">
+      <h3>How to Rotate Pages in a PDF (Free, No Software)</h3>
+      <p>Why scanned pages come out sideways, and how to rotate them without rescanning.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/blog/">← Back to Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/about/" style="color:var(--muted-text);">About</a> · <a href="/privacy/" style="color:var(--muted-text);">Privacy</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

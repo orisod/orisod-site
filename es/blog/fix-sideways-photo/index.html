@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cómo Arreglar una Foto Girada o Boca Abajo | Blog de Orisod</title>
+<meta name="description" content="¿Una foto se ve derecha en tu teléfono pero de lado en todas partes? Aquí está la razón real detrás de eso, y cómo arreglar la orientación de una foto de forma permanente.">
+<link rel="canonical" href="https://orisod.com/es/blog/fix-sideways-photo/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/fix-sideways-photo/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/fix-sideways-photo/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/fix-sideways-photo/">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
+.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
+.compare-table th{background:var(--card-bg);}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/es/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/es/tools/">Todas las Herramientas</a>
+    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/#pdf">Herramientas PDF</a>
+    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <a class="lang-flag" href="/blog/fix-sideways-photo/">EN</a>
+    <span class="lang-flag active">ES</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>Cómo Arreglar una Foto Girada o Boca Abajo</h1>
+<p class="intro">Tomas una foto sosteniendo tu teléfono de lado, se ve perfectamente derecha en la pantalla de tu teléfono — y luego la subes a algún lugar y aparece girada 90 grados. Esto no es aleatorio, y no es que falle la cámara de tu teléfono. Aquí te explicamos qué está pasando realmente y cómo arreglarlo de forma definitiva.</p>
+
+<div class="article-body">
+
+<h2>No siempre son los píxeles los que están girados</h2>
+<p>Aquí está la parte que confunde a la gente: un archivo de foto puede estar técnicamente almacenado de lado mientras se muestra derecho, gracias a un pequeño dato de metadatos llamado la bandera de orientación EXIF. En lugar de rotar físicamente cada píxel cuando inclinas tu teléfono para tomar una foto, muchas cámaras guardan los datos de la imagen exactamente como los capturó el sensor y simplemente añaden una etiqueta que dice "muestra esto girado 90 grados". Las apps que leen esa etiqueta muestran la foto correctamente. Las apps que la ignoran muestran los datos de píxeles crudos, sin rotar — por eso el mismo archivo puede verse perfectamente bien en una app y de lado en otra.</p>
+
+<h2>Por qué esto causa tanta confusión</h2>
+<p>Distintos programas tienen un soporte muy inconsistente para leer la bandera de orientación. Las galerías de teléfonos modernos y la mayoría de los navegadores actuales la leen correctamente. Pero algunos visores de imágenes antiguos, ciertos formularios de subida, algunos clientes de correo, y varios sistemas de backend que procesan imágenes (redimensionándolas, convirtiendo formatos, eliminando metadatos) o bien ignoran la bandera por completo o la eliminan en el proceso — momento en el cual la foto vuelve a mostrarse como estén orientados realmente los datos de píxeles crudos. No hiciste nada mal; el software simplemente no se puso de acuerdo sobre cuál orientación confiar.</p>
+
+<h2>Los dos tipos de arreglo para "de lado"</h2>
+<ul>
+  <li><strong>Rotación solo de metadatos.</strong> Algunas herramientas solo cambian la bandera EXIF sin tocar los datos de píxeles reales. Esto es rápido, pero solo funciona de forma confiable en software que respeta la bandera — en cualquier lugar que la ignore, la foto vuelve a verse de lado.</li>
+  <li><strong>Rotación real de píxeles.</strong> Una herramienta de rotación adecuada vuelve a renderizar físicamente los datos de la imagen en la nueva orientación y la guarda así. La foto ahora se ve correcta en absolutamente todo, sin importar si el software que la muestra lee datos EXIF o no, porque no hay ninguna bandera que ignorar — los píxeles mismos están orientados correctamente.</li>
+</ul>
+<p>Si alguna vez arreglaste la rotación de una foto en una app solo para que volviera a aparecer de lado en otro lugar, probablemente te topaste con un arreglo solo de metadatos. Una rotación real de píxeles resuelve el problema de forma permanente.</p>
+
+<h2>Las fotos boca abajo funcionan igual</h2>
+<p>Una foto completamente boca abajo (180 grados) sigue la misma lógica idéntica — es o una bandera de orientación desajustada o datos de píxeles genuinamente almacenados invertidos. El arreglo es el mismo: rotar el contenido real de la imagen en lugar de depender de una etiqueta de metadatos que no todo el software va a respetar.</p>
+
+<h2>Cómo saber con qué tipo de arreglo estás lidiando</h2>
+<p>Si una foto se muestra correctamente en una app pero de lado en otra, es una señal fuerte de que el archivo depende de la bandera de orientación EXIF en lugar de tener datos de píxeles genuinamente rotados. Si aparece de lado absolutamente en todas partes, incluida la app o el dispositivo donde se tomó originalmente, es probable que los propios datos de píxeles estén almacenados en esa orientación y no haya ninguna bandera involucrada. De cualquier forma, el arreglo es el mismo — rotar el contenido real de la imagen — pero saber en qué situación estás explica por qué un "arreglo" a veces no se mantiene.</p>
+
+<h2>Cómo arreglarlo de forma permanente</h2>
+<p>Rota la foto usando una herramienta que vuelva a renderizar los píxeles en lugar de una que solo edite metadatos. Seleccionas la dirección (90 grados a la izquierda, 90 grados a la derecha, o un giro completo de 180), la herramienta redibuja la imagen en la orientación corregida, y obtienes de vuelta un archivo correctamente orientado a nivel de píxel — sin necesidad de ninguna bandera, sin riesgo de que vuelva a verse de lado la próxima vez que pase por otro software.</p>
+
+<h2>Respuestas rápidas</h2>
+<p><strong>¿Por qué la misma foto se ve diferente en distintos dispositivos?</strong> Porque los dispositivos y apps varían en si respetan la bandera de orientación EXIF — un dispositivo muestra la vista "corregida", otro muestra los datos de píxeles crudos, y pueden no coincidir aunque sea exactamente el mismo archivo.</p>
+<p><strong>¿Rotar una foto reduce su calidad?</strong> Una rotación de 90 o 180 grados no requiere ningún remuestreo ni interpolación — cada píxel simplemente se mueve a una nueva posición — así que no hay pérdida de calidad por la rotación en sí.</p>
+<p><strong>¿Arreglar la rotación una vez lo arreglará en todos los lugares donde ya compartí la foto?</strong> No — si ya subiste o enviaste la versión de lado a algún lugar, necesitarás volver a subir el archivo corregido. El arreglo aplica al archivo que rotas, no a las copias que ya están en otros servicios.</p>
+
+<div class="cta-box">
+  <h3>Arregla una Foto de Lado de Forma Permanente</h3>
+  <p>La herramienta de rotación de Orisod vuelve a renderizar los datos de píxeles reales, así que tu foto se muestra correctamente en todas partes — no solo en apps que casualmente leen la bandera de orientación. Procesado localmente en tu navegador.</p>
+  <a class="cta-button" href="/es/rotate-image/">Rotar una Imagen →</a>
+</div>
+
+<p>Una foto de lado no es señal de que algo esté roto — son solo dos programas en desacuerdo sobre una bandera de metadatos. Rotar los píxeles reales resuelve el desacuerdo de forma definitiva.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Artículos relacionados</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/es/blog/blur-face-in-photo/">
+      <h3>Cómo Difuminar una Cara o Información Sensible en una Foto</h3>
+      <p>Cómo difuminar caras o detalles sensibles antes de compartir una foto públicamente.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/watermark-photos-guide/">
+      <h3>Cómo Poner Marca de Agua a Tus Fotos para Proteger Tu Trabajo</h3>
+      <p>Cómo proteger fotos compartidas con una marca de agua sin arruinar la imagen.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/black-and-white-photo-filter/">
+      <h3>Cómo Volver una Foto Blanco y Negro (o Añadir un Filtro de Color)</h3>
+      <p>Qué cambia realmente al convertir una foto a blanco y negro, y cómo hacerlo bien.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/es/blog/">← Volver al Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/es/about/" style="color:var(--muted-text);">Acerca de</a> · <a href="/es/privacy/" style="color:var(--muted-text);">Privacidad</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

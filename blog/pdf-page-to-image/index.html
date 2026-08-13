@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Convert a PDF Page Into an Image | Orisod Blog</title>
+<meta name="description" content="Need a PDF page as a JPG or PNG — for a slide, a website, or a forum post? Here's why a PDF page isn't already an image, and how the conversion actually works.">
+<link rel="canonical" href="https://orisod.com/blog/pdf-page-to-image/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/pdf-page-to-image/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/pdf-page-to-image/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/pdf-page-to-image/">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
+.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
+.compare-table th{background:var(--card-bg);}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/tools/">All Tools</a>
+    <a href="/tools/#image">Image Tools</a>
+    <a href="/tools/#pdf">PDF Tools</a>
+    <a href="/tools/#utility">Utility Tools</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <span class="lang-flag active">EN</span>
+    <a class="lang-flag" href="/es/blog/pdf-page-to-image/">ES</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>How to Convert a PDF Page Into an Image</h1>
+<p class="intro">You need a specific page of a PDF to drop into a slide deck, a website, or a forum post — somewhere that expects a JPG or PNG, not a PDF attachment. Here's why that's not as simple as it sounds, and how to get a clean image out of a PDF page.</p>
+
+<div class="article-body">
+
+<h2>A PDF page isn't already an image</h2>
+<p>This trips people up: a PDF looks like a flat picture of a page when you view it, so it seems like it should already "be" an image you could just save. But most PDFs are actually built from text, fonts, and vector graphics — instructions for how to draw the page, not a grid of pixels. That's exactly why PDF text stays sharp at any zoom level and why you can select and copy it. To turn that into a JPG or PNG, something has to render those instructions into an actual grid of pixels first — a process called rasterization.</p>
+
+<h2>What rasterization actually does</h2>
+<p>Rasterizing a PDF page means rendering it at a specific resolution and producing a flat raster image — the same kind of pixel grid a camera photo is made of. Once that happens, the result behaves like any other image: it can be resized, embedded, compressed, or uploaded anywhere images are accepted, but it loses the underlying text and vector precision the PDF originally had. There's no going back from an image to selectable text without a separate OCR step.</p>
+
+<h2>Where this comes up</h2>
+<ul>
+  <li><strong>Presentations.</strong> Dropping a single page or chart from a PDF report directly into a slide, where the software expects an image file, not a PDF.</li>
+  <li><strong>Websites and blog posts.</strong> Embedding a page of a document as a visual, the same way you'd embed a screenshot.</li>
+  <li><strong>Forums and messaging apps.</strong> Many platforms preview images inline but only let you attach PDFs as a separate download link — converting the page to an image gets it to show up directly in the conversation.</li>
+  <li><strong>Thumbnails and previews.</strong> Generating a preview image that represents a PDF document, like a cover page thumbnail.</li>
+</ul>
+
+<h2>Resolution matters more than you'd think</h2>
+<p>Because rasterization renders the page at a specific resolution, the sharpness of the resulting image depends entirely on that setting — render too small, and text that was perfectly crisp in the PDF turns visibly blurry or pixelated as an image. A good converter lets you choose a higher resolution when the output needs to stay legible, especially for pages with small text or fine detail like charts and diagrams.</p>
+
+<h2>Choosing between JPG and PNG for the output</h2>
+<p>If the page is mostly a photo or has complex color gradients, JPG usually gives a smaller file with no visible quality loss. If the page is mostly text, line art, or a diagram with sharp edges, PNG holds up better, avoiding the soft, slightly blurred look JPG compression can introduce around fine lines and small text — the same trade-off that applies when choosing between the two formats generally.</p>
+
+<h2>One page or the whole document?</h2>
+<p>Most PDFs someone needs converted are more than one page, but the actual need is usually just one specific page — the cover, a particular chart, a signature page. A useful converter lets you pick individual pages rather than forcing you to convert and then discard everything else, saving you from sorting through a folder of images you don't need.</p>
+
+<h2>A quick sanity check before you convert</h2>
+<p>If your goal is actually to reuse the text from the page — quoting a paragraph, editing a table, copying a list — converting to an image is the wrong tool entirely, since that step throws the selectable text away. Converting to an image only makes sense when what you need is the page's visual appearance, not its underlying content.</p>
+
+<h2>Quick answers</h2>
+<p><strong>Does converting a PDF page to an image keep the text searchable?</strong> No — once rasterized, the page is a flat image, and any text in it is no longer selectable or searchable unless you separately run OCR on the result.</p>
+<p><strong>Will the image look exactly like the PDF page?</strong> Visually, yes, at a high enough resolution — what changes is the underlying structure (pixels instead of text/vector instructions), not the appearance.</p>
+<p><strong>Can I convert every page of a PDF into images at once?</strong> Yes, most converters support batch conversion, producing one image per page if that's what you need instead of picking pages individually.</p>
+
+<div class="cta-box">
+  <h3>Turn a PDF Page Into an Image</h3>
+  <p>Orisod's PDF to JPG converter renders any page of a PDF into a sharp image, entirely in your browser — pick the page and resolution you need, with nothing uploaded to a server.</p>
+  <a class="cta-button" href="/pdf-to-jpg/">Convert PDF to JPG →</a>
+</div>
+
+<p>A PDF page becomes a usable image the moment it's rendered at a high enough resolution — after that, it drops into a slide, a webpage, or a forum post exactly like any other picture.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Related articles</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/blog/add-page-numbers-to-pdf/">
+      <h3>How to Add Page Numbers to a PDF</h3>
+      <p>How to add sequential page numbers to a finished PDF document.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/reorder-delete-pdf-pages/">
+      <h3>How to Reorder or Delete Pages in a PDF</h3>
+      <p>How to fix a scanned PDF's page order or remove a stray blank page.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/rotate-pdf-pages/">
+      <h3>How to Rotate Pages in a PDF (Free, No Software)</h3>
+      <p>Why scanned pages come out sideways, and how to rotate them without rescanning.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/blog/">← Back to Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/about/" style="color:var(--muted-text);">About</a> · <a href="/privacy/" style="color:var(--muted-text);">Privacy</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

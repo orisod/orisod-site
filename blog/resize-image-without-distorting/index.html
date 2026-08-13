@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Resize an Image Without Distorting It | Orisod Blog</title>
+<meta name="description" content="Stretch an image to the wrong dimensions and it warps — faces stretch, circles become ovals. Here's why that happens and how to resize without distorting.">
+<link rel="canonical" href="https://orisod.com/blog/resize-image-without-distorting/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/resize-image-without-distorting/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/resize-image-without-distorting/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/resize-image-without-distorting/">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
+.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
+.compare-table th{background:var(--card-bg);}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/tools/">All Tools</a>
+    <a href="/tools/#image">Image Tools</a>
+    <a href="/tools/#pdf">PDF Tools</a>
+    <a href="/tools/#utility">Utility Tools</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <span class="lang-flag active">EN</span>
+    <a class="lang-flag" href="/es/blog/resize-image-without-distorting/">ES</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>How to Resize an Image Without Distorting It</h1>
+<p class="intro">You've seen it happen: a photo gets resized and suddenly everyone in it looks slightly stretched, or a logo's perfect circle turns into an oval. Here's exactly why that happens, and how to resize without it.</p>
+
+<div class="article-body">
+
+<h2>What's actually happening when an image "distorts"</h2>
+<p>Every image has an aspect ratio — the proportional relationship between its width and height, like 4:3 or 16:9. When you resize an image by setting a new width and a new height independently, without keeping that ratio consistent, you're telling the software to squeeze or stretch the image to fit dimensions it wasn't proportioned for. The pixels get pushed and pulled non-uniformly to fill the new shape, which is exactly what makes a face look subtly stretched or a circle turn into an oval.</p>
+
+<h2>The fix: lock the aspect ratio</h2>
+<p>Most resizing happens correctly by locking the aspect ratio, meaning you only need to specify one dimension — say, a target width — and the height is calculated automatically to keep the original proportions intact. Nothing gets stretched or squeezed, because the shape of the image never actually changes, only its overall size.</p>
+
+<h2>What if you genuinely need a specific width AND height?</h2>
+<p>Sometimes the ratio you need really doesn't match the original — a square profile photo requirement applied to a wide landscape photo, for instance. In that case, distortion isn't actually the right alternative either; the real options are:</p>
+<ul>
+  <li><strong>Cropping</strong> — cutting away part of the image to change its proportions without stretching what remains.</li>
+  <li><strong>Letterboxing or padding</strong> — keeping the full image at its correct proportions and adding background space (often blank or blurred) to fill out the target shape.</li>
+</ul>
+<p>Both preserve the image's real proportions; only the framing changes. Distortion is the one option that actually damages the image itself, which is why it's worth avoiding even when a stubborn set of exact dimensions is required.</p>
+
+<h2>How to spot the aspect ratio math</h2>
+<p>The aspect ratio is just the width divided by the height. A 4000×3000 photo has a ratio of 4:3. To resize it to a new width while keeping that same ratio, you multiply the new width by the height-to-width ratio of the original — resizing to 1200px wide means the new height should be 900px (1200 × 3/4). Most resizing tools calculate this automatically once you lock the ratio, so you rarely need to do the math by hand, but understanding it makes it obvious why an arbitrary width-and-height pair breaks things.</p>
+
+<h2>A quick way to check if an image looks distorted</h2>
+<p>If there's a circle, a face, or any recognizably round or symmetrical shape in the image, distortion is easy to spot — circles becoming ovals is the classic tell. For photos without an obvious round reference point, distortion can be subtler but still shows up as a slightly "stretched" or "squashed" feeling to anyone looking at it, even if they can't immediately say why something looks off.</p>
+
+<h2>A real-world example of the math in action</h2>
+<p>Say you have a 3000×2000 landscape photo (a 3:2 ratio) and a website template that wants images exactly 1200px wide. Locking the aspect ratio and entering 1200 as the width automatically gives you a height of 800px (1200 × 2/3), and the photo looks exactly like the original, just smaller. Enter 1200×1200 instead — forcing it square without adjusting anything else — and the photo compresses vertically, making everything in it look noticeably squashed.</p>
+
+<h2>Resizing an image correctly</h2>
+<p>The safest approach is a resizing tool that locks the aspect ratio by default, so entering one dimension automatically calculates the other — removing the possibility of accidentally distorting the image in the first place.</p>
+
+<h2>Quick answers</h2>
+<p><strong>Is there ever a good reason to intentionally distort an image?</strong> Rarely — a few artistic or technical edge cases exist, but for nearly all practical purposes, distortion is a mistake rather than a choice.</p>
+<p><strong>Why did my image look fine in the editor but distorted once uploaded?</strong> Some platforms resize images automatically to fit a required shape, and if that automatic resize doesn't preserve the aspect ratio, distortion can appear after upload even if your original file was fine.</p>
+<p><strong>What's the difference between resizing and cropping?</strong> Resizing changes the overall size while (ideally) keeping the same proportions; cropping cuts away part of the image to change its proportions. They solve different problems and are often used together.</p>
+
+<div class="cta-box">
+  <h3>Resize an Image the Right Way</h3>
+  <p>Orisod's image resizer locks the aspect ratio by default, so your images never come out stretched or squeezed — all processed locally in your browser.</p>
+  <a class="cta-button" href="/resize-image/">Resize an Image →</a>
+</div>
+
+<p>Distortion isn't a mysterious glitch — it's just math, applied unevenly to pixels that were never meant to be pushed in different directions. Lock the aspect ratio and the problem disappears entirely.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Related articles</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/blog/blur-face-in-photo/">
+      <h3>How to Blur a Face or Sensitive Info in a Photo</h3>
+      <p>How to blur out faces or sensitive details before sharing a photo publicly.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/watermark-photos-guide/">
+      <h3>How to Watermark Your Photos to Protect Your Work</h3>
+      <p>How to protect shared photos with a watermark without ruining the image.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/black-and-white-photo-filter/">
+      <h3>How to Turn a Photo Black and White (or Add a Color Filter)</h3>
+      <p>What actually changes when a photo goes black and white, and how to do it right.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/blog/">← Back to Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/about/" style="color:var(--muted-text);">About</a> · <a href="/privacy/" style="color:var(--muted-text);">Privacy</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

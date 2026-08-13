@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is Image Metadata and How to View It | Orisod Blog</title>
+<meta name="description" content="Every image file carries information beyond its pixels — camera settings, captions, copyright notes, sometimes GPS data. Here's what metadata actually includes, and how to see what's inside a specific photo.">
+<link rel="canonical" href="https://orisod.com/blog/what-is-image-metadata/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/what-is-image-metadata/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/what-is-image-metadata/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/what-is-image-metadata/">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
+.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
+.compare-table th{background:var(--card-bg);}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/tools/">All Tools</a>
+    <a href="/tools/#image">Image Tools</a>
+    <a href="/tools/#pdf">PDF Tools</a>
+    <a href="/tools/#utility">Utility Tools</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <span class="lang-flag active">EN</span>
+    <a class="lang-flag" href="/es/blog/what-is-image-metadata/">ES</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>What Is Image Metadata and How to View It</h1>
+<p class="intro">An image file isn't just the picture you see — it can carry a layer of information alongside the pixels, describing where it came from, who owns it, and how it was made. Here's what that metadata actually includes, and how to look inside a specific photo to see what it's carrying.</p>
+
+<div class="article-body">
+
+<h2>Metadata is broader than just EXIF</h2>
+<p>Most people who've heard of image metadata know it through EXIF — the camera settings, timestamp, and sometimes GPS data that phones and cameras embed automatically. But EXIF is only one of several metadata standards an image file can carry. IPTC metadata (developed for the news and publishing industry) typically holds captions, keywords, credit lines, and usage rights. XMP, a newer standard from Adobe, can hold similar descriptive information and is designed to be extensible across different types of content. A single image file can carry data from more than one of these standards at once, each covering a different kind of information.</p>
+
+<h2>What each type of metadata typically contains</h2>
+<ul>
+  <li><strong>EXIF</strong> — camera make and model, exposure settings, date and time captured, and often GPS coordinates on phone photos.</li>
+  <li><strong>IPTC</strong> — caption or description, keywords, photographer credit, copyright notice, and sometimes location described in text (city, country) rather than coordinates.</li>
+  <li><strong>XMP</strong> — similar descriptive fields to IPTC, plus editing history in some software, and custom fields specific to certain applications.</li>
+</ul>
+
+<h2>Why this metadata exists at all</h2>
+<p>None of it is accidental — each standard was built to solve a real workflow problem. A photographer delivering images to a publication relies on IPTC captions and credit lines so the image arrives with its context intact instead of as an anonymous file. A photo management app relies on EXIF timestamps and camera data to sort and organize a library automatically. The metadata is doing real work for the people and systems that know to look for it — it's just invisible to anyone casually viewing the image.</p>
+
+<h2>Where metadata becomes useful to check</h2>
+<ul>
+  <li><strong>Verifying a photo's origin</strong> — checking the camera model and timestamp to confirm when and how an image was actually captured.</li>
+  <li><strong>Checking usage rights before reusing an image</strong> — IPTC copyright and credit fields can indicate whether and how an image is licensed for reuse.</li>
+  <li><strong>Understanding camera settings</strong> — photographers reviewing their own EXIF data to learn what settings produced a particular result.</li>
+  <li><strong>Privacy review before sharing</strong> — checking whether GPS or other identifying data is embedded before posting a photo publicly.</li>
+</ul>
+
+<h2>Viewing vs. removing</h2>
+<p>Viewing metadata and removing it are two different, complementary needs. Viewing is about understanding what's already embedded in a specific file — useful for verification, organization, or a privacy check before you decide what to do next. Removing (a separate process) is what you'd do afterward if you decide a photo shouldn't carry that information into wherever you're about to share it. Checking first is what tells you whether removing is even necessary for a given photo.</p>
+
+<h2>How to see what's inside a specific image</h2>
+<p>A metadata viewer reads a file's embedded EXIF, IPTC, and XMP fields and displays them in a readable format, rather than requiring specialized software or command-line tools. You upload or drag in the image, and it shows you exactly what's embedded — camera details, descriptive fields, timestamps, and location data if present — all without altering the file itself.</p>
+
+<h2>A concrete example</h2>
+<p>You receive a photo from someone claiming it was taken last week at a specific location, but something about it seems off. Checking the metadata might show a capture date from months earlier and a camera model that doesn't match what they described — not proof of anything on its own, but a concrete data point that either supports or contradicts the claim, sitting right inside the file the whole time.</p>
+
+<h2>Quick answers</h2>
+<p><strong>Does every image have metadata?</strong> Not necessarily — a screenshot or a graphic exported from design software often has little or no EXIF data, while a photo straight from a camera or phone usually has quite a bit.</p>
+<p><strong>Does viewing metadata change the file?</strong> No — viewing is a read-only operation; the image and its embedded data stay exactly as they were.</p>
+<p><strong>Can metadata be wrong or misleading?</strong> Yes — timestamps can be affected by an incorrectly set device clock, and metadata can sometimes be edited or stripped by software the image passed through, so it's informative but not guaranteed to be complete or accurate.</p>
+
+<div class="cta-box">
+  <h3>View Your Image's Metadata</h3>
+  <p>Orisod's metadata viewer reads a photo's embedded EXIF, camera, and location data and shows it to you clearly — entirely in your browser, with nothing uploaded to a server.</p>
+  <a class="cta-button" href="/image-metadata-viewer/">View Image Metadata →</a>
+</div>
+
+<p>An image file is rarely just its pixels — checking what else it's carrying takes a few seconds, and it's the first step before deciding whether that information should travel with the photo or not.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Related articles</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/blog/base64-encoding-explained/">
+      <h3>What Is Base64 Encoding and When Developers Need It for Images</h3>
+      <p>What Base64 encoding does, and when it's actually the right call for images.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/what-is-exif-data/">
+      <h3>What Is EXIF Data and Why You Should Remove It Before Sharing Photos</h3>
+      <p>The hidden data your photos carry — including GPS location — and how to strip it before you share.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/how-to-make-a-qr-code/">
+      <h3>How to Make a QR Code for Free (No App Needed)</h3>
+      <p>What QR codes actually store, why “expiring” codes are a myth, and how to make one in under a minute.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/blog/">← Back to Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/about/" style="color:var(--muted-text);">About</a> · <a href="/privacy/" style="color:var(--muted-text);">Privacy</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

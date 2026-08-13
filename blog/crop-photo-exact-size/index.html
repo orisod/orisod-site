@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Crop a Photo to the Exact Size You Need | Orisod Blog</title>
+<meta name="description" content="Cropping to 'roughly square' isn't the same as cropping to an exact pixel size. Here's the difference, when it matters, and how to hit an exact target size every time.">
+<link rel="canonical" href="https://orisod.com/blog/crop-photo-exact-size/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/crop-photo-exact-size/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/crop-photo-exact-size/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/crop-photo-exact-size/">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
+.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
+.compare-table th{background:var(--card-bg);}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/tools/">All Tools</a>
+    <a href="/tools/#image">Image Tools</a>
+    <a href="/tools/#pdf">PDF Tools</a>
+    <a href="/tools/#utility">Utility Tools</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <span class="lang-flag active">EN</span>
+    <a class="lang-flag" href="/es/blog/crop-photo-exact-size/">ES</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>How to Crop a Photo to the Exact Size You Need</h1>
+<p class="intro">A passport photo service, a print lab, or an ID badge system asks for a photo at an exact size — not "about the right shape," an exact number of pixels or inches. Here's why that distinction matters and how to hit it precisely.</p>
+
+<div class="article-body">
+
+<h2>Aspect ratio vs exact dimensions — not the same thing</h2>
+<p>Cropping to an aspect ratio means keeping a proportion, like 1:1 for a square or 4:3 for a standard photo — the crop can come out at any actual size as long as the ratio holds. Cropping to an exact size means the output has to be a specific pixel count or physical dimension, like exactly 600×600 pixels or exactly 2×2 inches at 300 DPI. A crop can be perfectly square and still be the wrong exact size if you needed 600×600 and ended up with 800×800. Most casual cropping only cares about the ratio; the situations where exact size actually matters are more specific than people expect.</p>
+
+<h2>Where exact size is non-negotiable</h2>
+<ul>
+  <li><strong>Passport and visa photos</strong> — governments specify an exact size (commonly 2×2 inches for US passports) with strict tolerances, and photos outside that range get rejected outright.</li>
+  <li><strong>ID badges and access cards</strong> — the printing system usually expects one fixed pixel size and will stretch or crop unpredictably if you feed it anything else.</li>
+  <li><strong>Print lab templates</strong> — ordering a 4×6 print means the file needs to match that ratio and resolution, or the lab crops it for you in a way you didn't choose.</li>
+  <li><strong>Website and app assets</strong> — a hero image slot or a profile picture upload area often expects one fixed size, and anything else gets awkwardly stretched or cropped by the platform.</li>
+</ul>
+
+<h2>Why "close enough" causes problems</h2>
+<p>When you upload a photo that's the right shape but the wrong exact size, one of two things usually happens: the receiving system stretches it to fit (distorting faces and straight lines) or crops it further on its own terms, often cutting off exactly the part you cared about keeping. Neither is what you wanted. Getting the exact size right yourself, before uploading, means you control what stays in frame — not an automated system guessing on your behalf.</p>
+
+<h2>How to crop to an exact size</h2>
+<p>The reliable way is a crop tool that lets you type in a target width and height directly, rather than dragging a selection box freehand and hoping it lands close. You position the crop area over the part of the photo you want to keep, lock in the exact pixel dimensions you were given, and export — no guessing, no manual measuring against a ruler on your screen.</p>
+
+<h2>A quick note on resolution</h2>
+<p>Exact pixel size and exact print size aren't interchangeable without knowing the resolution. A 600×600 pixel crop is a fixed number of pixels regardless of context, but if a print lab asks for "2×2 inches," that only becomes a real pixel target once you know the DPI they expect — at 300 DPI, 2×2 inches works out to exactly 600×600 pixels. When a spec gives you both a physical size and a DPI, do the multiplication first so you're cropping to the right pixel count, not just something that looks roughly 2 inches on your own screen.</p>
+
+<h2>What to do when the source photo isn't the same shape as the target</h2>
+<p>Often the photo you have doesn't naturally match the ratio you need — a wide landscape shot when you need a square, or a portrait shot when you need a wide banner. In that case, cropping necessarily means losing some of the original frame; there's no way around it without distorting the image. The only real decision is what to keep. Position the crop box over the part of the photo that actually matters — a face, a product, the focal point — rather than defaulting to a center crop, which can just as easily cut off exactly what you wanted kept.</p>
+
+<h2>Quick answers</h2>
+<p><strong>What if my photo is smaller than the exact size I need?</strong> Cropping only removes pixels, it can't add detail that isn't there — if your source photo is too small for the target size, you'd need to upscale it first, which comes with its own quality trade-offs, or start from a higher-resolution original.</p>
+<p><strong>Does cropping to an exact size distort the photo?</strong> Not if you crop rather than resize-to-fit. Cropping removes parts of the image while keeping everything else at its original proportions; only stretching an image to fill a shape it doesn't naturally match causes distortion.</p>
+<p><strong>Can I crop to an exact size and keep it centered on a specific part of the photo?</strong> Yes — a good crop tool lets you position the crop box freely before locking the dimensions, so you choose exactly what stays in frame rather than always cropping from the center.</p>
+
+<div class="cta-box">
+  <h3>Crop to an Exact Size in Seconds</h3>
+  <p>Orisod's crop tool lets you drag to select any area and set precise output dimensions — all processed locally in your browser, with nothing uploaded to a server.</p>
+  <a class="cta-button" href="/crop-image/">Crop an Image →</a>
+</div>
+
+<p>Whatever the exact numbers you were handed — a passport spec, a print lab template, an upload requirement — hitting them precisely takes the guesswork out of whether your photo will actually be accepted.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Related articles</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/blog/blur-face-in-photo/">
+      <h3>How to Blur a Face or Sensitive Info in a Photo</h3>
+      <p>How to blur out faces or sensitive details before sharing a photo publicly.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/watermark-photos-guide/">
+      <h3>How to Watermark Your Photos to Protect Your Work</h3>
+      <p>How to protect shared photos with a watermark without ruining the image.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/black-and-white-photo-filter/">
+      <h3>How to Turn a Photo Black and White (or Add a Color Filter)</h3>
+      <p>What actually changes when a photo goes black and white, and how to do it right.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/blog/">← Back to Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/about/" style="color:var(--muted-text);">About</a> · <a href="/privacy/" style="color:var(--muted-text);">Privacy</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

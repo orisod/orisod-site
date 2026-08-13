@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Tamaño de Imagen Correcto para Cada Red Social (2026) | Blog de Orisod</title>
+<meta name="description" content="Una guía de referencia con los tamaños de imagen recomendados actuales para Instagram, Facebook, LinkedIn, YouTube y X en 2026 — y cómo recortar tus fotos para cada uno.">
+<link rel="canonical" href="https://orisod.com/es/blog/social-media-image-sizes-2026/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/social-media-image-sizes-2026/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/social-media-image-sizes-2026/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/social-media-image-sizes-2026/">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
+.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
+.compare-table th{background:var(--card-bg);}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/es/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/es/tools/">Todas las Herramientas</a>
+    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/#pdf">Herramientas PDF</a>
+    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <a class="lang-flag" href="/blog/social-media-image-sizes-2026/">EN</a>
+    <span class="lang-flag active">ES</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>El Tamaño de Imagen Correcto para Cada Red Social (2026)</h1>
+<p class="intro">Cada plataforma tiene su propia idea del tamaño de imagen "correcto", y no coinciden entre sí. Publica las dimensiones equivocadas y la plataforma recortará, añadirá franjas, o estirará tu imagen a su manera — normalmente no a tu favor. Aquí tienes una referencia actual para acertar desde la primera vez.</p>
+
+<div class="article-body">
+
+<h2>Por qué esto sigue cambiando</h2>
+<p>Las redes sociales ajustan sus tamaños recomendados a medida que rediseñan los feeds, añaden nuevos espacios (historias, reels, banners), y cambian cómo se muestran las imágenes en pantallas de teléfono más nuevas y de mayor resolución. Un tamaño que era correcto hace dos años ahora puede mostrarse ligeramente recortado o con espacio vacío alrededor, porque la plataforma actualizó silenciosamente su contenedor de visualización sin anunciarlo mucho. Verificar los números actuales antes de una publicación importante — un lanzamiento, una actualización de perfil, una campaña publicitaria — vale la pena el minuto extra que toma.</p>
+
+<h2>Tamaños recomendados actuales (2026)</h2>
+<table class="compare-table">
+  <tr><th>Plataforma y ubicación</th><th>Tamaño recomendado</th></tr>
+  <tr><td>Publicación de Instagram (cuadrada)</td><td>1080×1080px</td></tr>
+  <tr><td>Publicación de Instagram (vertical)</td><td>1080×1350px</td></tr>
+  <tr><td>Historia de Instagram / Facebook</td><td>1080×1920px</td></tr>
+  <tr><td>Foto de portada de Facebook</td><td>820×312px</td></tr>
+  <tr><td>Imagen de publicación compartida en Facebook</td><td>1200×630px</td></tr>
+  <tr><td>Banner de perfil de LinkedIn</td><td>1584×396px</td></tr>
+  <tr><td>Imagen de publicación compartida en LinkedIn</td><td>1200×627px</td></tr>
+  <tr><td>Miniatura de YouTube</td><td>1280×720px</td></tr>
+  <tr><td>Banner de canal de YouTube</td><td>2560×1440px (área segura 1546×423px)</td></tr>
+  <tr><td>Encabezado de X (Twitter)</td><td>1500×500px</td></tr>
+  <tr><td>Imagen en publicación de X (Twitter)</td><td>1200×675px</td></tr>
+</table>
+<p>Trata estos como objetivos actuales de referencia y no como una ley absoluta — las plataformas redondean de forma distinta y ocasionalmente cambian unos pocos píxeles, pero mantenerte cerca de estos números aleja tu imagen de los límites de recorte que una plataforma aplica a cualquier cosa muy fuera de especificación. Cuando una plataforma no publica un número exacto para una ubicación específica, ajustarse al tamaño listado más cercano es más seguro que adivinar algo completamente nuevo.</p>
+
+<h2>La trampa del "área segura" en los banners</h2>
+<p>Los formatos de banner ancho — banners de LinkedIn, arte de canal de YouTube, portadas de Facebook — a menudo quedan parcialmente cubiertos por una foto de perfil, botones, o elementos de interfaz según si alguien lo ve en escritorio o en móvil. Por eso YouTube publica específicamente un "área segura" más pequeña dentro de su banner de 2560×1440: cualquier cosa importante (un logotipo, texto, una cara) necesita estar dentro de esa zona segura, o corre el riesgo de quedar recortada por completo en algunos dispositivos aunque la imagen completa técnicamente se haya subido bien.</p>
+
+<h2>Cuadrado vs vertical vs horizontal — elige según dónde vivirá</h2>
+<p>La misma foto a menudo necesita recortes diferentes para ubicaciones diferentes, no solo tamaños diferentes. Una foto horizontal que funciona genial como miniatura de YouTube (16:9) perderá por completo a su sujeto si se fuerza en el encuadre vertical alto 9:16 de una Historia de Instagram sin volver a recortar primero. En lugar de subir un solo recorte a todas partes y dejar que cada plataforma lo estropee de forma distinta, recortar una versión específica para cada ubicación mantiene la composición intencional en lugar de accidental.</p>
+
+<h2>Cómo acertar estos tamaños sin adivinar</h2>
+<p>Una herramienta de recorte construida alrededor de ajustes predefinidos para redes sociales te ahorra calcular relaciones de aspecto a mano. En lugar de calcular a ojo una selección arrastrada y esperar que quede cerca de 1080×1080, eliges la plataforma y la ubicación, y la herramienta limita el recorte exactamente a esa proporción y tamaño — así lo que exportas coincide con lo que la plataforma realmente espera, no una aproximación.</p>
+
+<h2>Planificando con anticipación para varias publicaciones</h2>
+<p>Si estás preparando varias imágenes a la vez — una semana de publicaciones, el lanzamiento de una campaña, un cambio de marca en varios perfiles — es más rápido recortar todo según especificación antes de empezar a programar que arreglar subidas rechazadas o mal recortadas una por una después. Crea el hábito de verificar el tamaño objetivo para cada ubicación primero, y luego recorta directamente a ese tamaño, en lugar de subir una sola imagen genérica y esperar que cada plataforma la maneje con elegancia. Rara vez lo hace.</p>
+
+<h2>Respuestas rápidas</h2>
+<p><strong>¿Qué pasa si subo el tamaño equivocado?</strong> La mayoría de las plataformas recortarán automáticamente o añadirán franjas (espacio vacío) en lugar de rechazar la subida directamente — pero pierdes el control sobre qué se corta exactamente o cómo se ve el espacio añadido, por lo que ajustarte tú mismo a la especificación vale la pena.</p>
+<p><strong>¿Estos tamaños importan para la calidad de imagen, o solo para el diseño?</strong> Ambos — usar un tamaño muy por debajo del objetivo de la plataforma puede resultar en una imagen borrosa o con apariencia ampliada una vez que se muestra en el feed, ya que la plataforma estira un archivo demasiado pequeño para llenar su contenedor de visualización.</p>
+<p><strong>¿Debería revisar si estos números se actualizan periódicamente?</strong> Sí, especialmente antes de una campaña importante — las plataformas actualizan las dimensiones ocasionalmente al rediseñarse, y un tamaño que era estándar hace uno o dos años ahora puede mostrarse ligeramente desajustado.</p>
+
+<div class="cta-box">
+  <h3>Recorta para Cualquier Red Social al Instante</h3>
+  <p>El recortador para redes sociales de Orisod incluye ajustes predefinidos para Instagram, Facebook, LinkedIn, YouTube y más — todo procesado localmente en tu navegador, nada se sube.</p>
+  <a class="cta-button" href="/es/social-media-crop/">Recortar para Redes Sociales →</a>
+</div>
+
+<p>Acertar el tamaño no es vanidad — es la diferencia entre una imagen que se ve intencional en el feed de alguien y una que parece subida sin pensarlo dos veces.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Artículos relacionados</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/es/blog/blur-face-in-photo/">
+      <h3>Cómo Difuminar una Cara o Información Sensible en una Foto</h3>
+      <p>Cómo difuminar caras o detalles sensibles antes de compartir una foto públicamente.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/watermark-photos-guide/">
+      <h3>Cómo Poner Marca de Agua a Tus Fotos para Proteger Tu Trabajo</h3>
+      <p>Cómo proteger fotos compartidas con una marca de agua sin arruinar la imagen.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/black-and-white-photo-filter/">
+      <h3>Cómo Volver una Foto Blanco y Negro (o Añadir un Filtro de Color)</h3>
+      <p>Qué cambia realmente al convertir una foto a blanco y negro, y cómo hacerlo bien.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/es/blog/">← Volver al Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/es/about/" style="color:var(--muted-text);">Acerca de</a> · <a href="/es/privacy/" style="color:var(--muted-text);">Privacidad</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

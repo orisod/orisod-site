@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cómo Rotar Páginas en un PDF (Gratis, Sin Programas) | Blog de Orisod</title>
+<meta name="description" content="Una página escaneada salió de lado o al revés en tu PDF. Aquí te explicamos por qué pasa eso, y cómo rotar una página o todo el documento sin instalar nada.">
+<link rel="canonical" href="https://orisod.com/es/blog/rotate-pdf-pages/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/rotate-pdf-pages/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/rotate-pdf-pages/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/rotate-pdf-pages/">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
+.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
+.compare-table th{background:var(--card-bg);}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/es/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/es/tools/">Todas las Herramientas</a>
+    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/#pdf">Herramientas PDF</a>
+    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <a class="lang-flag" href="/blog/rotate-pdf-pages/">EN</a>
+    <span class="lang-flag active">ES</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>Cómo Rotar Páginas en un PDF (Gratis, Sin Programas)</h1>
+<p class="intro">Abres un PDF y una página — o todas — está de lado, obligándote a inclinar la cabeza o rotar toda la pantalla solo para leerla. Aquí te explicamos por qué los PDF escaneados y fotografiados terminan así, y cómo corregir la rotación correctamente.</p>
+
+<div class="article-body">
+
+<h2>Por qué los PDF terminan de lado</h2>
+<p>Las dos causas más comunes tienen que ver con cómo llegó la página al PDF, no con nada malo en el PDF en sí. Un escáner o alimentador automático puede pasar una página en la orientación equivocada, especialmente con lotes mixtos de páginas verticales y horizontales. O una página se fotografió con el teléfono sostenido de lado, y la orientación de la foto pasó directamente al PDF sin corrección. De cualquier forma, el contenido en sí está bien — solo está mirando hacia el lado equivocado, y no hace falta rehacer el escaneo o la foto original.</p>
+
+<h2>Rotación por página vs. rotación de todo el documento</h2>
+<p>Son dos problemas distintos que se ven parecidos. A veces todo un documento está rotado de forma consistente — cada página necesita el mismo giro de 90 o 180 grados, algo rápido y uniforme de corregir. Otras veces, solo ciertas páginas están afectadas — un escáner alimentó la mayoría de una pila correctamente pero volteó dos páginas en el medio, así que la página 4 y la 11 necesitan rotarse mientras el resto se queda como está. Una herramienta de rotación útil maneja ambos casos: rotar todo a la vez, o apuntar a páginas específicas individualmente.</p>
+
+<h2>¿Rotar cambia algo más de la página?</h2>
+<p>No — rotar solo cambia los metadatos de orientación de la página y cómo se muestra e imprime. El contenido real, el texto y la calidad de imagen dentro de la página no se ven afectados en absoluto; nada se vuelve a dibujar, recomprimir o alterar más allá de hacia dónde mira la página. Es una corrección puramente cosmética y no destructiva.</p>
+
+<h2>Cómo saber si una página necesita 90°, 180° o 270°</h2>
+<p>Una página rotada 90 grados necesita un cuarto de giro para leerse normalmente — el texto corre verticalmente en lugar de horizontalmente. Una página rotada 180 grados está completamente al revés. Una rotación de 270 grados se ve parecida a una de 90 grados a primera vista pero gira hacia el lado equivocado si adivinas en lugar de verificar, así que vale la pena previsualizar el resultado antes de finalizar en lugar de asumir qué dirección lo corrige. También vale la pena revisar cada página afectada individualmente en lugar de asumir que todo el documento necesita la misma cantidad de rotación, ya que un atasco del escáner o un lote mixto de fotos puede rotar distintas páginas en distintas direcciones.</p>
+
+<h2>Un caso real común</h2>
+<p>Escaneas una pila de recibos o formularios usando un escáner de varias páginas, y a mitad de camino, una página se alimenta en horizontal mientras el resto están en vertical. El escaneo termina como un solo PDF, mayormente legible, excepto que esa página obliga a cualquiera que abra el archivo a rotar su dispositivo o mirar de lado. Rotar solo esa página, en lugar de volver a procesar todo el escaneo, lo corrige en segundos.</p>
+
+<h2>Rotar antes de compartir o imprimir</h2>
+<p>Una página de lado es una molestia menor en pantalla pero se convierte en un problema real al imprimirse — una página impresa mirando hacia el lado equivocado se ve inconfundiblemente como un error en un documento que debía verse profesional, ya sea un contrato, un informe o una solicitud. Rotar las páginas antes de compartir o imprimir toma los mismos pocos segundos de cualquier forma, pero detectarlo con anticipación evita enviar un documento que se ve visiblemente inacabado.</p>
+
+<h2>Rotar vs. volver a escanear</h2>
+<p>Es tentador simplemente volver a escanear o fotografiar desde cero una página de lado, pero eso significa encontrar de nuevo el documento original, rehacer la configuración del escaneo, y esperar que el segundo intento no introduzca un problema nuevo. Rotar la página existente toma una fracción del tiempo y funciona con el archivo que ya tienes — rara vez hay una buena razón para rehacer la captura solo para corregir un problema de orientación.</p>
+
+<h2>Respuestas rápidas</h2>
+<p><strong>¿Rotar una página de PDF reduce su calidad?</strong> No — la rotación no toca el contenido real ni la resolución de la página, solo su orientación de visualización.</p>
+<p><strong>¿Puedo rotar solo una página en un documento de varias páginas?</strong> Sí, una buena herramienta de rotación te permite apuntar a páginas individuales en lugar de forzar la misma rotación en todo el archivo.</p>
+<p><strong>¿Rotar afectará el tamaño del archivo?</strong> No de forma significativa — rotar cambia los metadatos de orientación, no los datos subyacentes de imagen o texto, así que el tamaño del archivo se mantiene esencialmente igual.</p>
+
+<div class="cta-box">
+  <h3>Rota las Páginas de Tu PDF Ahora</h3>
+  <p>El rotador de PDF de Orisod corrige páginas de lado o al revés — rota todo el documento o páginas individuales, completamente en tu navegador, sin subir nada a un servidor.</p>
+  <a class="cta-button" href="/es/rotate-pdf/">Rotar Páginas de PDF →</a>
+</div>
+
+<p>Una página de lado es una de las molestias pequeñas más comunes en un documento escaneado, y también una de las más rápidas de corregir — un par de clics, y todo el archivo se lee del lado correcto, sin tocar nada más del documento.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Artículos relacionados</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/es/blog/add-page-numbers-to-pdf/">
+      <h3>Cómo Añadir Números de Página a un PDF</h3>
+      <p>Cómo añadir números de página secuenciales a un documento PDF terminado.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/reorder-delete-pdf-pages/">
+      <h3>Cómo Reordenar o Eliminar Páginas en un PDF</h3>
+      <p>Cómo arreglar el orden de páginas de un PDF escaneado o eliminar una página en blanco.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/compress-pdf-without-losing-quality/">
+      <h3>Cómo Hacer un Archivo PDF Más Pequeño Sin Perder Calidad</h3>
+      <p>Qué hace realmente que un PDF sea enorme, y cómo reducirlo sin dañar la calidad.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/es/blog/">← Volver al Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/es/about/" style="color:var(--muted-text);">Acerca de</a> · <a href="/es/privacy/" style="color:var(--muted-text);">Privacidad</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

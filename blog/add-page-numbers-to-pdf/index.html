@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Add Page Numbers to a PDF | Orisod Blog</title>
+<meta name="description" content="A report, contract, or manuscript needs sequential page numbers and doesn't have them. Here's why page numbers matter more than they seem, and how to stamp them onto an existing PDF.">
+<link rel="canonical" href="https://orisod.com/blog/add-page-numbers-to-pdf/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/add-page-numbers-to-pdf/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/add-page-numbers-to-pdf/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/add-page-numbers-to-pdf/">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
+.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
+.compare-table th{background:var(--card-bg);}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/tools/">All Tools</a>
+    <a href="/tools/#image">Image Tools</a>
+    <a href="/tools/#pdf">PDF Tools</a>
+    <a href="/tools/#utility">Utility Tools</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <span class="lang-flag active">EN</span>
+    <a class="lang-flag" href="/es/blog/add-page-numbers-to-pdf/">ES</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>How to Add Page Numbers to a PDF</h1>
+<p class="intro">A document is finished, formatted, and ready to send — except it has no page numbers, and whoever receives it needs them to reference specific sections. Here's why that request comes up so often, and how to add numbers to a PDF that doesn't have them.</p>
+
+<div class="article-body">
+
+<h2>Why page numbers matter more than they seem</h2>
+<p>In a document someone reads on a screen, scrolling feels continuous and page numbers can seem unnecessary. But the moment a document gets printed, referenced in a meeting, or cited in another document ("see page 14"), page numbers stop being decorative and become the only reliable way to point someone to a specific spot. Legal documents, academic papers, business reports, and manuscripts all lean on page numbers for exactly this reason — without them, referring to "the page with the budget table" is a lot less precise than referring to page 14.</p>
+
+<h2>Why a finished PDF often doesn't have them</h2>
+<p>Page numbers are usually something the original document's author adds while writing — in a word processor, in page-layout software, or as part of a template. But plenty of PDFs never went through that step: a scanned document has no page-numbering feature to begin with, an exported PDF sometimes drops the header/footer settings that included numbering, or a document was assembled by merging several separate files that were each individually paginated (or not paginated at all). In each case, you're stuck with a finished PDF and no easy way to go back and re-export it with numbers included.</p>
+
+<h2>What adding page numbers to an existing PDF actually does</h2>
+<p>Rather than requiring you to go back to the original source document, a page-numbering tool stamps numbers directly onto each page of the PDF as it exists right now — reading the total page count, then adding the appropriate number to each page in sequence. This works regardless of whether the original PDF came from a word processor, a scanner, or a merge of several separate files, since it operates on the finished PDF rather than needing access to whatever created it.</p>
+
+<h2>Placement options</h2>
+<p>Page numbers are conventionally placed in one of a few consistent spots: bottom-center is the most common and least likely to overlap with existing content, bottom-corner (left or right) is common in books and formal reports, and occasionally top-corner for documents with a lot of content near the bottom of each page. The right placement mostly comes down to where the existing page content leaves clear space, and matching whatever convention the document type expects — a legal brief and a photo book don't follow the same norms.</p>
+
+<h2>Starting number and format</h2>
+<p>Not every document should start counting at "1" on its first physical page — a report with a cover page and table of contents often wants numbering to begin on the first content page, with the front matter left unnumbered or numbered separately with roman numerals. A flexible page-numbering tool lets you set the starting number and skip a set number of pages at the front, rather than forcing sequential numbering from page one no matter what.</p>
+
+<h2>Does this affect anything else in the document?</h2>
+<p>No — adding page numbers only stamps new content into the margin of each page; it doesn't touch the existing text, images, or layout already on the page. It's an additive change, not an edit to what's already there, so there's no risk of disturbing content that's already finalized.</p>
+
+<h2>A concrete example</h2>
+<p>A 60-page manuscript gets assembled by merging three separately written sections into one PDF, and none of the three had consistent page numbering to begin with. Rather than reopening each original document, fixing its numbering, re-exporting, and merging again, stamping numbers onto the already-merged 60-page file directly produces a single, correctly and continuously numbered document in one pass.</p>
+
+<h2>Quick answers</h2>
+<p><strong>Can I start numbering from a page other than the first one?</strong> Yes, most tools let you set a starting page and starting number, so a cover page or table of contents can stay unnumbered.</p>
+<p><strong>Will page numbers overlap with existing content?</strong> Not if placed in a location — like the bottom margin — that's typically kept clear on formatted documents; it's worth a quick check on documents with unusually full pages.</p>
+<p><strong>Does this work on scanned PDFs?</strong> Yes — since numbering is stamped onto the page as it currently exists, it works the same whether the underlying content is scanned images or typed text.</p>
+
+<div class="cta-box">
+  <h3>Add Page Numbers to Your PDF</h3>
+  <p>Orisod's page numbering tool stamps sequential numbers onto any PDF, with control over placement and starting page — entirely in your browser, with nothing uploaded to a server.</p>
+  <a class="cta-button" href="/add-page-numbers/">Add Page Numbers →</a>
+</div>
+
+<p>A document without page numbers isn't broken, but it's harder to reference precisely — adding them takes a minute and turns “the page with the chart” into “page 14,” which is the whole point.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Related articles</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/blog/reorder-delete-pdf-pages/">
+      <h3>How to Reorder or Delete Pages in a PDF</h3>
+      <p>How to fix a scanned PDF's page order or remove a stray blank page.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/rotate-pdf-pages/">
+      <h3>How to Rotate Pages in a PDF (Free, No Software)</h3>
+      <p>Why scanned pages come out sideways, and how to rotate them without rescanning.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/compress-pdf-without-losing-quality/">
+      <h3>How to Make a PDF File Smaller Without Losing Quality</h3>
+      <p>What actually makes a PDF huge, and how to shrink it without hurting quality.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/blog/">← Back to Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/about/" style="color:var(--muted-text);">About</a> · <a href="/privacy/" style="color:var(--muted-text);">Privacy</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

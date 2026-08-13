@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cómo Reordenar o Eliminar Páginas en un PDF | Blog de Orisod</title>
+<meta name="description" content="Un documento escaneado salió en el orden equivocado, o tiene una página en blanco que no debería estar ahí. Aquí te explicamos cómo reordenar o eliminar páginas de un PDF sin rehacer todo el escaneo.">
+<link rel="canonical" href="https://orisod.com/es/blog/reorder-delete-pdf-pages/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/reorder-delete-pdf-pages/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/reorder-delete-pdf-pages/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/reorder-delete-pdf-pages/">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
+.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
+.compare-table th{background:var(--card-bg);}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/es/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/es/tools/">Todas las Herramientas</a>
+    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/#pdf">Herramientas PDF</a>
+    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <a class="lang-flag" href="/blog/reorder-delete-pdf-pages/">EN</a>
+    <span class="lang-flag active">ES</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>Cómo Reordenar o Eliminar Páginas en un PDF</h1>
+<p class="intro">Un paquete escaneado sale desordenado, o una página en blanco se coló a mitad de un escaneo. Volver a escanear desde cero parece excesivo para un problema tan pequeño — y normalmente lo es, ya que reordenar o eliminar páginas en un PDF existente toma una fracción del tiempo.</p>
+
+<div class="article-body">
+
+<h2>Por qué esto pasa tan seguido con documentos escaneados</h2>
+<p>El escaneo de varias páginas y las pilas de páginas fotografiadas son propensos a pequeños errores: una página se alimenta a través del cargador automático de un escáner fuera de secuencia, una página separadora en blanco de una impresora se escanea por accidente, o una cámara de teléfono captura la misma página dos veces mientras fotografía un documento una página a la vez. Ninguno de estos son problemas de contenido — las páginas en sí están bien — están simplemente organizadas de forma incorrecta dentro del archivo, y corregir esa organización no requiere tocar el material original en absoluto.</p>
+
+<h2>Reordenar páginas</h2>
+<p>Reordenar significa cambiar la secuencia en que aparecen las páginas sin agregar ni quitar nada — la página 5 necesita ir antes que la página 3, por ejemplo. Una herramienta de organización de páginas normalmente muestra una cuadrícula visual o vista de miniaturas de cada página, permitiéndote arrastrar las páginas al orden correcto en lugar de adivinar solo por los números de página. Este enfoque visual importa porque es fácil contar mal cuando trabajas a partir de una lista de números de página en un documento que no puedes ver de un vistazo.</p>
+
+<h2>Eliminar páginas</h2>
+<p>Eliminar quita páginas por completo en lugar de moverlas — una página en blanco que un escáner recogió por accidente, una página duplicada, o una hoja de portada que no necesita ser parte del documento final. Las páginas eliminadas desaparecen del archivo resultante, y cada página después de ellas se recorre hacia arriba para llenar el hueco, así que la numeración de página (si el PDF tiene alguna) se mantiene continua.</p>
+
+<h2>Hacer ambas cosas a la vez</h2>
+<p>Estas dos operaciones a menudo necesitan ocurrir juntas en el mismo documento — un escaneo puede tener tanto una página en blanco suelta que eliminar como un par de páginas fuera de secuencia que corregir. Un buen organizador de páginas maneja esto en una sola pasada: puedes eliminar lo que no pertenece y arrastrar el resto al orden correcto en la misma vista visual, en lugar de tratarlos como dos pasos completamente separados que requieren volver a subir el archivo cada vez.</p>
+
+<h2>Qué se mantiene sin cambios</h2>
+<p>Reordenar y eliminar solo afectan la secuencia y cantidad de páginas — el contenido real de cada página restante (su texto, imágenes y formato) no se toca. Esta es una operación estructural sobre el documento, no una edición de contenido, así que no hay pérdida de calidad involucrada en ninguno de los dos procesos. Cualquier número de página impreso como parte del contenido escaneado original, sin embargo, no se actualizará automáticamente — eso ya era parte de la imagen de la página antes de empezar, no algo que la herramienta esté rastreando.</p>
+
+<h2>Por qué esto importa más de lo que parece</h2>
+<p>Un documento con páginas en el orden equivocado no es solo visualmente incómodo — para cualquier cosa oficial, como un contrato, una solicitud o un trámite legal, el orden de las páginas puede afectar si el documento se lee correctamente o incluso si se acepta. Un revisor que trabaja con un escaneo desordenado puede razonablemente asumir que falta algo o que algo está mal, incluso cuando cada página está realmente presente. Corregir la secuencia antes de enviarlo evita eso por completo.</p>
+
+<h2>Un ejemplo concreto</h2>
+<p>Escaneas una solicitud de alquiler de 12 páginas, y el alimentador del escáner falló dos veces: una hoja separadora en blanco terminó como página 6, y las páginas 9 y 10 llegaron intercambiadas. En lugar de volver a escanear las 12 páginas desde cero, eliminarías la página 6 en blanco y arrastrarías la página 10 antes de la 9 — dos correcciones rápidas a un escaneo por lo demás completo, en lugar de rehacer todo el proceso por un problema que solo afectó a tres páginas.</p>
+
+<h2>Respuestas rápidas</h2>
+<p><strong>¿Reordenar páginas afecta su calidad?</strong> No — las páginas se reorganizan, no se recrean ni recomprimen, así que nada sobre su contenido o resolución cambia.</p>
+<p><strong>¿Puedo eliminar varias páginas a la vez?</strong> Sí, la mayoría de los organizadores de páginas te permiten seleccionar y quitar varias páginas en una sola acción en lugar de una por una.</p>
+<p><strong>¿Necesito conocer los números exactos de página de antemano?</strong> No — una vista de miniaturas visual te permite ver y reorganizar páginas directamente, así que no necesitas planear números con anticipación.</p>
+
+<div class="cta-box">
+  <h3>Reorganiza las Páginas de Tu PDF</h3>
+  <p>El organizador de páginas PDF de Orisod te permite arrastrar páginas al orden correcto y eliminar las que no necesitas — completamente en tu navegador, con una vista visual de cada página.</p>
+  <a class="cta-button" href="/es/pdf-page-organizer/">Organizar Páginas de PDF →</a>
+</div>
+
+<p>Una página fuera de orden o una hoja en blanco suelta no significa empezar de nuevo — un organizador de páginas visual corrige ambas en aproximadamente el mismo tiempo que toma notar el problema, sin tocar el contenido de una sola página ni requerir que busques el documento original de nuevo.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Artículos relacionados</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/es/blog/add-page-numbers-to-pdf/">
+      <h3>Cómo Añadir Números de Página a un PDF</h3>
+      <p>Cómo añadir números de página secuenciales a un documento PDF terminado.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/rotate-pdf-pages/">
+      <h3>Cómo Rotar Páginas en un PDF (Gratis, Sin Programas)</h3>
+      <p>Por qué las páginas escaneadas salen de lado, y cómo rotarlas sin volver a escanear.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/compress-pdf-without-losing-quality/">
+      <h3>Cómo Hacer un Archivo PDF Más Pequeño Sin Perder Calidad</h3>
+      <p>Qué hace realmente que un PDF sea enorme, y cómo reducirlo sin dañar la calidad.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/es/blog/">← Volver al Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/es/about/" style="color:var(--muted-text);">Acerca de</a> · <a href="/es/privacy/" style="color:var(--muted-text);">Privacidad</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>
