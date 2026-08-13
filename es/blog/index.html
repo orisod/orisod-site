@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog – Consejos y Guías para Imágenes y PDF | Orisod</title>
+<meta name="description" content="Guías y tutoriales para trabajar con imágenes y PDF — formatos de archivo explicados, consejos prácticos, y herramientas gratuitas en el navegador para resolverlo.">
+<link rel="canonical" href="https://orisod.com/es/blog/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial, Helvetica, sans-serif;
+  text-align:center;
+  transition:background 0.2s, color 0.2s;
+}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 70px 20px;}
+h1{font-size:44px;margin-bottom:10px;}
+.subtitle{color:var(--muted-text);font-size:18px;margin-bottom:50px;max-width:600px;margin-left:auto;margin-right:auto;line-height:1.5;}
+.blog-grid{
+  max-width:900px;
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+  gap:18px;
+  text-align:left;
+}
+.blog-card{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:24px 22px;
+  text-decoration:none;
+  color:var(--text);
+  transition:0.2s;
+}
+.blog-card:hover{
+  border-color:var(--accent);
+  transform:translateY(-2px);
+}
+.blog-card h2{
+  font-size:18px;
+  margin:0;
+  line-height:1.3;
+}
+.blog-card p{
+  font-size:14px;
+  color:var(--muted-text);
+  line-height:1.5;
+  margin:0;
+}
+.blog-card .read-more{
+  font-size:13px;
+  color:var(--accent);
+  font-weight:bold;
+  margin-top:4px;
+}
+.footer{
+  margin-top:70px;
+  font-size:14px;
+  opacity:0.4;
+}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/es/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/es/tools/">Todas las Herramientas</a>
+    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/#pdf">Herramientas PDF</a>
+    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <a class="lang-flag" href="/blog/">EN</a>
+    <span class="lang-flag active">ES</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+  </div>
+</header>
+
+<main>
+<h1>Blog</h1>
+<p class="subtitle">Guías y tutoriales para trabajar con imágenes y PDF — formatos de archivo explicados, consejos prácticos, y las herramientas gratuitas para resolverlo.</p>
+
+<div class="blog-grid">
+
+  <a class="blog-card" href="/es/blog/heic-to-jpg-guide/">
+    <h2>HEIC a JPG: Qué Es y Cómo Convertir Fotos de iPhone</h2>
+    <p>Por qué las fotos de iPhone se guardan en HEIC, por qué no se abren en todas partes, y dos formas de solucionarlo en menos de un minuto.</p>
+    <span class="read-more">Leer más →</span>
+  </a>
+
+  <a class="blog-card" href="/es/blog/png-vs-jpg/">
+    <h2>PNG vs JPG: Qué Formato Deberías Usar (y Cómo Convertir)</h2>
+    <p>La diferencia real entre estos dos formatos, cuándo usar cada uno, y cómo convertir entre ellos gratis.</p>
+    <span class="read-more">Leer más →</span>
+  </a>
+
+  <a class="blog-card" href="/es/blog/find-color-code-from-image/">
+    <h2>Cómo Encontrar el Código de Color Exacto de Cualquier Imagen</h2>
+    <p>Por qué calcular un color a ojo nunca funciona bien, y cómo obtener el valor HEX o RGB preciso en segundos.</p>
+    <span class="read-more">Leer más →</span>
+  </a>
+
+  <a class="blog-card" href="/es/blog/check-image-dimensions/">
+    <h2>Cómo Verificar las Dimensiones y Resolución de una Imagen en Línea</h2>
+    <p>Qué significan realmente los píxeles, las dimensiones y el DPI, y la forma más rápida de comprobarlos en cualquier dispositivo.</p>
+    <span class="read-more">Leer más →</span>
+  </a>
+
+  <a class="blog-card" href="/es/blog/webp-vs-jpg/">
+    <h2>WebP vs JPG: Por Qué Tus Imágenes No Se Abren (y Cómo Solucionarlo)</h2>
+    <p>Qué es WebP, por qué tantos sitios web lo usan ahora, y cómo convertirlo de vuelta a un JPG que se abra en cualquier lugar.</p>
+    <span class="read-more">Leer más →</span>
+  </a>
+
+  <a class="blog-card" href="/es/blog/how-to-make-a-favicon/">
+    <h2>Cómo Crear un Favicon para Tu Sitio Web (Gratis, Sin Diseño)</h2>
+    <p>Qué necesita realmente un favicon, y cómo generar el conjunto completo de archivos sin tocar software de diseño.</p>
+    <span class="read-more">Leer más →</span>
+  </a>
+
+  <a class="blog-card" href="/es/blog/compress-image-without-losing-quality/">
+    <h2>Cómo Comprimir una Imagen Sin Perder Calidad</h2>
+    <p>Por qué el tamaño del archivo y la calidad visible no están tan conectados como crees, y dónde está el punto ideal.</p>
+    <span class="read-more">Leer más →</span>
+  </a>
+
+  <a class="blog-card" href="/es/blog/merge-multiple-pdfs/">
+    <h2>Cómo Unir Varios PDF en un Solo Archivo (Gratis)</h2>
+    <p>Cómo funciona realmente la unión de archivos, los errores que hay que evitar, y cómo combinar PDF sin perder calidad.</p>
+    <span class="read-more">Leer más →</span>
+  </a>
+
+  <a class="blog-card" href="/es/blog/how-to-make-a-qr-code/">
+    <h2>Cómo Hacer un Código QR Gratis (Sin Necesidad de App)</h2>
+    <p>Qué almacena realmente un código QR, por qué los códigos que "caducan" son un mito, y cómo hacer uno en menos de un minuto.</p>
+    <span class="read-more">Leer más →</span>
+  </a>
+
+  <a class="blog-card" href="/es/blog/what-is-exif-data/">
+    <h2>Qué Son los Datos EXIF y Por Qué Deberías Eliminarlos Antes de Compartir Fotos</h2>
+    <p>Los datos ocultos que llevan tus fotos — incluida la ubicación GPS — y cómo eliminarlos antes de compartir.</p>
+    <span class="read-more">Leer más →</span>
+  </a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/es/about/" style="color:var(--muted-text);">Acerca de</a> · <a href="/es/privacy/" style="color:var(--muted-text);">Privacidad</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

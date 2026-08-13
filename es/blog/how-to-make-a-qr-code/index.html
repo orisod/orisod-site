@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cómo Hacer un Código QR Gratis (Sin Necesidad de App) | Blog de Orisod</title>
+<meta name="description" content="¿Necesitas un código QR para un enlace, una contraseña WiFi o un menú — sin instalar una app ni pagar una suscripción? Aquí te explicamos qué almacena realmente un código QR y cómo hacer uno en segundos.">
+<link rel="canonical" href="https://orisod.com/es/blog/how-to-make-a-qr-code/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/how-to-make-a-qr-code/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/how-to-make-a-qr-code/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/how-to-make-a-qr-code/">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
+.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
+.compare-table th{background:var(--card-bg);}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/es/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/es/tools/">Todas las Herramientas</a>
+    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/#pdf">Herramientas PDF</a>
+    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <a class="lang-flag" href="/blog/how-to-make-a-qr-code/">EN</a>
+    <span class="lang-flag active">ES</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>Cómo Hacer un Código QR Gratis (Sin Necesidad de App)</h1>
+<p class="intro">Los códigos QR están en todas partes ahora — en menús, carteles, tarjetas de presentación, empaques — y hacer uno tú mismo es mucho más simple de lo que las apps de pago y los servicios de suscripción por ahí te harían creer. Aquí te explicamos qué ocurre realmente dentro de un código QR, y cómo generar uno gratis en menos de un minuto.</p>
+
+<div class="article-body">
+
+<h2>Qué almacena realmente un código QR</h2>
+<p>Un código QR es simplemente una forma visual de codificar texto — esa es toda la idea. Lo más común es que ese texto sea una URL, pero igual de fácil puede ser un bloque de texto plano, un número de teléfono, un correo electrónico, o una cadena con formato que le indica a un teléfono que se conecte automáticamente a una red WiFi. Cuando la cámara de un teléfono escanea el patrón de cuadrados blancos y negros, simplemente está decodificando ese texto de vuelta, de la misma forma que un lector de códigos de barras lee un código de barras.</p>
+
+<h2>Usos comunes hoy en día</h2>
+<ul>
+  <li><strong>Menús de restaurante</strong> — un código en la mesa lleva directamente a un menú en línea, evitando por completo uno impreso.</li>
+  <li><strong>Compartir WiFi</strong> — un código que codifica el nombre y la contraseña de tu red permite que los invitados se conecten sin escribir nada.</li>
+  <li><strong>Tarjetas de presentación y carteles</strong> — un código que enlaza a un sitio web, portafolio o datos de contacto, ya que es más rápido que escribir una URL a mano.</li>
+  <li><strong>Empaques de productos</strong> — enlazando a instrucciones, registro de garantía, o información adicional del producto.</li>
+</ul>
+
+<h2>¿Necesitas un generador de códigos QR de pago?</h2>
+<p>Aquí es donde surge mucha confusión (y gasto innecesario). Algunos servicios de pago promueven la idea de que los códigos QR gratuitos "caducan" o dejan de funcionar después de un período de prueba — pero un código QR estándar es solo una imagen estática que codifica texto fijo; no hay ningún componente en un servidor y nada que caduque, nunca. Lo que realmente "caduca" en esos servicios es una capa de redirección dinámica que ellos controlan, donde el código QR apunta a su servidor, que luego te reenvía a otro lugar — y si dejas de pagar, esa redirección deja de funcionar, no el código QR en sí. Para la gran mayoría de los usos cotidianos — un enlace, una contraseña WiFi, un poco de texto — un código QR estático y gratuito funciona exactamente igual el primer día que el día mil.</p>
+
+<h2>Códigos QR estáticos vs "dinámicos"</h2>
+<p>La distinción de la que dependen los servicios de pago es entre códigos estáticos y dinámicos. Un código estático tiene tu contenido real — el enlace, el texto, las credenciales WiFi — incorporado directamente en el patrón, de forma permanente. Un código dinámico en cambio apunta a una URL de redirección corta controlada por el servidor de una empresa, que luego reenvía el escaneo a tu destino real; esto permite que la empresa ofrezca estadísticas de escaneo y te deje cambiar el destino más tarde sin reimprimir el código, pero también significa que el código deja de funcionar en el momento en que ese servicio de redirección desaparece o tu suscripción caduca. Para un menú, una red WiFi, o un enlace a una página que no cambiará, un código estático no tiene esa dependencia.</p>
+
+<h2>Un par de consejos prácticos</h2>
+<p>Los códigos QR tienen corrección de errores incorporada, lo que significa que siguen escaneando correctamente incluso si parte del patrón está dañado, oculto, o cubierto por un pequeño logotipo — por eso a veces verás el logotipo de una empresa en el centro de uno. Si vas a imprimir un código QR físicamente, el tamaño importa más de lo que la gente espera: un código que escanea bien en la pantalla de un teléfono puede ser demasiado pequeño para escanear de forma confiable una vez impreso en un cartel o tarjeta de presentación, así que vale la pena probar una versión impresa a tamaño real antes de imprimir en masa.</p>
+
+<h2>Hacer uno en menos de un minuto</h2>
+<p>Generar un código QR es realmente simple: escribe o pega el texto o enlace que quieres codificar, y la herramienta renderiza al instante el patrón QR como una imagen que puedes descargar y usar — imprimirla, agregarla a una presentación, incrustarla en un sitio web, lo que necesites. No hay cuenta que crear ni app que instalar, ya que todo el proceso es simplemente convertir texto en un patrón de cuadrados.</p>
+
+<h2>Respuestas rápidas</h2>
+<p><strong>¿Mi código QR dejará de funcionar después de un tiempo?</strong> No — un código QR estándar y estático codifica el texto de forma permanente dentro de la propia imagen. Mientras el enlace o texto subyacente siga siendo válido (una URL que todavía exista, por ejemplo), el código seguirá funcionando indefinidamente.</p>
+<p><strong>¿Puedo poner una red WiFi protegida con contraseña en un código QR?</strong> Sí — los códigos QR admiten un formato específico de WiFi que incluye el nombre de red y la contraseña, permitiendo que la app de cámara de un teléfono se conecte automáticamente sin escribir nada.</p>
+<p><strong>¿Necesito software especial para escanear uno?</strong> No — cualquier cámara de teléfono inteligente moderna puede escanear un código QR de forma nativa, sin una app separada.</p>
+
+<div class="cta-box">
+  <h3>Genera un Código QR al Instante</h3>
+  <p>El generador de códigos QR de Orisod crea un código QR gratuito y permanente a partir de cualquier enlace o texto, completamente en tu navegador — sin cuenta, sin caducidad, sin suscripción.</p>
+  <a class="cta-button" href="/es/qr-code-generator/">Hacer un Código QR →</a>
+</div>
+
+<p>Un código QR es una de las herramientas más simples de la web para generar, y no necesita costar nada ni venir con condiciones. Escribe tu texto, descarga la imagen, y listo.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Artículos relacionados</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/es/blog/what-is-exif-data/">
+      <h3>Qué Son los Datos EXIF y Por Qué Deberías Eliminarlos Antes de Compartir Fotos</h3>
+      <p>Los datos ocultos que llevan tus fotos — incluida la ubicación GPS — y cómo eliminarlos antes de compartir.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/how-to-make-a-favicon/">
+      <h3>Cómo Crear un Favicon para Tu Sitio Web (Gratis, Sin Diseño)</h3>
+      <p>Qué necesita realmente un favicon, y cómo generar el conjunto completo de archivos sin tocar software de diseño.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/check-image-dimensions/">
+      <h3>Cómo Verificar las Dimensiones y Resolución de una Imagen en Línea</h3>
+      <p>Qué significan realmente los píxeles, las dimensiones y el DPI, y la forma más rápida de comprobarlos en cualquier dispositivo.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/es/blog/">← Volver al Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/es/about/" style="color:var(--muted-text);">Acerca de</a> · <a href="/es/privacy/" style="color:var(--muted-text);">Privacidad</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

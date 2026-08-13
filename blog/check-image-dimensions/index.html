@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Check an Image's Dimensions and Resolution Online | Orisod Blog</title>
+<meta name="description" content="Need an image's exact width, height, or resolution before uploading it somewhere? Here's what those numbers mean and the fastest way to check them.">
+<link rel="canonical" href="https://orisod.com/blog/check-image-dimensions/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/check-image-dimensions/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/check-image-dimensions/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/check-image-dimensions/">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
+.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
+.compare-table th{background:var(--card-bg);}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/tools/">All Tools</a>
+    <a href="/tools/#image">Image Tools</a>
+    <a href="/tools/#pdf">PDF Tools</a>
+    <a href="/tools/#utility">Utility Tools</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <span class="lang-flag active">EN</span>
+    <a class="lang-flag" href="/es/blog/check-image-dimensions/">ES</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>How to Check an Image's Dimensions and Resolution Online</h1>
+<p class="intro">A form asks for a photo of exactly 600×600 pixels, or a print shop wants 300 DPI, and suddenly you need numbers you don't have. Here's what those terms actually mean and how to check them on any image in seconds.</p>
+
+<div class="article-body">
+
+<h2>Pixels, dimensions, and resolution — what's the difference</h2>
+<p>An image's <strong>dimensions</strong> are simply its width and height in pixels — a photo that's 4000×3000 has 4000 pixels across and 3000 down. <strong>Resolution</strong>, usually expressed as DPI (dots per inch), describes how densely those pixels are packed when the image is printed at a physical size. The same 4000×3000 image can look razor-sharp printed small and noticeably soft printed as a poster, because the same pixel count is being stretched across more physical inches.</p>
+
+<h2>How DPI and pixel dimensions relate</h2>
+<p>DPI only means something once you attach a physical size to an image — a pixel count on its own has no inherent print size. For example, a 3000×2000 pixel image printed at 300 DPI comes out at 10×6.67 inches; print that same file at 150 DPI instead and it stretches to 20×13.3 inches, with each pixel now covering more physical space and looking noticeably softer. This is why a print shop asking for "300 DPI" is really asking about the relationship between your pixel count and the size you intend to print at, not a fixed property of the file itself.</p>
+
+<h2>Why these numbers actually matter</h2>
+<ul>
+  <li><strong>Upload forms</strong> for passport photos, ID badges, or profile pictures often require exact pixel dimensions, and reject anything that doesn't match.</li>
+  <li><strong>Social media platforms</strong> have specific recommended sizes for cover photos, posts, and thumbnails — get it wrong and the platform crops or stretches your image awkwardly.</li>
+  <li><strong>Print shops</strong> typically require a minimum DPI (often 300) at the final print size, or the output comes out blurry.</li>
+  <li><strong>Web developers</strong> need to know dimensions to avoid serving an image far larger than it will ever be displayed, which slows down page loads for no visual benefit.</li>
+</ul>
+
+<h2>The manual ways to check, and their limits</h2>
+<p>On a Windows PC, right-clicking a file and opening its Properties will eventually get you the dimensions, buried a couple of tabs in. On a Mac, selecting a file and pressing Cmd+I shows similar information in the Finder's "Get Info" panel. Both work, but only if you're on that specific device with the file already saved locally — neither helps if you're on a phone, checking an image someone just sent you, or trying to verify a photo before you've even downloaded it.</p>
+
+<h2>The fastest way: check it in your browser</h2>
+<p>A browser-based dimension checker skips all device-specific steps. Drop in the image, and it reads the width, height, file format, and often the DPI and aspect ratio directly — no matter what device you're on, and without installing anything. This is particularly useful when you're checking several images in a row against the same requirement, since there's no per-file right-click routine to repeat.</p>
+
+<h2>Common dimension requirements you'll run into</h2>
+<table class="compare-table">
+  <tr><th>Use case</th><th>Typical requirement</th></tr>
+  <tr><td>Passport / ID photo</td><td>Exact pixel dimensions, often square or a fixed ratio</td></tr>
+  <tr><td>LinkedIn profile photo</td><td>Minimum 400×400px recommended</td></tr>
+  <tr><td>Instagram post</td><td>1080×1080px (square) or 1080×1350px (portrait)</td></tr>
+  <tr><td>Website favicon</td><td>Square, commonly 32×32 or 512×512px</td></tr>
+  <tr><td>Print at high quality</td><td>300 DPI at the final printed size</td></tr>
+</table>
+<p>These aren't universal rules — every platform sets its own numbers — but they illustrate why checking first saves a wasted upload attempt. Aspect ratio (the proportional relationship between width and height) matters just as much as raw pixel count: an image with the right total pixels but the wrong ratio still gets awkwardly cropped by most platforms.</p>
+
+<h2>Quick answers</h2>
+<p><strong>What's a good resolution for web use?</strong> Web images typically don't need more than 72–150 DPI, since screens display in pixels, not physical inches — DPI only really matters once you're printing.</p>
+<p><strong>Does resizing an image change its DPI?</strong> Not directly — resizing changes pixel dimensions, while DPI is about how those pixels map to a printed size. The two are related but not the same adjustment.</p>
+<p><strong>Can I check dimensions without downloading the file first?</strong> If you already have the image open or saved on your device, a browser-based checker reads it locally without needing to upload it anywhere.</p>
+
+<div class="cta-box">
+  <h3>Check Any Image's Dimensions Instantly</h3>
+  <p>Orisod's dimension checker reads an image's width, height, format, and resolution directly in your browser — no upload, no install, works on any device.</p>
+  <a class="cta-button" href="/image-dimension-checker/">Check Image Dimensions →</a>
+</div>
+
+<p>Whether you're meeting a strict upload requirement, prepping a file for print, or just curious what you're working with, checking an image's real dimensions takes seconds once you skip the file-properties hunt — and it can save you a rejected upload or a blurry printout before it happens.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Related articles</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/blog/what-is-exif-data/">
+      <h3>What Is EXIF Data and Why You Should Remove It Before Sharing Photos</h3>
+      <p>The hidden data your photos carry — including GPS location — and how to strip it before you share.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/how-to-make-a-qr-code/">
+      <h3>How to Make a QR Code for Free (No App Needed)</h3>
+      <p>What QR codes actually store, why “expiring” codes are a myth, and how to make one in under a minute.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/how-to-make-a-favicon/">
+      <h3>How to Create a Favicon for Your Website (Free, No Design Skills)</h3>
+      <p>What a favicon actually needs, and how to generate the full file set without touching design software.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/blog/">← Back to Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/about/" style="color:var(--muted-text);">About</a> · <a href="/privacy/" style="color:var(--muted-text);">Privacy</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

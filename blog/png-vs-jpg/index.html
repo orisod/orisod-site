@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PNG vs JPG: Which Format Should You Use (and How to Convert) | Orisod Blog</title>
+<meta name="description" content="PNG or JPG? The real difference between the two formats, when to use each one, and how to convert between them for free in your browser.">
+<link rel="canonical" href="https://orisod.com/blog/png-vs-jpg/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/png-vs-jpg/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/png-vs-jpg/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/png-vs-jpg/">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
+.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
+.compare-table th{background:var(--card-bg);}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/tools/">All Tools</a>
+    <a href="/tools/#image">Image Tools</a>
+    <a href="/tools/#pdf">PDF Tools</a>
+    <a href="/tools/#utility">Utility Tools</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <span class="lang-flag active">EN</span>
+    <a class="lang-flag" href="/es/blog/png-vs-jpg/">ES</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>PNG vs JPG: Which Format Should You Use (and How to Convert)</h1>
+<p class="intro">PNG and JPG are the two most common image formats on the web, and it's easy to use them interchangeably without knowing why one might be the wrong choice. Here's the actual difference, when each one wins, and how to convert between them.</p>
+
+<div class="article-body">
+
+<h2>The core difference: how each format compresses</h2>
+<p>JPG uses lossy compression — it throws away some image data, choosing details it estimates the human eye won't miss, in exchange for a much smaller file. PNG uses lossless compression instead: every pixel is preserved exactly as it was, with no quality lost, but the trade-off is a bigger file, especially for photos. PNG also supports transparency (an alpha channel), which JPG doesn't support at all.</p>
+
+<h2>When PNG is the better choice</h2>
+<ul>
+  <li><strong>Screenshots</strong>, especially ones with text or sharp UI edges — JPG compression tends to blur fine lines and create visible artifacts around text.</li>
+  <li><strong>Logos, icons, and flat-color graphics</strong>, where crisp edges matter more than file size.</li>
+  <li><strong>Anything that needs a transparent background</strong>, like a logo you'll place over different colored backgrounds.</li>
+  <li><strong>Images you'll re-save repeatedly</strong> while editing, since JPG loses a little quality every time it's re-compressed and PNG doesn't.</li>
+</ul>
+
+<h2>When JPG is the better choice</h2>
+<ul>
+  <li><strong>Photos</strong> — camera and phone photos have complex gradients and color detail that compress extremely well under JPG, with the quality loss barely visible.</li>
+  <li><strong>Website images</strong>, where smaller file sizes mean faster page loads.</li>
+  <li><strong>Email attachments or upload forms</strong> with file size limits.</li>
+  <li><strong>Sharing large batches of photos</strong>, where PNG's file sizes would add up fast.</li>
+</ul>
+
+<h2>What the difference looks like in practice</h2>
+<table class="compare-table">
+  <tr><th>Image type</th><th>As PNG</th><th>As JPG (good quality)</th></tr>
+  <tr><td>12MP camera photo</td><td>~20–30 MB</td><td>~2–4 MB</td></tr>
+  <tr><td>Screenshot with text</td><td>Sharp, no artifacts</td><td>Slightly blurred edges</td></tr>
+</table>
+<p>For a photo, that size difference is huge and the visible quality loss is minimal — most people can't tell the two apart at a normal viewing size. For a screenshot full of text, though, PNG's lossless compression keeps every letter crisp, while JPG can introduce a soft, slightly fuzzy look around sharp edges.</p>
+
+<h2>Why does my computer default to PNG for screenshots?</h2>
+<p>Both Windows and macOS save screenshots as PNG by default, and it's not an accident — a screenshot is exactly the kind of image PNG is built for. It's full of flat colors, straight lines, and text, which is precisely what lossy JPG compression struggles with. If your OS saved screenshots as JPG instead, you'd end up with slightly fuzzy text and visible compression artifacts around every window edge and icon. The trade-off is that a folder of screenshots can quietly take up far more space than the same number of photos.</p>
+
+<h2>What about newer formats like WebP?</h2>
+<p>You may have noticed some websites now serve images in WebP instead of PNG or JPG. WebP is genuinely more efficient than both — it can do lossy compression like JPG or lossless compression like PNG, often at a smaller file size either way. It's not a replacement for this comparison so much as a third option: PNG and JPG remain the two formats you'll run into constantly, because they're supported everywhere without exception, while WebP occasionally still trips up older software or apps that expect one of the two classic formats.</p>
+
+<h2>Converting between PNG and JPG</h2>
+<p>A common situation: you've got a folder of PNG screenshots or graphics that are far larger than they need to be for email or a website, and you want them in JPG without losing noticeable quality. This matters in practice — Gmail caps attachments at 25MB, and plenty of upload forms have their own limits, so a handful of large PNGs can push you over the edge fast. Converting is quick — you don't need design software, just a tool that can read the PNG and re-encode it as a JPG.</p>
+
+<h2>Quick answers</h2>
+<p><strong>Will converting PNG to JPG hurt quality?</strong> For photos, no — the difference is essentially invisible at a reasonable quality setting. For graphics with sharp text or fine lines, some softness can appear, which is exactly why PNG stays the better choice for that kind of image.</p>
+<p><strong>Can I convert JPG back to PNG?</strong> Yes, but it won't undo any quality already lost when the file was first saved as JPG — you'll get a PNG that's losslessly identical to that JPG, not the original uncompressed image.</p>
+<p><strong>Which format should I use if I'm not sure?</strong> If the image is a photo, use JPG. If it has text, sharp edges, or needs a transparent background, use PNG. That single rule covers the vast majority of cases.</p>
+
+<div class="cta-box">
+  <h3>Convert PNG to JPG Instantly</h3>
+  <p>Orisod's PNG to JPG converter runs entirely in your browser — no upload, no account, no wait. Drop in your PNG files and get back JPGs at a fraction of the size.</p>
+  <a class="cta-button" href="/png-to-jpg/">Convert PNG to JPG →</a>
+</div>
+
+<p>Neither format is "better" in every situation — PNG and JPG were built for different jobs. Once you know which one fits what you're making, picking the right format (and converting when you picked wrong) takes seconds.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Related articles</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/blog/compress-image-without-losing-quality/">
+      <h3>How to Compress an Image Without Losing Quality</h3>
+      <p>Why file size and visible quality aren't as connected as you'd think, and where the real sweet spot is.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/webp-vs-jpg/">
+      <h3>WebP vs JPG: Why Your Images Won't Open (and How to Fix It)</h3>
+      <p>What WebP is, why so many websites use it now, and how to convert it back to a JPG that opens anywhere.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/heic-to-jpg-guide/">
+      <h3>HEIC to JPG: What It Is and How to Convert iPhone Photos</h3>
+      <p>Why iPhone photos save as HEIC, why they won't open everywhere, and two ways to fix it in under a minute.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/blog/">← Back to Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/about/" style="color:var(--muted-text);">About</a> · <a href="/privacy/" style="color:var(--muted-text);">Privacy</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

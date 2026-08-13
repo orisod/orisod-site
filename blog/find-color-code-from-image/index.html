@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Find the Exact Color Code From Any Image | Orisod Blog</title>
+<meta name="description" content="Need the exact HEX or RGB code from a photo, screenshot, or logo? Here's why eyeballing it doesn't work, and how to pick the precise color in seconds.">
+<link rel="canonical" href="https://orisod.com/blog/find-color-code-from-image/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/find-color-code-from-image/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/find-color-code-from-image/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/find-color-code-from-image/">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
+.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
+.compare-table th{background:var(--card-bg);}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/tools/">All Tools</a>
+    <a href="/tools/#image">Image Tools</a>
+    <a href="/tools/#pdf">PDF Tools</a>
+    <a href="/tools/#utility">Utility Tools</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <span class="lang-flag active">EN</span>
+    <a class="lang-flag" href="/es/blog/find-color-code-from-image/">ES</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>How to Find the Exact Color Code From Any Image</h1>
+<p class="intro">Whether you're matching a brand color, rebuilding a design, or just trying to recreate a shade you liked in a photo, guessing the color code never quite works. Here's how to pull the exact value straight from the image itself.</p>
+
+<div class="article-body">
+
+<h2>Why "close enough" doesn't work for color</h2>
+<p>Colors are deceptive to the eye. Two shades of blue can look nearly identical side by side and still be measurably different HEX codes — and that difference is exactly the kind of thing that shows up as an obvious mismatch once you use it in a design, a website, or a printed piece next to the original. If you need a color to match, you need the actual code, not your best guess at it.</p>
+
+<h2>What HEX, RGB, and HSL codes actually mean</h2>
+<p>A HEX code like <code>#2563eb</code> is just a compact way of writing a color's red, green, and blue values in one string — the same information as an RGB code like <code>rgb(37, 99, 235)</code>, just formatted differently. HSL describes the same color a different way, using hue, saturation, and lightness instead. All three are just different notations for the identical color; which one you need usually just depends on what the software or codebase you're working in expects.</p>
+
+<h2>The old, painful way</h2>
+<p>Before browser-based tools existed, getting a color code out of an image meant opening it in a full image editor, using an eyedropper tool buried in a toolbar, and reading the value off a color picker dialog — assuming you had that kind of software installed at all. It works, but it's a lot of steps for something that should take five seconds, and it's simply not an option if you're on a phone or a computer without design software.</p>
+
+<h2>The simple way: click the pixel, get the code</h2>
+<p>A browser-based color picker skips all of that. You upload or drag in the image, click directly on the pixel whose color you want, and the tool reads that exact pixel's value and shows it back to you as HEX, RGB, and usually a few other formats at once. There's no eyedropper to hunt for and no software to install — the image never even needs to leave your device, since the color is read directly in the browser.</p>
+
+<h2>What to do with the code once you have it</h2>
+<p>Once you've got the exact value, it drops straight into whatever you're building. Paste the HEX code into a CSS file, a design tool's color field, or a brand style guide, and you've got a pixel-perfect match instead of an approximation. This matters most when consistency counts — matching a logo color across a website, a slide deck, and printed materials, or recreating a specific shade from a reference photo in a new design.</p>
+
+<h2>Common situations where you'll need this</h2>
+<ul>
+  <li>A client sends over an old logo file and you need to pull their exact brand blue to use in a new design, with no style guide to reference.</li>
+  <li>You spot a background color on a website or in a screenshot that you want to reuse in your own project.</li>
+  <li>You're recreating a color scheme from a photo — a product shot, a piece of art, a room you're decorating — and want the palette to be precise rather than approximate.</li>
+  <li>You're debugging a CSS issue and need to confirm whether two elements that look the same color actually share the exact same value.</li>
+</ul>
+<p>In each case, the alternative to picking the color directly is trial and error — adjusting a color slider by eye until it looks "close enough," which rarely survives being placed next to the original.</p>
+
+<h2>A word of caution with compressed images</h2>
+<p>One thing worth knowing: if your source image is a heavily compressed JPG, the color you pick might be very slightly off from the "true" original color. Lossy compression can shift pixel values a little around sharp edges and in areas with subtle gradients, especially at lower quality settings. It's rarely a visible difference, but if you're chasing an exact brand color, pick from the least-compressed version of the image you can find — a PNG or the original source file, rather than a screenshot of a screenshot.</p>
+
+<h2>Quick answers</h2>
+<p><strong>Does this work with screenshots?</strong> Yes — any image format your browser can display, including PNG, JPG, and WEBP screenshots, works the same way.</p>
+<p><strong>Can I get more than one color from the same image?</strong> Yes, you can click as many different pixels as you need, one at a time, without re-uploading anything.</p>
+<p><strong>Do I need design software installed?</strong> No — the whole process happens in the browser tool itself, so there's nothing to install.</p>
+
+<div class="cta-box">
+  <h3>Pick a Color Code From Any Image</h3>
+  <p>Orisod's color picker runs entirely in your browser — upload or drag in any image, click a pixel, and get the exact HEX, RGB, and HSL values instantly. Nothing is uploaded to a server.</p>
+  <a class="cta-button" href="/color-picker-from-image/">Pick a Color From an Image →</a>
+</div>
+
+<p>Next time you need to match a color instead of guess at it, skip the eyedropper hunt and just click on the pixel that has the answer.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Related articles</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/blog/what-is-exif-data/">
+      <h3>What Is EXIF Data and Why You Should Remove It Before Sharing Photos</h3>
+      <p>The hidden data your photos carry — including GPS location — and how to strip it before you share.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/how-to-make-a-qr-code/">
+      <h3>How to Make a QR Code for Free (No App Needed)</h3>
+      <p>What QR codes actually store, why “expiring” codes are a myth, and how to make one in under a minute.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/how-to-make-a-favicon/">
+      <h3>How to Create a Favicon for Your Website (Free, No Design Skills)</h3>
+      <p>What a favicon actually needs, and how to generate the full file set without touching design software.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/blog/">← Back to Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/about/" style="color:var(--muted-text);">About</a> · <a href="/privacy/" style="color:var(--muted-text);">Privacy</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

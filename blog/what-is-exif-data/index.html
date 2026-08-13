@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is EXIF Data and Why You Should Remove It Before Sharing Photos | Orisod Blog</title>
+<meta name="description" content="Every photo your phone takes carries hidden data — including, often, your exact location. Here's what EXIF data is, what it reveals, and how to strip it before sharing.">
+<link rel="canonical" href="https://orisod.com/blog/what-is-exif-data/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/what-is-exif-data/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/what-is-exif-data/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/what-is-exif-data/">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
+.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
+.compare-table th{background:var(--card-bg);}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/tools/">All Tools</a>
+    <a href="/tools/#image">Image Tools</a>
+    <a href="/tools/#pdf">PDF Tools</a>
+    <a href="/tools/#utility">Utility Tools</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <span class="lang-flag active">EN</span>
+    <a class="lang-flag" href="/es/blog/what-is-exif-data/">ES</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>What Is EXIF Data and Why You Should Remove It Before Sharing Photos</h1>
+<p class="intro">Every photo taken on a phone or camera carries more information than what's visible in the image itself. That hidden data is called EXIF, and depending on your settings, it can include your exact GPS coordinates — information you probably don't mean to hand over every time you post a photo.</p>
+
+<div class="article-body">
+
+<h2>What is EXIF data, exactly?</h2>
+<p>EXIF (Exchangeable Image File Format) is a standard for embedding metadata directly inside an image file, invisible unless you specifically go looking for it. It was designed to be useful — photographers use it to check camera settings after the fact, and software uses it to auto-rotate images correctly. But the same mechanism that stores your camera's aperture setting can also store exactly where and when the photo was taken.</p>
+
+<h2>What EXIF can reveal about you</h2>
+<ul>
+  <li><strong>GPS coordinates</strong> — many phones embed the precise location a photo was taken, accurate enough to identify a specific building or address.</li>
+  <li><strong>Date and time</strong> — the exact moment the photo was captured, down to the second.</li>
+  <li><strong>Device information</strong> — the exact phone or camera model, and sometimes the software version.</li>
+  <li><strong>Camera settings</strong> — aperture, shutter speed, focal length, and similar technical details.</li>
+</ul>
+<p>Individually, some of this seems harmless. Combined — an exact location, tied to an exact timestamp, tied to a device you own — it adds up to more than most people realize they're sharing.</p>
+
+<h2>Where this becomes a real risk</h2>
+<p>The clearest example: posting a photo taken at home, with GPS data intact, on a public marketplace listing or a dating profile. Anyone who downloads the original file and checks its metadata can pull your home address directly from a photo you never meant to share your location through. The same risk applies to photos of children posted publicly, photos taken at a workplace, or any image where you'd rather not confirm exactly where you were standing when you took it.</p>
+
+<h2>Who this matters most for</h2>
+<p>Anyone selling items on an online marketplace should be cautious about location data embedded in listing photos — it can reveal where you live to a stranger before you've ever met them. The same goes for real estate or rental listings, freelancers photographing a client's property, and parents who post photos of their kids publicly. It matters even more for anyone who has reason to keep their location private from a specific person, where an old habit of posting photos without thinking about metadata can undo efforts made elsewhere to stay untraceable.</p>
+
+<h2>Do platforms strip this automatically?</h2>
+<p>Some do, some don't, and it's not something you can safely assume either way. Many major social media platforms strip most EXIF data on upload — but not all of them do it consistently, not all types of metadata get removed, and plenty of other channels people share photos through (email, messaging apps, direct file transfers, marketplace listings) don't touch the metadata at all. If a photo is downloaded before a platform processes it, or shared through a channel that doesn't strip anything, the original data travels right along with it. Relying on "the platform probably handles it" isn't a safe assumption.</p>
+
+<h2>How to remove EXIF data before sharing</h2>
+<p>The reliable approach is to strip the metadata yourself before you share a photo anywhere, rather than trusting whatever platform you're using to do it for you. A dedicated EXIF remover reads the image, strips the embedded metadata, and gives you back a visually identical photo with none of the hidden data attached — so what you're sharing is exactly what's visible, and nothing more.</p>
+
+<h2>Quick answers</h2>
+<p><strong>Does removing EXIF data affect photo quality?</strong> No — EXIF data is separate from the actual pixel data that makes up the image, so stripping it doesn't change how the photo looks at all.</p>
+<p><strong>Should I remove EXIF from every photo I share?</strong> It's a reasonable default for anything shared publicly or with people you don't know well. For private photos shared directly with family, the location and timestamp data is often harmless or even useful.</p>
+<p><strong>Can I check what EXIF data a photo has before deciding?</strong> Yes — a metadata viewer tool shows you exactly what's embedded in a specific photo, so you can see the GPS coordinates, timestamp, and device details before deciding whether to strip them.</p>
+
+<div class="cta-box">
+  <h3>Strip Hidden Metadata From Your Photos</h3>
+  <p>Orisod's EXIF remover strips GPS location, timestamps, and device data from your photos entirely in your browser — the image itself stays untouched, and nothing is ever uploaded to a server.</p>
+  <a class="cta-button" href="/exif-remover/">Remove EXIF Data →</a>
+</div>
+
+<p>Most people never think about EXIF data until it becomes a problem. Stripping it before you share a photo publicly takes seconds and closes a privacy gap you probably didn't know was open.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Related articles</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/blog/how-to-make-a-qr-code/">
+      <h3>How to Make a QR Code for Free (No App Needed)</h3>
+      <p>What QR codes actually store, why “expiring” codes are a myth, and how to make one in under a minute.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/how-to-make-a-favicon/">
+      <h3>How to Create a Favicon for Your Website (Free, No Design Skills)</h3>
+      <p>What a favicon actually needs, and how to generate the full file set without touching design software.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/check-image-dimensions/">
+      <h3>How to Check an Image's Dimensions and Resolution Online</h3>
+      <p>What pixels, dimensions, and DPI actually mean, and the fastest way to check them on any device.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/blog/">← Back to Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/about/" style="color:var(--muted-text);">About</a> · <a href="/privacy/" style="color:var(--muted-text);">Privacy</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

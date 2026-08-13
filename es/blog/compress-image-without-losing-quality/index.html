@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cómo Comprimir una Imagen Sin Perder Calidad | Blog de Orisod</title>
+<meta name="description" content="Reducir una foto suele significar resultados borrosos o pixelados. Aquí te explicamos por qué pasa eso, dónde está el punto ideal de calidad, y cómo comprimir una imagen correctamente.">
+<link rel="canonical" href="https://orisod.com/es/blog/compress-image-without-losing-quality/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/compress-image-without-losing-quality/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/compress-image-without-losing-quality/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/compress-image-without-losing-quality/">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
+.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
+.compare-table th{background:var(--card-bg);}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/es/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/es/tools/">Todas las Herramientas</a>
+    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/#pdf">Herramientas PDF</a>
+    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <a class="lang-flag" href="/blog/compress-image-without-losing-quality/">EN</a>
+    <span class="lang-flag active">ES</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>Cómo Comprimir una Imagen Sin Perder Calidad</h1>
+<p class="intro">Cada vez que has intentado reducir el tamaño de archivo de una foto, probablemente te preocupó que saliera borrosa o con manchas. Ese temor es razonable — una mala compresión de verdad arruina las fotos — pero hecho correctamente, puedes reducir un archivo drásticamente con una diferencia que nadie notará.</p>
+
+<div class="article-body">
+
+<h2>Por qué el tamaño del archivo y la calidad visible no están tan conectados como crees</h2>
+<p>Es tentador suponer que un archivo más pequeño automáticamente significa una imagen de peor aspecto, pero eso solo es cierto a partir de cierto punto. Las fotos están llenas de detalle redundante y casi invisible — gradientes sutiles, ruido y textura fina que el ojo humano apenas registra. La compresión funciona identificando y descartando primero exactamente ese tipo de datos, por lo que una foto bien comprimida con un ajuste sensato puede perder entre un 70 y 80% de su tamaño de archivo y verse esencialmente idéntica al original.</p>
+
+<h2>Compresión con pérdida vs sin pérdida, rápidamente</h2>
+<p>Hay dos enfoques fundamentalmente distintos. La compresión sin pérdida (cómo funciona PNG) reduce un archivo sin descartar ningún dato — obtienes un archivo más pequeño, pero la reducción de tamaño es limitada, típicamente mucho menos drástica que lo posible con fotos. La compresión con pérdida (cómo funciona JPG) descarta permanentemente algunos datos a cambio de reducciones de tamaño mucho mayores. Para fotografías específicamente, la compresión con pérdida es casi siempre la mejor opción, ya que los datos descartados se eligen específicamente por ser los visualmente menos importantes.</p>
+
+<h2>El punto ideal de calidad</h2>
+<p>La mayoría de herramientas de compresión te permiten fijar un nivel de calidad, normalmente como porcentaje o control deslizante. La relación entre ese ajuste y el tamaño de archivo no es lineal — bajar de 100% a 80% de calidad suele reducir el archivo dramáticamente con casi ningún cambio visible, mientras que bajar más de 40% a 20% apenas ahorra más espacio pero introduce artefactos de bloques evidentes. En la práctica, los ajustes de calidad entre aproximadamente 65% y 80% dan con el punto ideal para la mayoría de las fotos: archivos considerablemente más pequeños sin pérdida de calidad visible a tamaños de visualización normales.</p>
+
+<h2>Un ejemplo concreto</h2>
+<p>Toma una foto típica de teléfono de 12 megapíxeles, a menudo de 4-6MB directamente de la cámara. Comprimida al 75% de calidad sin cambiar sus dimensiones, esa misma foto comúnmente baja a algún punto entre 800KB y 1.2MB — una reducción de tamaño del 75-80% — mientras se ve idéntica a tamaños de visualización normales en pantalla. Baja la calidad al 30% en cambio, y quizás ahorres solo unos cientos de KB más, pero ahora probablemente verás bloques visibles en los bordes y en áreas suaves como cielos o tonos de piel. El grueso del ahorro útil ocurre temprano; el riesgo para la calidad se concentra en el extremo bajo.</p>
+
+<h2>Otras cosas que reducen un archivo además de la calidad</h2>
+<ul>
+  <li><strong>Las dimensiones físicas.</strong> Una foto redimensionada de 4000px de ancho a 1600px de ancho (todavía de sobra para la mayoría de usos web y en pantalla) terminará mucho más pequeña que la misma foto simplemente recomprimida a tamaño completo.</li>
+  <li><strong>El formato de archivo.</strong> Cambiar de PNG a JPG para una fotografía por sí solo suele reducir significativamente el tamaño, independientemente de cualquier control de calidad.</li>
+  <li><strong>Los metadatos eliminados.</strong> Las fotos de cámara llevan datos EXIF — modelo de cámara, ajustes, a veces ubicación GPS — que añaden una cantidad pequeña pero real de tamaño de archivo extra que las herramientas de compresión suelen eliminar automáticamente.</li>
+</ul>
+<p>Combinar una reducción modesta de calidad con un tamaño en píxeles apropiadamente más pequeño suele ser más efectivo, y produce un mejor resultado, que bajar agresivamente el control de calidad en una imagen enorme.</p>
+
+<h2>Cómo comprimir correctamente</h2>
+<p>El enfoque práctico: usa una herramienta donde controles directamente el ajuste de calidad y puedas ver o comparar los tamaños de archivo antes/después, en lugar de una que aplique un nivel de compresión fijo y desconocido. Empieza alrededor del 75-80% de calidad, verifica que el resultado se vea bien al tamaño en el que realmente lo mostrarás o imprimirás, y solo baja más si específicamente necesitas un archivo más pequeño y puedes tolerar algo más de suavizado visible.</p>
+
+<h2>Respuestas rápidas</h2>
+<p><strong>¿Comprimir una imagen varias veces sigue degradándola?</strong> Sí — cada ronda de compresión con pérdida descarta un poco más de datos, así que volver a guardar un JPG repetidamente reducirá gradualmente la calidad. Comprime siempre desde el archivo original, no desde una copia ya comprimida.</p>
+<p><strong>¿Cuál es la diferencia entre comprimir y redimensionar?</strong> Comprimir reduce el tamaño del archivo manteniendo las mismas dimensiones en píxeles; redimensionar cambia el ancho y alto reales. Resuelven problemas distintos y combinan bien juntos.</p>
+<p><strong>¿Hay un ajuste de calidad "correcto" para cada foto?</strong> No exactamente — una foto con detalle fino y textura muestra artefactos de compresión antes que una imagen más simple y suave, así que el rango seguro (aproximadamente 65-80%) es un punto de partida para verificar visualmente, no una regla fija.</p>
+
+<div class="cta-box">
+  <h3>Comprime una Imagen Sin Adivinar</h3>
+  <p>El compresor de imágenes de Orisod te permite fijar el nivel de calidad exacto y ver el tamaño de archivo antes/después al instante — todo procesado localmente en tu navegador, nada se sube.</p>
+  <a class="cta-button" href="/es/compress-image/">Comprimir una Imagen →</a>
+</div>
+
+<p>Una buena compresión no se trata de reducir un archivo lo máximo posible — se trata de encontrar el punto donde el tamaño baja significativamente y la calidad no. Ese punto existe para casi cualquier foto; solo necesitas una herramienta que te permita encontrarlo.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Artículos relacionados</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/es/blog/webp-vs-jpg/">
+      <h3>WebP vs JPG: Por Qué Tus Imágenes No Se Abren (y Cómo Solucionarlo)</h3>
+      <p>Qué es WebP, por qué tantos sitios web lo usan ahora, y cómo convertirlo de vuelta a un JPG que se abra en cualquier lugar.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/png-vs-jpg/">
+      <h3>PNG vs JPG: Qué Formato Deberías Usar (y Cómo Convertir)</h3>
+      <p>La diferencia real entre estos dos formatos, cuándo usar cada uno, y cómo convertir entre ellos gratis.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/heic-to-jpg-guide/">
+      <h3>HEIC a JPG: Qué Es y Cómo Convertir Fotos de iPhone</h3>
+      <p>Por qué las fotos de iPhone se guardan en HEIC, por qué no se abren en todas partes, y dos formas de solucionarlo en menos de un minuto.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/es/blog/">← Volver al Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/es/about/" style="color:var(--muted-text);">Acerca de</a> · <a href="/es/privacy/" style="color:var(--muted-text);">Privacidad</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

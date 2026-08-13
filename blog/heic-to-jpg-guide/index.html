@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HEIC to JPG: What It Is and How to Convert iPhone Photos | Orisod Blog</title>
+<meta name="description" content="What HEIC is, why iPhone photos default to it, and two simple ways to convert HEIC photos to JPG — including a free browser-based converter that never uploads your files.">
+<link rel="canonical" href="https://orisod.com/blog/heic-to-jpg-guide/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/heic-to-jpg-guide/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/heic-to-jpg-guide/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/heic-to-jpg-guide/">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/tools/">All Tools</a>
+    <a href="/tools/#image">Image Tools</a>
+    <a href="/tools/#pdf">PDF Tools</a>
+    <a href="/tools/#utility">Utility Tools</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <span class="lang-flag active">EN</span>
+    <a class="lang-flag" href="/es/blog/heic-to-jpg-guide/">ES</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>HEIC to JPG: What It Is and How to Convert iPhone Photos</h1>
+<p class="intro">If you've ever AirDropped, emailed, or uploaded a photo from an iPhone and had it show up broken or unreadable, you've run into HEIC. Here's what it actually is, why your iPhone uses it, and the two easiest ways to turn it back into a JPG that opens anywhere.</p>
+
+<div class="article-body">
+
+<h2>What is a HEIC file?</h2>
+<p>HEIC stands for High Efficiency Image Container — it's Apple's implementation of HEIF (High Efficiency Image Format). The short version: it's a modern way of storing photos that uses significantly better compression than JPG, so a HEIC file can look just as good as a JPG while taking up roughly half the storage space. It's built on the same underlying compression technology as HEVC (H.265) video, which is part of why it's so much more space-efficient than a format designed in the 1990s.</p>
+
+<h2>Why does my iPhone save photos as HEIC?</h2>
+<p>Since iOS 11, released in 2017, HEIC has been the default photo format on iPhone. Apple made the switch because the storage savings add up fast — if you take hundreds or thousands of photos, cutting the average file size in half means meaningfully more room on your device and less iCloud storage used. HEIC also supports some extra features JPG doesn't handle as well, like transparency and better preservation of Live Photo and depth data. Within Apple's own ecosystem — Photos app, AirDrop between Apple devices, iCloud — HEIC files just work, so most iPhone users never notice the format at all.</p>
+
+<h2>Why won't a HEIC photo open somewhere else?</h2>
+<p>The problem shows up the moment a photo leaves Apple's ecosystem. Plenty of software still doesn't know how to read a .heic file: many Android phones, older or unpatched versions of Windows, most website upload forms, older editing tools, and a lot of business or school software that expects standard image formats. When that happens, you'll typically see a broken thumbnail, a "file format not supported" error, or the upload simply gets rejected. None of this means the photo is corrupted — the file is fine, the software on the other end just doesn't have a HEIC decoder built in.</p>
+
+<h2>Two ways to fix it</h2>
+<p>There are really only two approaches, depending on whether you're trying to prevent the problem going forward or fix photos you already have.</p>
+<ul>
+  <li><strong>Change your iPhone's camera setting.</strong> Go to Settings → Camera → Formats, and switch from "High Efficiency" to "Most Compatible." New photos will save directly as JPG going forward. This doesn't touch anything you've already taken, and JPG files will take up a bit more storage on your phone.</li>
+  <li><strong>Convert your existing HEIC photos to JPG.</strong> For photos already sitting in your Camera Roll or already sent to you, the setting above won't help — you need to convert the files themselves. This is the faster fix for a one-off photo or a batch you need to send somewhere right now.</li>
+</ul>
+
+<h2>How to convert HEIC to JPG in under a minute</h2>
+<p>You don't need to install anything to convert a HEIC file. A browser-based converter can decode the HEIC file and re-save it as a standard JPG in a few seconds — you select or drag in your photo, the conversion happens automatically, and you download a JPG that will open on absolutely any device, browser, or website upload form.</p>
+
+<h2>Does converting HEIC to JPG lose quality?</h2>
+<p>There's a small trade-off, but in practice it's not something you'll notice. Converting from HEIC to JPG means going from one compressed format to another, so there's a slight re-encoding step involved — but at a reasonable quality setting, the difference is invisible to the eye. The much bigger factor for visible quality is the setting used during conversion, not the format swap itself. You end up with a JPG that looks the same as the original to anyone viewing it normally, just in a format every device can open.</p>
+
+<h2>Quick answers</h2>
+<p><strong>Can I convert a JPG back into HEIC?</strong> Technically yes, but there's rarely a reason to — HEIC's main advantage is smaller file size, and once a photo has already been saved as JPG, converting to HEIC won't recover any of the detail that was lost in the original JPG compression.</p>
+<p><strong>Is HEIC a "bad" format?</strong> Not at all — it's genuinely more efficient than JPG. The issue is purely compatibility: not every app, OS, or website has a HEIC decoder yet, so JPG remains the safer choice anytime a photo needs to be shared, uploaded, or viewed outside Apple's ecosystem.</p>
+<p><strong>Will this work with a batch of photos, not just one?</strong> Yes — you can convert several HEIC photos in one go rather than doing them one at a time, which matters if you're exporting an entire Camera Roll folder.</p>
+
+<div class="cta-box">
+  <h3>Convert Your HEIC Photos Now</h3>
+  <p>Orisod's HEIC to JPG converter runs entirely in your browser — your photos are never uploaded to a server, so you can convert Camera Roll exports as privately as you'd like. Works with single photos or several at once.</p>
+  <a class="cta-button" href="/heic-to-jpg/">Convert HEIC to JPG →</a>
+</div>
+
+<p>Whether you're prepping photos for a website, sending them to someone on Windows, or just want a format that opens everywhere without a second thought, converting HEIC to JPG takes seconds once you know where to click.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Related articles</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/blog/compress-image-without-losing-quality/">
+      <h3>How to Compress an Image Without Losing Quality</h3>
+      <p>Why file size and visible quality aren't as connected as you'd think, and where the real sweet spot is.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/webp-vs-jpg/">
+      <h3>WebP vs JPG: Why Your Images Won't Open (and How to Fix It)</h3>
+      <p>What WebP is, why so many websites use it now, and how to convert it back to a JPG that opens anywhere.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/png-vs-jpg/">
+      <h3>PNG vs JPG: Which Format Should You Use (and How to Convert)</h3>
+      <p>The real difference between these two formats, when to use each one, and how to convert between them for free.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/blog/">← Back to Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/about/" style="color:var(--muted-text);">About</a> · <a href="/privacy/" style="color:var(--muted-text);">Privacy</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cómo Encontrar el Código de Color Exacto de Cualquier Imagen | Blog de Orisod</title>
+<meta name="description" content="¿Necesitas el código HEX o RGB exacto de una foto, captura de pantalla o logotipo? Aquí te explicamos por qué calcularlo a ojo no funciona, y cómo elegir el color preciso en segundos.">
+<link rel="canonical" href="https://orisod.com/es/blog/find-color-code-from-image/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/find-color-code-from-image/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/find-color-code-from-image/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/find-color-code-from-image/">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
+.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
+.compare-table th{background:var(--card-bg);}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/es/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/es/tools/">Todas las Herramientas</a>
+    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/#pdf">Herramientas PDF</a>
+    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <a class="lang-flag" href="/blog/find-color-code-from-image/">EN</a>
+    <span class="lang-flag active">ES</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>Cómo Encontrar el Código de Color Exacto de Cualquier Imagen</h1>
+<p class="intro">Ya sea que estés igualando un color de marca, reconstruyendo un diseño, o simplemente intentando recrear un tono que viste en una foto, adivinar el código de color nunca funciona del todo bien. Aquí te explicamos cómo obtener el valor exacto directamente de la imagen.</p>
+
+<div class="article-body">
+
+<h2>Por qué "más o menos" no funciona con el color</h2>
+<p>Los colores engañan al ojo. Dos tonos de azul pueden verse casi idénticos uno junto al otro y aun así ser códigos HEX medibles y distintos — y esa diferencia es exactamente el tipo de cosa que se nota como un desajuste evidente en cuanto lo usas en un diseño, un sitio web, o una pieza impresa junto al original. Si necesitas que un color coincida, necesitas el código real, no tu mejor estimación.</p>
+
+<h2>Qué significan realmente los códigos HEX, RGB y HSL</h2>
+<p>Un código HEX como <code>#2563eb</code> es simplemente una forma compacta de escribir los valores rojo, verde y azul de un color en una sola cadena — la misma información que un código RGB como <code>rgb(37, 99, 235)</code>, solo con otro formato. HSL describe el mismo color de otra manera, usando matiz, saturación y luminosidad. Los tres son solo notaciones distintas para el color idéntico; cuál necesitas depende normalmente de lo que espere el software o el código con el que estés trabajando.</p>
+
+<h2>La forma antigua y tediosa</h2>
+<p>Antes de que existieran las herramientas basadas en navegador, obtener un código de color de una imagen significaba abrirla en un editor de imágenes completo, usar una herramienta de cuentagotas escondida en alguna barra de herramientas, y leer el valor en un cuadro de diálogo de selector de color — suponiendo que tuvieras ese tipo de software instalado. Funciona, pero son muchos pasos para algo que debería tomar cinco segundos, y simplemente no es una opción si estás en un teléfono o en una computadora sin software de diseño.</p>
+
+<h2>La forma sencilla: haz clic en el píxel, obtén el código</h2>
+<p>Un selector de color basado en navegador se salta todo eso. Subes o arrastras la imagen, haces clic directamente en el píxel cuyo color quieres, y la herramienta lee el valor exacto de ese píxel y te lo muestra como HEX, RGB y normalmente algunos formatos más a la vez. No hay que buscar ningún cuentagotas ni instalar software — la imagen ni siquiera necesita salir de tu dispositivo, ya que el color se lee directamente en el navegador.</p>
+
+<h2>Situaciones comunes donde necesitarás esto</h2>
+<ul>
+  <li>Un cliente te envía un logotipo antiguo y necesitas extraer su azul de marca exacto para usarlo en un diseño nuevo, sin ninguna guía de estilo como referencia.</li>
+  <li>Detectas un color de fondo en un sitio web o en una captura de pantalla que quieres reutilizar en tu propio proyecto.</li>
+  <li>Estás recreando una paleta de colores a partir de una foto — un producto, una obra de arte, una habitación que estás decorando — y quieres que sea precisa en lugar de aproximada.</li>
+  <li>Estás depurando un problema de CSS y necesitas confirmar si dos elementos que se ven del mismo color realmente comparten el mismo valor exacto.</li>
+</ul>
+<p>En cada caso, la alternativa a elegir el color directamente es prueba y error — ajustar un control deslizante de color a ojo hasta que se vea "suficientemente parecido", algo que rara vez sobrevive al colocarse junto al original.</p>
+
+<h2>Cuidado con las imágenes comprimidas</h2>
+<p>Algo que vale la pena saber: si tu imagen de origen es un JPG muy comprimido, el color que elijas podría estar ligeramente desviado del color "real" original. La compresión con pérdida puede alterar un poco los valores de los píxeles, especialmente en bordes definidos y en áreas con gradientes sutiles, sobre todo con ajustes de calidad más bajos. Rara vez es una diferencia visible, pero si estás persiguiendo un color de marca exacto, elige a partir de la versión menos comprimida que tengas disponible — un PNG o el archivo original, no una captura de una captura.</p>
+
+<h2>Respuestas rápidas</h2>
+<p><strong>¿Funciona esto con capturas de pantalla?</strong> Sí — cualquier formato de imagen que tu navegador pueda mostrar, incluyendo capturas en PNG, JPG y WEBP, funciona igual.</p>
+<p><strong>¿Puedo obtener más de un color de la misma imagen?</strong> Sí, puedes hacer clic en tantos píxeles distintos como necesites, uno a la vez, sin volver a subir nada.</p>
+<p><strong>¿Necesito software de diseño instalado?</strong> No — todo el proceso ocurre dentro de la propia herramienta del navegador, así que no hay nada que instalar.</p>
+
+<div class="cta-box">
+  <h3>Elige un Código de Color de Cualquier Imagen</h3>
+  <p>El selector de color de Orisod funciona completamente en tu navegador — sube o arrastra cualquier imagen, haz clic en un píxel, y obtén al instante los valores HEX, RGB y HSL exactos. Nada se sube a un servidor.</p>
+  <a class="cta-button" href="/es/color-picker-from-image/">Elegir un Color de una Imagen →</a>
+</div>
+
+<p>La próxima vez que necesites igualar un color en lugar de adivinarlo, sáltate la búsqueda del cuentagotas y simplemente haz clic en el píxel que tiene la respuesta.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Artículos relacionados</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/es/blog/what-is-exif-data/">
+      <h3>Qué Son los Datos EXIF y Por Qué Deberías Eliminarlos Antes de Compartir Fotos</h3>
+      <p>Los datos ocultos que llevan tus fotos — incluida la ubicación GPS — y cómo eliminarlos antes de compartir.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/how-to-make-a-qr-code/">
+      <h3>Cómo Hacer un Código QR Gratis (Sin Necesidad de App)</h3>
+      <p>Qué almacena realmente un código QR, por qué los códigos que “caducan” son un mito, y cómo hacer uno en menos de un minuto.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/how-to-make-a-favicon/">
+      <h3>Cómo Crear un Favicon para Tu Sitio Web (Gratis, Sin Diseño)</h3>
+      <p>Qué necesita realmente un favicon, y cómo generar el conjunto completo de archivos sin tocar software de diseño.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/es/blog/">← Volver al Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/es/about/" style="color:var(--muted-text);">Acerca de</a> · <a href="/es/privacy/" style="color:var(--muted-text);">Privacidad</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

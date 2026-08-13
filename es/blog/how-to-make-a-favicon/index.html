@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cómo Crear un Favicon para Tu Sitio Web (Gratis, Sin Diseño) | Blog de Orisod</title>
+<meta name="description" content="Tu pestaña del navegador muestra un ícono genérico en lugar de tu marca. Aquí te explicamos qué necesita realmente un favicon, y cómo generar el conjunto completo de archivos gratis.">
+<link rel="canonical" href="https://orisod.com/es/blog/how-to-make-a-favicon/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/how-to-make-a-favicon/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/how-to-make-a-favicon/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/how-to-make-a-favicon/">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
+.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
+.compare-table th{background:var(--card-bg);}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/es/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/es/tools/">Todas las Herramientas</a>
+    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/#pdf">Herramientas PDF</a>
+    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <a class="lang-flag" href="/blog/how-to-make-a-favicon/">EN</a>
+    <span class="lang-flag active">ES</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>Cómo Crear un Favicon para Tu Sitio Web (Gratis, Sin Diseño)</h1>
+<p class="intro">Ese pequeño ícono en la pestaña del navegador junto al título de tu página se llama favicon, y si no lo has configurado, tu sitio está mostrando un ícono genérico donde podría haber un poco de tu marca. Aquí te explicamos qué necesita realmente un favicon adecuado, y cómo generar uno sin tocar software de diseño.</p>
+
+<div class="article-body">
+
+<h2>Qué es un favicon, y por qué importa</h2>
+<p>Un favicon (abreviatura de "favorite icon") es la pequeña imagen cuadrada que aparece en una pestaña del navegador, en las listas de marcadores, y en la pantalla de inicio de un teléfono si alguien guarda tu sitio ahí. Es un detalle pequeño, pero su ausencia se nota — un ícono genérico o un cuadro de imagen roto junto al título de tu página se ve inacabado, especialmente cuando está junto a una fila de pestañas de sitios que sí lo resolvieron bien. Con una docena de pestañas abiertas, un favicon reconocible suele ser la única forma en que los visitantes encuentran el camino de regreso a tu sitio sin leer cada título de pestaña.</p>
+
+<h2>Lo que necesita realmente un paquete de favicon adecuado</h2>
+<p>Aquí está la parte que sorprende a la gente: un "favicon" no es solo un archivo. Distintos navegadores, sistemas operativos y dispositivos esperan cada uno su propia versión:</p>
+<ul>
+  <li><strong>favicon.ico</strong> — el formato clásico, todavía esperado por muchos navegadores como respaldo.</li>
+  <li><strong>Varios tamaños PNG</strong> (típicamente 16×16, 32×32, 192×192, 512×512) — para distintos contextos de visualización, desde pestañas del navegador hasta pantallas de inicio de Android.</li>
+  <li><strong>apple-touch-icon</strong> — un tamaño específico que usan los dispositivos Apple cuando un sitio se guarda en la pantalla de inicio de un iPhone o iPad.</li>
+  <li><strong>Una referencia en el manifest</strong> — para aplicaciones web progresivas, uniendo el conjunto de íconos.</li>
+</ul>
+<p>Hacer todo esto correctamente a mano significa exportar tu logotipo en media docena de tamaños distintos y nombrar cada archivo exactamente como se espera — tedioso incluso para alguien cómodo con software de edición de imágenes, y una verdadera barrera si no lo estás.</p>
+
+<h2>Por dónde empezar: tu logotipo o una imagen sencilla</h2>
+<p>No necesitas un diseño profesional — de hecho, una imagen limpia y sencilla funciona mejor, ya que un favicon se muestra a un tamaño diminuto donde el detalle fino desaparece. Un símbolo de logotipo, una o dos iniciales, o un ícono simple que represente tu sitio funcionan bien. Evita cualquier cosa con mucho texto pequeño o detalle intrincado; a 16×16 píxeles, simplemente se verá como una mancha borrosa.</p>
+
+<h2>Generar el conjunto completo de archivos</h2>
+<p>Una herramienta generadora de favicon toma una sola imagen de origen y produce automáticamente cada tamaño y formato que necesita un sitio moderno — el archivo .ico, los distintos PNG, y el ícono táctil de Apple — empaquetados juntos para que no tengas que exportar y renombrar manualmente seis archivos separados. Subes una imagen una vez y descargas el conjunto completo.</p>
+
+<h2>Instalarlo en tu sitio</h2>
+<p>Una vez que tienes los archivos, necesitan referenciarse en el <code>&lt;head&gt;</code> HTML de tu sitio, típicamente con un puñado de etiquetas <code>&lt;link&gt;</code> que apuntan a cada archivo. La mayoría de los generadores de favicon incluyen estas etiquetas exactas junto con la descarga, así que es cuestión de copiarlas en lugar de escribirlas desde cero.</p>
+
+<h2>Errores comunes con el favicon</h2>
+<ul>
+  <li><strong>Usar una imagen recargada o con mucho detalle.</strong> Cualquier cosa con texto fino o sombreado intrincado se convierte en una mancha ilegible a 16×16 píxeles — más simple casi siempre es mejor.</li>
+  <li><strong>Subir solo un tamaño.</strong> Un único PNG puede verse bien en una pestaña del navegador pero aparecer en blanco o mal recortado cuando alguien guarda tu sitio en la pantalla de inicio de un teléfono.</li>
+  <li><strong>Olvidar limpiar la caché después de actualizarlo.</strong> Los navegadores guardan los favicons en caché de forma muy agresiva, así que después de reemplazar uno, puede que necesites forzar una actualización o borrar las imágenes en caché antes de que aparezca el nuevo.</li>
+  <li><strong>Colocar los archivos en la carpeta equivocada.</strong> Las etiquetas <code>&lt;link&gt;</code> necesitan apuntar a donde realmente viven los archivos en tu servidor — un desajuste aquí es la razón más común por la que un favicon "generado correctamente" sigue sin aparecer.</li>
+</ul>
+
+<h2>Respuestas rápidas</h2>
+<p><strong>¿De verdad necesito todos esos tamaños distintos?</strong> Para compatibilidad completa en navegadores y dispositivos, sí — omitir algunos simplemente significa que el ícono no se mostrará correctamente en ciertos contextos, como cuando alguien guarda tu sitio en la pantalla de inicio de su teléfono.</p>
+<p><strong>¿Puedo usar una foto como favicon?</strong> Técnicamente sí, pero las fotos rara vez funcionan bien a un tamaño tan pequeño — un gráfico simple o un símbolo de logotipo se lee mucho más claramente.</p>
+<p><strong>¿Esto tendrá algún costo?</strong> Generar los archivos es gratis con la herramienta adecuada — no estás pagando por trabajo de diseño, solo automatizando un proceso de exportación.</p>
+
+<div class="cta-box">
+  <h3>Genera Tu Paquete de Favicon Ahora</h3>
+  <p>El generador de favicon de Orisod crea el conjunto completo — .ico, tamaños PNG, e ícono táctil de Apple — a partir de una sola imagen, completamente en tu navegador. Descarga todo a la vez, incluidas las etiquetas HTML para instalarlo.</p>
+  <a class="cta-button" href="/es/favicon-generator/">Generar un Favicon →</a>
+</div>
+
+<p>Es un detalle pequeño, pero un favicon faltante o roto es una de las señales más notorias de que un sitio está inacabado. Solucionarlo toma unos minutos y no requiere un diseñador.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Artículos relacionados</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/es/blog/what-is-exif-data/">
+      <h3>Qué Son los Datos EXIF y Por Qué Deberías Eliminarlos Antes de Compartir Fotos</h3>
+      <p>Los datos ocultos que llevan tus fotos — incluida la ubicación GPS — y cómo eliminarlos antes de compartir.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/how-to-make-a-qr-code/">
+      <h3>Cómo Hacer un Código QR Gratis (Sin Necesidad de App)</h3>
+      <p>Qué almacena realmente un código QR, por qué los códigos que “caducan” son un mito, y cómo hacer uno en menos de un minuto.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/check-image-dimensions/">
+      <h3>Cómo Verificar las Dimensiones y Resolución de una Imagen en Línea</h3>
+      <p>Qué significan realmente los píxeles, las dimensiones y el DPI, y la forma más rápida de comprobarlos en cualquier dispositivo.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/es/blog/">← Volver al Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/es/about/" style="color:var(--muted-text);">Acerca de</a> · <a href="/es/privacy/" style="color:var(--muted-text);">Privacidad</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>
