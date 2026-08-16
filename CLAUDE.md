@@ -83,11 +83,11 @@ here as a record so they don't get reintroduced:
 
 **Base pages:** `/` (home), `/tools` (catalog, 3 categories), `/about`, `/privacy`
 
-**40 tools**, organized into 3 categories on `/tools`:
+**41 tools**, organized into 3 categories on `/tools`:
 
 **🖼️ Image Tools (20):** webp-to-jpg, heic-to-jpg, png-to-jpg, png-to-webp, jpg-to-webp, webp-to-png, avif-to-jpg-png, gif-to-jpg-png, bmp-to-jpg-png, svg-to-png, resize-image, crop-image, compress-image, rotate-image, social-media-crop, round-image-corners, add-border-to-image, image-color-filters, watermark-adder, blur-area-tool
 
-**📄 PDF Tools (13):** jpg-to-pdf, image-to-pdf, pdf-to-jpg, merge-pdf, split-pdf, compress-pdf, rotate-pdf, pdf-page-organizer, add-page-numbers, edit-pdf-metadata, crop-pdf-pages, resize-pdf-pages, delete-pdf-pages
+**📄 PDF Tools (14):** jpg-to-pdf, image-to-pdf, pdf-to-jpg, merge-pdf, split-pdf, compress-pdf, rotate-pdf, pdf-page-organizer, add-page-numbers, edit-pdf-metadata, crop-pdf-pages, resize-pdf-pages, delete-pdf-pages, extract-pdf-text
 
 **🛠️ Utility Tools (7):** exif-remover, image-metadata-viewer, favicon-generator, qr-code-generator, image-to-base64, color-picker-from-image, image-dimension-checker
 

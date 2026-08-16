@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Compress PDF – Free Online Tool | Orisod</title>
-<meta name="description" content="Reduce PDF file size online for free. Best for scanned or image-heavy PDFs. Works directly in your browser — no files are uploaded.">
-<link rel="canonical" href="https://orisod.com/compress-pdf/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/compress-pdf/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/compress-pdf/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/compress-pdf/">
+<title>Extract PDF Text – Free Online Tool | Orisod</title>
+<meta name="description" content="Pull all the selectable text out of a PDF and copy it or download it as a .txt file, free and online. Works directly in your browser — no files are uploaded.">
+<link rel="canonical" href="https://orisod.com/extract-pdf-text/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/extract-pdf-text/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/extract-pdf-text/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/extract-pdf-text/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
@@ -34,7 +34,6 @@
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root{
   --bg:#0b0f1a;
@@ -71,34 +70,30 @@
 main{padding:40px 20px 60px 20px;}
 body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
 .container{max-width:800px;margin:0 auto;}
-h1{font-size:48px;margin-bottom:10px;}
+h1{font-size:44px;margin-bottom:10px;}
 p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
 .box{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:30px 20px;margin-top:30px;}
-.disclaimer{
-  background:#1f1a0f;
-  border:1px solid #78350f;
-  border-radius:8px;
-  padding:14px 18px;
-  margin-bottom:22px;
-  text-align:left;
-  font-size:14px;
-  color:#fbbf24;
-  line-height:1.6;
-}
 .dropzone{border:2px dashed var(--dropzone-border);border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
 .dropzone:hover, .dropzone.dragover{border-color:var(--accent);}
 input[type="file"]{display:none;}
-.quality-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:20px;font-size:14px;opacity:0.85;}
-input[type="range"]{width:200px;}
-button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
+.page-count{margin-top:16px;font-size:14px;opacity:0.75;}
+.text-output{margin-top:20px;text-align:left;display:none;}
+.text-output textarea{
+  width:100%;min-height:320px;padding:14px;border-radius:8px;border:1px solid #374151;background:#0f172a;color:white;
+  font-size:13px;font-family:"Courier New", monospace;line-height:1.5;resize:vertical;
+}
+.output-meta{margin-top:8px;font-size:13px;opacity:0.7;}
+.output-actions{display:flex;gap:12px;flex-wrap:wrap;}
+.warn-note{color:#f87171;font-size:14px;margin-top:12px;}
+button, .back{display:inline-block;margin-top:16px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
+button.secondary{background:var(--card-bg);border:1px solid var(--border);color:var(--text);}
+button.secondary:hover:not(:disabled){border-color:var(--accent);filter:none;}
 button:disabled{opacity:0.4;cursor:not-allowed;}
 button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
 .note{margin-top:20px;font-size:14px;opacity:0.6;}
 .footer{margin-top:50px;font-size:14px;opacity:0.4;}
 .error{color:#f87171;font-size:14px;margin-top:10px;}
 .progress{font-size:14px;opacity:0.7;margin-top:10px;}
-.size-compare{margin-top:12px;font-size:14px;opacity:0.85;}
-.size-compare .saved{color:#4ade80;font-weight:bold;}
 h2{margin-top:50px;font-size:22px;}
 .seo-content{max-width:700px;margin:0 auto;text-align:left;}
 .seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
@@ -134,67 +129,66 @@ h2{margin-top:50px;font-size:22px;}
   </nav>
   <div class="site-nav-right">
     <span class="lang-flag active">EN</span>
-    <a class="lang-flag" href="/es/compress-pdf/">ES</a>
+    <a class="lang-flag" href="/es/extract-pdf-text/">ES</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
   </div>
 </header>
 
 <main>
 <div class="container">
-  <h1>Compress PDF</h1>
-  <p>Reduce the file size of a PDF. Works best for scanned documents or PDFs with lots of images. Everything happens locally in your browser.</p>
+  <h1>Extract PDF Text</h1>
+  <p>Pull all the selectable text out of a PDF, then copy it or download it as a plain .txt file. Everything happens locally in your browser.</p>
 
   <div class="box">
-    <div class="disclaimer">
-      ⚠️ <strong>Good to know before you start:</strong> this tool works by converting each page into a compressed image and rebuilding the PDF from those images. This shrinks file size well for scanned pages or photo-heavy documents, but the resulting PDF will <strong>no longer have selectable or searchable text</strong>. If your PDF is mostly text and you need to keep it searchable, this may not be the right tool for it.
-    </div>
-
     <label class="dropzone" id="dropzone" for="fileInput">
       <div id="dropzoneText">📁 Click to select a PDF or drag and drop it here</div>
     </label>
     <input type="file" id="fileInput" accept=".pdf">
     <div class="error" id="errorMsg"></div>
     <div class="trust-strip">🔒 Processed on your device · No upload · No account · No watermark</div>
+    <div class="page-count" id="pageCount"></div>
 
-    <div class="quality-row">
-      <label for="quality">Compression level: <span id="qualityValue">60</span>%</label>
-      <input type="range" id="quality" min="20" max="90" value="60">
-    </div>
-
-    <br>
-    <button id="compressBtn" disabled>Compress PDF</button>
-    <div class="note">Higher = better quality, larger file. Lower = smaller file, more compression.</div>
+    <button id="extractBtn" style="display:none;">Extract Text</button>
     <div class="progress" id="progressMsg"></div>
-    <div class="size-compare" id="sizeCompare"></div>
+
+    <div class="text-output" id="textOutput">
+      <textarea id="textArea" readonly></textarea>
+      <div class="output-meta" id="outputMeta"></div>
+      <div class="warn-note" id="warnNote" style="display:none;"></div>
+      <div class="output-actions">
+        <button class="secondary" id="copyBtn">📋 Copy Text</button>
+        <button id="downloadBtn">⬇️ Download .txt</button>
+      </div>
+    </div>
   </div>
 
   <div class="seo-content">
     <h2>What does this tool do?</h2>
-    <p>This tool reduces PDF file size by rendering each page as a compressed image and rebuilding the document from those images, similar to how you'd compress a photo. It's most effective on scanned documents, photo-heavy PDFs, or anything where pages are already essentially images — the file size drop can be significant.</p>
+    <p>This tool reads every page of a PDF and pulls out the underlying selectable text — the same text you could highlight and copy in a PDF viewer — and lays it out as plain text you can copy or save as a .txt file. Page breaks are marked so you can still tell where one page ends and the next begins.</p>
 
-    <h2>When should you use it?</h2>
+    <h2>When should you use this tool?</h2>
     <ul>
-      <li>You have a scanned document that's too large to email or upload</li>
-      <li>Your PDF is full of photos and the file size is unreasonably large</li>
-      <li>You don't need to select, copy, or search the text in the document</li>
-      <li>A form or platform has a strict file size limit for PDF uploads</li>
+      <li>You need to paste a PDF's content into an email, document, or spreadsheet</li>
+      <li>You want to search or process a PDF's text with a tool that only accepts plain text</li>
+      <li>You're archiving a document's text separately from its layout</li>
+      <li>You need a quick way to check how much text a PDF actually contains</li>
     </ul>
 
     <h2>Why use Orisod for this?</h2>
-    <p>You control the compression level with a slider and see the before/after file size comparison immediately. Everything happens locally in your browser using PDF.js and jsPDF — your document is never uploaded to a server.</p>
+    <p>Extraction happens instantly, page by page, and the result appears right on the page so you can copy it directly or download it as a .txt file. The whole process happens locally in your browser using pdf.js — your document is never uploaded to a server.</p>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
-      <div class="q">Will I lose the ability to select text?</div>
-      <div>Yes. Since this tool converts pages to compressed images to achieve real size reduction, the resulting PDF is image-based and text is no longer selectable or searchable.</div>
+      <div class="q">Why is the output empty or very short?</div>
+      <div>If a PDF is a scanned image without a real text layer, there's no selectable text to extract — the pages are just pictures. This tool can't OCR scanned documents.</div>
     </div>
     <div class="faq-item">
-      <div class="q">Is this a good fit for a text-heavy report or contract?</div>
-      <div>Not ideally — if you need to keep text selectable and searchable, this tool isn't the right choice. It works best for scanned pages or documents that are already essentially images.</div>
+      <div class="q">Will the extracted text keep the original formatting?</div>
+      <div>No, formatting like fonts, columns, and tables is not preserved — this is a plain-text extraction, not a layout-preserving conversion.</div>
     </div>
     <div class="faq-item">
-      <div class="q">How much smaller will my file be?</div>
-      <div>It varies widely depending on your original PDF and the compression level you choose, but scanned or image-heavy documents often shrink significantly.</div>
+      <div class="q">Can I extract text from just one page?</div>
+      <div>The tool extracts all pages at once, but the output includes page markers so you can easily copy just the section you need.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my PDF uploaded to a server?</div>
@@ -202,10 +196,16 @@ h2{margin-top:50px;font-size:22px;}
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/compress-pdf-without-losing-quality/" style="color:var(--accent);text-decoration:none;">How to Make a PDF File Smaller Without Losing Quality</a></p>
-
   <h2>Related tools</h2>
   <div class="related-grid">
+  <a class="related-card" href="/pdf-to-jpg/">
+    <div class="icon-box cat-pdf">🖼️</div>
+    <div class="body">
+      <div class="title">PDF to JPG</div>
+      <div class="desc">Extract PDF pages as JPG images.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
   <a class="related-card" href="/merge-pdf/">
     <div class="icon-box cat-pdf">➕</div>
     <div class="body">
@@ -214,49 +214,17 @@ h2{margin-top:50px;font-size:22px;}
     </div>
     <div class="arrow">→</div>
   </a>
-  <a class="related-card" href="/split-pdf/">
-    <div class="icon-box cat-pdf">✂️</div>
+  <a class="related-card" href="/compress-pdf/">
+    <div class="icon-box cat-pdf">📦</div>
     <div class="body">
-      <div class="title">Split PDF</div>
-      <div class="desc">Extract a range or split every page.</div>
-    </div>
-    <div class="arrow">→</div>
-  </a>
-  <a class="related-card" href="/compress-image/">
-    <div class="icon-box cat-image">📦</div>
-    <div class="body">
-      <div class="title">Compress Image</div>
-      <div class="desc">Reduce file size, keep quality.</div>
-    </div>
-    <div class="arrow">→</div>
-  </a>
-  <a class="related-card" href="/resize-pdf-pages/">
-    <div class="icon-box cat-pdf">📐</div>
-    <div class="body">
-      <div class="title">Resize PDF Pages</div>
-      <div class="desc">Change page dimensions, e.g. A4 to Letter.</div>
-    </div>
-    <div class="arrow">→</div>
-  </a>
-  <a class="related-card" href="/edit-pdf-metadata/">
-    <div class="icon-box cat-pdf">🏷️</div>
-    <div class="body">
-      <div class="title">Edit PDF Metadata</div>
-      <div class="desc">Change title, author, subject &amp; keywords.</div>
-    </div>
-    <div class="arrow">→</div>
-  </a>
-  <a class="related-card" href="/extract-pdf-text/">
-    <div class="icon-box cat-pdf">📝</div>
-    <div class="body">
-      <div class="title">Extract PDF Text</div>
-      <div class="desc">Copy or download a PDF's text as .txt.</div>
+      <div class="title">Compress PDF</div>
+      <div class="desc">Shrink scanned or image-heavy PDFs.</div>
     </div>
     <div class="arrow">→</div>
   </a>
 </div>
 
-  <div class="footer">© Orisod Labs</div>
+  <div class="footer">© Orisod Labs · <a href="/about/" style="color:var(--muted-text);">About</a> · <a href="/privacy/" style="color:var(--muted-text);">Privacy</a></div>
 </div>
 
 </main>
@@ -283,19 +251,24 @@ h2{margin-top:50px;font-size:22px;}
 </script>
 
 <script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
 const fileInput = document.getElementById('fileInput');
 const dropzone = document.getElementById('dropzone');
 const dropzoneText = document.getElementById('dropzoneText');
 const errorMsg = document.getElementById('errorMsg');
-const qualitySlider = document.getElementById('quality');
-const qualityValue = document.getElementById('qualityValue');
-const compressBtn = document.getElementById('compressBtn');
 const progressMsg = document.getElementById('progressMsg');
-const sizeCompare = document.getElementById('sizeCompare');
+const pageCount = document.getElementById('pageCount');
+const extractBtn = document.getElementById('extractBtn');
+const textOutput = document.getElementById('textOutput');
+const textArea = document.getElementById('textArea');
+const outputMeta = document.getElementById('outputMeta');
+const warnNote = document.getElementById('warnNote');
+const copyBtn = document.getElementById('copyBtn');
+const downloadBtn = document.getElementById('downloadBtn');
 
 let selectedFile = null;
-
-qualitySlider.addEventListener('input', () => { qualityValue.textContent = qualitySlider.value; });
+let extractedText = '';
 
 fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
 dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
@@ -306,79 +279,92 @@ dropzone.addEventListener('drop', (e) => {
   handleFile(e.dataTransfer.files[0]);
 });
 
-function handleFile(file) {
+async function handleFile(file) {
   errorMsg.textContent = '';
-  sizeCompare.textContent = '';
+  progressMsg.textContent = '';
+  pageCount.textContent = '';
+  extractBtn.style.display = 'none';
+  textOutput.style.display = 'none';
+  extractedText = '';
+
   if (!file || !/\.pdf$/i.test(file.name)) {
     errorMsg.textContent = 'Please select a valid PDF file.';
     return;
   }
-  selectedFile = file;
-  dropzoneText.textContent = `✅ ${file.name} selected (${(file.size / 1024).toFixed(1)} KB)`;
-  compressBtn.disabled = false;
+
+  try {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
+    selectedFile = file;
+
+    pageCount.textContent = `Loaded: ${pdf.numPages} page${pdf.numPages === 1 ? '' : 's'}`;
+    dropzoneText.textContent = `✅ ${file.name} loaded`;
+    extractBtn.style.display = 'inline-block';
+  } catch (err) {
+    errorMsg.textContent = 'Could not read this PDF. It may be corrupted or password-protected.';
+  }
 }
 
-compressBtn.addEventListener('click', async () => {
+extractBtn.addEventListener('click', async () => {
   if (!selectedFile) return;
-  compressBtn.disabled = true;
-  compressBtn.textContent = 'Compressing...';
   errorMsg.textContent = '';
-  sizeCompare.textContent = '';
-  progressMsg.textContent = '';
-
-  const quality = parseInt(qualitySlider.value, 10) / 100;
-  const originalSize = selectedFile.size;
+  warnNote.style.display = 'none';
+  extractBtn.disabled = true;
 
   try {
     const arrayBuffer = await selectedFile.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-    const { jsPDF } = window.jspdf;
-    let outPdf = null;
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
+    const pageTexts = [];
+    let plainCharCount = 0;
 
-    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-      progressMsg.textContent = `Processing page ${pageNum} of ${pdf.numPages}...`;
-
-      const page = await pdf.getPage(pageNum);
-      const viewport = page.getViewport({ scale: 1.5 });
-      const canvas = document.createElement('canvas');
-      canvas.width = viewport.width;
-      canvas.height = viewport.height;
-      const ctx = canvas.getContext('2d');
-      await page.render({ canvasContext: ctx, viewport }).promise;
-
-      const dataUrl = canvas.toDataURL('image/jpeg', quality);
-      const orientation = viewport.width > viewport.height ? 'landscape' : 'portrait';
-
-      if (pageNum === 1) {
-        outPdf = new jsPDF({ orientation, unit: 'pt', format: [viewport.width, viewport.height] });
-      } else {
-        outPdf.addPage([viewport.width, viewport.height], orientation);
-      }
-      outPdf.addImage(dataUrl, 'JPEG', 0, 0, viewport.width, viewport.height);
+    for (let i = 1; i <= pdf.numPages; i++) {
+      progressMsg.textContent = `Extracting page ${i} of ${pdf.numPages}...`;
+      const page = await pdf.getPage(i);
+      const textContent = await page.getTextContent();
+      const pageText = textContent.items.map((item) => item.str).join(' ').trim();
+      plainCharCount += pageText.length;
+      pageTexts.push(`----- Page ${i} -----\n\n${pageText}`);
     }
 
-    const outBlob = outPdf.output('blob');
-    const newSize = outBlob.size;
-    const url = URL.createObjectURL(outBlob);
-    const baseName = selectedFile.name.replace(/\.pdf$/i, '');
+    extractedText = pageTexts.join('\n\n');
+    textArea.value = extractedText;
+    outputMeta.textContent = `${pdf.numPages} page${pdf.numPages === 1 ? '' : 's'} · ${plainCharCount.toLocaleString()} characters extracted`;
 
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${baseName}-compressed.pdf`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    if (plainCharCount === 0) {
+      warnNote.textContent = '⚠️ No selectable text was found. This PDF may be a scanned image without a text layer.';
+      warnNote.style.display = 'block';
+    }
 
-    const savedPct = Math.max(0, Math.round((1 - newSize / originalSize) * 100));
-    progressMsg.textContent = 'Done — compressed PDF downloaded.';
-    sizeCompare.innerHTML = `${(originalSize / 1024).toFixed(1)} KB → ${(newSize / 1024).toFixed(1)} KB <span class="saved">(${savedPct}% smaller)</span>`;
-  } catch (err) {
-    errorMsg.textContent = 'Could not process this PDF. Make sure it is not corrupted or password-protected.';
+    textOutput.style.display = 'block';
     progressMsg.textContent = '';
+  } catch (err) {
+    errorMsg.textContent = err.message || 'Could not extract text from this PDF.';
   }
 
-  compressBtn.disabled = false;
-  compressBtn.textContent = 'Compress PDF';
+  extractBtn.disabled = false;
+});
+
+copyBtn.addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(extractedText);
+    copyBtn.textContent = '✅ Copied!';
+    setTimeout(() => { copyBtn.textContent = '📋 Copy Text'; }, 1500);
+  } catch (err) {
+    errorMsg.textContent = 'Could not copy to clipboard. Select the text manually instead.';
+  }
+});
+
+downloadBtn.addEventListener('click', () => {
+  const blob = new Blob([extractedText], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const baseName = selectedFile.name.replace(/\.pdf$/i, '');
+
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${baseName}.txt`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 });
 </script>
 </body>

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Extraer texto de PDF – Herramienta gratuita en línea | Orisod</title>
+<meta name="description" content="Extrae todo el texto seleccionable de un PDF y cópialo o descárgalo como archivo .txt, gratis y en línea. Funciona directamente en tu navegador, sin subir archivos.">
+<link rel="canonical" href="https://orisod.com/es/extract-pdf-text/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/extract-pdf-text/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/extract-pdf-text/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/extract-pdf-text/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#2563eb">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+  --icon-alpha:.30;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+  --icon-alpha:.24;
+}
+*{box-sizing:border-box;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:5px 14px;margin:-5px 0;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:40px 20px 60px 20px;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:44px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:30px 20px;margin-top:30px;}
+.dropzone{border:2px dashed var(--dropzone-border);border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
+.dropzone:hover, .dropzone.dragover{border-color:var(--accent);}
+input[type="file"]{display:none;}
+.page-count{margin-top:16px;font-size:14px;opacity:0.75;}
+.text-output{margin-top:20px;text-align:left;display:none;}
+.text-output textarea{
+  width:100%;min-height:320px;padding:14px;border-radius:8px;border:1px solid #374151;background:#0f172a;color:white;
+  font-size:13px;font-family:"Courier New", monospace;line-height:1.5;resize:vertical;
+}
+.output-meta{margin-top:8px;font-size:13px;opacity:0.7;}
+.output-actions{display:flex;gap:12px;flex-wrap:wrap;}
+.warn-note{color:#f87171;font-size:14px;margin-top:12px;}
+button, .back{display:inline-block;margin-top:16px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
+button.secondary{background:var(--card-bg);border:1px solid var(--border);color:var(--text);}
+button.secondary:hover:not(:disabled){border-color:var(--accent);filter:none;}
+button:disabled{opacity:0.4;cursor:not-allowed;}
+button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.note{margin-top:20px;font-size:14px;opacity:0.6;}
+.footer{margin-top:50px;font-size:14px;opacity:0.4;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+.progress{font-size:14px;opacity:0.7;margin-top:10px;}
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related-grid{display:grid;grid-template-columns:repeat(2, 1fr);gap:12px;}
+@media (max-width:600px){.related-grid{grid-template-columns:1fr;}}
+.related-card{display:flex;align-items:center;gap:14px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-card .icon-box{flex:none;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;border:2px solid transparent;}
+.related-card .icon-box.cat-image{background:rgba(37,99,235,var(--icon-alpha));border-color:#2563eb;}
+.related-card .icon-box.cat-pdf{background:rgba(245,158,11,var(--icon-alpha));border-color:#f59e0b;}
+.related-card .icon-box.cat-utility{background:rgba(139,92,246,var(--icon-alpha));border-color:#8b5cf6;}
+.related-card .body{flex:1 1 auto;min-width:0;}
+.related-card .title{font-size:14px;font-weight:bold;margin-bottom:2px;}
+.related-card .desc{font-size:12px;color:var(--muted-text);line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.related-card .arrow{flex:none;font-size:16px;color:var(--muted-text);transition:0.2s;}
+.related-card:hover .arrow{color:var(--accent);transform:translateX(2px);}
+.trust-strip{font-size:12px;color:var(--muted-text);margin-top:12px;line-height:1.5;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/es/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/es/tools/">Todas las Herramientas</a>
+    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <span class="active-category">Herramientas PDF</span>
+    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <a href="/es/blog/">Blog</a>
+  </nav>
+  <div class="site-nav-right">
+    <a class="lang-flag" href="/extract-pdf-text/">EN</a>
+    <span class="lang-flag active">ES</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+  <h1>Extraer texto de PDF</h1>
+  <p>Extrae todo el texto seleccionable de un PDF y luego cópialo o descárgalo como archivo .txt. Todo ocurre localmente en tu navegador.</p>
+
+  <div class="box">
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Haz clic para seleccionar un PDF o arrástralo aquí</div>
+    </label>
+    <input type="file" id="fileInput" accept=".pdf">
+    <div class="error" id="errorMsg"></div>
+    <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subidas · Sin cuenta · Sin marca de agua</div>
+    <div class="page-count" id="pageCount"></div>
+
+    <button id="extractBtn" style="display:none;">Extraer texto</button>
+    <div class="progress" id="progressMsg"></div>
+
+    <div class="text-output" id="textOutput">
+      <textarea id="textArea" readonly></textarea>
+      <div class="output-meta" id="outputMeta"></div>
+      <div class="warn-note" id="warnNote" style="display:none;"></div>
+      <div class="output-actions">
+        <button class="secondary" id="copyBtn">📋 Copiar texto</button>
+        <button id="downloadBtn">⬇️ Descargar .txt</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="seo-content">
+    <h2>¿Qué hace esta herramienta?</h2>
+    <p>Esta herramienta lee cada página de un PDF y extrae el texto seleccionable subyacente — el mismo texto que podrías resaltar y copiar en un visor de PDF — y lo presenta como texto plano que puedes copiar o guardar como archivo .txt. Los saltos de página quedan marcados para que sepas dónde termina una página y empieza la siguiente.</p>
+
+    <h2>¿Cuándo usar esta herramienta?</h2>
+    <ul>
+      <li>Necesitas pegar el contenido de un PDF en un correo, documento o hoja de cálculo</li>
+      <li>Quieres buscar o procesar el texto de un PDF con una herramienta que solo acepta texto plano</li>
+      <li>Estás archivando el texto de un documento por separado de su diseño</li>
+      <li>Necesitas una forma rápida de comprobar cuánto texto tiene realmente un PDF</li>
+    </ul>
+
+    <h2>¿Por qué usar Orisod para esto?</h2>
+    <p>La extracción ocurre al instante, página por página, y el resultado aparece directamente en la página para que puedas copiarlo o descargarlo como .txt. Todo el proceso ocurre localmente en tu navegador usando pdf.js — tu documento nunca se sube a un servidor.</p>
+
+    <h2>Preguntas frecuentes</h2>
+    <div class="faq-item">
+      <div class="q">¿Por qué el resultado está vacío o es muy corto?</div>
+      <div>Si un PDF es una imagen escaneada sin una capa de texto real, no hay texto seleccionable que extraer — las páginas son solo imágenes. Esta herramienta no puede hacer OCR a documentos escaneados.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿El texto extraído conserva el formato original?</div>
+      <div>No, elementos como fuentes, columnas y tablas no se conservan — es una extracción de texto plano, no una conversión que preserve el diseño.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Puedo extraer texto de una sola página?</div>
+      <div>La herramienta extrae todas las páginas a la vez, pero el resultado incluye marcadores de página para que puedas copiar fácilmente solo la sección que necesitas.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Se sube mi PDF a un servidor?</div>
+      <div>No, todo el proceso ocurre localmente en tu navegador usando JavaScript.</div>
+    </div>
+  </div>
+
+  <h2>Herramientas relacionadas</h2>
+  <div class="related-grid">
+  <a class="related-card" href="/es/pdf-to-jpg/">
+    <div class="icon-box cat-pdf">🖼️</div>
+    <div class="body">
+      <div class="title">PDF a JPG</div>
+      <div class="desc">Extrae páginas de un PDF como imágenes JPG.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+  <a class="related-card" href="/es/merge-pdf/">
+    <div class="icon-box cat-pdf">➕</div>
+    <div class="body">
+      <div class="title">Unir PDF</div>
+      <div class="desc">Combina varios PDF en uno solo.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+  <a class="related-card" href="/es/compress-pdf/">
+    <div class="icon-box cat-pdf">📦</div>
+    <div class="body">
+      <div class="title">Comprimir PDF</div>
+      <div class="desc">Reduce PDF escaneados o con muchas imágenes.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+</div>
+
+  <div class="footer">© Orisod Labs · <a href="/es/about/" style="color:var(--muted-text);">Acerca de</a> · <a href="/es/privacy/" style="color:var(--muted-text);">Privacidad</a></div>
+</div>
+
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const errorMsg = document.getElementById('errorMsg');
+const progressMsg = document.getElementById('progressMsg');
+const pageCount = document.getElementById('pageCount');
+const extractBtn = document.getElementById('extractBtn');
+const textOutput = document.getElementById('textOutput');
+const textArea = document.getElementById('textArea');
+const outputMeta = document.getElementById('outputMeta');
+const warnNote = document.getElementById('warnNote');
+const copyBtn = document.getElementById('copyBtn');
+const downloadBtn = document.getElementById('downloadBtn');
+
+let selectedFile = null;
+let extractedText = '';
+
+fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  handleFile(e.dataTransfer.files[0]);
+});
+
+async function handleFile(file) {
+  errorMsg.textContent = '';
+  progressMsg.textContent = '';
+  pageCount.textContent = '';
+  extractBtn.style.display = 'none';
+  textOutput.style.display = 'none';
+  extractedText = '';
+
+  if (!file || !/\.pdf$/i.test(file.name)) {
+    errorMsg.textContent = 'Selecciona un archivo PDF válido.';
+    return;
+  }
+
+  try {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
+    selectedFile = file;
+
+    pageCount.textContent = `Cargado: ${pdf.numPages} página${pdf.numPages === 1 ? '' : 's'}`;
+    dropzoneText.textContent = `✅ ${file.name} cargado`;
+    extractBtn.style.display = 'inline-block';
+  } catch (err) {
+    errorMsg.textContent = 'No se pudo leer este PDF. Puede estar dañado o protegido con contraseña.';
+  }
+}
+
+extractBtn.addEventListener('click', async () => {
+  if (!selectedFile) return;
+  errorMsg.textContent = '';
+  warnNote.style.display = 'none';
+  extractBtn.disabled = true;
+
+  try {
+    const arrayBuffer = await selectedFile.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
+    const pageTexts = [];
+    let plainCharCount = 0;
+
+    for (let i = 1; i <= pdf.numPages; i++) {
+      progressMsg.textContent = `Extrayendo página ${i} de ${pdf.numPages}...`;
+      const page = await pdf.getPage(i);
+      const textContent = await page.getTextContent();
+      const pageText = textContent.items.map((item) => item.str).join(' ').trim();
+      plainCharCount += pageText.length;
+      pageTexts.push(`----- Página ${i} -----\n\n${pageText}`);
+    }
+
+    extractedText = pageTexts.join('\n\n');
+    textArea.value = extractedText;
+    outputMeta.textContent = `${pdf.numPages} página${pdf.numPages === 1 ? '' : 's'} · ${plainCharCount.toLocaleString()} caracteres extraídos`;
+
+    if (plainCharCount === 0) {
+      warnNote.textContent = '⚠️ No se encontró texto seleccionable. Este PDF puede ser una imagen escaneada sin capa de texto.';
+      warnNote.style.display = 'block';
+    }
+
+    textOutput.style.display = 'block';
+    progressMsg.textContent = '';
+  } catch (err) {
+    errorMsg.textContent = err.message || 'No se pudo extraer el texto de este PDF.';
+  }
+
+  extractBtn.disabled = false;
+});
+
+copyBtn.addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(extractedText);
+    copyBtn.textContent = '✅ ¡Copiado!';
+    setTimeout(() => { copyBtn.textContent = '📋 Copiar texto'; }, 1500);
+  } catch (err) {
+    errorMsg.textContent = 'No se pudo copiar al portapapeles. Selecciona el texto manualmente.';
+  }
+});
+
+downloadBtn.addEventListener('click', () => {
+  const blob = new Blob([extractedText], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const baseName = selectedFile.name.replace(/\.pdf$/i, '');
+
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${baseName}.txt`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+});
+</script>
+</body>
+</html>
