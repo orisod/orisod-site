@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Añadir números de página a un PDF – Herramienta gratuita | Orisod</title>
-<meta name="description" content="Numera las páginas de un PDF gratis, en línea. Elige la posición y el número inicial — funciona directamente en tu navegador, no se sube ningún archivo.">
-<link rel="canonical" href="https://orisod.com/es/add-page-numbers/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/add-page-numbers/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/add-page-numbers/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/add-page-numbers/">
+<title>Editar metadatos de PDF – Herramienta gratuita en línea | Orisod</title>
+<meta name="description" content="Consulta y edita el título, autor, asunto y palabras clave de un PDF, o bórralos todos, gratis y en línea. Funciona directamente en tu navegador, sin subir archivos.">
+<link rel="canonical" href="https://orisod.com/es/edit-pdf-metadata/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/edit-pdf-metadata/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/edit-pdf-metadata/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/edit-pdf-metadata/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
@@ -76,21 +76,17 @@ p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-heigh
 .dropzone{border:2px dashed var(--dropzone-border);border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
 .dropzone:hover, .dropzone.dragover{border-color:var(--accent);}
 input[type="file"]{display:none;}
-.page-info{margin-top:16px;font-size:14px;opacity:0.75;}
-.number-options{margin-top:20px;text-align:left;}
-.option-card{color:#fff;background:#0f172a;border:1px solid var(--border);border-radius:8px;padding:18px;margin-bottom:14px;}
-.option-card h3{margin:0 0 8px 0;font-size:15px;}
-.option-card p{margin:0 0 12px 0;font-size:13px;opacity:0.7;text-align:left;}
-.position-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:8px;max-width:360px;margin:10px auto 0 auto;}
-.position-btn{padding:10px 8px;border-radius:6px;border:1px solid #374151;background:var(--card-bg);color:white;cursor:pointer;font-size:12px;text-align:center;}
-.position-btn.active{background:var(--accent);border-color:#2563eb;}
-.option-card input[type="number"]{
-  padding:10px;border-radius:6px;border:1px solid #374151;background:#0f172a;color:white;font-size:14px;width:100px;
+.meta-fields{margin-top:20px;text-align:left;}
+.field-row{margin-bottom:14px;}
+.field-row label{display:block;font-size:13px;font-weight:bold;margin-bottom:6px;opacity:0.85;}
+.field-row input[type="text"]{
+  width:100%;padding:10px 12px;border-radius:6px;border:1px solid #374151;background:#0f172a;color:white;font-size:14px;
 }
-button, .back{display:inline-block;margin-top:12px;padding:12px 18px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:15px;cursor:pointer;}
+.clear-link{display:inline-block;margin-top:2px;font-size:13px;color:var(--muted-text);cursor:pointer;text-decoration:underline;}
+.clear-link:hover{color:var(--accent);}
+button, .back{display:inline-block;margin-top:16px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
 button:disabled{opacity:0.4;cursor:not-allowed;}
 button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
-.back{padding:14px 20px;margin-top:20px;font-size:16px;}
 .note{margin-top:20px;font-size:14px;opacity:0.6;}
 .footer{margin-top:50px;font-size:14px;opacity:0.4;}
 .error{color:#f87171;font-size:14px;margin-top:10px;}
@@ -129,7 +125,7 @@ h2{margin-top:50px;font-size:22px;}
     <a href="/es/blog/">Blog</a>
   </nav>
   <div class="site-nav-right">
-    <a class="lang-flag" href="/add-page-numbers/">EN</a>
+    <a class="lang-flag" href="/edit-pdf-metadata/">EN</a>
     <span class="lang-flag active">ES</span>
     <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
   </div>
@@ -137,8 +133,8 @@ h2{margin-top:50px;font-size:22px;}
 
 <main>
 <div class="container">
-  <h1>Añadir números de página</h1>
-  <p>Numera todas las páginas de un PDF. Elige la posición y el número inicial — todo ocurre localmente en tu navegador.</p>
+  <h1>Editar metadatos de PDF</h1>
+  <p>Consulta y edita el título, autor, asunto y palabras clave de un PDF — o bórralos todos. Todo ocurre localmente en tu navegador.</p>
 
   <div class="box">
     <label class="dropzone" id="dropzone" for="fileInput">
@@ -147,60 +143,59 @@ h2{margin-top:50px;font-size:22px;}
     <input type="file" id="fileInput" accept=".pdf">
     <div class="error" id="errorMsg"></div>
     <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subir archivos · Sin cuenta · Sin marca de agua</div>
-    <div class="page-info" id="pageInfo"></div>
 
-    <div class="number-options" id="numberOptions" style="display:none;">
-      <div class="option-card">
-        <h3>Posición</h3>
-        <div class="position-grid">
-          <div class="position-btn" data-pos="top-left">Arriba izquierda</div>
-          <div class="position-btn" data-pos="top-center">Arriba centro</div>
-          <div class="position-btn" data-pos="top-right">Arriba derecha</div>
-          <div class="position-btn" data-pos="bottom-left">Abajo izquierda</div>
-          <div class="position-btn active" data-pos="bottom-center">Abajo centro</div>
-          <div class="position-btn" data-pos="bottom-right">Abajo derecha</div>
-        </div>
+    <div class="meta-fields" id="metaFields" style="display:none;">
+      <div class="field-row">
+        <label for="titleField">Título</label>
+        <input type="text" id="titleField" placeholder="(ninguno)">
       </div>
-
-      <div class="option-card">
-        <h3>Número inicial</h3>
-        <p>La primera página mostrará este número, y el conteo seguirá a partir de ahí.</p>
-        <input type="number" id="startNumberInput" min="0" value="1">
+      <div class="field-row">
+        <label for="authorField">Autor</label>
+        <input type="text" id="authorField" placeholder="(ninguno)">
       </div>
-
-      <button id="addNumbersBtn">Añadir números y descargar</button>
+      <div class="field-row">
+        <label for="subjectField">Asunto</label>
+        <input type="text" id="subjectField" placeholder="(ninguno)">
+      </div>
+      <div class="field-row">
+        <label for="keywordsField">Palabras clave <span style="font-weight:normal;opacity:0.6;">(separadas por comas)</span></label>
+        <input type="text" id="keywordsField" placeholder="(ninguna)">
+      </div>
+      <span class="clear-link" id="clearLink">Borrar todos los campos</span>
+      <br>
+      <button id="saveBtn">Guardar y descargar</button>
     </div>
 
     <div class="progress" id="progressMsg"></div>
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué hace esta herramienta?</h2>
-    <p>Esta herramienta estampa un número de página en cada página de tu PDF, en la posición que elijas, comenzando desde el número que establezcas. El contenido del PDF permanece exactamente igual — el texto sigue siendo seleccionable, solo se añade un número a cada página.</p>
+    <h2>¿Qué son los metadatos de un PDF?</h2>
+    <p>Todo PDF incluye un pequeño conjunto de propiedades de documento junto a su contenido visible — título, autor, asunto y palabras clave. Estos metadatos no aparecen en la página, pero son lo que se muestra en el panel de "Propiedades" de un archivo, en algunos resultados de búsqueda, y a veces revelan quién creó un documento o con qué software se generó, incluso después de renombrar el archivo.</p>
 
-    <h2>¿Cuándo deberías usarla?</h2>
+    <h2>¿Cuándo deberías usar esta herramienta?</h2>
     <ul>
-      <li>Estás preparando un documento para imprimir y los lectores necesitan referenciar páginas específicas</li>
-      <li>Estás armando un informe, contrato o manuscrito que necesita referencias de página</li>
-      <li>Tu documento no empieza en la página 1 (por ejemplo, continúa desde otro documento) y necesitas un número inicial personalizado</li>
-      <li>Quieres los números de página en una esquina específica en lugar de donde los pone una impresora por defecto</li>
+      <li>Vas a compartir un PDF y no quieres dejar tu nombre o empresa en el campo de autor</li>
+      <li>Un documento fue generado por un software que puso un título genérico o desactualizado</li>
+      <li>Quieres añadir un título, autor o palabras clave claros a un PDF que vas a publicar</li>
+      <li>Estás limpiando las propiedades de un archivo antes de archivarlo o distribuirlo</li>
     </ul>
 
     <h2>¿Por qué usar Orisod para esto?</h2>
-    <p>Eliges exactamente dónde va el número y desde dónde empieza el conteo, y lo ves aplicado a todas las páginas en un solo paso. Todo ocurre localmente en tu navegador usando pdf-lib — tu documento nunca se sube a un servidor.</p>
+    <p>Esta herramienta lee los metadatos existentes directamente de tu archivo y te permite editarlos o borrarlos antes de guardar. Todo el proceso — lectura, edición y escritura del nuevo PDF — ocurre localmente en tu navegador usando pdf-lib. Tu documento nunca se sube a un servidor.</p>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
-      <div class="q">¿Esto afecta la selección de texto?</div>
-      <div>No, el contenido existente del PDF se conserva exactamente igual — solo se dibuja un número de página en cada página.</div>
+      <div class="q">¿Esto cambia el contenido visible de mi PDF?</div>
+      <div>No, solo se modifican las propiedades del documento (título, autor, asunto, palabras clave) — las páginas, el texto y el diseño se mantienen exactamente igual.</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Puedo empezar a contar desde un número distinto de 1?</div>
-      <div>Sí, establece cualquier número inicial y el conteo seguirá subiendo desde ahí a lo largo del documento.</div>
+      <div class="q">¿Puedo eliminar todos los metadatos a la vez?</div>
+      <div>Sí, haz clic en "Borrar todos los campos" para vaciarlos todos, y luego guarda — el PDF descargado tendrá los metadatos en blanco.</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Puedo elegir dónde aparece el número?</div>
-      <div>Sí, elige entre seis posiciones — arriba o abajo, izquierda, centro o derecha.</div>
+      <div class="q">¿Qué pasa si un campo ya está vacío?</div>
+      <div>Algunos PDF no tienen ciertos campos definidos. Esos campos simplemente aparecerán vacíos — puedes dejarlos así o completarlos.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Mi PDF se sube a un servidor?</div>
@@ -208,39 +203,29 @@ h2{margin-top:50px;font-size:22px;}
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres profundizar? Lee nuestra guía: <a href="/es/blog/add-page-numbers-to-pdf/" style="color:var(--accent);text-decoration:none;">Cómo Añadir Números de Página a un PDF</a></p>
-
   <h2>Herramientas relacionadas</h2>
   <div class="related-grid">
-  <a class="related-card" href="/es/merge-pdf/">
-    <div class="icon-box cat-pdf">➕</div>
+  <a class="related-card" href="/es/exif-remover/">
+    <div class="icon-box cat-utility">🔒</div>
     <div class="body">
-      <div class="title">Unir PDF</div>
-      <div class="desc">Combina varios PDF en uno solo.</div>
+      <div class="title">Eliminar EXIF</div>
+      <div class="desc">Elimina los metadatos ocultos de una foto.</div>
     </div>
     <div class="arrow">→</div>
   </a>
-  <a class="related-card" href="/es/pdf-page-organizer/">
-    <div class="icon-box cat-pdf">📑</div>
+  <a class="related-card" href="/es/add-page-numbers/">
+    <div class="icon-box cat-pdf">🔢</div>
     <div class="body">
-      <div class="title">Organizador de páginas PDF</div>
-      <div class="desc">Arrastra para reordenar o eliminar páginas.</div>
+      <div class="title">Añadir números de página</div>
+      <div class="desc">Numera las páginas de un PDF.</div>
     </div>
     <div class="arrow">→</div>
   </a>
-  <a class="related-card" href="/es/rotate-pdf/">
-    <div class="icon-box cat-pdf">🔃</div>
+  <a class="related-card" href="/es/compress-pdf/">
+    <div class="icon-box cat-pdf">📦</div>
     <div class="body">
-      <div class="title">Rotar páginas de PDF</div>
-      <div class="desc">Rota todas las páginas o solo algunas.</div>
-    </div>
-    <div class="arrow">→</div>
-  </a>
-  <a class="related-card" href="/es/edit-pdf-metadata/">
-    <div class="icon-box cat-pdf">🏷️</div>
-    <div class="body">
-      <div class="title">Editar metadatos de PDF</div>
-      <div class="desc">Cambia título, autor, asunto y palabras clave.</div>
+      <div class="title">Comprimir PDF</div>
+      <div class="desc">Reduce PDF escaneados o con muchas imágenes.</div>
     </div>
     <div class="arrow">→</div>
   </a>
@@ -277,23 +262,16 @@ const fileInput = document.getElementById('fileInput');
 const dropzone = document.getElementById('dropzone');
 const dropzoneText = document.getElementById('dropzoneText');
 const errorMsg = document.getElementById('errorMsg');
-const pageInfo = document.getElementById('pageInfo');
-const numberOptions = document.getElementById('numberOptions');
-const startNumberInput = document.getElementById('startNumberInput');
-const addNumbersBtn = document.getElementById('addNumbersBtn');
+const metaFields = document.getElementById('metaFields');
+const titleField = document.getElementById('titleField');
+const authorField = document.getElementById('authorField');
+const subjectField = document.getElementById('subjectField');
+const keywordsField = document.getElementById('keywordsField');
+const clearLink = document.getElementById('clearLink');
+const saveBtn = document.getElementById('saveBtn');
 const progressMsg = document.getElementById('progressMsg');
 
 let selectedFile = null;
-let totalPages = 0;
-let selectedPosition = 'bottom-center';
-
-document.querySelectorAll('.position-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.position-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    selectedPosition = btn.dataset.pos;
-  });
-});
 
 fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
 dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
@@ -316,59 +294,44 @@ async function handleFile(file) {
     const { PDFDocument } = PDFLib;
     const arrayBuffer = await file.arrayBuffer();
     const pdf = await PDFDocument.load(arrayBuffer);
-    totalPages = pdf.getPageCount();
     selectedFile = file;
 
     dropzoneText.textContent = `✅ ${file.name} cargado`;
-    pageInfo.textContent = `Este PDF tiene ${totalPages} página${totalPages !== 1 ? 's' : ''}.`;
-    numberOptions.style.display = 'block';
+    titleField.value = pdf.getTitle() || '';
+    authorField.value = pdf.getAuthor() || '';
+    subjectField.value = pdf.getSubject() || '';
+    keywordsField.value = (pdf.getKeywords() || '').toString();
+    metaFields.style.display = 'block';
   } catch (err) {
     errorMsg.textContent = 'No se pudo leer este PDF. Puede estar dañado o protegido con contraseña.';
-    numberOptions.style.display = 'none';
-    pageInfo.textContent = '';
+    metaFields.style.display = 'none';
   }
 }
 
-function getPosition(position, pageWidth, pageHeight, textWidth, fontSize) {
-  const margin = 24;
-  let x, y;
+clearLink.addEventListener('click', () => {
+  titleField.value = '';
+  authorField.value = '';
+  subjectField.value = '';
+  keywordsField.value = '';
+});
 
-  if (position.endsWith('left')) x = margin;
-  else if (position.endsWith('right')) x = pageWidth - textWidth - margin;
-  else x = (pageWidth - textWidth) / 2;
-
-  if (position.startsWith('top')) y = pageHeight - margin - fontSize;
-  else y = margin;
-
-  return { x, y };
-}
-
-addNumbersBtn.addEventListener('click', async () => {
+saveBtn.addEventListener('click', async () => {
+  if (!selectedFile) return;
   errorMsg.textContent = '';
   progressMsg.textContent = '';
-  addNumbersBtn.disabled = true;
-  addNumbersBtn.textContent = 'Añadiendo números...';
+  saveBtn.disabled = true;
+  saveBtn.textContent = 'Guardando...';
 
   try {
-    const startNumber = parseInt(startNumberInput.value, 10);
-    if (isNaN(startNumber)) {
-      throw new Error('Introduce un número inicial válido.');
-    }
-
-    const { PDFDocument, StandardFonts } = PDFLib;
+    const { PDFDocument } = PDFLib;
     const arrayBuffer = await selectedFile.arrayBuffer();
     const pdf = await PDFDocument.load(arrayBuffer);
-    const font = await pdf.embedFont(StandardFonts.Helvetica);
-    const fontSize = 11;
-    const pages = pdf.getPages();
 
-    pages.forEach((page, i) => {
-      const label = String(startNumber + i);
-      const { width, height } = page.getSize();
-      const textWidth = font.widthOfTextAtSize(label, fontSize);
-      const { x, y } = getPosition(selectedPosition, width, height, textWidth, fontSize);
-      page.drawText(label, { x, y, size: fontSize, font });
-    });
+    pdf.setTitle(titleField.value);
+    pdf.setAuthor(authorField.value);
+    pdf.setSubject(subjectField.value);
+    const keywords = keywordsField.value.split(',').map(k => k.trim()).filter(Boolean);
+    pdf.setKeywords(keywords);
 
     const bytes = await pdf.save();
     const blob = new Blob([bytes], { type: 'application/pdf' });
@@ -377,18 +340,18 @@ addNumbersBtn.addEventListener('click', async () => {
 
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${baseName}-numbered.pdf`;
+    a.download = `${baseName}-metadata.pdf`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
 
-    progressMsg.textContent = `Listo — números añadidos a ${pages.length} página(s).`;
+    progressMsg.textContent = 'Listo — metadatos actualizados.';
   } catch (err) {
-    errorMsg.textContent = err.message || 'No se pudieron añadir los números de página a este PDF.';
+    errorMsg.textContent = err.message || 'No se pudo actualizar este PDF.';
   }
 
-  addNumbersBtn.disabled = false;
-  addNumbersBtn.textContent = 'Añadir números y descargar';
+  saveBtn.disabled = false;
+  saveBtn.textContent = 'Guardar y descargar';
 });
 </script>
 </body>
