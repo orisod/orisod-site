@@ -26,6 +26,13 @@
 <link rel="alternate" hreflang="en" href="https://orisod.com/image-to-base64/">
 <link rel="alternate" hreflang="es" href="https://orisod.com/es/image-to-base64/">
 <link rel="alternate" hreflang="x-default" href="https://orisod.com/image-to-base64/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#2563eb">
 <style>
 :root{
   --bg:#0b0f1a;
@@ -35,6 +42,7 @@
   --accent:#2563eb;
   --muted-text:#94a3b8;
   --dropzone-border:#374151;
+  --icon-alpha:.30;
 }
 :root[data-theme="light"]{
   --bg:#f8fafc;
@@ -44,6 +52,7 @@
   --accent:#2563eb;
   --muted-text:#64748b;
   --dropzone-border:#cbd5e1;
+  --icon-alpha:.24;
 }
 *{box-sizing:border-box;}
 .site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
@@ -51,7 +60,7 @@
 .site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
 .site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
 .site-nav-links a:hover{opacity:1;}
-.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:5px 14px;margin:-5px 0;}
 .site-nav-right{display:flex;align-items:center;gap:8px;}
 .lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
 .lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
@@ -100,8 +109,19 @@ h2{margin-top:50px;font-size:22px;}
 .seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
 .faq-item{margin-bottom:18px;}
 .faq-item .q{font-weight:bold;margin-bottom:4px;}
-.related a{color:#60a5fa;text-decoration:none;display:block;margin:6px 0;text-align:center;}
-.related a:hover{text-decoration:underline;}
+.related-grid{display:grid;grid-template-columns:repeat(2, 1fr);gap:12px;}
+@media (max-width:600px){.related-grid{grid-template-columns:1fr;}}
+.related-card{display:flex;align-items:center;gap:14px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-card .icon-box{flex:none;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;border:2px solid transparent;}
+.related-card .icon-box.cat-image{background:rgba(37,99,235,var(--icon-alpha));border-color:#2563eb;}
+.related-card .icon-box.cat-pdf{background:rgba(245,158,11,var(--icon-alpha));border-color:#f59e0b;}
+.related-card .icon-box.cat-utility{background:rgba(139,92,246,var(--icon-alpha));border-color:#8b5cf6;}
+.related-card .body{flex:1 1 auto;min-width:0;}
+.related-card .title{font-size:14px;font-weight:bold;margin-bottom:2px;}
+.related-card .desc{font-size:12px;color:var(--muted-text);line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.related-card .arrow{flex:none;font-size:16px;color:var(--muted-text);transition:0.2s;}
+.related-card:hover .arrow{color:var(--accent);transform:translateX(2px);}
 </style>
 </head>
 <body>
@@ -192,11 +212,32 @@ h2{margin-top:50px;font-size:22px;}
   <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/base64-encoding-explained/" style="color:var(--accent);text-decoration:none;">What Is Base64 Encoding and When Developers Need It for Images</a></p>
 
   <h2>Related tools</h2>
-  <div class="related">
-    <a href="/compress-image/">Compress Image</a>
-    <a href="/resize-image/">Resize Image</a>
-    <a href="/png-to-jpg/">PNG to JPG</a>
-  </div>
+  <div class="related-grid">
+  <a class="related-card" href="/compress-image/">
+    <div class="icon-box cat-image">📦</div>
+    <div class="body">
+      <div class="title">Compress Image</div>
+      <div class="desc">Reduce file size, keep quality.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+  <a class="related-card" href="/resize-image/">
+    <div class="icon-box cat-image">📐</div>
+    <div class="body">
+      <div class="title">Resize Image</div>
+      <div class="desc">Change image width and height.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+  <a class="related-card" href="/png-to-jpg/">
+    <div class="icon-box cat-image">🔄</div>
+    <div class="body">
+      <div class="title">PNG to JPG</div>
+      <div class="desc">Convert PNG images to JPG format.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+</div>
 
   <div class="footer">© Orisod Labs</div>
 </div>
