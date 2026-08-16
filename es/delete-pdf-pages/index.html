@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Comprimir PDF – Herramienta gratuita en línea | Orisod</title>
-<meta name="description" content="Reduce el tamaño de archivo de un PDF gratis. Ideal para PDF escaneados o con muchas imágenes. Funciona directamente en tu navegador — no se sube ningún archivo.">
-<link rel="canonical" href="https://orisod.com/es/compress-pdf/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/compress-pdf/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/compress-pdf/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/compress-pdf/">
+<title>Eliminar páginas de PDF – Herramienta gratuita en línea | Orisod</title>
+<meta name="description" content="Elimina páginas específicas de un PDF escribiendo números o rangos de página, gratis y en línea. Funciona directamente en tu navegador, sin subir archivos.">
+<link rel="canonical" href="https://orisod.com/es/delete-pdf-pages/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/delete-pdf-pages/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/delete-pdf-pages/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/delete-pdf-pages/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
@@ -33,8 +33,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <style>
 :root{
   --bg:#0b0f1a;
@@ -71,34 +70,27 @@
 main{padding:40px 20px 60px 20px;}
 body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
 .container{max-width:800px;margin:0 auto;}
-h1{font-size:48px;margin-bottom:10px;}
+h1{font-size:44px;margin-bottom:10px;}
 p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
 .box{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:30px 20px;margin-top:30px;}
-.disclaimer{
-  background:#1f1a0f;
-  border:1px solid #78350f;
-  border-radius:8px;
-  padding:14px 18px;
-  margin-bottom:22px;
-  text-align:left;
-  font-size:14px;
-  color:#fbbf24;
-  line-height:1.6;
-}
 .dropzone{border:2px dashed var(--dropzone-border);border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
 .dropzone:hover, .dropzone.dragover{border-color:var(--accent);}
 input[type="file"]{display:none;}
-.quality-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:20px;font-size:14px;opacity:0.85;}
-input[type="range"]{width:200px;}
-button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
+.page-count{margin-top:16px;font-size:14px;opacity:0.75;}
+.delete-fields{margin-top:20px;text-align:left;}
+.field-row label{display:block;font-size:13px;font-weight:bold;margin-bottom:6px;opacity:0.85;}
+.field-row input[type="text"]{
+  width:100%;padding:10px 12px;border-radius:6px;border:1px solid #374151;background:#0f172a;color:white;font-size:14px;
+}
+.range-preview{margin-top:10px;font-size:13px;opacity:0.75;min-height:18px;}
+.range-preview.warn{color:#f87171;opacity:1;}
+button, .back{display:inline-block;margin-top:16px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
 button:disabled{opacity:0.4;cursor:not-allowed;}
 button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
 .note{margin-top:20px;font-size:14px;opacity:0.6;}
 .footer{margin-top:50px;font-size:14px;opacity:0.4;}
 .error{color:#f87171;font-size:14px;margin-top:10px;}
 .progress{font-size:14px;opacity:0.7;margin-top:10px;}
-.size-compare{margin-top:12px;font-size:14px;opacity:0.85;}
-.size-compare .saved{color:#4ade80;font-weight:bold;}
 h2{margin-top:50px;font-size:22px;}
 .seo-content{max-width:700px;margin:0 auto;text-align:left;}
 .seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
@@ -133,7 +125,7 @@ h2{margin-top:50px;font-size:22px;}
     <a href="/es/blog/">Blog</a>
   </nav>
   <div class="site-nav-right">
-    <a class="lang-flag" href="/compress-pdf/">EN</a>
+    <a class="lang-flag" href="/delete-pdf-pages/">EN</a>
     <span class="lang-flag active">ES</span>
     <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
   </div>
@@ -141,60 +133,57 @@ h2{margin-top:50px;font-size:22px;}
 
 <main>
 <div class="container">
-  <h1>Comprimir PDF</h1>
-  <p>Reduce el tamaño de archivo de un PDF. Funciona mejor con documentos escaneados o PDF con muchas imágenes. Todo ocurre localmente en tu navegador.</p>
+  <h1>Eliminar páginas de PDF</h1>
+  <p>Escribe los números o rangos de página que quieres eliminar y descarga el resto — sin hacer clic en miniaturas una por una. Todo ocurre localmente en tu navegador.</p>
 
   <div class="box">
-    <div class="disclaimer">
-      ⚠️ <strong>Bueno saberlo antes de empezar:</strong> esta herramienta funciona convirtiendo cada página en una imagen comprimida y reconstruyendo el PDF a partir de esas imágenes. Esto reduce bien el tamaño en páginas escaneadas o documentos con muchas fotos, pero el PDF resultante <strong>ya no tendrá texto seleccionable ni buscable</strong>. Si tu PDF es sobre todo texto y necesitas que siga siendo buscable, esta puede no ser la herramienta adecuada.
-    </div>
-
     <label class="dropzone" id="dropzone" for="fileInput">
       <div id="dropzoneText">📁 Haz clic para seleccionar un PDF o arrástralo aquí</div>
     </label>
     <input type="file" id="fileInput" accept=".pdf">
     <div class="error" id="errorMsg"></div>
-    <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subir archivos · Sin cuenta · Sin marca de agua</div>
+    <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subidas · Sin cuenta · Sin marca de agua</div>
+    <div class="page-count" id="pageCount"></div>
 
-    <div class="quality-row">
-      <label for="quality">Nivel de compresión: <span id="qualityValue">60</span>%</label>
-      <input type="range" id="quality" min="20" max="90" value="60">
+    <div class="delete-fields" id="deleteFields" style="display:none;">
+      <div class="field-row">
+        <label for="rangeField">Páginas a eliminar</label>
+        <input type="text" id="rangeField" placeholder="p. ej. 2, 4, 7-9">
+      </div>
+      <div class="range-preview" id="rangePreview"></div>
+      <button id="saveBtn" disabled>Eliminar páginas y descargar</button>
     </div>
 
-    <br>
-    <button id="compressBtn" disabled>Comprimir PDF</button>
-    <div class="note">Más alto = mejor calidad, archivo más grande. Más bajo = archivo más pequeño, más compresión.</div>
     <div class="progress" id="progressMsg"></div>
-    <div class="size-compare" id="sizeCompare"></div>
   </div>
 
   <div class="seo-content">
     <h2>¿Qué hace esta herramienta?</h2>
-    <p>Esta herramienta reduce el tamaño de un PDF renderizando cada página como una imagen comprimida y reconstruyendo el documento a partir de esas imágenes, de forma similar a comprimir una foto. Es más eficaz en documentos escaneados, PDF con muchas fotos, o cualquier cosa donde las páginas ya son esencialmente imágenes — la reducción de tamaño puede ser significativa.</p>
+    <p>En vez de hacer clic página por página, esta herramienta te permite escribir los números o rangos exactos de las páginas que quieres eliminar — como "2, 4, 7-9" — y ver al instante cuántas páginas se eliminarán antes de descargar el resultado. Está pensada para PDFs donde ya sabes qué páginas tienen que desaparecer.</p>
 
-    <h2>¿Cuándo deberías usarla?</h2>
+    <h2>¿Cuándo usar esta herramienta?</h2>
     <ul>
-      <li>Tienes un documento escaneado demasiado grande para enviar por correo o subir</li>
-      <li>Tu PDF está lleno de fotos y el tamaño de archivo es excesivo</li>
-      <li>No necesitas seleccionar, copiar ni buscar el texto del documento</li>
-      <li>Un formulario o plataforma tiene un límite estricto de tamaño para subir PDF</li>
+      <li>Necesitas eliminar rápidamente un puñado de páginas de un documento largo</li>
+      <li>Un PDF escaneado tiene páginas en blanco o duplicadas en posiciones conocidas</li>
+      <li>Quieres quitar un rango de páginas, como un apéndice o un capítulo</li>
+      <li>Ya conoces los números de página y no necesitas un selector visual con miniaturas</li>
     </ul>
 
     <h2>¿Por qué usar Orisod para esto?</h2>
-    <p>Controlas el nivel de compresión con un deslizador y ves la comparación de tamaño antes/después al instante. Todo ocurre localmente en tu navegador usando PDF.js y jsPDF — tu documento nunca se sube a un servidor.</p>
+    <p>Escribe números y rangos de página separados por comas, y verás una vista previa en tiempo real de cuántas páginas se eliminarán y cuántas quedarán antes de confirmar. Todo el proceso ocurre localmente en tu navegador usando pdf-lib — tu documento nunca se sube a un servidor. ¿Prefieres ver miniaturas y eliminar páginas visualmente? Prueba el <a href="/es/pdf-page-organizer/" style="color:var(--accent);">Organizador de páginas PDF</a>.</p>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
-      <div class="q">¿Perderé la capacidad de seleccionar texto?</div>
-      <div>Sí. Como esta herramienta convierte las páginas en imágenes comprimidas para lograr una reducción de tamaño real, el PDF resultante se basa en imágenes y el texto ya no es seleccionable ni buscable.</div>
+      <div class="q">¿Cómo indico qué páginas eliminar?</div>
+      <div>Escribe números de página separados por comas, y usa un guion para rangos — por ejemplo "2, 4, 7-9" elimina las páginas 2, 4, 7, 8 y 9.</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Es adecuada para un informe o contrato con mucho texto?</div>
-      <div>No es lo ideal — si necesitas mantener el texto seleccionable y buscable, esta herramienta no es la opción correcta. Funciona mejor con páginas escaneadas o documentos que ya son esencialmente imágenes.</div>
+      <div class="q">¿Puedo eliminar todas las páginas?</div>
+      <div>No, al menos una página debe permanecer en el documento. Verás un error si tu entrada eliminaría todas las páginas.</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Cuánto se reducirá mi archivo?</div>
-      <div>Varía mucho según tu PDF original y el nivel de compresión que elijas, pero los documentos escaneados o con muchas imágenes suelen reducirse significativamente.</div>
+      <div class="q">¿Se conserva la calidad de las páginas restantes?</div>
+      <div>Sí, las páginas restantes se copian exactamente como estaban — nada se rasteriza ni se recomprime.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se sube mi PDF a un servidor?</div>
@@ -202,15 +191,13 @@ h2{margin-top:50px;font-size:22px;}
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres profundizar? Lee nuestra guía: <a href="/es/blog/compress-pdf-without-losing-quality/" style="color:var(--accent);text-decoration:none;">Cómo Hacer un Archivo PDF Más Pequeño Sin Perder Calidad</a></p>
-
   <h2>Herramientas relacionadas</h2>
   <div class="related-grid">
-  <a class="related-card" href="/es/merge-pdf/">
-    <div class="icon-box cat-pdf">➕</div>
+  <a class="related-card" href="/es/pdf-page-organizer/">
+    <div class="icon-box cat-pdf">📑</div>
     <div class="body">
-      <div class="title">Unir PDF</div>
-      <div class="desc">Combina varios PDF en uno solo.</div>
+      <div class="title">Organizador de páginas PDF</div>
+      <div class="desc">Reordena o elimina páginas visualmente.</div>
     </div>
     <div class="arrow">→</div>
   </a>
@@ -218,37 +205,21 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf">✂️</div>
     <div class="body">
       <div class="title">Dividir PDF</div>
-      <div class="desc">Extrae un rango o divide cada página.</div>
+      <div class="desc">Divide un PDF en archivos separados.</div>
     </div>
     <div class="arrow">→</div>
   </a>
-  <a class="related-card" href="/es/compress-image/">
-    <div class="icon-box cat-image">📦</div>
+  <a class="related-card" href="/es/merge-pdf/">
+    <div class="icon-box cat-pdf">➕</div>
     <div class="body">
-      <div class="title">Comprimir imagen</div>
-      <div class="desc">Reduce el tamaño del archivo sin perder calidad.</div>
-    </div>
-    <div class="arrow">→</div>
-  </a>
-  <a class="related-card" href="/es/resize-pdf-pages/">
-    <div class="icon-box cat-pdf">📐</div>
-    <div class="body">
-      <div class="title">Redimensionar páginas de PDF</div>
-      <div class="desc">Cambia las dimensiones, p. ej. A4 a Letter.</div>
-    </div>
-    <div class="arrow">→</div>
-  </a>
-  <a class="related-card" href="/es/edit-pdf-metadata/">
-    <div class="icon-box cat-pdf">🏷️</div>
-    <div class="body">
-      <div class="title">Editar metadatos de PDF</div>
-      <div class="desc">Cambia título, autor, asunto y palabras clave.</div>
+      <div class="title">Unir PDF</div>
+      <div class="desc">Combina varios PDFs en uno solo.</div>
     </div>
     <div class="arrow">→</div>
   </a>
 </div>
 
-  <div class="footer">© Orisod Labs</div>
+  <div class="footer">© Orisod Labs · <a href="/es/about/" style="color:var(--muted-text);">Acerca de</a> · <a href="/es/privacy/" style="color:var(--muted-text);">Privacidad</a></div>
 </div>
 
 </main>
@@ -279,15 +250,16 @@ const fileInput = document.getElementById('fileInput');
 const dropzone = document.getElementById('dropzone');
 const dropzoneText = document.getElementById('dropzoneText');
 const errorMsg = document.getElementById('errorMsg');
-const qualitySlider = document.getElementById('quality');
-const qualityValue = document.getElementById('qualityValue');
-const compressBtn = document.getElementById('compressBtn');
 const progressMsg = document.getElementById('progressMsg');
-const sizeCompare = document.getElementById('sizeCompare');
+const pageCount = document.getElementById('pageCount');
+const deleteFields = document.getElementById('deleteFields');
+const rangeField = document.getElementById('rangeField');
+const rangePreview = document.getElementById('rangePreview');
+const saveBtn = document.getElementById('saveBtn');
 
 let selectedFile = null;
-
-qualitySlider.addEventListener('input', () => { qualityValue.textContent = qualitySlider.value; });
+let totalPages = 0;
+let keepIndices = [];
 
 fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
 dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
@@ -298,79 +270,116 @@ dropzone.addEventListener('drop', (e) => {
   handleFile(e.dataTransfer.files[0]);
 });
 
-function handleFile(file) {
+function parsePageRanges(str, total) {
+  const deleteSet = new Set();
+  str.split(',').forEach((part) => {
+    part = part.trim();
+    if (!part) return;
+    const rangeMatch = part.match(/^(\d+)\s*-\s*(\d+)$/);
+    if (rangeMatch) {
+      let a = parseInt(rangeMatch[1], 10);
+      let b = parseInt(rangeMatch[2], 10);
+      if (a > b) { const t = a; a = b; b = t; }
+      for (let i = a; i <= b; i++) if (i >= 1 && i <= total) deleteSet.add(i - 1);
+    } else if (/^\d+$/.test(part)) {
+      const n = parseInt(part, 10);
+      if (n >= 1 && n <= total) deleteSet.add(n - 1);
+    }
+  });
+  return deleteSet;
+}
+
+function updatePreview() {
+  if (!totalPages) return;
+  const deleteSet = parsePageRanges(rangeField.value, totalPages);
+  keepIndices = [];
+  for (let i = 0; i < totalPages; i++) if (!deleteSet.has(i)) keepIndices.push(i);
+
+  if (deleteSet.size === 0) {
+    rangePreview.textContent = '';
+    rangePreview.classList.remove('warn');
+    saveBtn.disabled = true;
+    return;
+  }
+
+  if (keepIndices.length === 0) {
+    rangePreview.textContent = `Esto eliminaría las ${totalPages} páginas — al menos una página debe permanecer.`;
+    rangePreview.classList.add('warn');
+    saveBtn.disabled = true;
+    return;
+  }
+
+  rangePreview.textContent = `Se eliminarán ${deleteSet.size} de ${totalPages} páginas. Quedarán ${keepIndices.length} página${keepIndices.length === 1 ? '' : 's'}.`;
+  rangePreview.classList.remove('warn');
+  saveBtn.disabled = false;
+}
+
+rangeField.addEventListener('input', updatePreview);
+
+async function handleFile(file) {
   errorMsg.textContent = '';
-  sizeCompare.textContent = '';
+  progressMsg.textContent = '';
+  deleteFields.style.display = 'none';
+  pageCount.textContent = '';
+  rangeField.value = '';
+  rangePreview.textContent = '';
+  saveBtn.disabled = true;
+
   if (!file || !/\.pdf$/i.test(file.name)) {
     errorMsg.textContent = 'Selecciona un archivo PDF válido.';
     return;
   }
-  selectedFile = file;
-  dropzoneText.textContent = `✅ ${file.name} seleccionado (${(file.size / 1024).toFixed(1)} KB)`;
-  compressBtn.disabled = false;
-}
-
-compressBtn.addEventListener('click', async () => {
-  if (!selectedFile) return;
-  compressBtn.disabled = true;
-  compressBtn.textContent = 'Comprimiendo...';
-  errorMsg.textContent = '';
-  sizeCompare.textContent = '';
-  progressMsg.textContent = '';
-
-  const quality = parseInt(qualitySlider.value, 10) / 100;
-  const originalSize = selectedFile.size;
 
   try {
+    const { PDFDocument } = PDFLib;
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await PDFDocument.load(arrayBuffer);
+    selectedFile = file;
+    totalPages = pdf.getPageCount();
+
+    pageCount.textContent = `Cargado: ${totalPages} página${totalPages === 1 ? '' : 's'}`;
+    dropzoneText.textContent = `✅ ${file.name} cargado`;
+    deleteFields.style.display = 'block';
+  } catch (err) {
+    errorMsg.textContent = 'No se pudo leer este PDF. Puede estar dañado o protegido con contraseña.';
+  }
+}
+
+saveBtn.addEventListener('click', async () => {
+  if (!selectedFile || keepIndices.length === 0) return;
+  errorMsg.textContent = '';
+  progressMsg.textContent = '';
+  saveBtn.disabled = true;
+  saveBtn.textContent = 'Eliminando...';
+
+  try {
+    const { PDFDocument } = PDFLib;
     const arrayBuffer = await selectedFile.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-    const { jsPDF } = window.jspdf;
-    let outPdf = null;
+    const srcPdf = await PDFDocument.load(arrayBuffer);
+    const newPdf = await PDFDocument.create();
 
-    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-      progressMsg.textContent = `Procesando página ${pageNum} de ${pdf.numPages}...`;
+    const copiedPages = await newPdf.copyPages(srcPdf, keepIndices);
+    copiedPages.forEach((page) => newPdf.addPage(page));
 
-      const page = await pdf.getPage(pageNum);
-      const viewport = page.getViewport({ scale: 1.5 });
-      const canvas = document.createElement('canvas');
-      canvas.width = viewport.width;
-      canvas.height = viewport.height;
-      const ctx = canvas.getContext('2d');
-      await page.render({ canvasContext: ctx, viewport }).promise;
-
-      const dataUrl = canvas.toDataURL('image/jpeg', quality);
-      const orientation = viewport.width > viewport.height ? 'landscape' : 'portrait';
-
-      if (pageNum === 1) {
-        outPdf = new jsPDF({ orientation, unit: 'pt', format: [viewport.width, viewport.height] });
-      } else {
-        outPdf.addPage([viewport.width, viewport.height], orientation);
-      }
-      outPdf.addImage(dataUrl, 'JPEG', 0, 0, viewport.width, viewport.height);
-    }
-
-    const outBlob = outPdf.output('blob');
-    const newSize = outBlob.size;
-    const url = URL.createObjectURL(outBlob);
+    const bytes = await newPdf.save();
+    const blob = new Blob([bytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
     const baseName = selectedFile.name.replace(/\.pdf$/i, '');
 
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${baseName}-compressed.pdf`;
+    a.download = `${baseName}-paginas-eliminadas.pdf`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
 
-    const savedPct = Math.max(0, Math.round((1 - newSize / originalSize) * 100));
-    progressMsg.textContent = 'Listo — PDF comprimido descargado.';
-    sizeCompare.innerHTML = `${(originalSize / 1024).toFixed(1)} KB → ${(newSize / 1024).toFixed(1)} KB <span class="saved">(${savedPct}% más pequeño)</span>`;
+    progressMsg.textContent = 'Listo — páginas eliminadas.';
   } catch (err) {
-    errorMsg.textContent = 'No se pudo procesar este PDF. Asegúrate de que no esté dañado ni protegido con contraseña.';
-    progressMsg.textContent = '';
+    errorMsg.textContent = err.message || 'No se pudo actualizar este PDF.';
   }
 
-  compressBtn.disabled = false;
-  compressBtn.textContent = 'Comprimir PDF';
+  saveBtn.disabled = false;
+  saveBtn.textContent = 'Eliminar páginas y descargar';
 });
 </script>
 </body>

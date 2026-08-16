@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Comprimir PDF – Herramienta gratuita en línea | Orisod</title>
-<meta name="description" content="Reduce el tamaño de archivo de un PDF gratis. Ideal para PDF escaneados o con muchas imágenes. Funciona directamente en tu navegador — no se sube ningún archivo.">
-<link rel="canonical" href="https://orisod.com/es/compress-pdf/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/compress-pdf/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/compress-pdf/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/compress-pdf/">
+<title>Recortar páginas de PDF – Herramienta gratuita en línea | Orisod</title>
+<meta name="description" content="Recorta los márgenes de cada página de un PDF indicando medidas exactas de arriba, abajo, izquierda y derecha, gratis y en línea. Funciona directamente en tu navegador, sin subir archivos.">
+<link rel="canonical" href="https://orisod.com/es/crop-pdf-pages/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/crop-pdf-pages/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/crop-pdf-pages/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/crop-pdf-pages/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
@@ -33,8 +33,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <style>
 :root{
   --bg:#0b0f1a;
@@ -71,34 +70,27 @@
 main{padding:40px 20px 60px 20px;}
 body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
 .container{max-width:800px;margin:0 auto;}
-h1{font-size:48px;margin-bottom:10px;}
+h1{font-size:44px;margin-bottom:10px;}
 p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
 .box{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:30px 20px;margin-top:30px;}
-.disclaimer{
-  background:#1f1a0f;
-  border:1px solid #78350f;
-  border-radius:8px;
-  padding:14px 18px;
-  margin-bottom:22px;
-  text-align:left;
-  font-size:14px;
-  color:#fbbf24;
-  line-height:1.6;
-}
 .dropzone{border:2px dashed var(--dropzone-border);border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
 .dropzone:hover, .dropzone.dragover{border-color:var(--accent);}
 input[type="file"]{display:none;}
-.quality-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:20px;font-size:14px;opacity:0.85;}
-input[type="range"]{width:200px;}
-button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
+.size-readout{margin-top:16px;font-size:14px;opacity:0.75;}
+.margin-fields{margin-top:20px;text-align:left;}
+.margin-grid{display:grid;grid-template-columns:repeat(2, 1fr);gap:14px;}
+@media (max-width:480px){.margin-grid{grid-template-columns:1fr;}}
+.field-row label{display:block;font-size:13px;font-weight:bold;margin-bottom:6px;opacity:0.85;}
+.field-row input[type="number"]{
+  width:100%;padding:10px 12px;border-radius:6px;border:1px solid #374151;background:#0f172a;color:white;font-size:14px;
+}
+button, .back{display:inline-block;margin-top:16px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
 button:disabled{opacity:0.4;cursor:not-allowed;}
 button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
 .note{margin-top:20px;font-size:14px;opacity:0.6;}
 .footer{margin-top:50px;font-size:14px;opacity:0.4;}
 .error{color:#f87171;font-size:14px;margin-top:10px;}
 .progress{font-size:14px;opacity:0.7;margin-top:10px;}
-.size-compare{margin-top:12px;font-size:14px;opacity:0.85;}
-.size-compare .saved{color:#4ade80;font-weight:bold;}
 h2{margin-top:50px;font-size:22px;}
 .seo-content{max-width:700px;margin:0 auto;text-align:left;}
 .seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
@@ -133,7 +125,7 @@ h2{margin-top:50px;font-size:22px;}
     <a href="/es/blog/">Blog</a>
   </nav>
   <div class="site-nav-right">
-    <a class="lang-flag" href="/compress-pdf/">EN</a>
+    <a class="lang-flag" href="/crop-pdf-pages/">EN</a>
     <span class="lang-flag active">ES</span>
     <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
   </div>
@@ -141,60 +133,71 @@ h2{margin-top:50px;font-size:22px;}
 
 <main>
 <div class="container">
-  <h1>Comprimir PDF</h1>
-  <p>Reduce el tamaño de archivo de un PDF. Funciona mejor con documentos escaneados o PDF con muchas imágenes. Todo ocurre localmente en tu navegador.</p>
+  <h1>Recortar páginas de PDF</h1>
+  <p>Recorta los márgenes de cada página de un PDF indicando medidas exactas — luego descarga el archivo recortado. Todo ocurre localmente en tu navegador.</p>
 
   <div class="box">
-    <div class="disclaimer">
-      ⚠️ <strong>Bueno saberlo antes de empezar:</strong> esta herramienta funciona convirtiendo cada página en una imagen comprimida y reconstruyendo el PDF a partir de esas imágenes. Esto reduce bien el tamaño en páginas escaneadas o documentos con muchas fotos, pero el PDF resultante <strong>ya no tendrá texto seleccionable ni buscable</strong>. Si tu PDF es sobre todo texto y necesitas que siga siendo buscable, esta puede no ser la herramienta adecuada.
-    </div>
-
     <label class="dropzone" id="dropzone" for="fileInput">
       <div id="dropzoneText">📁 Haz clic para seleccionar un PDF o arrástralo aquí</div>
     </label>
     <input type="file" id="fileInput" accept=".pdf">
     <div class="error" id="errorMsg"></div>
-    <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subir archivos · Sin cuenta · Sin marca de agua</div>
+    <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subidas · Sin cuenta · Sin marca de agua</div>
+    <div class="size-readout" id="sizeReadout"></div>
 
-    <div class="quality-row">
-      <label for="quality">Nivel de compresión: <span id="qualityValue">60</span>%</label>
-      <input type="range" id="quality" min="20" max="90" value="60">
+    <div class="margin-fields" id="marginFields" style="display:none;">
+      <div class="margin-grid">
+        <div class="field-row">
+          <label for="topField">Margen superior (mm)</label>
+          <input type="number" id="topField" value="0" min="0" step="1">
+        </div>
+        <div class="field-row">
+          <label for="bottomField">Margen inferior (mm)</label>
+          <input type="number" id="bottomField" value="0" min="0" step="1">
+        </div>
+        <div class="field-row">
+          <label for="leftField">Margen izquierdo (mm)</label>
+          <input type="number" id="leftField" value="0" min="0" step="1">
+        </div>
+        <div class="field-row">
+          <label for="rightField">Margen derecho (mm)</label>
+          <input type="number" id="rightField" value="0" min="0" step="1">
+        </div>
+      </div>
+      <br>
+      <button id="saveBtn">Recortar y descargar</button>
     </div>
 
-    <br>
-    <button id="compressBtn" disabled>Comprimir PDF</button>
-    <div class="note">Más alto = mejor calidad, archivo más grande. Más bajo = archivo más pequeño, más compresión.</div>
     <div class="progress" id="progressMsg"></div>
-    <div class="size-compare" id="sizeCompare"></div>
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué hace esta herramienta?</h2>
-    <p>Esta herramienta reduce el tamaño de un PDF renderizando cada página como una imagen comprimida y reconstruyendo el documento a partir de esas imágenes, de forma similar a comprimir una foto. Es más eficaz en documentos escaneados, PDF con muchas fotos, o cualquier cosa donde las páginas ya son esencialmente imágenes — la reducción de tamaño puede ser significativa.</p>
+    <h2>¿Qué hace recortar un PDF?</h2>
+    <p>Recortar reduce el área visible de cada página según la medida que indiques en cada lado, en milímetros. El contenido no se elimina ni se vuelve a dibujar — el límite visible de la página (su crop box) simplemente se mueve hacia adentro, ocultando los márgenes que ya no quieres mostrar o imprimir.</p>
 
-    <h2>¿Cuándo deberías usarla?</h2>
+    <h2>¿Cuándo usar esta herramienta?</h2>
     <ul>
-      <li>Tienes un documento escaneado demasiado grande para enviar por correo o subir</li>
-      <li>Tu PDF está lleno de fotos y el tamaño de archivo es excesivo</li>
-      <li>No necesitas seleccionar, copiar ni buscar el texto del documento</li>
-      <li>Un formulario o plataforma tiene un límite estricto de tamaño para subir PDF</li>
+      <li>Un documento escaneado tiene márgenes anchos e irregulares que quieres eliminar</li>
+      <li>Estás preparando un PDF para una maqueta de impresión que requiere márgenes específicos</li>
+      <li>Una página se exportó con espacio en blanco extra que quieres recortar</li>
+      <li>Quieres eliminar una franja de encabezado o pie de página dentro de un margen fijo</li>
     </ul>
 
     <h2>¿Por qué usar Orisod para esto?</h2>
-    <p>Controlas el nivel de compresión con un deslizador y ves la comparación de tamaño antes/después al instante. Todo ocurre localmente en tu navegador usando PDF.js y jsPDF — tu documento nunca se sube a un servidor.</p>
+    <p>Indica medidas exactas en milímetros para cada lado y todas las páginas del PDF se recortan de forma consistente en una sola pasada. Todo el proceso ocurre localmente en tu navegador usando pdf-lib — tu documento nunca se sube a un servidor.</p>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
-      <div class="q">¿Perderé la capacidad de seleccionar texto?</div>
-      <div>Sí. Como esta herramienta convierte las páginas en imágenes comprimidas para lograr una reducción de tamaño real, el PDF resultante se basa en imágenes y el texto ya no es seleccionable ni buscable.</div>
+      <div class="q">¿Recortar elimina contenido de forma permanente?</div>
+      <div>No, se mueve el límite visible de la página — el contenido subyacente no se redibuja ni se rasteriza, así que el texto sigue siendo seleccionable.</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Es adecuada para un informe o contrato con mucho texto?</div>
-      <div>No es lo ideal — si necesitas mantener el texto seleccionable y buscable, esta herramienta no es la opción correcta. Funciona mejor con páginas escaneadas o documentos que ya son esencialmente imágenes.</div>
+      <div class="q">¿Puedo recortar diferentes cantidades en cada lado?</div>
+      <div>Sí, los márgenes superior, inferior, izquierdo y derecho son independientes — deja cualquiera en 0 para no tocar ese lado.</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Cuánto se reducirá mi archivo?</div>
-      <div>Varía mucho según tu PDF original y el nivel de compresión que elijas, pero los documentos escaneados o con muchas imágenes suelen reducirse significativamente.</div>
+      <div class="q">¿Qué pasa si mi PDF tiene páginas de distinto tamaño?</div>
+      <div>Las mismas medidas de margen se aplican a todas las páginas. Si una página es demasiado pequeña para los márgenes indicados, verás un error pidiéndote que los reduzcas.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se sube mi PDF a un servidor?</div>
@@ -202,34 +205,8 @@ h2{margin-top:50px;font-size:22px;}
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres profundizar? Lee nuestra guía: <a href="/es/blog/compress-pdf-without-losing-quality/" style="color:var(--accent);text-decoration:none;">Cómo Hacer un Archivo PDF Más Pequeño Sin Perder Calidad</a></p>
-
   <h2>Herramientas relacionadas</h2>
   <div class="related-grid">
-  <a class="related-card" href="/es/merge-pdf/">
-    <div class="icon-box cat-pdf">➕</div>
-    <div class="body">
-      <div class="title">Unir PDF</div>
-      <div class="desc">Combina varios PDF en uno solo.</div>
-    </div>
-    <div class="arrow">→</div>
-  </a>
-  <a class="related-card" href="/es/split-pdf/">
-    <div class="icon-box cat-pdf">✂️</div>
-    <div class="body">
-      <div class="title">Dividir PDF</div>
-      <div class="desc">Extrae un rango o divide cada página.</div>
-    </div>
-    <div class="arrow">→</div>
-  </a>
-  <a class="related-card" href="/es/compress-image/">
-    <div class="icon-box cat-image">📦</div>
-    <div class="body">
-      <div class="title">Comprimir imagen</div>
-      <div class="desc">Reduce el tamaño del archivo sin perder calidad.</div>
-    </div>
-    <div class="arrow">→</div>
-  </a>
   <a class="related-card" href="/es/resize-pdf-pages/">
     <div class="icon-box cat-pdf">📐</div>
     <div class="body">
@@ -238,17 +215,25 @@ h2{margin-top:50px;font-size:22px;}
     </div>
     <div class="arrow">→</div>
   </a>
-  <a class="related-card" href="/es/edit-pdf-metadata/">
-    <div class="icon-box cat-pdf">🏷️</div>
+  <a class="related-card" href="/es/rotate-pdf/">
+    <div class="icon-box cat-pdf">🔃</div>
     <div class="body">
-      <div class="title">Editar metadatos de PDF</div>
-      <div class="desc">Cambia título, autor, asunto y palabras clave.</div>
+      <div class="title">Rotar páginas de PDF</div>
+      <div class="desc">Rota todas o algunas páginas.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+  <a class="related-card" href="/es/pdf-page-organizer/">
+    <div class="icon-box cat-pdf">📑</div>
+    <div class="body">
+      <div class="title">Organizador de páginas PDF</div>
+      <div class="desc">Reordena o elimina páginas visualmente.</div>
     </div>
     <div class="arrow">→</div>
   </a>
 </div>
 
-  <div class="footer">© Orisod Labs</div>
+  <div class="footer">© Orisod Labs · <a href="/es/about/" style="color:var(--muted-text);">Acerca de</a> · <a href="/es/privacy/" style="color:var(--muted-text);">Privacidad</a></div>
 </div>
 
 </main>
@@ -275,19 +260,36 @@ h2{margin-top:50px;font-size:22px;}
 </script>
 
 <script>
+const MM_PER_PT = 25.4 / 72;
+const PT_PER_MM = 72 / 25.4;
+const STANDARD_SIZES_MM = [
+  ['A4', 210, 297], ['Letter', 215.9, 279.4], ['Legal', 215.9, 355.6],
+  ['A3', 297, 420], ['A5', 148, 210]
+];
+
+function detectSizeLabel(wmm, hmm) {
+  const tol = 2;
+  for (const [name, w, h] of STANDARD_SIZES_MM) {
+    if (Math.abs(wmm - w) < tol && Math.abs(hmm - h) < tol) return name;
+    if (Math.abs(wmm - h) < tol && Math.abs(hmm - w) < tol) return name + ' horizontal';
+  }
+  return null;
+}
+
 const fileInput = document.getElementById('fileInput');
 const dropzone = document.getElementById('dropzone');
 const dropzoneText = document.getElementById('dropzoneText');
 const errorMsg = document.getElementById('errorMsg');
-const qualitySlider = document.getElementById('quality');
-const qualityValue = document.getElementById('qualityValue');
-const compressBtn = document.getElementById('compressBtn');
 const progressMsg = document.getElementById('progressMsg');
-const sizeCompare = document.getElementById('sizeCompare');
+const sizeReadout = document.getElementById('sizeReadout');
+const marginFields = document.getElementById('marginFields');
+const topField = document.getElementById('topField');
+const bottomField = document.getElementById('bottomField');
+const leftField = document.getElementById('leftField');
+const rightField = document.getElementById('rightField');
+const saveBtn = document.getElementById('saveBtn');
 
 let selectedFile = null;
-
-qualitySlider.addEventListener('input', () => { qualityValue.textContent = qualitySlider.value; });
 
 fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
 dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
@@ -298,79 +300,88 @@ dropzone.addEventListener('drop', (e) => {
   handleFile(e.dataTransfer.files[0]);
 });
 
-function handleFile(file) {
+async function handleFile(file) {
   errorMsg.textContent = '';
-  sizeCompare.textContent = '';
+  progressMsg.textContent = '';
+  marginFields.style.display = 'none';
+  sizeReadout.textContent = '';
+
   if (!file || !/\.pdf$/i.test(file.name)) {
     errorMsg.textContent = 'Selecciona un archivo PDF válido.';
     return;
   }
-  selectedFile = file;
-  dropzoneText.textContent = `✅ ${file.name} seleccionado (${(file.size / 1024).toFixed(1)} KB)`;
-  compressBtn.disabled = false;
-}
-
-compressBtn.addEventListener('click', async () => {
-  if (!selectedFile) return;
-  compressBtn.disabled = true;
-  compressBtn.textContent = 'Comprimiendo...';
-  errorMsg.textContent = '';
-  sizeCompare.textContent = '';
-  progressMsg.textContent = '';
-
-  const quality = parseInt(qualitySlider.value, 10) / 100;
-  const originalSize = selectedFile.size;
 
   try {
+    const { PDFDocument } = PDFLib;
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await PDFDocument.load(arrayBuffer);
+    selectedFile = file;
+
+    const firstPage = pdf.getPage(0);
+    const { width, height } = firstPage.getSize();
+    const wmm = Math.round(width * MM_PER_PT);
+    const hmm = Math.round(height * MM_PER_PT);
+    const label = detectSizeLabel(wmm, hmm);
+    sizeReadout.textContent = `Tamaño de página: ${wmm} × ${hmm} mm${label ? ' (' + label + ')' : ''} · ${pdf.getPageCount()} página${pdf.getPageCount() === 1 ? '' : 's'}`;
+
+    dropzoneText.textContent = `✅ ${file.name} cargado`;
+    marginFields.style.display = 'block';
+  } catch (err) {
+    errorMsg.textContent = 'No se pudo leer este PDF. Puede estar dañado o protegido con contraseña.';
+  }
+}
+
+saveBtn.addEventListener('click', async () => {
+  if (!selectedFile) return;
+  errorMsg.textContent = '';
+  progressMsg.textContent = '';
+  saveBtn.disabled = true;
+  saveBtn.textContent = 'Recortando...';
+
+  try {
+    const topMM = Math.max(0, parseFloat(topField.value) || 0);
+    const bottomMM = Math.max(0, parseFloat(bottomField.value) || 0);
+    const leftMM = Math.max(0, parseFloat(leftField.value) || 0);
+    const rightMM = Math.max(0, parseFloat(rightField.value) || 0);
+
+    const { PDFDocument } = PDFLib;
     const arrayBuffer = await selectedFile.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-    const { jsPDF } = window.jspdf;
-    let outPdf = null;
+    const pdf = await PDFDocument.load(arrayBuffer);
 
-    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-      progressMsg.textContent = `Procesando página ${pageNum} de ${pdf.numPages}...`;
+    const topPt = topMM * PT_PER_MM;
+    const bottomPt = bottomMM * PT_PER_MM;
+    const leftPt = leftMM * PT_PER_MM;
+    const rightPt = rightMM * PT_PER_MM;
 
-      const page = await pdf.getPage(pageNum);
-      const viewport = page.getViewport({ scale: 1.5 });
-      const canvas = document.createElement('canvas');
-      canvas.width = viewport.width;
-      canvas.height = viewport.height;
-      const ctx = canvas.getContext('2d');
-      await page.render({ canvasContext: ctx, viewport }).promise;
-
-      const dataUrl = canvas.toDataURL('image/jpeg', quality);
-      const orientation = viewport.width > viewport.height ? 'landscape' : 'portrait';
-
-      if (pageNum === 1) {
-        outPdf = new jsPDF({ orientation, unit: 'pt', format: [viewport.width, viewport.height] });
-      } else {
-        outPdf.addPage([viewport.width, viewport.height], orientation);
+    for (const page of pdf.getPages()) {
+      const { x, y, width, height } = page.getMediaBox();
+      const newWidth = width - leftPt - rightPt;
+      const newHeight = height - topPt - bottomPt;
+      if (newWidth <= 0 || newHeight <= 0) {
+        throw new Error('Estos márgenes son más grandes que la propia página. Redúcelos e inténtalo de nuevo.');
       }
-      outPdf.addImage(dataUrl, 'JPEG', 0, 0, viewport.width, viewport.height);
+      page.setCropBox(x + leftPt, y + bottomPt, newWidth, newHeight);
     }
 
-    const outBlob = outPdf.output('blob');
-    const newSize = outBlob.size;
-    const url = URL.createObjectURL(outBlob);
+    const bytes = await pdf.save();
+    const blob = new Blob([bytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
     const baseName = selectedFile.name.replace(/\.pdf$/i, '');
 
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${baseName}-compressed.pdf`;
+    a.download = `${baseName}-recortado.pdf`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
 
-    const savedPct = Math.max(0, Math.round((1 - newSize / originalSize) * 100));
-    progressMsg.textContent = 'Listo — PDF comprimido descargado.';
-    sizeCompare.innerHTML = `${(originalSize / 1024).toFixed(1)} KB → ${(newSize / 1024).toFixed(1)} KB <span class="saved">(${savedPct}% más pequeño)</span>`;
+    progressMsg.textContent = 'Listo — PDF recortado.';
   } catch (err) {
-    errorMsg.textContent = 'No se pudo procesar este PDF. Asegúrate de que no esté dañado ni protegido con contraseña.';
-    progressMsg.textContent = '';
+    errorMsg.textContent = err.message || 'No se pudo recortar este PDF.';
   }
 
-  compressBtn.disabled = false;
-  compressBtn.textContent = 'Comprimir PDF';
+  saveBtn.disabled = false;
+  saveBtn.textContent = 'Recortar y descargar';
 });
 </script>
 </body>

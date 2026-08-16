@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Organizador de páginas PDF – Herramienta gratuita en línea | Orisod</title>
-<meta name="description" content="Reordena o elimina páginas de un PDF con un editor visual de arrastrar y soltar, gratis y en línea. Funciona directamente en tu navegador — no se sube ningún archivo.">
-<link rel="canonical" href="https://orisod.com/es/pdf-page-organizer/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/pdf-page-organizer/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/pdf-page-organizer/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/pdf-page-organizer/">
+<title>Redimensionar páginas de PDF – Herramienta gratuita en línea | Orisod</title>
+<meta name="description" content="Cambia las dimensiones de página de un PDF — pasa entre A4, Letter, Legal o un tamaño personalizado, gratis y en línea. Funciona directamente en tu navegador, sin subir archivos.">
+<link rel="canonical" href="https://orisod.com/es/resize-pdf-pages/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/resize-pdf-pages/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/resize-pdf-pages/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/resize-pdf-pages/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
@@ -33,7 +33,6 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <style>
 :root{
@@ -70,39 +69,23 @@
 .theme-toggle:hover{border-color:var(--accent);}
 main{padding:40px 20px 60px 20px;}
 body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
-.container{max-width:900px;margin:0 auto;}
+.container{max-width:800px;margin:0 auto;}
 h1{font-size:44px;margin-bottom:10px;}
 p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
 .box{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:30px 20px;margin-top:30px;}
 .dropzone{border:2px dashed var(--dropzone-border);border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
 .dropzone:hover, .dropzone.dragover{border-color:var(--accent);}
 input[type="file"]{display:none;}
-.pages-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill, minmax(120px, 1fr));
-  gap:14px;
-  margin-top:24px;
+.size-readout{margin-top:16px;font-size:14px;opacity:0.75;}
+.resize-fields{margin-top:20px;text-align:left;}
+.field-row{margin-bottom:14px;}
+.field-row label{display:block;font-size:13px;font-weight:bold;margin-bottom:6px;opacity:0.85;}
+.field-row select, .field-row input[type="number"]{
+  width:100%;padding:10px 12px;border-radius:6px;border:1px solid #374151;background:#0f172a;color:white;font-size:14px;
 }
-.page-card{color:#fff;
-  background:#0f172a;
-  border:2px solid var(--border);
-  border-radius:8px;
-  padding:8px;
-  cursor:grab;
-  transition:0.15s;
-  position:relative;
-}
-.page-card.dragging{opacity:0.4;}
-.page-card.drag-over{border-color:#2563eb;}
-.page-card img{width:100%;border-radius:4px;display:block;background:white;}
-.page-card .page-label{font-size:12px;margin-top:6px;opacity:0.75;}
-.page-card .delete-btn{
-  position:absolute;top:4px;right:4px;
-  background:#dc2626;color:white;border:none;border-radius:4px;
-  width:22px;height:22px;font-size:12px;cursor:pointer;line-height:1;
-  display:flex;align-items:center;justify-content:center;padding:0;margin:0;
-}
-button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
+.custom-grid{display:grid;grid-template-columns:repeat(2, 1fr);gap:14px;}
+@media (max-width:480px){.custom-grid{grid-template-columns:1fr;}}
+button, .back{display:inline-block;margin-top:16px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
 button:disabled{opacity:0.4;cursor:not-allowed;}
 button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
 .note{margin-top:20px;font-size:14px;opacity:0.6;}
@@ -143,7 +126,7 @@ h2{margin-top:50px;font-size:22px;}
     <a href="/es/blog/">Blog</a>
   </nav>
   <div class="site-nav-right">
-    <a class="lang-flag" href="/pdf-page-organizer/">EN</a>
+    <a class="lang-flag" href="/resize-pdf-pages/">EN</a>
     <span class="lang-flag active">ES</span>
     <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
   </div>
@@ -151,8 +134,8 @@ h2{margin-top:50px;font-size:22px;}
 
 <main>
 <div class="container">
-  <h1>Organizador de páginas PDF</h1>
-  <p>Arrastra para reordenar páginas, o elimina las que no necesites — luego descarga el PDF reorganizado. Todo ocurre localmente en tu navegador.</p>
+  <h1>Redimensionar páginas de PDF</h1>
+  <p>Cambia las dimensiones de página de un PDF — a A4, Letter, Legal o un tamaño personalizado — y descarga el archivo redimensionado. Todo ocurre localmente en tu navegador.</p>
 
   <div class="box">
     <label class="dropzone" id="dropzone" for="fileInput">
@@ -160,43 +143,64 @@ h2{margin-top:50px;font-size:22px;}
     </label>
     <input type="file" id="fileInput" accept=".pdf">
     <div class="error" id="errorMsg"></div>
-    <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subir archivos · Sin cuenta · Sin marca de agua</div>
+    <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subidas · Sin cuenta · Sin marca de agua</div>
+    <div class="size-readout" id="sizeReadout"></div>
+
+    <div class="resize-fields" id="resizeFields" style="display:none;">
+      <div class="field-row">
+        <label for="sizeSelect">Tamaño de página objetivo</label>
+        <select id="sizeSelect">
+          <option value="a4">A4 (210 × 297 mm)</option>
+          <option value="letter">Letter (215.9 × 279.4 mm)</option>
+          <option value="legal">Legal (215.9 × 355.6 mm)</option>
+          <option value="a3">A3 (297 × 420 mm)</option>
+          <option value="a5">A5 (148 × 210 mm)</option>
+          <option value="custom">Tamaño personalizado…</option>
+        </select>
+      </div>
+      <div class="custom-grid" id="customGrid" style="display:none;">
+        <div class="field-row">
+          <label for="customW">Ancho (mm)</label>
+          <input type="number" id="customW" min="1" step="1" placeholder="210">
+        </div>
+        <div class="field-row">
+          <label for="customH">Alto (mm)</label>
+          <input type="number" id="customH" min="1" step="1" placeholder="297">
+        </div>
+      </div>
+      <button id="saveBtn">Redimensionar y descargar</button>
+    </div>
+
     <div class="progress" id="progressMsg"></div>
-
-    <div class="pages-grid" id="pagesGrid"></div>
-
-    <br>
-    <button id="saveBtn" style="display:none;">Guardar PDF reorganizado</button>
-    <div class="note">Arrastra cualquier miniatura de página para reordenarla. Haz clic en la ✕ de una página para eliminarla.</div>
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué hace esta herramienta?</h2>
-    <p>Esta herramienta muestra cada página de tu PDF como una miniatura que puedes arrastrar a un nuevo orden, o eliminar por completo, antes de guardar un documento reconstruido. El contenido del PDF se mantiene exactamente igual — el texto sigue siendo seleccionable, solo cambian el orden y la cantidad de páginas.</p>
+    <h2>¿Qué hace redimensionar un PDF?</h2>
+    <p>Redimensionar cambia las dimensiones físicas de la página de un PDF — por ejemplo, convertir un documento en tamaño Letter a A4, o al revés. El contenido de cada página se escala proporcionalmente para ajustarse a las nuevas dimensiones, así que nada se recorta; se estira o se reduce para coincidir con el tamaño objetivo.</p>
 
-    <h2>¿Cuándo deberías usarla?</h2>
+    <h2>¿Cuándo usar esta herramienta?</h2>
     <ul>
-      <li>Las páginas de un documento escaneado salieron en el orden incorrecto</li>
-      <li>Necesitas eliminar una página en blanco, duplicada o irrelevante de un PDF</li>
-      <li>Estás ensamblando un documento y necesitas reorganizar secciones visualmente</li>
-      <li>Quieres ver todas las páginas de un vistazo antes de decidir qué conservar</li>
+      <li>Recibiste un PDF en tamaño Letter pero necesitas imprimirlo en papel A4 (o al revés)</li>
+      <li>Un documento debe coincidir con un tamaño de página específico que pide una imprenta o editorial</li>
+      <li>Estás estandarizando un lote de PDFs de distintas fuentes a un tamaño consistente</li>
+      <li>Necesitas un tamaño de página personalizado que no está entre los ajustes estándar</li>
     </ul>
 
     <h2>¿Por qué usar Orisod para esto?</h2>
-    <p>Ves una miniatura real de cada página, no solo un número de página, lo que facilita mucho reordenar o eliminar las correctas. Todo ocurre localmente en tu navegador usando PDF.js y pdf-lib — tu documento nunca se sube a un servidor.</p>
+    <p>Elige un ajuste estándar o introduce un ancho y alto personalizados en milímetros, y todas las páginas se redimensionan en una sola pasada. Todo el proceso ocurre localmente en tu navegador usando pdf-lib — tu documento nunca se sube a un servidor.</p>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
-      <div class="q">¿Esto afecta la selección de texto?</div>
-      <div>No, el contenido real de las páginas del PDF se conserva exactamente — solo cambian el orden y qué páginas se incluyen.</div>
+      <div class="q">¿Redimensionar distorsiona mi contenido?</div>
+      <div>El contenido se escala para ajustarse a las nuevas dimensiones. Si el nuevo tamaño tiene una proporción distinta al original, el contenido se estirará ligeramente para llenarlo — el mismo compromiso que hace cualquier herramienta de "ajustar al tamaño".</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Puedo eliminar más de una página?</div>
-      <div>Sí, haz clic en la ✕ de tantas páginas como quieras eliminar antes de guardar.</div>
+      <div class="q">¿Esto cambia mucho el tamaño del archivo?</div>
+      <div>Normalmente no — el contenido e imágenes subyacentes no se recomprimen, solo cambian las dimensiones de página y la escala del contenido.</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Qué pasa si quiero deshacer una eliminación?</div>
-      <div>Recarga la página y sube tu PDF de nuevo para empezar de cero desde el original.</div>
+      <div class="q">¿Puedo indicar un tamaño que no está en la lista?</div>
+      <div>Sí, elige "Tamaño personalizado…" e introduce cualquier ancho y alto en milímetros.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se sube mi PDF a un servidor?</div>
@@ -204,42 +208,8 @@ h2{margin-top:50px;font-size:22px;}
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres profundizar? Lee nuestra guía: <a href="/es/blog/reorder-delete-pdf-pages/" style="color:var(--accent);text-decoration:none;">Cómo Reordenar o Eliminar Páginas en un PDF</a></p>
-
   <h2>Herramientas relacionadas</h2>
   <div class="related-grid">
-  <a class="related-card" href="/es/merge-pdf/">
-    <div class="icon-box cat-pdf">➕</div>
-    <div class="body">
-      <div class="title">Unir PDF</div>
-      <div class="desc">Combina varios PDF en uno solo.</div>
-    </div>
-    <div class="arrow">→</div>
-  </a>
-  <a class="related-card" href="/es/rotate-pdf/">
-    <div class="icon-box cat-pdf">🔃</div>
-    <div class="body">
-      <div class="title">Rotar páginas de PDF</div>
-      <div class="desc">Rota todas las páginas o solo algunas.</div>
-    </div>
-    <div class="arrow">→</div>
-  </a>
-  <a class="related-card" href="/es/add-page-numbers/">
-    <div class="icon-box cat-pdf">🔢</div>
-    <div class="body">
-      <div class="title">Añadir números de página</div>
-      <div class="desc">Numera las páginas de un PDF.</div>
-    </div>
-    <div class="arrow">→</div>
-  </a>
-  <a class="related-card" href="/es/delete-pdf-pages/">
-    <div class="icon-box cat-pdf">🗑️</div>
-    <div class="body">
-      <div class="title">Eliminar páginas de PDF</div>
-      <div class="desc">Elimina páginas por número o rango.</div>
-    </div>
-    <div class="arrow">→</div>
-  </a>
   <a class="related-card" href="/es/crop-pdf-pages/">
     <div class="icon-box cat-pdf">🔲</div>
     <div class="body">
@@ -248,9 +218,25 @@ h2{margin-top:50px;font-size:22px;}
     </div>
     <div class="arrow">→</div>
   </a>
+  <a class="related-card" href="/es/compress-pdf/">
+    <div class="icon-box cat-pdf">📦</div>
+    <div class="body">
+      <div class="title">Comprimir PDF</div>
+      <div class="desc">Reduce PDFs escaneados o con muchas imágenes.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+  <a class="related-card" href="/es/rotate-pdf/">
+    <div class="icon-box cat-pdf">🔃</div>
+    <div class="body">
+      <div class="title">Rotar páginas de PDF</div>
+      <div class="desc">Rota todas o algunas páginas.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
 </div>
 
-  <div class="footer">© Orisod Labs</div>
+  <div class="footer">© Orisod Labs · <a href="/es/about/" style="color:var(--muted-text);">Acerca de</a> · <a href="/es/privacy/" style="color:var(--muted-text);">Privacidad</a></div>
 </div>
 
 </main>
@@ -277,16 +263,39 @@ h2{margin-top:50px;font-size:22px;}
 </script>
 
 <script>
+const MM_PER_PT = 25.4 / 72;
+const PT_PER_MM = 72 / 25.4;
+const PRESETS_MM = {
+  a4: [210, 297], letter: [215.9, 279.4], legal: [215.9, 355.6], a3: [297, 420], a5: [148, 210]
+};
+const STANDARD_SIZES_MM = [
+  ['A4', 210, 297], ['Letter', 215.9, 279.4], ['Legal', 215.9, 355.6],
+  ['A3', 297, 420], ['A5', 148, 210]
+];
+
+function detectSizeLabel(wmm, hmm) {
+  const tol = 2;
+  for (const [name, w, h] of STANDARD_SIZES_MM) {
+    if (Math.abs(wmm - w) < tol && Math.abs(hmm - h) < tol) return name;
+    if (Math.abs(wmm - h) < tol && Math.abs(hmm - w) < tol) return name + ' horizontal';
+  }
+  return null;
+}
+
 const fileInput = document.getElementById('fileInput');
 const dropzone = document.getElementById('dropzone');
 const dropzoneText = document.getElementById('dropzoneText');
 const errorMsg = document.getElementById('errorMsg');
 const progressMsg = document.getElementById('progressMsg');
-const pagesGrid = document.getElementById('pagesGrid');
+const sizeReadout = document.getElementById('sizeReadout');
+const resizeFields = document.getElementById('resizeFields');
+const sizeSelect = document.getElementById('sizeSelect');
+const customGrid = document.getElementById('customGrid');
+const customW = document.getElementById('customW');
+const customH = document.getElementById('customH');
 const saveBtn = document.getElementById('saveBtn');
 
 let selectedFile = null;
-let pageOrder = [];
 
 fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
 dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
@@ -297,120 +306,77 @@ dropzone.addEventListener('drop', (e) => {
   handleFile(e.dataTransfer.files[0]);
 });
 
+sizeSelect.addEventListener('change', () => {
+  customGrid.style.display = sizeSelect.value === 'custom' ? 'grid' : 'none';
+});
+
 async function handleFile(file) {
   errorMsg.textContent = '';
-  pagesGrid.innerHTML = '';
-  saveBtn.style.display = 'none';
+  progressMsg.textContent = '';
+  resizeFields.style.display = 'none';
+  sizeReadout.textContent = '';
 
   if (!file || !/\.pdf$/i.test(file.name)) {
     errorMsg.textContent = 'Selecciona un archivo PDF válido.';
     return;
   }
-  selectedFile = file;
-  dropzoneText.textContent = `✅ ${file.name} cargado`;
 
   try {
+    const { PDFDocument } = PDFLib;
     const arrayBuffer = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
-    pageOrder = [];
+    const pdf = await PDFDocument.load(arrayBuffer);
+    selectedFile = file;
 
-    for (let i = 1; i <= pdf.numPages; i++) {
-      progressMsg.textContent = `Renderizando miniatura ${i} de ${pdf.numPages}...`;
-      const page = await pdf.getPage(i);
-      const viewport = page.getViewport({ scale: 0.3 });
-      const canvas = document.createElement('canvas');
-      canvas.width = viewport.width;
-      canvas.height = viewport.height;
-      const ctx = canvas.getContext('2d');
-      await page.render({ canvasContext: ctx, viewport }).promise;
+    const firstPage = pdf.getPage(0);
+    const { width, height } = firstPage.getSize();
+    const wmm = Math.round(width * MM_PER_PT);
+    const hmm = Math.round(height * MM_PER_PT);
+    const label = detectSizeLabel(wmm, hmm);
+    sizeReadout.textContent = `Tamaño actual: ${wmm} × ${hmm} mm${label ? ' (' + label + ')' : ''} · ${pdf.getPageCount()} página${pdf.getPageCount() === 1 ? '' : 's'}`;
 
-      pageOrder.push(i - 1);
-      addPageCard(i - 1, canvas.toDataURL('image/jpeg', 0.7), i);
-    }
-
-    progressMsg.textContent = '';
-    saveBtn.style.display = 'inline-block';
+    dropzoneText.textContent = `✅ ${file.name} cargado`;
+    resizeFields.style.display = 'block';
   } catch (err) {
     errorMsg.textContent = 'No se pudo leer este PDF. Puede estar dañado o protegido con contraseña.';
-    progressMsg.textContent = '';
   }
-}
-
-let draggedCard = null;
-
-function addPageCard(originalIndex, thumbnailDataUrl, displayNum) {
-  const card = document.createElement('div');
-  card.className = 'page-card';
-  card.draggable = true;
-  card.dataset.originalIndex = originalIndex;
-
-  card.innerHTML = `
-    <button class="delete-btn" title="Eliminar esta página">✕</button>
-    <img src="${thumbnailDataUrl}" alt="Página ${displayNum}">
-    <div class="page-label">Página ${displayNum}</div>
-  `;
-
-  card.querySelector('.delete-btn').addEventListener('click', () => {
-    pageOrder = pageOrder.filter(idx => idx !== originalIndex);
-    card.remove();
-  });
-
-  card.addEventListener('dragstart', () => {
-    draggedCard = card;
-    card.classList.add('dragging');
-  });
-  card.addEventListener('dragend', () => {
-    card.classList.remove('dragging');
-    draggedCard = null;
-    updatePageOrderFromDom();
-  });
-  card.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    card.classList.add('drag-over');
-  });
-  card.addEventListener('dragleave', () => {
-    card.classList.remove('drag-over');
-  });
-  card.addEventListener('drop', (e) => {
-    e.preventDefault();
-    card.classList.remove('drag-over');
-    if (draggedCard && draggedCard !== card) {
-      const allCards = Array.from(pagesGrid.children);
-      const draggedIdx = allCards.indexOf(draggedCard);
-      const targetIdx = allCards.indexOf(card);
-      if (draggedIdx < targetIdx) {
-        card.after(draggedCard);
-      } else {
-        card.before(draggedCard);
-      }
-    }
-  });
-
-  pagesGrid.appendChild(card);
-}
-
-function updatePageOrderFromDom() {
-  pageOrder = Array.from(pagesGrid.children).map(card => parseInt(card.dataset.originalIndex, 10));
 }
 
 saveBtn.addEventListener('click', async () => {
-  if (!selectedFile || pageOrder.length === 0) {
-    errorMsg.textContent = 'No quedan páginas para guardar.';
-    return;
+  if (!selectedFile) return;
+  errorMsg.textContent = '';
+  progressMsg.textContent = '';
+
+  let targetWmm, targetHmm;
+  if (sizeSelect.value === 'custom') {
+    targetWmm = parseFloat(customW.value);
+    targetHmm = parseFloat(customH.value);
+    if (!(targetWmm > 0) || !(targetHmm > 0)) {
+      errorMsg.textContent = 'Introduce un ancho y alto personalizados válidos.';
+      return;
+    }
+  } else {
+    [targetWmm, targetHmm] = PRESETS_MM[sizeSelect.value];
   }
 
   saveBtn.disabled = true;
-  saveBtn.textContent = 'Guardando...';
-  errorMsg.textContent = '';
+  saveBtn.textContent = 'Redimensionando...';
 
   try {
     const { PDFDocument } = PDFLib;
     const arrayBuffer = await selectedFile.arrayBuffer();
-    const sourcePdf = await PDFDocument.load(arrayBuffer);
+    const srcPdf = await PDFDocument.load(arrayBuffer);
     const newPdf = await PDFDocument.create();
 
-    const copiedPages = await newPdf.copyPages(sourcePdf, pageOrder);
-    copiedPages.forEach((page) => newPdf.addPage(page));
+    const targetWpt = targetWmm * PT_PER_MM;
+    const targetHpt = targetHmm * PT_PER_MM;
+
+    const indices = srcPdf.getPageIndices();
+    const embeddedPages = await newPdf.embedPdf(srcPdf, indices);
+
+    for (const embedded of embeddedPages) {
+      const newPage = newPdf.addPage([targetWpt, targetHpt]);
+      newPage.drawPage(embedded, { x: 0, y: 0, width: targetWpt, height: targetHpt });
+    }
 
     const bytes = await newPdf.save();
     const blob = new Blob([bytes], { type: 'application/pdf' });
@@ -419,16 +385,18 @@ saveBtn.addEventListener('click', async () => {
 
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${baseName}-organized.pdf`;
+    a.download = `${baseName}-redimensionado.pdf`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
+
+    progressMsg.textContent = 'Listo — PDF redimensionado.';
   } catch (err) {
-    errorMsg.textContent = 'No se pudo guardar el PDF reorganizado.';
+    errorMsg.textContent = err.message || 'No se pudo redimensionar este PDF.';
   }
 
   saveBtn.disabled = false;
-  saveBtn.textContent = 'Guardar PDF reorganizado';
+  saveBtn.textContent = 'Redimensionar y descargar';
 });
 </script>
 </body>

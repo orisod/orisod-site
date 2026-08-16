@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rotate PDF Pages – Free Online Tool | Orisod</title>
-<meta name="description" content="Rotate all or specific pages of a PDF online for free. Works directly in your browser — no files are uploaded.">
-<link rel="canonical" href="https://orisod.com/rotate-pdf/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/rotate-pdf/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/rotate-pdf/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/rotate-pdf/">
+<title>Crop PDF Pages – Free Online Tool | Orisod</title>
+<meta name="description" content="Trim the margins off every page of a PDF by entering exact top, bottom, left and right measurements, online for free. Works directly in your browser — no files are uploaded.">
+<link rel="canonical" href="https://orisod.com/crop-pdf-pages/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/crop-pdf-pages/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/crop-pdf-pages/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/crop-pdf-pages/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
@@ -76,21 +76,17 @@ p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-heigh
 .dropzone{border:2px dashed var(--dropzone-border);border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
 .dropzone:hover, .dropzone.dragover{border-color:var(--accent);}
 input[type="file"]{display:none;}
-.page-info{margin-top:16px;font-size:14px;opacity:0.75;}
-.rotate-options{margin-top:20px;text-align:left;}
-.option-card{color:#fff;background:#0f172a;border:1px solid var(--border);border-radius:8px;padding:18px;margin-bottom:14px;}
-.option-card h3{margin:0 0 8px 0;font-size:15px;}
-.option-card p{margin:0 0 12px 0;font-size:13px;opacity:0.7;text-align:left;}
-.option-card input[type="text"]{
-  padding:10px;border-radius:6px;border:1px solid #374151;background:#0f172a;color:white;font-size:14px;width:160px;
+.size-readout{margin-top:16px;font-size:14px;opacity:0.75;}
+.margin-fields{margin-top:20px;text-align:left;}
+.margin-grid{display:grid;grid-template-columns:repeat(2, 1fr);gap:14px;}
+@media (max-width:480px){.margin-grid{grid-template-columns:1fr;}}
+.field-row label{display:block;font-size:13px;font-weight:bold;margin-bottom:6px;opacity:0.85;}
+.field-row input[type="number"]{
+  width:100%;padding:10px 12px;border-radius:6px;border:1px solid #374151;background:#0f172a;color:white;font-size:14px;
 }
-.angle-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
-.angle-btn{padding:8px 14px;border-radius:6px;border:1px solid #374151;background:var(--card-bg);color:white;cursor:pointer;font-size:13px;}
-.angle-btn.active{background:var(--accent);border-color:#2563eb;}
-button, .back{display:inline-block;margin-top:12px;padding:12px 18px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:15px;cursor:pointer;}
+button, .back{display:inline-block;margin-top:16px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
 button:disabled{opacity:0.4;cursor:not-allowed;}
 button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
-.back{padding:14px 20px;margin-top:20px;font-size:16px;}
 .note{margin-top:20px;font-size:14px;opacity:0.6;}
 .footer{margin-top:50px;font-size:14px;opacity:0.4;}
 .error{color:#f87171;font-size:14px;margin-top:10px;}
@@ -130,15 +126,15 @@ h2{margin-top:50px;font-size:22px;}
   </nav>
   <div class="site-nav-right">
     <span class="lang-flag active">EN</span>
-    <a class="lang-flag" href="/es/rotate-pdf/">ES</a>
+    <a class="lang-flag" href="/es/crop-pdf-pages/">ES</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
   </div>
 </header>
 
 <main>
 <div class="container">
-  <h1>Rotate PDF Pages</h1>
-  <p>Rotate all pages or just specific ones in a PDF. Everything happens locally in your browser — your file is never uploaded anywhere.</p>
+  <h1>Crop PDF Pages</h1>
+  <p>Trim the margins off every page of a PDF by entering exact measurements — then download the cropped file. Everything happens locally in your browser.</p>
 
   <div class="box">
     <label class="dropzone" id="dropzone" for="fileInput">
@@ -147,57 +143,61 @@ h2{margin-top:50px;font-size:22px;}
     <input type="file" id="fileInput" accept=".pdf">
     <div class="error" id="errorMsg"></div>
     <div class="trust-strip">🔒 Processed on your device · No upload · No account · No watermark</div>
-    <div class="page-info" id="pageInfo"></div>
+    <div class="size-readout" id="sizeReadout"></div>
 
-    <div class="rotate-options" id="rotateOptions" style="display:none;">
-      <div class="option-card">
-        <h3>Rotation angle</h3>
-        <div class="angle-row">
-          <div class="angle-btn active" data-angle="90">90° Right</div>
-          <div class="angle-btn" data-angle="-90">90° Left</div>
-          <div class="angle-btn" data-angle="180">180°</div>
+    <div class="margin-fields" id="marginFields" style="display:none;">
+      <div class="margin-grid">
+        <div class="field-row">
+          <label for="topField">Top margin (mm)</label>
+          <input type="number" id="topField" value="0" min="0" step="1">
+        </div>
+        <div class="field-row">
+          <label for="bottomField">Bottom margin (mm)</label>
+          <input type="number" id="bottomField" value="0" min="0" step="1">
+        </div>
+        <div class="field-row">
+          <label for="leftField">Left margin (mm)</label>
+          <input type="number" id="leftField" value="0" min="0" step="1">
+        </div>
+        <div class="field-row">
+          <label for="rightField">Right margin (mm)</label>
+          <input type="number" id="rightField" value="0" min="0" step="1">
         </div>
       </div>
-
-      <div class="option-card">
-        <h3>Which pages?</h3>
-        <p>Leave blank to rotate every page, or enter specific pages/ranges (e.g. "1-2, 4").</p>
-        <input type="text" id="pagesInput" placeholder="All pages (or e.g. 1-2, 4)">
-      </div>
-
-      <button id="rotateBtn">Rotate &amp; Download</button>
+      <br>
+      <button id="saveBtn">Crop & Download</button>
     </div>
 
     <div class="progress" id="progressMsg"></div>
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>This tool rotates pages inside a PDF by 90°, 180°, or 270°, either across the whole document or only the specific pages you choose. The underlying PDF content stays exactly as it was — text remains selectable and searchable, only the page orientation changes.</p>
+    <h2>What does cropping a PDF do?</h2>
+    <p>Cropping trims the visible area of every page by the amount you specify on each side, measured in millimeters. The underlying content isn't deleted or redrawn — the page's visible boundary (its crop box) is simply moved inward, hiding the margins you no longer want to show or print.</p>
 
-    <h2>When should you use it?</h2>
+    <h2>When should you use this tool?</h2>
     <ul>
-      <li>A scanned document has one or more pages that came out sideways or upside down</li>
-      <li>You combined pages from different sources with mismatched orientations</li>
-      <li>Only some pages in a document need rotating, not all of them</li>
-      <li>You need to fix orientation before printing or sharing a document</li>
+      <li>A scanned document has wide, uneven margins you want to remove</li>
+      <li>You're preparing a PDF for a print layout that requires specific margins</li>
+      <li>A page was exported with extra white space you want to trim off</li>
+      <li>You want to remove a header or footer band that sits within a fixed margin</li>
     </ul>
 
     <h2>Why use Orisod for this?</h2>
-    <p>You can rotate every page at once, or target specific pages/ranges while leaving the rest untouched. The rotation happens entirely in your browser using pdf-lib — your document is never uploaded to a server, and the text stays fully selectable.</p>
+    <p>You enter exact millimeter measurements for each side and every page in the PDF is cropped consistently in one pass. The whole process happens locally in your browser using pdf-lib — your document is never uploaded to a server.</p>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
-      <div class="q">Does this affect text selectability?</div>
-      <div>No, this only changes the page's rotation metadata — the actual PDF content, including selectable text, stays exactly as it was.</div>
+      <div class="q">Does cropping delete any content permanently?</div>
+      <div>No, it moves the page's visible boundary — the content underneath isn't redrawn or rasterized, so text stays selectable.</div>
     </div>
     <div class="faq-item">
-      <div class="q">Can I rotate only some pages?</div>
-      <div>Yes, enter specific page numbers or ranges (like "1-2, 4"), and only those pages will be rotated — the rest stay untouched.</div>
+      <div class="q">Can I crop different amounts from each side?</div>
+      <div>Yes, the top, bottom, left and right margins are independent — set any of them to 0 to leave that side untouched.</div>
     </div>
     <div class="faq-item">
-      <div class="q">Can I rotate in both directions?</div>
-      <div>Yes, choose 90° right, 90° left, or a full 180° flip.</div>
+      <div class="q">What if my PDF has pages of different sizes?</div>
+      <div>The same margin measurements are applied to every page. If a page is too small for the margins you entered, you'll see an error asking you to reduce them.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my PDF uploaded to a server?</div>
@@ -205,42 +205,8 @@ h2{margin-top:50px;font-size:22px;}
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/rotate-pdf-pages/" style="color:var(--accent);text-decoration:none;">How to Rotate Pages in a PDF (Free, No Software)</a></p>
-
   <h2>Related tools</h2>
   <div class="related-grid">
-  <a class="related-card" href="/merge-pdf/">
-    <div class="icon-box cat-pdf">➕</div>
-    <div class="body">
-      <div class="title">Merge PDF</div>
-      <div class="desc">Combine multiple PDFs into one.</div>
-    </div>
-    <div class="arrow">→</div>
-  </a>
-  <a class="related-card" href="/split-pdf/">
-    <div class="icon-box cat-pdf">✂️</div>
-    <div class="body">
-      <div class="title">Split PDF</div>
-      <div class="desc">Extract a range or split every page.</div>
-    </div>
-    <div class="arrow">→</div>
-  </a>
-  <a class="related-card" href="/rotate-image/">
-    <div class="icon-box cat-image">🔃</div>
-    <div class="body">
-      <div class="title">Rotate Image</div>
-      <div class="desc">Rotate or flip an image instantly.</div>
-    </div>
-    <div class="arrow">→</div>
-  </a>
-  <a class="related-card" href="/crop-pdf-pages/">
-    <div class="icon-box cat-pdf">🔲</div>
-    <div class="body">
-      <div class="title">Crop PDF Pages</div>
-      <div class="desc">Trim margins from every page.</div>
-    </div>
-    <div class="arrow">→</div>
-  </a>
   <a class="related-card" href="/resize-pdf-pages/">
     <div class="icon-box cat-pdf">📐</div>
     <div class="body">
@@ -249,9 +215,25 @@ h2{margin-top:50px;font-size:22px;}
     </div>
     <div class="arrow">→</div>
   </a>
+  <a class="related-card" href="/rotate-pdf/">
+    <div class="icon-box cat-pdf">🔃</div>
+    <div class="body">
+      <div class="title">Rotate PDF Pages</div>
+      <div class="desc">Rotate all or specific pages.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+  <a class="related-card" href="/pdf-page-organizer/">
+    <div class="icon-box cat-pdf">📑</div>
+    <div class="body">
+      <div class="title">PDF Page Organizer</div>
+      <div class="desc">Reorder or delete pages visually.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
 </div>
 
-  <div class="footer">© Orisod Labs</div>
+  <div class="footer">© Orisod Labs · <a href="/about/" style="color:var(--muted-text);">About</a> · <a href="/privacy/" style="color:var(--muted-text);">Privacy</a></div>
 </div>
 
 </main>
@@ -278,27 +260,36 @@ h2{margin-top:50px;font-size:22px;}
 </script>
 
 <script>
+const MM_PER_PT = 25.4 / 72;
+const PT_PER_MM = 72 / 25.4;
+const STANDARD_SIZES_MM = [
+  ['A4', 210, 297], ['Letter', 215.9, 279.4], ['Legal', 215.9, 355.6],
+  ['A3', 297, 420], ['A5', 148, 210]
+];
+
+function detectSizeLabel(wmm, hmm) {
+  const tol = 2;
+  for (const [name, w, h] of STANDARD_SIZES_MM) {
+    if (Math.abs(wmm - w) < tol && Math.abs(hmm - h) < tol) return name;
+    if (Math.abs(wmm - h) < tol && Math.abs(hmm - w) < tol) return name + ' landscape';
+  }
+  return null;
+}
+
 const fileInput = document.getElementById('fileInput');
 const dropzone = document.getElementById('dropzone');
 const dropzoneText = document.getElementById('dropzoneText');
 const errorMsg = document.getElementById('errorMsg');
-const pageInfo = document.getElementById('pageInfo');
-const rotateOptions = document.getElementById('rotateOptions');
-const pagesInput = document.getElementById('pagesInput');
-const rotateBtn = document.getElementById('rotateBtn');
 const progressMsg = document.getElementById('progressMsg');
+const sizeReadout = document.getElementById('sizeReadout');
+const marginFields = document.getElementById('marginFields');
+const topField = document.getElementById('topField');
+const bottomField = document.getElementById('bottomField');
+const leftField = document.getElementById('leftField');
+const rightField = document.getElementById('rightField');
+const saveBtn = document.getElementById('saveBtn');
 
 let selectedFile = null;
-let totalPages = 0;
-let selectedAngle = 90;
-
-document.querySelectorAll('.angle-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.angle-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    selectedAngle = parseInt(btn.dataset.angle, 10);
-  });
-});
 
 fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
 dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
@@ -312,6 +303,9 @@ dropzone.addEventListener('drop', (e) => {
 async function handleFile(file) {
   errorMsg.textContent = '';
   progressMsg.textContent = '';
+  marginFields.style.display = 'none';
+  sizeReadout.textContent = '';
+
   if (!file || !/\.pdf$/i.test(file.name)) {
     errorMsg.textContent = 'Please select a valid PDF file.';
     return;
@@ -321,65 +315,53 @@ async function handleFile(file) {
     const { PDFDocument } = PDFLib;
     const arrayBuffer = await file.arrayBuffer();
     const pdf = await PDFDocument.load(arrayBuffer);
-    totalPages = pdf.getPageCount();
     selectedFile = file;
 
+    const firstPage = pdf.getPage(0);
+    const { width, height } = firstPage.getSize();
+    const wmm = Math.round(width * MM_PER_PT);
+    const hmm = Math.round(height * MM_PER_PT);
+    const label = detectSizeLabel(wmm, hmm);
+    sizeReadout.textContent = `Page size: ${wmm} × ${hmm} mm${label ? ' (' + label + ')' : ''} · ${pdf.getPageCount()} page${pdf.getPageCount() === 1 ? '' : 's'}`;
+
     dropzoneText.textContent = `✅ ${file.name} loaded`;
-    pageInfo.textContent = `This PDF has ${totalPages} page${totalPages !== 1 ? 's' : ''}.`;
-    rotateOptions.style.display = 'block';
+    marginFields.style.display = 'block';
   } catch (err) {
     errorMsg.textContent = 'Could not read this PDF. It may be corrupted or password-protected.';
-    rotateOptions.style.display = 'none';
-    pageInfo.textContent = '';
   }
 }
 
-function parsePageSelection(raw, maxPage) {
-  if (!raw.trim()) {
-    return Array.from({ length: maxPage }, (_, i) => i + 1);
-  }
-  const pages = new Set();
-  const parts = raw.split(',');
-  for (const part of parts) {
-    const trimmed = part.trim();
-    if (!trimmed) continue;
-    if (trimmed.includes('-')) {
-      const [startStr, endStr] = trimmed.split('-');
-      const start = parseInt(startStr, 10);
-      const end = parseInt(endStr, 10);
-      if (isNaN(start) || isNaN(end) || start < 1 || end > maxPage || end < start) {
-        throw new Error(`Invalid range: "${trimmed}"`);
-      }
-      for (let p = start; p <= end; p++) pages.add(p);
-    } else {
-      const num = parseInt(trimmed, 10);
-      if (isNaN(num) || num < 1 || num > maxPage) {
-        throw new Error(`Invalid page number: "${trimmed}"`);
-      }
-      pages.add(num);
-    }
-  }
-  return Array.from(pages);
-}
-
-rotateBtn.addEventListener('click', async () => {
+saveBtn.addEventListener('click', async () => {
+  if (!selectedFile) return;
   errorMsg.textContent = '';
   progressMsg.textContent = '';
-  rotateBtn.disabled = true;
-  rotateBtn.textContent = 'Rotating...';
+  saveBtn.disabled = true;
+  saveBtn.textContent = 'Cropping...';
 
   try {
-    const pagesToRotate = parsePageSelection(pagesInput.value, totalPages);
-    const { PDFDocument, degrees } = PDFLib;
+    const topMM = Math.max(0, parseFloat(topField.value) || 0);
+    const bottomMM = Math.max(0, parseFloat(bottomField.value) || 0);
+    const leftMM = Math.max(0, parseFloat(leftField.value) || 0);
+    const rightMM = Math.max(0, parseFloat(rightField.value) || 0);
+
+    const { PDFDocument } = PDFLib;
     const arrayBuffer = await selectedFile.arrayBuffer();
     const pdf = await PDFDocument.load(arrayBuffer);
-    const pages = pdf.getPages();
 
-    pagesToRotate.forEach((pageNum) => {
-      const page = pages[pageNum - 1];
-      const current = page.getRotation().angle;
-      page.setRotation(degrees(current + selectedAngle));
-    });
+    const topPt = topMM * PT_PER_MM;
+    const bottomPt = bottomMM * PT_PER_MM;
+    const leftPt = leftMM * PT_PER_MM;
+    const rightPt = rightMM * PT_PER_MM;
+
+    for (const page of pdf.getPages()) {
+      const { x, y, width, height } = page.getMediaBox();
+      const newWidth = width - leftPt - rightPt;
+      const newHeight = height - topPt - bottomPt;
+      if (newWidth <= 0 || newHeight <= 0) {
+        throw new Error('These margins are larger than the page itself. Reduce the values and try again.');
+      }
+      page.setCropBox(x + leftPt, y + bottomPt, newWidth, newHeight);
+    }
 
     const bytes = await pdf.save();
     const blob = new Blob([bytes], { type: 'application/pdf' });
@@ -388,18 +370,18 @@ rotateBtn.addEventListener('click', async () => {
 
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${baseName}-rotated.pdf`;
+    a.download = `${baseName}-cropped.pdf`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
 
-    progressMsg.textContent = `Done — ${pagesToRotate.length} page(s) rotated.`;
+    progressMsg.textContent = 'Done — PDF cropped.';
   } catch (err) {
-    errorMsg.textContent = err.message || 'Could not rotate this PDF.';
+    errorMsg.textContent = err.message || 'Could not crop this PDF.';
   }
 
-  rotateBtn.disabled = false;
-  rotateBtn.textContent = 'Rotate & Download';
+  saveBtn.disabled = false;
+  saveBtn.textContent = 'Crop & Download';
 });
 </script>
 </body>
