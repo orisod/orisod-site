@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Watermark Adder – Free Online Tool | Orisod</title>
-<meta name="description" content="Add a text watermark to your image, free and online. Choose position, size, color, opacity, or tile it across the whole photo — everything runs in your browser.">
-<link rel="canonical" href="https://orisod.com/watermark-adder/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/watermark-adder/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/watermark-adder/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/watermark-adder/">
+<title>Watermark PDF – Free Online Tool | Orisod</title>
+<meta name="description" content="Stamp a text watermark across every page of a PDF — choose position, rotation, size, color and opacity, with a live preview. Free, online, and processed entirely in your browser.">
+<link rel="canonical" href="https://orisod.com/watermark-pdf/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/watermark-pdf/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/watermark-pdf/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/watermark-pdf/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
@@ -33,6 +33,8 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <style>
 :root{
   --bg:#0b0f1a;
@@ -83,20 +85,19 @@ input[type="file"]{display:none;}
 }
 input[type="range"]{width:160px;}
 input[type="color"]{padding:2px;width:44px;height:32px;border-radius:6px;border:1px solid #374151;background:#0f172a;}
-.mode-row{display:flex;gap:8px;justify-content:center;margin-bottom:14px;}
-.mode-btn{padding:8px 16px;border-radius:6px;border:1px solid #374151;background:var(--card-bg);color:white;cursor:pointer;font-size:13px;}
-.mode-btn.active{background:var(--accent);border-color:#2563eb;}
 .position-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:6px;width:180px;}
 .pos-btn{padding:8px;border-radius:6px;border:1px solid #374151;background:#0f172a;color:white;cursor:pointer;font-size:11px;text-align:center;}
 .pos-btn.active{background:var(--accent);border-color:#2563eb;}
 .preview-wrap{margin-top:20px;}
-#previewCanvas{max-width:100%;border-radius:6px;border:1px solid var(--border);}
+#previewCanvas{max-width:100%;border-radius:6px;border:1px solid var(--border);background:white;}
+.page-count{margin-top:10px;font-size:13px;opacity:0.7;}
 button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
 button:disabled{opacity:0.4;cursor:not-allowed;}
 button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
 .note{margin-top:20px;font-size:14px;opacity:0.6;}
 .footer{margin-top:50px;font-size:14px;opacity:0.4;}
 .error{color:#f87171;font-size:14px;margin-top:10px;}
+.progress{font-size:14px;opacity:0.7;margin-top:10px;}
 h2{margin-top:50px;font-size:22px;}
 .seo-content{max-width:700px;margin:0 auto;text-align:left;}
 .seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
@@ -125,43 +126,38 @@ h2{margin-top:50px;font-size:22px;}
   <a class="site-nav-logo" href="/">Orisod</a>
   <nav class="site-nav-links">
     <a href="/tools/">All Tools</a>
-    <span class="active-category">Image Tools</span>
-    <a href="/tools/#pdf">PDF Tools</a>
+    <a href="/tools/#image">Image Tools</a>
+    <span class="active-category">PDF Tools</span>
     <a href="/tools/#utility">Utility Tools</a>
     <a href="/blog/">Blog</a>
   </nav>
   <div class="site-nav-right">
     <span class="lang-flag active">EN</span>
-    <a class="lang-flag" href="/es/watermark-adder/">ES</a>
+    <a class="lang-flag" href="/es/watermark-pdf/">ES</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
   </div>
 </header>
 
 <main>
 <div class="container">
-  <h1>Watermark Adder</h1>
-  <p>Add a text watermark to your photo — single placement or repeated across the whole image. Everything happens locally in your browser.</p>
+  <h1>Watermark PDF</h1>
+  <p>Stamp a text watermark across every page of a PDF — pick the position, rotation, size, color and opacity with a live preview. Everything happens locally in your browser.</p>
 
   <div class="box">
     <label class="dropzone" id="dropzone" for="fileInput">
-      <div id="dropzoneText">📁 Click to select an image or drag and drop it here</div>
+      <div id="dropzoneText">📁 Click to select a PDF or drag and drop it here</div>
     </label>
-    <input type="file" id="fileInput" accept="image/*">
+    <input type="file" id="fileInput" accept=".pdf">
     <div class="error" id="errorMsg"></div>
-    <div class="trust-strip">🔒 Processed on your device · No upload · No account</div>
+    <div class="trust-strip">🔒 Processed on your device · No upload · No account · No watermark added by us</div>
+    <div class="page-count" id="pageCount"></div>
 
     <div class="controls" id="controls">
       <div class="opt-row">
         <label>Text:</label>
-        <input type="text" id="textInput" value="© Your Name" placeholder="Watermark text">
+        <input type="text" id="textInput" value="CONFIDENTIAL" placeholder="Watermark text">
       </div>
-
-      <div class="mode-row">
-        <div class="mode-btn active" data-mode="single">Single Position</div>
-        <div class="mode-btn" data-mode="tiled">Repeated (Tiled)</div>
-      </div>
-
-      <div class="opt-row" id="positionRow">
+      <div class="opt-row">
         <label>Position:</label>
         <div class="position-grid">
           <div class="pos-btn" data-pos="top-left">↖</div>
@@ -175,103 +171,105 @@ h2{margin-top:50px;font-size:22px;}
           <div class="pos-btn" data-pos="bottom-right">↘</div>
         </div>
       </div>
-
+      <div class="opt-row">
+        <label>Rotation:</label>
+        <input type="range" id="rotationSlider" min="-90" max="90" value="45"><span id="rotationValue">45</span>°
+      </div>
       <div class="opt-row">
         <label>Font size:</label>
-        <input type="range" id="sizeSlider" min="12" max="120" value="36"><span id="sizeValue">36</span>px
+        <input type="range" id="sizeSlider" min="12" max="120" value="48"><span id="sizeValue">48</span>pt
       </div>
       <div class="opt-row">
         <label>Opacity:</label>
-        <input type="range" id="opacitySlider" min="5" max="100" value="40"><span id="opacityValue">40</span>%
+        <input type="range" id="opacitySlider" min="5" max="100" value="30"><span id="opacityValue">30</span>%
       </div>
       <div class="opt-row">
         <label>Color:</label>
-        <input type="color" id="colorInput" value="#ffffff">
+        <input type="color" id="colorInput" value="#ff0000">
       </div>
     </div>
 
     <div class="preview-wrap" id="previewWrap" style="display:none;">
       <canvas id="previewCanvas"></canvas>
+      <div class="note">Preview shows page 1. The watermark is applied to every page.</div>
     </div>
 
     <br>
-    <button id="downloadBtn" style="display:none;">Download Image</button>
-    <div class="note">Supports JPG, PNG, WEBP and other common image formats.</div>
+    <button id="downloadBtn" style="display:none;">Watermark & Download</button>
+    <div class="progress" id="progressMsg"></div>
   </div>
 
   <div class="seo-content">
     <h2>What does this tool do?</h2>
-    <p>This tool overlays custom text onto your image, either as a single watermark in one position or repeated diagonally across the entire photo — a common way to discourage unauthorized use of a photo while still allowing it to be viewed and shared.</p>
+    <p>This tool stamps a text watermark — like "CONFIDENTIAL", "DRAFT", or your own name — onto every page of a PDF, with full control over position, rotation angle, size, color and opacity. A live preview of page 1 updates as you adjust each setting, so you can see exactly how it'll look before downloading.</p>
 
     <h2>When should you use this tool?</h2>
     <ul>
-      <li>You're sharing photography samples publicly and want your name attached</li>
-      <li>You need to mark a document or image as a draft, sample, or confidential</li>
-      <li>You want to protect a photo from being reused without credit</li>
-      <li>You're branding a set of images with a consistent watermark</li>
+      <li>You're sharing a draft document and want to mark it clearly as not final</li>
+      <li>You need to label a PDF as confidential before sending it externally</li>
+      <li>You're distributing a sample or preview and want to discourage unauthorized reuse</li>
+      <li>You want to brand a document with your name or company before publishing it</li>
     </ul>
 
     <h2>Why use Orisod for this?</h2>
-    <p>Choose a single position or a repeated tiled pattern for stronger coverage, and adjust text, size, opacity, and color with a live preview. Everything happens locally in your browser using the Canvas API — your photo is never uploaded to a server.</p>
+    <p>Adjust text, position, rotation, size, color and opacity with a live preview before you commit — no guessing and re-downloading. The whole process happens locally in your browser using pdf.js for the preview and pdf-lib to build the final file — your document is never uploaded to a server.</p>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
-      <div class="q">What's the difference between single and tiled watermarks?</div>
-      <div>Single places your text once in a chosen corner or center. Tiled repeats the text diagonally across the whole image, making it much harder to crop out — common for protecting photography samples.</div>
+      <div class="q">Does the watermark apply to every page?</div>
+      <div>Yes, the same watermark is stamped onto every page of the PDF using the settings you choose.</div>
     </div>
     <div class="faq-item">
-      <div class="q">Can I make the watermark subtle?</div>
-      <div>Yes, lower the opacity slider for a lighter, less intrusive watermark, or increase it for a bolder, more visible one.</div>
-    </div>
-    <div class="faq-item">
-      <div class="q">Is my image uploaded anywhere?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div class="q">Can I remove the watermark afterward?</div>
+      <div>The watermark becomes part of the page content, similar to how watermarks work in other PDF tools. Keep your original file if you might need an unwatermarked copy later.</div>
     </div>
     <div class="faq-item">
       <div class="q">Can I add a logo image instead of text?</div>
-      <div>This tool currently supports text watermarks only. For adding a logo image, use an image editor or check back as we add more tools.</div>
+      <div>This tool currently supports text watermarks only.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Is my PDF uploaded to a server?</div>
+      <div>No, the entire process happens locally in your browser using JavaScript.</div>
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/watermark-photos-guide/" style="color:var(--accent);text-decoration:none;">How to Watermark Your Photos to Protect Your Work</a></p>
-
   <h2>Related tools</h2>
   <div class="related-grid">
-  <a class="related-card" href="/image-color-filters/">
-    <div class="icon-box cat-image">🎨</div>
+  <a class="related-card" href="/edit-pdf-metadata/">
+    <div class="icon-box cat-pdf">🏷️</div>
     <div class="body">
-      <div class="title">Image Color Filters</div>
-      <div class="desc">B&amp;W, sepia, brightness, contrast.</div>
+      <div class="title">Edit PDF Metadata</div>
+      <div class="desc">Change title, author, subject &amp; keywords.</div>
     </div>
     <div class="arrow">→</div>
   </a>
-  <a class="related-card" href="/add-border-to-image/">
-    <div class="icon-box cat-image">🖼️</div>
+  <a class="related-card" href="/watermark-adder/">
+    <div class="icon-box cat-image">💧</div>
     <div class="body">
-      <div class="title">Add Border to Image</div>
-      <div class="desc">Add a colored frame around a photo.</div>
+      <div class="title">Watermark Adder</div>
+      <div class="desc">Watermark a single image.</div>
     </div>
     <div class="arrow">→</div>
   </a>
-  <a class="related-card" href="/compress-image/">
-    <div class="icon-box cat-image">📦</div>
+  <a class="related-card" href="/compress-pdf/">
+    <div class="icon-box cat-pdf">📦</div>
     <div class="body">
-      <div class="title">Compress Image</div>
-      <div class="desc">Reduce file size, keep quality.</div>
+      <div class="title">Compress PDF</div>
+      <div class="desc">Shrink scanned or image-heavy PDFs.</div>
     </div>
     <div class="arrow">→</div>
   </a>
-  <a class="related-card" href="/watermark-pdf/">
-    <div class="icon-box cat-pdf">💧</div>
+  <a class="related-card" href="/sign-pdf/">
+    <div class="icon-box cat-pdf">✍️</div>
     <div class="body">
-      <div class="title">Watermark PDF</div>
-      <div class="desc">Stamp text across every page.</div>
+      <div class="title">Sign PDF</div>
+      <div class="desc">Draw and place a signature.</div>
     </div>
     <div class="arrow">→</div>
   </a>
 </div>
 
-  <div class="footer">© Orisod Labs</div>
+  <div class="footer">© Orisod Labs · <a href="/about/" style="color:var(--muted-text);">About</a> · <a href="/privacy/" style="color:var(--muted-text);">Privacy</a></div>
 </div>
 
 </main>
@@ -298,13 +296,18 @@ h2{margin-top:50px;font-size:22px;}
 </script>
 
 <script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
 const fileInput = document.getElementById('fileInput');
 const dropzone = document.getElementById('dropzone');
 const dropzoneText = document.getElementById('dropzoneText');
 const errorMsg = document.getElementById('errorMsg');
+const progressMsg = document.getElementById('progressMsg');
+const pageCount = document.getElementById('pageCount');
 const controls = document.getElementById('controls');
 const textInput = document.getElementById('textInput');
-const positionRow = document.getElementById('positionRow');
+const rotationSlider = document.getElementById('rotationSlider');
+const rotationValue = document.getElementById('rotationValue');
 const sizeSlider = document.getElementById('sizeSlider');
 const sizeValue = document.getElementById('sizeValue');
 const opacitySlider = document.getElementById('opacitySlider');
@@ -314,119 +317,65 @@ const previewWrap = document.getElementById('previewWrap');
 const previewCanvas = document.getElementById('previewCanvas');
 const downloadBtn = document.getElementById('downloadBtn');
 
-let img = null;
-let currentMode = 'single';
+let selectedFile = null;
+let pdfJsDoc = null;
 let currentPosition = 'middle-center';
 
-fileInput.addEventListener('change', (e) => { if (e.target.files[0]) loadFile(e.target.files[0]); });
+fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
 dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
 dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
 dropzone.addEventListener('drop', (e) => {
   e.preventDefault();
   dropzone.classList.remove('dragover');
-  if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+  handleFile(e.dataTransfer.files[0]);
 });
 
-function loadFile(file) {
+async function handleFile(file) {
   errorMsg.textContent = '';
-  if (!file.type.startsWith('image/')) {
-    errorMsg.textContent = 'Please select a valid image file.';
+  progressMsg.textContent = '';
+  controls.style.display = 'none';
+  previewWrap.style.display = 'none';
+  downloadBtn.style.display = 'none';
+  pageCount.textContent = '';
+
+  if (!file || !/\.pdf$/i.test(file.name)) {
+    errorMsg.textContent = 'Please select a valid PDF file.';
     return;
   }
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    img = new Image();
-    img.onload = () => {
-      dropzoneText.textContent = `✅ ${file.name} loaded`;
-      controls.style.display = 'block';
-      previewWrap.style.display = 'block';
-      downloadBtn.style.display = 'inline-block';
-      renderPreview();
-    };
-    img.onerror = () => { errorMsg.textContent = 'Could not load this image.'; };
-    img.src = e.target.result;
-  };
-  reader.readAsDataURL(file);
+
+  try {
+    const arrayBuffer = await file.arrayBuffer();
+    pdfJsDoc = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
+    selectedFile = file;
+
+    pageCount.textContent = `Loaded: ${pdfJsDoc.numPages} page${pdfJsDoc.numPages === 1 ? '' : 's'}`;
+    dropzoneText.textContent = `✅ ${file.name} loaded`;
+    controls.style.display = 'block';
+    previewWrap.style.display = 'block';
+    downloadBtn.style.display = 'inline-block';
+    await renderPreview();
+  } catch (err) {
+    errorMsg.textContent = 'Could not read this PDF. It may be corrupted or password-protected.';
+  }
 }
 
-document.querySelectorAll('.mode-btn').forEach(btn => {
+document.querySelectorAll('.pos-btn').forEach((btn) => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    currentMode = btn.dataset.mode;
-    positionRow.style.display = currentMode === 'single' ? 'flex' : 'none';
-    renderPreview();
-  });
-});
-
-document.querySelectorAll('.pos-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.pos-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.pos-btn').forEach((b) => b.classList.remove('active'));
     btn.classList.add('active');
     currentPosition = btn.dataset.pos;
     renderPreview();
   });
 });
 
-[textInput, sizeSlider, opacitySlider, colorInput].forEach(el => {
+[textInput, rotationSlider, sizeSlider, opacitySlider, colorInput].forEach((el) => {
   el.addEventListener('input', () => {
+    rotationValue.textContent = rotationSlider.value;
     sizeValue.textContent = sizeSlider.value;
     opacityValue.textContent = opacitySlider.value;
     renderPreview();
   });
 });
-
-function buildOutputCanvas() {
-  const canvas = document.createElement('canvas');
-  canvas.width = img.naturalWidth;
-  canvas.height = img.naturalHeight;
-  const ctx = canvas.getContext('2d');
-  ctx.drawImage(img, 0, 0);
-
-  const text = textInput.value || '';
-  const fontSize = parseInt(sizeSlider.value, 10);
-  const opacity = parseInt(opacitySlider.value, 10) / 100;
-  const color = colorInput.value;
-
-  ctx.font = `bold ${fontSize}px Arial`;
-  ctx.fillStyle = hexToRgba(color, opacity);
-  ctx.textBaseline = 'middle';
-
-  if (currentMode === 'single') {
-    const textWidth = ctx.measureText(text).width;
-    const margin = fontSize * 0.6;
-    let x, y;
-
-    if (currentPosition.includes('left')) x = margin;
-    else if (currentPosition.includes('right')) x = canvas.width - textWidth - margin;
-    else x = (canvas.width - textWidth) / 2;
-
-    if (currentPosition.includes('top')) y = margin + fontSize / 2;
-    else if (currentPosition.includes('bottom')) y = canvas.height - margin - fontSize / 2;
-    else y = canvas.height / 2;
-
-    ctx.fillText(text, x, y);
-  } else {
-    ctx.save();
-    ctx.translate(canvas.width / 2, canvas.height / 2);
-    ctx.rotate(-Math.PI / 6);
-    ctx.translate(-canvas.width / 2, -canvas.height / 2);
-
-    const textWidth = ctx.measureText(text).width;
-    const stepX = textWidth + fontSize * 2;
-    const stepY = fontSize * 3;
-    const diag = Math.sqrt(canvas.width ** 2 + canvas.height ** 2);
-
-    for (let y = -diag; y < diag; y += stepY) {
-      for (let x = -diag; x < diag; x += stepX) {
-        ctx.fillText(text, x, y);
-      }
-    }
-    ctx.restore();
-  }
-
-  return canvas;
-}
 
 function hexToRgba(hex, alpha) {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -435,29 +384,125 @@ function hexToRgba(hex, alpha) {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
-function renderPreview() {
-  if (!img) return;
-  const canvas = buildOutputCanvas();
-  const maxPreview = 500;
-  const scale = Math.min(1, maxPreview / Math.max(canvas.width, canvas.height));
-
-  previewCanvas.width = canvas.width * scale;
-  previewCanvas.height = canvas.height * scale;
-  const ctx = previewCanvas.getContext('2d');
-  ctx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
-  ctx.drawImage(canvas, 0, 0, previewCanvas.width, previewCanvas.height);
+function hexToUnitRgb(hex) {
+  return {
+    r: parseInt(hex.slice(1, 3), 16) / 255,
+    g: parseInt(hex.slice(3, 5), 16) / 255,
+    b: parseInt(hex.slice(5, 7), 16) / 255,
+  };
 }
 
-downloadBtn.addEventListener('click', () => {
-  if (!img) return;
-  const canvas = buildOutputCanvas();
-  const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
-  const a = document.createElement('a');
-  a.href = dataUrl;
-  a.download = 'watermarked-image.jpg';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+async function renderPreview() {
+  if (!pdfJsDoc) return;
+  const page = await pdfJsDoc.getPage(1);
+  const nativeViewport = page.getViewport({ scale: 1 });
+  const scale = Math.min(1, 650 / nativeViewport.width);
+  const viewport = page.getViewport({ scale });
+
+  previewCanvas.width = viewport.width;
+  previewCanvas.height = viewport.height;
+  const ctx = previewCanvas.getContext('2d');
+  await page.render({ canvasContext: ctx, viewport }).promise;
+
+  drawWatermarkOnCanvas(ctx, viewport.width, viewport.height, scale);
+}
+
+function drawWatermarkOnCanvas(ctx, cw, ch, scale) {
+  const text = textInput.value || '';
+  if (!text) return;
+
+  const fontSizePx = parseInt(sizeSlider.value, 10) * scale;
+  const opacity = parseInt(opacitySlider.value, 10) / 100;
+  const rotation = parseInt(rotationSlider.value, 10);
+  const color = colorInput.value;
+
+  ctx.save();
+  ctx.font = `bold ${fontSizePx}px Arial`;
+  ctx.fillStyle = hexToRgba(color, opacity);
+  ctx.textBaseline = 'alphabetic';
+
+  const textWidth = ctx.measureText(text).width;
+  const margin = fontSizePx * 0.6;
+  let x, y;
+
+  if (currentPosition.includes('left')) x = margin;
+  else if (currentPosition.includes('right')) x = cw - textWidth - margin;
+  else x = (cw - textWidth) / 2;
+
+  if (currentPosition.includes('top')) y = margin + fontSizePx * 0.8;
+  else if (currentPosition.includes('bottom')) y = ch - margin;
+  else y = ch / 2 + fontSizePx * 0.3;
+
+  ctx.translate(x, y);
+  ctx.rotate((-rotation * Math.PI) / 180);
+  ctx.fillText(text, 0, 0);
+  ctx.restore();
+}
+
+downloadBtn.addEventListener('click', async () => {
+  if (!selectedFile) return;
+  errorMsg.textContent = '';
+  progressMsg.textContent = '';
+  downloadBtn.disabled = true;
+  downloadBtn.textContent = 'Watermarking...';
+
+  try {
+    const text = textInput.value || '';
+    if (!text) {
+      throw new Error('Enter watermark text first.');
+    }
+
+    const { PDFDocument, StandardFonts, rgb, degrees } = PDFLib;
+    const arrayBuffer = await selectedFile.arrayBuffer();
+    const pdfDoc = await PDFDocument.load(arrayBuffer);
+    const font = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+
+    const fontSize = parseInt(sizeSlider.value, 10);
+    const opacity = parseInt(opacitySlider.value, 10) / 100;
+    const rotation = parseInt(rotationSlider.value, 10);
+    const { r, g, b } = hexToUnitRgb(colorInput.value);
+
+    for (const page of pdfDoc.getPages()) {
+      const { width, height } = page.getSize();
+      const textWidth = font.widthOfTextAtSize(text, fontSize);
+      const margin = fontSize * 0.6;
+      let x, y;
+
+      if (currentPosition.includes('left')) x = margin;
+      else if (currentPosition.includes('right')) x = width - textWidth - margin;
+      else x = (width - textWidth) / 2;
+
+      if (currentPosition.includes('top')) y = height - margin - fontSize * 0.8;
+      else if (currentPosition.includes('bottom')) y = margin;
+      else y = height / 2;
+
+      page.drawText(text, {
+        x, y, size: fontSize, font,
+        color: rgb(r, g, b),
+        opacity,
+        rotate: degrees(rotation),
+      });
+    }
+
+    const bytes = await pdfDoc.save();
+    const blob = new Blob([bytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const baseName = selectedFile.name.replace(/\.pdf$/i, '');
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${baseName}-watermarked.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    progressMsg.textContent = 'Done — watermark added.';
+  } catch (err) {
+    errorMsg.textContent = err.message || 'Could not watermark this PDF.';
+  }
+
+  downloadBtn.disabled = false;
+  downloadBtn.textContent = 'Watermark & Download';
 });
 </script>
 </body>

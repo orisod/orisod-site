@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Firmar PDF – Herramienta gratuita en línea | Orisod</title>
+<meta name="description" content="Dibuja tu firma y colócala en cualquier parte de una página de un PDF, gratis y en línea. Funciona directamente en tu navegador — sin subir archivos, sin cuenta.">
+<link rel="canonical" href="https://orisod.com/es/sign-pdf/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/sign-pdf/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/sign-pdf/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/sign-pdf/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#2563eb">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+  --icon-alpha:.30;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+  --icon-alpha:.24;
+}
+*{box-sizing:border-box;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:5px 14px;margin:-5px 0;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:40px 20px 60px 20px;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:44px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:30px 20px;margin-top:30px;}
+.dropzone{border:2px dashed var(--dropzone-border);border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
+.dropzone:hover, .dropzone.dragover{border-color:var(--accent);}
+input[type="file"]{display:none;}
+.page-count{margin-top:10px;font-size:13px;opacity:0.7;}
+.controls{margin-top:20px;text-align:left;display:none;}
+.step-label{font-size:14px;font-weight:bold;margin-bottom:8px;opacity:0.9;}
+.sig-pad-wrap{margin-bottom:10px;}
+#sigCanvas{width:100%;max-width:500px;height:170px;touch-action:none;background:white;border-radius:6px;border:1px solid var(--border);cursor:crosshair;display:block;}
+.sig-actions{display:flex;gap:10px;align-items:center;margin-bottom:20px;}
+.sig-actions button{margin-top:0;padding:9px 14px;font-size:13px;}
+button.secondary{background:var(--card-bg);border:1px solid var(--border);color:var(--text);}
+button.secondary:hover:not(:disabled){border-color:var(--accent);filter:none;}
+.opt-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;font-size:14px;flex-wrap:wrap;}
+.opt-row label{min-width:100px;opacity:0.85;text-align:left;}
+.opt-row input[type="number"]{
+  width:80px;padding:8px 10px;border-radius:6px;border:1px solid #374151;background:#0f172a;color:white;font-size:14px;
+}
+input[type="range"]{width:160px;}
+.placement-wrap{margin-top:16px;}
+#placementCanvas{max-width:100%;border-radius:6px;border:1px solid var(--border);background:white;cursor:crosshair;display:block;margin:0 auto;}
+button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
+button:disabled{opacity:0.4;cursor:not-allowed;}
+button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.note{margin-top:12px;font-size:14px;opacity:0.6;}
+.footer{margin-top:50px;font-size:14px;opacity:0.4;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+.progress{font-size:14px;opacity:0.7;margin-top:10px;}
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related-grid{display:grid;grid-template-columns:repeat(2, 1fr);gap:12px;}
+@media (max-width:600px){.related-grid{grid-template-columns:1fr;}}
+.related-card{display:flex;align-items:center;gap:14px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-card .icon-box{flex:none;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;border:2px solid transparent;}
+.related-card .icon-box.cat-image{background:rgba(37,99,235,var(--icon-alpha));border-color:#2563eb;}
+.related-card .icon-box.cat-pdf{background:rgba(245,158,11,var(--icon-alpha));border-color:#f59e0b;}
+.related-card .icon-box.cat-utility{background:rgba(139,92,246,var(--icon-alpha));border-color:#8b5cf6;}
+.related-card .body{flex:1 1 auto;min-width:0;}
+.related-card .title{font-size:14px;font-weight:bold;margin-bottom:2px;}
+.related-card .desc{font-size:12px;color:var(--muted-text);line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.related-card .arrow{flex:none;font-size:16px;color:var(--muted-text);transition:0.2s;}
+.related-card:hover .arrow{color:var(--accent);transform:translateX(2px);}
+.trust-strip{font-size:12px;color:var(--muted-text);margin-top:12px;line-height:1.5;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/es/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/es/tools/">Todas las Herramientas</a>
+    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <span class="active-category">Herramientas PDF</span>
+    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <a href="/es/blog/">Blog</a>
+  </nav>
+  <div class="site-nav-right">
+    <a class="lang-flag" href="/sign-pdf/">EN</a>
+    <span class="lang-flag active">ES</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+  <h1>Firmar PDF</h1>
+  <p>Dibuja tu firma y colócala en cualquier parte de una página de un PDF, luego descarga el archivo firmado. Todo ocurre localmente en tu navegador.</p>
+
+  <div class="box">
+    <label class="dropzone" id="dropzone" for="fileInput">
+      <div id="dropzoneText">📁 Haz clic para seleccionar un PDF o arrástralo aquí</div>
+    </label>
+    <input type="file" id="fileInput" accept=".pdf">
+    <div class="error" id="errorMsg"></div>
+    <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subidas · Sin cuenta</div>
+    <div class="page-count" id="pageCount"></div>
+
+    <div class="controls" id="controls">
+      <div class="step-label">1. Dibuja tu firma</div>
+      <div class="sig-pad-wrap">
+        <canvas id="sigCanvas" width="600" height="200"></canvas>
+      </div>
+      <div class="sig-actions">
+        <button class="secondary" id="clearSigBtn">Borrar firma</button>
+      </div>
+
+      <div class="step-label">2. Elige la página y haz clic para colocarla</div>
+      <div class="opt-row">
+        <label for="pageInput">Número de página:</label>
+        <input type="number" id="pageInput" min="1" value="1">
+      </div>
+      <div class="opt-row">
+        <label>Ancho de la firma:</label>
+        <input type="range" id="sizeSlider" min="60" max="300" value="150"><span id="sizeValue">150</span>pt
+      </div>
+
+      <div class="placement-wrap">
+        <canvas id="placementCanvas"></canvas>
+        <div class="note">Haz clic en cualquier parte de la página para mover tu firma allí.</div>
+      </div>
+    </div>
+
+    <br>
+    <button id="downloadBtn" style="display:none;">Firmar y descargar</button>
+    <div class="progress" id="progressMsg"></div>
+  </div>
+
+  <div class="seo-content">
+    <h2>¿Qué hace esta herramienta?</h2>
+    <p>Esta herramienta te permite dibujar una firma con el ratón o el dedo, y luego hacer clic en cualquier parte de una página de PDF elegida para colocarla. Una vista previa en vivo muestra exactamente dónde quedará la firma antes de descargar el archivo firmado.</p>
+
+    <h2>¿Cuándo usar esta herramienta?</h2>
+    <ul>
+      <li>Necesitas firmar un contrato, formulario o acuerdo sin imprimirlo ni escanearlo</li>
+      <li>Estás devolviendo rápidamente un documento firmado por correo</li>
+      <li>Quieres una forma simple, sin cuenta, de añadir una firma a un PDF puntual</li>
+      <li>Estás completando un formulario que solo necesita una firma, no un flujo completo de firma electrónica</li>
+    </ul>
+
+    <h2>¿Por qué usar Orisod para esto?</h2>
+    <p>Dibuja tu firma una vez y luego colócala con precisión con una vista previa en vivo de la página exacta que estás firmando. Todo el proceso ocurre localmente en tu navegador usando pdf.js para la vista previa y pdf-lib para incrustar la firma — tu documento nunca se sube a un servidor.</p>
+
+    <h2>Preguntas frecuentes</h2>
+    <div class="faq-item">
+      <div class="q">¿Es esto una firma electrónica con validez legal?</div>
+      <div>Esta herramienta dibuja e incrusta una imagen de tu firma en el PDF — no ofrece firma criptográfica, verificación de identidad ni un registro de auditoría como los servicios de firma electrónica dedicados. Para documentos que requieren cumplimiento legal de firma electrónica, usa un servicio diseñado para ese fin.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Puedo firmar más de una página?</div>
+      <div>Puedes colocar tu firma en una página por cada pasada. Para firmar varias páginas, vuelve a ejecutar la herramienta sobre el archivo descargado y colócala en otra página.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Puedo cambiar el tamaño de mi firma después de colocarla?</div>
+      <div>Sí, usa el control deslizante de ancho antes de descargar — la vista previa se actualiza al instante para que veas el nuevo tamaño antes de confirmar.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Se sube mi PDF a un servidor?</div>
+      <div>No, todo el proceso ocurre localmente en tu navegador usando JavaScript.</div>
+    </div>
+  </div>
+
+  <h2>Herramientas relacionadas</h2>
+  <div class="related-grid">
+  <a class="related-card" href="/es/watermark-pdf/">
+    <div class="icon-box cat-pdf">💧</div>
+    <div class="body">
+      <div class="title">Marca de agua en PDF</div>
+      <div class="desc">Estampa texto en cada página.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+  <a class="related-card" href="/es/edit-pdf-metadata/">
+    <div class="icon-box cat-pdf">🏷️</div>
+    <div class="body">
+      <div class="title">Editar metadatos de PDF</div>
+      <div class="desc">Cambia título, autor, asunto y palabras clave.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+  <a class="related-card" href="/es/add-page-numbers/">
+    <div class="icon-box cat-pdf">🔢</div>
+    <div class="body">
+      <div class="title">Añadir números de página</div>
+      <div class="desc">Numera las páginas de un PDF.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+</div>
+
+  <div class="footer">© Orisod Labs · <a href="/es/about/" style="color:var(--muted-text);">Acerca de</a> · <a href="/es/privacy/" style="color:var(--muted-text);">Privacidad</a></div>
+</div>
+
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const errorMsg = document.getElementById('errorMsg');
+const progressMsg = document.getElementById('progressMsg');
+const pageCount = document.getElementById('pageCount');
+const controls = document.getElementById('controls');
+const sigCanvas = document.getElementById('sigCanvas');
+const clearSigBtn = document.getElementById('clearSigBtn');
+const pageInput = document.getElementById('pageInput');
+const sizeSlider = document.getElementById('sizeSlider');
+const sizeValue = document.getElementById('sizeValue');
+const placementCanvas = document.getElementById('placementCanvas');
+const downloadBtn = document.getElementById('downloadBtn');
+
+let selectedFile = null;
+let pdfJsDoc = null;
+let numPages = 0;
+let baseImageCanvas = null;
+let pageScale = 1;
+let pageWidthPt = 0;
+let pageHeightPt = 0;
+let hasSignature = false;
+let placeX = 0;
+let placeY = 0;
+let placed = false;
+
+fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  handleFile(e.dataTransfer.files[0]);
+});
+
+async function handleFile(file) {
+  errorMsg.textContent = '';
+  progressMsg.textContent = '';
+  controls.style.display = 'none';
+  downloadBtn.style.display = 'none';
+  pageCount.textContent = '';
+  placed = false;
+
+  if (!file || !/\.pdf$/i.test(file.name)) {
+    errorMsg.textContent = 'Selecciona un archivo PDF válido.';
+    return;
+  }
+
+  try {
+    const arrayBuffer = await file.arrayBuffer();
+    pdfJsDoc = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
+    selectedFile = file;
+    numPages = pdfJsDoc.numPages;
+
+    pageCount.textContent = `Cargado: ${numPages} página${numPages === 1 ? '' : 's'}`;
+    dropzoneText.textContent = `✅ ${file.name} cargado`;
+    pageInput.max = numPages;
+    pageInput.value = numPages;
+    controls.style.display = 'block';
+    downloadBtn.style.display = 'inline-block';
+    await loadPlacementPage(numPages);
+  } catch (err) {
+    errorMsg.textContent = 'No se pudo leer este PDF. Puede estar dañado o protegido con contraseña.';
+  }
+}
+
+async function loadPlacementPage(pageNum) {
+  const page = await pdfJsDoc.getPage(pageNum);
+  const nativeViewport = page.getViewport({ scale: 1 });
+  pageWidthPt = nativeViewport.width;
+  pageHeightPt = nativeViewport.height;
+  pageScale = Math.min(1, 650 / nativeViewport.width);
+  const viewport = page.getViewport({ scale: pageScale });
+
+  placementCanvas.width = viewport.width;
+  placementCanvas.height = viewport.height;
+
+  const off = document.createElement('canvas');
+  off.width = viewport.width;
+  off.height = viewport.height;
+  await page.render({ canvasContext: off.getContext('2d'), viewport }).promise;
+  baseImageCanvas = off;
+
+  const widthPx = parseInt(sizeSlider.value, 10) * pageScale;
+  const heightPx = widthPx * (sigCanvas.height / sigCanvas.width);
+  placeX = viewport.width - widthPx - 20;
+  placeY = viewport.height - heightPx - 20;
+  placed = true;
+
+  updatePlacementPreview();
+}
+
+function updatePlacementPreview() {
+  if (!baseImageCanvas) return;
+  const ctx = placementCanvas.getContext('2d');
+  ctx.clearRect(0, 0, placementCanvas.width, placementCanvas.height);
+  ctx.drawImage(baseImageCanvas, 0, 0);
+
+  if (hasSignature) {
+    const widthPx = parseInt(sizeSlider.value, 10) * pageScale;
+    const heightPx = widthPx * (sigCanvas.height / sigCanvas.width);
+    ctx.drawImage(sigCanvas, placeX, placeY, widthPx, heightPx);
+    ctx.save();
+    ctx.strokeStyle = 'rgba(37, 99, 235, 0.8)';
+    ctx.setLineDash([4, 3]);
+    ctx.strokeRect(placeX, placeY, widthPx, heightPx);
+    ctx.restore();
+  }
+}
+
+pageInput.addEventListener('change', () => {
+  let n = parseInt(pageInput.value, 10);
+  if (!n || n < 1) n = 1;
+  if (n > numPages) n = numPages;
+  pageInput.value = n;
+  loadPlacementPage(n);
+});
+
+sizeSlider.addEventListener('input', () => {
+  sizeValue.textContent = sizeSlider.value;
+  updatePlacementPreview();
+});
+
+placementCanvas.addEventListener('click', (e) => {
+  const rect = placementCanvas.getBoundingClientRect();
+  const scaleX = placementCanvas.width / rect.width;
+  const scaleY = placementCanvas.height / rect.height;
+  const clickX = (e.clientX - rect.left) * scaleX;
+  const clickY = (e.clientY - rect.top) * scaleY;
+
+  const widthPx = parseInt(sizeSlider.value, 10) * pageScale;
+  const heightPx = widthPx * (sigCanvas.height / sigCanvas.width);
+  placeX = clickX - widthPx / 2;
+  placeY = clickY - heightPx / 2;
+  placed = true;
+  updatePlacementPreview();
+});
+
+// Dibujo de la firma
+let drawing = false;
+let lastX = 0;
+let lastY = 0;
+
+function sigPos(e) {
+  const rect = sigCanvas.getBoundingClientRect();
+  const scaleX = sigCanvas.width / rect.width;
+  const scaleY = sigCanvas.height / rect.height;
+  return { x: (e.clientX - rect.left) * scaleX, y: (e.clientY - rect.top) * scaleY };
+}
+
+sigCanvas.addEventListener('pointerdown', (e) => {
+  drawing = true;
+  hasSignature = true;
+  const pos = sigPos(e);
+  lastX = pos.x;
+  lastY = pos.y;
+  sigCanvas.setPointerCapture(e.pointerId);
+});
+sigCanvas.addEventListener('pointermove', (e) => {
+  if (!drawing) return;
+  const pos = sigPos(e);
+  const ctx = sigCanvas.getContext('2d');
+  ctx.strokeStyle = '#000';
+  ctx.lineWidth = 3;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.beginPath();
+  ctx.moveTo(lastX, lastY);
+  ctx.lineTo(pos.x, pos.y);
+  ctx.stroke();
+  lastX = pos.x;
+  lastY = pos.y;
+});
+sigCanvas.addEventListener('pointerup', () => {
+  drawing = false;
+  updatePlacementPreview();
+});
+sigCanvas.addEventListener('pointerleave', () => { drawing = false; });
+
+clearSigBtn.addEventListener('click', () => {
+  const ctx = sigCanvas.getContext('2d');
+  ctx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
+  hasSignature = false;
+  updatePlacementPreview();
+});
+
+downloadBtn.addEventListener('click', async () => {
+  if (!selectedFile) return;
+  errorMsg.textContent = '';
+  progressMsg.textContent = '';
+
+  if (!hasSignature) {
+    errorMsg.textContent = 'Dibuja primero una firma.';
+    return;
+  }
+  if (!placed) {
+    errorMsg.textContent = 'Elige primero una página.';
+    return;
+  }
+
+  downloadBtn.disabled = true;
+  downloadBtn.textContent = 'Firmando...';
+
+  try {
+    const { PDFDocument } = PDFLib;
+    const arrayBuffer = await selectedFile.arrayBuffer();
+    const pdfDoc = await PDFDocument.load(arrayBuffer);
+
+    const widthPt = parseInt(sizeSlider.value, 10);
+    const heightPt = widthPt * (sigCanvas.height / sigCanvas.width);
+    const xPt = placeX / pageScale;
+    const yPt = pageHeightPt - (placeY / pageScale) - heightPt;
+
+    const pngDataUrl = sigCanvas.toDataURL('image/png');
+    const pngImage = await pdfDoc.embedPng(pngDataUrl);
+
+    const pageNum = parseInt(pageInput.value, 10);
+    const targetPage = pdfDoc.getPages()[pageNum - 1];
+    targetPage.drawImage(pngImage, { x: xPt, y: yPt, width: widthPt, height: heightPt });
+
+    const bytes = await pdfDoc.save();
+    const blob = new Blob([bytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const baseName = selectedFile.name.replace(/\.pdf$/i, '');
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${baseName}-firmado.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    progressMsg.textContent = 'Listo — firma añadida.';
+  } catch (err) {
+    errorMsg.textContent = err.message || 'No se pudo firmar este PDF.';
+  }
+
+  downloadBtn.disabled = false;
+  downloadBtn.textContent = 'Firmar y descargar';
+});
+</script>
+</body>
+</html>

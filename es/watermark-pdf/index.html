@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Añadir marca de agua – Herramienta gratuita en línea | Orisod</title>
-<meta name="description" content="Añade una marca de agua de texto a tu imagen, gratis y en línea. Elige posición, tamaño, color, opacidad, o repítela por toda la foto — todo se ejecuta en tu navegador.">
-<link rel="canonical" href="https://orisod.com/es/watermark-adder/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/watermark-adder/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/watermark-adder/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/watermark-adder/">
+<title>Marca de agua en PDF – Herramienta gratuita en línea | Orisod</title>
+<meta name="description" content="Estampa una marca de agua de texto en cada página de un PDF — elige posición, rotación, tamaño, color y opacidad, con vista previa en vivo. Gratis, en línea y procesado en tu navegador.">
+<link rel="canonical" href="https://orisod.com/es/watermark-pdf/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/watermark-pdf/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/watermark-pdf/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/watermark-pdf/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
@@ -33,6 +33,8 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <style>
 :root{
   --bg:#0b0f1a;
@@ -83,20 +85,19 @@ input[type="file"]{display:none;}
 }
 input[type="range"]{width:160px;}
 input[type="color"]{padding:2px;width:44px;height:32px;border-radius:6px;border:1px solid #374151;background:#0f172a;}
-.mode-row{display:flex;gap:8px;justify-content:center;margin-bottom:14px;}
-.mode-btn{padding:8px 16px;border-radius:6px;border:1px solid #374151;background:var(--card-bg);color:white;cursor:pointer;font-size:13px;}
-.mode-btn.active{background:var(--accent);border-color:#2563eb;}
 .position-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:6px;width:180px;}
 .pos-btn{padding:8px;border-radius:6px;border:1px solid #374151;background:#0f172a;color:white;cursor:pointer;font-size:11px;text-align:center;}
 .pos-btn.active{background:var(--accent);border-color:#2563eb;}
 .preview-wrap{margin-top:20px;}
-#previewCanvas{max-width:100%;border-radius:6px;border:1px solid var(--border);}
+#previewCanvas{max-width:100%;border-radius:6px;border:1px solid var(--border);background:white;}
+.page-count{margin-top:10px;font-size:13px;opacity:0.7;}
 button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
 button:disabled{opacity:0.4;cursor:not-allowed;}
 button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
 .note{margin-top:20px;font-size:14px;opacity:0.6;}
 .footer{margin-top:50px;font-size:14px;opacity:0.4;}
 .error{color:#f87171;font-size:14px;margin-top:10px;}
+.progress{font-size:14px;opacity:0.7;margin-top:10px;}
 h2{margin-top:50px;font-size:22px;}
 .seo-content{max-width:700px;margin:0 auto;text-align:left;}
 .seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
@@ -125,13 +126,13 @@ h2{margin-top:50px;font-size:22px;}
   <a class="site-nav-logo" href="/es/">Orisod</a>
   <nav class="site-nav-links">
     <a href="/es/tools/">Todas las Herramientas</a>
-    <span class="active-category">Herramientas de Imagen</span>
-    <a href="/es/tools/#pdf">Herramientas PDF</a>
+    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <span class="active-category">Herramientas PDF</span>
     <a href="/es/tools/#utility">Herramientas de Utilidad</a>
     <a href="/es/blog/">Blog</a>
   </nav>
   <div class="site-nav-right">
-    <a class="lang-flag" href="/watermark-adder/">EN</a>
+    <a class="lang-flag" href="/watermark-pdf/">EN</a>
     <span class="lang-flag active">ES</span>
     <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
   </div>
@@ -139,29 +140,24 @@ h2{margin-top:50px;font-size:22px;}
 
 <main>
 <div class="container">
-  <h1>Añadir marca de agua</h1>
-  <p>Añade una marca de agua de texto a tu foto — en una sola posición o repetida por toda la imagen. Todo ocurre localmente en tu navegador.</p>
+  <h1>Marca de agua en PDF</h1>
+  <p>Estampa una marca de agua de texto en cada página de un PDF — elige posición, rotación, tamaño, color y opacidad con vista previa en vivo. Todo ocurre localmente en tu navegador.</p>
 
   <div class="box">
     <label class="dropzone" id="dropzone" for="fileInput">
-      <div id="dropzoneText">📁 Haz clic para seleccionar una imagen o arrástrala aquí</div>
+      <div id="dropzoneText">📁 Haz clic para seleccionar un PDF o arrástralo aquí</div>
     </label>
-    <input type="file" id="fileInput" accept="image/*">
+    <input type="file" id="fileInput" accept=".pdf">
     <div class="error" id="errorMsg"></div>
-    <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subir archivos · Sin cuenta</div>
+    <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subidas · Sin cuenta · Sin marca de agua añadida por nosotros</div>
+    <div class="page-count" id="pageCount"></div>
 
     <div class="controls" id="controls">
       <div class="opt-row">
         <label>Texto:</label>
-        <input type="text" id="textInput" value="© Tu Nombre" placeholder="Texto de la marca de agua">
+        <input type="text" id="textInput" value="CONFIDENCIAL" placeholder="Texto de la marca de agua">
       </div>
-
-      <div class="mode-row">
-        <div class="mode-btn active" data-mode="single">Posición única</div>
-        <div class="mode-btn" data-mode="tiled">Repetida (mosaico)</div>
-      </div>
-
-      <div class="opt-row" id="positionRow">
+      <div class="opt-row">
         <label>Posición:</label>
         <div class="position-grid">
           <div class="pos-btn" data-pos="top-left">↖</div>
@@ -175,103 +171,105 @@ h2{margin-top:50px;font-size:22px;}
           <div class="pos-btn" data-pos="bottom-right">↘</div>
         </div>
       </div>
-
       <div class="opt-row">
-        <label>Tamaño de fuente:</label>
-        <input type="range" id="sizeSlider" min="12" max="120" value="36"><span id="sizeValue">36</span>px
+        <label>Rotación:</label>
+        <input type="range" id="rotationSlider" min="-90" max="90" value="45"><span id="rotationValue">45</span>°
+      </div>
+      <div class="opt-row">
+        <label>Tamaño:</label>
+        <input type="range" id="sizeSlider" min="12" max="120" value="48"><span id="sizeValue">48</span>pt
       </div>
       <div class="opt-row">
         <label>Opacidad:</label>
-        <input type="range" id="opacitySlider" min="5" max="100" value="40"><span id="opacityValue">40</span>%
+        <input type="range" id="opacitySlider" min="5" max="100" value="30"><span id="opacityValue">30</span>%
       </div>
       <div class="opt-row">
         <label>Color:</label>
-        <input type="color" id="colorInput" value="#ffffff">
+        <input type="color" id="colorInput" value="#ff0000">
       </div>
     </div>
 
     <div class="preview-wrap" id="previewWrap" style="display:none;">
       <canvas id="previewCanvas"></canvas>
+      <div class="note">La vista previa muestra la página 1. La marca de agua se aplica a todas las páginas.</div>
     </div>
 
     <br>
-    <button id="downloadBtn" style="display:none;">Descargar imagen</button>
-    <div class="note">Compatible con JPG, PNG, WEBP y otros formatos de imagen comunes.</div>
+    <button id="downloadBtn" style="display:none;">Aplicar marca de agua y descargar</button>
+    <div class="progress" id="progressMsg"></div>
   </div>
 
   <div class="seo-content">
     <h2>¿Qué hace esta herramienta?</h2>
-    <p>Esta herramienta superpone texto personalizado sobre tu imagen, ya sea como una única marca de agua en una posición o repetida en diagonal por toda la foto — una forma común de disuadir el uso no autorizado de una foto sin dejar de permitir que se vea y se comparta.</p>
+    <p>Esta herramienta estampa una marca de agua de texto — como "CONFIDENCIAL", "BORRADOR" o tu propio nombre — en cada página de un PDF, con control total sobre posición, ángulo de rotación, tamaño, color y opacidad. Una vista previa en vivo de la página 1 se actualiza mientras ajustas cada opción, para que veas exactamente cómo quedará antes de descargar.</p>
 
-    <h2>¿Cuándo deberías usar esta herramienta?</h2>
+    <h2>¿Cuándo usar esta herramienta?</h2>
     <ul>
-      <li>Compartes muestras de fotografía públicamente y quieres que aparezca tu nombre</li>
-      <li>Necesitas marcar un documento o imagen como borrador, muestra o confidencial</li>
-      <li>Quieres proteger una foto para que no se reutilice sin crédito</li>
-      <li>Estás marcando un conjunto de imágenes con una marca de agua consistente</li>
+      <li>Estás compartiendo un borrador y quieres marcarlo claramente como no definitivo</li>
+      <li>Necesitas etiquetar un PDF como confidencial antes de enviarlo externamente</li>
+      <li>Estás distribuyendo una muestra o vista previa y quieres desalentar su uso no autorizado</li>
+      <li>Quieres marcar un documento con tu nombre o empresa antes de publicarlo</li>
     </ul>
 
     <h2>¿Por qué usar Orisod para esto?</h2>
-    <p>Elige una posición única o un patrón repetido en mosaico para mayor cobertura, y ajusta el texto, tamaño, opacidad y color con una vista previa en vivo. Todo ocurre localmente en tu navegador usando la API de Canvas — tu foto nunca se sube a un servidor.</p>
+    <p>Ajusta texto, posición, rotación, tamaño, color y opacidad con una vista previa en vivo antes de confirmar — sin adivinar ni descargar varias veces. Todo el proceso ocurre localmente en tu navegador usando pdf.js para la vista previa y pdf-lib para generar el archivo final — tu documento nunca se sube a un servidor.</p>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
-      <div class="q">¿Cuál es la diferencia entre marca de agua única y en mosaico?</div>
-      <div>La única coloca tu texto una vez en una esquina o el centro elegido. La de mosaico repite el texto en diagonal por toda la imagen, lo que hace mucho más difícil recortarla — común para proteger muestras de fotografía.</div>
+      <div class="q">¿La marca de agua se aplica a todas las páginas?</div>
+      <div>Sí, la misma marca de agua se estampa en cada página del PDF con la configuración que elijas.</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Puedo hacer la marca de agua sutil?</div>
-      <div>Sí, baja el control de opacidad para una marca de agua más ligera y discreta, o auméntalo para una más intensa y visible.</div>
+      <div class="q">¿Puedo quitar la marca de agua después?</div>
+      <div>La marca de agua pasa a formar parte del contenido de la página, igual que en otras herramientas de PDF. Conserva tu archivo original por si necesitas una copia sin marca de agua más adelante.</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Se sube mi imagen a algún lugar?</div>
+      <div class="q">¿Puedo añadir una imagen o logo en vez de texto?</div>
+      <div>Por ahora esta herramienta solo admite marcas de agua de texto.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Se sube mi PDF a un servidor?</div>
       <div>No, todo el proceso ocurre localmente en tu navegador usando JavaScript.</div>
-    </div>
-    <div class="faq-item">
-      <div class="q">¿Puedo añadir un logo en vez de texto?</div>
-      <div>Esta herramienta actualmente solo admite marcas de agua de texto. Para añadir un logo, usa un editor de imágenes o vuelve más adelante mientras añadimos más herramientas.</div>
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres profundizar? Lee nuestra guía: <a href="/es/blog/watermark-photos-guide/" style="color:var(--accent);text-decoration:none;">Cómo Poner Marca de Agua a Tus Fotos para Proteger Tu Trabajo</a></p>
-
   <h2>Herramientas relacionadas</h2>
   <div class="related-grid">
-  <a class="related-card" href="/es/image-color-filters/">
-    <div class="icon-box cat-image">🎨</div>
+  <a class="related-card" href="/es/edit-pdf-metadata/">
+    <div class="icon-box cat-pdf">🏷️</div>
     <div class="body">
-      <div class="title">Filtros de color</div>
-      <div class="desc">Blanco y negro, sepia, brillo, contraste.</div>
+      <div class="title">Editar metadatos de PDF</div>
+      <div class="desc">Cambia título, autor, asunto y palabras clave.</div>
     </div>
     <div class="arrow">→</div>
   </a>
-  <a class="related-card" href="/es/add-border-to-image/">
-    <div class="icon-box cat-image">🖼️</div>
+  <a class="related-card" href="/es/watermark-adder/">
+    <div class="icon-box cat-image">💧</div>
     <div class="body">
-      <div class="title">Añadir marco a imagen</div>
-      <div class="desc">Añade un marco de color alrededor de una foto.</div>
+      <div class="title">Añadir marca de agua</div>
+      <div class="desc">Marca de agua para una sola imagen.</div>
     </div>
     <div class="arrow">→</div>
   </a>
-  <a class="related-card" href="/es/compress-image/">
-    <div class="icon-box cat-image">📦</div>
+  <a class="related-card" href="/es/compress-pdf/">
+    <div class="icon-box cat-pdf">📦</div>
     <div class="body">
-      <div class="title">Comprimir imagen</div>
-      <div class="desc">Reduce el tamaño del archivo sin perder calidad.</div>
+      <div class="title">Comprimir PDF</div>
+      <div class="desc">Reduce PDF escaneados o con muchas imágenes.</div>
     </div>
     <div class="arrow">→</div>
   </a>
-  <a class="related-card" href="/es/watermark-pdf/">
-    <div class="icon-box cat-pdf">💧</div>
+  <a class="related-card" href="/es/sign-pdf/">
+    <div class="icon-box cat-pdf">✍️</div>
     <div class="body">
-      <div class="title">Marca de agua en PDF</div>
-      <div class="desc">Estampa texto en cada página.</div>
+      <div class="title">Firmar PDF</div>
+      <div class="desc">Dibuja y coloca una firma.</div>
     </div>
     <div class="arrow">→</div>
   </a>
 </div>
 
-  <div class="footer">© Orisod Labs</div>
+  <div class="footer">© Orisod Labs · <a href="/es/about/" style="color:var(--muted-text);">Acerca de</a> · <a href="/es/privacy/" style="color:var(--muted-text);">Privacidad</a></div>
 </div>
 
 </main>
@@ -298,13 +296,18 @@ h2{margin-top:50px;font-size:22px;}
 </script>
 
 <script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
 const fileInput = document.getElementById('fileInput');
 const dropzone = document.getElementById('dropzone');
 const dropzoneText = document.getElementById('dropzoneText');
 const errorMsg = document.getElementById('errorMsg');
+const progressMsg = document.getElementById('progressMsg');
+const pageCount = document.getElementById('pageCount');
 const controls = document.getElementById('controls');
 const textInput = document.getElementById('textInput');
-const positionRow = document.getElementById('positionRow');
+const rotationSlider = document.getElementById('rotationSlider');
+const rotationValue = document.getElementById('rotationValue');
 const sizeSlider = document.getElementById('sizeSlider');
 const sizeValue = document.getElementById('sizeValue');
 const opacitySlider = document.getElementById('opacitySlider');
@@ -314,119 +317,65 @@ const previewWrap = document.getElementById('previewWrap');
 const previewCanvas = document.getElementById('previewCanvas');
 const downloadBtn = document.getElementById('downloadBtn');
 
-let img = null;
-let currentMode = 'single';
+let selectedFile = null;
+let pdfJsDoc = null;
 let currentPosition = 'middle-center';
 
-fileInput.addEventListener('change', (e) => { if (e.target.files[0]) loadFile(e.target.files[0]); });
+fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
 dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
 dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
 dropzone.addEventListener('drop', (e) => {
   e.preventDefault();
   dropzone.classList.remove('dragover');
-  if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+  handleFile(e.dataTransfer.files[0]);
 });
 
-function loadFile(file) {
+async function handleFile(file) {
   errorMsg.textContent = '';
-  if (!file.type.startsWith('image/')) {
-    errorMsg.textContent = 'Selecciona un archivo de imagen válido.';
+  progressMsg.textContent = '';
+  controls.style.display = 'none';
+  previewWrap.style.display = 'none';
+  downloadBtn.style.display = 'none';
+  pageCount.textContent = '';
+
+  if (!file || !/\.pdf$/i.test(file.name)) {
+    errorMsg.textContent = 'Selecciona un archivo PDF válido.';
     return;
   }
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    img = new Image();
-    img.onload = () => {
-      dropzoneText.textContent = `✅ ${file.name} cargado`;
-      controls.style.display = 'block';
-      previewWrap.style.display = 'block';
-      downloadBtn.style.display = 'inline-block';
-      renderPreview();
-    };
-    img.onerror = () => { errorMsg.textContent = 'No se pudo cargar esta imagen.'; };
-    img.src = e.target.result;
-  };
-  reader.readAsDataURL(file);
+
+  try {
+    const arrayBuffer = await file.arrayBuffer();
+    pdfJsDoc = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
+    selectedFile = file;
+
+    pageCount.textContent = `Cargado: ${pdfJsDoc.numPages} página${pdfJsDoc.numPages === 1 ? '' : 's'}`;
+    dropzoneText.textContent = `✅ ${file.name} cargado`;
+    controls.style.display = 'block';
+    previewWrap.style.display = 'block';
+    downloadBtn.style.display = 'inline-block';
+    await renderPreview();
+  } catch (err) {
+    errorMsg.textContent = 'No se pudo leer este PDF. Puede estar dañado o protegido con contraseña.';
+  }
 }
 
-document.querySelectorAll('.mode-btn').forEach(btn => {
+document.querySelectorAll('.pos-btn').forEach((btn) => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    currentMode = btn.dataset.mode;
-    positionRow.style.display = currentMode === 'single' ? 'flex' : 'none';
-    renderPreview();
-  });
-});
-
-document.querySelectorAll('.pos-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.pos-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.pos-btn').forEach((b) => b.classList.remove('active'));
     btn.classList.add('active');
     currentPosition = btn.dataset.pos;
     renderPreview();
   });
 });
 
-[textInput, sizeSlider, opacitySlider, colorInput].forEach(el => {
+[textInput, rotationSlider, sizeSlider, opacitySlider, colorInput].forEach((el) => {
   el.addEventListener('input', () => {
+    rotationValue.textContent = rotationSlider.value;
     sizeValue.textContent = sizeSlider.value;
     opacityValue.textContent = opacitySlider.value;
     renderPreview();
   });
 });
-
-function buildOutputCanvas() {
-  const canvas = document.createElement('canvas');
-  canvas.width = img.naturalWidth;
-  canvas.height = img.naturalHeight;
-  const ctx = canvas.getContext('2d');
-  ctx.drawImage(img, 0, 0);
-
-  const text = textInput.value || '';
-  const fontSize = parseInt(sizeSlider.value, 10);
-  const opacity = parseInt(opacitySlider.value, 10) / 100;
-  const color = colorInput.value;
-
-  ctx.font = `bold ${fontSize}px Arial`;
-  ctx.fillStyle = hexToRgba(color, opacity);
-  ctx.textBaseline = 'middle';
-
-  if (currentMode === 'single') {
-    const textWidth = ctx.measureText(text).width;
-    const margin = fontSize * 0.6;
-    let x, y;
-
-    if (currentPosition.includes('left')) x = margin;
-    else if (currentPosition.includes('right')) x = canvas.width - textWidth - margin;
-    else x = (canvas.width - textWidth) / 2;
-
-    if (currentPosition.includes('top')) y = margin + fontSize / 2;
-    else if (currentPosition.includes('bottom')) y = canvas.height - margin - fontSize / 2;
-    else y = canvas.height / 2;
-
-    ctx.fillText(text, x, y);
-  } else {
-    ctx.save();
-    ctx.translate(canvas.width / 2, canvas.height / 2);
-    ctx.rotate(-Math.PI / 6);
-    ctx.translate(-canvas.width / 2, -canvas.height / 2);
-
-    const textWidth = ctx.measureText(text).width;
-    const stepX = textWidth + fontSize * 2;
-    const stepY = fontSize * 3;
-    const diag = Math.sqrt(canvas.width ** 2 + canvas.height ** 2);
-
-    for (let y = -diag; y < diag; y += stepY) {
-      for (let x = -diag; x < diag; x += stepX) {
-        ctx.fillText(text, x, y);
-      }
-    }
-    ctx.restore();
-  }
-
-  return canvas;
-}
 
 function hexToRgba(hex, alpha) {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -435,29 +384,125 @@ function hexToRgba(hex, alpha) {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
-function renderPreview() {
-  if (!img) return;
-  const canvas = buildOutputCanvas();
-  const maxPreview = 500;
-  const scale = Math.min(1, maxPreview / Math.max(canvas.width, canvas.height));
-
-  previewCanvas.width = canvas.width * scale;
-  previewCanvas.height = canvas.height * scale;
-  const ctx = previewCanvas.getContext('2d');
-  ctx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
-  ctx.drawImage(canvas, 0, 0, previewCanvas.width, previewCanvas.height);
+function hexToUnitRgb(hex) {
+  return {
+    r: parseInt(hex.slice(1, 3), 16) / 255,
+    g: parseInt(hex.slice(3, 5), 16) / 255,
+    b: parseInt(hex.slice(5, 7), 16) / 255,
+  };
 }
 
-downloadBtn.addEventListener('click', () => {
-  if (!img) return;
-  const canvas = buildOutputCanvas();
-  const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
-  const a = document.createElement('a');
-  a.href = dataUrl;
-  a.download = 'watermarked-image.jpg';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+async function renderPreview() {
+  if (!pdfJsDoc) return;
+  const page = await pdfJsDoc.getPage(1);
+  const nativeViewport = page.getViewport({ scale: 1 });
+  const scale = Math.min(1, 650 / nativeViewport.width);
+  const viewport = page.getViewport({ scale });
+
+  previewCanvas.width = viewport.width;
+  previewCanvas.height = viewport.height;
+  const ctx = previewCanvas.getContext('2d');
+  await page.render({ canvasContext: ctx, viewport }).promise;
+
+  drawWatermarkOnCanvas(ctx, viewport.width, viewport.height, scale);
+}
+
+function drawWatermarkOnCanvas(ctx, cw, ch, scale) {
+  const text = textInput.value || '';
+  if (!text) return;
+
+  const fontSizePx = parseInt(sizeSlider.value, 10) * scale;
+  const opacity = parseInt(opacitySlider.value, 10) / 100;
+  const rotation = parseInt(rotationSlider.value, 10);
+  const color = colorInput.value;
+
+  ctx.save();
+  ctx.font = `bold ${fontSizePx}px Arial`;
+  ctx.fillStyle = hexToRgba(color, opacity);
+  ctx.textBaseline = 'alphabetic';
+
+  const textWidth = ctx.measureText(text).width;
+  const margin = fontSizePx * 0.6;
+  let x, y;
+
+  if (currentPosition.includes('left')) x = margin;
+  else if (currentPosition.includes('right')) x = cw - textWidth - margin;
+  else x = (cw - textWidth) / 2;
+
+  if (currentPosition.includes('top')) y = margin + fontSizePx * 0.8;
+  else if (currentPosition.includes('bottom')) y = ch - margin;
+  else y = ch / 2 + fontSizePx * 0.3;
+
+  ctx.translate(x, y);
+  ctx.rotate((-rotation * Math.PI) / 180);
+  ctx.fillText(text, 0, 0);
+  ctx.restore();
+}
+
+downloadBtn.addEventListener('click', async () => {
+  if (!selectedFile) return;
+  errorMsg.textContent = '';
+  progressMsg.textContent = '';
+  downloadBtn.disabled = true;
+  downloadBtn.textContent = 'Aplicando...';
+
+  try {
+    const text = textInput.value || '';
+    if (!text) {
+      throw new Error('Escribe primero el texto de la marca de agua.');
+    }
+
+    const { PDFDocument, StandardFonts, rgb, degrees } = PDFLib;
+    const arrayBuffer = await selectedFile.arrayBuffer();
+    const pdfDoc = await PDFDocument.load(arrayBuffer);
+    const font = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+
+    const fontSize = parseInt(sizeSlider.value, 10);
+    const opacity = parseInt(opacitySlider.value, 10) / 100;
+    const rotation = parseInt(rotationSlider.value, 10);
+    const { r, g, b } = hexToUnitRgb(colorInput.value);
+
+    for (const page of pdfDoc.getPages()) {
+      const { width, height } = page.getSize();
+      const textWidth = font.widthOfTextAtSize(text, fontSize);
+      const margin = fontSize * 0.6;
+      let x, y;
+
+      if (currentPosition.includes('left')) x = margin;
+      else if (currentPosition.includes('right')) x = width - textWidth - margin;
+      else x = (width - textWidth) / 2;
+
+      if (currentPosition.includes('top')) y = height - margin - fontSize * 0.8;
+      else if (currentPosition.includes('bottom')) y = margin;
+      else y = height / 2;
+
+      page.drawText(text, {
+        x, y, size: fontSize, font,
+        color: rgb(r, g, b),
+        opacity,
+        rotate: degrees(rotation),
+      });
+    }
+
+    const bytes = await pdfDoc.save();
+    const blob = new Blob([bytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const baseName = selectedFile.name.replace(/\.pdf$/i, '');
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${baseName}-marca-de-agua.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    progressMsg.textContent = 'Listo — marca de agua añadida.';
+  } catch (err) {
+    errorMsg.textContent = err.message || 'No se pudo aplicar la marca de agua a este PDF.';
+  }
+
+  downloadBtn.disabled = false;
+  downloadBtn.textContent = 'Aplicar marca de agua y descargar';
 });
 </script>
 </body>
