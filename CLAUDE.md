@@ -128,6 +128,7 @@ here as a record so they don't get reintroduced:
 ## Working conventions for this repo
 
 - New tool → new folder `tool-name/` with `index.html` inside (self-contained: CSS and JS in the same file, no external site JS files)
-- After creating/editing tool pages, remember to also update: `/tools/index.html` (add the card to the right category), `sitemap.xml` (add the URL), and any `related tools` reciprocal links on relevant existing pages
+- **Every tool ships together with its blog/guide post, EN+ES, same hard requirement as shipping the tool itself in both languages — not optional, not a fast-follow (corrected 2026-08-16, superseding an earlier "recommended but not a blocker" note).** One tool = 4 pages published together: `tool-name/`, `es/tool-name/`, `blog/guide-slug/`, `es/blog/guide-slug/`. Exception: if an existing guide already substantively covers the same topic (e.g. a second UI for the same underlying action), update that guide and cross-link it instead of publishing a near-duplicate post — ask the user first if it's not clear-cut, since it's a content-strategy call, not a mechanical one.
+- After creating/editing tool pages, remember to also update: `/tools/index.html` (add the card to the right category), `sitemap.xml` (add the URL), any `related tools` reciprocal links on relevant existing pages, `blog/index.html` + `es/blog/index.html` (add the guide's card), and the guide's own reciprocal "Related articles" links
 - Keep the GA4 snippet, the visual design system, and the SEO content structure identical across every new page — consistency across 36+ pages matters more than any individual page being clever
 - Commit messages should be clear about what was added/changed (e.g. "Add Spanish version of compress-image tool")

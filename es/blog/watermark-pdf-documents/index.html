@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cómo Poner una Marca de Agua en un PDF (Confidencial, Borrador o Tu Nombre) | Blog de Orisod</title>
+<meta name="description" content="Estampar cada página de un PDF con una marca de agua de texto antes de compartirlo — cuándo vale la pena hacerlo, y cómo controlar posición, rotación y opacidad para que no estorbe.">
+<link rel="canonical" href="https://orisod.com/es/blog/watermark-pdf-documents/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/watermark-pdf-documents/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/watermark-pdf-documents/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/watermark-pdf-documents/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#2563eb">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:5px 14px;margin:-5px 0;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/es/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/es/tools/">Todas las Herramientas</a>
+    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/#pdf">Herramientas PDF</a>
+    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <a class="lang-flag" href="/blog/watermark-pdf-documents/">EN</a>
+    <span class="lang-flag active">ES</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>Cómo Poner una Marca de Agua en un PDF (Confidencial, Borrador o Tu Nombre)</h1>
+<p class="intro">Estás por enviar un documento que todavía no es definitivo, o uno que no debería circular libremente una vez que salga de tus manos. Una marca de agua estampada en cada página — "BORRADOR", "CONFIDENCIAL" o tu propio nombre — hace que ese estado sea imposible de pasar por alto, sin cambiar nada del contenido real del documento.</p>
+
+<div class="article-body">
+
+<h2>Para qué sirve realmente una marca de agua en un PDF</h2>
+<p>A diferencia de una marca de agua en una foto, que existe principalmente para desalentar el robo de la imagen en sí, una marca de agua en un PDF suele tratarse de comunicar un estado — esto es un borrador, esto es confidencial, esto viene de una fuente específica. Es una etiqueta estampada dentro del documento mismo en lugar de un correo de acompañamiento que podría separarse del archivo a medida que se reenvía.</p>
+
+<h2>Elegir un texto que realmente diga algo</h2>
+<p>"CONFIDENCIAL", "BORRADOR", "MUESTRA", y un nombre de empresa o personal cubren la mayoría de los casos de uso reales. La elección correcta depende de lo que quieras evitar: "BORRADOR" le dice al lector que no trate el contenido como definitivo, "CONFIDENCIAL" indica que no debería compartirse más, y una marca de nombre o empresa atribuye el documento a su origen. Elige la que coincida con tu preocupación real en lugar de recurrir por defecto a la que suene más oficial.</p>
+
+<h2>Posición, rotación y opacidad importan por igual</h2>
+<p>Una marca de agua demasiado marcada hace difícil leer el documento; una demasiado sutil casi como si no estuviera. Una colocación diagonal en el centro de la página (el aspecto clásico) es difícil de pasar por alto y difícil de recortar selectivamente, mientras que una colocación en una esquina es menos intrusiva si el documento necesita seguir siendo cómodamente legible. Una opacidad más baja mantiene legible el texto subyacente a través de la marca de agua; una opacidad más alta hace que la etiqueta sea inconfundible a costa de algo de legibilidad — no hay una respuesta única correcta, depende de qué tan importante sea la legibilidad frente a la visibilidad para tu documento específico.</p>
+
+<h2>Qué protege y qué no protege una marca de agua</h2>
+<p>Una marca de agua deja claro el estado de un documento de un vistazo y desalienta hacerlo pasar por algo que no es — pero no es encriptación, y no impide que alguien abra, lea o incluso copie el texto que hay debajo de ella. Si necesitas restringir realmente quién puede abrir un documento, ese es un problema distinto (protección con contraseña) al de etiquetar su estado, y ambos suelen confundirse.</p>
+
+<h2>Aplicarla a cada página vs. solo una</h2>
+<p>Para la mayoría de los casos de uso, estampar cada página importa más que estampar solo la primera — un lector que reenvía la página 12 fuera de contexto debería seguir viendo la etiqueta "CONFIDENCIAL", no solo quien abre el archivo desde la página uno. Una herramienta que aplica la marca de agua de manera uniforme en todo el documento, y no solo en la portada, evita ese vacío.</p>
+
+<h2>Un ejemplo concreto</h2>
+<p>Terminaste el primer borrador completo de una propuesta y necesitas comentarios antes de que sea definitiva, pero te preocupa que un revisor la reenvíe más adelante como si fuera la versión final. Poner "BORRADOR" en cada página con una opacidad moderada mantiene el contenido totalmente legible mientras deja claro, de un vistazo, en cada página, que esto no es lo que debería circular como definitivo.</p>
+
+<h2>Respuestas rápidas</h2>
+<p><strong>¿La marca de agua se aplica automáticamente a cada página?</strong> Con una herramienta adecuada de marca de agua para PDF, sí — el mismo sello se aplica de manera uniforme en todo el documento en una sola pasada.</p>
+<p><strong>¿Puedo quitar una marca de agua después de añadirla?</strong> Una vez aplicada, la marca de agua pasa a formar parte del contenido de la página, igual que en la mayoría de las herramientas de PDF — conserva tu archivo original sin marca de agua por si lo necesitas de nuevo.</p>
+<p><strong>¿Una marca de agua realmente protege un documento de ser copiado?</strong> No — hace que el estado sea obvio visualmente, pero no restringe el acceso ni impide copiar. Eso requiere protección con contraseña, una función aparte.</p>
+
+<div class="cta-box">
+  <h3>Pon una Marca de Agua en Tu PDF</h3>
+  <p>La herramienta Marca de Agua en PDF de Orisod estampa texto en cada página con control total de posición, rotación, tamaño, color y opacidad, con vista previa en vivo — completamente en tu navegador.</p>
+  <a class="cta-button" href="/es/watermark-pdf/">Marca de Agua en PDF →</a>
+</div>
+
+<p>El trabajo de una marca de agua es dejar claro el estado de un documento en el momento en que alguien lo abre, en cualquier página — no bloquearlo. Con la posición y la opacidad correctas para tu documento específico, cumple esa función sin estorbar la lectura real del contenido.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Artículos relacionados</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/es/blog/sign-pdf-online/">
+      <h3>Cómo Firmar un PDF en Línea (Sin Imprimir ni Escanear)</h3>
+      <p>Dibujar una firma y colocarla en una página de PDF sin usar un bolígrafo físico.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/watermark-photos-guide/">
+      <h3>Cómo Poner Marca de Agua a Tus Fotos para Proteger Tu Trabajo</h3>
+      <p>Cómo proteger fotos compartidas con una marca de agua sin arruinar la imagen.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/merge-multiple-pdfs/">
+      <h3>Cómo Unir Varios PDF en un Solo Archivo (Gratis)</h3>
+      <p>Cómo funciona realmente la unión de PDF, los errores a evitar, y cómo combinarlos sin perder calidad.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/es/blog/">← Volver al Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/es/about/" style="color:var(--muted-text);">Acerca de</a> · <a href="/es/privacy/" style="color:var(--muted-text);">Privacidad</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cómo Recortar los Márgenes de un PDF (Sin Reimprimirlo) | Blog de Orisod</title>
+<meta name="description" content="Márgenes anchos o irregulares en un PDF escaneado o exportado, y cómo recortarlos a medidas exactas sin volver a escanear o exportar el original.">
+<link rel="canonical" href="https://orisod.com/es/blog/trim-pdf-margins/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/trim-pdf-margins/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/trim-pdf-margins/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/trim-pdf-margins/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#2563eb">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:5px 14px;margin:-5px 0;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/es/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/es/tools/">Todas las Herramientas</a>
+    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/#pdf">Herramientas PDF</a>
+    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <a class="lang-flag" href="/blog/trim-pdf-margins/">EN</a>
+    <span class="lang-flag active">ES</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>Cómo Recortar los Márgenes de un PDF (Sin Reimprimirlo)</h1>
+<p class="intro">Una página escaneada sale con cinco centímetros de espacio en blanco muerto alrededor de los bordes, o un PDF exportado desde otra herramienta tiene márgenes que no coinciden con lo que realmente necesitas. Rehacer el origen — volver a escanear, volver a exportar, reformatear — es la forma lenta de arreglarlo. Recortar directamente los márgenes del archivo existente es la rápida.</p>
+
+<div class="article-body">
+
+<h2>Por qué los PDF terminan con márgenes anchos o irregulares</h2>
+<p>Los márgenes quedan incorporados en un PDF por todo tipo de razones que no tienen nada que ver con lo que realmente quieres: un escáner captura por defecto todo el vidrio en lugar de solo la página, un documento se diseñó para un tamaño de papel distinto al que se usa ahora, o una configuración de exportación agregó relleno que nadie pidió. Ninguno de estos son problemas de contenido — la página en sí está bien — el límite visible alrededor de ella simplemente es más grande de lo necesario.</p>
+
+<h2>Qué cambia realmente al recortar un PDF</h2>
+<p>Recortar mueve el límite visible de una página hacia adentro según la cantidad que indiques en cada lado, normalmente medida en milímetros. No toca, redibuja ni recomprime nada dentro de ese límite — el texto sigue siendo seleccionable, las imágenes conservan su resolución original. Piénsalo menos como "editar" la página y más como cambiar qué parte de ella se muestra e imprime.</p>
+
+<h2>Elegir los márgenes correctos para tu caso</h2>
+<p>Los márgenes irregulares en los cuatro lados son comunes en documentos escaneados, así que arriba, abajo, izquierda y derecha normalmente necesitan valores distintos en lugar de un número uniforme. Una forma rápida de averiguar qué necesitas: abre el PDF, mira cuánto espacio vacío hay en cada borde, y estima en milímetros — la mayoría de las herramientas de recorte te permiten previsualizar o reajustar antes de guardar, así que no hace falta acertar exactamente a la primera.</p>
+
+<h2>Qué se mantiene sin cambios</h2>
+<p>Recortar es un cambio de límite, no una edición de contenido — el texto, las imágenes y el diseño subyacentes dentro del nuevo límite son exactamente los mismos de antes. Si tu PDF tiene varias páginas de distinto tamaño, la mayoría de las herramientas aplican las mismas medidas de margen a todas las páginas en lugar de personalizarlas por página, así que ten cuidado con un error si una página resulta demasiado pequeña para los márgenes que fijaste.</p>
+
+<h2>Un ejemplo concreto</h2>
+<p>Escaneas un recibo o un formulario de una sola página en un escáner plano configurado para capturar un área A4 completa, pero el contenido real solo llena el tercio superior de la página. En lugar de volver a escanear con un recorte más ajustado, recortarías unos 150mm de la parte inferior y una cantidad menor de los lados — una sola pasada, y el resultado es una página del tamaño del contenido en vez del tamaño del vidrio del escáner.</p>
+
+<h2>Respuestas rápidas</h2>
+<p><strong>¿Recortar elimina contenido de forma permanente?</strong> No — mueve el límite visible de la página hacia adentro. El contenido subyacente no se redibuja ni se rasteriza, así que nada se pierde ni se degrada.</p>
+<p><strong>¿Puedo recortar diferentes cantidades en cada lado?</strong> Sí — arriba, abajo, izquierda y derecha son independientes, así que corregir márgenes irregulares es fácil sin recortar de más un lado que ya estaba bien.</p>
+<p><strong>¿Esto funciona en un PDF de varias páginas?</strong> Sí, las mismas medidas de margen se aplican a todas las páginas en una sola pasada — útil para un documento escaneado donde todas las páginas comparten el mismo problema de margen del escáner.</p>
+
+<div class="cta-box">
+  <h3>Recorta los Márgenes de Tu PDF</h3>
+  <p>La herramienta Recortar Páginas de PDF de Orisod te permite indicar medidas exactas de arriba, abajo, izquierda y derecha, y las aplica a todas las páginas — completamente en tu navegador.</p>
+  <a class="cta-button" href="/es/crop-pdf-pages/">Recortar Páginas de PDF →</a>
+</div>
+
+<p>Los márgenes anchos o irregulares casi siempre son un residuo de cómo se escaneó o exportó una página, no algo mal con el contenido en sí — y corregirlos es un ajuste de una sola pasada, no un motivo para rehacer el documento original desde cero.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Artículos relacionados</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/es/blog/change-pdf-page-size/">
+      <h3>Cómo Cambiar el Tamaño de Página de un PDF (A4, Letter, Legal o Personalizado)</h3>
+      <p>Convertir un PDF en tamaño Letter a A4, o al revés, sin rediseñar el documento.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/rotate-pdf-pages/">
+      <h3>Cómo Rotar Páginas en un PDF (Gratis, Sin Programas)</h3>
+      <p>Por qué las páginas escaneadas salen de lado, y cómo rotarlas sin volver a escanear.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/compress-pdf-without-losing-quality/">
+      <h3>Cómo Hacer un Archivo PDF Más Pequeño Sin Perder Calidad</h3>
+      <p>Qué hace realmente que un PDF sea enorme, y cómo reducirlo sin dañar la calidad.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/es/blog/">← Volver al Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/es/about/" style="color:var(--muted-text);">Acerca de</a> · <a href="/es/privacy/" style="color:var(--muted-text);">Privacidad</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

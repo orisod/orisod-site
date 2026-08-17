@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cómo Firmar un PDF en Línea (Sin Imprimir ni Escanear) | Blog de Orisod</title>
+<meta name="description" content="Dibujar una firma y colocarla en una página de PDF sin un bolígrafo físico — cómo funciona, y dónde están realmente los límites de una herramienta de firma simple.">
+<link rel="canonical" href="https://orisod.com/es/blog/sign-pdf-online/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/sign-pdf-online/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/sign-pdf-online/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/sign-pdf-online/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#2563eb">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:5px 14px;margin:-5px 0;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/es/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/es/tools/">Todas las Herramientas</a>
+    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/#pdf">Herramientas PDF</a>
+    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <a class="lang-flag" href="/blog/sign-pdf-online/">EN</a>
+    <span class="lang-flag active">ES</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>Cómo Firmar un PDF en Línea (Sin Imprimir ni Escanear)</h1>
+<p class="intro">Un formulario o contrato necesita tu firma, y el camino tradicional — imprimir, firmar con bolígrafo, escanear, enviar por correo — toma más tiempo que la firma misma. Dibujar una firma directamente sobre el PDF y colocarla exactamente donde tiene que ir se salta por completo la impresora y el escáner.</p>
+
+<div class="article-body">
+
+<h2>Cómo funciona realmente dibujar una firma en línea</h2>
+<p>Un panel de firma te permite dibujar con el ratón o con el dedo en una pantalla táctil, de la misma forma en que firmarías en un terminal físico de recibos. Ese dibujo se guarda como una imagen con fondo transparente — solo la tinta, sin caja blanca alrededor — que luego se coloca en la página del PDF en la posición y tamaño que elijas.</p>
+
+<h2>Colocarla en el lugar correcto</h2>
+<p>La mayoría de los campos de firma están en un lugar predecible — la parte inferior de una página, cerca de una línea impresa de "Firma:" — así que poder ver la página real mientras posicionas tu firma importa más de lo que parece. Una vista previa en vivo de la página exacta que estás firmando, con la firma arrastrable a donde tenga que ir, evita adivinar coordenadas a ciegas.</p>
+
+<h2>Qué es esto y qué no es</h2>
+<p>Esta es una forma rápida y simple de poner una firma dibujada en un documento — útil para aprobaciones internas, confirmaciones rápidas, o documentos donde una firma escaneada con bolígrafo habría sido aceptable de todas formas. No es una firma electrónica con validez legal como la de los servicios creados específicamente para eso: no hay firma criptográfica, ni verificación de identidad, ni un registro de auditoría que pruebe quién firmó y cuándo. Para contratos o documentos que requieren cumplimiento real de firma electrónica, un servicio de firma electrónica dedicado es la herramienta correcta, no un sello de imagen dibujada.</p>
+
+<h2>Una página a la vez</h2>
+<p>Una herramienta de firma simple normalmente coloca tu firma en una página por cada pasada — la página que realmente necesitas firmar, usualmente la última en un documento corto. Si varias páginas necesitan cada una una firma, volver a ejecutar la herramienta sobre el archivo ya firmado y colocarla en la siguiente página suele ser más rápido que intentar poner varias firmas en un solo paso.</p>
+
+<h2>Ajustar el tamaño de forma apropiada</h2>
+<p>Una firma demasiado grande se ve poco natural y puede superponerse a otro contenido; demasiado pequeña y es difícil de leer como una firma real en vez de una mancha. Poder cambiar el tamaño antes de finalizar — y ver ese tamaño reflejado en la vista previa en vivo — facilita llegar a algo que se vea como una firma real y proporcionada en lugar de adivinar y volver a descargar.</p>
+
+<h2>Un ejemplo concreto</h2>
+<p>Recibes por correo un formulario de confirmación de una sola página que solo necesita tu firma al final antes de devolverlo. En lugar de imprimirlo, firmarlo con bolígrafo y volver a escanearlo — tres pasos extra y probablemente ir a buscar una impresora que funcione — dibujar tu firma directamente sobre el PDF y colocarla en la línea de firma toma menos de un minuto, sin necesitar impresora.</p>
+
+<h2>Respuestas rápidas</h2>
+<p><strong>¿Esto es legalmente lo mismo que un servicio de firma electrónica?</strong> No — incrusta una imagen dibujada de tu firma, sin la firma criptográfica ni la verificación de identidad que ofrecen las plataformas de firma electrónica dedicadas. Usa una de esas para documentos que requieren cumplimiento legal de firma electrónica.</p>
+<p><strong>¿Puedo firmar más de una página a la vez?</strong> Normalmente una página por cada pasada — para varias páginas firmadas, vuelve a ejecutar la herramienta sobre el resultado y colócala en la siguiente página.</p>
+<p><strong>¿Puedo ajustar el tamaño después de dibujar mi firma?</strong> Sí, la mayoría de las herramientas te permiten cambiar el tamaño antes de finalizar, con la vista previa actualizándose para que veas el tamaño real antes de descargar.</p>
+
+<div class="cta-box">
+  <h3>Firma Tu PDF</h3>
+  <p>La herramienta Firmar PDF de Orisod te permite dibujar una firma y colocarla con precisión en cualquier página, con vista previa en vivo — completamente en tu navegador.</p>
+  <a class="cta-button" href="/es/sign-pdf/">Firmar PDF →</a>
+</div>
+
+<p>Para la firma del día a día — aprobaciones, confirmaciones, trámites rápidos — dibujar una firma directamente sobre un PDF es más rápido que el ciclo de imprimir-firmar-escanear que reemplaza, sin necesitar impresora, escáner ni una cuenta de firma electrónica dedicada.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Artículos relacionados</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/es/blog/watermark-pdf-documents/">
+      <h3>Cómo Poner una Marca de Agua en un PDF (Confidencial, Borrador o Tu Nombre)</h3>
+      <p>Estampar cada página de un PDF con una marca de agua de texto antes de compartirlo.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/add-page-numbers-to-pdf/">
+      <h3>Cómo Añadir Números de Página a un PDF</h3>
+      <p>Cómo añadir números de página secuenciales a un documento PDF terminado.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/merge-multiple-pdfs/">
+      <h3>Cómo Unir Varios PDF en un Solo Archivo (Gratis)</h3>
+      <p>Cómo funciona realmente la unión de PDF, los errores a evitar, y cómo combinarlos sin perder calidad.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/es/blog/">← Volver al Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/es/about/" style="color:var(--muted-text);">Acerca de</a> · <a href="/es/privacy/" style="color:var(--muted-text);">Privacidad</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

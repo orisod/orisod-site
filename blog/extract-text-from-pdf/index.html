@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How to Add Page Numbers to a PDF | Orisod Blog</title>
-<meta name="description" content="A report, contract, or manuscript needs sequential page numbers and doesn't have them. Here's why page numbers matter more than they seem, and how to stamp them onto an existing PDF.">
-<link rel="canonical" href="https://orisod.com/blog/add-page-numbers-to-pdf/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/blog/add-page-numbers-to-pdf/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/add-page-numbers-to-pdf/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/add-page-numbers-to-pdf/">
+<title>How to Extract Text From a PDF (Copy or Save as .txt) | Orisod Blog</title>
+<meta name="description" content="Pulling the actual text out of a PDF instead of retyping it by hand — how text extraction works, why it sometimes comes back empty, and how to fix that.">
+<link rel="canonical" href="https://orisod.com/blog/extract-text-from-pdf/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/extract-text-from-pdf/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/extract-text-from-pdf/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/extract-text-from-pdf/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
@@ -73,9 +73,6 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 .article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
 .article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
 .article-body li{margin-bottom:8px;}
-.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
-.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
-.compare-table th{background:var(--card-bg);}
 .cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
 .cta-box h3{margin:0 0 10px 0;font-size:19px;}
 .cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
@@ -106,7 +103,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   </nav>
   <div class="site-nav-right">
     <span class="lang-flag active">EN</span>
-    <a class="lang-flag" href="/es/blog/add-page-numbers-to-pdf/">ES</a>
+    <a class="lang-flag" href="/es/blog/extract-text-from-pdf/">ES</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
   </div>
 </header>
@@ -114,44 +111,38 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <main>
 <div class="container">
 
-<h1>How to Add Page Numbers to a PDF</h1>
-<p class="intro">A document is finished, formatted, and ready to send — except it has no page numbers, and whoever receives it needs them to reference specific sections. Here's why that request comes up so often, and how to add numbers to a PDF that doesn't have them.</p>
+<h1>How to Extract Text From a PDF (Copy or Save as .txt)</h1>
+<p class="intro">You need the words inside a PDF — to search them, paste them into an email, or process them with something that only accepts plain text — but retyping a multi-page document by hand isn't a real option. Extracting the text that's already there takes seconds, when the PDF actually has selectable text to extract.</p>
 
 <div class="article-body">
 
-<h2>Why page numbers matter more than they seem</h2>
-<p>In a document someone reads on a screen, scrolling feels continuous and page numbers can seem unnecessary. But the moment a document gets printed, referenced in a meeting, or cited in another document ("see page 14"), page numbers stop being decorative and become the only reliable way to point someone to a specific spot. Legal documents, academic papers, business reports, and manuscripts all lean on page numbers for exactly this reason — without them, referring to "the page with the budget table" is a lot less precise than referring to page 14.</p>
+<h2>What text extraction actually does</h2>
+<p>Every page of a text-based PDF stores its content as actual characters, positioned on the page — the same text you can highlight and copy in a PDF viewer. Extraction reads through every page and pulls that text out as plain text, stripping away the fonts, columns and layout and leaving just the words themselves, in reading order.</p>
 
-<h2>Why a finished PDF often doesn't have them</h2>
-<p>Page numbers are usually something the original document's author adds while writing — in a word processor, in page-layout software, or as part of a template. But plenty of PDFs never went through that step: a scanned document has no page-numbering feature to begin with, an exported PDF sometimes drops the header/footer settings that included numbering, or a document was assembled by merging several separate files that were each individually paginated (or not paginated at all). In each case, you're stuck with a finished PDF and no easy way to go back and re-export it with numbers included.</p>
+<h2>Why some PDFs give you nothing</h2>
+<p>A scanned document — a photographed page, or a document run through a scanner — is stored as an image of a page, not as characters. There's no text to extract because there was never any text there to begin with, just pixels that happen to look like letters to a human eye. This is the single most common reason extraction comes back empty, and it's not a bug in the extraction tool — it's a real limitation of what a scanned image contains. Making a scanned document's text extractable requires OCR (optical character recognition), a separate process that recognizes shapes as letters, which plain text extraction doesn't do.</p>
 
-<h2>What adding page numbers to an existing PDF actually does</h2>
-<p>Rather than requiring you to go back to the original source document, a page-numbering tool stamps numbers directly onto each page of the PDF as it exists right now — reading the total page count, then adding the appropriate number to each page in sequence. This works regardless of whether the original PDF came from a word processor, a scanner, or a merge of several separate files, since it operates on the finished PDF rather than needing access to whatever created it.</p>
+<h2>What a good extraction keeps track of</h2>
+<p>Page boundaries matter even in plain text — knowing where one page ends and the next begins helps you find something later, especially in a long document. A good extraction marks those boundaries clearly in the output rather than running every page's text together into one undifferentiated block.</p>
 
-<h2>Placement options</h2>
-<p>Page numbers are conventionally placed in one of a few consistent spots: bottom-center is the most common and least likely to overlap with existing content, bottom-corner (left or right) is common in books and formal reports, and occasionally top-corner for documents with a lot of content near the bottom of each page. The right placement mostly comes down to where the existing page content leaves clear space, and matching whatever convention the document type expects — a legal brief and a photo book don't follow the same norms.</p>
-
-<h2>Starting number and format</h2>
-<p>Not every document should start counting at "1" on its first physical page — a report with a cover page and table of contents often wants numbering to begin on the first content page, with the front matter left unnumbered or numbered separately with roman numerals. A flexible page-numbering tool lets you set the starting number and skip a set number of pages at the front, rather than forcing sequential numbering from page one no matter what.</p>
-
-<h2>Does this affect anything else in the document?</h2>
-<p>No — adding page numbers only stamps new content into the margin of each page; it doesn't touch the existing text, images, or layout already on the page. It's an additive change, not an edit to what's already there, so there's no risk of disturbing content that's already finalized.</p>
+<h2>What gets lost in the process</h2>
+<p>Plain text extraction is exactly that — plain. Fonts, bold and italic styling, column layout, and table structure aren't preserved, since none of that exists in plain text to begin with. If you need the visual layout intact, extraction isn't the right tool; you'd want to keep working with the PDF itself, or convert it to a format like Word that can hold formatting.</p>
 
 <h2>A concrete example</h2>
-<p>A 60-page manuscript gets assembled by merging three separately written sections into one PDF, and none of the three had consistent page numbering to begin with. Rather than reopening each original document, fixing its numbering, re-exporting, and merging again, stamping numbers onto the already-merged 60-page file directly produces a single, correctly and continuously numbered document in one pass.</p>
+<p>You have a 40-page report and need to search it for every mention of a specific clause — something a PDF viewer's search can sometimes struggle with across a long, image-heavy document. Extracting the full text into one file lets you search or process it with a plain-text tool, or paste specific passages into an email without retyping them.</p>
 
 <h2>Quick answers</h2>
-<p><strong>Can I start numbering from a page other than the first one?</strong> Yes, most tools let you set a starting page and starting number, so a cover page or table of contents can stay unnumbered.</p>
-<p><strong>Will page numbers overlap with existing content?</strong> Not if placed in a location — like the bottom margin — that's typically kept clear on formatted documents; it's worth a quick check on documents with unusually full pages.</p>
-<p><strong>Does this work on scanned PDFs?</strong> Yes — since numbering is stamped onto the page as it currently exists, it works the same whether the underlying content is scanned images or typed text.</p>
+<p><strong>Why is my extracted text empty or very short?</strong> The PDF is likely a scanned image without a real text layer — there's no selectable text to pull out, only pixels. OCR is a separate process for making scanned documents searchable.</p>
+<p><strong>Does extraction keep the original formatting?</strong> No — it's a plain-text extraction, not a layout-preserving conversion. Fonts, columns and tables aren't preserved.</p>
+<p><strong>Can I tell which page a piece of text came from?</strong> Yes, if the extraction marks page boundaries in the output — look for page markers rather than one continuous block of text.</p>
 
 <div class="cta-box">
-  <h3>Add Page Numbers to Your PDF</h3>
-  <p>Orisod's page numbering tool stamps sequential numbers onto any PDF, with control over placement and starting page — entirely in your browser, with nothing uploaded to a server.</p>
-  <a class="cta-button" href="/add-page-numbers/">Add Page Numbers →</a>
+  <h3>Extract Text From Your PDF</h3>
+  <p>Orisod's Extract PDF Text tool pulls the text out of every page, with page markers, and lets you copy it or download it as a .txt file — entirely in your browser.</p>
+  <a class="cta-button" href="/extract-pdf-text/">Extract PDF Text →</a>
 </div>
 
-<p>A document without page numbers isn't broken, but it's harder to reference precisely — adding them takes a minute and turns “the page with the chart” into “page 14,” which is the whole point.</p>
+<p>If a PDF has real, selectable text, getting it out as plain text takes seconds — the only real obstacle is a scanned document with no text layer at all, which is a limitation of the source file, not of extraction itself.</p>
 
 </div>
 
@@ -163,19 +154,14 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
       <p>How to fix a scanned PDF's page order or remove a stray blank page.</p>
     </a>
 
-    <a class="blog-card" href="/blog/rotate-pdf-pages/">
-      <h3>How to Rotate Pages in a PDF (Free, No Software)</h3>
-      <p>Why scanned pages come out sideways, and how to rotate them without rescanning.</p>
+    <a class="blog-card" href="/blog/split-pdf-guide/">
+      <h3>How to Split a PDF Into Separate Files</h3>
+      <p>How to pull specific pages out of a PDF or split one file into several.</p>
     </a>
 
     <a class="blog-card" href="/blog/compress-pdf-without-losing-quality/">
       <h3>How to Make a PDF File Smaller Without Losing Quality</h3>
       <p>What actually makes a PDF huge, and how to shrink it without hurting quality.</p>
-    </a>
-
-    <a class="blog-card" href="/blog/sign-pdf-online/">
-      <h3>How to Sign a PDF Online (No Printing or Scanning)</h3>
-      <p>Drawing a signature and placing it on a PDF page without a physical pen.</p>
     </a>
   </div>
 </div>

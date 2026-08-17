@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How to Reorder or Delete Pages in a PDF | Orisod Blog</title>
-<meta name="description" content="A scanned document came out in the wrong order, or has a blank page that shouldn't be there. Here's how to reorder or remove pages from a PDF without redoing the whole scan.">
-<link rel="canonical" href="https://orisod.com/blog/reorder-delete-pdf-pages/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/blog/reorder-delete-pdf-pages/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/reorder-delete-pdf-pages/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/reorder-delete-pdf-pages/">
+<title>How to Trim the Margins on a PDF (Without Reprinting It) | Orisod Blog</title>
+<meta name="description" content="Wide or uneven margins on a scanned or exported PDF, and how to trim them to exact measurements without re-scanning or re-exporting the original.">
+<link rel="canonical" href="https://orisod.com/blog/trim-pdf-margins/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/trim-pdf-margins/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/trim-pdf-margins/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/trim-pdf-margins/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
@@ -73,9 +73,6 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 .article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
 .article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
 .article-body li{margin-bottom:8px;}
-.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
-.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
-.compare-table th{background:var(--card-bg);}
 .cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
 .cta-box h3{margin:0 0 10px 0;font-size:19px;}
 .cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
@@ -106,7 +103,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   </nav>
   <div class="site-nav-right">
     <span class="lang-flag active">EN</span>
-    <a class="lang-flag" href="/es/blog/reorder-delete-pdf-pages/">ES</a>
+    <a class="lang-flag" href="/es/blog/trim-pdf-margins/">ES</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
   </div>
 </header>
@@ -114,56 +111,47 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <main>
 <div class="container">
 
-<h1>How to Reorder or Delete Pages in a PDF</h1>
-<p class="intro">A scanned packet comes out of order, or a blank page slipped in partway through a scan. Rescanning from scratch feels like overkill for a problem this small — and it usually is, since reordering or deleting pages in an existing PDF takes a fraction of the time.</p>
+<h1>How to Trim the Margins on a PDF (Without Reprinting It)</h1>
+<p class="intro">A scanned page comes out with two inches of dead white space around the edges, or a PDF exported from some other tool has margins that don't match what you actually need. Redoing the source — rescanning, re-exporting, reformatting — is the slow way to fix it. Trimming the existing file's margins directly is the fast one.</p>
 
 <div class="article-body">
 
-<h2>Why this happens so often with scanned documents</h2>
-<p>Multi-page scanning and stacks of photographed pages are both prone to small mistakes: a page gets fed through a scanner's automatic feeder out of sequence, a blank separator page from a printer gets scanned by accident, or a phone camera captures the same page twice while photographing a document one page at a time. None of these are content problems — the pages themselves are fine — they're just organized incorrectly within the file, and fixing that organization doesn't require touching the original source material at all.</p>
+<h2>Why PDFs end up with wide or uneven margins</h2>
+<p>Margins get baked into a PDF for all kinds of reasons that have nothing to do with what you actually want: a scanner defaults to capturing the full glass bed instead of just the page, a document was designed for a different paper size than it's now being used for, or an export setting added padding nobody asked for. None of these are content problems — the page itself is fine — the visible boundary around it is just larger than it needs to be.</p>
 
-<h2>Reordering pages</h2>
-<p>Reordering means changing the sequence pages appear in without adding or removing anything — page 5 needs to come before page 3, for instance. A page organizer tool typically shows a visual grid or thumbnail view of every page, letting you drag pages into the correct order rather than guessing based on page numbers alone. This visual approach matters because it's easy to miscount when working from a list of page numbers on a document you can't see at a glance.</p>
+<h2>What cropping a PDF actually changes</h2>
+<p>Cropping moves a page's visible boundary inward by the amount you specify on each side, typically measured in millimeters. It doesn't touch, redraw, or recompress anything inside that boundary — text stays selectable, images stay at their original resolution. Think of it less as "editing" the page and more as changing which part of it gets shown and printed.</p>
 
-<h2>Deleting pages</h2>
-<p>Deleting removes pages entirely rather than moving them — a blank page a scanner picked up by accident, a duplicate page, or a cover sheet that doesn't need to be part of the final document. Deleted pages are gone from the resulting file, and every page after them shifts up to fill the gap, so page numbering (if the PDF has any) stays continuous.</p>
-
-<h2>Prefer typing page numbers instead of clicking thumbnails?</h2>
-<p>The visual, drag-and-drop approach above is the right call when you need to see every page to know what you're doing — but on a long document where you already know exactly which pages need to go (say, "delete pages 40 through 52 of a 200-page report"), clicking through dozens of thumbnails is slower than it needs to be. For that case, <a href="/delete-pdf-pages/" style="color:var(--accent);">Delete PDF Pages</a> skips the thumbnail grid entirely: type the page numbers or ranges you want gone — like "2, 4, 7-9" — and it shows a live count of how many pages will be removed before you commit. Same underlying result as dragging pages to the trash in the visual organizer, just faster when you're working from a page list instead of eyeballing content.</p>
-
-<h2>Doing both at once</h2>
-<p>These two operations often need to happen together on the same document — a scan might have both a stray blank page to remove and a couple of pages out of sequence to fix. A good page organizer handles this in a single pass: you can delete what doesn't belong and drag the rest into the right order in the same visual view, rather than treating them as two completely separate steps that each require re-uploading the file.</p>
-
-<h2>Why this matters more than it seems</h2>
-<p>A document with pages in the wrong order isn't just visually awkward — for anything official, like a contract, application, or legal filing, page order can affect whether the document reads correctly or even whether it's accepted at all. A reviewer working through a misordered scan may reasonably assume something is missing or wrong, even when every page is actually present. Getting the sequence right before sending it out avoids that entirely.</p>
+<h2>Choosing the right margins for your case</h2>
+<p>Uneven margins on all four sides is common with scanned documents, so top, bottom, left and right usually need different values rather than one uniform number. A quick way to figure out what you need: open the PDF, look at how much empty space sits along each edge, and estimate in millimeters — most crop tools let you preview or re-adjust before saving, so getting it exactly right on the first try isn't necessary.</p>
 
 <h2>What stays unchanged</h2>
-<p>Reordering and deleting only affect the page sequence and count — the actual content of every remaining page (its text, images, and formatting) is untouched. This is a structural operation on the document, not a content edit, so there's no quality loss involved in either process. Any page numbers printed as part of the original scanned content itself, however, won't automatically update — those were part of the page image before you started, not something the tool is tracking.</p>
+<p>Cropping is a boundary change, not a content edit — the underlying text, images and layout inside the new boundary are exactly what they were before. If your PDF has multiple pages of different sizes, most tools apply the same margin measurements to every page rather than customizing per page, so watch for an error if a page turns out too small for the margins you set.</p>
 
 <h2>A concrete example</h2>
-<p>You scan a 12-page rental application, and the scanner's feeder mis-fed twice: a blank separator sheet ended up as page 6, and pages 9 and 10 came through swapped. Rather than re-scanning all 12 pages from scratch, you'd delete the blank page 6 and drag page 10 ahead of page 9 — two quick fixes to an otherwise complete scan, instead of redoing the entire process for a problem that only touched three pages.</p>
+<p>You scan a receipt or a single-page form on a flatbed scanner set to capture a full A4 area, but the actual content only fills the top third of the page. Instead of rescanning at a tighter crop setting, you'd trim roughly 150mm off the bottom and a smaller amount off the sides — one pass, and the result is a page sized to the content instead of the scanner bed.</p>
 
 <h2>Quick answers</h2>
-<p><strong>Does reordering pages affect their quality?</strong> No — pages are being rearranged, not recreated or recompressed, so nothing about their content or resolution changes.</p>
-<p><strong>Can I delete multiple pages at once?</strong> Yes, most page organizers let you select and remove several pages in a single action rather than one at a time.</p>
-<p><strong>Do I need to know the exact page numbers ahead of time?</strong> No — a visual thumbnail view lets you see and rearrange pages directly, so you don't need to plan out numbers in advance.</p>
+<p><strong>Does cropping delete any content permanently?</strong> No — it moves the page's visible boundary inward. The content underneath isn't redrawn or rasterized, so nothing is lost or degraded.</p>
+<p><strong>Can I crop different amounts from each side?</strong> Yes — top, bottom, left and right are independent, so uneven margins are easy to fix without over-trimming a side that was already fine.</p>
+<p><strong>Will this work on a multi-page PDF?</strong> Yes, the same margin measurements apply to every page in one pass — useful for a scanned document where every page shares the same scanner-bed margin problem.</p>
 
 <div class="cta-box">
-  <h3>Reorganize Your PDF Pages</h3>
-  <p>Orisod's PDF page organizer lets you drag pages into the right order and delete the ones you don't need — entirely in your browser, with a visual view of every page.</p>
-  <a class="cta-button" href="/pdf-page-organizer/">Organize PDF Pages →</a>
+  <h3>Trim Your PDF's Margins</h3>
+  <p>Orisod's Crop PDF Pages tool lets you enter exact top, bottom, left and right measurements and applies them to every page — entirely in your browser.</p>
+  <a class="cta-button" href="/crop-pdf-pages/">Crop PDF Pages →</a>
 </div>
 
-<p>A page out of order or a stray blank sheet doesn't mean starting over — a visual page organizer fixes both in about the same time it takes to notice the problem, without touching the content of a single page or requiring you to track down the original document again.</p>
+<p>Wide or uneven margins are almost always a leftover from how a page was scanned or exported, not something wrong with the content itself — and fixing them is a one-pass adjustment, not a reason to redo the original document from scratch.</p>
 
 </div>
 
 <div class="related-section">
   <h2>Related articles</h2>
   <div class="related-grid">
-    <a class="blog-card" href="/blog/add-page-numbers-to-pdf/">
-      <h3>How to Add Page Numbers to a PDF</h3>
-      <p>How to add sequential page numbers to a finished PDF document.</p>
+    <a class="blog-card" href="/blog/change-pdf-page-size/">
+      <h3>How to Change a PDF's Page Size (A4, Letter, Legal or Custom)</h3>
+      <p>Turning a Letter-sized PDF into A4, or the reverse, without redesigning the document.</p>
     </a>
 
     <a class="blog-card" href="/blog/rotate-pdf-pages/">

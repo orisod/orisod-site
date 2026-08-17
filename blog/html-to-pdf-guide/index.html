@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How to Merge Multiple PDFs Into One File (Free) | Orisod Blog</title>
-<meta name="description" content="Got several PDFs — scanned pages, invoices, reports — that need to become a single file? Here's how merging actually works and how to do it properly for free.">
-<link rel="canonical" href="https://orisod.com/blog/merge-multiple-pdfs/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/blog/merge-multiple-pdfs/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/merge-multiple-pdfs/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/merge-multiple-pdfs/">
+<title>How to Convert HTML to PDF (Paste Code, Get a File) | Orisod Blog</title>
+<meta name="description" content="Turning HTML and CSS into a PDF without installing anything — how it works, what it can't do (like fetching a live URL), and when it's the right tool.">
+<link rel="canonical" href="https://orisod.com/blog/html-to-pdf-guide/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/html-to-pdf-guide/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/html-to-pdf-guide/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/html-to-pdf-guide/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
@@ -73,9 +73,6 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 .article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
 .article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
 .article-body li{margin-bottom:8px;}
-.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
-.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
-.compare-table th{background:var(--card-bg);}
 .cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
 .cta-box h3{margin:0 0 10px 0;font-size:19px;}
 .cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
@@ -106,7 +103,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   </nav>
   <div class="site-nav-right">
     <span class="lang-flag active">EN</span>
-    <a class="lang-flag" href="/es/blog/merge-multiple-pdfs/">ES</a>
+    <a class="lang-flag" href="/es/blog/html-to-pdf-guide/">ES</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
   </div>
 </header>
@@ -114,46 +111,41 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <main>
 <div class="container">
 
-<h1>How to Merge Multiple PDFs Into One File (Free)</h1>
-<p class="intro">A stack of separate PDFs — scanned receipts, signed contract pages, chapters of a report — is rarely what you actually want to send or submit. Here's how merging them into a single file works, and how to do it without losing quality or reordering anything by accident.</p>
+<h1>How to Convert HTML to PDF (Paste Code, Get a File)</h1>
+<p class="intro">You have an HTML snippet, an invoice template, or a styled report and need it as a fixed, shareable PDF instead of raw code. Converting HTML directly to a PDF, without installing anything or standing up a server, turns styled markup into a document in a few seconds.</p>
 
 <div class="article-body">
 
-<h2>Why you'd want to merge PDFs in the first place</h2>
-<p>Merging comes up constantly in ordinary situations: combining scanned pages of a signed document into one file instead of five, assembling an expense report from individual invoice PDFs, putting together chapters or sections of a longer document that were written or exported separately, or bundling supporting documents for a single application or submission. Almost anywhere a form or a person asks for "one PDF" instead of several attachments, merging is the step that gets you there.</p>
+<h2>How HTML-to-PDF conversion actually works</h2>
+<p>The HTML you provide gets rendered exactly like a browser would render it — layout, colors, fonts, everything defined in inline styles or &lt;style&gt; blocks — and that rendered result is then captured and placed into a PDF. It's effectively taking a high-resolution "screenshot" of the rendered page and packaging it as a document, rather than parsing the HTML into some intermediate PDF-specific format.</p>
 
-<h2>What actually happens when PDFs are merged</h2>
-<p>A proper merge tool doesn't flatten your PDFs into images or reprint them — it reads the underlying pages from each file and combines them into a single new document, preserving the original text, fonts, and vector content exactly as they were. That distinction matters: a document merged this way stays searchable and selectable, and text stays crisp at any zoom level, unlike documents that have been rasterized (turned into flat images) somewhere along the way.</p>
+<h2>What it can and can't do with a live website</h2>
+<p>A common assumption is that you can hand a tool a URL and get back a PDF of that page — but a browser-based converter with no server behind it can't fetch another website's page for you; that would require server-side infrastructure to make the request. What it can do is convert HTML code directly, which means the workaround for converting a live page is straightforward: view the page's source, copy the relevant HTML, and paste it in.</p>
 
-<h2>A typical example: assembling an expense report</h2>
-<p>Say you've got six separate PDF receipts, each exported or scanned individually, and a finance system that only accepts one attachment per submission. Uploading them one at a time isn't an option, and emailing six attachments looks disorganized next to a single clean document. Merging them in the right order — chronological, or grouped by category, whatever your report expects — turns six scattered files into the one document the process actually wants, without retyping anything or losing the original receipt images.</p>
+<h2>Why some images don't show up</h2>
+<p>An image referenced by URL from another website needs that website to explicitly allow cross-origin access for the browser to read its pixel data — without that permission, the browser can see the image but can't include its contents in a captured render. This is a browser security restriction (CORS), not a bug in the conversion process, and it mainly affects images hosted elsewhere rather than ones embedded directly as data.</p>
 
-<h2>Common merging mistakes</h2>
-<ul>
-  <li><strong>Screenshotting and reprinting pages.</strong> Some people combine PDFs by taking screenshots of each page and building a new PDF from the images — this destroys the ability to select or search text, and quietly reduces image quality.</li>
-  <li><strong>Getting the page order wrong.</strong> The order you add files determines the final page order, so it's worth double-checking before merging, especially with several similarly-named files.</li>
-  <li><strong>Merging password-protected files without unlocking them first.</strong> A locked PDF often needs to be unlocked before a merge tool can read its pages properly.</li>
-</ul>
+<h2>How pagination works for long content</h2>
+<p>Content taller than a single printed page needs to be split across multiple pages, and the straightforward way to do that is a direct cut at a fixed height — page 1 gets the first slice, page 2 the next, and so on, with no gap or overlap between them. This works cleanly most of the time, especially with naturally spaced content like headings and paragraphs, but it's a geometric cut rather than layout-aware pagination — a line of dense text sitting exactly on that cut point could, in principle, be split visually between two pages.</p>
 
-<h2>What if my PDFs are scanned documents?</h2>
-<p>Scanned pages are already images wrapped in a PDF container, rather than selectable text — merging doesn't change that either way. If your originals are scans, the merged file will still be scans; a proper merge just combines them without any extra quality loss on top of whatever the original scan quality already was. It's a completely separate step from OCR (converting scanned text into selectable text), which isn't necessary just to combine files into one document.</p>
+<h2>Choosing page size and orientation</h2>
+<p>A4 and Letter cover most standard documents; Legal is common for contracts and certain forms. Orientation matters more than it might seem — a wide table or a landscape-oriented design will look cramped and awkward forced into a tall portrait page, while portrait suits regular text content. Getting these settings right before converting saves a re-download later.</p>
 
-<h2>How to merge PDFs online</h2>
-<p>The process is straightforward with the right tool: upload or drag in the PDFs you want combined, arrange them in the order you want the final document to read, and merge. A good browser-based merger handles this in seconds and lets you reorder files before committing, so you're not stuck re-uploading if you get the sequence wrong the first time. Once merged, it's worth a quick scroll through the final file to confirm every page landed where you expected before you send or submit it.</p>
+<h2>A concrete example</h2>
+<p>You built a simple styled invoice as an HTML file — a logo, some CSS for spacing and colors, a table of line items — and need to send it as a PDF rather than an editable web page. Pasting the HTML in, confirming the preview looks right, and converting produces a fixed PDF version in seconds, with no design software or server-side rendering pipeline involved.</p>
 
 <h2>Quick answers</h2>
-<p><strong>Does merging reduce PDF quality?</strong> Not if the tool merges the underlying pages directly rather than converting them to images first — text and vector graphics stay exactly as sharp as the originals.</p>
-<p><strong>Can I merge PDFs that were originally different page sizes?</strong> Yes — the merged file simply contains pages of whatever size each original page was; they don't need to match, and the result still opens and prints normally.</p>
-<p><strong>Is there a limit to how many PDFs I can merge at once?</strong> Practical limits usually come from your device's memory rather than the tool itself — merging a handful of documents, or even several dozen pages, is well within normal use.</p>
-<p><strong>Do I need to remove blank or duplicate pages first?</strong> Not necessarily — you can merge as-is and clean up afterward with a page organizer tool if you spot anything to remove.</p>
+<p><strong>Can I convert a live website by giving its URL?</strong> Not directly — a browser-based tool with no server can't fetch another site's page. Copy that page's HTML source and paste it in instead.</p>
+<p><strong>Why are some of my images missing from the PDF?</strong> They're likely loaded from a site that blocks cross-origin access, which prevents the browser from reading their pixel data.</p>
+<p><strong>Will a line of text ever get cut in half across a page break?</strong> It's possible with dense content, since page breaks are a fixed-height cut rather than reflow-aware pagination — content with natural spacing (headings, list items, paragraph gaps) almost always avoids this.</p>
 
 <div class="cta-box">
-  <h3>Merge Your PDFs Instantly</h3>
-  <p>Orisod's PDF merger combines multiple files into one, preserving the original text and quality — all processed locally in your browser, with no upload to a server.</p>
-  <a class="cta-button" href="/merge-pdf/">Merge PDFs →</a>
+  <h3>Convert Your HTML to a PDF</h3>
+  <p>Orisod's HTML to PDF tool renders your pasted or uploaded HTML with a live preview, then converts it to a paginated PDF — entirely in your browser.</p>
+  <a class="cta-button" href="/html-to-pdf/">HTML to PDF →</a>
 </div>
 
-<p>Whatever the reason you've got several PDFs that should really be one, merging them properly — without flattening text into images, degrading the original quality, or losing track of the order — takes under a minute once you're using the right tool instead of piecing files together by hand.</p>
+<p>For a styled snippet, template, or report you already have as HTML, converting straight to PDF is faster than exporting from whatever tool generated it in the first place — paste the code, confirm the preview, and you have a shareable file.</p>
 
 </div>
 
@@ -170,14 +162,9 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
       <p>How to turn several photos into a single multi-page PDF instead of separate files.</p>
     </a>
 
-    <a class="blog-card" href="/blog/pdf-page-to-image/">
-      <h3>How to Convert a PDF Page Into an Image</h3>
-      <p>Why a PDF page isn't already an image, and how to convert one into a JPG or PNG.</p>
-    </a>
-
-    <a class="blog-card" href="/blog/html-to-pdf-guide/">
-      <h3>How to Convert HTML to PDF (Paste Code, Get a File)</h3>
-      <p>Turning HTML and CSS into a PDF without installing anything.</p>
+    <a class="blog-card" href="/blog/merge-multiple-pdfs/">
+      <h3>How to Merge Multiple PDFs Into One File (Free)</h3>
+      <p>How merging actually works, the mistakes to avoid, and how to combine PDFs without losing quality.</p>
     </a>
   </div>
 </div>

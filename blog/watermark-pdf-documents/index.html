@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Watermark a PDF (Confidential, Draft, or Your Name) | Orisod Blog</title>
+<meta name="description" content="Stamping every page of a PDF with a text watermark before sharing it — when it's worth doing, and how to control position, rotation and opacity so it doesn't get in the way.">
+<link rel="canonical" href="https://orisod.com/blog/watermark-pdf-documents/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/watermark-pdf-documents/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/watermark-pdf-documents/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/watermark-pdf-documents/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#2563eb">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:5px 14px;margin:-5px 0;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/tools/">All Tools</a>
+    <a href="/tools/#image">Image Tools</a>
+    <a href="/tools/#pdf">PDF Tools</a>
+    <a href="/tools/#utility">Utility Tools</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <span class="lang-flag active">EN</span>
+    <a class="lang-flag" href="/es/blog/watermark-pdf-documents/">ES</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>How to Watermark a PDF (Confidential, Draft, or Your Name)</h1>
+<p class="intro">You're about to send out a document that isn't final yet, or one that shouldn't circulate freely once it leaves your hands. A watermark stamped across every page — "DRAFT," "CONFIDENTIAL," or your own name — makes that status impossible to miss, without changing anything about the document's actual content.</p>
+
+<div class="article-body">
+
+<h2>What a PDF watermark is actually for</h2>
+<p>Unlike a watermark on a photo, which mainly exists to discourage theft of the image itself, a PDF watermark is usually about communicating status — this is a draft, this is confidential, this came from a specific source. It's a label stamped into the document itself rather than a cover email that might get separated from the file as it's forwarded around.</p>
+
+<h2>Choosing text that actually says something</h2>
+<p>"CONFIDENTIAL," "DRAFT," "SAMPLE," and a company or personal name cover most real use cases. The right choice depends on what you're trying to prevent: "DRAFT" tells a reader not to treat the content as final, "CONFIDENTIAL" signals it shouldn't be shared further, and a name or company mark attributes the document to its source. Pick the one that matches your actual concern rather than defaulting to whichever sounds most official.</p>
+
+<h2>Position, rotation and opacity all matter</h2>
+<p>A watermark that's too bold makes the document hard to read; one that's too subtle might as well not be there. A diagonal placement across the center of the page (the classic look) is hard to miss and hard to crop out selectively, while a corner placement is less intrusive if the document needs to stay comfortably readable. Lower opacity keeps the underlying text legible through the watermark; higher opacity makes the label unmistakable at the cost of some readability — there's no single right answer, it depends on how important legibility is versus visibility for your specific document.</p>
+
+<h2>What a watermark does and doesn't protect against</h2>
+<p>A watermark makes a document's status obvious at a glance and discourages passing it off as something it isn't — but it's not encryption, and it doesn't prevent someone from opening, reading, or even copying the text underneath it. If you need to actually restrict who can open a document, that's a different problem (password protection) than labeling its status, and the two are often confused.</p>
+
+<h2>Applying it to every page vs. just one</h2>
+<p>For most use cases, stamping every page matters more than stamping just the first — a reader forwarding page 12 out of context should still see the "CONFIDENTIAL" label, not just whoever opens the file from page one. A tool that applies the watermark uniformly across the whole document, rather than only the cover page, avoids that gap.</p>
+
+<h2>A concrete example</h2>
+<p>You've finished the first full draft of a proposal and need feedback before it's final, but you're worried a reviewer might forward it further as if it were the finished version. Watermarking every page with "DRAFT" at a moderate opacity keeps the content fully readable while making it clear, at a glance, on every single page, that this isn't what should be circulated as final.</p>
+
+<h2>Quick answers</h2>
+<p><strong>Does the watermark apply to every page automatically?</strong> With a proper PDF watermarking tool, yes — the same stamp is applied uniformly across the whole document in one pass.</p>
+<p><strong>Can I remove a watermark after adding it?</strong> Once applied, a watermark becomes part of the page content, similar to how watermarks work in most PDF tools — keep your original unwatermarked file if you might need it again.</p>
+<p><strong>Does a watermark actually protect a document from being copied?</strong> No — it makes status obvious visually, but it doesn't restrict access or prevent copying. That requires password protection, a separate feature.</p>
+
+<div class="cta-box">
+  <h3>Watermark Your PDF</h3>
+  <p>Orisod's Watermark PDF tool stamps text across every page with full control over position, rotation, size, color and opacity, with a live preview — entirely in your browser.</p>
+  <a class="cta-button" href="/watermark-pdf/">Watermark PDF →</a>
+</div>
+
+<p>A watermark's job is to make a document's status obvious the moment someone opens it, on any page — not to lock it down. Get the position and opacity right for your specific document, and it does that job without getting in the way of actually reading the content.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Related articles</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/blog/sign-pdf-online/">
+      <h3>How to Sign a PDF Online (No Printing or Scanning)</h3>
+      <p>Drawing a signature and placing it on a PDF page without a physical pen.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/watermark-photos-guide/">
+      <h3>How to Watermark Your Photos to Protect Your Work</h3>
+      <p>How to protect shared photos with a watermark without ruining the image.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/merge-multiple-pdfs/">
+      <h3>How to Merge Multiple PDFs Into One File (Free)</h3>
+      <p>How merging actually works, the mistakes to avoid, and how to combine PDFs without losing quality.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/blog/">← Back to Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/about/" style="color:var(--muted-text);">About</a> · <a href="/privacy/" style="color:var(--muted-text);">Privacy</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

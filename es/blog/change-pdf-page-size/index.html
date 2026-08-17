@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cómo Cambiar el Tamaño de Página de un PDF (A4, Letter, Legal o Personalizado) | Blog de Orisod</title>
+<meta name="description" content="Convertir un PDF en tamaño Letter a A4, o al revés, sin rediseñar el documento — cómo funciona realmente el redimensionado de página y cuándo lo necesitas.">
+<link rel="canonical" href="https://orisod.com/es/blog/change-pdf-page-size/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/change-pdf-page-size/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/change-pdf-page-size/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/change-pdf-page-size/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#2563eb">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:5px 14px;margin:-5px 0;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.footer{margin-top:70px;font-size:14px;opacity:0.4;text-align:center;}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/es/">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/es/tools/">Todas las Herramientas</a>
+    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/#pdf">Herramientas PDF</a>
+    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <a class="lang-flag" href="/blog/change-pdf-page-size/">EN</a>
+    <span class="lang-flag active">ES</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>Cómo Cambiar el Tamaño de Página de un PDF (A4, Letter, Legal o Personalizado)</h1>
+<p class="intro">Recibiste un PDF con tamaño para papel Letter de EE. UU., pero estás imprimiendo en A4 — o al revés. El contenido está bien, el archivo simplemente no tiene el tamaño del papel que realmente tienes. Redimensionar un PDF existente toma una sola pasada; no hace falta rediseñar el documento a otro tamaño de página desde cero.</p>
+
+<div class="article-body">
+
+<h2>Por qué este desajuste pasa tan seguido</h2>
+<p>Letter (usado principalmente en EE. UU. y Canadá) y A4 (usado en casi todos los demás lugares) son parecidos en tamaño pero no idénticos — Letter es ligeramente más ancho y más corto, A4 ligeramente más angosto y más alto. Un documento creado en una región y abierto en otra suele llevar el tamaño de página "equivocado" para quien lo esté imprimiendo, y el mismo desajuste aparece con papel tamaño Legal para contratos o formularios.</p>
+
+<h2>Qué hace realmente el redimensionado</h2>
+<p>Redimensionar cambia las dimensiones físicas de página de un PDF y escala proporcionalmente el contenido de cada página para ajustarse al nuevo tamaño — nada se recorta ni se corta, se estira o se reduce para coincidir. Si el nuevo tamaño tiene una proporción distinta a la original (que es el caso entre A4 y Letter, ligeramente), el contenido se estira un poco para llenarlo en lugar de dejar franjas en blanco — el mismo compromiso que hace cualquier enfoque de "ajustar al tamaño".</p>
+
+<h2>Tamaños estándar vs. dimensiones personalizadas</h2>
+<p>A4, Letter y Legal cubren la mayoría de los casos, pero a veces hace falta un ancho y alto personalizados — una imprenta con requisitos de tamaño específicos, un formato de folleto no estándar, o un tamaño de página que no está entre los ajustes habituales. De cualquier forma, la operación subyacente es la misma: definir un ancho y alto objetivo, y cada página del documento se escala para coincidir.</p>
+
+<h2>Qué no cambia</h2>
+<p>El número de páginas, su orden y su contenido se mantienen exactamente como estaban — solo cambian las dimensiones físicas y la escala de lo que hay en cada página. El tamaño del archivo típicamente también se mantiene cercano al original, ya que las imágenes y el contenido incrustado no se recomprimen, solo se redibujan a una nueva escala.</p>
+
+<h2>Un ejemplo concreto</h2>
+<p>Un cliente de EE. UU. te envía un contrato en tamaño Letter para firmar y devolver, pero tu impresora tiene cargado A4 y sigue produciendo una página ligeramente recortada o con márgenes raros. En lugar de pelear con la configuración de la impresora, redimensionar el PDF a A4 antes de imprimir te da una página que coincide con el papel de la bandeja, con todo escalado correctamente.</p>
+
+<h2>Respuestas rápidas</h2>
+<p><strong>¿Redimensionar distorsiona mi contenido?</strong> Ligeramente, si el tamaño objetivo tiene una proporción distinta a la original — el mismo compromiso de "estirar para ajustar" que hace cualquier herramienta de redimensionado. Entre A4 y Letter, la diferencia es lo bastante pequeña como para casi no notarse.</p>
+<p><strong>¿Esto afecta mucho el tamaño del archivo?</strong> Normalmente no — el contenido subyacente no se recomprime, solo cambian las dimensiones de página y la escala del contenido.</p>
+<p><strong>¿Puedo usar un tamaño que no sea A4, Letter o Legal?</strong> Sí, la mayoría de las herramientas de redimensionado admiten un ancho y alto personalizados además de los ajustes estándar.</p>
+
+<div class="cta-box">
+  <h3>Redimensiona las Páginas de Tu PDF</h3>
+  <p>La herramienta Redimensionar Páginas de PDF de Orisod cambia entre A4, Letter, Legal o un tamaño personalizado, escalando cada página para coincidir — completamente en tu navegador.</p>
+  <a class="cta-button" href="/es/resize-pdf-pages/">Redimensionar Páginas de PDF →</a>
+</div>
+
+<p>Un tamaño de página que no coincide es uno de los dolores de cabeza de impresión más comunes (y más evitables) — redimensionar el archivo para que coincida con tu papel toma una sola pasada, y no hace falta rediseñar ni recrear el documento para solucionarlo.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Artículos relacionados</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/es/blog/trim-pdf-margins/">
+      <h3>Cómo Recortar los Márgenes de un PDF (Sin Reimprimirlo)</h3>
+      <p>Márgenes anchos o irregulares en un PDF, y cómo recortarlos a medidas exactas.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/compress-pdf-without-losing-quality/">
+      <h3>Cómo Hacer un Archivo PDF Más Pequeño Sin Perder Calidad</h3>
+      <p>Qué hace realmente que un PDF sea enorme, y cómo reducirlo sin dañar la calidad.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/rotate-pdf-pages/">
+      <h3>Cómo Rotar Páginas en un PDF (Gratis, Sin Programas)</h3>
+      <p>Por qué las páginas escaneadas salen de lado, y cómo rotarlas sin volver a escanear.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/es/blog/">← Volver al Blog</a>
+
+</div>
+
+<div class="footer">© Orisod Labs · <a href="/es/about/" style="color:var(--muted-text);">Acerca de</a> · <a href="/es/privacy/" style="color:var(--muted-text);">Privacidad</a></div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

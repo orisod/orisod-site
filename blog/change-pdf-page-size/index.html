@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How to Add Page Numbers to a PDF | Orisod Blog</title>
-<meta name="description" content="A report, contract, or manuscript needs sequential page numbers and doesn't have them. Here's why page numbers matter more than they seem, and how to stamp them onto an existing PDF.">
-<link rel="canonical" href="https://orisod.com/blog/add-page-numbers-to-pdf/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/blog/add-page-numbers-to-pdf/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/add-page-numbers-to-pdf/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/add-page-numbers-to-pdf/">
+<title>How to Change a PDF's Page Size (A4, Letter, Legal or Custom) | Orisod Blog</title>
+<meta name="description" content="Turning a Letter-sized PDF into A4, or the reverse, without redesigning the document — how page resizing actually works and when you need it.">
+<link rel="canonical" href="https://orisod.com/blog/change-pdf-page-size/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/change-pdf-page-size/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/change-pdf-page-size/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/change-pdf-page-size/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
@@ -73,9 +73,6 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 .article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
 .article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
 .article-body li{margin-bottom:8px;}
-.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
-.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
-.compare-table th{background:var(--card-bg);}
 .cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
 .cta-box h3{margin:0 0 10px 0;font-size:19px;}
 .cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
@@ -106,7 +103,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   </nav>
   <div class="site-nav-right">
     <span class="lang-flag active">EN</span>
-    <a class="lang-flag" href="/es/blog/add-page-numbers-to-pdf/">ES</a>
+    <a class="lang-flag" href="/es/blog/change-pdf-page-size/">ES</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
   </div>
 </header>
@@ -114,58 +111,47 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <main>
 <div class="container">
 
-<h1>How to Add Page Numbers to a PDF</h1>
-<p class="intro">A document is finished, formatted, and ready to send — except it has no page numbers, and whoever receives it needs them to reference specific sections. Here's why that request comes up so often, and how to add numbers to a PDF that doesn't have them.</p>
+<h1>How to Change a PDF's Page Size (A4, Letter, Legal or Custom)</h1>
+<p class="intro">You received a PDF sized for US Letter paper, but you're printing on A4 — or the other way around. The content is fine, the file just isn't sized for the paper you actually have. Resizing an existing PDF's pages takes one pass; redesigning the document to a different page size from scratch doesn't need to happen.</p>
 
 <div class="article-body">
 
-<h2>Why page numbers matter more than they seem</h2>
-<p>In a document someone reads on a screen, scrolling feels continuous and page numbers can seem unnecessary. But the moment a document gets printed, referenced in a meeting, or cited in another document ("see page 14"), page numbers stop being decorative and become the only reliable way to point someone to a specific spot. Legal documents, academic papers, business reports, and manuscripts all lean on page numbers for exactly this reason — without them, referring to "the page with the budget table" is a lot less precise than referring to page 14.</p>
+<h2>Why this mismatch happens so often</h2>
+<p>Letter (used mainly in the US and Canada) and A4 (used almost everywhere else) are close in size but not identical — Letter is slightly wider and shorter, A4 slightly narrower and taller. A document created in one region and opened in another routinely carries the "wrong" page size for whoever's printing it, and the same mismatch shows up with Legal-sized paper for contracts or forms.</p>
 
-<h2>Why a finished PDF often doesn't have them</h2>
-<p>Page numbers are usually something the original document's author adds while writing — in a word processor, in page-layout software, or as part of a template. But plenty of PDFs never went through that step: a scanned document has no page-numbering feature to begin with, an exported PDF sometimes drops the header/footer settings that included numbering, or a document was assembled by merging several separate files that were each individually paginated (or not paginated at all). In each case, you're stuck with a finished PDF and no easy way to go back and re-export it with numbers included.</p>
+<h2>What resizing actually does</h2>
+<p>Resizing changes a PDF's physical page dimensions and scales the content on each page proportionally to fit the new size — nothing is cropped or cut off, it's stretched or shrunk to match. If the new page has a different aspect ratio than the original (which A4 and Letter do, slightly), the content stretches a little to fill it rather than leaving blank strips — the same trade-off any "resize to fit" approach makes.</p>
 
-<h2>What adding page numbers to an existing PDF actually does</h2>
-<p>Rather than requiring you to go back to the original source document, a page-numbering tool stamps numbers directly onto each page of the PDF as it exists right now — reading the total page count, then adding the appropriate number to each page in sequence. This works regardless of whether the original PDF came from a word processor, a scanner, or a merge of several separate files, since it operates on the finished PDF rather than needing access to whatever created it.</p>
+<h2>Standard sizes vs. custom dimensions</h2>
+<p>A4, Letter and Legal cover most cases, but a custom width and height is sometimes necessary — a printer with specific size requirements, a non-standard booklet format, or a page size that isn't part of the usual presets. Either way, the underlying operation is the same: define a target width and height, and every page in the document gets scaled to match it.</p>
 
-<h2>Placement options</h2>
-<p>Page numbers are conventionally placed in one of a few consistent spots: bottom-center is the most common and least likely to overlap with existing content, bottom-corner (left or right) is common in books and formal reports, and occasionally top-corner for documents with a lot of content near the bottom of each page. The right placement mostly comes down to where the existing page content leaves clear space, and matching whatever convention the document type expects — a legal brief and a photo book don't follow the same norms.</p>
-
-<h2>Starting number and format</h2>
-<p>Not every document should start counting at "1" on its first physical page — a report with a cover page and table of contents often wants numbering to begin on the first content page, with the front matter left unnumbered or numbered separately with roman numerals. A flexible page-numbering tool lets you set the starting number and skip a set number of pages at the front, rather than forcing sequential numbering from page one no matter what.</p>
-
-<h2>Does this affect anything else in the document?</h2>
-<p>No — adding page numbers only stamps new content into the margin of each page; it doesn't touch the existing text, images, or layout already on the page. It's an additive change, not an edit to what's already there, so there's no risk of disturbing content that's already finalized.</p>
+<h2>What doesn't change</h2>
+<p>The number of pages, their order, and their content all stay exactly as they were — only the physical dimensions and the scale of what's on each page change. File size typically stays close to the original too, since images and embedded content aren't recompressed, just redrawn at a new scale.</p>
 
 <h2>A concrete example</h2>
-<p>A 60-page manuscript gets assembled by merging three separately written sections into one PDF, and none of the three had consistent page numbering to begin with. Rather than reopening each original document, fixing its numbering, re-exporting, and merging again, stamping numbers onto the already-merged 60-page file directly produces a single, correctly and continuously numbered document in one pass.</p>
+<p>A US-based client sends you a Letter-sized contract to sign and return, but your printer is loaded with A4 and keeps producing a slightly cropped or oddly-margined page. Rather than fighting printer settings, resizing the PDF to A4 before printing gets you a page that matches the paper in the tray, with everything scaled to fit properly.</p>
 
 <h2>Quick answers</h2>
-<p><strong>Can I start numbering from a page other than the first one?</strong> Yes, most tools let you set a starting page and starting number, so a cover page or table of contents can stay unnumbered.</p>
-<p><strong>Will page numbers overlap with existing content?</strong> Not if placed in a location — like the bottom margin — that's typically kept clear on formatted documents; it's worth a quick check on documents with unusually full pages.</p>
-<p><strong>Does this work on scanned PDFs?</strong> Yes — since numbering is stamped onto the page as it currently exists, it works the same whether the underlying content is scanned images or typed text.</p>
+<p><strong>Will resizing distort my content?</strong> Slightly, if the target size has a different aspect ratio than the original — the same stretch-to-fit trade-off any resize tool makes. Between A4 and Letter, the difference is small enough to rarely be noticeable.</p>
+<p><strong>Does this affect file size much?</strong> Not usually — the underlying content isn't recompressed, only the page dimensions and content scale change.</p>
+<p><strong>Can I use a size that isn't A4, Letter or Legal?</strong> Yes, most resizing tools support a custom width and height alongside the standard presets.</p>
 
 <div class="cta-box">
-  <h3>Add Page Numbers to Your PDF</h3>
-  <p>Orisod's page numbering tool stamps sequential numbers onto any PDF, with control over placement and starting page — entirely in your browser, with nothing uploaded to a server.</p>
-  <a class="cta-button" href="/add-page-numbers/">Add Page Numbers →</a>
+  <h3>Resize Your PDF's Pages</h3>
+  <p>Orisod's Resize PDF Pages tool switches between A4, Letter, Legal or a custom size, scaling every page to match — entirely in your browser.</p>
+  <a class="cta-button" href="/resize-pdf-pages/">Resize PDF Pages →</a>
 </div>
 
-<p>A document without page numbers isn't broken, but it's harder to reference precisely — adding them takes a minute and turns “the page with the chart” into “page 14,” which is the whole point.</p>
+<p>A mismatched page size is one of the most common (and most avoidable) printing headaches — resizing the file to match your paper takes one pass, and there's no need to redesign or recreate the document to fix it.</p>
 
 </div>
 
 <div class="related-section">
   <h2>Related articles</h2>
   <div class="related-grid">
-    <a class="blog-card" href="/blog/reorder-delete-pdf-pages/">
-      <h3>How to Reorder or Delete Pages in a PDF</h3>
-      <p>How to fix a scanned PDF's page order or remove a stray blank page.</p>
-    </a>
-
-    <a class="blog-card" href="/blog/rotate-pdf-pages/">
-      <h3>How to Rotate Pages in a PDF (Free, No Software)</h3>
-      <p>Why scanned pages come out sideways, and how to rotate them without rescanning.</p>
+    <a class="blog-card" href="/blog/trim-pdf-margins/">
+      <h3>How to Trim the Margins on a PDF (Without Reprinting It)</h3>
+      <p>Wide or uneven margins on a scanned or exported PDF, and how to trim them to exact measurements.</p>
     </a>
 
     <a class="blog-card" href="/blog/compress-pdf-without-losing-quality/">
@@ -173,9 +159,9 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
       <p>What actually makes a PDF huge, and how to shrink it without hurting quality.</p>
     </a>
 
-    <a class="blog-card" href="/blog/sign-pdf-online/">
-      <h3>How to Sign a PDF Online (No Printing or Scanning)</h3>
-      <p>Drawing a signature and placing it on a PDF page without a physical pen.</p>
+    <a class="blog-card" href="/blog/rotate-pdf-pages/">
+      <h3>How to Rotate Pages in a PDF (Free, No Software)</h3>
+      <p>Why scanned pages come out sideways, and how to rotate them without rescanning.</p>
     </a>
   </div>
 </div>
