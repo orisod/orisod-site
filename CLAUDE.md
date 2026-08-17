@@ -23,6 +23,7 @@ Orisod (orisod.com) is a free, browser-based toolkit for images and PDFs — thi
   - **heic2any** (`heic2any/0.0.4/heic2any.min.js`) — real HEIC decoding
   - **JSZip** (`jszip/3.10.1/jszip.min.js`) — packaging multi-file downloads as ZIP
   - **qrcodejs** (`qrcodejs/1.0.0/qrcode.min.js`) — QR generation
+  - **html2canvas** (`html2canvas/1.4.1/html2canvas.min.js`) — rasterizing rendered HTML/DOM to canvas (used with jsPDF for HTML to PDF)
 
 ## Visual design system (must stay consistent across every page)
 
@@ -83,11 +84,11 @@ here as a record so they don't get reintroduced:
 
 **Base pages:** `/` (home), `/tools` (catalog, 3 categories), `/about`, `/privacy`
 
-**43 tools**, organized into 3 categories on `/tools`:
+**44 tools**, organized into 3 categories on `/tools`:
 
 **🖼️ Image Tools (20):** webp-to-jpg, heic-to-jpg, png-to-jpg, png-to-webp, jpg-to-webp, webp-to-png, avif-to-jpg-png, gif-to-jpg-png, bmp-to-jpg-png, svg-to-png, resize-image, crop-image, compress-image, rotate-image, social-media-crop, round-image-corners, add-border-to-image, image-color-filters, watermark-adder, blur-area-tool
 
-**📄 PDF Tools (16):** jpg-to-pdf, image-to-pdf, pdf-to-jpg, merge-pdf, split-pdf, compress-pdf, rotate-pdf, pdf-page-organizer, add-page-numbers, edit-pdf-metadata, crop-pdf-pages, resize-pdf-pages, delete-pdf-pages, extract-pdf-text, watermark-pdf, sign-pdf
+**📄 PDF Tools (17):** jpg-to-pdf, image-to-pdf, pdf-to-jpg, merge-pdf, split-pdf, compress-pdf, rotate-pdf, pdf-page-organizer, add-page-numbers, edit-pdf-metadata, crop-pdf-pages, resize-pdf-pages, delete-pdf-pages, extract-pdf-text, watermark-pdf, sign-pdf, html-to-pdf
 
 **🛠️ Utility Tools (7):** exif-remover, image-metadata-viewer, favicon-generator, qr-code-generator, image-to-base64, color-picker-from-image, image-dimension-checker
 
