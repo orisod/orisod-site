@@ -67,7 +67,7 @@ body{
 .site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
 .site-nav-links span{cursor:default;}
 .site-nav-links a:hover{opacity:1;}
-.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:5px 14px;margin:-5px 0;}
+.site-nav-links span.active-category, .site-nav-links a.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:5px 14px;margin:-5px 0;}
 .site-nav-right{display:flex;align-items:center;gap:8px;}
 .lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
 .lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
@@ -184,6 +184,13 @@ h1{font-size:44px;margin-bottom:10px;}
 
 <header class="site-nav">
   <a class="site-nav-logo" href="/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/tools/" data-filter="all">All Tools</a>
+    <a href="/tools/#image" data-filter="image">Image Tools</a>
+    <a href="/tools/#pdf" data-filter="pdf">PDF Tools</a>
+    <a href="/tools/#utility" data-filter="utility">Utility Tools</a>
+    <a href="/blog/">Blog</a>
+  </nav>
   <div class="site-nav-right">
     <span class="lang-flag active">EN</span>
     <a class="lang-flag" href="/es/tools/">ES</a>
@@ -518,6 +525,7 @@ h1{font-size:44px;margin-bottom:10px;}
 
 (function(){
   var pills = document.querySelectorAll('.pill');
+  var navFilterLinks = document.querySelectorAll('.site-nav-links a[data-filter]');
   var sections = document.querySelectorAll('.category-section');
   var searchInput = document.getElementById('toolSearch');
   var noResults = document.getElementById('noResults');
@@ -543,14 +551,26 @@ h1{font-size:44px;margin-bottom:10px;}
     pills.forEach(function(p){
       p.classList.toggle('active', p.dataset.filter === currentFilter);
     });
+    navFilterLinks.forEach(function(a){
+      a.classList.toggle('active-category', a.dataset.filter === currentFilter && currentFilter !== 'all');
+    });
+  }
+
+  function setFilter(filter){
+    currentFilter = filter;
+    var url = currentFilter === 'all' ? '/tools/' : '/tools/#' + currentFilter;
+    history.replaceState(null, '', url);
+    render();
   }
 
   pills.forEach(function(p){
-    p.addEventListener('click', function(){
-      currentFilter = p.dataset.filter;
-      var url = currentFilter === 'all' ? '/tools' : '/tools#' + currentFilter;
-      history.replaceState(null, '', url);
-      render();
+    p.addEventListener('click', function(){ setFilter(p.dataset.filter); });
+  });
+
+  navFilterLinks.forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      setFilter(a.dataset.filter);
     });
   });
 
