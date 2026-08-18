@@ -89,7 +89,7 @@ h1{font-size:44px;margin-bottom:10px;}
   transition:0.2s;
 }
 .pill:hover{border-color:var(--accent);color:var(--text);}
-.pill.active{background:var(--accent);border-color:var(--accent);color:white;}
+.pill.active{background:var(--accent);border-color:var(--accent);color:white;cursor:default;}
 .category-title{
   text-align:left;
   max-width:1100px;
@@ -579,7 +579,9 @@ h1{font-size:44px;margin-bottom:10px;}
     });
     noResults.style.display = anyVisible ? 'none' : 'block';
     pills.forEach(function(p){
-      p.classList.toggle('active', p.dataset.filter === currentFilter);
+      var isActive = p.dataset.filter === currentFilter;
+      p.classList.toggle('active', isActive);
+      p.disabled = isActive;
     });
     syncNavCategory();
   }
