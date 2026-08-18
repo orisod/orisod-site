@@ -26,7 +26,6 @@
 <link rel="alternate" hreflang="en" href="https://orisod.com/blog/blur-face-in-photo/">
 <link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/blur-face-in-photo/">
 <link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/blur-face-in-photo/">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
 <link rel="icon" href="/favicon.ico">
@@ -55,7 +54,8 @@
 *{box-sizing:border-box;}
 body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);text-align:center;transition:background 0.2s, color 0.2s;}
 .site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
-.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);display:inline-flex;align-items:center;gap:8px;}
+.site-nav-logo img{height:26px;width:auto;display:block;}
 .site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
 .site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
 .site-nav-links a:hover{opacity:1;}
@@ -96,7 +96,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <body>
 
 <header class="site-nav">
-  <a class="site-nav-logo" href="/es/">Orisod</a>
+  <a class="site-nav-logo" href="/es/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
   <nav class="site-nav-links">
     <a href="/es/tools/">Todas las Herramientas</a>
     <a href="/es/tools/#image">Herramientas de Imagen</a>
