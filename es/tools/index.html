@@ -67,7 +67,7 @@ body{
 .site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
 .site-nav-links span{cursor:default;}
 .site-nav-links a:hover{opacity:1;}
-.site-nav-links span.active-category, .site-nav-links a.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:5px 14px;margin:-5px 0;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:5px 14px;margin:-5px 0;}
 .site-nav-right{display:flex;align-items:center;gap:8px;}
 .lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
 .lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
@@ -525,11 +525,41 @@ h1{font-size:44px;margin-bottom:10px;}
 
 (function(){
   var pills = document.querySelectorAll('.pill');
-  var navFilterLinks = document.querySelectorAll('.site-nav-links a[data-filter]');
+  var navGroup = document.querySelector('.site-nav-links');
+  var navSpecs = [
+    {filter: 'all', label: 'Todas las Herramientas', href: '/es/tools/'},
+    {filter: 'image', label: 'Herramientas de Imagen', href: '/es/tools/#image'},
+    {filter: 'pdf', label: 'Herramientas PDF', href: '/es/tools/#pdf'},
+    {filter: 'utility', label: 'Herramientas de Utilidad', href: '/es/tools/#utility'}
+  ];
   var sections = document.querySelectorAll('.category-section');
   var searchInput = document.getElementById('toolSearch');
   var noResults = document.getElementById('noResults');
   var currentFilter = 'all';
+
+  function syncNavCategory(){
+    navSpecs.forEach(function(spec){
+      var el = navGroup.querySelector('[data-filter="' + spec.filter + '"]');
+      var isActive = spec.filter === currentFilter;
+      var wantTag = isActive ? 'SPAN' : 'A';
+      if (el.tagName === wantTag) return;
+      var replacement;
+      if (isActive) {
+        replacement = document.createElement('span');
+        replacement.className = 'active-category';
+      } else {
+        replacement = document.createElement('a');
+        replacement.href = spec.href;
+        replacement.addEventListener('click', function(e){
+          e.preventDefault();
+          setFilter(spec.filter);
+        });
+      }
+      replacement.dataset.filter = spec.filter;
+      replacement.textContent = spec.label;
+      el.replaceWith(replacement);
+    });
+  }
 
   function render(){
     var query = searchInput.value.trim().toLowerCase();
@@ -551,9 +581,7 @@ h1{font-size:44px;margin-bottom:10px;}
     pills.forEach(function(p){
       p.classList.toggle('active', p.dataset.filter === currentFilter);
     });
-    navFilterLinks.forEach(function(a){
-      a.classList.toggle('active-category', a.dataset.filter === currentFilter && currentFilter !== 'all');
-    });
+    syncNavCategory();
   }
 
   function setFilter(filter){
@@ -567,7 +595,7 @@ h1{font-size:44px;margin-bottom:10px;}
     p.addEventListener('click', function(){ setFilter(p.dataset.filter); });
   });
 
-  navFilterLinks.forEach(function(a){
+  navGroup.querySelectorAll('a[data-filter]').forEach(function(a){
     a.addEventListener('click', function(e){
       e.preventDefault();
       setFilter(a.dataset.filter);
