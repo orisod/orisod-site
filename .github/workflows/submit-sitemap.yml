@@ -1,0 +1,62 @@
+name: Submit sitemap to Google Search Console
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - sitemap.xml
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+env:
+  # Search Console property (Domain property, per GSC verification)
+  GSC_SITE_URL: sc-domain:orisod.com
+  SITEMAP_URL: https://orisod.com/sitemap.xml
+
+jobs:
+  submit-sitemap:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Authenticate to Google
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GSC_SERVICE_ACCOUNT_KEY }}
+          token_format: access_token
+          access_token_scopes: https://www.googleapis.com/auth/webmasters
+
+      - name: Submit sitemap to Search Console
+        run: |
+          set -euo pipefail
+
+          site_encoded=$(python3 -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1], safe=''))" "$GSC_SITE_URL")
+          feed_encoded=$(python3 -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1], safe=''))" "$SITEMAP_URL")
+
+          url="https://www.googleapis.com/webmasters/v3/sites/${site_encoded}/sitemaps/${feed_encoded}"
+
+          http_status=$(curl -s -o response.json -w "%{http_code}" -X PUT \
+            -H "Authorization: Bearer ${{ steps.auth.outputs.access_token }}" \
+            "$url")
+
+          echo "HTTP status: $http_status"
+          cat response.json || true
+
+          if [ "$http_status" -ge 200 ] && [ "$http_status" -lt 300 ]; then
+            echo "Sitemap submitted successfully: $SITEMAP_URL"
+          else
+            echo "::error::Failed to submit sitemap (HTTP $http_status)"
+            exit 1
+          fi
+
+      - name: Verify sitemap status
+        run: |
+          set -euo pipefail
+
+          site_encoded=$(python3 -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1], safe=''))" "$GSC_SITE_URL")
+          feed_encoded=$(python3 -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1], safe=''))" "$SITEMAP_URL")
+
+          url="https://www.googleapis.com/webmasters/v3/sites/${site_encoded}/sitemaps/${feed_encoded}"
+
+          curl -s -H "Authorization: Bearer ${{ steps.auth.outputs.access_token }}" "$url" | tee sitemap-status.json
