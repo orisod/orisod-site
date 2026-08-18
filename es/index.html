@@ -41,6 +41,9 @@
   --accent:#2563eb;
   --muted-text:#94a3b8;
   --dropzone-border:#374151;
+  --icon-alpha:.30;
+  --grid-alpha:.05;
+  --card-shadow:0 8px 24px rgba(0,0,0,.35);
 }
 :root[data-theme="light"]{
   --bg:#f8fafc;
@@ -50,15 +53,22 @@
   --accent:#2563eb;
   --muted-text:#64748b;
   --dropzone-border:#cbd5e1;
+  --icon-alpha:.24;
+  --grid-alpha:.035;
+  --card-shadow:0 8px 24px rgba(15,23,42,.08);
 }
 *{box-sizing:border-box;}
 body{
   margin:0;
   font-family:Arial, Helvetica, sans-serif;
-  background:var(--bg);
+  background-color:var(--bg);
+  background-image:
+    linear-gradient(rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px);
+  background-size:42px 42px;
   color:var(--text);
   text-align:center;
-  transition:background 0.2s, color 0.2s;
+  transition:background-color 0.2s, color 0.2s;
 }
 .site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
 .site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);display:inline-flex;align-items:center;gap:8px;}
@@ -73,106 +83,148 @@ body{
 .lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
 .theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
 .theme-toggle:hover{border-color:var(--accent);}
-main{padding:60px 20px 60px 20px;}
+main{padding:60px 20px 0 20px;}
 .hero{
-  max-width:760px;
+  max-width:720px;
   margin:0 auto;
+  position:relative;
 }
 h1{
-  font-size:60px;
-  letter-spacing:4px;
-  margin:0 0 14px 0;
+  font-size:42px;
+  line-height:1.2;
+  letter-spacing:-0.5px;
+  margin:0 0 16px 0;
 }
 .hero-logo{
-  height:110px;
+  height:100px;
   width:auto;
-  margin:0 0 14px 0;
-}
-.tagline{
-  font-size:20px;
-  opacity:0.9;
-  margin-bottom:16px;
-  line-height:1.5;
+  margin:0 auto 22px auto;
+  display:block;
 }
 .sub{
-  font-size:16px;
-  opacity:0.65;
+  font-size:17px;
+  color:var(--muted-text);
   max-width:600px;
   margin:0 auto 34px auto;
   line-height:1.6;
 }
-.cta-row{
-  display:flex;
-  justify-content:center;
-  gap:14px;
-  flex-wrap:wrap;
-  margin-bottom:20px;
+.search-box{
+  position:relative;
+  max-width:480px;
+  margin:0 auto 50px auto;
 }
-.cta-primary{
-  text-decoration:none;
-  background:var(--accent);
-  color:white;
-  padding:16px 28px;
-  border-radius:8px;
-  font-size:17px;
-  font-weight:bold;
+.search-box input{
+  width:100%;
+  font-family:inherit;
+  font-size:15px;
+  padding:16px 68px 16px 46px;
+  border-radius:12px;
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  color:var(--text);
+  outline:none;
+  box-shadow:var(--card-shadow);
   transition:0.2s;
 }
-.cta-primary:hover{
-  filter:brightness(1.08);
+.search-box input::placeholder{color:var(--muted-text);}
+.search-box input:focus{border-color:var(--accent);}
+.search-icon{
+  position:absolute;
+  left:17px;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:16px;
+  opacity:0.6;
+  pointer-events:none;
 }
-.trust-line{
-  font-size:13px;
-  opacity:0.55;
-  margin-top:10px;
-  margin-bottom:60px;
+.kbd-hint{
+  position:absolute;
+  right:12px;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:12px;
+  color:var(--muted-text);
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:5px;
+  padding:3px 7px;
+  pointer-events:none;
 }
-.section-title{
-  font-size:26px;
-  margin-bottom:22px;
+.tool-category{
+  max-width:900px;
+  margin:0 auto 50px auto;
+  text-align:left;
 }
-.grid{
-  max-width:960px;
-  margin:0 auto;
+.category-heading{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:20px;
+  margin:0 0 16px 0;
+  padding-bottom:12px;
+  border-bottom:1px solid var(--border);
+}
+.category-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(210px, 1fr));
+  grid-template-columns:repeat(2, 1fr);
   gap:16px;
 }
-.card{
+@media (max-width:640px){.category-grid{grid-template-columns:1fr;}}
+.tool-card{
   display:flex;
   flex-direction:column;
   align-items:flex-start;
-  gap:10px;
+  gap:12px;
   background:var(--card-bg);
   border:1px solid var(--border);
-  border-radius:12px;
-  padding:22px 20px;
+  border-radius:14px;
+  padding:24px 22px;
   text-decoration:none;
   color:var(--text);
   text-align:left;
+  box-shadow:var(--card-shadow);
   transition:0.2s;
 }
-.card:hover{
+.tool-card:hover{
   border-color:var(--accent);
   transform:translateY(-2px);
 }
-.card .icon{
-  font-size:26px;
+.tool-card .icon-box{
+  width:44px;
+  height:44px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+  border:2px solid transparent;
 }
-.card .name{
-  font-size:16px;
-  font-weight:bold;
+.tool-card .icon-box.cat-image{background:rgba(37,99,235,var(--icon-alpha));border-color:#2563eb;}
+.tool-card .icon-box.cat-pdf{background:rgba(245,158,11,var(--icon-alpha));border-color:#f59e0b;}
+.tool-card .icon-box.cat-utility{background:rgba(139,92,246,var(--icon-alpha));border-color:#8b5cf6;}
+.tool-card-title{font-size:16px;font-weight:bold;}
+.tool-card-desc{font-size:13px;color:var(--muted-text);line-height:1.5;}
+.site-footer{
+  margin-top:40px;
+  padding:40px 24px 30px 24px;
+  border-top:1px solid var(--border);
+  text-align:left;
 }
-.card .desc{
-  font-size:13px;
-  color:var(--muted-text);
-  line-height:1.4;
+.footer-inner{
+  max-width:1000px;
+  margin:0 auto;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  gap:40px;
 }
-.footer{
-  margin-top:70px;
-  font-size:14px;
-  opacity:0.4;
-}
+.footer-brand{max-width:280px;}
+.footer-brand-logo{font-size:16px;font-weight:bold;letter-spacing:0.5px;margin-bottom:10px;}
+.footer-brand-desc{font-size:13px;color:var(--muted-text);line-height:1.5;margin-bottom:14px;}
+.footer-copy{font-size:12px;color:var(--muted-text);opacity:0.7;}
+.footer-col h3{font-size:13px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-text);margin:0 0 14px 0;}
+.footer-col a{display:block;font-size:14px;color:var(--text);text-decoration:none;opacity:0.8;margin-bottom:10px;}
+.footer-col a:hover{opacity:1;color:var(--accent);}
 </style>
 </head>
 <body>
@@ -195,59 +247,86 @@ h1{
 
 <main>
 <div class="hero">
-  <h1><img class="hero-logo" src="/assets/orisod-logo-full.png" alt="Orisod Labs"></h1>
-  <p class="tagline">44 herramientas gratis. Sin subir archivos. Sin cuenta.</p>
-  <div class="sub">Convierte, comprime, redimensiona, recorta, une PDF, genera códigos QR, elimina metadatos de fotos y mucho más — sin instalaciones, sin registro, sin complicaciones.</div>
+  <img class="hero-logo" src="/assets/orisod-logo-full.png" alt="Orisod Labs">
+  <h1>44 herramientas, 100% en tu navegador, sin subir archivos.</h1>
+  <p class="sub">Convierte, comprime, redimensiona, recorta, une PDF, genera códigos QR, elimina metadatos de fotos y mucho más — cada herramienta se ejecuta localmente en tu navegador. Sin instalaciones, sin registro, sin subir archivos a ningún servidor.</p>
 
-  <div class="cta-row">
-    <a class="cta-primary" href="/es/tools/">Ver todas las herramientas</a>
+  <div class="search-box">
+    <span class="search-icon" aria-hidden="true">🔍</span>
+    <input type="text" id="homeSearch" placeholder="Buscar herramientas…" aria-label="Buscar herramientas" autocomplete="off">
+    <span class="kbd-hint">⌘K</span>
   </div>
-  <div class="trust-line">🔒 Todo se ejecuta localmente en tu navegador. Tus archivos nunca se suben a ningún servidor.</div>
 </div>
 
-<div class="section-title">Herramientas populares</div>
-<div class="grid">
+<section class="tool-category">
+  <h2 class="category-heading">🖼️ Herramientas de Imagen</h2>
+  <div class="category-grid">
+    <a class="tool-card" href="/es/compress-image/">
+      <div class="icon-box cat-image">📦</div>
+      <div class="tool-card-title">Comprimir imagen</div>
+      <div class="tool-card-desc">Reduce el tamaño del archivo sin perder calidad.</div>
+    </a>
+    <a class="tool-card" href="/es/heic-to-jpg/">
+      <div class="icon-box cat-image">📱</div>
+      <div class="tool-card-title">HEIC a JPG</div>
+      <div class="tool-card-desc">Convierte fotos HEIC de iPhone a JPG.</div>
+    </a>
+  </div>
+</section>
 
-  <a class="card" href="/es/compress-image/">
-    <div class="icon">📦</div>
-    <div class="name">Comprimir imagen</div>
-    <div class="desc">Reduce el tamaño del archivo sin perder calidad.</div>
-  </a>
+<section class="tool-category">
+  <h2 class="category-heading">📄 Herramientas PDF</h2>
+  <div class="category-grid">
+    <a class="tool-card" href="/es/merge-pdf/">
+      <div class="icon-box cat-pdf">➕</div>
+      <div class="tool-card-title">Unir PDF</div>
+      <div class="tool-card-desc">Combina varios PDF en uno solo.</div>
+    </a>
+    <a class="tool-card" href="/es/compress-pdf/">
+      <div class="icon-box cat-pdf">📦</div>
+      <div class="tool-card-title">Comprimir PDF</div>
+      <div class="tool-card-desc">Reduce PDF escaneados o con muchas imágenes.</div>
+    </a>
+  </div>
+</section>
 
-  <a class="card" href="/es/heic-to-jpg/">
-    <div class="icon">📱</div>
-    <div class="name">HEIC a JPG</div>
-    <div class="desc">Convierte fotos de iPhone a JPG.</div>
-  </a>
+<section class="tool-category">
+  <h2 class="category-heading">🛠️ Herramientas de Utilidad</h2>
+  <div class="category-grid">
+    <a class="tool-card" href="/es/exif-remover/">
+      <div class="icon-box cat-utility">🔒</div>
+      <div class="tool-card-title">Eliminar EXIF</div>
+      <div class="tool-card-desc">Elimina los metadatos ocultos de una foto.</div>
+    </a>
+    <a class="tool-card" href="/es/qr-code-generator/">
+      <div class="icon-box cat-utility">🔳</div>
+      <div class="tool-card-title">Generador de códigos QR</div>
+      <div class="tool-card-desc">Convierte un enlace o texto en un código QR.</div>
+    </a>
+  </div>
+</section>
 
-  <a class="card" href="/es/merge-pdf/">
-    <div class="icon">➕</div>
-    <div class="name">Unir PDF</div>
-    <div class="desc">Combina varios PDF en uno solo.</div>
-  </a>
-
-  <a class="card" href="/es/exif-remover/">
-    <div class="icon">🔒</div>
-    <div class="name">Eliminar EXIF</div>
-    <div class="desc">Elimina los metadatos ocultos de una foto.</div>
-  </a>
-
-  <a class="card" href="/es/qr-code-generator/">
-    <div class="icon">🔳</div>
-    <div class="name">Generador de códigos QR</div>
-    <div class="desc">Convierte un enlace o texto en un código QR.</div>
-  </a>
-
-  <a class="card" href="/es/crop-image/">
-    <div class="icon">✂️</div>
-    <div class="name">Recortar imagen</div>
-    <div class="desc">Arrastra para seleccionar y recortar cualquier área.</div>
-  </a>
-
-</div>
-
-
-<div class="footer">© Orisod Labs · <a href="/es/about/" style="color:var(--muted-text);">Acerca de</a> · <a href="/es/privacy/" style="color:var(--muted-text);">Privacidad</a></div>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-brand-logo">ORISOD</div>
+      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF que funcionan en tu navegador. Procesamiento 100% local — tus archivos nunca se suben a ningún servidor.</div>
+      <div class="footer-copy">© Orisod Labs</div>
+    </div>
+    <div class="footer-col">
+      <h3>Herramientas</h3>
+      <a href="/es/tools/#image">Herramientas de Imagen</a>
+      <a href="/es/tools/#pdf">Herramientas PDF</a>
+      <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    </div>
+    <div class="footer-col">
+      <h3>Empresa</h3>
+      <a href="/es/about/">Acerca de</a>
+      <a href="/es/privacy/">Privacidad</a>
+      <a href="/es/blog/">Blog</a>
+    </div>
+  </div>
+</footer>
 </main>
 
 <script>
@@ -267,6 +346,23 @@ h1{
       localStorage.setItem('orisod-theme','light');
     }
     updateIcon();
+  });
+})();
+
+(function(){
+  var input = document.getElementById('homeSearch');
+  function goSearch(){
+    var q = input.value.trim();
+    window.location.href = '/es/tools/' + (q ? '?q=' + encodeURIComponent(q) : '');
+  }
+  input.addEventListener('keydown', function(e){
+    if(e.key === 'Enter') goSearch();
+  });
+  document.addEventListener('keydown', function(e){
+    if((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k'){
+      e.preventDefault();
+      input.focus();
+    }
   });
 })();
 </script>
