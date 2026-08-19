@@ -41,6 +41,9 @@
   --accent:#2563eb;
   --muted-text:#94a3b8;
   --dropzone-border:#374151;
+  --icon-alpha:.30;
+  --grid-alpha:.05;
+  --card-shadow:0 8px 24px rgba(0,0,0,.35);
 }
 :root[data-theme="light"]{
   --bg:#f8fafc;
@@ -50,15 +53,22 @@
   --accent:#2563eb;
   --muted-text:#64748b;
   --dropzone-border:#cbd5e1;
+  --icon-alpha:.24;
+  --grid-alpha:.035;
+  --card-shadow:0 8px 24px rgba(15,23,42,.08);
 }
 *{box-sizing:border-box;}
 body{
   margin:0;
-  background:var(--bg);
+  background-color:var(--bg);
+  background-image:
+    linear-gradient(rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px);
+  background-size:42px 42px;
   color:var(--text);
   font-family:Arial, Helvetica, sans-serif;
   text-align:center;
-  transition:background 0.2s, color 0.2s;
+  transition:background-color 0.2s, color 0.2s;
 }
 .site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
 .site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);display:inline-flex;align-items:center;gap:8px;}
@@ -92,7 +102,7 @@ h1{font-size:44px;margin-bottom:10px;}
 .pill.active{background:var(--accent);border-color:var(--accent);color:white;cursor:default;}
 .category-title{
   text-align:left;
-  max-width:1100px;
+  max-width:1200px;
   margin:0 auto;
   font-size:20px;
   color:#60a5fa;
@@ -132,47 +142,55 @@ h1{font-size:44px;margin-bottom:10px;}
   margin-top:20px;
 }
 .grid{
-  max-width:1100px;
+  max-width:1200px;
   margin:0 auto;
   display:grid;
-  grid-template-columns:repeat(auto-fill, minmax(170px, 1fr));
-  gap:12px;
+  grid-template-columns:repeat(4, 1fr);
+  align-items:start;
+  gap:16px;
 }
-.card{
+@media (max-width:980px){.grid{grid-template-columns:repeat(3, 1fr);}}
+@media (max-width:700px){.grid{grid-template-columns:repeat(2, 1fr);}}
+@media (max-width:440px){.grid{grid-template-columns:1fr;}}
+
+/* Reusable compact tool-card pattern, shared with the homepage category
+   previews (index.html / es/index.html) — .card/.name/.desc classes are
+   kept alongside these for the existing search/filter JS, which queries
+   those directly and is untouched here. */
+.tool-card{
   display:flex;
   flex-direction:column;
   align-items:flex-start;
-  gap:6px;
+  gap:10px;
   background:var(--card-bg);
   border:1px solid var(--border);
-  border-radius:10px;
-  padding:14px 16px;
+  border-radius:12px;
+  padding:16px 18px;
   text-decoration:none;
   color:var(--text);
   text-align:left;
+  box-shadow:var(--card-shadow);
   transition:0.2s;
 }
-.card:hover{
+.tool-card:hover{
   border-color:var(--accent);
   transform:translateY(-2px);
 }
-.card .icon{
-  font-size:20px;
+.tool-card .icon-box{
+  width:38px;
+  height:38px;
+  border-radius:9px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:17px;
+  border:2px solid transparent;
 }
-.card .name{
-  font-size:14px;
-  font-weight:bold;
-  line-height:1.3;
-}
-.card .desc{
-  font-size:12px;
-  color:var(--muted-text);
-  line-height:1.3;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  width:100%;
-}
+.tool-card .icon-box.cat-image{background:rgba(37,99,235,var(--icon-alpha));border-color:#2563eb;}
+.tool-card .icon-box.cat-pdf{background:rgba(245,158,11,var(--icon-alpha));border-color:#f59e0b;}
+.tool-card .icon-box.cat-utility{background:rgba(139,92,246,var(--icon-alpha));border-color:#8b5cf6;}
+.tool-card-title{font-size:15px;font-weight:bold;}
+.tool-card-desc{font-size:13px;color:var(--muted-text);line-height:1.45;}
 .footer{
   margin-top:70px;
   font-size:14px;
@@ -219,125 +237,125 @@ h1{font-size:44px;margin-bottom:10px;}
 <div class="category-title">🖼️ Image Tools</div>
 <div class="grid">
 
-  <a class="card" href="/add-border-to-image/">
-    <div class="icon">🖼️</div>
-    <div class="name">Add Border to Image</div>
-    <div class="desc">Add a colored frame around a photo.</div>
-  </a>
+  <a class="card tool-card" href="/add-border-to-image/">
+      <div class="icon-box cat-image">🖼️</div>
+      <div class="name tool-card-title">Add Border to Image</div>
+      <div class="desc tool-card-desc">Add a colored frame around a photo.</div>
+    </a>
 
-  <a class="card" href="/avif-to-jpg-png/">
-    <div class="icon">🔄</div>
-    <div class="name">AVIF to JPG/PNG</div>
-    <div class="desc">Convert modern AVIF images.</div>
-  </a>
+  <a class="card tool-card" href="/avif-to-jpg-png/">
+      <div class="icon-box cat-image">🔄</div>
+      <div class="name tool-card-title">AVIF to JPG/PNG</div>
+      <div class="desc tool-card-desc">Convert modern AVIF images.</div>
+    </a>
 
-  <a class="card" href="/blur-area-tool/">
-    <div class="icon">🔲</div>
-    <div class="name">Blur Faces / Blur Area</div>
-    <div class="desc">Pixelate faces or private details.</div>
-  </a>
+  <a class="card tool-card" href="/blur-area-tool/">
+      <div class="icon-box cat-image">🔲</div>
+      <div class="name tool-card-title">Blur Faces / Blur Area</div>
+      <div class="desc tool-card-desc">Pixelate faces or private details.</div>
+    </a>
 
-  <a class="card" href="/bmp-to-jpg-png/">
-    <div class="icon">🔄</div>
-    <div class="name">BMP to JPG/PNG</div>
-    <div class="desc">Shrink old uncompressed BMP files.</div>
-  </a>
+  <a class="card tool-card" href="/bmp-to-jpg-png/">
+      <div class="icon-box cat-image">🔄</div>
+      <div class="name tool-card-title">BMP to JPG/PNG</div>
+      <div class="desc tool-card-desc">Shrink old uncompressed BMP files.</div>
+    </a>
 
-  <a class="card" href="/compress-image/">
-    <div class="icon">📦</div>
-    <div class="name">Compress Image</div>
-    <div class="desc">Reduce file size, keep quality.</div>
-  </a>
+  <a class="card tool-card" href="/compress-image/">
+      <div class="icon-box cat-image">📦</div>
+      <div class="name tool-card-title">Compress Image</div>
+      <div class="desc tool-card-desc">Reduce file size, keep quality.</div>
+    </a>
 
-  <a class="card" href="/crop-image/">
-    <div class="icon">✂️</div>
-    <div class="name">Crop Image</div>
-    <div class="desc">Drag to select and crop any area.</div>
-  </a>
+  <a class="card tool-card" href="/crop-image/">
+      <div class="icon-box cat-image">✂️</div>
+      <div class="name tool-card-title">Crop Image</div>
+      <div class="desc tool-card-desc">Drag to select and crop any area.</div>
+    </a>
 
-  <a class="card" href="/gif-to-jpg-png/">
-    <div class="icon">🎞️</div>
-    <div class="name">GIF to JPG/PNG</div>
-    <div class="desc">Extract a GIF's first frame as an image.</div>
-  </a>
+  <a class="card tool-card" href="/gif-to-jpg-png/">
+      <div class="icon-box cat-image">🎞️</div>
+      <div class="name tool-card-title">GIF to JPG/PNG</div>
+      <div class="desc tool-card-desc">Extract a GIF's first frame as an image.</div>
+    </a>
 
-  <a class="card" href="/heic-to-jpg/">
-    <div class="icon">📱</div>
-    <div class="name">HEIC to JPG</div>
-    <div class="desc">Convert iPhone HEIC photos to JPG.</div>
-  </a>
+  <a class="card tool-card" href="/heic-to-jpg/">
+      <div class="icon-box cat-image">📱</div>
+      <div class="name tool-card-title">HEIC to JPG</div>
+      <div class="desc tool-card-desc">Convert iPhone HEIC photos to JPG.</div>
+    </a>
 
-  <a class="card" href="/image-color-filters/">
-    <div class="icon">🎨</div>
-    <div class="name">Image Color Filters</div>
-    <div class="desc">B&amp;W, sepia, brightness, contrast.</div>
-  </a>
+  <a class="card tool-card" href="/image-color-filters/">
+      <div class="icon-box cat-image">🎨</div>
+      <div class="name tool-card-title">Image Color Filters</div>
+      <div class="desc tool-card-desc">B&amp;W, sepia, brightness, contrast.</div>
+    </a>
 
-  <a class="card" href="/jpg-to-webp/">
-    <div class="icon">📉</div>
-    <div class="name">JPG to WEBP</div>
-    <div class="desc">Shrink JPG files with WEBP.</div>
-  </a>
+  <a class="card tool-card" href="/jpg-to-webp/">
+      <div class="icon-box cat-image">📉</div>
+      <div class="name tool-card-title">JPG to WEBP</div>
+      <div class="desc tool-card-desc">Shrink JPG files with WEBP.</div>
+    </a>
 
-  <a class="card" href="/png-to-jpg/">
-    <div class="icon">🔄</div>
-    <div class="name">PNG to JPG</div>
-    <div class="desc">Convert PNG images to JPG format.</div>
-  </a>
+  <a class="card tool-card" href="/png-to-jpg/">
+      <div class="icon-box cat-image">🔄</div>
+      <div class="name tool-card-title">PNG to JPG</div>
+      <div class="desc tool-card-desc">Convert PNG images to JPG format.</div>
+    </a>
 
-  <a class="card" href="/png-to-webp/">
-    <div class="icon">📉</div>
-    <div class="name">PNG to WEBP</div>
-    <div class="desc">Shrink PNG files with WEBP.</div>
-  </a>
+  <a class="card tool-card" href="/png-to-webp/">
+      <div class="icon-box cat-image">📉</div>
+      <div class="name tool-card-title">PNG to WEBP</div>
+      <div class="desc tool-card-desc">Shrink PNG files with WEBP.</div>
+    </a>
 
-  <a class="card" href="/resize-image/">
-    <div class="icon">📐</div>
-    <div class="name">Resize Image</div>
-    <div class="desc">Change image width and height.</div>
-  </a>
+  <a class="card tool-card" href="/resize-image/">
+      <div class="icon-box cat-image">📐</div>
+      <div class="name tool-card-title">Resize Image</div>
+      <div class="desc tool-card-desc">Change image width and height.</div>
+    </a>
 
-  <a class="card" href="/rotate-image/">
-    <div class="icon">🔃</div>
-    <div class="name">Rotate Image</div>
-    <div class="desc">Rotate or flip an image instantly.</div>
-  </a>
+  <a class="card tool-card" href="/rotate-image/">
+      <div class="icon-box cat-image">🔃</div>
+      <div class="name tool-card-title">Rotate Image</div>
+      <div class="desc tool-card-desc">Rotate or flip an image instantly.</div>
+    </a>
 
-  <a class="card" href="/round-image-corners/">
-    <div class="icon">⭕</div>
-    <div class="name">Round Corners / Circle Crop</div>
-    <div class="desc">Round corners or crop to a circle.</div>
-  </a>
+  <a class="card tool-card" href="/round-image-corners/">
+      <div class="icon-box cat-image">⭕</div>
+      <div class="name tool-card-title">Round Corners / Circle Crop</div>
+      <div class="desc tool-card-desc">Round corners or crop to a circle.</div>
+    </a>
 
-  <a class="card" href="/social-media-crop/">
-    <div class="icon">📲</div>
-    <div class="name">Social Media Cropper</div>
-    <div class="desc">Crop to Instagram, YouTube & more.</div>
-  </a>
+  <a class="card tool-card" href="/social-media-crop/">
+      <div class="icon-box cat-image">📲</div>
+      <div class="name tool-card-title">Social Media Cropper</div>
+      <div class="desc tool-card-desc">Crop to Instagram, YouTube & more.</div>
+    </a>
 
-  <a class="card" href="/svg-to-png/">
-    <div class="icon">🎨</div>
-    <div class="name">SVG to PNG</div>
-    <div class="desc">Convert vector SVG to a raster PNG.</div>
-  </a>
+  <a class="card tool-card" href="/svg-to-png/">
+      <div class="icon-box cat-image">🎨</div>
+      <div class="name tool-card-title">SVG to PNG</div>
+      <div class="desc tool-card-desc">Convert vector SVG to a raster PNG.</div>
+    </a>
 
-  <a class="card" href="/watermark-adder/">
-    <div class="icon">💧</div>
-    <div class="name">Watermark Adder</div>
-    <div class="desc">Add a text watermark to a photo.</div>
-  </a>
+  <a class="card tool-card" href="/watermark-adder/">
+      <div class="icon-box cat-image">💧</div>
+      <div class="name tool-card-title">Watermark Adder</div>
+      <div class="desc tool-card-desc">Add a text watermark to a photo.</div>
+    </a>
 
-  <a class="card" href="/webp-to-jpg/">
-    <div class="icon">🔄</div>
-    <div class="name">WEBP to JPG</div>
-    <div class="desc">Convert WEBP images to JPG format.</div>
-  </a>
+  <a class="card tool-card" href="/webp-to-jpg/">
+      <div class="icon-box cat-image">🔄</div>
+      <div class="name tool-card-title">WEBP to JPG</div>
+      <div class="desc tool-card-desc">Convert WEBP images to JPG format.</div>
+    </a>
 
-  <a class="card" href="/webp-to-png/">
-    <div class="icon">🔄</div>
-    <div class="name">WEBP to PNG</div>
-    <div class="desc">Convert WEBP to PNG, transparency kept.</div>
-  </a>
+  <a class="card tool-card" href="/webp-to-png/">
+      <div class="icon-box cat-image">🔄</div>
+      <div class="name tool-card-title">WEBP to PNG</div>
+      <div class="desc tool-card-desc">Convert WEBP to PNG, transparency kept.</div>
+    </a>
 
 </div>
 </section>
@@ -346,107 +364,107 @@ h1{font-size:44px;margin-bottom:10px;}
 <div class="category-title">📄 PDF Tools</div>
 <div class="grid">
 
-  <a class="card" href="/add-page-numbers/">
-    <div class="icon">🔢</div>
-    <div class="name">Add Page Numbers</div>
-    <div class="desc">Stamp page numbers on a PDF.</div>
-  </a>
+  <a class="card tool-card" href="/add-page-numbers/">
+      <div class="icon-box cat-pdf">🔢</div>
+      <div class="name tool-card-title">Add Page Numbers</div>
+      <div class="desc tool-card-desc">Stamp page numbers on a PDF.</div>
+    </a>
 
-  <a class="card" href="/compress-pdf/">
-    <div class="icon">📦</div>
-    <div class="name">Compress PDF</div>
-    <div class="desc">Shrink scanned or image-heavy PDFs.</div>
-  </a>
+  <a class="card tool-card" href="/compress-pdf/">
+      <div class="icon-box cat-pdf">📦</div>
+      <div class="name tool-card-title">Compress PDF</div>
+      <div class="desc tool-card-desc">Shrink scanned or image-heavy PDFs.</div>
+    </a>
 
-  <a class="card" href="/crop-pdf-pages/">
-    <div class="icon">🔲</div>
-    <div class="name">Crop PDF Pages</div>
-    <div class="desc">Trim margins from every page.</div>
-  </a>
+  <a class="card tool-card" href="/crop-pdf-pages/">
+      <div class="icon-box cat-pdf">🔲</div>
+      <div class="name tool-card-title">Crop PDF Pages</div>
+      <div class="desc tool-card-desc">Trim margins from every page.</div>
+    </a>
 
-  <a class="card" href="/delete-pdf-pages/">
-    <div class="icon">🗑️</div>
-    <div class="name">Delete PDF Pages</div>
-    <div class="desc">Remove pages by number or range.</div>
-  </a>
+  <a class="card tool-card" href="/delete-pdf-pages/">
+      <div class="icon-box cat-pdf">🗑️</div>
+      <div class="name tool-card-title">Delete PDF Pages</div>
+      <div class="desc tool-card-desc">Remove pages by number or range.</div>
+    </a>
 
-  <a class="card" href="/edit-pdf-metadata/">
-    <div class="icon">🏷️</div>
-    <div class="name">Edit PDF Metadata</div>
-    <div class="desc">Change title, author, subject &amp; keywords.</div>
-  </a>
+  <a class="card tool-card" href="/edit-pdf-metadata/">
+      <div class="icon-box cat-pdf">🏷️</div>
+      <div class="name tool-card-title">Edit PDF Metadata</div>
+      <div class="desc tool-card-desc">Change title, author, subject &amp; keywords.</div>
+    </a>
 
-  <a class="card" href="/extract-pdf-text/">
-    <div class="icon">📝</div>
-    <div class="name">Extract PDF Text</div>
-    <div class="desc">Copy or download a PDF's text as .txt.</div>
-  </a>
+  <a class="card tool-card" href="/extract-pdf-text/">
+      <div class="icon-box cat-pdf">📝</div>
+      <div class="name tool-card-title">Extract PDF Text</div>
+      <div class="desc tool-card-desc">Copy or download a PDF's text as .txt.</div>
+    </a>
 
-  <a class="card" href="/html-to-pdf/">
-    <div class="icon">🌐</div>
-    <div class="name">HTML to PDF</div>
-    <div class="desc">Paste HTML and convert it to PDF.</div>
-  </a>
+  <a class="card tool-card" href="/html-to-pdf/">
+      <div class="icon-box cat-pdf">🌐</div>
+      <div class="name tool-card-title">HTML to PDF</div>
+      <div class="desc tool-card-desc">Paste HTML and convert it to PDF.</div>
+    </a>
 
-  <a class="card" href="/image-to-pdf/">
-    <div class="icon">📄</div>
-    <div class="name">Image to PDF</div>
-    <div class="desc">Combine any images into one PDF.</div>
-  </a>
+  <a class="card tool-card" href="/image-to-pdf/">
+      <div class="icon-box cat-pdf">📄</div>
+      <div class="name tool-card-title">Image to PDF</div>
+      <div class="desc tool-card-desc">Combine any images into one PDF.</div>
+    </a>
 
-  <a class="card" href="/jpg-to-pdf/">
-    <div class="icon">📄</div>
-    <div class="name">JPG to PDF</div>
-    <div class="desc">Turn JPG images into a PDF file.</div>
-  </a>
+  <a class="card tool-card" href="/jpg-to-pdf/">
+      <div class="icon-box cat-pdf">📄</div>
+      <div class="name tool-card-title">JPG to PDF</div>
+      <div class="desc tool-card-desc">Turn JPG images into a PDF file.</div>
+    </a>
 
-  <a class="card" href="/merge-pdf/">
-    <div class="icon">➕</div>
-    <div class="name">Merge PDF</div>
-    <div class="desc">Combine multiple PDFs into one.</div>
-  </a>
+  <a class="card tool-card" href="/merge-pdf/">
+      <div class="icon-box cat-pdf">➕</div>
+      <div class="name tool-card-title">Merge PDF</div>
+      <div class="desc tool-card-desc">Combine multiple PDFs into one.</div>
+    </a>
 
-  <a class="card" href="/pdf-page-organizer/">
-    <div class="icon">📑</div>
-    <div class="name">PDF Page Organizer</div>
-    <div class="desc">Drag to reorder or delete pages.</div>
-  </a>
+  <a class="card tool-card" href="/pdf-page-organizer/">
+      <div class="icon-box cat-pdf">📑</div>
+      <div class="name tool-card-title">PDF Page Organizer</div>
+      <div class="desc tool-card-desc">Drag to reorder or delete pages.</div>
+    </a>
 
-  <a class="card" href="/pdf-to-jpg/">
-    <div class="icon">🖼️</div>
-    <div class="name">PDF to JPG</div>
-    <div class="desc">Extract PDF pages as JPG images.</div>
-  </a>
+  <a class="card tool-card" href="/pdf-to-jpg/">
+      <div class="icon-box cat-pdf">🖼️</div>
+      <div class="name tool-card-title">PDF to JPG</div>
+      <div class="desc tool-card-desc">Extract PDF pages as JPG images.</div>
+    </a>
 
-  <a class="card" href="/resize-pdf-pages/">
-    <div class="icon">📐</div>
-    <div class="name">Resize PDF Pages</div>
-    <div class="desc">Change page dimensions, e.g. A4 to Letter.</div>
-  </a>
+  <a class="card tool-card" href="/resize-pdf-pages/">
+      <div class="icon-box cat-pdf">📐</div>
+      <div class="name tool-card-title">Resize PDF Pages</div>
+      <div class="desc tool-card-desc">Change page dimensions, e.g. A4 to Letter.</div>
+    </a>
 
-  <a class="card" href="/rotate-pdf/">
-    <div class="icon">🔃</div>
-    <div class="name">Rotate PDF Pages</div>
-    <div class="desc">Rotate all or specific pages.</div>
-  </a>
+  <a class="card tool-card" href="/rotate-pdf/">
+      <div class="icon-box cat-pdf">🔃</div>
+      <div class="name tool-card-title">Rotate PDF Pages</div>
+      <div class="desc tool-card-desc">Rotate all or specific pages.</div>
+    </a>
 
-  <a class="card" href="/sign-pdf/">
-    <div class="icon">✍️</div>
-    <div class="name">Sign PDF</div>
-    <div class="desc">Draw and place a signature.</div>
-  </a>
+  <a class="card tool-card" href="/sign-pdf/">
+      <div class="icon-box cat-pdf">✍️</div>
+      <div class="name tool-card-title">Sign PDF</div>
+      <div class="desc tool-card-desc">Draw and place a signature.</div>
+    </a>
 
-  <a class="card" href="/split-pdf/">
-    <div class="icon">✂️</div>
-    <div class="name">Split PDF</div>
-    <div class="desc">Extract a range or split every page.</div>
-  </a>
+  <a class="card tool-card" href="/split-pdf/">
+      <div class="icon-box cat-pdf">✂️</div>
+      <div class="name tool-card-title">Split PDF</div>
+      <div class="desc tool-card-desc">Extract a range or split every page.</div>
+    </a>
 
-  <a class="card" href="/watermark-pdf/">
-    <div class="icon">💧</div>
-    <div class="name">Watermark PDF</div>
-    <div class="desc">Stamp text across every page.</div>
-  </a>
+  <a class="card tool-card" href="/watermark-pdf/">
+      <div class="icon-box cat-pdf">💧</div>
+      <div class="name tool-card-title">Watermark PDF</div>
+      <div class="desc tool-card-desc">Stamp text across every page.</div>
+    </a>
 
 </div>
 </section>
@@ -455,47 +473,47 @@ h1{font-size:44px;margin-bottom:10px;}
 <div class="category-title">🛠️ Utility Tools</div>
 <div class="grid">
 
-  <a class="card" href="/color-picker-from-image/">
-    <div class="icon">🎨</div>
-    <div class="name">Color Picker from Image</div>
-    <div class="desc">Click a pixel to get its HEX/RGB.</div>
-  </a>
+  <a class="card tool-card" href="/color-picker-from-image/">
+      <div class="icon-box cat-utility">🎨</div>
+      <div class="name tool-card-title">Color Picker from Image</div>
+      <div class="desc tool-card-desc">Click a pixel to get its HEX/RGB.</div>
+    </a>
 
-  <a class="card" href="/exif-remover/">
-    <div class="icon">🔒</div>
-    <div class="name">EXIF Remover</div>
-    <div class="desc">Strip hidden metadata from a photo.</div>
-  </a>
+  <a class="card tool-card" href="/exif-remover/">
+      <div class="icon-box cat-utility">🔒</div>
+      <div class="name tool-card-title">EXIF Remover</div>
+      <div class="desc tool-card-desc">Strip hidden metadata from a photo.</div>
+    </a>
 
-  <a class="card" href="/favicon-generator/">
-    <div class="icon">🌐</div>
-    <div class="name">Favicon Generator</div>
-    <div class="desc">Generate a full favicon.ico package.</div>
-  </a>
+  <a class="card tool-card" href="/favicon-generator/">
+      <div class="icon-box cat-utility">🌐</div>
+      <div class="name tool-card-title">Favicon Generator</div>
+      <div class="desc tool-card-desc">Generate a full favicon.ico package.</div>
+    </a>
 
-  <a class="card" href="/image-dimension-checker/">
-    <div class="icon">📏</div>
-    <div class="name">Image Dimension Checker</div>
-    <div class="desc">Check size, format, DPI &amp; ratio.</div>
-  </a>
+  <a class="card tool-card" href="/image-dimension-checker/">
+      <div class="icon-box cat-utility">📏</div>
+      <div class="name tool-card-title">Image Dimension Checker</div>
+      <div class="desc tool-card-desc">Check size, format, DPI &amp; ratio.</div>
+    </a>
 
-  <a class="card" href="/image-metadata-viewer/">
-    <div class="icon">🔍</div>
-    <div class="name">Image Metadata Viewer</div>
-    <div class="desc">See a photo's camera, date &amp; GPS data.</div>
-  </a>
+  <a class="card tool-card" href="/image-metadata-viewer/">
+      <div class="icon-box cat-utility">🔍</div>
+      <div class="name tool-card-title">Image Metadata Viewer</div>
+      <div class="desc tool-card-desc">See a photo's camera, date &amp; GPS data.</div>
+    </a>
 
-  <a class="card" href="/image-to-base64/">
-    <div class="icon">🔤</div>
-    <div class="name">Image to Base64</div>
-    <div class="desc">Encode/decode images as Base64.</div>
-  </a>
+  <a class="card tool-card" href="/image-to-base64/">
+      <div class="icon-box cat-utility">🔤</div>
+      <div class="name tool-card-title">Image to Base64</div>
+      <div class="desc tool-card-desc">Encode/decode images as Base64.</div>
+    </a>
 
-  <a class="card" href="/qr-code-generator/">
-    <div class="icon">🔳</div>
-    <div class="name">QR Code Generator</div>
-    <div class="desc">Turn a link or text into a QR code.</div>
-  </a>
+  <a class="card tool-card" href="/qr-code-generator/">
+      <div class="icon-box cat-utility">🔳</div>
+      <div class="name tool-card-title">QR Code Generator</div>
+      <div class="desc tool-card-desc">Turn a link or text into a QR code.</div>
+    </a>
 
 </div>
 </section>
