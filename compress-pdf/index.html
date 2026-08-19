@@ -130,9 +130,10 @@ h2{margin-top:50px;font-size:22px;}
 .related-card{display:flex;align-items:center;gap:14px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;color:var(--text);transition:0.2s;}
 .related-card:hover{border-color:var(--accent);transform:translateY(-2px);}
 .related-card .icon-box{flex:none;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;border:2px solid transparent;}
-.related-card .icon-box.cat-image{background:rgba(37,99,235,var(--icon-alpha));border-color:#2563eb;}
-.related-card .icon-box.cat-pdf{background:rgba(245,158,11,var(--icon-alpha));border-color:#f59e0b;}
-.related-card .icon-box.cat-utility{background:rgba(139,92,246,var(--icon-alpha));border-color:#8b5cf6;}
+.related-card .icon-box.cat-image{background:rgba(37,99,235,var(--icon-alpha));border-color:#2563eb;color:#2563eb;}
+.related-card .icon-box.cat-pdf{background:rgba(245,158,11,var(--icon-alpha));border-color:#f59e0b;color:#f59e0b;}
+.related-card .icon-box.cat-utility{background:rgba(139,92,246,var(--icon-alpha));border-color:#8b5cf6;color:#8b5cf6;}
+.related-card .icon-box svg{width:22px;height:22px;display:block;}
 .related-card .body{flex:1 1 auto;min-width:0;}
 .related-card .title{font-size:14px;font-weight:bold;margin-bottom:2px;}
 .related-card .desc{font-size:12px;color:var(--muted-text);line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
@@ -227,7 +228,7 @@ h2{margin-top:50px;font-size:22px;}
   <h2>Related tools</h2>
   <div class="related-grid">
   <a class="related-card" href="/merge-pdf/">
-    <div class="icon-box cat-pdf">➕</div>
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v12M8 6l4-4 4 4"/><path d="M6 22l6-6 6 6"/></svg></div>
     <div class="body">
       <div class="title">Merge PDF</div>
       <div class="desc">Combine multiple PDFs into one.</div>
@@ -235,7 +236,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="arrow">→</div>
   </a>
   <a class="related-card" href="/split-pdf/">
-    <div class="icon-box cat-pdf">✂️</div>
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V10"/><path d="M8 18l4 4 4-4"/><path d="M6 2l6 6 6-6"/></svg></div>
     <div class="body">
       <div class="title">Split PDF</div>
       <div class="desc">Extract a range or split every page.</div>
@@ -243,7 +244,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="arrow">→</div>
   </a>
   <a class="related-card" href="/compress-image/">
-    <div class="icon-box cat-image">📦</div>
+    <div class="icon-box cat-image"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v7M9 6l3 3 3-3"/><path d="M12 22v-7M9 18l3-3 3 3"/></svg></div>
     <div class="body">
       <div class="title">Compress Image</div>
       <div class="desc">Reduce file size, keep quality.</div>
@@ -251,7 +252,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="arrow">→</div>
   </a>
   <a class="related-card" href="/resize-pdf-pages/">
-    <div class="icon-box cat-pdf">📐</div>
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M20 20l-5-5M20 20h-4M20 20v-4"/></svg></div>
     <div class="body">
       <div class="title">Resize PDF Pages</div>
       <div class="desc">Change page dimensions, e.g. A4 to Letter.</div>
@@ -259,7 +260,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="arrow">→</div>
   </a>
   <a class="related-card" href="/edit-pdf-metadata/">
-    <div class="icon-box cat-pdf">🏷️</div>
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M9.5 17l1-4L15 8.5 16.5 10 12 14.5z"/></svg></div>
     <div class="body">
       <div class="title">Edit PDF Metadata</div>
       <div class="desc">Change title, author, subject &amp; keywords.</div>
@@ -267,7 +268,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="arrow">→</div>
   </a>
   <a class="related-card" href="/extract-pdf-text/">
-    <div class="icon-box cat-pdf">📝</div>
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M8 11h6M8 14h7M8 17h4"/><path d="M20 14h-3m3 0l-2-2m2 2l-2 2"/></svg></div>
     <div class="body">
       <div class="title">Extract PDF Text</div>
       <div class="desc">Copy or download a PDF's text as .txt.</div>
@@ -275,7 +276,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="arrow">→</div>
   </a>
   <a class="related-card" href="/watermark-pdf/">
-    <div class="icon-box cat-pdf">💧</div>
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.8 6 11.2A6 6 0 0 1 6 14.2C6 9.8 12 3 12 3z"/></svg></div>
     <div class="body">
       <div class="title">Watermark PDF</div>
       <div class="desc">Stamp text across every page.</div>

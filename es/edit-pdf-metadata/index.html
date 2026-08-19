@@ -122,9 +122,10 @@ h2{margin-top:50px;font-size:22px;}
 .related-card{display:flex;align-items:center;gap:14px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;color:var(--text);transition:0.2s;}
 .related-card:hover{border-color:var(--accent);transform:translateY(-2px);}
 .related-card .icon-box{flex:none;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;border:2px solid transparent;}
-.related-card .icon-box.cat-image{background:rgba(37,99,235,var(--icon-alpha));border-color:#2563eb;}
-.related-card .icon-box.cat-pdf{background:rgba(245,158,11,var(--icon-alpha));border-color:#f59e0b;}
-.related-card .icon-box.cat-utility{background:rgba(139,92,246,var(--icon-alpha));border-color:#8b5cf6;}
+.related-card .icon-box.cat-image{background:rgba(37,99,235,var(--icon-alpha));border-color:#2563eb;color:#2563eb;}
+.related-card .icon-box.cat-pdf{background:rgba(245,158,11,var(--icon-alpha));border-color:#f59e0b;color:#f59e0b;}
+.related-card .icon-box.cat-utility{background:rgba(139,92,246,var(--icon-alpha));border-color:#8b5cf6;color:#8b5cf6;}
+.related-card .icon-box svg{width:22px;height:22px;display:block;}
 .related-card .body{flex:1 1 auto;min-width:0;}
 .related-card .title{font-size:14px;font-weight:bold;margin-bottom:2px;}
 .related-card .desc{font-size:12px;color:var(--muted-text);line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
@@ -226,7 +227,7 @@ h2{margin-top:50px;font-size:22px;}
   <h2>Herramientas relacionadas</h2>
   <div class="related-grid">
   <a class="related-card" href="/es/exif-remover/">
-    <div class="icon-box cat-utility">🔒</div>
+    <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
     <div class="body">
       <div class="title">Eliminar EXIF</div>
       <div class="desc">Elimina los metadatos ocultos de una foto.</div>
@@ -234,7 +235,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="arrow">→</div>
   </a>
   <a class="related-card" href="/es/add-page-numbers/">
-    <div class="icon-box cat-pdf">🔢</div>
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><circle cx="17" cy="17" r="3"/><path d="M17 15.5v3"/></svg></div>
     <div class="body">
       <div class="title">Añadir números de página</div>
       <div class="desc">Numera las páginas de un PDF.</div>
@@ -242,7 +243,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="arrow">→</div>
   </a>
   <a class="related-card" href="/es/compress-pdf/">
-    <div class="icon-box cat-pdf">📦</div>
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M9 13l3 2 3-2M9 17l3-2 3 2"/></svg></div>
     <div class="body">
       <div class="title">Comprimir PDF</div>
       <div class="desc">Reduce PDF escaneados o con muchas imágenes.</div>
@@ -250,7 +251,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="arrow">→</div>
   </a>
   <a class="related-card" href="/es/watermark-pdf/">
-    <div class="icon-box cat-pdf">💧</div>
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.8 6 11.2A6 6 0 0 1 6 14.2C6 9.8 12 3 12 3z"/></svg></div>
     <div class="body">
       <div class="title">Marca de agua en PDF</div>
       <div class="desc">Estampa texto en cada página.</div>
@@ -258,7 +259,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="arrow">→</div>
   </a>
   <a class="related-card" href="/es/sign-pdf/">
-    <div class="icon-box cat-pdf">✍️</div>
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18c3 1 4-2 6-2s2 3 5 1 4-4 7-2"/></svg></div>
     <div class="body">
       <div class="title">Firmar PDF</div>
       <div class="desc">Dibuja y coloca una firma.</div>
