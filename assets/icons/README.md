@@ -55,7 +55,7 @@ just works in both light and dark theme with no per-icon color code.
 | `merge-split.svg` | combining or dividing files |
 | `count-measure.svg` | measuring, counting, or checking dimensions |
 | `watermark-stamp.svg` | stamping/overlaying a mark on content |
-| `wrench.svg` | generic tool/utility concept — no existing per-tool icon fit, so this was purpose-designed (open-end wrench: an open ring + diagonal handle) rather than reused; kept here as the one deliberate exception to "reuse, don't design new icons" |
+| `wrench.svg` | generic tool/utility concept — no existing per-tool icon fit, so this was purpose-designed (open-end wrench: a square open jaw bracket + diagonal handle + grip mark, all straight lines — deliberately angular, no circles/arcs, so it can't read as a magnifying glass) rather than reused; kept here as the one deliberate exception to "reuse, don't design new icons" |
 
 Either way, the markup pattern is identical everywhere on the site:
 
