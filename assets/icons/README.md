@@ -12,8 +12,9 @@ page's theme).
   (`compress-pdf.svg` → `/compress-pdf/`). Includes both the 44 currently-live tools
   (wired into the site) and the 18 Phase 10 planned tools (stored ahead of time, not
   wired into any page yet since those pages don't exist).
-- `assets/icons/actions/*.svg` — 10 reusable generic icons for any tool that isn't
-  one of the 62 above. Not tied to a specific tool.
+- `assets/icons/actions/*.svg` — 11 reusable generic icons for any tool that isn't
+  one of the 62 above, plus one (`wrench.svg`) used as the Utility Tools category-header
+  glyph on the homepage and `/tools` catalog. Not tied to a specific tool.
 
 ## How the color/theme wiring works
 
@@ -54,6 +55,7 @@ just works in both light and dark theme with no per-icon color code.
 | `merge-split.svg` | combining or dividing files |
 | `count-measure.svg` | measuring, counting, or checking dimensions |
 | `watermark-stamp.svg` | stamping/overlaying a mark on content |
+| `wrench.svg` | generic tool/utility concept — no existing per-tool icon fit, so this was purpose-designed (open-end wrench: an open ring + diagonal handle) rather than reused; kept here as the one deliberate exception to "reuse, don't design new icons" |
 
 Either way, the markup pattern is identical everywhere on the site:
 

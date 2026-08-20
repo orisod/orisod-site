@@ -109,10 +109,17 @@ h1{font-size:44px;margin-bottom:10px;}
   margin-top:50px;
   margin-bottom:16px;
   padding-left:4px;
+  display:flex;
+  align-items:center;
+  gap:10px;
 }
 .category-section:first-of-type .category-title{
   margin-top:0;
 }
+.category-title svg{width:18px;height:18px;flex:0 0 auto;}
+.category-title svg.cat-image{color:#2563eb;}
+.category-title svg.cat-pdf{color:#f59e0b;}
+.category-title svg.cat-utility{color:#8b5cf6;}
 .search-box{
   max-width:420px;
   margin:0 auto 26px auto;
@@ -251,7 +258,7 @@ h1{font-size:44px;margin-bottom:10px;}
 <p class="no-results" id="noResults">No se encontraron herramientas.</p>
 
 <section class="category-section" data-category="image">
-<div class="category-title">🖼️ Herramientas de imagen</div>
+<div class="category-title"><svg class="cat-image" xmlns="http://www.w3.org/2000/svg" viewBox="0 2 18 17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="14" height="13" rx="1.5"/><circle cx="6" cy="8" r="1.2"/><path d="M2 15l3.5-3.5 2.5 2.5 3.5-4 3 3"/></svg>Herramientas de imagen</div>
 <div class="grid">
 
   <a class="card tool-card" href="/es/add-border-to-image/">
@@ -378,7 +385,7 @@ h1{font-size:44px;margin-bottom:10px;}
 </section>
 
 <section class="category-section" data-category="pdf">
-<div class="category-title">📄 Herramientas de PDF</div>
+<div class="category-title"><svg class="cat-pdf" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/></svg>Herramientas de PDF</div>
 <div class="grid">
 
   <a class="card tool-card" href="/es/add-page-numbers/">
@@ -487,7 +494,7 @@ h1{font-size:44px;margin-bottom:10px;}
 </section>
 
 <section class="category-section" data-category="utility">
-<div class="category-title">🛠️ Herramientas de utilidad</div>
+<div class="category-title"><svg class="cat-utility" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 6A4 4 0 1 0 9 4"/><path d="M11 11.5L18 19"/></svg>Herramientas de utilidad</div>
 <div class="grid">
 
   <a class="card tool-card" href="/es/color-picker-from-image/">

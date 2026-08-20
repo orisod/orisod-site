@@ -208,6 +208,10 @@ h1{
   padding-bottom:12px;
   border-bottom:1px solid var(--border);
 }
+.category-heading svg{width:18px;height:18px;flex:0 0 auto;}
+.category-heading svg.cat-image{color:#2563eb;}
+.category-heading svg.cat-pdf{color:#f59e0b;}
+.category-heading svg.cat-utility{color:#8b5cf6;}
 
 /* Reusable compact tool-card pattern — also intended for the /tools catalog
    page redesign, so keep this block generic (no homepage-specific sizing
@@ -310,7 +314,7 @@ h1{
 </div>
 
 <section class="tool-category">
-  <h2 class="category-heading">🖼️ Image Tools</h2>
+  <h2 class="category-heading"><svg class="cat-image" xmlns="http://www.w3.org/2000/svg" viewBox="0 2 18 17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="14" height="13" rx="1.5"/><circle cx="6" cy="8" r="1.2"/><path d="M2 15l3.5-3.5 2.5 2.5 3.5-4 3 3"/></svg>Image Tools</h2>
   <div class="category-grid">
     <a class="tool-card" href="/compress-image/">
       <div class="icon-box cat-image"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v7M9 6l3 3 3-3"/><path d="M12 22v-7M9 18l3-3 3 3"/></svg></div>
@@ -331,7 +335,7 @@ h1{
 </section>
 
 <section class="tool-category">
-  <h2 class="category-heading">📄 PDF Tools</h2>
+  <h2 class="category-heading"><svg class="cat-pdf" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/></svg>PDF Tools</h2>
   <div class="category-grid">
     <a class="tool-card" href="/merge-pdf/">
       <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v12M8 6l4-4 4 4"/><path d="M6 22l6-6 6 6"/></svg></div>
@@ -352,7 +356,7 @@ h1{
 </section>
 
 <section class="tool-category">
-  <h2 class="category-heading">🛠️ Utility Tools</h2>
+  <h2 class="category-heading"><svg class="cat-utility" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 6A4 4 0 1 0 9 4"/><path d="M11 11.5L18 19"/></svg>Utility Tools</h2>
   <div class="category-grid">
     <a class="tool-card" href="/exif-remover/">
       <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
