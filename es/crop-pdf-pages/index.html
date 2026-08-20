@@ -33,6 +33,7 @@
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
 :root{
   --bg:#0b0f1a;
@@ -57,6 +58,27 @@
   --grid-alpha:.10;
 }
 *{box-sizing:border-box;}
+.tool-hero{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:4px;}
+.tool-hero .icon-box{width:52px;height:52px;}
+.tool-hero .icon-box svg{width:28px;height:28px;}
+.tool-hero h1{margin:0;font-size:32px;}
+@media (max-width:600px){.tool-hero{flex-direction:column;gap:8px;}}
+.tool-sub{font-size:16px;max-width:640px;margin:0 auto 20px auto;}
+.workspace{max-width:1040px;margin:0 auto;}
+.workspace-controls{margin-top:20px;text-align:center;}
+.result-card{display:flex;align-items:center;gap:16px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-top:20px;text-align:left;}
+.result-card .icon-box{width:46px;height:46px;}
+.result-card .icon-box svg{width:24px;height:24px;}
+.result-card .result-body{flex:1 1 auto;min-width:0;}
+.result-card .result-filename{font-size:14px;font-weight:bold;margin-bottom:4px;word-break:break-all;}
+.result-stat{font-size:15px;opacity:0.9;}
+.result-stat .saved{color:#4ade80;font-weight:bold;}
+.workspace-stage{display:grid;grid-template-columns:1fr 1fr;gap:16px;text-align:left;}
+@media (max-width:760px){.workspace-stage{grid-template-columns:1fr;}}
+.stage-panel{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.stage-label{display:inline-block;font-size:12px;font-weight:bold;color:var(--accent);background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:3px 10px;margin-bottom:12px;}
+.panel-body{display:flex;align-items:center;justify-content:center;min-height:200px;}
+.panel-body img{max-width:100%;max-height:220px;border-radius:6px;border:1px solid var(--border);display:block;}
 .site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
 .site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);display:inline-flex;align-items:center;gap:8px;}
 .site-nav-logo img{height:26px;width:auto;display:block;}
@@ -86,6 +108,9 @@ input[type="file"]{display:none;}
 .field-row input[type="number"]{
   width:100%;padding:10px 12px;border-radius:6px;border:1px solid var(--dropzone-border);background:var(--card-bg);color:var(--text);font-size:14px;
 }
+.crop-preview-wrap{position:relative;display:inline-block;line-height:0;overflow:hidden;border-radius:6px;}
+.crop-preview-wrap img{max-width:100%;max-height:220px;border-radius:6px;display:block;}
+.crop-guide{position:absolute;border:2px dashed var(--accent);box-shadow:0 0 0 9999px rgba(0,0,0,.55);pointer-events:none;}
 button, .back{display:inline-block;margin-top:16px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
 button:disabled{opacity:0.4;cursor:not-allowed;}
 button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
@@ -123,11 +148,11 @@ h2{margin-top:50px;font-size:22px;}
 @media (max-width:600px){.related-grid{grid-template-columns:1fr;}}
 .related-card{display:flex;align-items:center;gap:14px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;color:var(--text);transition:0.2s;}
 .related-card:hover{border-color:var(--accent);transform:translateY(-2px);}
-.related-card .icon-box{flex:none;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;border:2px solid transparent;}
-.related-card .icon-box.cat-image{background:rgba(37,99,235,var(--icon-alpha));border-color:#2563eb;color:#2563eb;}
-.related-card .icon-box.cat-pdf{background:rgba(245,158,11,var(--icon-alpha));border-color:#f59e0b;color:#f59e0b;}
-.related-card .icon-box.cat-utility{background:rgba(139,92,246,var(--icon-alpha));border-color:#8b5cf6;color:#8b5cf6;}
-.related-card .icon-box svg{width:22px;height:22px;display:block;}
+.icon-box{flex:none;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;border:2px solid transparent;}
+.icon-box.cat-image{background:rgba(37,99,235,var(--icon-alpha));border-color:#2563eb;color:#2563eb;}
+.icon-box.cat-pdf{background:rgba(245,158,11,var(--icon-alpha));border-color:#f59e0b;color:#f59e0b;}
+.icon-box.cat-utility{background:rgba(139,92,246,var(--icon-alpha));border-color:#8b5cf6;color:#8b5cf6;}
+.icon-box svg{width:22px;height:22px;display:block;}
 .related-card .body{flex:1 1 auto;min-width:0;}
 .related-card .title{font-size:14px;font-weight:bold;margin-bottom:2px;}
 .related-card .desc{font-size:12px;color:var(--muted-text);line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
@@ -156,42 +181,68 @@ h2{margin-top:50px;font-size:22px;}
 
 <main>
 <div class="container">
-  <h1>Recortar páginas de PDF</h1>
-  <p>Recorta los márgenes de cada página de un PDF indicando medidas exactas — luego descarga el archivo recortado. Todo ocurre localmente en tu navegador.</p>
+  <div class="tool-hero">
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/></svg></div>
+    <h1>Recortar páginas de PDF</h1>
+  </div>
+  <p class="tool-sub">Recorta los márgenes de cada página de un PDF indicando medidas exactas — luego descarga el archivo recortado. Todo ocurre localmente en tu navegador.</p>
 
-  <div class="box">
-    <label class="dropzone" id="dropzone" for="fileInput">
-      <div id="dropzoneText">📁 Haz clic para seleccionar un PDF o arrástralo aquí</div>
-    </label>
-    <input type="file" id="fileInput" accept=".pdf">
-    <div class="error" id="errorMsg"></div>
-    <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subidas · Sin cuenta · Sin marca de agua</div>
-    <div class="size-readout" id="sizeReadout"></div>
+  <div class="workspace">
+    <div class="box">
+      <label class="dropzone" id="dropzone" for="fileInput">
+        <div id="dropzoneText">📁 Haz clic para seleccionar un PDF o arrástralo aquí</div>
+      </label>
+      <input type="file" id="fileInput" accept=".pdf">
+      <div class="error" id="errorMsg"></div>
+      <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subidas · Sin cuenta · Sin marca de agua</div>
+      <div class="size-readout" id="sizeReadout"></div>
 
-    <div class="margin-fields" id="marginFields" style="display:none;">
-      <div class="margin-grid">
-        <div class="field-row">
-          <label for="topField">Margen superior (mm)</label>
-          <input type="number" id="topField" value="0" min="0" step="1">
+      <div class="editor" id="editor" style="display:none;">
+        <div class="workspace-stage">
+          <div class="stage-panel">
+            <span class="stage-label">Original</span>
+            <div class="panel-body"><img id="originalDisplay" alt=""></div>
+          </div>
+          <div class="stage-panel">
+            <span class="stage-label">Vista previa del recorte (página 1)</span>
+            <div class="panel-body">
+              <div class="crop-preview-wrap" id="cropPreviewWrap">
+                <img id="previewImg" alt="">
+                <div class="crop-guide" id="cropGuide"></div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="field-row">
-          <label for="bottomField">Margen inferior (mm)</label>
-          <input type="number" id="bottomField" value="0" min="0" step="1">
+
+        <div class="margin-fields" id="marginFields">
+          <div class="margin-grid">
+            <div class="field-row">
+              <label for="topField">Margen superior (mm)</label>
+              <input type="number" id="topField" value="0" min="0" step="1">
+            </div>
+            <div class="field-row">
+              <label for="bottomField">Margen inferior (mm)</label>
+              <input type="number" id="bottomField" value="0" min="0" step="1">
+            </div>
+            <div class="field-row">
+              <label for="leftField">Margen izquierdo (mm)</label>
+              <input type="number" id="leftField" value="0" min="0" step="1">
+            </div>
+            <div class="field-row">
+              <label for="rightField">Margen derecho (mm)</label>
+              <input type="number" id="rightField" value="0" min="0" step="1">
+            </div>
+          </div>
         </div>
-        <div class="field-row">
-          <label for="leftField">Margen izquierdo (mm)</label>
-          <input type="number" id="leftField" value="0" min="0" step="1">
-        </div>
-        <div class="field-row">
-          <label for="rightField">Margen derecho (mm)</label>
-          <input type="number" id="rightField" value="0" min="0" step="1">
+
+        <div class="workspace-controls">
+          <button id="saveBtn">Recortar y descargar</button>
         </div>
       </div>
-      <br>
-      <button id="saveBtn">Recortar y descargar</button>
-    </div>
 
-    <div class="progress" id="progressMsg"></div>
+      <div class="progress" id="progressMsg"></div>
+      <div class="result" id="result"></div>
+    </div>
   </div>
 
   <div class="seo-content">
@@ -321,20 +372,59 @@ function detectSizeLabel(wmm, hmm) {
   return null;
 }
 
+pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
 const fileInput = document.getElementById('fileInput');
 const dropzone = document.getElementById('dropzone');
 const dropzoneText = document.getElementById('dropzoneText');
 const errorMsg = document.getElementById('errorMsg');
 const progressMsg = document.getElementById('progressMsg');
 const sizeReadout = document.getElementById('sizeReadout');
+const editor = document.getElementById('editor');
+const originalDisplay = document.getElementById('originalDisplay');
+const previewImg = document.getElementById('previewImg');
+const cropGuide = document.getElementById('cropGuide');
 const marginFields = document.getElementById('marginFields');
 const topField = document.getElementById('topField');
 const bottomField = document.getElementById('bottomField');
 const leftField = document.getElementById('leftField');
 const rightField = document.getElementById('rightField');
 const saveBtn = document.getElementById('saveBtn');
+const resultEl = document.getElementById('result');
 
 let selectedFile = null;
+let pageWidthMM = 0;
+let pageHeightMM = 0;
+
+async function renderFirstPageThumbnail(file) {
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  const page = await pdf.getPage(1);
+  const viewport = page.getViewport({ scale: 1 });
+  const canvas = document.createElement('canvas');
+  canvas.width = viewport.width;
+  canvas.height = viewport.height;
+  const ctx = canvas.getContext('2d');
+  await page.render({ canvasContext: ctx, viewport }).promise;
+  return canvas.toDataURL('image/jpeg', 0.85);
+}
+
+function updateCropGuide() {
+  if (!pageWidthMM || !pageHeightMM) return;
+  const topMM = Math.max(0, parseFloat(topField.value) || 0);
+  const bottomMM = Math.max(0, parseFloat(bottomField.value) || 0);
+  const leftMM = Math.max(0, parseFloat(leftField.value) || 0);
+  const rightMM = Math.max(0, parseFloat(rightField.value) || 0);
+
+  cropGuide.style.top = `${Math.min(95, (topMM / pageHeightMM) * 100)}%`;
+  cropGuide.style.bottom = `${Math.min(95, (bottomMM / pageHeightMM) * 100)}%`;
+  cropGuide.style.left = `${Math.min(95, (leftMM / pageWidthMM) * 100)}%`;
+  cropGuide.style.right = `${Math.min(95, (rightMM / pageWidthMM) * 100)}%`;
+}
+
+[topField, bottomField, leftField, rightField].forEach((el) => {
+  el.addEventListener('input', updateCropGuide);
+});
 
 fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
 dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
@@ -348,7 +438,8 @@ dropzone.addEventListener('drop', (e) => {
 async function handleFile(file) {
   errorMsg.textContent = '';
   progressMsg.textContent = '';
-  marginFields.style.display = 'none';
+  resultEl.innerHTML = '';
+  editor.style.display = 'none';
   sizeReadout.textContent = '';
 
   if (!file || !/\.pdf$/i.test(file.name)) {
@@ -366,11 +457,22 @@ async function handleFile(file) {
     const { width, height } = firstPage.getSize();
     const wmm = Math.round(width * MM_PER_PT);
     const hmm = Math.round(height * MM_PER_PT);
+    pageWidthMM = wmm;
+    pageHeightMM = hmm;
     const label = detectSizeLabel(wmm, hmm);
     sizeReadout.textContent = `Tamaño de página: ${wmm} × ${hmm} mm${label ? ' (' + label + ')' : ''} · ${pdf.getPageCount()} página${pdf.getPageCount() === 1 ? '' : 's'}`;
 
     dropzoneText.textContent = `✅ ${file.name} cargado`;
-    marginFields.style.display = 'block';
+
+    const thumbDataUrl = await renderFirstPageThumbnail(file);
+    originalDisplay.src = thumbDataUrl;
+    previewImg.src = thumbDataUrl;
+    topField.value = '0';
+    bottomField.value = '0';
+    leftField.value = '0';
+    rightField.value = '0';
+    editor.style.display = 'block';
+    updateCropGuide();
   } catch (err) {
     errorMsg.textContent = 'No se pudo leer este PDF. Puede estar dañado o protegido con contraseña.';
   }
@@ -380,6 +482,7 @@ saveBtn.addEventListener('click', async () => {
   if (!selectedFile) return;
   errorMsg.textContent = '';
   progressMsg.textContent = '';
+  resultEl.innerHTML = '';
   saveBtn.disabled = true;
   saveBtn.textContent = 'Recortando...';
 
@@ -412,15 +515,27 @@ saveBtn.addEventListener('click', async () => {
     const blob = new Blob([bytes], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
     const baseName = selectedFile.name.replace(/\.pdf$/i, '');
+    const outName = `${baseName}-recortado.pdf`;
 
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${baseName}-recortado.pdf`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    progressMsg.textContent = 'Listo — descarga disponible.';
 
-    progressMsg.textContent = 'Listo — PDF recortado.';
+    const card = document.createElement('div');
+    card.className = 'result-card';
+    card.innerHTML = `
+      <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/></svg></div>
+      <div class="result-body">
+        <div class="result-filename">${outName}</div>
+        <div class="result-stat">${(blob.size / 1024).toFixed(1)} KB</div>
+      </div>
+    `;
+    resultEl.appendChild(card);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = outName;
+    link.className = 'back';
+    link.textContent = 'Descargar PDF Recortado';
+    resultEl.appendChild(link);
   } catch (err) {
     errorMsg.textContent = err.message || 'No se pudo recortar este PDF.';
   }

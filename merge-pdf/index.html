@@ -57,6 +57,21 @@
   --grid-alpha:.10;
 }
 *{box-sizing:border-box;}
+.tool-hero{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:4px;}
+.tool-hero .icon-box{width:52px;height:52px;}
+.tool-hero .icon-box svg{width:28px;height:28px;}
+.tool-hero h1{margin:0;font-size:32px;}
+@media (max-width:600px){.tool-hero{flex-direction:column;gap:8px;}}
+.tool-sub{font-size:16px;max-width:640px;margin:0 auto 20px auto;}
+.workspace{max-width:1040px;margin:0 auto;}
+.workspace-controls{margin-top:20px;text-align:center;}
+.result-card{display:flex;align-items:center;gap:16px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-top:20px;text-align:left;}
+.result-card .icon-box{width:46px;height:46px;}
+.result-card .icon-box svg{width:24px;height:24px;}
+.result-card .result-body{flex:1 1 auto;min-width:0;}
+.result-card .result-filename{font-size:14px;font-weight:bold;margin-bottom:4px;word-break:break-all;}
+.result-stat{font-size:15px;opacity:0.9;}
+.result-stat .saved{color:#4ade80;font-weight:bold;}
 .site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
 .site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);display:inline-flex;align-items:center;gap:8px;}
 .site-nav-logo img{height:26px;width:auto;display:block;}
@@ -120,11 +135,11 @@ h2{margin-top:50px;font-size:22px;}
 @media (max-width:600px){.related-grid{grid-template-columns:1fr;}}
 .related-card{display:flex;align-items:center;gap:14px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;color:var(--text);transition:0.2s;}
 .related-card:hover{border-color:var(--accent);transform:translateY(-2px);}
-.related-card .icon-box{flex:none;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;border:2px solid transparent;}
-.related-card .icon-box.cat-image{background:rgba(37,99,235,var(--icon-alpha));border-color:#2563eb;color:#2563eb;}
-.related-card .icon-box.cat-pdf{background:rgba(245,158,11,var(--icon-alpha));border-color:#f59e0b;color:#f59e0b;}
-.related-card .icon-box.cat-utility{background:rgba(139,92,246,var(--icon-alpha));border-color:#8b5cf6;color:#8b5cf6;}
-.related-card .icon-box svg{width:22px;height:22px;display:block;}
+.icon-box{flex:none;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;border:2px solid transparent;}
+.icon-box.cat-image{background:rgba(37,99,235,var(--icon-alpha));border-color:#2563eb;color:#2563eb;}
+.icon-box.cat-pdf{background:rgba(245,158,11,var(--icon-alpha));border-color:#f59e0b;color:#f59e0b;}
+.icon-box.cat-utility{background:rgba(139,92,246,var(--icon-alpha));border-color:#8b5cf6;color:#8b5cf6;}
+.icon-box svg{width:22px;height:22px;display:block;}
 .related-card .body{flex:1 1 auto;min-width:0;}
 .related-card .title{font-size:14px;font-weight:bold;margin-bottom:2px;}
 .related-card .desc{font-size:12px;color:var(--muted-text);line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
@@ -153,23 +168,32 @@ h2{margin-top:50px;font-size:22px;}
 
 <main>
 <div class="container">
-  <h1>Merge PDF</h1>
-  <p>Combine multiple PDF files into a single document. Everything happens locally in your browser — your files are never uploaded anywhere.</p>
+  <div class="tool-hero">
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v12M8 6l4-4 4 4"/><path d="M6 22l6-6 6 6"/></svg></div>
+    <h1>Merge PDF</h1>
+  </div>
+  <p class="tool-sub">Combine multiple PDF files into a single document. Everything happens locally in your browser — your files are never uploaded anywhere.</p>
 
-  <div class="box">
-    <label class="dropzone" id="dropzone" for="fileInput">
-      <div id="dropzoneText">📁 Click to select PDF files or drag and drop them here</div>
-    </label>
-    <input type="file" id="fileInput" accept=".pdf" multiple>
+  <div class="workspace">
+    <div class="box">
+      <label class="dropzone" id="dropzone" for="fileInput">
+        <div id="dropzoneText">📁 Click to select PDF files or drag and drop them here</div>
+      </label>
+      <input type="file" id="fileInput" accept=".pdf" multiple>
 
-    <div class="file-list" id="fileList"></div>
+      <div class="file-list" id="fileList"></div>
 
-    <br>
-    <button id="mergeBtn" disabled>Merge PDFs</button>
-    <div class="note">Files are combined in the order shown above. Use the arrows to reorder them.</div>
-    <div class="error" id="errorMsg"></div>
-    <div class="trust-strip">🔒 Processed on your device · No upload · No account · No watermark</div>
-    <div class="progress" id="progressMsg"></div>
+      <div class="error" id="errorMsg"></div>
+      <div class="trust-strip">🔒 Processed on your device · No upload · No account · No watermark</div>
+
+      <div class="workspace-controls">
+        <button id="mergeBtn" disabled>Merge PDFs</button>
+        <div class="note">Files are combined in the order shown above. Use the arrows to reorder them.</div>
+        <div class="progress" id="progressMsg"></div>
+      </div>
+
+      <div class="result" id="result"></div>
+    </div>
   </div>
 
   <div class="seo-content">
@@ -314,6 +338,7 @@ const fileListEl = document.getElementById('fileList');
 const mergeBtn = document.getElementById('mergeBtn');
 const errorMsg = document.getElementById('errorMsg');
 const progressMsg = document.getElementById('progressMsg');
+const resultEl = document.getElementById('result');
 
 let selectedFiles = [];
 
@@ -394,6 +419,7 @@ mergeBtn.addEventListener('click', async () => {
   mergeBtn.textContent = 'Merging...';
   errorMsg.textContent = '';
   progressMsg.textContent = '';
+  resultEl.innerHTML = '';
 
   try {
     const { PDFDocument } = PDFLib;
@@ -410,15 +436,27 @@ mergeBtn.addEventListener('click', async () => {
     const mergedBytes = await mergedPdf.save();
     const blob = new Blob([mergedBytes], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
+    const pageCount = mergedPdf.getPageCount();
 
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'merged.pdf';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    progressMsg.textContent = 'Done — ready to download.';
 
-    progressMsg.textContent = `Done — ${selectedFiles.length} files merged.`;
+    const card = document.createElement('div');
+    card.className = 'result-card';
+    card.innerHTML = `
+      <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v12M8 6l4-4 4 4"/><path d="M6 22l6-6 6 6"/></svg></div>
+      <div class="result-body">
+        <div class="result-filename">merged.pdf</div>
+        <div class="result-stat">${selectedFiles.length} files merged · ${pageCount} page${pageCount !== 1 ? 's' : ''} · ${(blob.size / 1024).toFixed(1)} KB</div>
+      </div>
+    `;
+    resultEl.appendChild(card);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'merged.pdf';
+    link.className = 'back';
+    link.textContent = 'Download Merged PDF';
+    resultEl.appendChild(link);
   } catch (err) {
     errorMsg.textContent = 'Could not merge these PDFs. Make sure none of them are password-protected or corrupted.';
     progressMsg.textContent = '';

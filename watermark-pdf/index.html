@@ -58,6 +58,27 @@
   --grid-alpha:.10;
 }
 *{box-sizing:border-box;}
+.tool-hero{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:4px;}
+.tool-hero .icon-box{width:52px;height:52px;}
+.tool-hero .icon-box svg{width:28px;height:28px;}
+.tool-hero h1{margin:0;font-size:32px;}
+@media (max-width:600px){.tool-hero{flex-direction:column;gap:8px;}}
+.tool-sub{font-size:16px;max-width:640px;margin:0 auto 20px auto;}
+.workspace{max-width:1040px;margin:0 auto;}
+.workspace-controls{margin-top:20px;text-align:center;}
+.result-card{display:flex;align-items:center;gap:16px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-top:20px;text-align:left;}
+.result-card .icon-box{width:46px;height:46px;}
+.result-card .icon-box svg{width:24px;height:24px;}
+.result-card .result-body{flex:1 1 auto;min-width:0;}
+.result-card .result-filename{font-size:14px;font-weight:bold;margin-bottom:4px;word-break:break-all;}
+.result-stat{font-size:15px;opacity:0.9;}
+.result-stat .saved{color:#4ade80;font-weight:bold;}
+.workspace-stage{display:grid;grid-template-columns:1fr 1fr;gap:16px;text-align:left;}
+@media (max-width:760px){.workspace-stage{grid-template-columns:1fr;}}
+.stage-panel{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.stage-label{display:inline-block;font-size:12px;font-weight:bold;color:var(--accent);background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:3px 10px;margin-bottom:12px;}
+.panel-body{display:flex;align-items:center;justify-content:center;min-height:200px;}
+.panel-body img{max-width:100%;max-height:220px;border-radius:6px;border:1px solid var(--border);display:block;}
 .site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
 .site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);display:inline-flex;align-items:center;gap:8px;}
 .site-nav-logo img{height:26px;width:auto;display:block;}
@@ -91,7 +112,7 @@ input[type="color"]{padding:2px;width:44px;height:32px;border-radius:6px;border:
 .pos-btn{padding:8px;border-radius:6px;border:1px solid var(--dropzone-border);background:var(--card-bg);color:var(--text);cursor:pointer;font-size:11px;text-align:center;}
 .pos-btn.active{background:var(--accent);border-color:var(--accent);color:white;}
 .preview-wrap{margin-top:20px;}
-#previewCanvas{max-width:100%;border-radius:6px;border:1px solid var(--border);background:white;}
+#previewCanvas, #originalCanvas{max-width:100%;border-radius:6px;border:1px solid var(--border);background:white;}
 .page-count{margin-top:10px;font-size:13px;opacity:0.7;}
 button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
 button:disabled{opacity:0.4;cursor:not-allowed;}
@@ -130,11 +151,11 @@ h2{margin-top:50px;font-size:22px;}
 @media (max-width:600px){.related-grid{grid-template-columns:1fr;}}
 .related-card{display:flex;align-items:center;gap:14px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;color:var(--text);transition:0.2s;}
 .related-card:hover{border-color:var(--accent);transform:translateY(-2px);}
-.related-card .icon-box{flex:none;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;border:2px solid transparent;}
-.related-card .icon-box.cat-image{background:rgba(37,99,235,var(--icon-alpha));border-color:#2563eb;color:#2563eb;}
-.related-card .icon-box.cat-pdf{background:rgba(245,158,11,var(--icon-alpha));border-color:#f59e0b;color:#f59e0b;}
-.related-card .icon-box.cat-utility{background:rgba(139,92,246,var(--icon-alpha));border-color:#8b5cf6;color:#8b5cf6;}
-.related-card .icon-box svg{width:22px;height:22px;display:block;}
+.icon-box{flex:none;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;border:2px solid transparent;}
+.icon-box.cat-image{background:rgba(37,99,235,var(--icon-alpha));border-color:#2563eb;color:#2563eb;}
+.icon-box.cat-pdf{background:rgba(245,158,11,var(--icon-alpha));border-color:#f59e0b;color:#f59e0b;}
+.icon-box.cat-utility{background:rgba(139,92,246,var(--icon-alpha));border-color:#8b5cf6;color:#8b5cf6;}
+.icon-box svg{width:22px;height:22px;display:block;}
 .related-card .body{flex:1 1 auto;min-width:0;}
 .related-card .title{font-size:14px;font-weight:bold;margin-bottom:2px;}
 .related-card .desc{font-size:12px;color:var(--muted-text);line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
@@ -163,63 +184,80 @@ h2{margin-top:50px;font-size:22px;}
 
 <main>
 <div class="container">
-  <h1>Watermark PDF</h1>
-  <p>Stamp a text watermark across every page of a PDF — pick the position, rotation, size, color and opacity with a live preview. Everything happens locally in your browser.</p>
+  <div class="tool-hero">
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.8 6 11.2A6 6 0 0 1 6 14.2C6 9.8 12 3 12 3z"/></svg></div>
+    <h1>Watermark PDF</h1>
+  </div>
+  <p class="tool-sub">Stamp a text watermark across every page of a PDF — pick the position, rotation, size, color and opacity with a live preview. Everything happens locally in your browser.</p>
 
-  <div class="box">
-    <label class="dropzone" id="dropzone" for="fileInput">
-      <div id="dropzoneText">📁 Click to select a PDF or drag and drop it here</div>
-    </label>
-    <input type="file" id="fileInput" accept=".pdf">
-    <div class="error" id="errorMsg"></div>
-    <div class="trust-strip">🔒 Processed on your device · No upload · No account · No watermark added by us</div>
-    <div class="page-count" id="pageCount"></div>
+  <div class="workspace">
+    <div class="box">
+      <label class="dropzone" id="dropzone" for="fileInput">
+        <div id="dropzoneText">📁 Click to select a PDF or drag and drop it here</div>
+      </label>
+      <input type="file" id="fileInput" accept=".pdf">
+      <div class="error" id="errorMsg"></div>
+      <div class="trust-strip">🔒 Processed on your device · No upload · No account · No watermark added by us</div>
+      <div class="page-count" id="pageCount"></div>
 
-    <div class="controls" id="controls">
-      <div class="opt-row">
-        <label>Text:</label>
-        <input type="text" id="textInput" value="CONFIDENTIAL" placeholder="Watermark text">
-      </div>
-      <div class="opt-row">
-        <label>Position:</label>
-        <div class="position-grid">
-          <div class="pos-btn" data-pos="top-left">↖</div>
-          <div class="pos-btn" data-pos="top-center">↑</div>
-          <div class="pos-btn" data-pos="top-right">↗</div>
-          <div class="pos-btn" data-pos="middle-left">←</div>
-          <div class="pos-btn active" data-pos="middle-center">●</div>
-          <div class="pos-btn" data-pos="middle-right">→</div>
-          <div class="pos-btn" data-pos="bottom-left">↙</div>
-          <div class="pos-btn" data-pos="bottom-center">↓</div>
-          <div class="pos-btn" data-pos="bottom-right">↘</div>
+      <div class="editor" id="editor" style="display:none;">
+        <div class="workspace-stage">
+          <div class="stage-panel">
+            <span class="stage-label">Original</span>
+            <div class="panel-body"><canvas id="originalCanvas"></canvas></div>
+          </div>
+          <div class="stage-panel">
+            <span class="stage-label">Live Preview (page 1)</span>
+            <div class="panel-body"><canvas id="previewCanvas"></canvas></div>
+          </div>
+        </div>
+        <div class="note">Preview shows page 1. The watermark is applied to every page.</div>
+
+        <div class="controls" id="controls" style="display:block;">
+          <div class="opt-row">
+            <label>Text:</label>
+            <input type="text" id="textInput" value="CONFIDENTIAL" placeholder="Watermark text">
+          </div>
+          <div class="opt-row">
+            <label>Position:</label>
+            <div class="position-grid">
+              <div class="pos-btn" data-pos="top-left">↖</div>
+              <div class="pos-btn" data-pos="top-center">↑</div>
+              <div class="pos-btn" data-pos="top-right">↗</div>
+              <div class="pos-btn" data-pos="middle-left">←</div>
+              <div class="pos-btn active" data-pos="middle-center">●</div>
+              <div class="pos-btn" data-pos="middle-right">→</div>
+              <div class="pos-btn" data-pos="bottom-left">↙</div>
+              <div class="pos-btn" data-pos="bottom-center">↓</div>
+              <div class="pos-btn" data-pos="bottom-right">↘</div>
+            </div>
+          </div>
+          <div class="opt-row">
+            <label>Rotation:</label>
+            <input type="range" id="rotationSlider" min="-90" max="90" value="45"><span id="rotationValue">45</span>°
+          </div>
+          <div class="opt-row">
+            <label>Font size:</label>
+            <input type="range" id="sizeSlider" min="12" max="120" value="48"><span id="sizeValue">48</span>pt
+          </div>
+          <div class="opt-row">
+            <label>Opacity:</label>
+            <input type="range" id="opacitySlider" min="5" max="100" value="30"><span id="opacityValue">30</span>%
+          </div>
+          <div class="opt-row">
+            <label>Color:</label>
+            <input type="color" id="colorInput" value="#ff0000">
+          </div>
+        </div>
+
+        <div class="workspace-controls">
+          <button id="downloadBtn">Watermark & Download</button>
         </div>
       </div>
-      <div class="opt-row">
-        <label>Rotation:</label>
-        <input type="range" id="rotationSlider" min="-90" max="90" value="45"><span id="rotationValue">45</span>°
-      </div>
-      <div class="opt-row">
-        <label>Font size:</label>
-        <input type="range" id="sizeSlider" min="12" max="120" value="48"><span id="sizeValue">48</span>pt
-      </div>
-      <div class="opt-row">
-        <label>Opacity:</label>
-        <input type="range" id="opacitySlider" min="5" max="100" value="30"><span id="opacityValue">30</span>%
-      </div>
-      <div class="opt-row">
-        <label>Color:</label>
-        <input type="color" id="colorInput" value="#ff0000">
-      </div>
-    </div>
 
-    <div class="preview-wrap" id="previewWrap" style="display:none;">
-      <canvas id="previewCanvas"></canvas>
-      <div class="note">Preview shows page 1. The watermark is applied to every page.</div>
+      <div class="progress" id="progressMsg"></div>
+      <div class="result" id="result"></div>
     </div>
-
-    <br>
-    <button id="downloadBtn" style="display:none;">Watermark & Download</button>
-    <div class="progress" id="progressMsg"></div>
   </div>
 
   <div class="seo-content">
@@ -358,9 +396,11 @@ const sizeValue = document.getElementById('sizeValue');
 const opacitySlider = document.getElementById('opacitySlider');
 const opacityValue = document.getElementById('opacityValue');
 const colorInput = document.getElementById('colorInput');
-const previewWrap = document.getElementById('previewWrap');
+const editor = document.getElementById('editor');
+const originalCanvas = document.getElementById('originalCanvas');
 const previewCanvas = document.getElementById('previewCanvas');
 const downloadBtn = document.getElementById('downloadBtn');
+const resultEl = document.getElementById('result');
 
 let selectedFile = null;
 let pdfJsDoc = null;
@@ -375,12 +415,24 @@ dropzone.addEventListener('drop', (e) => {
   handleFile(e.dataTransfer.files[0]);
 });
 
+async function renderOriginal() {
+  if (!pdfJsDoc) return;
+  const page = await pdfJsDoc.getPage(1);
+  const nativeViewport = page.getViewport({ scale: 1 });
+  const scale = Math.min(1, 650 / nativeViewport.width);
+  const viewport = page.getViewport({ scale });
+
+  originalCanvas.width = viewport.width;
+  originalCanvas.height = viewport.height;
+  const ctx = originalCanvas.getContext('2d');
+  await page.render({ canvasContext: ctx, viewport }).promise;
+}
+
 async function handleFile(file) {
   errorMsg.textContent = '';
   progressMsg.textContent = '';
-  controls.style.display = 'none';
-  previewWrap.style.display = 'none';
-  downloadBtn.style.display = 'none';
+  resultEl.innerHTML = '';
+  editor.style.display = 'none';
   pageCount.textContent = '';
 
   if (!file || !/\.pdf$/i.test(file.name)) {
@@ -395,9 +447,8 @@ async function handleFile(file) {
 
     pageCount.textContent = `Loaded: ${pdfJsDoc.numPages} page${pdfJsDoc.numPages === 1 ? '' : 's'}`;
     dropzoneText.textContent = `✅ ${file.name} loaded`;
-    controls.style.display = 'block';
-    previewWrap.style.display = 'block';
-    downloadBtn.style.display = 'inline-block';
+    editor.style.display = 'block';
+    await renderOriginal();
     await renderPreview();
   } catch (err) {
     errorMsg.textContent = 'Could not read this PDF. It may be corrupted or password-protected.';
@@ -488,6 +539,7 @@ downloadBtn.addEventListener('click', async () => {
   if (!selectedFile) return;
   errorMsg.textContent = '';
   progressMsg.textContent = '';
+  resultEl.innerHTML = '';
   downloadBtn.disabled = true;
   downloadBtn.textContent = 'Watermarking...';
 
@@ -533,15 +585,27 @@ downloadBtn.addEventListener('click', async () => {
     const blob = new Blob([bytes], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
     const baseName = selectedFile.name.replace(/\.pdf$/i, '');
+    const outName = `${baseName}-watermarked.pdf`;
 
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${baseName}-watermarked.pdf`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    progressMsg.textContent = 'Done — ready to download.';
 
-    progressMsg.textContent = 'Done — watermark added.';
+    const card = document.createElement('div');
+    card.className = 'result-card';
+    card.innerHTML = `
+      <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.8 6 11.2A6 6 0 0 1 6 14.2C6 9.8 12 3 12 3z"/></svg></div>
+      <div class="result-body">
+        <div class="result-filename">${outName}</div>
+        <div class="result-stat">${(blob.size / 1024).toFixed(1)} KB</div>
+      </div>
+    `;
+    resultEl.appendChild(card);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = outName;
+    link.className = 'back';
+    link.textContent = 'Download Watermarked PDF';
+    resultEl.appendChild(link);
   } catch (err) {
     errorMsg.textContent = err.message || 'Could not watermark this PDF.';
   }

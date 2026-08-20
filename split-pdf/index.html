@@ -58,6 +58,21 @@
   --grid-alpha:.10;
 }
 *{box-sizing:border-box;}
+.tool-hero{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:4px;}
+.tool-hero .icon-box{width:52px;height:52px;}
+.tool-hero .icon-box svg{width:28px;height:28px;}
+.tool-hero h1{margin:0;font-size:32px;}
+@media (max-width:600px){.tool-hero{flex-direction:column;gap:8px;}}
+.tool-sub{font-size:16px;max-width:640px;margin:0 auto 20px auto;}
+.workspace{max-width:1040px;margin:0 auto;}
+.workspace-controls{margin-top:20px;text-align:center;}
+.result-card{display:flex;align-items:center;gap:16px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-top:20px;text-align:left;}
+.result-card .icon-box{width:46px;height:46px;}
+.result-card .icon-box svg{width:24px;height:24px;}
+.result-card .result-body{flex:1 1 auto;min-width:0;}
+.result-card .result-filename{font-size:14px;font-weight:bold;margin-bottom:4px;word-break:break-all;}
+.result-stat{font-size:15px;opacity:0.9;}
+.result-stat .saved{color:#4ade80;font-weight:bold;}
 .site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
 .site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);display:inline-flex;align-items:center;gap:8px;}
 .site-nav-logo img{height:26px;width:auto;display:block;}
@@ -125,11 +140,11 @@ h2{margin-top:50px;font-size:22px;}
 @media (max-width:600px){.related-grid{grid-template-columns:1fr;}}
 .related-card{display:flex;align-items:center;gap:14px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;color:var(--text);transition:0.2s;}
 .related-card:hover{border-color:var(--accent);transform:translateY(-2px);}
-.related-card .icon-box{flex:none;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;border:2px solid transparent;}
-.related-card .icon-box.cat-image{background:rgba(37,99,235,var(--icon-alpha));border-color:#2563eb;color:#2563eb;}
-.related-card .icon-box.cat-pdf{background:rgba(245,158,11,var(--icon-alpha));border-color:#f59e0b;color:#f59e0b;}
-.related-card .icon-box.cat-utility{background:rgba(139,92,246,var(--icon-alpha));border-color:#8b5cf6;color:#8b5cf6;}
-.related-card .icon-box svg{width:22px;height:22px;display:block;}
+.icon-box{flex:none;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;border:2px solid transparent;}
+.icon-box.cat-image{background:rgba(37,99,235,var(--icon-alpha));border-color:#2563eb;color:#2563eb;}
+.icon-box.cat-pdf{background:rgba(245,158,11,var(--icon-alpha));border-color:#f59e0b;color:#f59e0b;}
+.icon-box.cat-utility{background:rgba(139,92,246,var(--icon-alpha));border-color:#8b5cf6;color:#8b5cf6;}
+.icon-box svg{width:22px;height:22px;display:block;}
 .related-card .body{flex:1 1 auto;min-width:0;}
 .related-card .title{font-size:14px;font-weight:bold;margin-bottom:2px;}
 .related-card .desc{font-size:12px;color:var(--muted-text);line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
@@ -158,35 +173,41 @@ h2{margin-top:50px;font-size:22px;}
 
 <main>
 <div class="container">
-  <h1>Split PDF</h1>
-  <p>Extract a page range into its own PDF, or split every page into a separate file. Everything happens locally in your browser — your file is never uploaded anywhere.</p>
+  <div class="tool-hero">
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V10"/><path d="M8 18l4 4 4-4"/><path d="M6 2l6 6 6-6"/></svg></div>
+    <h1>Split PDF</h1>
+  </div>
+  <p class="tool-sub">Extract a page range into its own PDF, or split every page into a separate file. Everything happens locally in your browser — your file is never uploaded anywhere.</p>
 
-  <div class="box">
-    <label class="dropzone" id="dropzone" for="fileInput">
-      <div id="dropzoneText">📁 Click to select a PDF or drag and drop it here</div>
-    </label>
-    <input type="file" id="fileInput" accept=".pdf">
-    <div class="error" id="errorMsg"></div>
-    <div class="trust-strip">🔒 Processed on your device · No upload · No account · No watermark</div>
-    <div class="page-info" id="pageInfo"></div>
+  <div class="workspace">
+    <div class="box">
+      <label class="dropzone" id="dropzone" for="fileInput">
+        <div id="dropzoneText">📁 Click to select a PDF or drag and drop it here</div>
+      </label>
+      <input type="file" id="fileInput" accept=".pdf">
+      <div class="error" id="errorMsg"></div>
+      <div class="trust-strip">🔒 Processed on your device · No upload · No account · No watermark</div>
+      <div class="page-info" id="pageInfo"></div>
 
-    <div class="split-options" id="splitOptions" style="display:none;">
-      <div class="option-card">
-        <h3>Extract a page range</h3>
-        <p>Enter pages or ranges (e.g. "1-3, 5") to create a single new PDF with just those pages, in that order.</p>
-        <input type="text" id="rangeInput" placeholder="e.g. 1-3, 5">
-        <br>
-        <button id="extractBtn">Extract Range</button>
+      <div class="split-options" id="splitOptions" style="display:none;">
+        <div class="option-card">
+          <h3>Extract a page range</h3>
+          <p>Enter pages or ranges (e.g. "1-3, 5") to create a single new PDF with just those pages, in that order.</p>
+          <input type="text" id="rangeInput" placeholder="e.g. 1-3, 5">
+          <br>
+          <button id="extractBtn">Extract Range</button>
+        </div>
+
+        <div class="option-card">
+          <h3>Split into individual pages</h3>
+          <p>Creates one PDF file per page and downloads them all as a ZIP.</p>
+          <button id="splitAllBtn">Split All Pages (ZIP)</button>
+        </div>
       </div>
 
-      <div class="option-card">
-        <h3>Split into individual pages</h3>
-        <p>Creates one PDF file per page and downloads them all as a ZIP.</p>
-        <button id="splitAllBtn">Split All Pages (ZIP)</button>
-      </div>
+      <div class="progress" id="progressMsg"></div>
+      <div class="result" id="result"></div>
     </div>
-
-    <div class="progress" id="progressMsg"></div>
   </div>
 
   <div class="seo-content">
@@ -318,6 +339,31 @@ const rangeInput = document.getElementById('rangeInput');
 const extractBtn = document.getElementById('extractBtn');
 const splitAllBtn = document.getElementById('splitAllBtn');
 const progressMsg = document.getElementById('progressMsg');
+const resultEl = document.getElementById('result');
+
+function showResult(icon, filename, stat, url, downloadName, downloadLabel) {
+  resultEl.innerHTML = '';
+  const card = document.createElement('div');
+  card.className = 'result-card';
+  card.innerHTML = `
+    <div class="icon-box cat-pdf">${icon}</div>
+    <div class="result-body">
+      <div class="result-filename">${filename}</div>
+      <div class="result-stat">${stat}</div>
+    </div>
+  `;
+  resultEl.appendChild(card);
+
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = downloadName;
+  link.className = 'back';
+  link.textContent = downloadLabel;
+  resultEl.appendChild(link);
+}
+
+const PDF_ICON = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/></svg>';
+const ZIP_ICON = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M9 4v16M9 7h3M9 11h3M9 15h3"/></svg>';
 
 let selectedFile = null;
 let totalPages = 0;
@@ -384,6 +430,7 @@ function parseRanges(raw, maxPage) {
 extractBtn.addEventListener('click', async () => {
   errorMsg.textContent = '';
   progressMsg.textContent = '';
+  resultEl.innerHTML = '';
   const raw = rangeInput.value.trim();
   if (!raw) {
     errorMsg.textContent = 'Enter a page range, e.g. "1-3, 5".';
@@ -408,15 +455,10 @@ extractBtn.addEventListener('click', async () => {
     const blob = new Blob([bytes], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
     const baseName = selectedFile.name.replace(/\.pdf$/i, '');
+    const outName = `${baseName}-extracted.pdf`;
 
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${baseName}-extracted.pdf`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-
-    progressMsg.textContent = `Done — ${pages.length} page(s) extracted.`;
+    progressMsg.textContent = 'Done — ready to download.';
+    showResult(PDF_ICON, outName, `${pages.length} page${pages.length !== 1 ? 's' : ''} extracted · ${(blob.size / 1024).toFixed(1)} KB`, url, outName, 'Download Extracted PDF');
   } catch (err) {
     errorMsg.textContent = err.message || 'Could not extract these pages.';
   }
@@ -428,6 +470,7 @@ extractBtn.addEventListener('click', async () => {
 splitAllBtn.addEventListener('click', async () => {
   errorMsg.textContent = '';
   progressMsg.textContent = '';
+  resultEl.innerHTML = '';
   splitAllBtn.disabled = true;
   splitAllBtn.textContent = 'Splitting...';
 
@@ -450,15 +493,10 @@ splitAllBtn.addEventListener('click', async () => {
     progressMsg.textContent = 'Packaging ZIP file...';
     const content = await zip.generateAsync({ type: 'blob' });
     const url = URL.createObjectURL(content);
+    const outName = `${baseName}-split.zip`;
 
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${baseName}-split.zip`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-
-    progressMsg.textContent = `Done — ${totalPages} pages split into separate files.`;
+    progressMsg.textContent = 'Done — ready to download.';
+    showResult(ZIP_ICON, outName, `${totalPages} page${totalPages !== 1 ? 's' : ''} split into separate files · ${(content.size / 1024).toFixed(1)} KB`, url, outName, 'Download ZIP');
   } catch (err) {
     errorMsg.textContent = 'Could not split this PDF.';
     progressMsg.textContent = '';
