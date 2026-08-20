@@ -435,9 +435,9 @@ convertBtn.addEventListener('click', () => {
       const a = document.createElement('a');
       a.href = downloadUrl;
       a.download = outName;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+      a.className = 'back';
+      a.textContent = 'Descargar PNG';
+      result.appendChild(a);
     }, 'image/png');
   };
   img.onerror = () => {

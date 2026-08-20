@@ -388,9 +388,9 @@ convertBtn.addEventListener('click', () => {
       const a = document.createElement('a');
       a.href = dataUrl;
       a.download = outName;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+      a.className = 'back';
+      a.textContent = `Descargar ${outputFormat.toUpperCase()}`;
+      result.appendChild(a);
     };
     img.onerror = () => { errorMsg.textContent = 'No se pudo leer este archivo GIF.'; };
     img.src = e.target.result;
