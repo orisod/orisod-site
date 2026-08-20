@@ -79,10 +79,10 @@ p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-heigh
 input[type="file"]{display:none;}
 .canvas-wrap{position:relative;display:inline-block;max-width:100%;margin-top:20px;}
 #imgCanvas{max-width:100%;border-radius:6px;border:1px solid var(--border);cursor:crosshair;display:block;}
-.color-result{color:#fff;
+.color-result{color:var(--text);
   display:none;
   margin-top:20px;
-  background:#0f172a;
+  background:var(--card-bg);
   border:1px solid var(--border);
   border-radius:8px;
   padding:16px 20px;
@@ -91,15 +91,15 @@ input[type="file"]{display:none;}
   justify-content:center;
   flex-wrap:wrap;
 }
-.swatch{width:56px;height:56px;border-radius:8px;border:2px solid #374151;flex-shrink:0;}
+.swatch{width:56px;height:56px;border-radius:8px;border:2px solid var(--dropzone-border);flex-shrink:0;}
 .color-values{text-align:left;font-size:14px;}
 .color-values div{margin-bottom:4px;}
 .color-values button{
-  margin:0 0 0 8px;padding:2px 8px;font-size:11px;background:#374151;border:none;border-radius:4px;color:white;cursor:pointer;
+  margin:0 0 0 8px;padding:2px 8px;font-size:11px;background:var(--dropzone-border);border:none;border-radius:4px;color:var(--text);cursor:pointer;
 }
 .copied-tag{color:#4ade80;font-size:12px;margin-left:6px;display:none;}
 .history-row{margin-top:16px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap;}
-.history-swatch{width:28px;height:28px;border-radius:6px;border:1px solid #374151;cursor:pointer;}
+.history-swatch{width:28px;height:28px;border-radius:6px;border:1px solid var(--dropzone-border);cursor:pointer;}
 .note{margin-top:20px;font-size:14px;opacity:0.6;}
 .site-footer{
   margin-top:40px;

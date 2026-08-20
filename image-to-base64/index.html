@@ -74,8 +74,8 @@ body{margin:0;font-family:Arial, Helvetica, sans-serif;background-color:var(--bg
 h1{font-size:44px;margin-bottom:10px;}
 p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
 .tabs{display:flex;justify-content:center;gap:10px;margin-top:20px;}
-.tab-btn{padding:10px 20px;border-radius:8px;border:1px solid var(--border);background:var(--card-bg);color:white;cursor:pointer;font-size:14px;transition:0.2s;}
-.tab-btn.active{background:var(--accent);border-color:#2563eb;}
+.tab-btn{padding:10px 20px;border-radius:8px;border:1px solid var(--border);background:var(--card-bg);color:var(--text);cursor:pointer;font-size:14px;transition:0.2s;}
+.tab-btn.active{background:var(--accent);border-color:var(--accent);color:white;}
 .box{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:30px 20px;margin-top:20px;}
 .dropzone{border:2px dashed var(--dropzone-border);border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
 .dropzone:hover, .dropzone.dragover{border-color:var(--accent);}
@@ -88,9 +88,9 @@ textarea{
   margin-top:20px;
   padding:14px;
   border-radius:8px;
-  border:1px solid #374151;
-  background:#0f172a;
-  color:#e2e8f0;
+  border:1px solid var(--dropzone-border);
+  background:var(--card-bg);
+  color:var(--text);
   font-family:monospace;
   font-size:12px;
   resize:vertical;
