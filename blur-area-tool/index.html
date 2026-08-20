@@ -81,7 +81,7 @@ input[type="file"]{display:none;}
 .controls-row{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:16px;flex-wrap:wrap;font-size:14px;opacity:0.9;}
 input[type="range"]{width:160px;}
 .action-row{display:flex;justify-content:center;gap:10px;margin-top:16px;flex-wrap:wrap;}
-.action-btn{padding:10px 16px;border-radius:8px;border:1px solid #374151;background:#374151;color:white;cursor:pointer;font-size:13px;}
+.action-btn{padding:10px 16px;border-radius:8px;border:1px solid var(--dropzone-border);background:var(--card-bg);color:var(--text);cursor:pointer;font-size:13px;}
 .action-btn:hover{filter:brightness(1.15);}
 .region-count{margin-top:10px;font-size:13px;opacity:0.7;}
 button.primary, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
@@ -120,17 +120,32 @@ h2{margin-top:50px;font-size:22px;}
 @media (max-width:600px){.related-grid{grid-template-columns:1fr;}}
 .related-card{display:flex;align-items:center;gap:14px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;color:var(--text);transition:0.2s;}
 .related-card:hover{border-color:var(--accent);transform:translateY(-2px);}
-.related-card .icon-box{flex:none;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;border:2px solid transparent;}
-.related-card .icon-box.cat-image{background:rgba(37,99,235,var(--icon-alpha));border-color:#2563eb;color:#2563eb;}
-.related-card .icon-box.cat-pdf{background:rgba(245,158,11,var(--icon-alpha));border-color:#f59e0b;color:#f59e0b;}
-.related-card .icon-box.cat-utility{background:rgba(139,92,246,var(--icon-alpha));border-color:#8b5cf6;color:#8b5cf6;}
-.related-card .icon-box svg{width:22px;height:22px;display:block;}
 .related-card .body{flex:1 1 auto;min-width:0;}
 .related-card .title{font-size:14px;font-weight:bold;margin-bottom:2px;}
 .related-card .desc{font-size:12px;color:var(--muted-text);line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .related-card .arrow{flex:none;font-size:16px;color:var(--muted-text);transition:0.2s;}
 .related-card:hover .arrow{color:var(--accent);transform:translateX(2px);}
 .trust-strip{font-size:12px;color:var(--muted-text);margin-top:12px;line-height:1.5;}
+.icon-box{flex:none;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;border:2px solid transparent;}
+.icon-box.cat-image{background:rgba(37,99,235,var(--icon-alpha));border-color:#2563eb;color:#2563eb;}
+.icon-box.cat-pdf{background:rgba(245,158,11,var(--icon-alpha));border-color:#f59e0b;color:#f59e0b;}
+.icon-box.cat-utility{background:rgba(139,92,246,var(--icon-alpha));border-color:#8b5cf6;color:#8b5cf6;}
+.icon-box svg{width:22px;height:22px;display:block;}
+.tool-hero{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:4px;}
+.tool-hero .icon-box{width:52px;height:52px;}
+.tool-hero .icon-box svg{width:28px;height:28px;}
+.tool-hero h1{margin:0;font-size:32px;}
+@media (max-width:600px){.tool-hero{flex-direction:column;gap:8px;}}
+.tool-sub{font-size:16px;max-width:640px;margin:0 auto 20px auto;}
+.workspace{max-width:1040px;margin:0 auto;}
+.workspace-stage{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px;text-align:left;}
+@media (max-width:760px){.workspace-stage{grid-template-columns:1fr;}}
+.stage-panel{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.stage-label{display:inline-block;font-size:12px;font-weight:bold;color:var(--accent);background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:3px 10px;margin-bottom:12px;}
+.panel-body{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:160px;text-align:center;}
+#previewCanvas{max-width:100%;border-radius:6px;border:1px solid var(--border);}
+.workspace-controls{margin-top:20px;text-align:center;}
+.editor{display:none;}
 </style>
 </head>
 <body>
@@ -153,36 +168,57 @@ h2{margin-top:50px;font-size:22px;}
 
 <main>
 <div class="container">
-  <h1>Blur Faces / Blur Area Tool</h1>
-  <p>Drag to select one or more areas — faces, license plates, or any private detail — and pixelate them before sharing. Everything happens locally in your browser.</p>
+  <div class="tool-hero">
+    <div class="icon-box cat-image"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="1"/><circle cx="12" cy="7" r="1"/><circle cx="17" cy="7" r="1"/><circle cx="7" cy="12" r="1"/><circle cx="12" cy="12" r="1.8" opacity="0.4"/><circle cx="17" cy="12" r="1"/><circle cx="7" cy="17" r="1"/><circle cx="12" cy="17" r="1"/><circle cx="17" cy="17" r="1"/></svg></div>
+    <h1>Blur Faces / Blur Area Tool</h1>
+  </div>
+  <p class="tool-sub">Drag to select one or more areas — faces, license plates, or any private detail — and pixelate them before sharing. Everything happens locally in your browser.</p>
 
-  <div class="box">
-    <label class="dropzone" id="dropzone" for="fileInput">
-      <div id="dropzoneText">📁 Click to select an image or drag and drop it here</div>
-    </label>
-    <input type="file" id="fileInput" accept="image/*">
-    <div class="error" id="errorMsg"></div>
-    <div class="trust-strip">🔒 Processed on your device · No upload · No account · No watermark</div>
+  <div class="workspace">
+    <div class="box">
+      <label class="dropzone" id="dropzone" for="fileInput">
+        <div id="dropzoneText">📁 Click to select an image or drag and drop it here</div>
+      </label>
+      <input type="file" id="fileInput" accept="image/*">
+      <div class="error" id="errorMsg"></div>
+      <div class="trust-strip">🔒 Processed on your device · No upload · No account · No watermark</div>
 
-    <div class="canvas-wrap" id="canvasWrap" style="display:none;">
-      <canvas id="sourceCanvas"></canvas>
-      <div id="regionsOverlay"></div>
+      <div class="editor" id="editor">
+        <div class="workspace-stage">
+          <div class="stage-panel">
+            <span class="stage-label">Original — drag to mark areas</span>
+            <div class="canvas-wrap" id="canvasWrap">
+              <canvas id="sourceCanvas"></canvas>
+              <div id="regionsOverlay"></div>
+            </div>
+          </div>
+          <div class="stage-panel">
+            <span class="stage-label">Live Preview</span>
+            <div class="panel-body">
+              <canvas id="previewCanvas"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="workspace-controls">
+          <div class="controls-row" id="controlsRow">
+            <label for="intensitySlider">Blur strength: <span id="intensityValue">12</span></label>
+            <input type="range" id="intensitySlider" min="4" max="30" value="12">
+          </div>
+
+          <div class="action-row" id="actionRow">
+            <div class="action-btn" id="undoBtn">Undo Last Selection</div>
+            <div class="action-btn" id="clearBtn">Clear All</div>
+          </div>
+          <div class="region-count" id="regionCount"></div>
+
+          <button class="primary" id="applyBtn">Apply Blur &amp; Download</button>
+          <div class="error" id="blurError"></div>
+        </div>
+      </div>
+
+      <div class="note">Drag on the image to select an area. Add as many areas as you need before applying.</div>
     </div>
-
-    <div class="controls-row" id="controlsRow" style="display:none;">
-      <label for="intensitySlider">Blur strength: <span id="intensityValue">12</span></label>
-      <input type="range" id="intensitySlider" min="4" max="30" value="12">
-    </div>
-
-    <div class="action-row" id="actionRow" style="display:none;">
-      <div class="action-btn" id="undoBtn">Undo Last Selection</div>
-      <div class="action-btn" id="clearBtn">Clear All</div>
-    </div>
-    <div class="region-count" id="regionCount"></div>
-
-    <br>
-    <button class="primary" id="applyBtn" disabled style="display:none;">Apply Blur & Download</button>
-    <div class="note">Drag on the image to select an area. Add as many areas as you need before applying.</div>
   </div>
 
   <div class="seo-content">
@@ -300,8 +336,10 @@ const fileInput = document.getElementById('fileInput');
 const dropzone = document.getElementById('dropzone');
 const dropzoneText = document.getElementById('dropzoneText');
 const errorMsg = document.getElementById('errorMsg');
+const editor = document.getElementById('editor');
 const canvasWrap = document.getElementById('canvasWrap');
 const sourceCanvas = document.getElementById('sourceCanvas');
+const previewCanvas = document.getElementById('previewCanvas');
 const regionsOverlay = document.getElementById('regionsOverlay');
 const controlsRow = document.getElementById('controlsRow');
 const intensitySlider = document.getElementById('intensitySlider');
@@ -311,6 +349,7 @@ const undoBtn = document.getElementById('undoBtn');
 const clearBtn = document.getElementById('clearBtn');
 const regionCount = document.getElementById('regionCount');
 const applyBtn = document.getElementById('applyBtn');
+const blurError = document.getElementById('blurError');
 
 let img = null;
 let scale = 1;
@@ -339,13 +378,12 @@ function loadFile(file) {
     img.onload = () => {
       dropzoneText.textContent = `✅ ${file.name} loaded`;
       setupCanvas();
-      canvasWrap.style.display = 'inline-block';
-      controlsRow.style.display = 'flex';
-      actionRow.style.display = 'flex';
-      applyBtn.style.display = 'inline-block';
+      editor.style.display = 'block';
       regions = [];
+      blurError.textContent = '';
       updateRegionCount();
       renderRegionOverlays();
+      renderPreview();
     };
     img.onerror = () => { errorMsg.textContent = 'Could not load this image.'; };
     img.src = e.target.result;
@@ -354,8 +392,8 @@ function loadFile(file) {
 }
 
 function setupCanvas() {
-  const maxWidth = Math.min(700, window.innerWidth - 80);
-  const maxHeight = 480;
+  const maxWidth = Math.min(460, window.innerWidth - 80);
+  const maxHeight = 420;
   scale = Math.min(1, maxWidth / img.width, maxHeight / img.height);
   sourceCanvas.width = img.width * scale;
   sourceCanvas.height = img.height * scale;
@@ -418,6 +456,7 @@ function endDrag() {
   dragStart = null;
   updateRegionCount();
   renderRegionOverlays();
+  renderPreview();
 }
 
 sourceCanvas.addEventListener('mousedown', startDrag);
@@ -444,23 +483,42 @@ function updateRegionCount() {
   regionCount.textContent = regions.length === 0
     ? 'No areas selected yet.'
     : `${regions.length} area${regions.length > 1 ? 's' : ''} selected.`;
-  applyBtn.disabled = regions.length === 0;
+  if (regions.length > 0) blurError.textContent = '';
 }
 
 undoBtn.addEventListener('click', () => {
   regions.pop();
   updateRegionCount();
   renderRegionOverlays();
+  renderPreview();
 });
 clearBtn.addEventListener('click', () => {
   regions = [];
   updateRegionCount();
   renderRegionOverlays();
+  renderPreview();
 });
 
 intensitySlider.addEventListener('input', () => {
   intensityValue.textContent = intensitySlider.value;
+  renderPreview();
 });
+
+function renderPreview() {
+  if (!img) return;
+  previewCanvas.width = sourceCanvas.width;
+  previewCanvas.height = sourceCanvas.height;
+  const ctx = previewCanvas.getContext('2d');
+  ctx.drawImage(img, 0, 0, previewCanvas.width, previewCanvas.height);
+  const blockSize = Math.max(2, parseInt(intensitySlider.value, 10));
+  regions.forEach((r) => {
+    const x = Math.max(0, Math.round(r.x));
+    const y = Math.max(0, Math.round(r.y));
+    const w = Math.min(Math.round(r.w), previewCanvas.width - x);
+    const h = Math.min(Math.round(r.h), previewCanvas.height - y);
+    if (w > 0 && h > 0) pixelateRegion(ctx, x, y, w, h, blockSize);
+  });
+}
 
 function pixelateRegion(ctx, x, y, w, h, blockSize) {
   const imageData = ctx.getImageData(x, y, w, h);
@@ -494,7 +552,12 @@ function pixelateRegion(ctx, x, y, w, h, blockSize) {
 }
 
 applyBtn.addEventListener('click', () => {
-  if (!img || regions.length === 0) return;
+  if (!img) return;
+  if (regions.length === 0) {
+    blurError.textContent = 'Please mark at least one area to blur before downloading.';
+    return;
+  }
+  blurError.textContent = '';
 
   const outCanvas = document.createElement('canvas');
   outCanvas.width = img.naturalWidth;
