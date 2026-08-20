@@ -75,12 +75,11 @@ p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-heigh
 .dropzone{border:2px dashed var(--dropzone-border);border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
 .dropzone:hover, .dropzone.dragover{border-color:var(--accent);}
 input[type="file"]{display:none;}
-.controls{margin-top:20px;display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap;font-size:14px;opacity:0.9;}
+.editor{display:none;margin-top:20px;}
+.controls{margin-top:0;display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap;font-size:14px;opacity:0.9;}
 .controls label{display:flex;align-items:center;gap:8px;}
 input[type="range"]{width:160px;}
-input[type="color"]{padding:2px;width:44px;height:32px;border-radius:6px;border:1px solid #374151;background:#0f172a;}
-.preview-wrap{margin-top:20px;}
-#previewCanvas{max-width:100%;border-radius:6px;}
+input[type="color"]{padding:2px;width:44px;height:32px;border-radius:6px;border:1px solid var(--dropzone-border);background:var(--card-bg);}
 button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
 button:disabled{opacity:0.4;cursor:not-allowed;}
 button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
@@ -117,17 +116,31 @@ h2{margin-top:50px;font-size:22px;}
 @media (max-width:600px){.related-grid{grid-template-columns:1fr;}}
 .related-card{display:flex;align-items:center;gap:14px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;color:var(--text);transition:0.2s;}
 .related-card:hover{border-color:var(--accent);transform:translateY(-2px);}
-.related-card .icon-box{flex:none;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;border:2px solid transparent;}
-.related-card .icon-box.cat-image{background:rgba(37,99,235,var(--icon-alpha));border-color:#2563eb;color:#2563eb;}
-.related-card .icon-box.cat-pdf{background:rgba(245,158,11,var(--icon-alpha));border-color:#f59e0b;color:#f59e0b;}
-.related-card .icon-box.cat-utility{background:rgba(139,92,246,var(--icon-alpha));border-color:#8b5cf6;color:#8b5cf6;}
-.related-card .icon-box svg{width:22px;height:22px;display:block;}
 .related-card .body{flex:1 1 auto;min-width:0;}
 .related-card .title{font-size:14px;font-weight:bold;margin-bottom:2px;}
 .related-card .desc{font-size:12px;color:var(--muted-text);line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .related-card .arrow{flex:none;font-size:16px;color:var(--muted-text);transition:0.2s;}
 .related-card:hover .arrow{color:var(--accent);transform:translateX(2px);}
 .trust-strip{font-size:12px;color:var(--muted-text);margin-top:12px;line-height:1.5;}
+.icon-box{flex:none;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;border:2px solid transparent;}
+.icon-box.cat-image{background:rgba(37,99,235,var(--icon-alpha));border-color:#2563eb;color:#2563eb;}
+.icon-box.cat-pdf{background:rgba(245,158,11,var(--icon-alpha));border-color:#f59e0b;color:#f59e0b;}
+.icon-box.cat-utility{background:rgba(139,92,246,var(--icon-alpha));border-color:#8b5cf6;color:#8b5cf6;}
+.icon-box svg{width:22px;height:22px;display:block;}
+.tool-hero{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:4px;}
+.tool-hero .icon-box{width:52px;height:52px;}
+.tool-hero .icon-box svg{width:28px;height:28px;}
+.tool-hero h1{margin:0;font-size:32px;}
+@media (max-width:600px){.tool-hero{flex-direction:column;gap:8px;}}
+.tool-sub{font-size:16px;max-width:640px;margin:0 auto 20px auto;}
+.workspace{max-width:1040px;margin:0 auto;}
+.workspace-stage{display:grid;grid-template-columns:1fr 1fr;gap:16px;text-align:left;}
+@media (max-width:760px){.workspace-stage{grid-template-columns:1fr;}}
+.stage-panel{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.stage-label{display:inline-block;font-size:12px;font-weight:bold;color:var(--accent);background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:3px 10px;margin-bottom:12px;}
+.panel-body{display:flex;align-items:center;justify-content:center;min-height:160px;}
+.panel-body img, #previewCanvas{max-width:100%;border-radius:6px;border:1px solid var(--border);display:block;}
+.workspace-controls{margin-top:20px;text-align:center;}
 </style>
 </head>
 <body>
@@ -150,30 +163,45 @@ h2{margin-top:50px;font-size:22px;}
 
 <main>
 <div class="container">
-  <h1>Add Border/Frame to Image</h1>
-  <p>Add a colored border around your photo — adjust the thickness, color, and rounding to taste. Everything happens locally in your browser.</p>
+  <div class="tool-hero">
+    <div class="icon-box cat-image"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" stroke-dasharray="2.2 2.2"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg></div>
+    <h1>Add Border/Frame to Image</h1>
+  </div>
+  <p class="tool-sub">Add a colored border around your photo — adjust the thickness, color, and rounding to taste. Everything happens locally in your browser.</p>
 
-  <div class="box">
-    <label class="dropzone" id="dropzone" for="fileInput">
-      <div id="dropzoneText">📁 Click to select an image or drag and drop it here</div>
-    </label>
-    <input type="file" id="fileInput" accept="image/*">
-    <div class="error" id="errorMsg"></div>
-    <div class="trust-strip">🔒 Processed on your device · No upload · No account · No watermark</div>
+  <div class="workspace">
+    <div class="box">
+      <label class="dropzone" id="dropzone" for="fileInput">
+        <div id="dropzoneText">📁 Click to select an image or drag and drop it here</div>
+      </label>
+      <input type="file" id="fileInput" accept="image/*">
+      <div class="error" id="errorMsg"></div>
+      <div class="trust-strip">🔒 Processed on your device · No upload · No account · No watermark</div>
 
-    <div class="controls" id="controls" style="display:none;">
-      <label>Width: <input type="range" id="widthSlider" min="0" max="100" value="20"> <span id="widthValue">20</span>px</label>
-      <label>Color: <input type="color" id="colorInput" value="#ffffff"></label>
-      <label>Corner radius: <input type="range" id="radiusSlider" min="0" max="50" value="0"> <span id="radiusValue">0</span>px</label>
+      <div class="editor" id="editor">
+        <div class="workspace-stage">
+          <div class="stage-panel">
+            <span class="stage-label">Original</span>
+            <div class="panel-body"><img id="originalImg" alt=""></div>
+          </div>
+          <div class="stage-panel">
+            <span class="stage-label">Live Preview</span>
+            <div class="panel-body"><canvas id="previewCanvas"></canvas></div>
+          </div>
+        </div>
+
+        <div class="workspace-controls">
+          <div class="controls" id="controls">
+            <label>Width: <input type="range" id="widthSlider" min="0" max="100" value="20"> <span id="widthValue">20</span>px</label>
+            <label>Color: <input type="color" id="colorInput" value="#ffffff"></label>
+            <label>Corner radius: <input type="range" id="radiusSlider" min="0" max="50" value="0"> <span id="radiusValue">0</span>px</label>
+          </div>
+          <button id="downloadBtn">Download Image</button>
+        </div>
+      </div>
+
+      <div class="note">Supports JPG, PNG, WEBP and other common image formats.</div>
     </div>
-
-    <div class="preview-wrap" id="previewWrap" style="display:none;">
-      <canvas id="previewCanvas"></canvas>
-    </div>
-
-    <br>
-    <button id="downloadBtn" style="display:none;">Download Image</button>
-    <div class="note">Supports JPG, PNG, WEBP and other common image formats.</div>
   </div>
 
   <div class="seo-content">
@@ -189,7 +217,7 @@ h2{margin-top:50px;font-size:22px;}
     </ul>
 
     <h2>Why use Orisod for this?</h2>
-    <p>Adjust the border width, color, and corner rounding with a live preview before downloading. Everything happens locally in your browser using the Canvas API — your photo is never uploaded to a server.</p>
+    <p>Adjust the border width, color, and corner rounding with a live side-by-side preview before downloading. Everything happens locally in your browser using the Canvas API — your photo is never uploaded to a server.</p>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
@@ -291,13 +319,13 @@ const fileInput = document.getElementById('fileInput');
 const dropzone = document.getElementById('dropzone');
 const dropzoneText = document.getElementById('dropzoneText');
 const errorMsg = document.getElementById('errorMsg');
-const controls = document.getElementById('controls');
+const editor = document.getElementById('editor');
+const originalImg = document.getElementById('originalImg');
 const widthSlider = document.getElementById('widthSlider');
 const widthValue = document.getElementById('widthValue');
 const colorInput = document.getElementById('colorInput');
 const radiusSlider = document.getElementById('radiusSlider');
 const radiusValue = document.getElementById('radiusValue');
-const previewWrap = document.getElementById('previewWrap');
 const previewCanvas = document.getElementById('previewCanvas');
 const downloadBtn = document.getElementById('downloadBtn');
 
@@ -323,9 +351,8 @@ function loadFile(file) {
     img = new Image();
     img.onload = () => {
       dropzoneText.textContent = `✅ ${file.name} loaded`;
-      controls.style.display = 'flex';
-      previewWrap.style.display = 'block';
-      downloadBtn.style.display = 'inline-block';
+      originalImg.src = e.target.result;
+      editor.style.display = 'block';
       renderPreview();
     };
     img.onerror = () => { errorMsg.textContent = 'Could not load this image.'; };
@@ -381,7 +408,7 @@ function drawRoundedRectPath(ctx, x, y, w, h, r) {
 function renderPreview() {
   if (!img) return;
   const canvas = buildOutputCanvas();
-  const maxPreview = 450;
+  const maxPreview = 320;
   const scale = Math.min(1, maxPreview / Math.max(canvas.width, canvas.height));
 
   previewCanvas.width = canvas.width * scale;

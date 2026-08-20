@@ -142,11 +142,11 @@ button:hover:not(:disabled), .back:hover{
   margin-top:25px;
   text-align:left;
 }
-.result-item{color:#fff;
+.result-item{color:var(--text);
   display:flex;
   align-items:center;
   justify-content:space-between;
-  background:#0f172a;
+  background:var(--card-bg);
   border:1px solid var(--border);
   border-radius:8px;
   padding:12px 16px;
@@ -154,7 +154,7 @@ button:hover:not(:disabled), .back:hover{
   font-size:14px;
 }
 .result-item a{
-  color:#60a5fa;
+  color:var(--accent);
   text-decoration:none;
   font-weight:bold;
 }
@@ -207,17 +207,38 @@ h2{
 @media (max-width:600px){.related-grid{grid-template-columns:1fr;}}
 .related-card{display:flex;align-items:center;gap:14px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;color:var(--text);transition:0.2s;}
 .related-card:hover{border-color:var(--accent);transform:translateY(-2px);}
-.related-card .icon-box{flex:none;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;border:2px solid transparent;}
-.related-card .icon-box.cat-image{background:rgba(37,99,235,var(--icon-alpha));border-color:#2563eb;color:#2563eb;}
-.related-card .icon-box.cat-pdf{background:rgba(245,158,11,var(--icon-alpha));border-color:#f59e0b;color:#f59e0b;}
-.related-card .icon-box.cat-utility{background:rgba(139,92,246,var(--icon-alpha));border-color:#8b5cf6;color:#8b5cf6;}
-.related-card .icon-box svg{width:22px;height:22px;display:block;}
 .related-card .body{flex:1 1 auto;min-width:0;}
 .related-card .title{font-size:14px;font-weight:bold;margin-bottom:2px;}
 .related-card .desc{font-size:12px;color:var(--muted-text);line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .related-card .arrow{flex:none;font-size:16px;color:var(--muted-text);transition:0.2s;}
 .related-card:hover .arrow{color:var(--accent);transform:translateX(2px);}
 .trust-strip{font-size:12px;color:var(--muted-text);margin-top:12px;line-height:1.5;}
+.icon-box{flex:none;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;border:2px solid transparent;}
+.icon-box.cat-image{background:rgba(37,99,235,var(--icon-alpha));border-color:#2563eb;color:#2563eb;}
+.icon-box.cat-pdf{background:rgba(245,158,11,var(--icon-alpha));border-color:#f59e0b;color:#f59e0b;}
+.icon-box.cat-utility{background:rgba(139,92,246,var(--icon-alpha));border-color:#8b5cf6;color:#8b5cf6;}
+.icon-box svg{width:22px;height:22px;display:block;}
+.tool-hero{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:4px;}
+.tool-hero .icon-box{width:52px;height:52px;}
+.tool-hero .icon-box svg{width:28px;height:28px;}
+.tool-hero h1{margin:0;font-size:32px;}
+@media (max-width:600px){.tool-hero{flex-direction:column;gap:8px;}}
+.tool-sub{font-size:16px;max-width:640px;margin:0 auto 20px auto;}
+.workspace{max-width:1040px;margin:0 auto;}
+.workspace-controls{margin-top:20px;text-align:center;}
+.result-card{display:flex;align-items:center;gap:16px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-top:14px;text-align:left;}
+.result-card .icon-box{width:46px;height:46px;}
+.result-card .icon-box svg{width:24px;height:24px;}
+.result-card .result-thumb{flex:none;width:88px;height:88px;object-fit:cover;border-radius:8px;border:1px solid var(--border);background:var(--card-bg);}
+.result-card .result-body{flex:1 1 auto;min-width:0;}
+.result-card .result-filename{font-size:14px;font-weight:bold;margin-bottom:4px;word-break:break-all;}
+.result-stat{font-size:15px;opacity:0.9;}
+.result-stat .saved{color:#4ade80;font-weight:bold;}
+.result-card .back{display:inline-block;margin-top:8px;padding:8px 14px;font-size:13px;}
+@media (max-width:480px){
+  .result-card{flex-direction:column;align-items:flex-start;}
+  .result-card .result-thumb{width:100%;height:140px;}
+}
 </style>
 </head>
 <body>
@@ -240,30 +261,35 @@ h2{
 
 <main>
 <div class="container">
-  <h1>HEIC to JPG Converter</h1>
-  <p>Convert HEIC images from your iPhone or iPad to JPG online for free. Everything happens locally in your browser — your files are never uploaded anywhere.</p>
+  <div class="tool-hero">
+    <div class="icon-box cat-image"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="14" height="13" rx="3"/><circle cx="9" cy="10.5" r="3.2"/><circle cx="9" cy="10.5" r="1"/><path d="M13.5 10.5l2.5 2.5-2.5 2.5"/><path d="M19 15.5l3.5 6.5h-7z" fill="currentColor" stroke="none"/></svg></div>
+    <h1>HEIC to JPG Converter</h1>
+  </div>
+  <p class="tool-sub">Convert HEIC images from your iPhone or iPad to JPG online for free. Everything happens locally in your browser — your files are never uploaded anywhere.</p>
 
-  <div class="box">
-    <label class="dropzone" id="dropzone" for="fileInput">
-      <div id="dropzoneText">📁 Click to select HEIC files or drag and drop them here</div>
-    </label>
-    <input type="file" id="fileInput" accept=".heic,.heif" multiple>
+  <div class="workspace">
+    <div class="box">
+      <label class="dropzone" id="dropzone" for="fileInput">
+        <div id="dropzoneText">📁 Click to select HEIC files or drag and drop them here</div>
+      </label>
+      <input type="file" id="fileInput" accept=".heic,.heif" multiple>
+      <div class="error" id="errorMsg"></div>
+      <div class="trust-strip">🔒 Processed on your device · No upload · No account · No watermark</div>
 
-    <div class="quality-row">
-      <label for="quality">Quality: <span id="qualityValue">85</span>%</label>
-      <input type="range" id="quality" min="30" max="100" value="85">
-    </div>
+      <div class="workspace-controls">
+        <div class="quality-row">
+          <label for="quality">Quality: <span id="qualityValue">85</span>%</label>
+          <input type="range" id="quality" min="30" max="100" value="85">
+        </div>
+        <button id="convertBtn" disabled>Convert to JPG</button>
+        <div class="note">Supports HEIC and HEIF files (the format used by iPhone photos). Nothing leaves your device.</div>
+        <div class="progress" id="progressMsg"></div>
+      </div>
 
-    <br>
-    <button id="convertBtn" disabled>Convert to JPG</button>
-    <div class="note">Supports HEIC and HEIF files (the format used by iPhone photos). Nothing leaves your device.</div>
-    <div class="error" id="errorMsg"></div>
-    <div class="trust-strip">🔒 Processed on your device · No upload · No account · No watermark</div>
-    <div class="progress" id="progressMsg"></div>
-
-    <div class="results" id="results"></div>
-    <div class="download-all" id="downloadAllWrap" style="display:none;">
-      <button id="downloadAllBtn">Download All</button>
+      <div class="results" id="results"></div>
+      <div class="download-all" id="downloadAllWrap" style="display:none;">
+        <button id="downloadAllBtn">Download All</button>
+      </div>
     </div>
   </div>
 
@@ -481,17 +507,24 @@ function addResultRow(name, blob) {
   const url = URL.createObjectURL(blob);
   const sizeKb = (blob.size / 1024).toFixed(1);
 
-  const row = document.createElement('div');
-  row.className = 'result-item';
-  row.innerHTML = `<span>${name} (${sizeKb} KB)</span>`;
+  const card = document.createElement('div');
+  card.className = 'result-card';
+  card.innerHTML = `
+    <img class="result-thumb" src="${url}" alt="${name}">
+    <div class="result-body">
+      <div class="result-filename">${name}</div>
+      <div class="result-stat">${sizeKb} KB · JPG</div>
+    </div>
+  `;
 
   const link = document.createElement('a');
   link.href = url;
   link.download = name;
+  link.className = 'back';
   link.textContent = 'Download';
 
-  row.appendChild(link);
-  results.appendChild(row);
+  card.querySelector('.result-body').appendChild(link);
+  results.appendChild(card);
 }
 
 downloadAllBtn.addEventListener('click', () => {
