@@ -58,6 +58,21 @@
   --grid-alpha:.10;
 }
 *{box-sizing:border-box;}
+.tool-hero{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:4px;}
+.tool-hero .icon-box{width:52px;height:52px;}
+.tool-hero .icon-box svg{width:28px;height:28px;}
+.tool-hero h1{margin:0;font-size:32px;}
+@media (max-width:600px){.tool-hero{flex-direction:column;gap:8px;}}
+.tool-sub{font-size:16px;max-width:640px;margin:0 auto 20px auto;}
+.workspace{max-width:1040px;margin:0 auto;}
+.workspace-controls{margin-top:20px;text-align:center;}
+.result-card{display:flex;align-items:center;gap:16px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-top:20px;text-align:left;}
+.result-card .icon-box{width:46px;height:46px;}
+.result-card .icon-box svg{width:24px;height:24px;}
+.result-card .result-body{flex:1 1 auto;min-width:0;}
+.result-card .result-filename{font-size:14px;font-weight:bold;margin-bottom:4px;word-break:break-all;}
+.result-stat{font-size:15px;opacity:0.9;}
+.result-stat .saved{color:#4ade80;font-weight:bold;}
 .site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
 .site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);display:inline-flex;align-items:center;gap:8px;}
 .site-nav-logo img{height:26px;width:auto;display:block;}
@@ -136,11 +151,11 @@ h2{margin-top:50px;font-size:22px;}
 @media (max-width:600px){.related-grid{grid-template-columns:1fr;}}
 .related-card{display:flex;align-items:center;gap:14px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;color:var(--text);transition:0.2s;}
 .related-card:hover{border-color:var(--accent);transform:translateY(-2px);}
-.related-card .icon-box{flex:none;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;border:2px solid transparent;}
-.related-card .icon-box.cat-image{background:rgba(37,99,235,var(--icon-alpha));border-color:#2563eb;color:#2563eb;}
-.related-card .icon-box.cat-pdf{background:rgba(245,158,11,var(--icon-alpha));border-color:#f59e0b;color:#f59e0b;}
-.related-card .icon-box.cat-utility{background:rgba(139,92,246,var(--icon-alpha));border-color:#8b5cf6;color:#8b5cf6;}
-.related-card .icon-box svg{width:22px;height:22px;display:block;}
+.icon-box{flex:none;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;border:2px solid transparent;}
+.icon-box.cat-image{background:rgba(37,99,235,var(--icon-alpha));border-color:#2563eb;color:#2563eb;}
+.icon-box.cat-pdf{background:rgba(245,158,11,var(--icon-alpha));border-color:#f59e0b;color:#f59e0b;}
+.icon-box.cat-utility{background:rgba(139,92,246,var(--icon-alpha));border-color:#8b5cf6;color:#8b5cf6;}
+.icon-box svg{width:22px;height:22px;display:block;}
 .related-card .body{flex:1 1 auto;min-width:0;}
 .related-card .title{font-size:14px;font-weight:bold;margin-bottom:2px;}
 .related-card .desc{font-size:12px;color:var(--muted-text);line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
@@ -169,31 +184,38 @@ h2{margin-top:50px;font-size:22px;}
 
 <main>
 <div class="container">
-  <h1>Comprimir PDF</h1>
-  <p>Reduce el tamaño de archivo de un PDF. Funciona mejor con documentos escaneados o PDF con muchas imágenes. Todo ocurre localmente en tu navegador.</p>
+  <div class="tool-hero">
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M9 13l3 2 3-2M9 17l3-2 3 2"/></svg></div>
+    <h1>Comprimir PDF</h1>
+  </div>
+  <p class="tool-sub">Reduce el tamaño de archivo de un PDF. Funciona mejor con documentos escaneados o PDF con muchas imágenes. Todo ocurre localmente en tu navegador.</p>
 
-  <div class="box">
-    <div class="disclaimer">
-      ⚠️ <strong>Bueno saberlo antes de empezar:</strong> esta herramienta funciona convirtiendo cada página en una imagen comprimida y reconstruyendo el PDF a partir de esas imágenes. Esto reduce bien el tamaño en páginas escaneadas o documentos con muchas fotos, pero el PDF resultante <strong>ya no tendrá texto seleccionable ni buscable</strong>. Si tu PDF es sobre todo texto y necesitas que siga siendo buscable, esta puede no ser la herramienta adecuada.
+  <div class="workspace">
+    <div class="box">
+      <div class="disclaimer">
+        ⚠️ <strong>Bueno saberlo antes de empezar:</strong> esta herramienta funciona convirtiendo cada página en una imagen comprimida y reconstruyendo el PDF a partir de esas imágenes. Esto reduce bien el tamaño en páginas escaneadas o documentos con muchas fotos, pero el PDF resultante <strong>ya no tendrá texto seleccionable ni buscable</strong>. Si tu PDF es sobre todo texto y necesitas que siga siendo buscable, esta puede no ser la herramienta adecuada.
+      </div>
+
+      <label class="dropzone" id="dropzone" for="fileInput">
+        <div id="dropzoneText">📁 Haz clic para seleccionar un PDF o arrástralo aquí</div>
+      </label>
+      <input type="file" id="fileInput" accept=".pdf">
+      <div class="error" id="errorMsg"></div>
+      <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subir archivos · Sin cuenta · Sin marca de agua</div>
+
+      <div class="quality-row">
+        <label for="quality">Nivel de compresión: <span id="qualityValue">60</span>%</label>
+        <input type="range" id="quality" min="20" max="90" value="60">
+      </div>
+
+      <div class="workspace-controls">
+        <button id="compressBtn" disabled>Comprimir PDF</button>
+        <div class="note">Más alto = mejor calidad, archivo más grande. Más bajo = archivo más pequeño, más compresión.</div>
+        <div class="progress" id="progressMsg"></div>
+      </div>
+
+      <div class="result" id="result"></div>
     </div>
-
-    <label class="dropzone" id="dropzone" for="fileInput">
-      <div id="dropzoneText">📁 Haz clic para seleccionar un PDF o arrástralo aquí</div>
-    </label>
-    <input type="file" id="fileInput" accept=".pdf">
-    <div class="error" id="errorMsg"></div>
-    <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subir archivos · Sin cuenta · Sin marca de agua</div>
-
-    <div class="quality-row">
-      <label for="quality">Nivel de compresión: <span id="qualityValue">60</span>%</label>
-      <input type="range" id="quality" min="20" max="90" value="60">
-    </div>
-
-    <br>
-    <button id="compressBtn" disabled>Comprimir PDF</button>
-    <div class="note">Más alto = mejor calidad, archivo más grande. Más bajo = archivo más pequeño, más compresión.</div>
-    <div class="progress" id="progressMsg"></div>
-    <div class="size-compare" id="sizeCompare"></div>
   </div>
 
   <div class="seo-content">
@@ -347,7 +369,7 @@ const qualitySlider = document.getElementById('quality');
 const qualityValue = document.getElementById('qualityValue');
 const compressBtn = document.getElementById('compressBtn');
 const progressMsg = document.getElementById('progressMsg');
-const sizeCompare = document.getElementById('sizeCompare');
+const resultEl = document.getElementById('result');
 
 let selectedFile = null;
 
@@ -364,7 +386,7 @@ dropzone.addEventListener('drop', (e) => {
 
 function handleFile(file) {
   errorMsg.textContent = '';
-  sizeCompare.textContent = '';
+  resultEl.innerHTML = '';
   if (!file || !/\.pdf$/i.test(file.name)) {
     errorMsg.textContent = 'Selecciona un archivo PDF válido.';
     return;
@@ -379,7 +401,7 @@ compressBtn.addEventListener('click', async () => {
   compressBtn.disabled = true;
   compressBtn.textContent = 'Comprimiendo...';
   errorMsg.textContent = '';
-  sizeCompare.textContent = '';
+  resultEl.innerHTML = '';
   progressMsg.textContent = '';
 
   const quality = parseInt(qualitySlider.value, 10) / 100;
@@ -417,17 +439,28 @@ compressBtn.addEventListener('click', async () => {
     const newSize = outBlob.size;
     const url = URL.createObjectURL(outBlob);
     const baseName = selectedFile.name.replace(/\.pdf$/i, '');
-
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${baseName}-compressed.pdf`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    const outName = `${baseName}-compressed.pdf`;
 
     const savedPct = Math.max(0, Math.round((1 - newSize / originalSize) * 100));
-    progressMsg.textContent = 'Listo — PDF comprimido descargado.';
-    sizeCompare.innerHTML = `${(originalSize / 1024).toFixed(1)} KB → ${(newSize / 1024).toFixed(1)} KB <span class="saved">(${savedPct}% más pequeño)</span>`;
+    progressMsg.textContent = 'Listo — descarga disponible.';
+
+    const card = document.createElement('div');
+    card.className = 'result-card';
+    card.innerHTML = `
+      <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M9 13l3 2 3-2M9 17l3-2 3 2"/></svg></div>
+      <div class="result-body">
+        <div class="result-filename">${outName}</div>
+        <div class="result-stat">${(originalSize / 1024).toFixed(1)} KB → ${(newSize / 1024).toFixed(1)} KB <span class="saved">(${savedPct}% más pequeño)</span></div>
+      </div>
+    `;
+    resultEl.appendChild(card);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = outName;
+    link.className = 'back';
+    link.textContent = 'Descargar PDF Comprimido';
+    resultEl.appendChild(link);
   } catch (err) {
     errorMsg.textContent = 'No se pudo procesar este PDF. Asegúrate de que no esté dañado ni protegido con contraseña.';
     progressMsg.textContent = '';
