@@ -1,8 +1,10 @@
 # Orisod — Project Context for Claude Code
 
-## Permanent rule
+## Permanent rules
 
 **Always run `git pull` at the start of every session before making changes**, since manual edits sometimes happen directly on GitHub's web editor.
+
+**Never commit or push directly to `main`.** Every change, without exception, goes through: create a feature branch → commit → push the branch → open a PR → wait for CI to pass → merge only after the user explicitly approves the merge. This applies regardless of how the request is phrased (e.g. "commit this," "push it") — those instructions mean "do it via the branch/PR flow," not "commit straight to main." If a step in this flow seems to conflict with a direct instruction, stop and confirm with the user rather than defaulting to the direct-to-main path.
 
 ## What this project is
 
