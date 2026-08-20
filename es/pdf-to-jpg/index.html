@@ -150,8 +150,8 @@ button:hover:not(:disabled), .back:hover{
   gap:14px;
   margin-top:15px;
 }
-.result-item{color:#fff;
-  background:#0f172a;
+.result-item{color:var(--text);
+  background:var(--card-bg);
   border:1px solid var(--border);
   border-radius:8px;
   padding:10px;
@@ -179,9 +179,9 @@ button:hover:not(:disabled), .back:hover{
 .selection-controls input[type="text"]{
   padding:8px 10px;
   border-radius:6px;
-  border:1px solid #374151;
-  background:#0f172a;
-  color:white;
+  border:1px solid var(--dropzone-border);
+  background:var(--card-bg);
+  color:var(--text);
   font-size:13px;
   width:140px;
 }
@@ -189,7 +189,8 @@ button:hover:not(:disabled), .back:hover{
   margin:0;
   padding:8px 14px;
   font-size:13px;
-  background:#374151;
+  background:var(--dropzone-border);
+  color:var(--text);
 }
 .selection-controls button:hover:not(:disabled){
   filter:brightness(1.15);
@@ -208,7 +209,7 @@ button:hover:not(:disabled), .back:hover{
   border:1px solid var(--border);
 }
 .result-item a{
-  color:#60a5fa;
+  color:var(--accent);
   text-decoration:none;
   font-weight:bold;
 }
