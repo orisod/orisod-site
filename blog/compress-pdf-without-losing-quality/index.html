@@ -165,7 +165,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <p>A 15-page contract scanned at high resolution might land at 35MB — well over Gmail's 25MB attachment limit. Compressed properly, that same file often drops to somewhere between 3MB and 6MB, comfortably under any email limit, while every line of text and signature remains exactly as legible as it was in the original scan. The 30MB that disappeared was never visible detail to begin with — it was resolution the document never needed in the first place.</p>
 
 <h2>Quick answers</h2>
-<p><strong>Will compressing a PDF affect the text?</strong> Yes, if the tool rebuilds each page as a compressed image (like Orisod's Compress PDF does) — the resulting file is image-based, so text is no longer selectable or searchable, even though it looks identical. That only matters if your original PDF had real, selectable text to begin with; a scanned document never had any to lose.</p>
+<p><strong>Will compressing a PDF affect the text?</strong> Yes. Because this tool rebuilds each page as a compressed image, the resulting file's text is no longer selectable or searchable, even though it can look identical. A PDF made up only of images has no selectable text to lose — but if a scanned PDF includes a text layer added by OCR, that layer is lost too.</p>
 <p><strong>Can I compress a PDF that's already been compressed once?</strong> Yes, but repeated compression on the same file can start to show visible quality loss, similar to re-saving a JPG multiple times — compress from the original source when possible.</p>
 <p><strong>Does a smaller PDF mean fewer pages?</strong> No — compression doesn't remove pages or content, only the resolution of the images already inside them.</p>
 
