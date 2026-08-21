@@ -20,7 +20,7 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Difuminar caras / área – Herramienta gratuita en línea | Orisod</title>
+<title>Difuminar caras o áreas – Herramienta gratuita en línea | Orisod</title>
 <meta name="description" content="Arrastra para seleccionar y difuminar cualquier área de una imagen — caras, matrículas o datos privados. Gratis, en el navegador, sin subir archivos.">
 <link rel="canonical" href="https://orisod.com/es/blur-area-tool/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/blur-area-tool/">
@@ -155,16 +155,16 @@ h2{margin-top:50px;font-size:22px;}
 <header class="site-nav">
   <a class="site-nav-logo" href="/es/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
   <nav class="site-nav-links">
-    <a href="/es/tools/">Todas las Herramientas</a>
-    <span class="active-category">Herramientas de Imagen</span>
+    <a href="/es/tools/">Todas las herramientas</a>
+    <span class="active-category">Herramientas de imagen</span>
     <a href="/es/tools/#pdf">Herramientas PDF</a>
-    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <a href="/es/tools/#utility">Utilidades</a>
     <a href="/es/blog/">Blog</a>
   </nav>
   <div class="site-nav-right">
     <a class="lang-flag" href="/blur-area-tool/">EN</a>
     <span class="lang-flag active">ES</span>
-    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro">🌙</button>
   </div>
 </header>
 
@@ -172,18 +172,18 @@ h2{margin-top:50px;font-size:22px;}
 <div class="container">
   <div class="tool-hero">
     <div class="icon-box cat-image"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="1"/><circle cx="12" cy="7" r="1"/><circle cx="17" cy="7" r="1"/><circle cx="7" cy="12" r="1"/><circle cx="12" cy="12" r="1.8" opacity="0.4"/><circle cx="17" cy="12" r="1"/><circle cx="7" cy="17" r="1"/><circle cx="12" cy="17" r="1"/><circle cx="17" cy="17" r="1"/></svg></div>
-    <h1>Difuminar caras / área</h1>
+    <h1>Difuminar caras o áreas</h1>
   </div>
   <p class="tool-sub">Arrastra para seleccionar una o más áreas — caras, matrículas o cualquier detalle privado — y pixélalas antes de compartir. Todo ocurre localmente en tu navegador.</p>
 
   <div class="workspace">
     <div class="box">
       <label class="dropzone" id="dropzone" for="fileInput">
-        <div id="dropzoneText">📁 Haz clic para seleccionar una imagen o arrástrala aquí</div>
+        <div id="dropzoneText">📁 Haz clic para seleccionar una imagen o arrástrala y suéltala aquí</div>
       </label>
       <input type="file" id="fileInput" accept="image/*">
       <div class="error" id="errorMsg"></div>
-      <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subir archivos · Sin cuenta · Sin marca de agua</div>
+      <div class="trust-strip">🔒 Procesamiento local · Archivos siempre en tu dispositivo · Sin cuenta · Sin marca de agua</div>
 
       <div class="editor" id="editor">
         <div class="workspace-stage">
@@ -236,12 +236,12 @@ h2{margin-top:50px;font-size:22px;}
     </ul>
 
     <h2>¿Por qué usar Orisod para esto?</h2>
-    <p>Esta herramienta usa pixelado en lugar de un difuminado suave, que es el método más fiable para ocultar información privada — un difuminado ligero a veces se puede revertir, mientras que el pixelado descarta permanentemente el detalle original. Puedes seleccionar varias áreas, ajustar la intensidad y todo ocurre localmente en tu navegador — tu foto nunca se sube a un servidor.</p>
+    <p>Esta herramienta usa pixelado en lugar de un difuminado suave, que es el método más fiable para ocultar información privada — un difuminado ligero a veces se puede revertir, mientras que el pixelado descarta permanentemente el detalle original. Puedes seleccionar varias áreas, ajustar la intensidad y todo ocurre localmente en tu navegador — tu foto permanece en tu dispositivo.</p>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿Detecta caras automáticamente?</div>
-      <div>No, tú arrastras manualmente para seleccionar el área que quieres difuminar — esto te da control total sobre exactamente qué se oculta, incluidas cosas que no son caras, como matrículas o documentos.</div>
+      <div>No. Tú eliges manualmente el área que quieres difuminar, lo que te permite ocultar con precisión caras, matrículas, documentos u otros detalles.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Puedo difuminar más de un área?</div>
@@ -249,15 +249,15 @@ h2{margin-top:50px;font-size:22px;}
     </div>
     <div class="faq-item">
       <div class="q">¿Se puede revertir el pixelado?</div>
-      <div>No, el pixelado descarta permanentemente el detalle de los píxeles en esa área — a diferencia de algunos filtros de difuminado, no hay forma de recuperar el contenido original de la imagen a partir del resultado pixelado.</div>
+      <div>No. El pixelado elimina de forma permanente el detalle de esa zona. A diferencia de ciertos desenfoques, no permite reconstruir el contenido original a partir del resultado.</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Se sube mi foto a algún lugar?</div>
-      <div>No, todo el proceso ocurre localmente en tu navegador usando JavaScript.</div>
+      <div class="q">¿Se envía mi foto a algún servidor?</div>
+      <div>No. Todo se procesa localmente en tu navegador mediante JavaScript; el archivo permanece en tu dispositivo.</div>
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres profundizar? Lee nuestra guía: <a href="/es/blog/blur-face-in-photo/" style="color:var(--accent);text-decoration:none;">Cómo Difuminar una Cara o Información Sensible en una Foto</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres profundizar? Lee nuestra guía: <a href="/es/blog/blur-face-in-photo/" style="color:var(--accent);text-decoration:none;">Cómo difuminar una cara o información sensible en una foto</a></p>
 
   <h2>Herramientas relacionadas</h2>
   <div class="related-grid">
@@ -291,14 +291,14 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF que funcionan en tu navegador. Procesamiento 100% local — tus archivos nunca se suben a ningún servidor.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Procesamiento 100 % local: tus archivos permanecen en tu dispositivo.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">
       <h3>Herramientas</h3>
-      <a href="/es/tools/#image">Herramientas de Imagen</a>
+      <a href="/es/tools/#image">Herramientas de imagen</a>
       <a href="/es/tools/#pdf">Herramientas PDF</a>
-      <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+      <a href="/es/tools/#utility">Utilidades</a>
     </div>
     <div class="footer-col">
       <h3>Empresa</h3>
@@ -484,7 +484,7 @@ function renderRegionOverlays() {
 function updateRegionCount() {
   regionCount.textContent = regions.length === 0
     ? 'Todavía no hay áreas seleccionadas.'
-    : `${regions.length} área${regions.length > 1 ? 's' : ''} seleccionada${regions.length > 1 ? 's' : ''}.`;
+    : `${regions.length} área${regions.length > 1? 's': ''} seleccionada${regions.length > 1? 's': ''}.`;
   if (regions.length > 0) blurError.textContent = '';
 }
 

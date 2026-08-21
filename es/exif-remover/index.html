@@ -138,31 +138,31 @@ h2{margin-top:50px;font-size:22px;}
 <header class="site-nav">
   <a class="site-nav-logo" href="/es/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
   <nav class="site-nav-links">
-    <a href="/es/tools/">Todas las Herramientas</a>
-    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/">Todas las herramientas</a>
+    <a href="/es/tools/#image">Herramientas de imagen</a>
     <a href="/es/tools/#pdf">Herramientas PDF</a>
-    <span class="active-category">Herramientas de Utilidad</span>
+    <span class="active-category">Utilidades</span>
     <a href="/es/blog/">Blog</a>
   </nav>
   <div class="site-nav-right">
     <a class="lang-flag" href="/exif-remover/">EN</a>
     <span class="lang-flag active">ES</span>
-    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro">🌙</button>
   </div>
 </header>
 
 <main>
 <div class="container">
   <h1>Eliminar EXIF</h1>
-  <p>Sube una foto para ver qué metadatos ocultos contiene — como ubicación GPS, modelo de cámara o fecha de captura — y luego elimínalos antes de compartirla. Todo ocurre localmente en tu navegador.</p>
+  <p>Selecciona una foto para consultar sus metadatos ocultos, como la ubicación GPS, el modelo de cámara o la fecha de captura, y elimínalos antes de compartirla. Todo se procesa localmente en tu navegador.</p>
 
   <div class="box">
     <label class="dropzone" id="dropzone" for="fileInput">
-      <div id="dropzoneText">📁 Haz clic para seleccionar una foto o arrástrala aquí</div>
+      <div id="dropzoneText">📁 Haz clic para seleccionar una foto o arrástrala y suéltala aquí</div>
     </label>
     <input type="file" id="fileInput" accept="image/*">
     <div class="error" id="errorMsg"></div>
-    <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subir archivos · Sin cuenta · Sin marca de agua</div>
+    <div class="trust-strip">🔒 Procesamiento local · Archivos siempre en tu dispositivo · Sin cuenta · Sin marca de agua</div>
 
     <div class="metadata-box" id="metadataBox">
       <h3>Metadatos encontrados en esta foto:</h3>
@@ -171,7 +171,7 @@ h2{margin-top:50px;font-size:22px;}
 
     <br>
     <button id="removeBtn" disabled>Eliminar metadatos y descargar</button>
-    <div class="note">Compatible con JPG, PNG, WEBP y otros formatos de imagen comunes.</div>
+    <div class="note">Compatible con JPG, PNG, WebP y otros formatos de imagen comunes.</div>
 
     <div class="result" id="result"></div>
   </div>
@@ -189,7 +189,7 @@ h2{margin-top:50px;font-size:22px;}
     </ul>
 
     <h2>¿Por qué usar Orisod para esto?</h2>
-    <p>Esta herramienta primero te muestra exactamente qué metadatos se encontraron en tu foto — no es solo un botón de "confía en nosotros". Luego, la eliminación ocurre procesando la imagen localmente en tu navegador, lo que elimina por completo todos los metadatos incrustados. Tu foto original nunca se sube a un servidor.</p>
+    <p>La herramienta muestra primero los metadatos detectados para que puedas comprobar qué contiene la foto. Después procesa la imagen localmente en tu navegador y elimina los metadatos incrustados; la foto original permanece en tu dispositivo.</p>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
@@ -205,12 +205,12 @@ h2{margin-top:50px;font-size:22px;}
       <div>Algunas imágenes (especialmente capturas de pantalla, o fotos ya compartidas en redes sociales) no tienen datos EXIF. La herramienta te avisará si no se encontró nada.</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Mi foto se sube a un servidor?</div>
-      <div>No. Tanto la detección de metadatos como su eliminación ocurren localmente en tu navegador — la foto nunca sale de tu dispositivo.</div>
+      <div class="q">¿Se envía mi foto a algún servidor?</div>
+      <div>No. Tanto la detección como la eliminación de metadatos se realizan localmente en tu navegador; la foto permanece en tu dispositivo.</div>
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres profundizar? Lee nuestra guía: <a href="/es/blog/what-is-exif-data/" style="color:var(--accent);text-decoration:none;">Qué Son los Datos EXIF y Por Qué Deberías Eliminarlos Antes de Compartir Fotos</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres profundizar? Lee nuestra guía: <a href="/es/blog/what-is-exif-data/" style="color:var(--accent);text-decoration:none;">Qué son los datos EXIF y por qué eliminarlos antes de compartir fotos</a></p>
 
   <h2>Herramientas relacionadas</h2>
   <div class="related-grid">
@@ -225,7 +225,7 @@ h2{margin-top:50px;font-size:22px;}
   <a class="related-card" href="/es/blur-area-tool/">
     <div class="icon-box cat-image"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="1"/><circle cx="12" cy="7" r="1"/><circle cx="17" cy="7" r="1"/><circle cx="7" cy="12" r="1"/><circle cx="12" cy="12" r="1.8" opacity="0.4"/><circle cx="17" cy="12" r="1"/><circle cx="7" cy="17" r="1"/><circle cx="12" cy="17" r="1"/><circle cx="17" cy="17" r="1"/></svg></div>
     <div class="body">
-      <div class="title">Difuminar caras / área</div>
+      <div class="title">Difuminar caras o áreas</div>
       <div class="desc">Pixela caras o detalles privados.</div>
     </div>
     <div class="arrow">→</div>
@@ -252,14 +252,14 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF que funcionan en tu navegador. Procesamiento 100% local — tus archivos nunca se suben a ningún servidor.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Procesamiento 100 % local: tus archivos permanecen en tu dispositivo.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">
       <h3>Herramientas</h3>
-      <a href="/es/tools/#image">Herramientas de Imagen</a>
+      <a href="/es/tools/#image">Herramientas de imagen</a>
       <a href="/es/tools/#pdf">Herramientas PDF</a>
-      <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+      <a href="/es/tools/#utility">Utilidades</a>
     </div>
     <div class="footer-col">
       <h3>Empresa</h3>

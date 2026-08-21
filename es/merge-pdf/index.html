@@ -153,16 +153,16 @@ h2{margin-top:50px;font-size:22px;}
 <header class="site-nav">
   <a class="site-nav-logo" href="/es/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
   <nav class="site-nav-links">
-    <a href="/es/tools/">Todas las Herramientas</a>
-    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/">Todas las herramientas</a>
+    <a href="/es/tools/#image">Herramientas de imagen</a>
     <span class="active-category">Herramientas PDF</span>
-    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <a href="/es/tools/#utility">Utilidades</a>
     <a href="/es/blog/">Blog</a>
   </nav>
   <div class="site-nav-right">
     <a class="lang-flag" href="/merge-pdf/">EN</a>
     <span class="lang-flag active">ES</span>
-    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro">🌙</button>
   </div>
 </header>
 
@@ -172,19 +172,19 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v12M8 6l4-4 4 4"/><path d="M6 22l6-6 6 6"/></svg></div>
     <h1>Unir PDF</h1>
   </div>
-  <p class="tool-sub">Combina varios archivos PDF en un solo documento. Todo ocurre localmente en tu navegador — tus archivos nunca se suben a ningún lugar.</p>
+  <p class="tool-sub">Combina varios archivos PDF en un solo documento. Todo ocurre localmente en tu navegador — tus archivos permanecen en tu dispositivo.</p>
 
   <div class="workspace">
     <div class="box">
       <label class="dropzone" id="dropzone" for="fileInput">
-        <div id="dropzoneText">📁 Haz clic para seleccionar archivos PDF o arrástralos aquí</div>
+        <div id="dropzoneText">📁 Haz clic para seleccionar archivos PDF o arrástralos y suéltalos aquí</div>
       </label>
       <input type="file" id="fileInput" accept=".pdf" multiple>
 
       <div class="file-list" id="fileList"></div>
 
       <div class="error" id="errorMsg"></div>
-      <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subir archivos · Sin cuenta · Sin marca de agua</div>
+      <div class="trust-strip">🔒 Procesamiento local · Archivos siempre en tu dispositivo · Sin cuenta · Sin marca de agua</div>
 
       <div class="workspace-controls">
         <button id="mergeBtn" disabled>Unir PDF</button>
@@ -198,7 +198,7 @@ h2{margin-top:50px;font-size:22px;}
 
   <div class="seo-content">
     <h2>¿Qué hace esta herramienta?</h2>
-    <p>Esta herramienta combina dos o más archivos PDF en un único documento PDF, manteniendo el texto, las imágenes y el formato original de cada página exactamente como estaban — nada se rasteriza ni se vuelve a renderizar como imagen. El resultado es un PDF real, de calidad editable, no una copia con aspecto escaneado.</p>
+    <p>La herramienta combina dos o más archivos PDF en un solo documento y conserva el texto, las imágenes y el formato de cada página. No convierte el contenido en imágenes: el resultado sigue siendo un PDF con texto seleccionable, no una copia con aspecto de escaneo.</p>
 
     <h2>¿Cuándo deberías usarla?</h2>
     <ul>
@@ -209,11 +209,11 @@ h2{margin-top:50px;font-size:22px;}
     </ul>
 
     <h2>¿Por qué usar Orisod para esto?</h2>
-    <p>La unión ocurre completamente en tu navegador usando pdf-lib — tus PDF nunca se suben a un servidor. Puedes reordenar los archivos antes de unirlos con las flechas arriba/abajo, eliminar cualquier archivo que no quieras incluir, y el documento final conserva la selección de texto completa y la calidad original.</p>
+    <p>La unión ocurre directamente en tu navegador usando pdf-lib — tus archivos PDF permanecen en tu dispositivo. Puedes reordenar los archivos antes de unirlos con las flechas arriba/abajo, eliminar cualquier archivo que no quieras incluir, y el documento final conserva la selección de texto completa y la calidad original.</p>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
-      <div class="q">¿Unir afecta la calidad o el texto de mis PDF?</div>
+      <div class="q">¿Unir los archivos afecta la calidad o el texto de los PDF?</div>
       <div>No. A diferencia de herramientas que primero convierten las páginas en imágenes, esta herramienta une el contenido real del PDF — el texto sigue siendo seleccionable y buscable, y la calidad de las imágenes no cambia.</div>
     </div>
     <div class="faq-item">
@@ -221,16 +221,16 @@ h2{margin-top:50px;font-size:22px;}
       <div>Sí, usa las flechas arriba y abajo junto a cada archivo para reordenarlos antes de unirlos.</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Hay un límite de cuántos PDF puedo unir?</div>
+      <div class="q">¿Existe un límite de archivos PDF que puedo unir?</div>
       <div>No hay un límite fijo — puedes combinar tantos archivos como la memoria de tu navegador pueda manejar cómodamente.</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Se suben mis archivos a un servidor?</div>
-      <div>No. Todo el proceso de unión se ejecuta localmente en tu navegador usando JavaScript — nada se envía a ningún lugar.</div>
+      <div class="q">¿Se envían mis archivos a algún servidor?</div>
+      <div>No. Todo el proceso de unión se realiza localmente en tu navegador mediante JavaScript; tus archivos permanecen en tu dispositivo.</div>
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres profundizar? Lee nuestra guía: <a href="/es/blog/merge-multiple-pdfs/" style="color:var(--accent);text-decoration:none;">Cómo Unir Varios PDF en un Solo Archivo (Gratis)</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres profundizar? Lee nuestra guía: <a href="/es/blog/merge-multiple-pdfs/" style="color:var(--accent);text-decoration:none;">Cómo unir varios archivos PDF en uno solo (gratis)</a></p>
 
   <h2>Herramientas relacionadas</h2>
   <div class="related-grid">
@@ -288,14 +288,14 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF que funcionan en tu navegador. Procesamiento 100% local — tus archivos nunca se suben a ningún servidor.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Procesamiento 100 % local: tus archivos permanecen en tu dispositivo.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">
       <h3>Herramientas</h3>
-      <a href="/es/tools/#image">Herramientas de Imagen</a>
+      <a href="/es/tools/#image">Herramientas de imagen</a>
       <a href="/es/tools/#pdf">Herramientas PDF</a>
-      <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+      <a href="/es/tools/#utility">Utilidades</a>
     </div>
     <div class="footer-col">
       <h3>Empresa</h3>
@@ -366,7 +366,7 @@ function addFiles(fileList) {
 function renderFileList() {
   dropzoneText.textContent = selectedFiles.length > 0
     ? `📁 Haz clic para añadir más PDF (${selectedFiles.length} seleccionados)`
-    : '📁 Haz clic para seleccionar archivos PDF o arrástralos aquí';
+    : '📁 Haz clic para seleccionar archivos PDF o arrástralos y suéltalos aquí';
 
   fileListEl.innerHTML = '';
   selectedFiles.forEach((file, index) => {
@@ -438,7 +438,7 @@ mergeBtn.addEventListener('click', async () => {
     const url = URL.createObjectURL(blob);
     const pageCount = mergedPdf.getPageCount();
 
-    progressMsg.textContent = 'Listo — descarga disponible.';
+    progressMsg.textContent = 'Listo para descargar.';
 
     const card = document.createElement('div');
     card.className = 'result-card';
@@ -455,7 +455,7 @@ mergeBtn.addEventListener('click', async () => {
     link.href = url;
     link.download = 'merged.pdf';
     link.className = 'back';
-    link.textContent = 'Descargar PDF Unido';
+    link.textContent = 'Descargar PDF unido';
     resultEl.appendChild(link);
   } catch (err) {
     errorMsg.textContent = 'No se pudieron unir estos PDF. Asegúrate de que ninguno esté protegido con contraseña o dañado.';

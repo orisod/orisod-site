@@ -20,7 +20,7 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cómo Convertir HTML a PDF (Pega el Código, Obtén un Archivo) | Blog de Orisod</title>
+<title>Cómo convertir HTML a PDF (pega el código y obtén el archivo) | Blog de Orisod</title>
 <meta name="description" content="Convertir HTML y CSS en un PDF sin instalar nada — cómo funciona, qué no puede hacer (como obtener una URL en vivo), y cuándo es la herramienta correcta.">
 <link rel="canonical" href="https://orisod.com/es/blog/html-to-pdf-guide/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/blog/html-to-pdf-guide/">
@@ -115,32 +115,32 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <header class="site-nav">
   <a class="site-nav-logo" href="/es/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
   <nav class="site-nav-links">
-    <a href="/es/tools/">Todas las Herramientas</a>
-    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/">Todas las herramientas</a>
+    <a href="/es/tools/#image">Herramientas de imagen</a>
     <a href="/es/tools/#pdf">Herramientas PDF</a>
-    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <a href="/es/tools/#utility">Utilidades</a>
     <span class="active-category">Blog</span>
   </nav>
   <div class="site-nav-right">
     <a class="lang-flag" href="/blog/html-to-pdf-guide/">EN</a>
     <span class="lang-flag active">ES</span>
-    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro">🌙</button>
   </div>
 </header>
 
 <main>
 <div class="container">
 
-<h1>Cómo Convertir HTML a PDF (Pega el Código, Obtén un Archivo)</h1>
+<h1>Cómo convertir HTML a PDF (pega el código y obtén el archivo)</h1>
 <p class="intro">Tienes un fragmento HTML, una plantilla de factura o un informe con estilo y lo necesitas como un PDF fijo y compartible en lugar de código sin procesar. Convertir HTML directamente a PDF, sin instalar nada ni levantar un servidor, convierte el marcado con estilo en un documento en unos segundos.</p>
 
 <div class="article-body">
 
-<h2>Cómo funciona realmente la conversión de HTML a PDF</h2>
+<h2>Cómo funciona la conversión de HTML a PDF</h2>
 <p>El HTML que proporcionas se renderiza exactamente como lo haría un navegador — diseño, colores, fuentes, todo lo definido en estilos en línea o bloques &lt;style&gt; — y ese resultado renderizado luego se captura y se coloca en un PDF. Es efectivamente tomar una "captura de pantalla" de alta resolución de la página renderizada y empaquetarla como documento, en lugar de analizar el HTML en algún formato intermedio específico de PDF.</p>
 
 <h2>Qué puede y qué no puede hacer con un sitio web en vivo</h2>
-<p>Una suposición común es que puedes darle a una herramienta una URL y obtener de vuelta un PDF de esa página — pero un convertidor basado en navegador sin servidor detrás no puede obtener la página de otro sitio web por ti; eso requeriría infraestructura del lado del servidor para hacer la solicitud. Lo que sí puede hacer es convertir código HTML directamente, lo que significa que la solución para convertir una página en vivo es sencilla: ver el código fuente de la página, copiar el HTML relevante, y pegarlo.</p>
+<p>Una suposición común es que puedes darle a una herramienta una URL y obtener de vuelta un PDF de esa página — pero un convertidor que funciona en el navegador sin servidor detrás no puede obtener la página de otro sitio web por ti; eso requeriría infraestructura del lado del servidor para hacer la solicitud. Lo que sí puede hacer es convertir código HTML directamente, lo que significa que la solución para convertir una página en vivo es sencilla: ver el código fuente de la página, copiar el HTML relevante, y pegarlo.</p>
 
 <h2>Por qué algunas imágenes no aparecen</h2>
 <p>Una imagen referenciada por URL desde otro sitio web necesita que ese sitio permita explícitamente el acceso de origen cruzado para que el navegador pueda leer sus datos de píxeles — sin ese permiso, el navegador puede ver la imagen pero no puede incluir su contenido en una captura renderizada. Esta es una restricción de seguridad del navegador (CORS), no un error en el proceso de conversión, y afecta principalmente a las imágenes alojadas en otro lugar en vez de las incrustadas directamente como datos.</p>
@@ -149,19 +149,19 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <p>El contenido más alto que una sola página impresa necesita dividirse en varias páginas, y la forma directa de hacerlo es un corte recto a una altura fija — la página 1 recibe el primer tramo, la página 2 el siguiente, y así sucesivamente, sin hueco ni superposición entre ellas. Esto funciona bien la mayoría de las veces, especialmente con contenido espaciado de forma natural como títulos y párrafos, pero es un corte geométrico y no una paginación consciente del diseño — una línea de texto denso que caiga justo en ese punto de corte podría, en principio, quedar dividida visualmente entre dos páginas.</p>
 
 <h2>Elegir el tamaño de página y la orientación</h2>
-<p>A4 y Letter cubren la mayoría de los documentos estándar; Legal es común para contratos y ciertos formularios. La orientación importa más de lo que parece — una tabla ancha o un diseño en orientación horizontal se verá apretado y forzado en una página vertical alta, mientras que la vertical le sienta bien al contenido de texto normal. Acertar con estos ajustes antes de convertir ahorra tener que volver a descargar después.</p>
+<p>A4 y carta cubren la mayoría de los documentos estándar; Legal es común para contratos y ciertos formularios. La orientación importa más de lo que parece — una tabla ancha o un diseño en orientación horizontal se verá apretado y forzado en una página vertical alta, mientras que la vertical le sienta bien al contenido de texto normal. Acertar con estos ajustes antes de convertir ahorra tener que volver a descargar después.</p>
 
 <h2>Un ejemplo concreto</h2>
-<p>Creaste una factura simple con estilo como archivo HTML — un logo, algo de CSS para espaciado y colores, una tabla de conceptos — y necesitas enviarla como PDF en lugar de como una página web editable. Pegar el HTML, confirmar que la vista previa se ve bien, y convertir produce una versión en PDF fija en segundos, sin necesitar software de diseño ni una canalización de renderizado del lado del servidor.</p>
+<p>Creaste una factura simple con estilo como archivo HTML — un logo, algo de CSS para espaciado y colores, una tabla de conceptos — y necesitas enviarla como PDF en lugar de como una página web editable. Pegar el HTML, confirmar que la vista previa se ve bien, y convertir produce una versión en PDF fija en segundos, sin necesitar programas de diseño ni una canalización de renderizado del lado del servidor.</p>
 
 <h2>Respuestas rápidas</h2>
-<p><strong>¿Puedo convertir un sitio web en vivo dando su URL?</strong> No directamente — una herramienta basada en navegador sin servidor no puede obtener la página de otro sitio. En su lugar, copia el código fuente HTML de esa página y pégalo.</p>
+<p><strong>¿Puedo convertir un sitio web en vivo dando su URL?</strong> No directamente — una herramienta que funciona en el navegador sin servidor no puede obtener la página de otro sitio. En su lugar, copia el código fuente HTML de esa página y pégalo.</p>
 <p><strong>¿Por qué faltan algunas de mis imágenes en el PDF?</strong> Probablemente se cargan desde un sitio que bloquea el acceso de origen cruzado, lo que impide que el navegador lea sus datos de píxeles.</p>
 <p><strong>¿Una línea de texto puede quedar cortada a la mitad entre páginas?</strong> Es posible con contenido denso, ya que los saltos de página son un corte a altura fija y no una paginación consciente del reflujo — el contenido con espaciado natural (títulos, elementos de lista, saltos de párrafo) casi siempre evita esto.</p>
 
 <div class="cta-box">
-  <h3>Convierte Tu HTML a PDF</h3>
-  <p>La herramienta HTML a PDF de Orisod renderiza tu HTML pegado o subido con una vista previa en vivo, y luego lo convierte en un PDF paginado — completamente en tu navegador.</p>
+  <h3>Convierte tu HTML a PDF</h3>
+  <p>La herramienta HTML a PDF de Orisod muestra una vista previa en tiempo real del código pegado o del archivo seleccionado y lo convierte en un documento paginado. Todo se procesa directamente en tu navegador.</p>
   <a class="cta-button" href="/es/html-to-pdf/">HTML a PDF →</a>
 </div>
 
@@ -173,23 +173,23 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <h2>Artículos relacionados</h2>
   <div class="related-grid">
     <a class="blog-card" href="/es/blog/jpg-to-pdf-guide/">
-      <h3>Cómo Convertir un JPG en un PDF en Segundos</h3>
+      <h3>Cómo convertir un JPG en PDF en segundos</h3>
       <p>Por qué un documento fotografiado a menudo necesita convertirse en PDF, y cómo hacerlo en segundos.</p>
     </a>
 
     <a class="blog-card" href="/es/blog/combine-photos-into-pdf/">
-      <h3>Cómo Combinar Varias Fotos en un Solo PDF</h3>
+      <h3>Cómo combinar varias fotos en un solo PDF</h3>
       <p>Cómo convertir varias fotos en un solo PDF de varias páginas en lugar de archivos separados.</p>
     </a>
 
     <a class="blog-card" href="/es/blog/merge-multiple-pdfs/">
-      <h3>Cómo Unir Varios PDF en un Solo Archivo (Gratis)</h3>
-      <p>Cómo funciona realmente la unión de PDF, los errores a evitar, y cómo combinarlos sin perder calidad.</p>
+      <h3>Cómo unir varios archivos PDF en uno solo (gratis)</h3>
+      <p>Cómo funciona la unión de PDF, los errores a evitar, y cómo combinarlos sin perder calidad.</p>
     </a>
   </div>
 </div>
 
-<a class="back-link" href="/es/blog/">← Volver al Blog</a>
+<a class="back-link" href="/es/blog/">← Volver al blog</a>
 
 </div>
 
@@ -197,14 +197,14 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF que funcionan en tu navegador. Procesamiento 100% local — tus archivos nunca se suben a ningún servidor.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Procesamiento 100 % local: tus archivos permanecen en tu dispositivo.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">
       <h3>Herramientas</h3>
-      <a href="/es/tools/#image">Herramientas de Imagen</a>
+      <a href="/es/tools/#image">Herramientas de imagen</a>
       <a href="/es/tools/#pdf">Herramientas PDF</a>
-      <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+      <a href="/es/tools/#utility">Utilidades</a>
     </div>
     <div class="footer-col">
       <h3>Empresa</h3>

@@ -20,7 +20,7 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SVG a PNG: Cuándo Necesitas una Imagen de Tamaño Fijo en Lugar de Vector | Blog de Orisod</title>
+<title>SVG a PNG: cuándo necesitas una imagen de tamaño fijo | Blog de Orisod</title>
 <meta name="description" content="SVG se escala infinitamente sin perder calidad, entonces ¿por qué convertirlo a PNG? Aquí está la distinción entre vector y raster, y cuándo te ves obligado a rasterizar.">
 <link rel="canonical" href="https://orisod.com/es/blog/svg-to-png-guide/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/blog/svg-to-png-guide/">
@@ -118,44 +118,44 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <header class="site-nav">
   <a class="site-nav-logo" href="/es/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
   <nav class="site-nav-links">
-    <a href="/es/tools/">Todas las Herramientas</a>
-    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/">Todas las herramientas</a>
+    <a href="/es/tools/#image">Herramientas de imagen</a>
     <a href="/es/tools/#pdf">Herramientas PDF</a>
-    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <a href="/es/tools/#utility">Utilidades</a>
     <span class="active-category">Blog</span>
   </nav>
   <div class="site-nav-right">
     <a class="lang-flag" href="/blog/svg-to-png-guide/">EN</a>
     <span class="lang-flag active">ES</span>
-    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro">🌙</button>
   </div>
 </header>
 
 <main>
 <div class="container">
 
-<h1>SVG a PNG: Cuándo Necesitas una Imagen de Tamaño Fijo en Lugar de Vector</h1>
+<h1>SVG a PNG: cuándo necesitas una imagen de tamaño fijo</h1>
 <p class="intro">Si SVG es el mejor formato — infinitamente escalable, tamaño de archivo diminuto, nítido a cualquier nivel de zoom — ¿por qué convertirlo alguna vez a PNG? La respuesta está en una diferencia fundamental de cómo cada formato almacena una imagen.</p>
 
 <div class="article-body">
 
-<h2>Vector vs raster: la diferencia principal</h2>
-<p>Un PNG (como un JPG o cualquier formato de foto típico) es una imagen raster — almacena una cuadrícula fija de píxeles individuales, cada uno con su propio color. Acércate lo suficiente y eventualmente verás los cuadrados individuales, porque hay un límite fijo a la cantidad de detalle almacenado. Un SVG es una imagen vectorial en cambio — almacena instrucciones matemáticas para dibujar formas, líneas y curvas, lo que significa que puede renderizarse a cualquier tamaño, desde un icono diminuto hasta un cartel del tamaño de un edificio, y redibujarse con nitidez cada vez sin pixelación, nunca.</p>
+<h2>Vectorial vs. mapa de bits: la diferencia principal</h2>
+<p>Un PNG (como un JPG o cualquier formato de foto típico) es una imagen de mapa de bits — almacena una cuadrícula fija de píxeles individuales, cada uno con su propio color. Acércate lo suficiente y eventualmente verás los cuadrados individuales, porque hay un límite fijo a la cantidad de detalle almacenado. Un SVG es una imagen vectorial en cambio — almacena instrucciones matemáticas para dibujar formas, líneas y curvas, lo que significa que puede renderizarse a cualquier tamaño, desde un icono diminuto hasta un cartel del tamaño de un edificio, y redibujarse con nitidez cada vez sin pixelación, nunca.</p>
 
 <h2>Por qué SVG suena estrictamente mejor — y por qué no siempre es utilizable</h2>
-<p>Para logotipos, iconos y formas gráficas limpias, SVG genuinamente es el mejor formato en casi todos los aspectos: menor tamaño de archivo, escalabilidad infinita, y a menudo texto y colores editables incluso después. El problema es que mucho software, plataformas y casos de uso simplemente no aceptan SVG en absoluto, o necesitan una imagen de píxeles fijos por alguna razón específica. Ahí es donde convertir a PNG se vuelve necesario — no porque PNG sea mejor, sino porque la situación requiere un archivo raster.</p>
+<p>Para logotipos, iconos y gráficos sencillos, SVG suele ofrecer archivos pequeños, escalabilidad sin pérdida y elementos que siguen siendo editables. El problema es que muchas aplicaciones y plataformas no admiten SVG o exigen una imagen de píxeles con tamaño fijo. En esos casos conviene convertir a PNG, no porque sea superior, sino porque el destino requiere un formato de mapa de bits.</p>
 
 <h2>Situaciones comunes que te obligan a rasterizar</h2>
 <ul>
   <li><strong>Formularios de subida y plataformas que rechazan SVG</strong> por completo, a menudo por razones de seguridad — los archivos SVG técnicamente pueden contener código incrustado, así que algunas plataformas simplemente no permiten el formato en absoluto.</li>
   <li><strong>Software o sistemas antiguos</strong> que nunca se construyeron para renderizar gráficos vectoriales y solo entienden imágenes basadas en píxeles.</li>
   <li><strong>Clientes de correo electrónico</strong>, muchos de los cuales no renderizan SVG de forma confiable o en absoluto, haciendo que una versión PNG de un logotipo sea la opción más segura para una firma de correo.</li>
-  <li><strong>Componer sobre una foto o video</strong>, donde el software de edición trabaja en píxeles y necesita que el gráfico se suministre como una capa raster.</li>
-  <li><strong>Plataformas de redes sociales</strong>, que casi universalmente esperan subidas de imágenes raster, no archivos vectoriales.</li>
+  <li><strong>Componer sobre una foto o video</strong>, donde el software de edición trabaja en píxeles y necesita que el gráfico se suministre como una capa de mapa de bits.</li>
+  <li><strong>Plataformas de redes sociales</strong>, que casi universalmente esperan subidas de imágenes de mapa de bits, no archivos vectoriales.</li>
 </ul>
 
 <h2>La contrapartida que aceptas</h2>
-<p>Una vez que un SVG se convierte a PNG, deja de ser infinitamente escalable — lo has fijado a un tamaño de píxeles específico, y agrandar ese PNG más tarde mostrará el mismo suavizado o pixelación que agrandar cualquier otra imagen raster. Este es el único costo real de rasterizar: estás cambiando la ventaja principal de SVG por compatibilidad. La solución práctica es exportar a un tamaño mayor del que necesitas actualmente, dándote algo de margen antes de que la pérdida de calidad se vuelva visible.</p>
+<p>Una vez que un SVG se convierte a PNG, deja de ser infinitamente escalable — lo has fijado a un tamaño de píxeles específico, y agrandar ese PNG más tarde mostrará el mismo suavizado o pixelación que agrandar cualquier otra imagen de mapa de bits. Este es el único costo real de rasterizar: estás cambiando la ventaja principal de SVG por compatibilidad. La solución práctica es exportar a un tamaño mayor del que necesitas actualmente, dándote algo de margen antes de que la pérdida de calidad se vuelva visible.</p>
 
 <h2>Elegir el tamaño de salida correcto</h2>
 <p>Ya que el PNG queda ahora fijo a las dimensiones que exportaste, piensa con anticipación en el tamaño más grande que realmente vas a necesitar — un logotipo destinado a un cartel impreso grande necesita una exportación PNG mucho más grande que uno destinado a un pequeño favicon de sitio web. En caso de duda, exportar más grande de lo necesario cuesta casi nada y deja margen para reducir después sin ninguna pérdida de calidad, mientras que agrandar un PNG pequeño mostrará suavizado visible.</p>
@@ -164,7 +164,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <p>Digamos que diseñaste un logotipo como SVG, perfecto para tu sitio web ya que se mantiene nítido en cualquier tamaño de pantalla y resolución. Ahora necesitas ese mismo logotipo para una firma de correo, una plantilla de tarjeta de presentación impresa construida en software que no lee SVG, y una subida de foto de perfil de red social que solo acepta JPG o PNG. Ninguno de esos tres destinos puede usar el SVG original directamente — cada uno necesita su propia exportación PNG del tamaño apropiado, lo cual es normal y esperado, no una señal de que hiciste algo mal al diseñarlo como SVG en primer lugar.</p>
 
 <h2>Convertir SVG a PNG</h2>
-<p>Convertir es rápido — sube el SVG, y obtén de vuelta un PNG con el tamaño que elijas, con cualquier transparencia del gráfico vectorial original preservada en la salida raster.</p>
+<p>La conversión es rápida: selecciona el SVG y obtén un PNG con el tamaño que elijas y la transparencia del original conservada.</p>
 
 <h2>Respuestas rápidas</h2>
 <p><strong>¿Convertir SVG a PNG pierde calidad?</strong> No al tamaño que exportas — el PNG será nítido a ese tamaño específico. La pérdida solo se vuelve visible si más tarde intentas agrandar ese PNG más allá de sus dimensiones de exportación originales.</p>
@@ -172,8 +172,8 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <p><strong>¿Por qué algunas plataformas bloquean específicamente las subidas de SVG?</strong> Los archivos SVG pueden contener scripts incrustados, lo que crea un riesgo de seguridad en plataformas que muestran archivos subidos por usuarios a otros — muchas simplemente no permiten el formato para evitar ese riesgo por completo, sin importar si un archivo en particular es realmente dañino.</p>
 
 <div class="cta-box">
-  <h3>Convierte SVG a PNG Ahora</h3>
-  <p>El conversor de SVG a PNG de Orisod funciona completamente en tu navegador — sube tu SVG, elige tu tamaño, y obtén de vuelta un PNG nítido, transparencia incluida.</p>
+  <h3>Convierte SVG a PNG ahora</h3>
+  <p>El convertidor de SVG a PNG de Orisod funciona directamente en tu navegador. Selecciona el SVG, elige el tamaño y obtén un PNG nítido que conserva la transparencia.</p>
   <a class="cta-button" href="/es/svg-to-png/">Convertir SVG a PNG →</a>
 </div>
 
@@ -185,23 +185,23 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <h2>Artículos relacionados</h2>
   <div class="related-grid">
     <a class="blog-card" href="/es/blog/resize-image-without-distorting/">
-      <h3>Cómo Redimensionar una Imagen Sin Distorsionarla</h3>
+      <h3>Cómo redimensionar una imagen sin deformarla</h3>
       <p>Por qué estirar una imagen la distorsiona, y cómo redimensionar sin deformar nada.</p>
     </a>
 
     <a class="blog-card" href="/es/blog/shrink-bmp-files/">
-      <h3>Los Archivos BMP Son Enormes — Así Puedes Reducirlos</h3>
+      <h3>Los archivos BMP ocupan demasiado: cómo reducir su tamaño</h3>
       <p>Por qué los archivos BMP sin comprimir son tan grandes comparados con JPG o PNG, y cómo reducirlos.</p>
     </a>
 
     <a class="blog-card" href="/es/blog/crop-photo-exact-size/">
-      <h3>Cómo Recortar una Foto al Tamaño Exacto que Necesitas</h3>
+      <h3>Cómo recortar una foto al tamaño exacto que necesitas</h3>
       <p>La diferencia entre recortar “más o menos bien” y recortar a un tamaño exacto en píxeles.</p>
     </a>
   </div>
 </div>
 
-<a class="back-link" href="/es/blog/">← Volver al Blog</a>
+<a class="back-link" href="/es/blog/">← Volver al blog</a>
 
 </div>
 
@@ -209,14 +209,14 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF que funcionan en tu navegador. Procesamiento 100% local — tus archivos nunca se suben a ningún servidor.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Procesamiento 100 % local: tus archivos permanecen en tu dispositivo.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">
       <h3>Herramientas</h3>
-      <a href="/es/tools/#image">Herramientas de Imagen</a>
+      <a href="/es/tools/#image">Herramientas de imagen</a>
       <a href="/es/tools/#pdf">Herramientas PDF</a>
-      <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+      <a href="/es/tools/#utility">Utilidades</a>
     </div>
     <div class="footer-col">
       <h3>Empresa</h3>

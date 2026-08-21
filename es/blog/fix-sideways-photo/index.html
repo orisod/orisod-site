@@ -20,7 +20,7 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cómo Arreglar una Foto Girada o Boca Abajo | Blog de Orisod</title>
+<title>Cómo corregir una foto girada o invertida | Blog de Orisod</title>
 <meta name="description" content="¿Una foto se ve derecha en tu teléfono pero de lado en todas partes? Aquí está la razón real detrás de eso, y cómo arreglar la orientación de una foto de forma permanente.">
 <link rel="canonical" href="https://orisod.com/es/blog/fix-sideways-photo/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/blog/fix-sideways-photo/">
@@ -118,29 +118,29 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <header class="site-nav">
   <a class="site-nav-logo" href="/es/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
   <nav class="site-nav-links">
-    <a href="/es/tools/">Todas las Herramientas</a>
-    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/">Todas las herramientas</a>
+    <a href="/es/tools/#image">Herramientas de imagen</a>
     <a href="/es/tools/#pdf">Herramientas PDF</a>
-    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <a href="/es/tools/#utility">Utilidades</a>
     <span class="active-category">Blog</span>
   </nav>
   <div class="site-nav-right">
     <a class="lang-flag" href="/blog/fix-sideways-photo/">EN</a>
     <span class="lang-flag active">ES</span>
-    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro">🌙</button>
   </div>
 </header>
 
 <main>
 <div class="container">
 
-<h1>Cómo Arreglar una Foto Girada o Boca Abajo</h1>
+<h1>Cómo corregir una foto girada o invertida</h1>
 <p class="intro">Tomas una foto sosteniendo tu teléfono de lado, se ve perfectamente derecha en la pantalla de tu teléfono — y luego la subes a algún lugar y aparece girada 90 grados. Esto no es aleatorio, y no es que falle la cámara de tu teléfono. Aquí te explicamos qué está pasando realmente y cómo arreglarlo de forma definitiva.</p>
 
 <div class="article-body">
 
 <h2>No siempre son los píxeles los que están girados</h2>
-<p>Aquí está la parte que confunde a la gente: un archivo de foto puede estar técnicamente almacenado de lado mientras se muestra derecho, gracias a un pequeño dato de metadatos llamado la bandera de orientación EXIF. En lugar de rotar físicamente cada píxel cuando inclinas tu teléfono para tomar una foto, muchas cámaras guardan los datos de la imagen exactamente como los capturó el sensor y simplemente añaden una etiqueta que dice "muestra esto girado 90 grados". Las apps que leen esa etiqueta muestran la foto correctamente. Las apps que la ignoran muestran los datos de píxeles crudos, sin rotar — por eso el mismo archivo puede verse perfectamente bien en una app y de lado en otra.</p>
+<p>Aquí está la parte que confunde a la gente: un archivo de foto puede estar técnicamente almacenado de lado mientras se muestra derecho, gracias a un pequeño dato de metadatos llamado la bandera de orientación EXIF. En lugar de rotar físicamente cada píxel cuando inclinas tu teléfono para tomar una foto, muchas cámaras guardan los datos de la imagen exactamente como los capturó el sensor y simplemente añaden una etiqueta que dice "muestra esto girado 90 grados". Las aplicaciones que leen esa etiqueta muestran la foto correctamente. Las aplicaciones que la ignoran muestran los datos de píxeles crudos, sin rotar — por eso el mismo archivo puede verse perfectamente bien en una aplicación y de lado en otra.</p>
 
 <h2>Por qué esto causa tanta confusión</h2>
 <p>Distintos programas tienen un soporte muy inconsistente para leer la bandera de orientación. Las galerías de teléfonos modernos y la mayoría de los navegadores actuales la leen correctamente. Pero algunos visores de imágenes antiguos, ciertos formularios de subida, algunos clientes de correo, y varios sistemas de backend que procesan imágenes (redimensionándolas, convirtiendo formatos, eliminando metadatos) o bien ignoran la bandera por completo o la eliminan en el proceso — momento en el cual la foto vuelve a mostrarse como estén orientados realmente los datos de píxeles crudos. No hiciste nada mal; el software simplemente no se puso de acuerdo sobre cuál orientación confiar.</p>
@@ -150,25 +150,25 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <li><strong>Rotación solo de metadatos.</strong> Algunas herramientas solo cambian la bandera EXIF sin tocar los datos de píxeles reales. Esto es rápido, pero solo funciona de forma confiable en software que respeta la bandera — en cualquier lugar que la ignore, la foto vuelve a verse de lado.</li>
   <li><strong>Rotación real de píxeles.</strong> Una herramienta de rotación adecuada vuelve a renderizar físicamente los datos de la imagen en la nueva orientación y la guarda así. La foto ahora se ve correcta en absolutamente todo, sin importar si el software que la muestra lee datos EXIF o no, porque no hay ninguna bandera que ignorar — los píxeles mismos están orientados correctamente.</li>
 </ul>
-<p>Si alguna vez arreglaste la rotación de una foto en una app solo para que volviera a aparecer de lado en otro lugar, probablemente te topaste con un arreglo solo de metadatos. Una rotación real de píxeles resuelve el problema de forma permanente.</p>
+<p>Si alguna vez arreglaste la rotación de una foto en una aplicación solo para que volviera a aparecer de lado en otro lugar, probablemente te topaste con un arreglo solo de metadatos. Una rotación real de píxeles resuelve el problema de forma permanente.</p>
 
 <h2>Las fotos boca abajo funcionan igual</h2>
 <p>Una foto completamente boca abajo (180 grados) sigue la misma lógica idéntica — es o una bandera de orientación desajustada o datos de píxeles genuinamente almacenados invertidos. El arreglo es el mismo: rotar el contenido real de la imagen en lugar de depender de una etiqueta de metadatos que no todo el software va a respetar.</p>
 
 <h2>Cómo saber con qué tipo de arreglo estás lidiando</h2>
-<p>Si una foto se muestra correctamente en una app pero de lado en otra, es una señal fuerte de que el archivo depende de la bandera de orientación EXIF en lugar de tener datos de píxeles genuinamente rotados. Si aparece de lado absolutamente en todas partes, incluida la app o el dispositivo donde se tomó originalmente, es probable que los propios datos de píxeles estén almacenados en esa orientación y no haya ninguna bandera involucrada. De cualquier forma, el arreglo es el mismo — rotar el contenido real de la imagen — pero saber en qué situación estás explica por qué un "arreglo" a veces no se mantiene.</p>
+<p>Si una foto se muestra correctamente en una aplicación pero de lado en otra, es una señal fuerte de que el archivo depende de la bandera de orientación EXIF en lugar de tener datos de píxeles genuinamente rotados. Si aparece de lado absolutamente en todas partes, incluida la aplicación o el dispositivo donde se tomó originalmente, es probable que los propios datos de píxeles estén almacenados en esa orientación y no haya ninguna bandera involucrada. De cualquier forma, el arreglo es el mismo — rotar el contenido real de la imagen — pero saber en qué situación estás explica por qué un "arreglo" a veces no se mantiene.</p>
 
 <h2>Cómo arreglarlo de forma permanente</h2>
 <p>Rota la foto usando una herramienta que vuelva a renderizar los píxeles en lugar de una que solo edite metadatos. Seleccionas la dirección (90 grados a la izquierda, 90 grados a la derecha, o un giro completo de 180), la herramienta redibuja la imagen en la orientación corregida, y obtienes de vuelta un archivo correctamente orientado a nivel de píxel — sin necesidad de ninguna bandera, sin riesgo de que vuelva a verse de lado la próxima vez que pase por otro software.</p>
 
 <h2>Respuestas rápidas</h2>
-<p><strong>¿Por qué la misma foto se ve diferente en distintos dispositivos?</strong> Porque los dispositivos y apps varían en si respetan la bandera de orientación EXIF — un dispositivo muestra la vista "corregida", otro muestra los datos de píxeles crudos, y pueden no coincidir aunque sea exactamente el mismo archivo.</p>
+<p><strong>¿Por qué la misma foto se ve diferente en distintos dispositivos?</strong> Porque los dispositivos y aplicaciones varían en si respetan la bandera de orientación EXIF — un dispositivo muestra la vista "corregida", otro muestra los datos de píxeles crudos, y pueden no coincidir aunque sea exactamente el mismo archivo.</p>
 <p><strong>¿Rotar una foto reduce su calidad?</strong> Una rotación de 90 o 180 grados no requiere ningún remuestreo ni interpolación — cada píxel simplemente se mueve a una nueva posición — así que no hay pérdida de calidad por la rotación en sí.</p>
 <p><strong>¿Arreglar la rotación una vez lo arreglará en todos los lugares donde ya compartí la foto?</strong> No — si ya subiste o enviaste la versión de lado a algún lugar, necesitarás volver a subir el archivo corregido. El arreglo aplica al archivo que rotas, no a las copias que ya están en otros servicios.</p>
 
 <div class="cta-box">
-  <h3>Arregla una Foto de Lado de Forma Permanente</h3>
-  <p>La herramienta de rotación de Orisod vuelve a renderizar los datos de píxeles reales, así que tu foto se muestra correctamente en todas partes — no solo en apps que casualmente leen la bandera de orientación. Procesado localmente en tu navegador.</p>
+  <h3>Corrige una foto girada de forma permanente</h3>
+  <p>La herramienta Rotar imagen de Orisod gira los píxeles de la foto, no solo la etiqueta de orientación EXIF. Así el resultado se muestra correctamente incluso en aplicaciones que ignoran esos metadatos. Todo se procesa localmente en tu navegador.</p>
   <a class="cta-button" href="/es/rotate-image/">Rotar una Imagen →</a>
 </div>
 
@@ -180,23 +180,23 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <h2>Artículos relacionados</h2>
   <div class="related-grid">
     <a class="blog-card" href="/es/blog/social-media-image-sizes-2026/">
-      <h3>El Tamaño de Imagen Correcto para Cada Red Social (2026)</h3>
+      <h3>Tamaños de imagen recomendados para cada red social (2026)</h3>
       <p>El tamaño de imagen recomendado actual para cada red social importante, en un solo lugar.</p>
     </a>
 
     <a class="blog-card" href="/es/blog/crop-photo-exact-size/">
-      <h3>Cómo Recortar una Foto al Tamaño Exacto que Necesitas</h3>
+      <h3>Cómo recortar una foto al tamaño exacto que necesitas</h3>
       <p>La diferencia entre recortar “más o menos bien” y recortar a un tamaño exacto en píxeles.</p>
     </a>
 
     <a class="blog-card" href="/es/blog/round-image-corners-guide/">
-      <h3>Cómo Redondear las Esquinas de una Imagen (Sin Software de Diseño)</h3>
+      <h3>Cómo redondear las esquinas de una imagen (sin programas de diseño)</h3>
       <p>Cómo redondear esquinas o recortar en círculo cuando el CSS por sí solo no exporta una imagen final.</p>
     </a>
   </div>
 </div>
 
-<a class="back-link" href="/es/blog/">← Volver al Blog</a>
+<a class="back-link" href="/es/blog/">← Volver al blog</a>
 
 </div>
 
@@ -204,14 +204,14 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF que funcionan en tu navegador. Procesamiento 100% local — tus archivos nunca se suben a ningún servidor.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Procesamiento 100 % local: tus archivos permanecen en tu dispositivo.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">
       <h3>Herramientas</h3>
-      <a href="/es/tools/#image">Herramientas de Imagen</a>
+      <a href="/es/tools/#image">Herramientas de imagen</a>
       <a href="/es/tools/#pdf">Herramientas PDF</a>
-      <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+      <a href="/es/tools/#utility">Utilidades</a>
     </div>
     <div class="footer-col">
       <h3>Empresa</h3>

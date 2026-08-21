@@ -159,16 +159,16 @@ h2{margin-top:50px;font-size:22px;}
 <header class="site-nav">
   <a class="site-nav-logo" href="/es/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
   <nav class="site-nav-links">
-    <a href="/es/tools/">Todas las Herramientas</a>
-    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/">Todas las herramientas</a>
+    <a href="/es/tools/#image">Herramientas de imagen</a>
     <span class="active-category">Herramientas PDF</span>
-    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <a href="/es/tools/#utility">Utilidades</a>
     <a href="/es/blog/">Blog</a>
   </nav>
   <div class="site-nav-right">
     <a class="lang-flag" href="/html-to-pdf/">EN</a>
     <span class="lang-flag active">ES</span>
-    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro">🌙</button>
   </div>
 </header>
 
@@ -178,16 +178,16 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4M13 6l-2 12"/></svg></div>
     <h1>HTML a PDF</h1>
   </div>
-  <p class="tool-sub">Pega código HTML, previsualiza cómo se renderiza y conviértelo en un PDF paginado. Todo ocurre localmente en tu navegador.</p>
+  <p class="tool-sub">Pega código HTML, comprueba la vista previa y conviértelo en un PDF paginado. Todo se procesa localmente en tu navegador.</p>
 
   <div class="workspace">
     <div class="box">
       <label class="dropzone" id="dropzone" for="fileInput">
-        <div id="dropzoneText">📁 Haz clic para subir un archivo .html, o pega tu código HTML abajo</div>
+        <div id="dropzoneText">📁 Haz clic para seleccionar un archivo .html o pega tu código HTML abajo</div>
       </label>
       <input type="file" id="fileInput" accept=".html,.htm">
       <div class="error" id="errorMsg"></div>
-      <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subidas · Sin cuenta</div>
+      <div class="trust-strip">🔒 Procesamiento local · Archivos siempre en tu dispositivo · Sin cuenta</div>
 
       <div class="field-label">Código HTML</div>
       <textarea id="htmlInput" spellcheck="false"><h1 style="color:#2563eb;">¡Hola, PDF!</h1>
@@ -202,7 +202,7 @@ h2{margin-top:50px;font-size:22px;}
         <label for="sizeSelect">Tamaño de página:</label>
         <select id="sizeSelect">
           <option value="a4">A4</option>
-          <option value="letter">Letter</option>
+          <option value="letter">Carta</option>
           <option value="legal">Legal</option>
         </select>
         <label for="orientationSelect">Orientación:</label>
@@ -229,7 +229,7 @@ h2{margin-top:50px;font-size:22px;}
 
   <div class="seo-content">
     <h2>¿Qué hace esta herramienta?</h2>
-    <p>Esta herramienta renderiza el HTML que pegas o subes — incluyendo estilos en línea y bloques &lt;style&gt; — en una vista previa en vivo, y luego convierte ese resultado renderizado en un PDF. El contenido más alto que una página se divide automáticamente en varias páginas.</p>
+    <p>La herramienta procesa el HTML que pegas o seleccionas, incluidos los estilos en línea y los bloques &lt;style&gt;, y muestra una vista previa en tiempo real antes de crear el PDF. Si el contenido ocupa más de una página, se divide automáticamente.</p>
 
     <h2>¿Cuándo usar esta herramienta?</h2>
     <ul>
@@ -240,12 +240,12 @@ h2{margin-top:50px;font-size:22px;}
     </ul>
 
     <h2>¿Por qué usar Orisod para esto?</h2>
-    <p>Pega tu HTML, míralo renderizado al instante, ajusta el tamaño de página y la orientación, y convierte — todo sin salir de la página. Todo el proceso ocurre localmente en tu navegador usando html2canvas y jsPDF — tu contenido nunca se sube a un servidor.</p>
+    <p>Pega el HTML, comprueba la vista previa, ajusta el tamaño y la orientación de la página y conviértelo sin salir del sitio. Todo se procesa localmente en tu navegador mediante html2canvas y jsPDF; el contenido permanece en tu dispositivo.</p>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
-      <div class="q">¿Puedo convertir un sitio web en vivo indicando su URL?</div>
-      <div>No, esta herramienta convierte el código HTML que pegas o subes directamente — no puede obtener la página de otro sitio web por ti, ya que eso requeriría un servidor. Copia el código fuente HTML de la página y pégalo aquí.</div>
+      <div class="q">¿Puedo convertir una página web introduciendo su URL?</div>
+      <div>No. La herramienta convierte el código HTML que pegas o seleccionas, pero no puede obtener por sí sola una página alojada en otro sitio porque eso requeriría un servidor. Copia el código fuente de la página y pégalo aquí.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Por qué algunas imágenes no aparecen en el PDF?</div>
@@ -257,15 +257,15 @@ h2{margin-top:50px;font-size:22px;}
     </div>
     <div class="faq-item">
       <div class="q">¿Se ejecutan las etiquetas &lt;script&gt; de mi HTML?</div>
-      <div>No, los scripts no se ejecutan — solo se renderiza la estructura HTML y el estilo CSS, por seguridad.</div>
+      <div>No. Por seguridad, los scripts no se ejecutan; solo se procesa la estructura HTML y los estilos CSS.</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Se sube mi contenido a un servidor?</div>
-      <div>No, todo el proceso ocurre localmente en tu navegador usando JavaScript.</div>
+      <div class="q">¿Se envía mi contenido a algún servidor?</div>
+      <div>No. Todo se procesa localmente en tu navegador mediante JavaScript; el archivo permanece en tu dispositivo.</div>
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres profundizar? Lee nuestra guía: <a href="/es/blog/html-to-pdf-guide/" style="color:var(--accent);text-decoration:none;">Cómo Convertir HTML a PDF (Pega el Código, Obtén un Archivo)</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres profundizar? Lee nuestra guía: <a href="/es/blog/html-to-pdf-guide/" style="color:var(--accent);text-decoration:none;">Cómo convertir HTML a PDF (pega el código y obtén el archivo)</a></p>
 
   <h2>Herramientas relacionadas</h2>
   <div class="related-grid">
@@ -299,14 +299,14 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF que funcionan en tu navegador. Procesamiento 100% local — tus archivos nunca se suben a ningún servidor.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Procesamiento 100 % local: tus archivos permanecen en tu dispositivo.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">
       <h3>Herramientas</h3>
-      <a href="/es/tools/#image">Herramientas de Imagen</a>
+      <a href="/es/tools/#image">Herramientas de imagen</a>
       <a href="/es/tools/#pdf">Herramientas PDF</a>
-      <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+      <a href="/es/tools/#utility">Utilidades</a>
     </div>
     <div class="footer-col">
       <h3>Empresa</h3>
@@ -448,7 +448,7 @@ convertBtn.addEventListener('click', async () => {
     const blob = pdf.output('blob');
     const url = URL.createObjectURL(blob);
 
-    progressMsg.textContent = 'Listo — descarga disponible.';
+    progressMsg.textContent = 'Listo para descargar.';
 
     const card = document.createElement('div');
     card.className = 'result-card';

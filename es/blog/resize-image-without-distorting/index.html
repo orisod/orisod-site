@@ -20,7 +20,7 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cómo Redimensionar una Imagen Sin Distorsionarla | Blog de Orisod</title>
+<title>Cómo redimensionar una imagen sin deformarla | Blog de Orisod</title>
 <meta name="description" content="Estira una imagen a las dimensiones equivocadas y se deforma — las caras se estiran, los círculos se vuelven óvalos. Aquí te explicamos por qué pasa eso y cómo redimensionar sin distorsionar.">
 <link rel="canonical" href="https://orisod.com/es/blog/resize-image-without-distorting/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/blog/resize-image-without-distorting/">
@@ -118,28 +118,28 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <header class="site-nav">
   <a class="site-nav-logo" href="/es/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
   <nav class="site-nav-links">
-    <a href="/es/tools/">Todas las Herramientas</a>
-    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/">Todas las herramientas</a>
+    <a href="/es/tools/#image">Herramientas de imagen</a>
     <a href="/es/tools/#pdf">Herramientas PDF</a>
-    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <a href="/es/tools/#utility">Utilidades</a>
     <span class="active-category">Blog</span>
   </nav>
   <div class="site-nav-right">
     <a class="lang-flag" href="/blog/resize-image-without-distorting/">EN</a>
     <span class="lang-flag active">ES</span>
-    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro">🌙</button>
   </div>
 </header>
 
 <main>
 <div class="container">
 
-<h1>Cómo Redimensionar una Imagen Sin Distorsionarla</h1>
+<h1>Cómo redimensionar una imagen sin deformarla</h1>
 <p class="intro">Lo has visto pasar: una foto se redimensiona y de repente todos en ella se ven ligeramente estirados, o el círculo perfecto de un logotipo se convierte en un óvalo. Aquí te explicamos exactamente por qué pasa eso, y cómo redimensionar sin que ocurra.</p>
 
 <div class="article-body">
 
-<h2>Qué está pasando realmente cuando una imagen "se distorsiona"</h2>
+<h2>Qué está pasando cuando una imagen "se distorsiona"</h2>
 <p>Toda imagen tiene una relación de aspecto — la relación proporcional entre su ancho y alto, como 4:3 o 16:9. Cuando redimensionas una imagen fijando un nuevo ancho y un nuevo alto de forma independiente, sin mantener esa relación consistente, le estás diciendo al software que apriete o estire la imagen para ajustarla a dimensiones para las que no estaba proporcionada. Los píxeles se empujan y se jalan de forma no uniforme para llenar la nueva forma, que es exactamente lo que hace que una cara se vea sutilmente estirada o que un círculo se convierta en un óvalo.</p>
 
 <h2>La solución: fija la relación de aspecto</h2>
@@ -154,13 +154,13 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <p>Ambas preservan las proporciones reales de la imagen; solo cambia el encuadre. La distorsión es la única opción que realmente daña la imagen en sí, por lo que vale la pena evitarla incluso cuando se requiere un conjunto obstinado de dimensiones exactas.</p>
 
 <h2>Cómo entender las matemáticas de la relación de aspecto</h2>
-<p>La relación de aspecto es simplemente el ancho dividido entre el alto. Una foto de 4000×3000 tiene una relación de 4:3. Para redimensionarla a un nuevo ancho manteniendo esa misma relación, multiplicas el nuevo ancho por la proporción alto-ancho del original — redimensionar a 1200px de ancho significa que el nuevo alto debería ser 900px (1200 × 3/4). La mayoría de las herramientas de redimensionado calculan esto automáticamente una vez que fijas la relación, así que rara vez necesitas hacer el cálculo a mano, pero entenderlo hace obvio por qué un par arbitrario de ancho y alto rompe las cosas.</p>
+<p>La relación de aspecto es simplemente el ancho dividido entre el alto. Una foto de 4000 × 3000 tiene una relación de 4:3. Para redimensionarla a un nuevo ancho manteniendo esa misma relación, multiplicas el nuevo ancho por la proporción alto-ancho del original — redimensionar a 1200px de ancho significa que el nuevo alto debería ser 900px (1200 × 3/4). La mayoría de las herramientas de redimensionado calculan esto automáticamente una vez que fijas la relación, así que rara vez necesitas hacer el cálculo a mano, pero entenderlo hace obvio por qué un par arbitrario de ancho y alto rompe las cosas.</p>
 
 <h2>Una forma rápida de detectar si una imagen se ve distorsionada</h2>
 <p>Si hay un círculo, una cara, o cualquier forma reconociblemente redonda o simétrica en la imagen, la distorsión es fácil de detectar — los círculos convirtiéndose en óvalos es la señal clásica. Para fotos sin un punto de referencia redondo obvio, la distorsión puede ser más sutil pero aun así se nota como una sensación de "estirado" o "aplastado" para cualquiera que la mire, incluso si no puede decir de inmediato por qué algo se ve mal.</p>
 
 <h2>Un ejemplo real de las matemáticas en acción</h2>
-<p>Digamos que tienes una foto panorámica de 3000×2000 (una relación 3:2) y una plantilla de sitio web que quiere imágenes de exactamente 1200px de ancho. Fijar la relación de aspecto e ingresar 1200 como ancho te da automáticamente un alto de 800px (1200 × 2/3), y la foto se ve exactamente como el original, solo más pequeña. Ingresa 1200×1200 en cambio — forzándola a ser cuadrada sin ajustar nada más — y la foto se comprime verticalmente, haciendo que todo en ella se vea notablemente aplastado.</p>
+<p>Digamos que tienes una foto panorámica de 3000 × 2000 (una relación 3:2) y una plantilla de sitio web que quiere imágenes de exactamente 1200px de ancho. Fijar la relación de aspecto e ingresar 1200 como ancho te da automáticamente un alto de 800px (1200 × 2/3), y la foto se ve exactamente como el original, solo más pequeña. Ingresa 1200 × 1200 en cambio — forzándola a ser cuadrada sin ajustar nada más — y la foto se comprime verticalmente, haciendo que todo en ella se vea notablemente aplastado.</p>
 
 <h2>Redimensionar una imagen correctamente</h2>
 <p>El enfoque más seguro es una herramienta de redimensionado que fije la relación de aspecto por defecto, así que ingresar una dimensión calcula automáticamente la otra — eliminando la posibilidad de distorsionar accidentalmente la imagen desde el principio.</p>
@@ -171,8 +171,8 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <p><strong>¿Cuál es la diferencia entre redimensionar y recortar?</strong> Redimensionar cambia el tamaño general manteniendo (idealmente) las mismas proporciones; recortar corta parte de la imagen para cambiar sus proporciones. Resuelven problemas distintos y a menudo se usan juntos.</p>
 
 <div class="cta-box">
-  <h3>Redimensiona una Imagen de la Forma Correcta</h3>
-  <p>El redimensionador de imágenes de Orisod fija la relación de aspecto por defecto, así que tus imágenes nunca salen estiradas ni aplastadas — todo procesado localmente en tu navegador.</p>
+  <h3>Redimensiona una imagen sin deformarla</h3>
+  <p>La herramienta Redimensionar imagen de Orisod mantiene la relación de aspecto de forma predeterminada para evitar deformaciones. Todo se procesa localmente en tu navegador.</p>
   <a class="cta-button" href="/es/resize-image/">Redimensionar una Imagen →</a>
 </div>
 
@@ -184,23 +184,23 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <h2>Artículos relacionados</h2>
   <div class="related-grid">
     <a class="blog-card" href="/es/blog/crop-photo-exact-size/">
-      <h3>Cómo Recortar una Foto al Tamaño Exacto que Necesitas</h3>
+      <h3>Cómo recortar una foto al tamaño exacto que necesitas</h3>
       <p>La diferencia entre recortar “más o menos bien” y recortar a un tamaño exacto en píxeles.</p>
     </a>
 
     <a class="blog-card" href="/es/blog/svg-to-png-guide/">
-      <h3>SVG a PNG: Cuándo Necesitas una Imagen de Tamaño Fijo en Lugar de Vector</h3>
+      <h3>SVG a PNG: cuándo necesitas una imagen de tamaño fijo</h3>
       <p>Cuándo un archivo vectorial escalable necesita convertirse en una imagen ráster de tamaño fijo.</p>
     </a>
 
     <a class="blog-card" href="/es/blog/fix-sideways-photo/">
-      <h3>Cómo Arreglar una Foto Girada o Boca Abajo</h3>
-      <p>Por qué las fotos a veces aparecen giradas según la app, y cómo arreglarlo definitivamente.</p>
+      <h3>Cómo corregir una foto girada o invertida</h3>
+      <p>Por qué las fotos a veces aparecen giradas según la aplicación, y cómo arreglarlo definitivamente.</p>
     </a>
   </div>
 </div>
 
-<a class="back-link" href="/es/blog/">← Volver al Blog</a>
+<a class="back-link" href="/es/blog/">← Volver al blog</a>
 
 </div>
 
@@ -208,14 +208,14 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF que funcionan en tu navegador. Procesamiento 100% local — tus archivos nunca se suben a ningún servidor.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Procesamiento 100 % local: tus archivos permanecen en tu dispositivo.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">
       <h3>Herramientas</h3>
-      <a href="/es/tools/#image">Herramientas de Imagen</a>
+      <a href="/es/tools/#image">Herramientas de imagen</a>
       <a href="/es/tools/#pdf">Herramientas PDF</a>
-      <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+      <a href="/es/tools/#utility">Utilidades</a>
     </div>
     <div class="footer-col">
       <h3>Empresa</h3>

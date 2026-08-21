@@ -20,7 +20,7 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cómo Redondear las Esquinas de una Imagen (Sin Software de Diseño) | Blog de Orisod</title>
+<title>Cómo redondear las esquinas de una imagen (sin programas de diseño) | Blog de Orisod</title>
 <meta name="description" content="¿Necesitas una versión con esquinas redondeadas o recorte circular de una foto — para un avatar, un ícono de app, o una tarjeta — sin abrir un programa de diseño? Aquí te explicamos cómo, y por qué el CSS solo no siempre basta.">
 <link rel="canonical" href="https://orisod.com/es/blog/round-image-corners-guide/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/blog/round-image-corners-guide/">
@@ -118,49 +118,49 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <header class="site-nav">
   <a class="site-nav-logo" href="/es/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
   <nav class="site-nav-links">
-    <a href="/es/tools/">Todas las Herramientas</a>
-    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/">Todas las herramientas</a>
+    <a href="/es/tools/#image">Herramientas de imagen</a>
     <a href="/es/tools/#pdf">Herramientas PDF</a>
-    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <a href="/es/tools/#utility">Utilidades</a>
     <span class="active-category">Blog</span>
   </nav>
   <div class="site-nav-right">
     <a class="lang-flag" href="/blog/round-image-corners-guide/">EN</a>
     <span class="lang-flag active">ES</span>
-    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro">🌙</button>
   </div>
 </header>
 
 <main>
 <div class="container">
 
-<h1>Cómo Redondear las Esquinas de una Imagen (Sin Software de Diseño)</h1>
-<p class="intro">Las esquinas redondeadas y los recortes circulares aparecen constantemente — avatares de perfil, íconos de apps, tarjetas de producto — y aunque parece un simple ajuste visual, producir realmente un archivo de imagen independiente con esquinas redondeadas (no solo una visualización redondeada en una página web) confunde más de lo esperado.</p>
+<h1>Cómo redondear las esquinas de una imagen (sin programas de diseño)</h1>
+<p class="intro">Las esquinas redondeadas y los recortes circulares aparecen constantemente — avatares de perfil, íconos de aplicaciones, tarjetas de producto — y aunque parece un simple ajuste visual, producir realmente un archivo de imagen independiente con esquinas redondeadas (no solo una visualización redondeada en una página web) confunde más de lo esperado.</p>
 
 <div class="article-body">
 
-<h2>Dónde aparecen realmente las esquinas redondeadas y los recortes circulares</h2>
+<h2>Dónde aparecen las esquinas redondeadas y los recortes circulares</h2>
 <ul>
   <li><strong>Avatares de perfil</strong> — la mayoría de las plataformas muestran las fotos de usuario en un círculo, y tener la imagen de origen ya recortada evita que la plataforma haga un recorte automático impredecible.</li>
-  <li><strong>Íconos de apps</strong> — muchas guías de íconos de tiendas de apps y pantallas de inicio esperan (o aplican automáticamente) esquinas redondeadas cuadradas con un radio específico.</li>
+  <li><strong>Íconos de aplicaciones </strong>— muchas guías de íconos de tiendas de aplicaciones y pantallas de inicio esperan (o aplican automáticamente) esquinas redondeadas cuadradas con un radio específico.</li>
   <li><strong>Tarjetas de producto y contenido</strong> — una miniatura con esquinas redondeadas se siente más moderna y coincide con la mayoría de las convenciones de diseño de interfaz actuales.</li>
   <li><strong>Materiales impresos</strong> — las esquinas redondeadas en fotos son un toque de acabado común para impresiones físicas, tarjetas y credenciales.</li>
 </ul>
 
 <h2>Por qué el redondeado con CSS no siempre es la respuesta</h2>
-<p>Si estás colocando una imagen en un sitio web, el <code>border-radius</code> de CSS puede redondear visualmente sus esquinas sin tocar el archivo real — la imagen subyacente sigue siendo un rectángulo plano, y el navegador simplemente recorta cómo se muestra. Eso funciona bien mientras la imagen solo viva dentro de esa página web. Se rompe en el momento en que necesitas un archivo realmente redondeado: subir una foto de perfil a una plataforma que no aplica su propio redondeo, exportar un ícono para una tienda de apps, adjuntar una imagen a un correo, o imprimirla — ninguno de esos contextos ejecuta tu CSS, así que un archivo rectangular se queda rectangular.</p>
+<p>Si estás colocando una imagen en un sitio web, el <code>border-radius</code> de CSS puede redondear visualmente sus esquinas sin tocar el archivo real — la imagen subyacente sigue siendo un rectángulo plano, y el navegador simplemente recorta cómo se muestra. Eso funciona bien mientras la imagen solo viva dentro de esa página web. Se rompe en el momento en que necesitas un archivo realmente redondeado: subir una foto de perfil a una plataforma que no aplica su propio redondeo, exportar un ícono para una tienda de aplicaciones, adjuntar una imagen a un correo, o imprimirla — ninguno de esos contextos ejecuta tu CSS, así que un archivo rectangular se queda rectangular.</p>
 
-<h2>Qué significa realmente "redondear" un archivo</h2>
+<h2>Qué significa "redondear" un archivo</h2>
 <p>Para producir una imagen genuinamente redondeada, las esquinas (o todo lo que esté fuera de un círculo) necesitan volverse realmente píxeles transparentes, no solo ocultarse visualmente — lo que significa que el resultado tiene que ser un formato que admita transparencia, como PNG, en lugar de JPG. Una imagen redondeada guardada como JPG no puede tener esquinas transparentes en absoluto; JPG rellenará esas áreas con un color sólido en su lugar, normalmente blanco, que se ve bien sobre un fondo blanco y visiblemente mal sobre cualquier otra cosa.</p>
 
 <h2>Recorte circular vs rectángulo redondeado</h2>
 <p>Un recorte circular elimina todo lo que esté fuera de un límite circular — la forma estándar para avatares y fotos de perfil. Un rectángulo redondeado mantiene la forma original de la imagen pero suaviza solo las cuatro esquinas con un radio elegido — más común para tarjetas, miniaturas e íconos donde todavía quieres una imagen mayormente rectangular. Ambos dependen del mismo mecanismo de transparencia por debajo; la diferencia es solo la forma de la máscara aplicada.</p>
 
-<h2>Eligiendo un radio de esquina que realmente se vea bien</h2>
+<h2>Eligiendo un radio de esquina que se vea bien</h2>
 <p>Un radio pequeño (un suavizado sutil de esquinas que de otra forma serían nítidas) se lee como moderno y sutil, y funciona bien para tarjetas y miniaturas donde todavía quieres una imagen claramente rectangular. Un radio grande se acerca a verse casi circular en las esquinas, lo que conviene más a elementos pequeños como íconos que a fotos grandes, donde un radio agresivo puede verse involuntario en lugar de estilizado. No hay una regla fija, pero ajustar el radio a cómo se mostrará realmente la imagen — pequeña y densa en una cuadrícula vs grande e independiente — suele guiar la elección correcta.</p>
 
-<h2>Cómo hacerlo sin software de diseño</h2>
-<p>Una herramienta de redondeo basada en navegador aplica la máscara por ti — subes la imagen, eliges un recorte circular o un radio de esquina, y exportas un PNG con las áreas correctas hechas transparentes. Sin capas, sin enmascarado manual, sin necesidad de licencia de software de diseño; todo el proceso es elegir una forma y descargar el resultado — y como el resultado es un archivo real y no un truco de visualización, se ve correcto en el momento en que se sube a cualquier lugar, sobre cualquier fondo.</p>
+<h2>Cómo hacerlo sin programas de diseño</h2>
+<p>Una herramienta en el navegador aplica la máscara por ti: selecciona la imagen, elige un recorte circular o un radio para las esquinas y exporta un PNG con las zonas exteriores transparentes. No necesitas capas ni máscaras manuales. Como el efecto forma parte del archivo, se conserva al utilizar la imagen sobre cualquier fondo.</p>
 
 <h2>Respuestas rápidas</h2>
 <p><strong>¿Puedo redondear las esquinas de un JPG?</strong> No directamente manteniéndolo como JPG — el resultado necesita guardarse como PNG (u otro formato con transparencia) para que las áreas redondeadas sean realmente transparentes en lugar de rellenarse con un color de fondo.</p>
@@ -168,8 +168,8 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <p><strong>¿Un recorte circular es el mismo proceso que redondear esquinas?</strong> Funcionalmente sí — ambos aplican una máscara de transparencia a la imagen, solo con una forma distinta (un círculo completo vs cuatro esquinas redondeadas en una imagen por lo demás rectangular).</p>
 
 <div class="cta-box">
-  <h3>Redondea Esquinas o Recorta en Círculo una Imagen</h3>
-  <p>La herramienta de redondeo de Orisod exporta un PNG con transparencia real — recorte circular o radio de esquina personalizado — completamente en tu navegador, sin subir nada a un servidor.</p>
+  <h3>Redondea las esquinas o recorta una imagen en círculo</h3>
+  <p>La herramienta Redondear imagen de Orisod crea un recorte circular o aplica el radio de esquina que elijas y exporta un PNG con transparencia. Todo se procesa en tu navegador.</p>
   <a class="cta-button" href="/es/round-image-corners/">Redondear Esquinas de Imagen →</a>
 </div>
 
@@ -181,23 +181,23 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <h2>Artículos relacionados</h2>
   <div class="related-grid">
     <a class="blog-card" href="/es/blog/add-photo-border-online/">
-      <h3>Cómo Añadir un Marco o Borde a Tus Fotos en Línea</h3>
+      <h3>Cómo añadir un marco o borde a tus fotos en línea</h3>
       <p>Un simple borde puede hacer que una foto casual se vea intencional — así se añade uno.</p>
     </a>
 
     <a class="blog-card" href="/es/blog/social-media-image-sizes-2026/">
-      <h3>El Tamaño de Imagen Correcto para Cada Red Social (2026)</h3>
+      <h3>Tamaños de imagen recomendados para cada red social (2026)</h3>
       <p>El tamaño de imagen recomendado actual para cada red social importante, en un solo lugar.</p>
     </a>
 
     <a class="blog-card" href="/es/blog/black-and-white-photo-filter/">
-      <h3>Cómo Volver una Foto Blanco y Negro (o Añadir un Filtro de Color)</h3>
-      <p>Qué cambia realmente al convertir una foto a blanco y negro, y cómo hacerlo bien.</p>
+      <h3>Cómo convertir una foto a blanco y negro (o aplicar un filtro de color)</h3>
+      <p>Qué cambia al convertir una foto a blanco y negro, y cómo hacerlo bien.</p>
     </a>
   </div>
 </div>
 
-<a class="back-link" href="/es/blog/">← Volver al Blog</a>
+<a class="back-link" href="/es/blog/">← Volver al blog</a>
 
 </div>
 
@@ -205,14 +205,14 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF que funcionan en tu navegador. Procesamiento 100% local — tus archivos nunca se suben a ningún servidor.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Procesamiento 100 % local: tus archivos permanecen en tu dispositivo.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">
       <h3>Herramientas</h3>
-      <a href="/es/tools/#image">Herramientas de Imagen</a>
+      <a href="/es/tools/#image">Herramientas de imagen</a>
       <a href="/es/tools/#pdf">Herramientas PDF</a>
-      <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+      <a href="/es/tools/#utility">Utilidades</a>
     </div>
     <div class="footer-col">
       <h3>Empresa</h3>
