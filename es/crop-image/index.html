@@ -233,16 +233,16 @@ h2{
 <header class="site-nav">
   <a class="site-nav-logo" href="/es/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
   <nav class="site-nav-links">
-    <a href="/es/tools/">Todas las Herramientas</a>
-    <span class="active-category">Herramientas de Imagen</span>
+    <a href="/es/tools/">Todas las herramientas</a>
+    <span class="active-category">Herramientas de imagen</span>
     <a href="/es/tools/#pdf">Herramientas PDF</a>
-    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <a href="/es/tools/#utility">Utilidades</a>
     <a href="/es/blog/">Blog</a>
   </nav>
   <div class="site-nav-right">
     <a class="lang-flag" href="/crop-image/">EN</a>
     <span class="lang-flag active">ES</span>
-    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro">🌙</button>
   </div>
 </header>
 
@@ -252,16 +252,16 @@ h2{
     <div class="icon-box cat-image"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/></svg></div>
     <h1>Recortar imagen</h1>
   </div>
-  <p class="tool-sub">Sube una imagen, arrastra para seleccionar el área que quieres y descarga el resultado recortado. Todo ocurre localmente en tu navegador.</p>
+  <p class="tool-sub">Selecciona una imagen, arrastra para marcar el área que quieres conservar y descarga el resultado. Todo se procesa localmente en tu navegador.</p>
 
   <div class="workspace">
     <div class="box">
       <label class="dropzone" id="dropzone" for="fileInput">
-        <div id="dropzoneText">📁 Haz clic para seleccionar una imagen o arrástrala aquí</div>
+        <div id="dropzoneText">📁 Haz clic para seleccionar una imagen o arrástrala y suéltala aquí</div>
       </label>
       <input type="file" id="fileInput" accept="image/*">
       <div class="error" id="errorMsg"></div>
-      <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subir archivos · Sin cuenta · Sin marca de agua</div>
+      <div class="trust-strip">🔒 Procesamiento local · Archivos siempre en tu dispositivo · Sin cuenta · Sin marca de agua</div>
 
       <div class="editor" id="editor">
         <div class="workspace-stage">
@@ -287,7 +287,7 @@ h2{
         </div>
       </div>
 
-      <div class="note">Compatible con JPG, PNG, WEBP y otros formatos de imagen comunes. Nada sale de tu dispositivo.</div>
+      <div class="note">Compatible con JPG, PNG, WebP y otros formatos de imagen comunes. Tus archivos permanecen en tu dispositivo.</div>
     </div>
   </div>
 
@@ -304,7 +304,7 @@ h2{
     </ul>
 
     <h2>¿Por qué usar Orisod para esto?</h2>
-    <p>Esta herramienta te da un área de recorte visual, seleccionable arrastrando directamente sobre tu imagen — sin necesidad de coordenadas de píxeles manuales. Ves el resultado recortado actualizarse en vivo en una vista previa lado a lado mientras arrastras, y todo ocurre localmente en tu navegador, por lo que tu foto nunca se sube a ningún lugar.</p>
+    <p>Selecciona visualmente el área de recorte arrastrando sobre la imagen, sin introducir coordenadas. Una vista previa comparativa se actualiza en tiempo real mientras ajustas la selección. Todo se procesa localmente en tu navegador y la foto permanece en tu dispositivo.</p>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
@@ -316,16 +316,16 @@ h2{
       <div>No, recortar solo elimina los píxeles fuera de tu selección — la imagen restante conserva su calidad original.</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Mi imagen se sube a algún lugar?</div>
-      <div>No, tanto la selección del recorte como la exportación ocurren localmente en tu navegador.</div>
+      <div class="q">¿Se envía mi imagen a algún servidor?</div>
+      <div>No. Tanto la selección como la exportación se realizan localmente en tu navegador; la imagen permanece en tu dispositivo.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Esto funciona en dispositivos móviles?</div>
-      <div>Sí, la herramienta de recorte admite arrastrar con el dedo en teléfonos y tablets, no solo con el mouse.</div>
+      <div>Sí. En teléfonos y tabletas puedes arrastrar con el dedo, y en computadoras con el puntero.</div>
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres profundizar? Lee nuestra guía: <a href="/es/blog/crop-photo-exact-size/" style="color:var(--accent);text-decoration:none;">Cómo Recortar una Foto al Tamaño Exacto que Necesitas</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres profundizar? Lee nuestra guía: <a href="/es/blog/crop-photo-exact-size/" style="color:var(--accent);text-decoration:none;">Cómo recortar una foto al tamaño exacto que necesitas</a></p>
 
   <h2>Herramientas relacionadas</h2>
   <div class="related-grid">
@@ -359,14 +359,14 @@ h2{
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF que funcionan en tu navegador. Procesamiento 100% local — tus archivos nunca se suben a ningún servidor.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Procesamiento 100 % local: tus archivos permanecen en tu dispositivo.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">
       <h3>Herramientas</h3>
-      <a href="/es/tools/#image">Herramientas de Imagen</a>
+      <a href="/es/tools/#image">Herramientas de imagen</a>
       <a href="/es/tools/#pdf">Herramientas PDF</a>
-      <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+      <a href="/es/tools/#utility">Utilidades</a>
     </div>
     <div class="footer-col">
       <h3>Empresa</h3>
@@ -477,7 +477,7 @@ function setupCanvas() {
   cropError.textContent = '';
   previewCanvas.style.display = 'none';
   previewPlaceholder.style.display = 'block';
-  previewPlaceholder.textContent = 'Arrastra sobre la imagen original para ver aquí una vista previa en vivo.';
+  previewPlaceholder.textContent = 'Arrastra sobre la imagen original para ver aquí una vista previa en tiempo real.';
 }
 
 function getPos(e) {

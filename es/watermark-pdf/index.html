@@ -169,16 +169,16 @@ h2{margin-top:50px;font-size:22px;}
 <header class="site-nav">
   <a class="site-nav-logo" href="/es/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
   <nav class="site-nav-links">
-    <a href="/es/tools/">Todas las Herramientas</a>
-    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/">Todas las herramientas</a>
+    <a href="/es/tools/#image">Herramientas de imagen</a>
     <span class="active-category">Herramientas PDF</span>
-    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <a href="/es/tools/#utility">Utilidades</a>
     <a href="/es/blog/">Blog</a>
   </nav>
   <div class="site-nav-right">
     <a class="lang-flag" href="/watermark-pdf/">EN</a>
     <span class="lang-flag active">ES</span>
-    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro">🌙</button>
   </div>
 </header>
 
@@ -188,16 +188,16 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.8 6 11.2A6 6 0 0 1 6 14.2C6 9.8 12 3 12 3z"/></svg></div>
     <h1>Marca de agua en PDF</h1>
   </div>
-  <p class="tool-sub">Estampa una marca de agua de texto en cada página de un PDF — elige posición, rotación, tamaño, color y opacidad con vista previa en vivo. Todo ocurre localmente en tu navegador.</p>
+  <p class="tool-sub">Añade una marca de agua de texto a todas las páginas de un PDF. Ajusta la posición, la rotación, el tamaño, el color y la opacidad con una vista previa en tiempo real. Todo se procesa localmente en tu navegador.</p>
 
   <div class="workspace">
     <div class="box">
       <label class="dropzone" id="dropzone" for="fileInput">
-        <div id="dropzoneText">📁 Haz clic para seleccionar un PDF o arrástralo aquí</div>
+        <div id="dropzoneText">📁 Haz clic para seleccionar un PDF o arrástralo y suéltalo aquí</div>
       </label>
       <input type="file" id="fileInput" accept=".pdf">
       <div class="error" id="errorMsg"></div>
-      <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subidas · Sin cuenta · Sin marca de agua añadida por nosotros</div>
+      <div class="trust-strip">🔒 Procesamiento local · Archivos siempre en tu dispositivo · Sin cuenta · Orisod no añade marcas de agua</div>
       <div class="page-count" id="pageCount"></div>
 
       <div class="editor" id="editor" style="display:none;">
@@ -262,7 +262,7 @@ h2{margin-top:50px;font-size:22px;}
 
   <div class="seo-content">
     <h2>¿Qué hace esta herramienta?</h2>
-    <p>Esta herramienta estampa una marca de agua de texto — como "CONFIDENCIAL", "BORRADOR" o tu propio nombre — en cada página de un PDF, con control total sobre posición, ángulo de rotación, tamaño, color y opacidad. Una vista previa en vivo de la página 1 se actualiza mientras ajustas cada opción, para que veas exactamente cómo quedará antes de descargar.</p>
+    <p>Añade un texto, como “CONFIDENCIAL”, “BORRADOR” o tu nombre, a todas las páginas del PDF. Puedes controlar la posición, el ángulo, el tamaño, el color y la opacidad; la vista previa de la primera página se actualiza en tiempo real para mostrar el resultado antes de descargarlo.</p>
 
     <h2>¿Cuándo usar esta herramienta?</h2>
     <ul>
@@ -273,7 +273,7 @@ h2{margin-top:50px;font-size:22px;}
     </ul>
 
     <h2>¿Por qué usar Orisod para esto?</h2>
-    <p>Ajusta texto, posición, rotación, tamaño, color y opacidad con una vista previa en vivo antes de confirmar — sin adivinar ni descargar varias veces. Todo el proceso ocurre localmente en tu navegador usando pdf.js para la vista previa y pdf-lib para generar el archivo final — tu documento nunca se sube a un servidor.</p>
+    <p>Ajusta texto, posición, rotación, tamaño, color y opacidad con una vista previa en tiempo real antes de confirmar — sin adivinar ni descargar varias veces. Todo el proceso ocurre localmente en tu navegador usando PDF.js para la vista previa y pdf-lib para generar el archivo final — tu documento permanece en tu dispositivo.</p>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
@@ -285,16 +285,16 @@ h2{margin-top:50px;font-size:22px;}
       <div>La marca de agua pasa a formar parte del contenido de la página, igual que en otras herramientas de PDF. Conserva tu archivo original por si necesitas una copia sin marca de agua más adelante.</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Puedo añadir una imagen o logo en vez de texto?</div>
+      <div class="q">¿Puedo añadir una imagen o un logotipo en lugar de texto?</div>
       <div>Por ahora esta herramienta solo admite marcas de agua de texto.</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Se sube mi PDF a un servidor?</div>
-      <div>No, todo el proceso ocurre localmente en tu navegador usando JavaScript.</div>
+      <div class="q">¿Se envía mi PDF a algún servidor?</div>
+      <div>No. Todo se procesa localmente en tu navegador mediante JavaScript; el archivo permanece en tu dispositivo.</div>
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres profundizar? Lee nuestra guía: <a href="/es/blog/watermark-pdf-documents/" style="color:var(--accent);text-decoration:none;">Cómo Poner una Marca de Agua en un PDF (Confidencial, Borrador o Tu Nombre)</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres profundizar? Lee nuestra guía: <a href="/es/blog/watermark-pdf-documents/" style="color:var(--accent);text-decoration:none;">Cómo añadir una marca de agua a un PDF</a></p>
 
   <h2>Herramientas relacionadas</h2>
   <div class="related-grid">
@@ -336,14 +336,14 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF que funcionan en tu navegador. Procesamiento 100% local — tus archivos nunca se suben a ningún servidor.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Procesamiento 100 % local: tus archivos permanecen en tu dispositivo.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">
       <h3>Herramientas</h3>
-      <a href="/es/tools/#image">Herramientas de Imagen</a>
+      <a href="/es/tools/#image">Herramientas de imagen</a>
       <a href="/es/tools/#pdf">Herramientas PDF</a>
-      <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+      <a href="/es/tools/#utility">Utilidades</a>
     </div>
     <div class="footer-col">
       <h3>Empresa</h3>
@@ -445,7 +445,7 @@ async function handleFile(file) {
     pdfJsDoc = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
     selectedFile = file;
 
-    pageCount.textContent = `Cargado: ${pdfJsDoc.numPages} página${pdfJsDoc.numPages === 1 ? '' : 's'}`;
+    pageCount.textContent = `Cargado: ${pdfJsDoc.numPages} página${pdfJsDoc.numPages === 1? '': 's'}`;
     dropzoneText.textContent = `✅ ${file.name} cargado`;
     editor.style.display = 'block';
     await renderOriginal();
@@ -587,7 +587,7 @@ downloadBtn.addEventListener('click', async () => {
     const baseName = selectedFile.name.replace(/\.pdf$/i, '');
     const outName = `${baseName}-marca-de-agua.pdf`;
 
-    progressMsg.textContent = 'Listo — descarga disponible.';
+    progressMsg.textContent = 'Listo para descargar.';
 
     const card = document.createElement('div');
     card.className = 'result-card';
@@ -604,7 +604,7 @@ downloadBtn.addEventListener('click', async () => {
     link.href = url;
     link.download = outName;
     link.className = 'back';
-    link.textContent = 'Descargar PDF con Marca de Agua';
+    link.textContent = 'Descargar PDF con marca de agua';
     resultEl.appendChild(link);
   } catch (err) {
     errorMsg.textContent = err.message || 'No se pudo aplicar la marca de agua a este PDF.';

@@ -156,16 +156,16 @@ h2{margin-top:50px;font-size:22px;}
 <header class="site-nav">
   <a class="site-nav-logo" href="/es/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
   <nav class="site-nav-links">
-    <a href="/es/tools/">Todas las Herramientas</a>
-    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/">Todas las herramientas</a>
+    <a href="/es/tools/#image">Herramientas de imagen</a>
     <span class="active-category">Herramientas PDF</span>
-    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <a href="/es/tools/#utility">Utilidades</a>
     <a href="/es/blog/">Blog</a>
   </nav>
   <div class="site-nav-right">
     <a class="lang-flag" href="/edit-pdf-metadata/">EN</a>
     <span class="lang-flag active">ES</span>
-    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro">🌙</button>
   </div>
 </header>
 
@@ -180,11 +180,11 @@ h2{margin-top:50px;font-size:22px;}
   <div class="workspace">
     <div class="box">
       <label class="dropzone" id="dropzone" for="fileInput">
-        <div id="dropzoneText">📁 Haz clic para seleccionar un PDF o arrástralo aquí</div>
+        <div id="dropzoneText">📁 Haz clic para seleccionar un PDF o arrástralo y suéltalo aquí</div>
       </label>
       <input type="file" id="fileInput" accept=".pdf">
       <div class="error" id="errorMsg"></div>
-      <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subir archivos · Sin cuenta · Sin marca de agua</div>
+      <div class="trust-strip">🔒 Procesamiento local · Archivos siempre en tu dispositivo · Sin cuenta · Sin marca de agua</div>
 
       <div class="meta-fields" id="metaFields" style="display:none;">
         <div class="field-row">
@@ -217,7 +217,7 @@ h2{margin-top:50px;font-size:22px;}
 
   <div class="seo-content">
     <h2>¿Qué son los metadatos de un PDF?</h2>
-    <p>Todo PDF incluye un pequeño conjunto de propiedades de documento junto a su contenido visible — título, autor, asunto y palabras clave. Estos metadatos no aparecen en la página, pero son lo que se muestra en el panel de "Propiedades" de un archivo, en algunos resultados de búsqueda, y a veces revelan quién creó un documento o con qué software se generó, incluso después de renombrar el archivo.</p>
+    <p>Los archivos PDF pueden incluir propiedades como título, autor, asunto y palabras clave además del contenido visible. Estos metadatos no aparecen en la página, pero sí en el panel “Propiedades” y, en algunos casos, en resultados de búsqueda. También pueden revelar quién creó el documento o con qué programa se generó, aunque cambies el nombre del archivo.</p>
 
     <h2>¿Cuándo deberías usar esta herramienta?</h2>
     <ul>
@@ -228,7 +228,7 @@ h2{margin-top:50px;font-size:22px;}
     </ul>
 
     <h2>¿Por qué usar Orisod para esto?</h2>
-    <p>Esta herramienta lee los metadatos existentes directamente de tu archivo y te permite editarlos o borrarlos antes de guardar. Todo el proceso — lectura, edición y escritura del nuevo PDF — ocurre localmente en tu navegador usando pdf-lib. Tu documento nunca se sube a un servidor.</p>
+    <p>La herramienta lee los metadatos del archivo y te permite editarlos o eliminarlos antes de guardar. Todo el proceso —lectura, edición y creación del nuevo PDF— se realiza localmente en tu navegador mediante pdf-lib; el documento permanece en tu dispositivo.</p>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
@@ -237,15 +237,15 @@ h2{margin-top:50px;font-size:22px;}
     </div>
     <div class="faq-item">
       <div class="q">¿Puedo eliminar todos los metadatos a la vez?</div>
-      <div>Sí, haz clic en "Borrar todos los campos" para vaciarlos todos, y luego guarda — el PDF descargado tendrá los metadatos en blanco.</div>
+      <div>Sí. Haz clic en “Borrar todos los campos” y guarda el resultado; el PDF descargado tendrá esos metadatos vacíos.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Qué pasa si un campo ya está vacío?</div>
       <div>Algunos PDF no tienen ciertos campos definidos. Esos campos simplemente aparecerán vacíos — puedes dejarlos así o completarlos.</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Mi PDF se sube a un servidor?</div>
-      <div>No, todo el proceso ocurre localmente en tu navegador usando JavaScript.</div>
+      <div class="q">¿Se envía mi PDF a algún servidor?</div>
+      <div>No. Todo se procesa localmente en tu navegador mediante JavaScript; el archivo permanece en tu dispositivo.</div>
     </div>
   </div>
 
@@ -297,14 +297,14 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF que funcionan en tu navegador. Procesamiento 100% local — tus archivos nunca se suben a ningún servidor.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Procesamiento 100 % local: tus archivos permanecen en tu dispositivo.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">
       <h3>Herramientas</h3>
-      <a href="/es/tools/#image">Herramientas de Imagen</a>
+      <a href="/es/tools/#image">Herramientas de imagen</a>
       <a href="/es/tools/#pdf">Herramientas PDF</a>
-      <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+      <a href="/es/tools/#utility">Utilidades</a>
     </div>
     <div class="footer-col">
       <h3>Empresa</h3>
@@ -423,7 +423,7 @@ saveBtn.addEventListener('click', async () => {
     const baseName = selectedFile.name.replace(/\.pdf$/i, '');
     const outName = `${baseName}-metadata.pdf`;
 
-    progressMsg.textContent = 'Listo — descarga disponible.';
+    progressMsg.textContent = 'Listo para descargar.';
 
     const filledCount = [titleField.value, authorField.value, subjectField.value, keywordsField.value].filter(Boolean).length;
 

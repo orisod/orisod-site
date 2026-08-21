@@ -20,7 +20,7 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Añadir Marco a Imagen – Herramienta Gratuita en Línea | Orisod</title>
+<title>Añadir un marco a una imagen – Herramienta gratuita en línea | Orisod</title>
 <meta name="description" content="Añade un marco de color alrededor de tu imagen, gratis y en línea. Ajusta el ancho, color y redondeo de esquinas — todo se ejecuta en tu navegador.">
 <link rel="canonical" href="https://orisod.com/es/add-border-to-image/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/add-border-to-image/">
@@ -150,16 +150,16 @@ h2{margin-top:50px;font-size:22px;}
 <header class="site-nav">
   <a class="site-nav-logo" href="/es/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
   <nav class="site-nav-links">
-    <a href="/es/tools/">Todas las Herramientas</a>
-    <span class="active-category">Herramientas de Imagen</span>
+    <a href="/es/tools/">Todas las herramientas</a>
+    <span class="active-category">Herramientas de imagen</span>
     <a href="/es/tools/#pdf">Herramientas PDF</a>
-    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <a href="/es/tools/#utility">Utilidades</a>
     <a href="/es/blog/">Blog</a>
   </nav>
   <div class="site-nav-right">
     <a class="lang-flag" href="/add-border-to-image/">EN</a>
     <span class="lang-flag active">ES</span>
-    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro">🌙</button>
   </div>
 </header>
 
@@ -167,18 +167,18 @@ h2{margin-top:50px;font-size:22px;}
 <div class="container">
   <div class="tool-hero">
     <div class="icon-box cat-image"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" stroke-dasharray="2.2 2.2"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg></div>
-    <h1>Añadir Marco a Imagen</h1>
+    <h1>Añadir marco a una imagen</h1>
   </div>
   <p class="tool-sub">Añade un marco de color alrededor de tu foto — ajusta el grosor, color y redondeo a tu gusto. Todo ocurre localmente en tu navegador.</p>
 
   <div class="workspace">
     <div class="box">
       <label class="dropzone" id="dropzone" for="fileInput">
-        <div id="dropzoneText">📁 Haz clic para seleccionar una imagen o arrástrala aquí</div>
+        <div id="dropzoneText">📁 Haz clic para seleccionar una imagen o arrástrala y suéltala aquí</div>
       </label>
       <input type="file" id="fileInput" accept="image/*">
       <div class="error" id="errorMsg"></div>
-      <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subir archivos · Sin cuenta · Sin marca de agua</div>
+      <div class="trust-strip">🔒 Procesamiento local · Archivos siempre en tu dispositivo · Sin cuenta · Sin marca de agua</div>
 
       <div class="editor" id="editor">
         <div class="workspace-stage">
@@ -198,11 +198,11 @@ h2{margin-top:50px;font-size:22px;}
             <label>Color: <input type="color" id="colorInput" value="#ffffff"></label>
             <label>Radio de esquina: <input type="range" id="radiusSlider" min="0" max="50" value="0"> <span id="radiusValue">0</span>px</label>
           </div>
-          <button id="downloadBtn">Descargar Imagen</button>
+          <button id="downloadBtn">Descargar imagen</button>
         </div>
       </div>
 
-      <div class="note">Compatible con JPG, PNG, WEBP y otros formatos de imagen comunes.</div>
+      <div class="note">Compatible con JPG, PNG, WebP y otros formatos de imagen comunes.</div>
     </div>
   </div>
 
@@ -219,28 +219,28 @@ h2{margin-top:50px;font-size:22px;}
     </ul>
 
     <h2>¿Por qué usar Orisod para esto?</h2>
-    <p>Ajusta el ancho del borde, el color y el redondeo de esquinas con una vista previa lado a lado en vivo antes de descargar. Todo ocurre localmente en tu navegador usando la API Canvas — tu foto nunca se sube a un servidor.</p>
+    <p>Ajusta el ancho y el color del borde, además del redondeo de las esquinas, con una vista previa comparativa en tiempo real. Todo se procesa localmente en tu navegador mediante la API Canvas; tu foto permanece en tu dispositivo.</p>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿El borde cambia las dimensiones originales de la imagen?</div>
-      <div>Sí, el borde se añade alrededor de la imagen, así que el resultado final es más grande que el original por el ancho del borde en cada lado.</div>
+      <div>Sí. El borde añade píxeles alrededor de la imagen, por lo que las dimensiones finales aumentan según el grosor aplicado a cada lado.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Puedo hacer el borde transparente?</div>
-      <div>Actualmente el borde siempre es un color sólido que eliges. Para una imagen con fondo transparente, usa nuestra herramienta de Redondear Bordes en su lugar.</div>
+      <div>El borde siempre usa el color sólido que elijas. Si necesitas conservar un fondo transparente, prueba la herramienta Redondear bordes.</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Se sube mi imagen a algún lugar?</div>
-      <div>No, todo el proceso ocurre localmente en tu navegador usando JavaScript.</div>
+      <div class="q">¿Se envía mi imagen a algún servidor?</div>
+      <div>No. Todo se procesa localmente en tu navegador mediante JavaScript; el archivo permanece en tu dispositivo.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Qué formatos son compatibles?</div>
-      <div>JPG, PNG, WEBP y otros formatos de imagen comunes que tu navegador pueda leer.</div>
+      <div>JPG, PNG, WebP y otros formatos de imagen comunes que tu navegador pueda leer.</div>
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres profundizar? Lee nuestra guía: <a href="/es/blog/add-photo-border-online/" style="color:var(--accent);text-decoration:none;">Cómo Añadir un Marco o Borde a Tus Fotos en Línea</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres profundizar? Lee nuestra guía: <a href="/es/blog/add-photo-border-online/" style="color:var(--accent);text-decoration:none;">Cómo añadir un marco o borde a tus fotos en línea</a></p>
 
   <h2>Herramientas relacionadas</h2>
   <div class="related-grid">
@@ -255,7 +255,7 @@ h2{margin-top:50px;font-size:22px;}
   <a class="related-card" href="/es/round-image-corners/">
     <div class="icon-box cat-image"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="12" cy="12" r="6"/></svg></div>
     <div class="body">
-      <div class="title">Redondear bordes / Recorte circular</div>
+      <div class="title">Redondear bordes / recorte circular</div>
       <div class="desc">Redondea bordes o recorta en forma de círculo.</div>
     </div>
     <div class="arrow">→</div>
@@ -274,14 +274,14 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF que funcionan en tu navegador. Procesamiento 100% local — tus archivos nunca se suben a ningún servidor.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Procesamiento 100 % local: tus archivos permanecen en tu dispositivo.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">
       <h3>Herramientas</h3>
-      <a href="/es/tools/#image">Herramientas de Imagen</a>
+      <a href="/es/tools/#image">Herramientas de imagen</a>
       <a href="/es/tools/#pdf">Herramientas PDF</a>
-      <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+      <a href="/es/tools/#utility">Utilidades</a>
     </div>
     <div class="footer-col">
       <h3>Empresa</h3>
@@ -345,7 +345,7 @@ dropzone.addEventListener('drop', (e) => {
 function loadFile(file) {
   errorMsg.textContent = '';
   if (!file.type.startsWith('image/')) {
-    errorMsg.textContent = 'Por favor selecciona un archivo de imagen válido.';
+    errorMsg.textContent = 'Selecciona un archivo de imagen válido.';
     return;
   }
   const reader = new FileReader();

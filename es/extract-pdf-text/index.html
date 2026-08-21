@@ -162,16 +162,16 @@ h2{margin-top:50px;font-size:22px;}
 <header class="site-nav">
   <a class="site-nav-logo" href="/es/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
   <nav class="site-nav-links">
-    <a href="/es/tools/">Todas las Herramientas</a>
-    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/">Todas las herramientas</a>
+    <a href="/es/tools/#image">Herramientas de imagen</a>
     <span class="active-category">Herramientas PDF</span>
-    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <a href="/es/tools/#utility">Utilidades</a>
     <a href="/es/blog/">Blog</a>
   </nav>
   <div class="site-nav-right">
     <a class="lang-flag" href="/extract-pdf-text/">EN</a>
     <span class="lang-flag active">ES</span>
-    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro">🌙</button>
   </div>
 </header>
 
@@ -186,11 +186,11 @@ h2{margin-top:50px;font-size:22px;}
   <div class="workspace">
     <div class="box">
       <label class="dropzone" id="dropzone" for="fileInput">
-        <div id="dropzoneText">📁 Haz clic para seleccionar un PDF o arrástralo aquí</div>
+        <div id="dropzoneText">📁 Haz clic para seleccionar un PDF o arrástralo y suéltalo aquí</div>
       </label>
       <input type="file" id="fileInput" accept=".pdf">
       <div class="error" id="errorMsg"></div>
-      <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subidas · Sin cuenta · Sin marca de agua</div>
+      <div class="trust-strip">🔒 Procesamiento local · Archivos siempre en tu dispositivo · Sin cuenta · Sin marca de agua</div>
       <div class="page-count" id="pageCount"></div>
 
       <div class="workspace-controls">
@@ -226,7 +226,7 @@ h2{margin-top:50px;font-size:22px;}
     </ul>
 
     <h2>¿Por qué usar Orisod para esto?</h2>
-    <p>La extracción ocurre al instante, página por página, y el resultado aparece directamente en la página para que puedas copiarlo o descargarlo como .txt. Todo el proceso ocurre localmente en tu navegador usando pdf.js — tu documento nunca se sube a un servidor.</p>
+    <p>La extracción ocurre al instante, página por página, y el resultado aparece directamente en la página para que puedas copiarlo o descargarlo como .txt. Todo el proceso ocurre localmente en tu navegador usando PDF.js — tu documento permanece en tu dispositivo.</p>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
@@ -242,12 +242,12 @@ h2{margin-top:50px;font-size:22px;}
       <div>La herramienta extrae todas las páginas a la vez, pero el resultado incluye marcadores de página para que puedas copiar fácilmente solo la sección que necesitas.</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Se sube mi PDF a un servidor?</div>
-      <div>No, todo el proceso ocurre localmente en tu navegador usando JavaScript.</div>
+      <div class="q">¿Se envía mi PDF a algún servidor?</div>
+      <div>No. Todo se procesa localmente en tu navegador mediante JavaScript; el archivo permanece en tu dispositivo.</div>
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres profundizar? Lee nuestra guía: <a href="/es/blog/extract-text-from-pdf/" style="color:var(--accent);text-decoration:none;">Cómo Extraer Texto de un PDF (Copiar o Guardar como .txt)</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres profundizar? Lee nuestra guía: <a href="/es/blog/extract-text-from-pdf/" style="color:var(--accent);text-decoration:none;">Cómo extraer texto de un PDF (copiar o guardar como .txt)</a></p>
 
   <h2>Herramientas relacionadas</h2>
   <div class="related-grid">
@@ -281,14 +281,14 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF que funcionan en tu navegador. Procesamiento 100% local — tus archivos nunca se suben a ningún servidor.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Procesamiento 100 % local: tus archivos permanecen en tu dispositivo.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">
       <h3>Herramientas</h3>
-      <a href="/es/tools/#image">Herramientas de Imagen</a>
+      <a href="/es/tools/#image">Herramientas de imagen</a>
       <a href="/es/tools/#pdf">Herramientas PDF</a>
-      <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+      <a href="/es/tools/#utility">Utilidades</a>
     </div>
     <div class="footer-col">
       <h3>Empresa</h3>
@@ -370,7 +370,7 @@ async function handleFile(file) {
     const pdf = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
     selectedFile = file;
 
-    pageCount.textContent = `Cargado: ${pdf.numPages} página${pdf.numPages === 1 ? '' : 's'}`;
+    pageCount.textContent = `Cargado: ${pdf.numPages} página${pdf.numPages === 1? '': 's'}`;
     dropzoneText.textContent = `✅ ${file.name} cargado`;
     extractBtn.style.display = 'inline-block';
   } catch (err) {
@@ -401,7 +401,7 @@ extractBtn.addEventListener('click', async () => {
 
     extractedText = pageTexts.join('\n\n');
     textArea.value = extractedText;
-    outputMeta.textContent = `${pdf.numPages} página${pdf.numPages === 1 ? '' : 's'} · ${plainCharCount.toLocaleString()} caracteres extraídos`;
+    outputMeta.textContent = `${pdf.numPages} página${pdf.numPages === 1? '': 's'} · ${plainCharCount.toLocaleString()} caracteres extraídos`;
 
     if (plainCharCount === 0) {
       warnNote.textContent = '⚠️ No se encontró texto seleccionable. Este PDF puede ser una imagen escaneada sin capa de texto.';

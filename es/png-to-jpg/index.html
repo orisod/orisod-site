@@ -157,16 +157,16 @@ h2{margin-top:50px;}
 <header class="site-nav">
   <a class="site-nav-logo" href="/es/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
   <nav class="site-nav-links">
-    <a href="/es/tools/">Todas las Herramientas</a>
-    <span class="active-category">Herramientas de Imagen</span>
+    <a href="/es/tools/">Todas las herramientas</a>
+    <span class="active-category">Herramientas de imagen</span>
     <a href="/es/tools/#pdf">Herramientas PDF</a>
-    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <a href="/es/tools/#utility">Utilidades</a>
     <a href="/es/blog/">Blog</a>
   </nav>
   <div class="site-nav-right">
     <a class="lang-flag" href="/png-to-jpg/">EN</a>
     <span class="lang-flag active">ES</span>
-    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro">🌙</button>
   </div>
 </header>
 
@@ -176,20 +176,20 @@ h2{margin-top:50px;}
     <div class="icon-box cat-image"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="14" height="13" rx="1.5"/><rect x="3.5" y="5.5" width="5" height="5" fill="currentColor" stroke="none"/><rect x="9.5" y="10.5" width="5" height="5" fill="currentColor" stroke="none"/><path d="M13.5 10.5l2.5 2.5-2.5 2.5"/><path d="M19 15.5l3.5 6.5h-7z" fill="currentColor" stroke="none"/></svg></div>
     <h1>Convertidor de PNG a JPG</h1>
   </div>
-  <p class="tool-sub">Convierte imágenes PNG a formato JPG en línea gratis. Todo ocurre localmente en tu navegador — tus archivos nunca se suben a ningún lugar.</p>
+  <p class="tool-sub">Convierte imágenes PNG a formato JPG en línea gratis. Todo ocurre localmente en tu navegador — tus archivos permanecen en tu dispositivo.</p>
 
   <div class="workspace">
     <div class="box">
       <label class="dropzone" id="dropzone" for="fileInput">
-        <div id="dropzoneText">📁 Haz clic para seleccionar archivos PNG o arrástralos aquí</div>
+        <div id="dropzoneText">📁 Haz clic para seleccionar archivos PNG o arrástralos y suéltalos aquí</div>
       </label>
       <input type="file" id="fileInput" accept=".png" multiple>
       <div class="error" id="errorMsg"></div>
-      <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subir archivos · Sin cuenta · Sin marca de agua</div>
+      <div class="trust-strip">🔒 Procesamiento local · Archivos siempre en tu dispositivo · Sin cuenta · Sin marca de agua</div>
 
       <div class="workspace-controls">
         <button id="convertBtn" disabled>Convertir a JPG</button>
-        <div class="note">Compatible con uno o varios archivos PNG. Nada sale de tu dispositivo.</div>
+        <div class="note">Compatible con uno o varios archivos PNG. Tus archivos permanecen en tu dispositivo.</div>
       </div>
 
       <div class="results" id="results"></div>
@@ -212,7 +212,7 @@ h2{margin-top:50px;}
     </ul>
 
     <h2>¿Por qué usar Orisod para esto?</h2>
-    <p>Esta herramienta convierte uno o varios archivos PNG a JPG a la vez, completamente en tu navegador — tus imágenes nunca se suben a un servidor. Cualquier transparencia en el PNG original se reemplaza con un fondo blanco, tal como se ven normalmente los archivos JPG.</p>
+    <p>Esta herramienta convierte uno o varios archivos PNG a JPG a la vez, directamente en tu navegador — tus imágenes permanecen en tu dispositivo. Cualquier transparencia en el PNG original se reemplaza con un fondo blanco, tal como se ven normalmente los archivos JPG.</p>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
@@ -224,8 +224,8 @@ h2{margin-top:50px;}
       <div>Para fotos, la diferencia visual suele ser mínima. Para gráficos con bordes definidos o texto, la compresión JPG puede introducir un ligero suavizado comparado con PNG.</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Se suben mis archivos a algún lugar?</div>
-      <div>No, la conversión ocurre localmente en tu navegador usando JavaScript.</div>
+      <div class="q">¿Se envían mis archivos a algún servidor?</div>
+      <div>No. La conversión se realiza localmente en tu navegador mediante JavaScript; el archivo permanece en tu dispositivo.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Puedo convertir varios PNG a la vez?</div>
@@ -233,15 +233,15 @@ h2{margin-top:50px;}
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres profundizar? Lee nuestra guía: <a href="/es/blog/png-vs-jpg/" style="color:var(--accent);text-decoration:none;">PNG vs JPG: Qué Formato Deberías Usar (y Cómo Convertir)</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres profundizar? Lee nuestra guía: <a href="/es/blog/png-vs-jpg/" style="color:var(--accent);text-decoration:none;">PNG vs. JPG: qué formato usar y cómo convertirlos</a></p>
 
   <h2>Herramientas relacionadas</h2>
   <div class="related-grid">
   <a class="related-card" href="/es/webp-to-jpg/">
     <div class="icon-box cat-image"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="14" height="13" rx="1.5"/><path d="M10 6.5l-3.5 6H9l-1 4.5 4.5-6.5H10z" fill="currentColor" stroke="none"/><path d="M13.5 10.5l2.5 2.5-2.5 2.5"/><path d="M19 15.5l3.5 6.5h-7z" fill="currentColor" stroke="none"/></svg></div>
     <div class="body">
-      <div class="title">WEBP a JPG</div>
-      <div class="desc">Convierte imágenes WEBP a formato JPG.</div>
+      <div class="title">WebP a JPG</div>
+      <div class="desc">Convierte imágenes WebP a formato JPG.</div>
     </div>
     <div class="arrow">→</div>
   </a>
@@ -272,8 +272,8 @@ h2{margin-top:50px;}
   <a class="related-card" href="/es/png-to-webp/">
     <div class="icon-box cat-image"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="14" height="13" rx="1.5"/><rect x="3.5" y="5.5" width="5" height="5" fill="currentColor" stroke="none"/><rect x="9.5" y="10.5" width="5" height="5" fill="currentColor" stroke="none"/><path d="M13.5 10.5l2.5 2.5-2.5 2.5"/><circle cx="19" cy="19" r="3.2" fill="currentColor" stroke="none"/></svg></div>
     <div class="body">
-      <div class="title">PNG a WEBP</div>
-      <div class="desc">Reduce archivos PNG con WEBP.</div>
+      <div class="title">PNG a WebP</div>
+      <div class="desc">Reduce archivos PNG con WebP.</div>
     </div>
     <div class="arrow">→</div>
   </a>
@@ -291,14 +291,14 @@ h2{margin-top:50px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF que funcionan en tu navegador. Procesamiento 100% local — tus archivos nunca se suben a ningún servidor.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Procesamiento 100 % local: tus archivos permanecen en tu dispositivo.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">
       <h3>Herramientas</h3>
-      <a href="/es/tools/#image">Herramientas de Imagen</a>
+      <a href="/es/tools/#image">Herramientas de imagen</a>
       <a href="/es/tools/#pdf">Herramientas PDF</a>
-      <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+      <a href="/es/tools/#utility">Utilidades</a>
     </div>
     <div class="footer-col">
       <h3>Empresa</h3>
@@ -363,7 +363,7 @@ function handleFiles(fileList) {
     return;
   }
   selectedFiles = valid;
-  dropzoneText.textContent = `✅ ${valid.length} archivo(s) seleccionado(s) — ${valid.map(f => f.name).join(', ')}`;
+  dropzoneText.textContent = `✅ ${valid.length} ${valid.length === 1 ? 'archivo seleccionado' : 'archivos seleccionados'} — ${valid.map(f => f.name).join(', ')}`;
   convertBtn.disabled = false;
   results.innerHTML = '';
   downloadAllWrap.style.display = 'none';
@@ -406,12 +406,12 @@ function convertToJpg(file) {
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(img, 0, 0);
-        canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error('Conversion failed')), 'image/jpeg', 0.92);
+        canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error('No se pudo completar la conversión')), 'image/jpeg', 0.92);
       };
-      img.onerror = () => reject(new Error('Could not load image'));
+      img.onerror = () => reject(new Error('No se pudo cargar la imagen'));
       img.src = e.target.result;
     };
-    reader.onerror = () => reject(new Error('Could not read file'));
+    reader.onerror = () => reject(new Error('No se pudo leer el archivo'));
     reader.readAsDataURL(file);
   });
 }

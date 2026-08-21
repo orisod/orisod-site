@@ -20,7 +20,7 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cómo Poner una Marca de Agua en un PDF (Confidencial, Borrador o Tu Nombre) | Blog de Orisod</title>
+<title>Cómo añadir una marca de agua a un PDF | Blog de Orisod</title>
 <meta name="description" content="Estampar cada página de un PDF con una marca de agua de texto antes de compartirlo — cuándo vale la pena hacerlo, y cómo controlar posición, rotación y opacidad para que no estorbe.">
 <link rel="canonical" href="https://orisod.com/es/blog/watermark-pdf-documents/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/blog/watermark-pdf-documents/">
@@ -115,38 +115,38 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <header class="site-nav">
   <a class="site-nav-logo" href="/es/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
   <nav class="site-nav-links">
-    <a href="/es/tools/">Todas las Herramientas</a>
-    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/">Todas las herramientas</a>
+    <a href="/es/tools/#image">Herramientas de imagen</a>
     <a href="/es/tools/#pdf">Herramientas PDF</a>
-    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <a href="/es/tools/#utility">Utilidades</a>
     <span class="active-category">Blog</span>
   </nav>
   <div class="site-nav-right">
     <a class="lang-flag" href="/blog/watermark-pdf-documents/">EN</a>
     <span class="lang-flag active">ES</span>
-    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro">🌙</button>
   </div>
 </header>
 
 <main>
 <div class="container">
 
-<h1>Cómo Poner una Marca de Agua en un PDF (Confidencial, Borrador o Tu Nombre)</h1>
+<h1>Cómo añadir una marca de agua a un PDF</h1>
 <p class="intro">Estás por enviar un documento que todavía no es definitivo, o uno que no debería circular libremente una vez que salga de tus manos. Una marca de agua estampada en cada página — "BORRADOR", "CONFIDENCIAL" o tu propio nombre — hace que ese estado sea imposible de pasar por alto, sin cambiar nada del contenido real del documento.</p>
 
 <div class="article-body">
 
-<h2>Para qué sirve realmente una marca de agua en un PDF</h2>
+<h2>Para qué sirve una marca de agua en un PDF</h2>
 <p>A diferencia de una marca de agua en una foto, que existe principalmente para desalentar el robo de la imagen en sí, una marca de agua en un PDF suele tratarse de comunicar un estado — esto es un borrador, esto es confidencial, esto viene de una fuente específica. Es una etiqueta estampada dentro del documento mismo en lugar de un correo de acompañamiento que podría separarse del archivo a medida que se reenvía.</p>
 
-<h2>Elegir un texto que realmente diga algo</h2>
+<h2>Elegir un texto que diga algo</h2>
 <p>"CONFIDENCIAL", "BORRADOR", "MUESTRA", y un nombre de empresa o personal cubren la mayoría de los casos de uso reales. La elección correcta depende de lo que quieras evitar: "BORRADOR" le dice al lector que no trate el contenido como definitivo, "CONFIDENCIAL" indica que no debería compartirse más, y una marca de nombre o empresa atribuye el documento a su origen. Elige la que coincida con tu preocupación real en lugar de recurrir por defecto a la que suene más oficial.</p>
 
 <h2>Posición, rotación y opacidad importan por igual</h2>
-<p>Una marca de agua demasiado marcada hace difícil leer el documento; una demasiado sutil casi como si no estuviera. Una colocación diagonal en el centro de la página (el aspecto clásico) es difícil de pasar por alto y difícil de recortar selectivamente, mientras que una colocación en una esquina es menos intrusiva si el documento necesita seguir siendo cómodamente legible. Una opacidad más baja mantiene legible el texto subyacente a través de la marca de agua; una opacidad más alta hace que la etiqueta sea inconfundible a costa de algo de legibilidad — no hay una respuesta única correcta, depende de qué tan importante sea la legibilidad frente a la visibilidad para tu documento específico.</p>
+<p>Una marca de agua demasiado intensa dificulta la lectura; una demasiado tenue apenas cumple su función. La posición diagonal en el centro es visible y difícil de eliminar mediante un recorte, mientras que una esquina resulta menos intrusiva. Una opacidad baja deja leer mejor el contenido y una alta destaca más la etiqueta. El equilibrio depende de cuánto valores la legibilidad frente a la visibilidad.</p>
 
 <h2>Qué protege y qué no protege una marca de agua</h2>
-<p>Una marca de agua deja claro el estado de un documento de un vistazo y desalienta hacerlo pasar por algo que no es — pero no es encriptación, y no impide que alguien abra, lea o incluso copie el texto que hay debajo de ella. Si necesitas restringir realmente quién puede abrir un documento, ese es un problema distinto (protección con contraseña) al de etiquetar su estado, y ambos suelen confundirse.</p>
+<p>Una marca de agua deja claro el estado de un documento de un vistazo y desalienta hacerlo pasar por algo que no es — pero no es cifrado, y no impide que alguien abra, lea o incluso copie el texto que hay debajo de ella. Si necesitas restringir realmente quién puede abrir un documento, ese es un problema distinto (protección con contraseña) al de etiquetar su estado, y ambos suelen confundirse.</p>
 
 <h2>Aplicarla a cada página vs. solo una</h2>
 <p>Para la mayoría de los casos de uso, estampar cada página importa más que estampar solo la primera — un lector que reenvía la página 12 fuera de contexto debería seguir viendo la etiqueta "CONFIDENCIAL", no solo quien abre el archivo desde la página uno. Una herramienta que aplica la marca de agua de manera uniforme en todo el documento, y no solo en la portada, evita ese vacío.</p>
@@ -160,8 +160,8 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <p><strong>¿Una marca de agua realmente protege un documento de ser copiado?</strong> No — hace que el estado sea obvio visualmente, pero no restringe el acceso ni impide copiar. Eso requiere protección con contraseña, una función aparte.</p>
 
 <div class="cta-box">
-  <h3>Pon una Marca de Agua en Tu PDF</h3>
-  <p>La herramienta Marca de Agua en PDF de Orisod estampa texto en cada página con control total de posición, rotación, tamaño, color y opacidad, con vista previa en vivo — completamente en tu navegador.</p>
+  <h3>Añade una marca de agua a tu PDF</h3>
+  <p>La herramienta Marca de agua en PDF de Orisod añade texto a cada página y permite ajustar la posición, la rotación, el tamaño, el color y la opacidad mediante una vista previa en tiempo real. Todo funciona directamente en tu navegador.</p>
   <a class="cta-button" href="/es/watermark-pdf/">Marca de Agua en PDF →</a>
 </div>
 
@@ -173,23 +173,23 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <h2>Artículos relacionados</h2>
   <div class="related-grid">
     <a class="blog-card" href="/es/blog/sign-pdf-online/">
-      <h3>Cómo Firmar un PDF en Línea (Sin Imprimir ni Escanear)</h3>
+      <h3>Cómo firmar un PDF en línea (sin imprimir ni escanear)</h3>
       <p>Dibujar una firma y colocarla en una página de PDF sin usar un bolígrafo físico.</p>
     </a>
 
     <a class="blog-card" href="/es/blog/watermark-photos-guide/">
-      <h3>Cómo Poner Marca de Agua a Tus Fotos para Proteger Tu Trabajo</h3>
+      <h3>Cómo añadir una marca de agua a tus fotos</h3>
       <p>Cómo proteger fotos compartidas con una marca de agua sin arruinar la imagen.</p>
     </a>
 
     <a class="blog-card" href="/es/blog/merge-multiple-pdfs/">
-      <h3>Cómo Unir Varios PDF en un Solo Archivo (Gratis)</h3>
-      <p>Cómo funciona realmente la unión de PDF, los errores a evitar, y cómo combinarlos sin perder calidad.</p>
+      <h3>Cómo unir varios archivos PDF en uno solo (gratis)</h3>
+      <p>Cómo funciona la unión de PDF, los errores a evitar, y cómo combinarlos sin perder calidad.</p>
     </a>
   </div>
 </div>
 
-<a class="back-link" href="/es/blog/">← Volver al Blog</a>
+<a class="back-link" href="/es/blog/">← Volver al blog</a>
 
 </div>
 
@@ -197,14 +197,14 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF que funcionan en tu navegador. Procesamiento 100% local — tus archivos nunca se suben a ningún servidor.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Procesamiento 100 % local: tus archivos permanecen en tu dispositivo.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">
       <h3>Herramientas</h3>
-      <a href="/es/tools/#image">Herramientas de Imagen</a>
+      <a href="/es/tools/#image">Herramientas de imagen</a>
       <a href="/es/tools/#pdf">Herramientas PDF</a>
-      <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+      <a href="/es/tools/#utility">Utilidades</a>
     </div>
     <div class="footer-col">
       <h3>Empresa</h3>

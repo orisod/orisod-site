@@ -166,16 +166,16 @@ h2{margin-top:50px;font-size:22px;}
 <header class="site-nav">
   <a class="site-nav-logo" href="/es/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
   <nav class="site-nav-links">
-    <a href="/es/tools/">Todas las Herramientas</a>
-    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/">Todas las herramientas</a>
+    <a href="/es/tools/#image">Herramientas de imagen</a>
     <span class="active-category">Herramientas PDF</span>
-    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <a href="/es/tools/#utility">Utilidades</a>
     <a href="/es/blog/">Blog</a>
   </nav>
   <div class="site-nav-right">
     <a class="lang-flag" href="/crop-pdf-pages/">EN</a>
     <span class="lang-flag active">ES</span>
-    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro">🌙</button>
   </div>
 </header>
 
@@ -190,11 +190,11 @@ h2{margin-top:50px;font-size:22px;}
   <div class="workspace">
     <div class="box">
       <label class="dropzone" id="dropzone" for="fileInput">
-        <div id="dropzoneText">📁 Haz clic para seleccionar un PDF o arrástralo aquí</div>
+        <div id="dropzoneText">📁 Haz clic para seleccionar un PDF o arrástralo y suéltalo aquí</div>
       </label>
       <input type="file" id="fileInput" accept=".pdf">
       <div class="error" id="errorMsg"></div>
-      <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subidas · Sin cuenta · Sin marca de agua</div>
+      <div class="trust-strip">🔒 Procesamiento local · Archivos siempre en tu dispositivo · Sin cuenta · Sin marca de agua</div>
       <div class="size-readout" id="sizeReadout"></div>
 
       <div class="editor" id="editor" style="display:none;">
@@ -247,7 +247,7 @@ h2{margin-top:50px;font-size:22px;}
 
   <div class="seo-content">
     <h2>¿Qué hace recortar un PDF?</h2>
-    <p>Recortar reduce el área visible de cada página según la medida que indiques en cada lado, en milímetros. El contenido no se elimina ni se vuelve a dibujar — el límite visible de la página (su crop box) simplemente se mueve hacia adentro, ocultando los márgenes que ya no quieres mostrar o imprimir.</p>
+    <p>Recortar reduce el área visible de cada página según los márgenes que indiques en milímetros. El contenido no se elimina ni se vuelve a dibujar: solo se ajusta el cuadro de recorte de la página para ocultar lo que ya no quieres mostrar o imprimir.</p>
 
     <h2>¿Cuándo usar esta herramienta?</h2>
     <ul>
@@ -258,12 +258,12 @@ h2{margin-top:50px;font-size:22px;}
     </ul>
 
     <h2>¿Por qué usar Orisod para esto?</h2>
-    <p>Indica medidas exactas en milímetros para cada lado y todas las páginas del PDF se recortan de forma consistente en una sola pasada. Todo el proceso ocurre localmente en tu navegador usando pdf-lib — tu documento nunca se sube a un servidor.</p>
+    <p>Indica medidas exactas en milímetros para cada lado y todas las páginas del PDF se recortan de forma consistente en una sola pasada. Todo el proceso ocurre localmente en tu navegador usando pdf-lib — tu documento permanece en tu dispositivo.</p>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿Recortar elimina contenido de forma permanente?</div>
-      <div>No, se mueve el límite visible de la página — el contenido subyacente no se redibuja ni se rasteriza, así que el texto sigue siendo seleccionable.</div>
+      <div>No. Solo se ajusta el área visible de la página; el contenido no se redibuja ni se convierte en imagen, por lo que el texto sigue siendo seleccionable.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Puedo recortar diferentes cantidades en cada lado?</div>
@@ -274,12 +274,12 @@ h2{margin-top:50px;font-size:22px;}
       <div>Las mismas medidas de margen se aplican a todas las páginas. Si una página es demasiado pequeña para los márgenes indicados, verás un error pidiéndote que los reduzcas.</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Se sube mi PDF a un servidor?</div>
-      <div>No, todo el proceso ocurre localmente en tu navegador usando JavaScript.</div>
+      <div class="q">¿Se envía mi PDF a algún servidor?</div>
+      <div>No. Todo se procesa localmente en tu navegador mediante JavaScript; el archivo permanece en tu dispositivo.</div>
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres profundizar? Lee nuestra guía: <a href="/es/blog/trim-pdf-margins/" style="color:var(--accent);text-decoration:none;">Cómo Recortar los Márgenes de un PDF (Sin Reimprimirlo)</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres profundizar? Lee nuestra guía: <a href="/es/blog/trim-pdf-margins/" style="color:var(--accent);text-decoration:none;">Cómo recortar los márgenes de un PDF sin volver a imprimirlo</a></p>
 
   <h2>Herramientas relacionadas</h2>
   <div class="related-grid">
@@ -287,7 +287,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M20 20l-5-5M20 20h-4M20 20v-4"/></svg></div>
     <div class="body">
       <div class="title">Redimensionar páginas de PDF</div>
-      <div class="desc">Cambia las dimensiones, p. ej. A4 a Letter.</div>
+      <div class="desc">Cambia las dimensiones, p. ej. A4 a carta.</div>
     </div>
     <div class="arrow">→</div>
   </a>
@@ -313,14 +313,14 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF que funcionan en tu navegador. Procesamiento 100% local — tus archivos nunca se suben a ningún servidor.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Procesamiento 100 % local: tus archivos permanecen en tu dispositivo.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">
       <h3>Herramientas</h3>
-      <a href="/es/tools/#image">Herramientas de Imagen</a>
+      <a href="/es/tools/#image">Herramientas de imagen</a>
       <a href="/es/tools/#pdf">Herramientas PDF</a>
-      <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+      <a href="/es/tools/#utility">Utilidades</a>
     </div>
     <div class="footer-col">
       <h3>Empresa</h3>
@@ -460,7 +460,7 @@ async function handleFile(file) {
     pageWidthMM = wmm;
     pageHeightMM = hmm;
     const label = detectSizeLabel(wmm, hmm);
-    sizeReadout.textContent = `Tamaño de página: ${wmm} × ${hmm} mm${label ? ' (' + label + ')' : ''} · ${pdf.getPageCount()} página${pdf.getPageCount() === 1 ? '' : 's'}`;
+    sizeReadout.textContent = `Tamaño de página: ${wmm} × ${hmm} mm${label? ' (' + label + ')': ''} · ${pdf.getPageCount()} página${pdf.getPageCount() === 1? '': 's'}`;
 
     dropzoneText.textContent = `✅ ${file.name} cargado`;
 
@@ -517,7 +517,7 @@ saveBtn.addEventListener('click', async () => {
     const baseName = selectedFile.name.replace(/\.pdf$/i, '');
     const outName = `${baseName}-recortado.pdf`;
 
-    progressMsg.textContent = 'Listo — descarga disponible.';
+    progressMsg.textContent = 'Listo para descargar.';
 
     const card = document.createElement('div');
     card.className = 'result-card';
@@ -534,7 +534,7 @@ saveBtn.addEventListener('click', async () => {
     link.href = url;
     link.download = outName;
     link.className = 'back';
-    link.textContent = 'Descargar PDF Recortado';
+    link.textContent = 'Descargar PDF recortado';
     resultEl.appendChild(link);
   } catch (err) {
     errorMsg.textContent = err.message || 'No se pudo recortar este PDF.';

@@ -293,16 +293,16 @@ h2{margin-top:50px;font-size:22px;}
 <header class="site-nav">
   <a class="site-nav-logo" href="/es/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
   <nav class="site-nav-links">
-    <a href="/es/tools/">Todas las Herramientas</a>
-    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/">Todas las herramientas</a>
+    <a href="/es/tools/#image">Herramientas de imagen</a>
     <span class="active-category">Herramientas PDF</span>
-    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <a href="/es/tools/#utility">Utilidades</a>
     <a href="/es/blog/">Blog</a>
   </nav>
   <div class="site-nav-right">
     <a class="lang-flag" href="/pdf-to-jpg/">EN</a>
     <span class="lang-flag active">ES</span>
-    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro">🌙</button>
   </div>
 </header>
 
@@ -312,16 +312,16 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2h6l4 4v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M10 2v4h4"/><path d="M13.5 10.5l2.5 2.5-2.5 2.5"/><path d="M19 15.5l3.5 6.5h-7z" fill="currentColor" stroke="none"/></svg></div>
     <h1>Convertidor de PDF a JPG</h1>
   </div>
-  <p class="tool-sub">Convierte páginas de PDF en imágenes JPG de alta calidad de forma rápida y sencilla. Todo ocurre localmente en tu navegador — tus archivos nunca se suben a ningún lugar.</p>
+  <p class="tool-sub">Convierte páginas de PDF en imágenes JPG de alta calidad de forma rápida y sencilla. Todo ocurre localmente en tu navegador — tus archivos permanecen en tu dispositivo.</p>
 
   <div class="workspace">
     <div class="box">
       <label class="dropzone" id="dropzone" for="fileInput">
-        <div id="dropzoneText">📄 Haz clic para seleccionar un archivo PDF o arrástralo aquí</div>
+        <div id="dropzoneText">📄 Haz clic para seleccionar un archivo PDF o arrástralo y suéltalo aquí</div>
       </label>
       <input type="file" id="fileInput" accept=".pdf">
       <div class="error" id="errorMsg"></div>
-      <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subir archivos · Sin cuenta · Sin marca de agua</div>
+      <div class="trust-strip">🔒 Procesamiento local · Archivos siempre en tu dispositivo · Sin cuenta · Sin marca de agua</div>
 
       <div class="quality-row">
         <label for="quality">Calidad de imagen: <span id="qualityValue">85</span>%</label>
@@ -330,7 +330,7 @@ h2{margin-top:50px;font-size:22px;}
 
       <div class="workspace-controls">
         <button id="convertBtn" disabled>Convertir a JPG</button>
-        <div class="note">Sube un PDF y convierte cada página en una imagen JPG. Nada sale de tu dispositivo.</div>
+        <div class="note">Selecciona un PDF y convierte cada página en una imagen JPG. El archivo permanece en tu dispositivo.</div>
         <div class="progress" id="progressMsg"></div>
       </div>
 
@@ -350,7 +350,7 @@ h2{margin-top:50px;font-size:22px;}
           <button id="downloadAllBtn">Descargar todo (ZIP)</button>
         </div>
         <div id="downloadSelectedWrap" style="display:none;">
-          <button id="downloadSelectedBtn">Descargar seleccionadas</button>
+          <button id="downloadSelectedBtn">Descargar selección</button>
         </div>
       </div>
     </div>
@@ -373,24 +373,24 @@ h2{margin-top:50px;font-size:22px;}
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
-      <div class="q">¿Funciona con PDF de varias páginas?</div>
+      <div class="q">¿Funciona con archivos PDF de varias páginas?</div>
       <div>Sí. Cada página de tu PDF se convierte en su propia imagen JPG. Puedes descargar páginas individuales, seleccionar un rango específico (como "2-5, 8") o descargar todo de una vez como archivo ZIP.</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Se sube mi PDF a un servidor?</div>
-      <div>No. Toda la conversión se ejecuta localmente en tu navegador — el archivo nunca sale de tu dispositivo.</div>
+      <div class="q">¿Se envía mi PDF a algún servidor?</div>
+      <div>No. Toda la conversión se realiza localmente en tu navegador; el archivo permanece en tu dispositivo.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Puedo controlar la calidad de la imagen?</div>
       <div>Sí, usa el control de calidad antes de convertir para equilibrar la nitidez de la imagen con el tamaño del archivo.</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Funciona con PDF escaneados o protegidos con contraseña?</div>
+      <div class="q">¿Funciona con archivos PDF escaneados o protegidos con contraseña?</div>
       <div>Los PDF escaneados (basados en imágenes) se convierten con normalidad. Los PDF protegidos con contraseña deben desbloquearse primero, ya que el navegador no puede leer contenido cifrado.</div>
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres profundizar? Lee nuestra guía: <a href="/es/blog/pdf-page-to-image/" style="color:var(--accent);text-decoration:none;">Cómo Convertir una Página de PDF en Imagen</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres profundizar? Lee nuestra guía: <a href="/es/blog/pdf-page-to-image/" style="color:var(--accent);text-decoration:none;">Cómo convertir una página PDF en una imagen</a></p>
 
   <h2>Herramientas relacionadas</h2>
   <div class="related-grid">
@@ -432,14 +432,14 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF que funcionan en tu navegador. Procesamiento 100% local — tus archivos nunca se suben a ningún servidor.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Procesamiento 100 % local: tus archivos permanecen en tu dispositivo.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">
       <h3>Herramientas</h3>
-      <a href="/es/tools/#image">Herramientas de Imagen</a>
+      <a href="/es/tools/#image">Herramientas de imagen</a>
       <a href="/es/tools/#pdf">Herramientas PDF</a>
-      <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+      <a href="/es/tools/#utility">Utilidades</a>
     </div>
     <div class="footer-col">
       <h3>Empresa</h3>
@@ -576,7 +576,7 @@ convertBtn.addEventListener('click', async () => {
       addResultCard(item);
     }
 
-    progressMsg.textContent = `Listo — ${pdf.numPages} página(s) convertidas.`;
+    progressMsg.textContent = `Listo: ${pdf.numPages} ${pdf.numPages === 1? 'página convertida': 'páginas convertidas'}.`;
     if (convertedImages.length > 1) {
       downloadAllWrap.style.display = 'block';
       selectionControls.style.display = 'flex';

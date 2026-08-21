@@ -158,16 +158,16 @@ h2{margin-top:50px;font-size:22px;}
 <header class="site-nav">
   <a class="site-nav-logo" href="/es/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
   <nav class="site-nav-links">
-    <a href="/es/tools/">Todas las Herramientas</a>
-    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/">Todas las herramientas</a>
+    <a href="/es/tools/#image">Herramientas de imagen</a>
     <span class="active-category">Herramientas PDF</span>
-    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <a href="/es/tools/#utility">Utilidades</a>
     <a href="/es/blog/">Blog</a>
   </nav>
   <div class="site-nav-right">
     <a class="lang-flag" href="/split-pdf/">EN</a>
     <span class="lang-flag active">ES</span>
-    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro">🌙</button>
   </div>
 </header>
 
@@ -177,16 +177,16 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V10"/><path d="M8 18l4 4 4-4"/><path d="M6 2l6 6 6-6"/></svg></div>
     <h1>Dividir PDF</h1>
   </div>
-  <p class="tool-sub">Extrae un rango de páginas en su propio PDF, o divide cada página en un archivo separado. Todo ocurre localmente en tu navegador — tu archivo nunca se sube a ningún lado.</p>
+  <p class="tool-sub">Extrae un rango de páginas en un PDF independiente o divide cada página en un archivo separado. Todo se procesa localmente en tu navegador; el archivo original permanece en tu dispositivo.</p>
 
   <div class="workspace">
     <div class="box">
       <label class="dropzone" id="dropzone" for="fileInput">
-        <div id="dropzoneText">📁 Haz clic para seleccionar un PDF o arrástralo aquí</div>
+        <div id="dropzoneText">📁 Haz clic para seleccionar un PDF o arrástralo y suéltalo aquí</div>
       </label>
       <input type="file" id="fileInput" accept=".pdf">
       <div class="error" id="errorMsg"></div>
-      <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subir archivos · Sin cuenta · Sin marca de agua</div>
+      <div class="trust-strip">🔒 Procesamiento local · Archivos siempre en tu dispositivo · Sin cuenta · Sin marca de agua</div>
       <div class="page-info" id="pageInfo"></div>
 
       <div class="split-options" id="splitOptions" style="display:none;">
@@ -223,11 +223,11 @@ h2{margin-top:50px;font-size:22px;}
     </ul>
 
     <h2>¿Por qué usar Orisod para esto?</h2>
-    <p>La división ocurre completamente en tu navegador usando pdf-lib — tu PDF nunca se sube a un servidor. Puedes extraer un rango específico como un solo archivo, o dividir todo el documento en archivos de página individuales empaquetados en un único ZIP.</p>
+    <p>La división ocurre directamente en tu navegador usando pdf-lib — tu PDF permanece en tu dispositivo. Puedes extraer un rango específico como un solo archivo, o dividir todo el documento en archivos de página individuales empaquetados en un único ZIP.</p>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
-      <div class="q">¿Dividir afecta la calidad de mi PDF?</div>
+      <div class="q">¿Dividir el archivo afecta la calidad del PDF?</div>
       <div>No. La herramienta extrae las páginas reales del PDF sin convertirlas en imágenes, así que el texto sigue siendo seleccionable y la calidad no cambia.</div>
     </div>
     <div class="faq-item">
@@ -239,12 +239,12 @@ h2{margin-top:50px;font-size:22px;}
       <div>Obtendrás un archivo ZIP con 50 archivos PDF separados de una página cada uno, conservando el contenido exacto de la página original.</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Se sube mi archivo a un servidor?</div>
-      <div>No, todo el proceso ocurre localmente en tu navegador usando JavaScript.</div>
+      <div class="q">¿Se envía mi archivo a algún servidor?</div>
+      <div>No. Todo se procesa localmente en tu navegador mediante JavaScript; el archivo permanece en tu dispositivo.</div>
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres profundizar? Lee nuestra guía: <a href="/es/blog/split-pdf-guide/" style="color:var(--accent);text-decoration:none;">Cómo Dividir un PDF en Archivos Separados</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres profundizar? Lee nuestra guía: <a href="/es/blog/split-pdf-guide/" style="color:var(--accent);text-decoration:none;">Cómo dividir un PDF en archivos separados</a></p>
 
   <h2>Herramientas relacionadas</h2>
   <div class="related-grid">
@@ -286,14 +286,14 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF que funcionan en tu navegador. Procesamiento 100% local — tus archivos nunca se suben a ningún servidor.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Procesamiento 100 % local: tus archivos permanecen en tu dispositivo.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">
       <h3>Herramientas</h3>
-      <a href="/es/tools/#image">Herramientas de Imagen</a>
+      <a href="/es/tools/#image">Herramientas de imagen</a>
       <a href="/es/tools/#pdf">Herramientas PDF</a>
-      <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+      <a href="/es/tools/#utility">Utilidades</a>
     </div>
     <div class="footer-col">
       <h3>Empresa</h3>
@@ -393,7 +393,7 @@ async function handleFile(file) {
     selectedFile = file;
 
     dropzoneText.textContent = `✅ ${file.name} cargado`;
-    pageInfo.textContent = `Este PDF tiene ${totalPages} página${totalPages !== 1 ? 's' : ''}.`;
+    pageInfo.textContent = `Este PDF tiene ${totalPages} página${totalPages!== 1? 's': ''}.`;
     splitOptions.style.display = 'block';
   } catch (err) {
     errorMsg.textContent = 'No se pudo leer este PDF. Puede estar dañado o protegido con contraseña.';
@@ -457,8 +457,8 @@ extractBtn.addEventListener('click', async () => {
     const baseName = selectedFile.name.replace(/\.pdf$/i, '');
     const outName = `${baseName}-extracted.pdf`;
 
-    progressMsg.textContent = 'Listo — descarga disponible.';
-    showResult(PDF_ICON, outName, `${pages.length} página${pages.length !== 1 ? 's' : ''} extraída(s) · ${(blob.size / 1024).toFixed(1)} KB`, url, outName, 'Descargar PDF Extraído');
+    progressMsg.textContent = 'Listo para descargar.';
+    showResult(PDF_ICON, outName, `${pages.length} ${pages.length === 1? 'página extraída': 'páginas extraídas'} · ${(blob.size / 1024).toFixed(1)} KB`, url, outName, 'Descargar PDF extraído');
   } catch (err) {
     errorMsg.textContent = err.message || 'No se pudieron extraer estas páginas.';
   }
@@ -495,8 +495,8 @@ splitAllBtn.addEventListener('click', async () => {
     const url = URL.createObjectURL(content);
     const outName = `${baseName}-split.zip`;
 
-    progressMsg.textContent = 'Listo — descarga disponible.';
-    showResult(ZIP_ICON, outName, `${totalPages} página${totalPages !== 1 ? 's' : ''} dividida(s) en archivos separados · ${(content.size / 1024).toFixed(1)} KB`, url, outName, 'Descargar ZIP');
+    progressMsg.textContent = 'Listo para descargar.';
+    showResult(ZIP_ICON, outName, `${totalPages} ${totalPages === 1? 'página dividida': 'páginas divididas'} en archivos separados · ${(content.size / 1024).toFixed(1)} KB`, url, outName, 'Descargar ZIP');
   } catch (err) {
     errorMsg.textContent = 'No se pudo dividir este PDF.';
     progressMsg.textContent = '';

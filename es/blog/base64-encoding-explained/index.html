@@ -20,7 +20,7 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Qué Es la Codificación Base64 y Cuándo los Desarrolladores la Necesitan para Imágenes | Blog de Orisod</title>
+<title>Qué es la codificación Base64 y cuándo usarla con imágenes | Blog de Orisod</title>
 <meta name="description" content="¿Alguna vez viste una imagen convertida en un enorme bloque de texto que empieza con 'data:image/png;base64'? Aquí te explicamos qué hace realmente la codificación Base64, y cuándo es la decisión correcta para imágenes en tu proyecto.">
 <link rel="canonical" href="https://orisod.com/es/blog/base64-encoding-explained/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/blog/base64-encoding-explained/">
@@ -118,65 +118,65 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <header class="site-nav">
   <a class="site-nav-logo" href="/es/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
   <nav class="site-nav-links">
-    <a href="/es/tools/">Todas las Herramientas</a>
-    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/">Todas las herramientas</a>
+    <a href="/es/tools/#image">Herramientas de imagen</a>
     <a href="/es/tools/#pdf">Herramientas PDF</a>
-    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <a href="/es/tools/#utility">Utilidades</a>
     <span class="active-category">Blog</span>
   </nav>
   <div class="site-nav-right">
     <a class="lang-flag" href="/blog/base64-encoding-explained/">EN</a>
     <span class="lang-flag active">ES</span>
-    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro">🌙</button>
   </div>
 </header>
 
 <main>
 <div class="container">
 
-<h1>Qué Es la Codificación Base64 y Cuándo los Desarrolladores la Necesitan para Imágenes</h1>
-<p class="intro">Probablemente lo has visto en un archivo CSS o en una respuesta de API: un bloque enorme de texto que empieza con algo como data:image/png;base64, seguido de cientos de caracteres que claramente no son texto legible. Aquí te explicamos qué está pasando realmente, y cuándo codificar una imagen así es genuinamente la decisión correcta.</p>
+<h1>Qué es la codificación Base64 y cuándo usarla con imágenes</h1>
+<p class="intro">Quizá lo hayas visto en un archivo CSS o en una respuesta de API: un bloque de texto que empieza por data:image/png;base64, seguido de cientos de caracteres ilegibles. Aquí verás qué significa, cómo funciona y cuándo conviene codificar una imagen de esta forma.</p>
 
 <div class="article-body">
 
-<h2>Qué es realmente Base64</h2>
-<p>Base64 es una forma de representar datos binarios — los bytes en bruto que forman un archivo de imagen — usando solo 64 caracteres de texto imprimibles (letras, números y un par de símbolos). Los archivos de imagen son binarios por naturaleza, pero muchos de los contextos en los que trabaja un desarrollador (archivos CSS, payloads JSON, atributos HTML, correo electrónico) están construidos alrededor de texto plano y no manejan bien los datos binarios en bruto. La codificación Base64 convierte esos datos binarios de imagen en una cadena de texto que cualquiera de esos formatos basados en texto puede transportar sin problemas.</p>
+<h2>Qué es Base64</h2>
+<p>Base64 representa datos binarios —los bytes que forman un archivo— mediante un conjunto de 64 caracteres de texto. Las imágenes son binarias, pero CSS, HTML, JSON y el correo electrónico suelen trabajar con texto plano. La codificación transforma los datos de la imagen en una cadena que esos formatos pueden transportar sin adjuntar un archivo binario independiente.</p>
 
 <h2>Por qué las imágenes se codifican así</h2>
-<p>La razón principal es la incrustación: una imagen codificada en Base64 puede pegarse directamente en el atributo <code>src</code> de una etiqueta <code>&lt;img&gt;</code> de HTML, en una propiedad <code>background-image</code> de CSS, o en un campo JSON, sin necesidad de referenciar un archivo de imagen separado en absoluto. Eso importa porque cada archivo de imagen independiente que un navegador necesita normalmente implica una solicitud de red separada. Para un puñado de iconos pequeños o un logotipo diminuto, incrustarlos como Base64 directamente dentro del CSS o HTML significa que el navegador no necesita hacer solicitudes adicionales solo para obtener esos archivos pequeños.</p>
+<p>La principal ventaja es poder incrustar la imagen: la cadena Base64 puede colocarse en el atributo <code>src</code> <code>de una etiqueta &lt;img&gt;, en una propiedad</code> <code>background-image</code> de CSS o en un campo JSON. Así se evita solicitar un archivo independiente. Puede ser útil para unos pocos iconos muy pequeños, aunque no suele convenir con imágenes grandes.</p>
 
 <h2>La contrapartida: más texto, menos solicitudes</h2>
-<p>La codificación Base64 no es gratuita — convertir datos binarios a texto de esta forma aumenta el tamaño en aproximadamente un 33%, ya que se necesitan más caracteres de texto para representar la misma información que el formato binario original necesitaba. Así que una imagen de 10KB se convierte en aproximadamente 13-14KB de texto Base64. Si esa contrapartida vale la pena depende completamente del contexto: para un icono diminuto, el ahorro de saltarse una solicitud de red extra normalmente supera el modesto aumento de tamaño; para una foto grande, la penalización del 33% de tamaño se acumula rápido y supera cualquier beneficio de evitar una solicitud separada.</p>
+<p>Base64 tiene un costo: al convertir datos binarios en texto, el tamaño aumenta alrededor de un 33 %. Una imagen de 10 KB, por ejemplo, se transforma en unos 13–14 KB de texto. Ese aumento puede compensar en un icono muy pequeño si evita una solicitud de red adicional, pero suele jugar en contra con fotografías grandes.</p>
 
 <h2>Dónde aparece esto en el desarrollo real</h2>
 <ul>
   <li><strong>Imágenes de fondo en CSS</strong> para iconos pequeños y de uso frecuente, incrustados directamente en una hoja de estilos en lugar de como archivos separados.</li>
-  <li><strong>HTML de correo electrónico</strong>, donde algunos clientes de correo manejan de forma más confiable las imágenes incrustadas en línea que las imágenes externas enlazadas, que muchas bandejas de entrada bloquean por defecto.</li>
-  <li><strong>Respuestas de API</strong>, donde una imagen necesita viajar dentro de un payload JSON junto con otros datos, en lugar de como un archivo obtenido por separado.</li>
-  <li><strong>Data URIs en general</strong>, en cualquier lugar donde un solo archivo autocontenido (sin dependencias externas) sea más conveniente que un archivo más sus recursos referenciados.</li>
+  <li><strong>Correo electrónico en HTML.</strong> Algunos clientes muestran con mayor fiabilidad las imágenes incrustadas que los recursos externos, que pueden bloquearse de forma predeterminada.</li>
+  <li><strong>Respuestas de API</strong>. Una imagen puede viajar dentro de una estructura JSON junto con otros datos, sin obtenerse como archivo independiente.</li>
+  <li><strong>URI de datos.</strong> Son útiles cuando un recurso autocontenido resulta más práctico que un archivo con dependencias externas.</li>
 </ul>
 
 <h2>Cuándo es la decisión equivocada</h2>
-<p>Para la mayoría de las imágenes cotidianas de un sitio web — fotos, gráficos más grandes, cualquier cosa reutilizada en varias páginas — Base64 juega en tu contra. Las imágenes codificadas no pueden ser cacheadas por separado por el navegador de la forma en que puede hacerlo un archivo de imagen normal, así que si el mismo icono aparece en diez páginas, un archivo de imagen real se descarga una vez y se reutiliza, mientras que una versión incrustada en Base64 se vuelve a enviar como parte del HTML o CSS de cada página. Para imágenes grandes o reutilizadas con frecuencia, eso se traduce en ancho de banda desperdiciado en comparación con simplemente enlazar un archivo de imagen normal.</p>
+<p>Para la mayoría de las imágenes de un sitio —fotos, gráficos grandes o recursos reutilizados— Base64 no conviene. El navegador no puede guardar la imagen en caché como un archivo independiente: si el mismo icono aparece en diez páginas, la versión incrustada vuelve a viajar dentro del HTML o CSS de cada una. Para archivos grandes o frecuentes, enlazar la imagen normal ahorra ancho de banda.</p>
 
-<h2>Cómo generar realmente una cadena Base64 a partir de una imagen</h2>
-<p>Convertir una imagen a Base64 significa leer sus datos binarios y volver a codificarlos en ese formato de texto — algo que rara vez necesitas hacer a mano. Un conversor basado en navegador se encarga de esto directamente: subes la imagen, y te devuelve la cadena de texto codificada (con o sin el prefijo completo de data URI) lista para pegar en el CSS, HTML o JSON en el que estés trabajando.</p>
+<h2>Cómo generar una cadena Base64 a partir de una imagen</h2>
+<p>Convertir una imagen a Base64 consiste en leer sus datos binarios y representarlos como texto, algo que rara vez necesitas hacer a mano. Una herramienta en el navegador se encarga del proceso: seleccionas la imagen y obtienes la cadena codificada, con o sin el prefijo completo del URI de datos, lista para utilizar en CSS, HTML o JSON.</p>
 
 <h2>Un ejemplo concreto</h2>
-<p>Un pequeño icono de flecha de 2KB usado en toda la navegación de un sitio es un candidato razonable para incrustar en Base64 — codificado, se convierte en aproximadamente 2.7KB de texto que vive directamente en un archivo CSS, ahorrándole al navegador una solicitud separada para un archivo tan pequeño. Una foto de producto de 500KB no es un buen candidato — codificada, se infla a alrededor de 665KB de texto que abulta una respuesta HTML o JSON, y a diferencia de un archivo de imagen normal, no puede cachearse de forma independiente por el navegador si aparece en más de una página.</p>
+<p>Un icono de 2 KB utilizado en toda la navegación puede ser un buen candidato: codificado ocupa unos 2,7 KB dentro del CSS y evita una solicitud adicional. Una foto de producto de 500 KB no lo es; en Base64 rondaría los 665 KB, aumentaría el tamaño del HTML o JSON y no podría guardarse en caché como un archivo independiente.</p>
 
 <h2>Respuestas rápidas</h2>
-<p><strong>¿La codificación Base64 comprime la imagen?</strong> No — no reduce el tamaño real de los datos de la imagen, simplemente representa los mismos datos de otra forma, y esa representación es en realidad más grande que el binario original.</p>
-<p><strong>¿Puedo convertir una cadena Base64 de vuelta en un archivo de imagen normal?</strong> Sí — decodificar invierte el proceso, convirtiendo la cadena de texto de vuelta en los datos binarios originales de la imagen.</p>
-<p><strong>¿La codificación Base64 es una medida de seguridad?</strong> No — es puramente una conversión de formato, no encriptación. Cualquiera puede decodificar una cadena Base64 de vuelta a la imagen original sin ninguna clave o contraseña especial involucrada.</p>
+<p><strong>¿Base64 comprime la imagen?</strong> No. Solo representa los mismos datos de otra forma y, de hecho, la cadena resultante ocupa más que el archivo binario original.</p>
+<p><strong>¿Puedo recuperar una imagen a partir de Base64?</strong> Sí. Al decodificar la cadena se reconstruyen los datos binarios originales del archivo.</p>
+<p><strong>¿Base64 protege la imagen? No. Es una codificación</strong>, no un método de cifrado. Cualquiera puede decodificar la cadena y recuperar la imagen sin utilizar una clave ni una contraseña.</p>
 
 <div class="cta-box">
-  <h3>Convierte una Imagen a (o desde) Base64</h3>
-  <p>La herramienta de Base64 de Orisod codifica una imagen en una cadena de datos lista para usar, o decodifica una de vuelta a un archivo de imagen normal — completamente en tu navegador, sin subir nada a un servidor.</p>
+  <h3>Convierte una imagen a Base64 o decodifícala</h3>
+  <p>La herramienta Base64 de Orisod convierte una imagen en una cadena lista para usar y también permite recuperar la imagen a partir de esa cadena. Todo se procesa en tu navegador y los datos permanecen en tu dispositivo.</p>
   <a class="cta-button" href="/es/image-to-base64/">Convertir Imagen a Base64 →</a>
 </div>
 
-<p>Base64 no es ni un truco ni un método de compresión — es una forma segura para texto de transportar datos binarios de imagen, genuinamente útil para pequeños iconos incrustados y payloads autocontenidos, y genuinamente derrochadora para cualquier cosa más grande o reutilizada con frecuencia.</p>
+<p>Base64 no comprime ni protege una imagen: permite transportar datos binarios como texto. Resulta útil para recursos pequeños e incrustados, pero aumenta innecesariamente el peso de archivos grandes o reutilizados.</p>
 
 </div>
 
@@ -184,23 +184,23 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <h2>Artículos relacionados</h2>
   <div class="related-grid">
     <a class="blog-card" href="/es/blog/what-is-image-metadata/">
-      <h3>Qué Son los Metadatos de una Imagen y Cómo Verlos</h3>
+      <h3>Qué son los metadatos de una imagen y cómo consultarlos</h3>
       <p>Qué se esconde dentro de un archivo de imagen además de los píxeles, y cómo verlo.</p>
     </a>
 
     <a class="blog-card" href="/es/blog/what-is-exif-data/">
-      <h3>Qué Son los Datos EXIF y Por Qué Deberías Eliminarlos Antes de Compartir Fotos</h3>
+      <h3>Qué son los datos EXIF y por qué eliminarlos antes de compartir fotos</h3>
       <p>Los datos ocultos que llevan tus fotos — incluida la ubicación GPS — y cómo eliminarlos antes de compartir.</p>
     </a>
 
     <a class="blog-card" href="/es/blog/how-to-make-a-qr-code/">
-      <h3>Cómo Hacer un Código QR Gratis (Sin Necesidad de App)</h3>
-      <p>Qué almacena realmente un código QR, por qué los códigos que “caducan” son un mito, y cómo hacer uno en menos de un minuto.</p>
+      <h3>Cómo crear un código QR gratis (sin instalar una aplicación)</h3>
+      <p>Qué almacena un código QR, por qué un código estático no caduca y cómo crear uno en menos de un minuto.</p>
     </a>
   </div>
 </div>
 
-<a class="back-link" href="/es/blog/">← Volver al Blog</a>
+<a class="back-link" href="/es/blog/">← Volver al blog</a>
 
 </div>
 
@@ -208,14 +208,14 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF que funcionan en tu navegador. Procesamiento 100% local — tus archivos nunca se suben a ningún servidor.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Procesamiento 100 % local: tus archivos permanecen en tu dispositivo.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">
       <h3>Herramientas</h3>
-      <a href="/es/tools/#image">Herramientas de Imagen</a>
+      <a href="/es/tools/#image">Herramientas de imagen</a>
       <a href="/es/tools/#pdf">Herramientas PDF</a>
-      <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+      <a href="/es/tools/#utility">Utilidades</a>
     </div>
     <div class="footer-col">
       <h3>Empresa</h3>
