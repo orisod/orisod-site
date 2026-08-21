@@ -150,7 +150,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 </ul>
 
 <h2>What compression actually does inside a PDF</h2>
-<p>Compressing a PDF means re-encoding the embedded images at a lower resolution or with more efficient compression, while leaving the text, fonts, and document structure untouched. This is the same underlying idea as compressing a standalone photo — the visually redundant detail in each embedded image gets reduced, and because that detail is often invisible at normal viewing or printing size anyway, the size drops dramatically with no noticeable change in how the document looks. The layout, page count, and text all stay exactly as they were before compression.</p>
+<p>Compressing a PDF this way means rendering each page as an image at a lower resolution or with more efficient compression, then rebuilding the document from those images — the same underlying idea as compressing a standalone photo. The visually redundant detail in each page gets reduced, and because that detail is often invisible at normal viewing or printing size anyway, the size drops dramatically with no noticeable change in how the document looks. The layout and page count stay exactly as they were before compression — but because every page becomes an image, text that used to be selectable and searchable no longer is. That trade-off is invisible on a page that was already a scan or a photo, since there was no selectable text there to begin with.</p>
 
 <h2>Why "without losing quality" is realistic here</h2>
 <p>Because PDF file size is dominated by image resolution rather than genuine visual detail, there's usually a lot of room to compress before quality loss becomes visible. A scanned page captured at 600 DPI but only ever viewed on a screen or printed at a normal size is carrying far more resolution than anyone will ever perceive — compressing it down to a more reasonable level removes redundant data, not visible sharpness.</p>
@@ -165,13 +165,13 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <p>A 15-page contract scanned at high resolution might land at 35MB — well over Gmail's 25MB attachment limit. Compressed properly, that same file often drops to somewhere between 3MB and 6MB, comfortably under any email limit, while every line of text and signature remains exactly as legible as it was in the original scan. The 30MB that disappeared was never visible detail to begin with — it was resolution the document never needed in the first place.</p>
 
 <h2>Quick answers</h2>
-<p><strong>Will compressing a PDF affect the text?</strong> No — compression targets the embedded images; selectable text and fonts are left as they were.</p>
+<p><strong>Will compressing a PDF affect the text?</strong> Yes, if the tool rebuilds each page as a compressed image (like Orisod's Compress PDF does) — the resulting file is image-based, so text is no longer selectable or searchable, even though it looks identical. That only matters if your original PDF had real, selectable text to begin with; a scanned document never had any to lose.</p>
 <p><strong>Can I compress a PDF that's already been compressed once?</strong> Yes, but repeated compression on the same file can start to show visible quality loss, similar to re-saving a JPG multiple times — compress from the original source when possible.</p>
 <p><strong>Does a smaller PDF mean fewer pages?</strong> No — compression doesn't remove pages or content, only the resolution of the images already inside them.</p>
 
 <div class="cta-box">
   <h3>Compress Your PDF Now</h3>
-  <p>Orisod's PDF compressor shrinks scanned and image-heavy PDFs while keeping the text and layout intact — entirely in your browser, with nothing uploaded to a server.</p>
+  <p>Orisod's PDF compressor shrinks scanned and image-heavy PDFs while keeping the layout and page count intact — entirely in your browser, with nothing uploaded to a server. Best for documents that are already scans or photos; if you need to keep text selectable, this isn't the right tool.</p>
   <a class="cta-button" href="/compress-pdf/">Compress a PDF →</a>
 </div>
 

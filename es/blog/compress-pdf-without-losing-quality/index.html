@@ -150,7 +150,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 </ul>
 
 <h2>Qué hace realmente la compresión dentro de un PDF</h2>
-<p>Comprimir un PDF significa volver a codificar las imágenes incrustadas a una resolución menor o con una compresión más eficiente, dejando intactos el texto, las fuentes y la estructura del documento. Es la misma idea subyacente que comprimir una foto independiente — el detalle visualmente redundante en cada imagen incrustada se reduce, y como ese detalle suele ser invisible a un tamaño normal de visualización o impresión de todas formas, el tamaño baja drásticamente sin cambio perceptible en cómo se ve el documento. El diseño, el número de páginas y el texto se mantienen exactamente como estaban antes de comprimir.</p>
+<p>Comprimir un PDF de esta forma significa renderizar cada página como una imagen a una resolución menor o con una compresión más eficiente, y luego reconstruir el documento a partir de esas imágenes — la misma idea subyacente que comprimir una foto independiente. El detalle visualmente redundante en cada página se reduce, y como ese detalle suele ser invisible a un tamaño normal de visualización o impresión de todas formas, el tamaño baja drásticamente sin cambio perceptible en cómo se ve el documento. El diseño y el número de páginas se mantienen exactamente como estaban antes de comprimir — pero como cada página se convierte en una imagen, el texto que antes era seleccionable y buscable deja de serlo. Esa diferencia es invisible en una página que ya era un escaneo o una foto, porque ahí nunca hubo texto seleccionable que perder.</p>
 
 <h2>Por qué "sin perder calidad" es realista aquí</h2>
 <p>Como el tamaño de archivo de un PDF está dominado por la resolución de imagen más que por el detalle visual genuino, normalmente hay mucho margen para comprimir antes de que la pérdida de calidad se vuelva visible. Una página escaneada capturada a 600 DPI pero que solo se verá en pantalla o se imprimirá a tamaño normal lleva mucha más resolución de la que nadie percibirá jamás — comprimirla a un nivel más razonable elimina datos redundantes, no nitidez visible.</p>
@@ -165,13 +165,13 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <p>Un contrato de 15 páginas escaneado a alta resolución podría pesar 35MB — muy por encima del límite de 25MB de adjuntos de Gmail. Comprimido correctamente, ese mismo archivo suele bajar a algo entre 3MB y 6MB, cómodamente por debajo de cualquier límite de correo, mientras cada línea de texto y firma se mantiene exactamente tan legible como en el escaneo original. Los 30MB que desaparecieron nunca fueron detalle visible para empezar — eran resolución que el documento nunca necesitó.</p>
 
 <h2>Respuestas rápidas</h2>
-<p><strong>¿Comprimir un PDF afecta al texto?</strong> No — la compresión se dirige a las imágenes incrustadas; el texto seleccionable y las fuentes se dejan como estaban.</p>
+<p><strong>¿Comprimir un PDF afecta al texto?</strong> Sí, si la herramienta reconstruye cada página como una imagen comprimida (como hace Comprimir PDF de Orisod) — el archivo resultante se basa en imágenes, así que el texto deja de ser seleccionable o buscable, aunque se vea idéntico. Esto solo importa si tu PDF original tenía texto real y seleccionable; un documento escaneado nunca tuvo ninguno que perder.</p>
 <p><strong>¿Puedo comprimir un PDF que ya se comprimió una vez?</strong> Sí, pero comprimir repetidamente el mismo archivo puede empezar a mostrar pérdida de calidad visible, similar a volver a guardar un JPG varias veces — comprime desde el archivo original cuando sea posible.</p>
 <p><strong>¿Un PDF más pequeño significa menos páginas?</strong> No — la compresión no elimina páginas ni contenido, solo la resolución de las imágenes que ya están dentro de ellas.</p>
 
 <div class="cta-box">
   <h3>Comprime Tu PDF Ahora</h3>
-  <p>El compresor de PDF de Orisod reduce documentos escaneados y con muchas imágenes manteniendo intactos el texto y el diseño — completamente en tu navegador, sin subir nada a un servidor.</p>
+  <p>El compresor de PDF de Orisod reduce documentos escaneados y con muchas imágenes manteniendo intactos el diseño y el número de páginas — completamente en tu navegador, sin subir nada a un servidor. Ideal para documentos que ya son escaneos o fotos; si necesitas mantener el texto seleccionable, esta no es la herramienta adecuada.</p>
   <a class="cta-button" href="/es/compress-pdf/">Comprimir un PDF →</a>
 </div>
 
