@@ -34,6 +34,7 @@
 <meta name="theme-color" content="#2563eb">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <style>
 :root{
   --bg:#0b0f1a;
@@ -112,6 +113,12 @@ p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-heigh
 input[type="file"]{display:none;}
 .quality-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:20px;font-size:14px;opacity:0.85;}
 input[type="range"]{width:200px;}
+.mode-row{display:flex;gap:12px;justify-content:center;margin-top:20px;flex-wrap:wrap;}
+.mode-option{display:flex;align-items:flex-start;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 14px;cursor:pointer;text-align:left;max-width:260px;}
+.mode-option input{margin:3px 0 0 0;}
+.mode-option.selected{border-color:var(--accent);}
+.mode-option .mode-title{font-size:14px;font-weight:bold;display:block;}
+.mode-option .mode-hint{font-size:12px;color:var(--muted-text);display:block;margin-top:2px;line-height:1.4;}
 button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
 button:disabled{opacity:0.4;cursor:not-allowed;}
 button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
@@ -193,7 +200,7 @@ h2{margin-top:50px;font-size:22px;}
   <div class="workspace">
     <div class="box">
       <div class="disclaimer">
-        ⚠️ <strong>Bueno saberlo antes de empezar:</strong> esta herramienta funciona convirtiendo cada página en una imagen comprimida y reconstruyendo el PDF a partir de esas imágenes. Esto reduce bien el tamaño en páginas escaneadas o documentos con muchas fotos, pero el PDF resultante <strong>ya no tendrá texto seleccionable ni buscable</strong>. Si tu PDF es sobre todo texto y necesitas que siga siendo buscable, esta puede no ser la herramienta adecuada.
+        ℹ️ <strong>Dos modos de compresión:</strong> <strong>Limpieza rápida</strong> reoptimiza la estructura interna del PDF y mantiene todo el texto seleccionable y buscable — ideal para informes, contratos y otros PDF basados en texto. <strong>Compresión fuerte</strong> convierte cada página en una imagen comprimida, lo que reduce mucho más el tamaño en PDF escaneados o con muchas fotos, pero el PDF resultante <strong>ya no tendrá texto seleccionable ni buscable</strong>.
       </div>
 
       <label class="dropzone" id="dropzone" for="fileInput">
@@ -203,14 +210,25 @@ h2{margin-top:50px;font-size:22px;}
       <div class="error" id="errorMsg"></div>
       <div class="trust-strip">🔒 Procesamiento local · Archivos siempre en tu dispositivo · Sin cuenta · Sin marca de agua</div>
 
-      <div class="quality-row">
+      <div class="mode-row" id="modeRow">
+        <label class="mode-option" data-mode="quick">
+          <input type="radio" name="compressMode" value="quick" checked>
+          <span><span class="mode-title">Limpieza rápida</span><span class="mode-hint">Mantiene el texto seleccionable — ideal para informes, contratos, formularios</span></span>
+        </label>
+        <label class="mode-option" data-mode="strong">
+          <input type="radio" name="compressMode" value="strong">
+          <span><span class="mode-title">Compresión fuerte</span><span class="mode-hint">Convierte las páginas en imágenes — ideal para escaneos y PDF con muchas fotos</span></span>
+        </label>
+      </div>
+
+      <div class="quality-row" id="qualityRow" style="display:none;">
         <label for="quality">Nivel de compresión: <span id="qualityValue">60</span>%</label>
         <input type="range" id="quality" min="20" max="90" value="60">
       </div>
 
       <div class="workspace-controls">
         <button id="compressBtn" disabled>Comprimir PDF</button>
-        <div class="note">Más alto = mejor calidad, archivo más grande. Más bajo = archivo más pequeño, más compresión.</div>
+        <div class="note" id="qualityNote" style="display:none;">Más alto = mejor calidad, archivo más grande. Más bajo = archivo más pequeño, más compresión.</div>
         <div class="progress" id="progressMsg"></div>
       </div>
 
@@ -220,31 +238,35 @@ h2{margin-top:50px;font-size:22px;}
 
   <div class="seo-content">
     <h2>¿Qué hace esta herramienta?</h2>
-    <p>Esta herramienta reduce el tamaño de un PDF renderizando cada página como una imagen comprimida y reconstruyendo el documento a partir de esas imágenes, de forma similar a comprimir una foto. Es más eficaz en documentos escaneados, PDF con muchas fotos, o cualquier cosa donde las páginas ya son esencialmente imágenes — la reducción de tamaño puede ser significativa.</p>
+    <p>Esta herramienta ofrece dos formas de reducir un PDF. <strong>Limpieza rápida</strong> vuelve a guardar el PDF con una estructura interna más eficiente — sin rasterizar — así que el texto sigue siendo totalmente seleccionable y buscable; es la mejor opción por defecto para informes, contratos, formularios y cualquier documento escrito en lugar de escaneado. <strong>Compresión fuerte</strong> renderiza cada página como una imagen comprimida y reconstruye el documento a partir de esas imágenes, de forma similar a comprimir una foto; reduce mucho más el tamaño en PDF escaneados o con muchas fotos, pero el archivo resultante se basa en imágenes y ya no es buscable.</p>
 
     <h2>¿Cuándo deberías usarla?</h2>
     <ul>
-      <li>Tienes un documento escaneado demasiado grande para enviar por correo o subir</li>
-      <li>Tu PDF está lleno de fotos y el tamaño de archivo es excesivo</li>
-      <li>No necesitas seleccionar, copiar ni buscar el texto del documento</li>
+      <li>Tu PDF es sobre todo texto (un informe, contrato o formulario) y quieres reducirlo sin perder el texto buscable — usa Limpieza rápida</li>
+      <li>Tienes un documento escaneado o PDF con muchas fotos demasiado grande para enviar por correo o subir — usa Compresión fuerte</li>
       <li>Un formulario o plataforma tiene un límite estricto de tamaño para subir PDF</li>
+      <li>Quieres ver el tamaño antes y después antes de decidirte a descargar</li>
     </ul>
 
     <h2>¿Por qué usar Orisod para esto?</h2>
-    <p>Ajusta el nivel de compresión con un control deslizante y compara el tamaño antes y después. Todo se procesa localmente en tu navegador mediante PDF.js y jsPDF; el documento permanece en tu dispositivo.</p>
+    <p>Eliges el modo que se ajusta a tu documento y, en Compresión fuerte, controlas el nivel de compresión con un control deslizante y ves la comparación de tamaño antes y después al instante. Si una compresión no fuera a reducir realmente tu archivo, te lo decimos y mantenemos tu original en lugar de entregarte un archivo más grande. Todo se procesa localmente en tu navegador mediante PDF.js, pdf-lib y jsPDF; tu documento nunca se sube a un servidor.</p>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿Perderé la capacidad de seleccionar texto?</div>
-      <div>Sí. Como esta herramienta convierte las páginas en imágenes comprimidas para lograr una reducción de tamaño real, el PDF resultante se basa en imágenes y el texto ya no es seleccionable ni buscable.</div>
+      <div>Solo con Compresión fuerte, que convierte las páginas en imágenes para lograr una reducción de tamaño mucho mayor. Limpieza rápida nunca rasteriza nada, así que el texto se mantiene seleccionable y buscable.</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Es adecuada para un informe o contrato con mucho texto?</div>
-      <div>No es lo ideal — si necesitas mantener el texto seleccionable y buscable, esta herramienta no es la opción correcta. Funciona mejor con páginas escaneadas o documentos que ya son esencialmente imágenes.</div>
+      <div class="q">¿Qué modo debería usar para un informe o contrato con mucho texto?</div>
+      <div>Limpieza rápida. Optimiza la estructura interna del PDF en lugar de convertir las páginas en imágenes, por lo que el tamaño se reduce (normalmente de forma moderada, más si el archivo tiene historial de ediciones acumulado) sin perder texto seleccionable ni buscable.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Cuánto se reducirá mi archivo?</div>
-      <div>Varía mucho según tu PDF original y el nivel de compresión que elijas, pero los documentos escaneados o con muchas imágenes suelen reducirse significativamente.</div>
+      <div>Varía. Limpieza rápida suele dar una reducción moderada, ya que no vuelve a codificar ningún contenido, solo limpia la estructura — los PDF que se han guardado varias veces con otros editores suelen reducirse más. Compresión fuerte puede reducir drásticamente documentos escaneados o con muchas imágenes, controlado por el control deslizante de calidad.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Qué pasa si la compresión no fuera a reducir realmente el tamaño del archivo?</div>
+      <div>Lo detectamos y mantenemos tu archivo original en lugar de darte algo más grande o de menor calidad sin motivo — verás una nota explicando por qué, con la sugerencia de probar el otro modo si se ajusta mejor a tu documento.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se envía mi PDF a algún servidor?</div>
@@ -367,6 +389,10 @@ const dropzoneText = document.getElementById('dropzoneText');
 const errorMsg = document.getElementById('errorMsg');
 const qualitySlider = document.getElementById('quality');
 const qualityValue = document.getElementById('qualityValue');
+const qualityRow = document.getElementById('qualityRow');
+const qualityNote = document.getElementById('qualityNote');
+const modeInputs = document.querySelectorAll('input[name="compressMode"]');
+const modeOptions = document.querySelectorAll('.mode-option');
 const compressBtn = document.getElementById('compressBtn');
 const progressMsg = document.getElementById('progressMsg');
 const resultEl = document.getElementById('result');
@@ -374,6 +400,19 @@ const resultEl = document.getElementById('result');
 let selectedFile = null;
 
 qualitySlider.addEventListener('input', () => { qualityValue.textContent = qualitySlider.value; });
+
+function getMode() {
+  return document.querySelector('input[name="compressMode"]:checked').value;
+}
+
+function updateModeUI() {
+  const mode = getMode();
+  qualityRow.style.display = mode === 'strong' ? 'flex' : 'none';
+  qualityNote.style.display = mode === 'strong' ? 'block' : 'none';
+  modeOptions.forEach(opt => opt.classList.toggle('selected', opt.dataset.mode === mode));
+}
+modeInputs.forEach(r => r.addEventListener('change', updateModeUI));
+updateModeUI();
 
 fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
 dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
@@ -404,62 +443,94 @@ compressBtn.addEventListener('click', async () => {
   resultEl.innerHTML = '';
   progressMsg.textContent = '';
 
+  const mode = getMode();
   const quality = parseInt(qualitySlider.value, 10) / 100;
   const originalSize = selectedFile.size;
 
   try {
     const arrayBuffer = await selectedFile.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-    const { jsPDF } = window.jspdf;
-    let outPdf = null;
+    let outBytes;
 
-    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-      progressMsg.textContent = `Procesando página ${pageNum} de ${pdf.numPages}...`;
+    if (mode === 'quick') {
+      progressMsg.textContent = 'Optimizando la estructura del PDF...';
+      const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer, { updateMetadata: false });
+      outBytes = await pdfDoc.save({ useObjectStreams: true });
+    } else {
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
+      const { jsPDF } = window.jspdf;
+      let outPdf = null;
 
-      const page = await pdf.getPage(pageNum);
-      const viewport = page.getViewport({ scale: 1.5 });
-      const canvas = document.createElement('canvas');
-      canvas.width = viewport.width;
-      canvas.height = viewport.height;
-      const ctx = canvas.getContext('2d');
-      await page.render({ canvasContext: ctx, viewport }).promise;
+      for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+        progressMsg.textContent = `Procesando página ${pageNum} de ${pdf.numPages}...`;
 
-      const dataUrl = canvas.toDataURL('image/jpeg', quality);
-      const orientation = viewport.width > viewport.height ? 'landscape' : 'portrait';
+        const page = await pdf.getPage(pageNum);
+        const viewport = page.getViewport({ scale: 1.5 });
+        const canvas = document.createElement('canvas');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        const ctx = canvas.getContext('2d');
+        await page.render({ canvasContext: ctx, viewport }).promise;
 
-      if (pageNum === 1) {
-        outPdf = new jsPDF({ orientation, unit: 'pt', format: [viewport.width, viewport.height] });
-      } else {
-        outPdf.addPage([viewport.width, viewport.height], orientation);
+        const dataUrl = canvas.toDataURL('image/jpeg', quality);
+        const orientation = viewport.width > viewport.height ? 'landscape' : 'portrait';
+
+        if (pageNum === 1) {
+          outPdf = new jsPDF({ orientation, unit: 'pt', format: [viewport.width, viewport.height] });
+        } else {
+          outPdf.addPage([viewport.width, viewport.height], orientation);
+        }
+        outPdf.addImage(dataUrl, 'JPEG', 0, 0, viewport.width, viewport.height);
       }
-      outPdf.addImage(dataUrl, 'JPEG', 0, 0, viewport.width, viewport.height);
+      outBytes = outPdf.output('arraybuffer');
     }
 
-    const outBlob = outPdf.output('blob');
-    const newSize = outBlob.size;
+    let outBlob = new Blob([outBytes], { type: 'application/pdf' });
+    let newSize = outBlob.size;
+    let keptOriginal = false;
+    let outName = `${selectedFile.name.replace(/\.pdf$/i, '')}-compressed.pdf`;
+
+    if (newSize >= originalSize) {
+      keptOriginal = true;
+      outBlob = new Blob([arrayBuffer], { type: 'application/pdf' });
+      newSize = originalSize;
+      outName = selectedFile.name;
+    }
+
     const url = URL.createObjectURL(outBlob);
-    const baseName = selectedFile.name.replace(/\.pdf$/i, '');
-    const outName = `${baseName}-compressed.pdf`;
-
-    const savedPct = Math.max(0, Math.round((1 - newSize / originalSize) * 100));
-    progressMsg.textContent = 'Listo — descarga disponible.';
-
     const card = document.createElement('div');
     card.className = 'result-card';
-    card.innerHTML = `
-      <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M9 13l3 2 3-2M9 17l3-2 3 2"/></svg></div>
-      <div class="result-body">
-        <div class="result-filename">${outName}</div>
-        <div class="result-stat">${(originalSize / 1024).toFixed(1)} KB → ${(newSize / 1024).toFixed(1)} KB <span class="saved">(${savedPct}% más pequeño)</span></div>
-      </div>
-    `;
+
+    if (keptOriginal) {
+      const suggestion = mode === 'quick'
+        ? 'Este PDF ya tiene una estructura eficiente, así que Limpieza rápida no pudo reducirlo más. Si contiene páginas escaneadas o fotos, prueba con Compresión fuerte.'
+        : 'Compresión fuerte habría hecho este archivo más grande — probablemente ya es un PDF basado en texto en lugar de un escaneo. Prueba con Limpieza rápida.';
+      progressMsg.textContent = 'Listo — no fue posible reducir el tamaño, se mantuvo el original.';
+      card.innerHTML = `
+        <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M9 13l3 2 3-2M9 17l3-2 3 2"/></svg></div>
+        <div class="result-body">
+          <div class="result-filename">${outName}</div>
+          <div class="result-stat">${(originalSize / 1024).toFixed(1)} KB — ya optimizado, se mantuvo el original</div>
+          <div class="note" style="margin-top:6px;font-size:13px;">${suggestion}</div>
+        </div>
+      `;
+    } else {
+      const savedPct = Math.max(0, Math.round((1 - newSize / originalSize) * 100));
+      progressMsg.textContent = 'Listo — descarga disponible.';
+      card.innerHTML = `
+        <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M9 13l3 2 3-2M9 17l3-2 3 2"/></svg></div>
+        <div class="result-body">
+          <div class="result-filename">${outName}</div>
+          <div class="result-stat">${(originalSize / 1024).toFixed(1)} KB → ${(newSize / 1024).toFixed(1)} KB <span class="saved">(${savedPct}% más pequeño)</span></div>
+        </div>
+      `;
+    }
     resultEl.appendChild(card);
 
     const link = document.createElement('a');
     link.href = url;
     link.download = outName;
     link.className = 'back';
-    link.textContent = 'Descargar PDF Comprimido';
+    link.textContent = keptOriginal ? 'Descargar PDF' : 'Descargar PDF Comprimido';
     resultEl.appendChild(link);
   } catch (err) {
     errorMsg.textContent = 'No se pudo procesar este PDF. Asegúrate de que no esté dañado ni protegido con contraseña.';

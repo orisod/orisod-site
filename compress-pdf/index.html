@@ -34,6 +34,7 @@
 <meta name="theme-color" content="#2563eb">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <style>
 :root{
   --bg:#0b0f1a;
@@ -112,6 +113,12 @@ p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-heigh
 input[type="file"]{display:none;}
 .quality-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:20px;font-size:14px;opacity:0.85;}
 input[type="range"]{width:200px;}
+.mode-row{display:flex;gap:12px;justify-content:center;margin-top:20px;flex-wrap:wrap;}
+.mode-option{display:flex;align-items:flex-start;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 14px;cursor:pointer;text-align:left;max-width:260px;}
+.mode-option input{margin:3px 0 0 0;}
+.mode-option.selected{border-color:var(--accent);}
+.mode-option .mode-title{font-size:14px;font-weight:bold;display:block;}
+.mode-option .mode-hint{font-size:12px;color:var(--muted-text);display:block;margin-top:2px;line-height:1.4;}
 button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
 button:disabled{opacity:0.4;cursor:not-allowed;}
 button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
@@ -193,7 +200,7 @@ h2{margin-top:50px;font-size:22px;}
   <div class="workspace">
     <div class="box">
       <div class="disclaimer">
-        ⚠️ <strong>Good to know before you start:</strong> this tool works by converting each page into a compressed image and rebuilding the PDF from those images. This shrinks file size well for scanned pages or photo-heavy documents, but the resulting PDF will <strong>no longer have selectable or searchable text</strong>. If your PDF is mostly text and you need to keep it searchable, this may not be the right tool for it.
+        ℹ️ <strong>Two compression modes:</strong> <strong>Quick clean</strong> re-optimizes the PDF's internal structure and keeps all text selectable and searchable — best for reports, contracts, and other text-based PDFs. <strong>Strong compression</strong> converts each page into a compressed image instead, which shrinks scanned or photo-heavy PDFs a lot more, but the resulting PDF will <strong>no longer have selectable or searchable text</strong>.
       </div>
 
       <label class="dropzone" id="dropzone" for="fileInput">
@@ -203,14 +210,25 @@ h2{margin-top:50px;font-size:22px;}
       <div class="error" id="errorMsg"></div>
       <div class="trust-strip">🔒 Processed on your device · No upload · No account · No watermark</div>
 
-      <div class="quality-row">
+      <div class="mode-row" id="modeRow">
+        <label class="mode-option" data-mode="quick">
+          <input type="radio" name="compressMode" value="quick" checked>
+          <span><span class="mode-title">Quick clean</span><span class="mode-hint">Keeps text selectable — best for reports, contracts, forms</span></span>
+        </label>
+        <label class="mode-option" data-mode="strong">
+          <input type="radio" name="compressMode" value="strong">
+          <span><span class="mode-title">Strong compression</span><span class="mode-hint">Rasterizes pages — best for scans & photo-heavy PDFs</span></span>
+        </label>
+      </div>
+
+      <div class="quality-row" id="qualityRow" style="display:none;">
         <label for="quality">Compression level: <span id="qualityValue">60</span>%</label>
         <input type="range" id="quality" min="20" max="90" value="60">
       </div>
 
       <div class="workspace-controls">
         <button id="compressBtn" disabled>Compress PDF</button>
-        <div class="note">Higher = better quality, larger file. Lower = smaller file, more compression.</div>
+        <div class="note" id="qualityNote" style="display:none;">Higher = better quality, larger file. Lower = smaller file, more compression.</div>
         <div class="progress" id="progressMsg"></div>
       </div>
 
@@ -220,31 +238,35 @@ h2{margin-top:50px;font-size:22px;}
 
   <div class="seo-content">
     <h2>What does this tool do?</h2>
-    <p>This tool reduces PDF file size by rendering each page as a compressed image and rebuilding the document from those images, similar to how you'd compress a photo. It's most effective on scanned documents, photo-heavy PDFs, or anything where pages are already essentially images — the file size drop can be significant.</p>
+    <p>This tool offers two ways to shrink a PDF. <strong>Quick clean</strong> re-saves the PDF with a more efficient internal structure — no rasterization — so text stays fully selectable and searchable; it's the better default for reports, contracts, forms, and anything typed rather than scanned. <strong>Strong compression</strong> renders each page as a compressed image and rebuilds the document from those images, similar to compressing a photo; it shrinks scanned or photo-heavy PDFs a lot more, but the resulting file is image-based and no longer searchable.</p>
 
     <h2>When should you use it?</h2>
     <ul>
-      <li>You have a scanned document that's too large to email or upload</li>
-      <li>Your PDF is full of photos and the file size is unreasonably large</li>
-      <li>You don't need to select, copy, or search the text in the document</li>
+      <li>Your PDF is mostly text (a report, contract, or form) and you want it smaller without losing searchable text — use Quick clean</li>
+      <li>You have a scanned document or photo-heavy PDF that's too large to email or upload — use Strong compression</li>
       <li>A form or platform has a strict file size limit for PDF uploads</li>
+      <li>You want to see the before/after file size before committing to a download</li>
     </ul>
 
     <h2>Why use Orisod for this?</h2>
-    <p>You control the compression level with a slider and see the before/after file size comparison immediately. Everything happens locally in your browser using PDF.js and jsPDF — your document is never uploaded to a server.</p>
+    <p>You pick the mode that fits your document, and for Strong compression you control the compression level with a slider and see the before/after file size comparison immediately. If a compression pass wouldn't actually make your file smaller, we tell you and keep your original instead of handing you a bigger file. Everything happens locally in your browser using PDF.js, pdf-lib, and jsPDF — your document is never uploaded to a server.</p>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Will I lose the ability to select text?</div>
-      <div>Yes. Since this tool converts pages to compressed images to achieve real size reduction, the resulting PDF is image-based and text is no longer selectable or searchable.</div>
+      <div>Only with Strong compression, which converts pages to images to achieve a much bigger size reduction. Quick clean never rasterizes anything, so text stays selectable and searchable.</div>
     </div>
     <div class="faq-item">
-      <div class="q">Is this a good fit for a text-heavy report or contract?</div>
-      <div>Not ideally — if you need to keep text selectable and searchable, this tool isn't the right choice. It works best for scanned pages or documents that are already essentially images.</div>
+      <div class="q">Which mode should I use for a text-heavy report or contract?</div>
+      <div>Quick clean. It optimizes the PDF's internal structure instead of turning pages into images, so file size drops (typically a modest amount, more if the file has editing history baked in) without losing selectable, searchable text.</div>
     </div>
     <div class="faq-item">
       <div class="q">How much smaller will my file be?</div>
-      <div>It varies widely depending on your original PDF and the compression level you choose, but scanned or image-heavy documents often shrink significantly.</div>
+      <div>It varies. Quick clean usually gives a modest reduction since it isn't re-encoding any content, just cleaning up structure — PDFs that have been saved multiple times by other editors tend to shrink the most. Strong compression can shrink scanned or image-heavy documents dramatically, controlled by the quality slider.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">What happens if compression wouldn't actually reduce the file size?</div>
+      <div>We detect that and keep your original file instead of giving you something bigger or lower quality for no reason — you'll see a note explaining why, with a suggestion to try the other mode if it fits your document better.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my PDF uploaded to a server?</div>
@@ -367,6 +389,10 @@ const dropzoneText = document.getElementById('dropzoneText');
 const errorMsg = document.getElementById('errorMsg');
 const qualitySlider = document.getElementById('quality');
 const qualityValue = document.getElementById('qualityValue');
+const qualityRow = document.getElementById('qualityRow');
+const qualityNote = document.getElementById('qualityNote');
+const modeInputs = document.querySelectorAll('input[name="compressMode"]');
+const modeOptions = document.querySelectorAll('.mode-option');
 const compressBtn = document.getElementById('compressBtn');
 const progressMsg = document.getElementById('progressMsg');
 const resultEl = document.getElementById('result');
@@ -374,6 +400,19 @@ const resultEl = document.getElementById('result');
 let selectedFile = null;
 
 qualitySlider.addEventListener('input', () => { qualityValue.textContent = qualitySlider.value; });
+
+function getMode() {
+  return document.querySelector('input[name="compressMode"]:checked').value;
+}
+
+function updateModeUI() {
+  const mode = getMode();
+  qualityRow.style.display = mode === 'strong' ? 'flex' : 'none';
+  qualityNote.style.display = mode === 'strong' ? 'block' : 'none';
+  modeOptions.forEach(opt => opt.classList.toggle('selected', opt.dataset.mode === mode));
+}
+modeInputs.forEach(r => r.addEventListener('change', updateModeUI));
+updateModeUI();
 
 fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
 dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
@@ -404,62 +443,94 @@ compressBtn.addEventListener('click', async () => {
   resultEl.innerHTML = '';
   progressMsg.textContent = '';
 
+  const mode = getMode();
   const quality = parseInt(qualitySlider.value, 10) / 100;
   const originalSize = selectedFile.size;
 
   try {
     const arrayBuffer = await selectedFile.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-    const { jsPDF } = window.jspdf;
-    let outPdf = null;
+    let outBytes;
 
-    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-      progressMsg.textContent = `Processing page ${pageNum} of ${pdf.numPages}...`;
+    if (mode === 'quick') {
+      progressMsg.textContent = 'Optimizing PDF structure...';
+      const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer, { updateMetadata: false });
+      outBytes = await pdfDoc.save({ useObjectStreams: true });
+    } else {
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
+      const { jsPDF } = window.jspdf;
+      let outPdf = null;
 
-      const page = await pdf.getPage(pageNum);
-      const viewport = page.getViewport({ scale: 1.5 });
-      const canvas = document.createElement('canvas');
-      canvas.width = viewport.width;
-      canvas.height = viewport.height;
-      const ctx = canvas.getContext('2d');
-      await page.render({ canvasContext: ctx, viewport }).promise;
+      for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+        progressMsg.textContent = `Processing page ${pageNum} of ${pdf.numPages}...`;
 
-      const dataUrl = canvas.toDataURL('image/jpeg', quality);
-      const orientation = viewport.width > viewport.height ? 'landscape' : 'portrait';
+        const page = await pdf.getPage(pageNum);
+        const viewport = page.getViewport({ scale: 1.5 });
+        const canvas = document.createElement('canvas');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        const ctx = canvas.getContext('2d');
+        await page.render({ canvasContext: ctx, viewport }).promise;
 
-      if (pageNum === 1) {
-        outPdf = new jsPDF({ orientation, unit: 'pt', format: [viewport.width, viewport.height] });
-      } else {
-        outPdf.addPage([viewport.width, viewport.height], orientation);
+        const dataUrl = canvas.toDataURL('image/jpeg', quality);
+        const orientation = viewport.width > viewport.height ? 'landscape' : 'portrait';
+
+        if (pageNum === 1) {
+          outPdf = new jsPDF({ orientation, unit: 'pt', format: [viewport.width, viewport.height] });
+        } else {
+          outPdf.addPage([viewport.width, viewport.height], orientation);
+        }
+        outPdf.addImage(dataUrl, 'JPEG', 0, 0, viewport.width, viewport.height);
       }
-      outPdf.addImage(dataUrl, 'JPEG', 0, 0, viewport.width, viewport.height);
+      outBytes = outPdf.output('arraybuffer');
     }
 
-    const outBlob = outPdf.output('blob');
-    const newSize = outBlob.size;
+    let outBlob = new Blob([outBytes], { type: 'application/pdf' });
+    let newSize = outBlob.size;
+    let keptOriginal = false;
+    let outName = `${selectedFile.name.replace(/\.pdf$/i, '')}-compressed.pdf`;
+
+    if (newSize >= originalSize) {
+      keptOriginal = true;
+      outBlob = new Blob([arrayBuffer], { type: 'application/pdf' });
+      newSize = originalSize;
+      outName = selectedFile.name;
+    }
+
     const url = URL.createObjectURL(outBlob);
-    const baseName = selectedFile.name.replace(/\.pdf$/i, '');
-    const outName = `${baseName}-compressed.pdf`;
-
-    const savedPct = Math.max(0, Math.round((1 - newSize / originalSize) * 100));
-    progressMsg.textContent = 'Done — ready to download.';
-
     const card = document.createElement('div');
     card.className = 'result-card';
-    card.innerHTML = `
-      <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M9 13l3 2 3-2M9 17l3-2 3 2"/></svg></div>
-      <div class="result-body">
-        <div class="result-filename">${outName}</div>
-        <div class="result-stat">${(originalSize / 1024).toFixed(1)} KB → ${(newSize / 1024).toFixed(1)} KB <span class="saved">(${savedPct}% smaller)</span></div>
-      </div>
-    `;
+
+    if (keptOriginal) {
+      const suggestion = mode === 'quick'
+        ? 'This PDF is already efficiently structured, so Quick clean couldn’t shrink it further. If it contains scanned pages or photos, try Strong compression instead.'
+        : 'Strong compression would have made this file bigger — it’s likely already text-based rather than scanned. Try Quick clean instead.';
+      progressMsg.textContent = 'Done — no size reduction possible, original kept.';
+      card.innerHTML = `
+        <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M9 13l3 2 3-2M9 17l3-2 3 2"/></svg></div>
+        <div class="result-body">
+          <div class="result-filename">${outName}</div>
+          <div class="result-stat">${(originalSize / 1024).toFixed(1)} KB — already optimized, original kept</div>
+          <div class="note" style="margin-top:6px;font-size:13px;">${suggestion}</div>
+        </div>
+      `;
+    } else {
+      const savedPct = Math.max(0, Math.round((1 - newSize / originalSize) * 100));
+      progressMsg.textContent = 'Done — ready to download.';
+      card.innerHTML = `
+        <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M9 13l3 2 3-2M9 17l3-2 3 2"/></svg></div>
+        <div class="result-body">
+          <div class="result-filename">${outName}</div>
+          <div class="result-stat">${(originalSize / 1024).toFixed(1)} KB → ${(newSize / 1024).toFixed(1)} KB <span class="saved">(${savedPct}% smaller)</span></div>
+        </div>
+      `;
+    }
     resultEl.appendChild(card);
 
     const link = document.createElement('a');
     link.href = url;
     link.download = outName;
     link.className = 'back';
-    link.textContent = 'Download Compressed PDF';
+    link.textContent = keptOriginal ? 'Download PDF' : 'Download Compressed PDF';
     resultEl.appendChild(link);
   } catch (err) {
     errorMsg.textContent = 'Could not process this PDF. Make sure it is not corrupted or password-protected.';
