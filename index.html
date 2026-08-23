@@ -194,6 +194,68 @@ h1{
   padding:3px 7px;
   pointer-events:none;
 }
+.search-suggestions{
+  display:none;
+  position:absolute;
+  top:calc(100% + 6px);
+  left:0;
+  right:0;
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:12px;
+  box-shadow:var(--card-shadow);
+  overflow-y:auto;
+  max-height:340px;
+  z-index:20;
+  text-align:left;
+}
+.suggestion-item{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:11px 16px;
+  min-height:46px;
+  box-sizing:border-box;
+  cursor:pointer;
+  border-bottom:1px solid var(--border);
+}
+.suggestion-item:last-child{border-bottom:none;}
+.suggestion-item.active, .suggestion-item:hover{background:rgba(37,99,235,.14);}
+.suggestion-main{
+  flex:1 1 auto;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+.suggestion-name{
+  font-size:14px;
+  font-weight:bold;
+  color:var(--text);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.suggestion-desc{
+  font-size:12px;
+  color:var(--muted-text);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.suggestion-cat{
+  flex:none;
+  font-size:10px;
+  font-weight:bold;
+  text-transform:uppercase;
+  letter-spacing:.3px;
+  padding:3px 8px;
+  border-radius:999px;
+}
+.suggestion-cat.cat-image{background:rgba(37,99,235,var(--icon-alpha));color:#2563eb;}
+.suggestion-cat.cat-pdf{background:rgba(245,158,11,var(--icon-alpha));color:#f59e0b;}
+.suggestion-cat.cat-utility{background:rgba(139,92,246,var(--icon-alpha));color:#8b5cf6;}
 .tool-category{
   max-width:1000px;
   margin:0 auto 50px auto;
@@ -420,14 +482,186 @@ h1{
 })();
 
 (function(){
+  var TOOLS = [
+    {n:"Add Border to Image",d:"Add a colored frame around a photo.",h:"/add-border-to-image/",c:"image"},
+    {n:"AVIF to JPG/PNG",d:"Convert modern AVIF images.",h:"/avif-to-jpg-png/",c:"image"},
+    {n:"Blur Faces / Blur Area",d:"Pixelate faces or private details.",h:"/blur-area-tool/",c:"image"},
+    {n:"BMP to JPG/PNG",d:"Shrink old uncompressed BMP files.",h:"/bmp-to-jpg-png/",c:"image"},
+    {n:"Compress Image",d:"Reduce file size, keep quality.",h:"/compress-image/",c:"image"},
+    {n:"Crop Image",d:"Drag to select and crop any area.",h:"/crop-image/",c:"image"},
+    {n:"GIF to JPG/PNG",d:"Extract a GIF's first frame as an image.",h:"/gif-to-jpg-png/",c:"image"},
+    {n:"HEIC to JPG",d:"Convert iPhone HEIC photos to JPG.",h:"/heic-to-jpg/",c:"image"},
+    {n:"Image Color Filters",d:"B&W, sepia, brightness, contrast.",h:"/image-color-filters/",c:"image"},
+    {n:"JPG to WEBP",d:"Shrink JPG files with WEBP.",h:"/jpg-to-webp/",c:"image"},
+    {n:"PNG to JPG",d:"Convert PNG images to JPG format.",h:"/png-to-jpg/",c:"image"},
+    {n:"PNG to WEBP",d:"Shrink PNG files with WEBP.",h:"/png-to-webp/",c:"image"},
+    {n:"Resize Image",d:"Change image width and height.",h:"/resize-image/",c:"image"},
+    {n:"Rotate Image",d:"Rotate or flip an image instantly.",h:"/rotate-image/",c:"image"},
+    {n:"Round Corners / Circle Crop",d:"Round corners or crop to a circle.",h:"/round-image-corners/",c:"image"},
+    {n:"Social Media Cropper",d:"Crop to Instagram, YouTube & more.",h:"/social-media-crop/",c:"image"},
+    {n:"SVG to PNG",d:"Convert vector SVG to a raster PNG.",h:"/svg-to-png/",c:"image"},
+    {n:"Watermark Adder",d:"Add a text watermark to a photo.",h:"/watermark-adder/",c:"image"},
+    {n:"WEBP to JPG",d:"Convert WEBP images to JPG format.",h:"/webp-to-jpg/",c:"image"},
+    {n:"WEBP to PNG",d:"Convert WEBP to PNG, transparency kept.",h:"/webp-to-png/",c:"image"},
+    {n:"Add Page Numbers",d:"Stamp page numbers on a PDF.",h:"/add-page-numbers/",c:"pdf"},
+    {n:"Compress PDF",d:"Shrink scanned or image-heavy PDFs.",h:"/compress-pdf/",c:"pdf"},
+    {n:"Crop PDF Pages",d:"Trim margins from every page.",h:"/crop-pdf-pages/",c:"pdf"},
+    {n:"Delete PDF Pages",d:"Remove pages by number or range.",h:"/delete-pdf-pages/",c:"pdf"},
+    {n:"Edit PDF Metadata",d:"Change title, author, subject & keywords.",h:"/edit-pdf-metadata/",c:"pdf"},
+    {n:"Extract PDF Text",d:"Copy or download a PDF's text as .txt.",h:"/extract-pdf-text/",c:"pdf"},
+    {n:"HTML to PDF",d:"Paste HTML and convert it to PDF.",h:"/html-to-pdf/",c:"pdf"},
+    {n:"Image to PDF",d:"Combine any images into one PDF.",h:"/image-to-pdf/",c:"pdf"},
+    {n:"JPG to PDF",d:"Turn JPG images into a PDF file.",h:"/jpg-to-pdf/",c:"pdf"},
+    {n:"Merge PDF",d:"Combine multiple PDFs into one.",h:"/merge-pdf/",c:"pdf"},
+    {n:"PDF Page Organizer",d:"Drag to reorder or delete pages.",h:"/pdf-page-organizer/",c:"pdf"},
+    {n:"PDF to JPG",d:"Extract PDF pages as JPG images.",h:"/pdf-to-jpg/",c:"pdf"},
+    {n:"Resize PDF Pages",d:"Change page dimensions, e.g. A4 to Letter.",h:"/resize-pdf-pages/",c:"pdf"},
+    {n:"Rotate PDF Pages",d:"Rotate all or specific pages.",h:"/rotate-pdf/",c:"pdf"},
+    {n:"Sign PDF",d:"Draw and place a signature.",h:"/sign-pdf/",c:"pdf"},
+    {n:"Split PDF",d:"Extract a range or split every page.",h:"/split-pdf/",c:"pdf"},
+    {n:"Watermark PDF",d:"Stamp text across every page.",h:"/watermark-pdf/",c:"pdf"},
+    {n:"Color Picker from Image",d:"Click a pixel to get its HEX/RGB.",h:"/color-picker-from-image/",c:"utility"},
+    {n:"EXIF Remover",d:"Strip hidden metadata from a photo.",h:"/exif-remover/",c:"utility"},
+    {n:"Favicon Generator",d:"Generate a full favicon.ico package.",h:"/favicon-generator/",c:"utility"},
+    {n:"Image Dimension Checker",d:"Check size, format, DPI & ratio.",h:"/image-dimension-checker/",c:"utility"},
+    {n:"Image Metadata Viewer",d:"See a photo's camera, date & GPS data.",h:"/image-metadata-viewer/",c:"utility"},
+    {n:"Image to Base64",d:"Encode/decode images as Base64.",h:"/image-to-base64/",c:"utility"},
+    {n:"QR Code Generator",d:"Turn a link or text into a QR code.",h:"/qr-code-generator/",c:"utility"}
+  ];
+  var CAT_LABELS = {image:"Image", pdf:"PDF", utility:"Utility"};
+  var MAX_SUGGESTIONS = 6;
+
   var input = document.getElementById('homeSearch');
+  var box = input.closest('.search-box');
+  var dropdown = document.createElement('div');
+  dropdown.className = 'search-suggestions';
+  dropdown.id = 'homeSearchSuggestions';
+  dropdown.setAttribute('role', 'listbox');
+  box.appendChild(dropdown);
+
+  input.setAttribute('role', 'combobox');
+  input.setAttribute('aria-expanded', 'false');
+  input.setAttribute('aria-controls', 'homeSearchSuggestions');
+  input.setAttribute('aria-autocomplete', 'list');
+
+  var currentMatches = [];
+  var activeIndex = -1;
+
+  function getMatches(query){
+    var q = query.trim().toLowerCase();
+    if(!q) return [];
+    var starts = [], contains = [];
+    TOOLS.forEach(function(t){
+      var name = t.n.toLowerCase();
+      if(name.indexOf(q) === 0){
+        starts.push(t);
+      } else if(name.indexOf(q) !== -1 || t.d.toLowerCase().indexOf(q) !== -1){
+        contains.push(t);
+      }
+    });
+    return starts.concat(contains).slice(0, MAX_SUGGESTIONS);
+  }
+
+  function closeDropdown(){
+    dropdown.style.display = 'none';
+    dropdown.innerHTML = '';
+    input.setAttribute('aria-expanded', 'false');
+    input.removeAttribute('aria-activedescendant');
+    currentMatches = [];
+    activeIndex = -1;
+  }
+
+  function setActive(idx){
+    var items = dropdown.querySelectorAll('.suggestion-item');
+    items.forEach(function(el, i){ el.classList.toggle('active', i === idx); });
+    activeIndex = idx;
+    if(idx >= 0 && items[idx]){
+      input.setAttribute('aria-activedescendant', items[idx].id);
+      items[idx].scrollIntoView({block: 'nearest'});
+    } else {
+      input.removeAttribute('aria-activedescendant');
+    }
+  }
+
+  function renderDropdown(matches){
+    currentMatches = matches;
+    activeIndex = -1;
+    dropdown.innerHTML = '';
+    if(!matches.length){
+      closeDropdown();
+      return;
+    }
+    matches.forEach(function(t, i){
+      var item = document.createElement('div');
+      item.className = 'suggestion-item';
+      item.id = 'homeSuggestion-' + i;
+      item.setAttribute('role', 'option');
+
+      var main = document.createElement('div');
+      main.className = 'suggestion-main';
+      var nameEl = document.createElement('span');
+      nameEl.className = 'suggestion-name';
+      nameEl.textContent = t.n;
+      var descEl = document.createElement('span');
+      descEl.className = 'suggestion-desc';
+      descEl.textContent = t.d;
+      main.appendChild(nameEl);
+      main.appendChild(descEl);
+
+      var catEl = document.createElement('span');
+      catEl.className = 'suggestion-cat cat-' + t.c;
+      catEl.textContent = CAT_LABELS[t.c] || t.c;
+
+      item.appendChild(main);
+      item.appendChild(catEl);
+
+      item.addEventListener('mouseenter', function(){ setActive(i); });
+      item.addEventListener('click', function(){ window.location.href = t.h; });
+
+      dropdown.appendChild(item);
+    });
+    dropdown.style.display = 'block';
+    input.setAttribute('aria-expanded', 'true');
+  }
+
   function goSearch(){
     var q = input.value.trim();
     window.location.href = '/tools/' + (q ? '?q=' + encodeURIComponent(q) : '');
   }
-  input.addEventListener('keydown', function(e){
-    if(e.key === 'Enter') goSearch();
+
+  input.addEventListener('input', function(){
+    renderDropdown(getMatches(input.value));
   });
+
+  input.addEventListener('focus', function(){
+    if(input.value.trim()) renderDropdown(getMatches(input.value));
+  });
+
+  input.addEventListener('keydown', function(e){
+    if(e.key === 'ArrowDown'){
+      if(!currentMatches.length) return;
+      e.preventDefault();
+      setActive(activeIndex + 1 >= currentMatches.length ? 0 : activeIndex + 1);
+    } else if(e.key === 'ArrowUp'){
+      if(!currentMatches.length) return;
+      e.preventDefault();
+      setActive(activeIndex - 1 < 0 ? currentMatches.length - 1 : activeIndex - 1);
+    } else if(e.key === 'Enter'){
+      if(activeIndex >= 0 && currentMatches[activeIndex]){
+        e.preventDefault();
+        window.location.href = currentMatches[activeIndex].h;
+      } else {
+        goSearch();
+      }
+    } else if(e.key === 'Escape'){
+      closeDropdown();
+    }
+  });
+
+  document.addEventListener('click', function(e){
+    if(!box.contains(e.target)) closeDropdown();
+  });
+
   document.addEventListener('keydown', function(e){
     if((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k'){
       e.preventDefault();
