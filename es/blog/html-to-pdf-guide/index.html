@@ -108,6 +108,14 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 .related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
 .related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
 .related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+.blog-cat{display:inline-block;font-size:11px;font-weight:bold;text-transform:uppercase;letter-spacing:.3px;padding:3px 9px;border-radius:999px;margin-bottom:12px;cursor:default;}
+.blog-card .blog-cat{margin-bottom:0;}
+.blog-cat.cat-guide{background:#16213d;color:#60a5fa;}
+.blog-cat.cat-tip{background:#1f1a0f;color:#fbbf24;}
+.blog-cat.cat-comparison{background:#241c3d;color:#a78bfa;}
+:root[data-theme="light"] .blog-cat.cat-guide{background:#eff6ff;color:#1e40af;}
+:root[data-theme="light"] .blog-cat.cat-tip{background:#fffbeb;color:#92400e;}
+:root[data-theme="light"] .blog-cat.cat-comparison{background:#f5f3ff;color:#5b21b6;}
 </style>
 </head>
 <body>
@@ -131,6 +139,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <main>
 <div class="container">
 
+<span class="blog-cat cat-guide">Guías</span>
 <h1>Cómo convertir HTML a PDF (pega el código y obtén el archivo)</h1>
 <p class="intro">Tienes un fragmento HTML, una plantilla de factura o un informe con estilo y lo necesitas como un PDF fijo y compartible en lugar de código sin procesar. Convertir HTML directamente a PDF, sin instalar nada ni levantar un servidor, convierte el marcado con estilo en un documento en unos segundos.</p>
 
