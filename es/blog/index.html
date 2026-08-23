@@ -112,10 +112,11 @@ h1{font-size:44px;margin-bottom:10px;}
 }
 .blog-card .read-more{
   font-size:13px;
-  color:var(--accent);
+  color:#60a5fa;
   font-weight:bold;
-  margin-top:4px;
+  margin-top:auto;
 }
+:root[data-theme="light"] .blog-card .read-more{color:var(--accent);}
 .site-footer{
   margin-top:40px;
   padding:40px 24px 30px 24px;
@@ -138,7 +139,7 @@ h1{font-size:44px;margin-bottom:10px;}
 .footer-col a{display:block;font-size:14px;color:var(--text);text-decoration:none;opacity:0.8;margin-bottom:10px;}
 .footer-col a:hover{opacity:1;color:var(--accent);}
 .blog-cat{display:inline-block;font-size:11px;font-weight:bold;text-transform:uppercase;letter-spacing:.3px;padding:3px 9px;border-radius:999px;margin-bottom:12px;cursor:default;}
-.blog-card .blog-cat{margin-bottom:0;}
+.blog-card .blog-cat{display:inline-flex;width:fit-content;margin-bottom:0;}
 .blog-cat.cat-guide{background:#16213d;color:#60a5fa;}
 .blog-cat.cat-tip{background:#1f1a0f;color:#fbbf24;}
 .blog-cat.cat-comparison{background:#241c3d;color:#a78bfa;}
@@ -167,7 +168,7 @@ h1{font-size:44px;margin-bottom:10px;}
 
 <main>
 <h1>Blog</h1>
-<p class="subtitle">Guías y tutoriales para trabajar con imágenes y PDF — formatos de archivo explicados, consejos prácticos, y las herramientas gratuitas para resolverlo.</p>
+<p class="subtitle">Guías y tutoriales sobre imágenes y PDF: formatos explicados, consejos prácticos y herramientas gratuitas para resolver cada tarea.</p>
 
 <div class="blog-grid">
 
