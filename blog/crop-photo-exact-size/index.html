@@ -73,6 +73,9 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 .article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
 .article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
 .article-body li{margin-bottom:8px;}
+.theme-figure{margin:10px 0 26px 0;}
+.theme-figure img{display:block;width:100%;height:auto;border-radius:10px;border:1px solid var(--border);}
+.theme-figure figcaption{font-size:13.5px;color:var(--muted-text);margin-top:10px;line-height:1.5;}
 .compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
 .compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
 .compare-table th{background:var(--card-bg);}
@@ -163,7 +166,12 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <p>When you upload a photo that's the right shape but the wrong exact size, one of two things usually happens: the receiving system stretches it to fit (distorting faces and straight lines) or crops it further on its own terms, often cutting off exactly the part you cared about keeping. Neither is what you wanted. Getting the exact size right yourself, before uploading, means you control what stays in frame — not an automated system guessing on your behalf.</p>
 
 <h2>How to crop to an exact size</h2>
-<p>The reliable way is a crop tool that lets you type in a target width and height directly, rather than dragging a selection box freehand and hoping it lands close. You position the crop area over the part of the photo you want to keep, lock in the exact pixel dimensions you were given, and export — no guessing, no manual measuring against a ruler on your screen.</p>
+<p>The reliable way is a crop tool that shows you the live pixel dimensions of your selection as you drag, rather than a plain selection box you're just eyeballing. You drag the crop area over the part of the photo you want to keep, watch the width and height readout update in real time, and adjust the selection until it reads the exact numbers you need before exporting — no guessing, no manual measuring against a ruler on your screen.</p>
+
+<figure class="theme-figure">
+  <img class="theme-img" data-dark="/assets/blog/crop-photo-exact-size/crop-photo-exact-size-dark-en.webp" data-light="/assets/blog/crop-photo-exact-size/crop-photo-exact-size-light-en.webp" src="/assets/blog/crop-photo-exact-size/crop-photo-exact-size-dark-en.webp" alt="Orisod's Crop Image tool mid-drag, showing the selection box on the source image and its live pixel-dimension readout" width="800" height="632" loading="lazy">
+  <figcaption>Drag to select, and watch the pixel dimensions update live until they match exactly what you need.</figcaption>
+</figure>
 
 <h2>A quick note on resolution</h2>
 <p>Exact pixel size and exact print size aren't interchangeable without knowing the resolution. A 600×600 pixel crop is a fixed number of pixels regardless of context, but if a print lab asks for "2×2 inches," that only becomes a real pixel target once you know the DPI they expect — at 300 DPI, 2×2 inches works out to exactly 600×600 pixels. When a spec gives you both a physical size and a DPI, do the multiplication first so you're cropping to the right pixel count, not just something that looks roughly 2 inches on your own screen.</p>
@@ -239,7 +247,15 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   function updateIcon(){
     btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
   }
+  function updateThemeImages(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    document.querySelectorAll('.theme-img').forEach(function(img){
+      var target = isLight ? img.dataset.light : img.dataset.dark;
+      if(img.getAttribute('src') !== target) img.src = target;
+    });
+  }
   updateIcon();
+  updateThemeImages();
   btn.addEventListener('click', function(){
     var isLight = document.documentElement.getAttribute('data-theme')==='light';
     if(isLight){
@@ -250,6 +266,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
       localStorage.setItem('orisod-theme','light');
     }
     updateIcon();
+    updateThemeImages();
   });
 })();
 </script>

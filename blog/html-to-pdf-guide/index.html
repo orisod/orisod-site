@@ -73,6 +73,9 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 .article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
 .article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
 .article-body li{margin-bottom:8px;}
+.theme-figure{margin:10px 0 26px 0;}
+.theme-figure img{display:block;width:100%;height:auto;border-radius:10px;border:1px solid var(--border);}
+.theme-figure figcaption{font-size:13.5px;color:var(--muted-text);margin-top:10px;line-height:1.5;}
 .cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
 .cta-box h3{margin:0 0 10px 0;font-size:19px;}
 .cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
@@ -147,6 +150,11 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <h2>How HTML-to-PDF conversion actually works</h2>
 <p>The HTML you provide gets rendered exactly like a browser would render it — layout, colors, fonts, everything defined in inline styles or &lt;style&gt; blocks — and that rendered result is then captured and placed into a PDF. It's effectively taking a high-resolution "screenshot" of the rendered page and packaging it as a document, rather than parsing the HTML into some intermediate PDF-specific format.</p>
+
+<figure class="theme-figure">
+  <img class="theme-img" data-dark="/assets/blog/html-to-pdf-guide/html-to-pdf-guide-dark-en.webp" data-light="/assets/blog/html-to-pdf-guide/html-to-pdf-guide-light-en.webp" src="/assets/blog/html-to-pdf-guide/html-to-pdf-guide-dark-en.webp" alt="Orisod's HTML to PDF tool showing pasted HTML code alongside its live rendered preview" width="860" height="1022" loading="lazy">
+  <figcaption>See exactly how it'll look before converting.</figcaption>
+</figure>
 
 <h2>What it can and can't do with a live website</h2>
 <p>A common assumption is that you can hand a tool a URL and get back a PDF of that page — but a browser-based converter with no server behind it can't fetch another website's page for you; that would require server-side infrastructure to make the request. What it can do is convert HTML code directly, which means the workaround for converting a live page is straightforward: view the page's source, copy the relevant HTML, and paste it in.</p>
@@ -231,7 +239,15 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   function updateIcon(){
     btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
   }
+  function updateThemeImages(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    document.querySelectorAll('.theme-img').forEach(function(img){
+      var target = isLight ? img.dataset.light : img.dataset.dark;
+      if(img.getAttribute('src') !== target) img.src = target;
+    });
+  }
   updateIcon();
+  updateThemeImages();
   btn.addEventListener('click', function(){
     var isLight = document.documentElement.getAttribute('data-theme')==='light';
     if(isLight){
@@ -242,6 +258,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
       localStorage.setItem('orisod-theme','light');
     }
     updateIcon();
+    updateThemeImages();
   });
 })();
 </script>
