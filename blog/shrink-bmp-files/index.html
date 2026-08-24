@@ -73,6 +73,9 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 .article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
 .article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
 .article-body li{margin-bottom:8px;}
+.theme-figure{margin:10px 0 26px 0;}
+.theme-figure svg{display:block;width:100%;height:auto;}
+.theme-figure figcaption{font-size:13.5px;color:var(--muted-text);margin-top:10px;line-height:1.5;}
 .compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
 .compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
 .compare-table th{background:var(--card-bg);}
@@ -172,6 +175,23 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <p>If you're doing pixel-level image processing or analysis where you specifically don't want any compression artifacts influencing the data — some scientific or technical workflows fall into this category — BMP's lack of compression is a feature, not a bug. For everyday sharing, storage, web use, or basically anything outside that narrow technical case, there's no real reason to keep a BMP file that large.</p>
 
 <h2>File size side by side</h2>
+<p>The same comparison, measured on one 1920×1080 test image:</p>
+<figure class="theme-figure">
+  <svg viewBox="0 0 700 340" width="700" height="340" role="img" aria-label="Bar chart comparing the same 1920×1080 photo saved as BMP (6MB+), PNG, and JPG (under 500KB)" xmlns="http://www.w3.org/2000/svg">
+    <title>Bar chart comparing the same 1920×1080 photo saved as BMP (6MB+), PNG, and JPG (under 500KB)</title>
+    <line x1="60" y1="280" x2="640" y2="280" stroke="var(--border)" stroke-width="1"></line>
+    <rect x="135" y="60" width="110" height="220" rx="4" fill="var(--muted-text)"></rect>
+    <text x="190" y="46" text-anchor="middle" font-size="18" font-weight="bold" fill="var(--text)">5.93 MB</text>
+    <text x="190" y="304" text-anchor="middle" font-size="15" fill="var(--muted-text)">BMP</text>
+    <rect x="295" y="168" width="110" height="112" rx="4" fill="var(--accent)"></rect>
+    <text x="350" y="154" text-anchor="middle" font-size="18" font-weight="bold" fill="var(--text)">3.02 MB</text>
+    <text x="350" y="304" text-anchor="middle" font-size="15" fill="var(--muted-text)">PNG</text>
+    <rect x="455" y="265.6" width="110" height="14.4" rx="4" fill="var(--accent)"></rect>
+    <text x="510" y="251.6" text-anchor="middle" font-size="18" font-weight="bold" fill="var(--text)">398 KB</text>
+    <text x="510" y="304" text-anchor="middle" font-size="15" fill="var(--muted-text)">JPG</text>
+  </svg>
+  <figcaption>In this example, BMP stores the pixels without image compression while JPG reduces the file to a fraction of the size.</figcaption>
+</figure>
 <table class="compare-table">
   <tr><th>Format</th><th>Approx. size (1920×1080 photo)</th></tr>
   <tr><td>BMP (uncompressed)</td><td>~6 MB</td></tr>
