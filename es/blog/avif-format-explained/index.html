@@ -73,6 +73,10 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 .article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
 .article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
 .article-body li{margin-bottom:8px;}
+.theme-figure{margin:10px 0 26px 0;}
+.theme-figure svg{display:block;width:100%;height:auto;}
+.theme-figure img{display:block;width:100%;height:auto;border-radius:10px;border:1px solid var(--border);}
+.theme-figure figcaption{font-size:13.5px;color:var(--muted-text);margin-top:10px;line-height:1.5;}
 .compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
 .compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
 .compare-table th{background:var(--card-bg);}
@@ -177,6 +181,22 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <tr><td>Soporte de software</td><td>Creciendo, todavía limitado</td><td>Amplio</td><td>Universal</td></tr>
   <tr><td>Ideal para</td><td>Rendimiento web de vanguardia</td><td>Uso web general</td><td>Máxima compatibilidad</td></tr>
 </table>
+<figure class="theme-figure">
+<svg viewBox="0 0 700 340" width="700" height="340" role="img" aria-label="Gráfico de barras que compara el tamaño de la misma foto de prueba guardada como JPG, WebP y AVIF en el ajuste de calidad típico de cada formato; AVIF es el más pequeño" xmlns="http://www.w3.org/2000/svg">
+<title>Gráfico de barras que compara el tamaño de la misma foto de prueba guardada como JPG, WebP y AVIF en el ajuste de calidad típico de cada formato; AVIF es el más pequeño</title>
+<line x1="60" y1="280" x2="640" y2="280" stroke="var(--border)" stroke-width="1"></line>
+<rect x="60.0" y="90.0" width="106.3" height="190.0" rx="4" fill="var(--muted-text)"></rect>
+<text x="113.2" y="76.0" text-anchor="middle" font-size="18" font-weight="bold" fill="var(--text)">980 KB</text>
+<text x="113.2" y="304.0" text-anchor="middle" font-size="15" fill="var(--muted-text)">JPG</text>
+<rect x="296.8" y="153.8" width="106.3" height="126.2" rx="4" fill="var(--accent)"></rect>
+<text x="350.0" y="139.8" text-anchor="middle" font-size="18" font-weight="bold" fill="var(--text)">651 KB</text>
+<text x="350.0" y="304.0" text-anchor="middle" font-size="15" fill="var(--muted-text)">WebP</text>
+<rect x="533.7" y="239.9" width="106.3" height="40.1" rx="4" fill="var(--accent)"></rect>
+<text x="586.8" y="225.9" text-anchor="middle" font-size="18" font-weight="bold" fill="var(--text)">207 KB</text>
+<text x="586.8" y="304.0" text-anchor="middle" font-size="15" fill="var(--muted-text)">AVIF</text>
+</svg>
+<figcaption>Medido en una foto de prueba de 3000×2250, codificada con Pillow 12.3.0 (libwebp / pillow-avif-plugin), calidad JPG 80, calidad WebP 80, calidad AVIF 50 — cerca del ajuste típico de "buena calidad" de cada formato. Trátalo como este ejemplo concreto, no como una garantía universal; el ahorro real varía según la imagen.</figcaption>
+</figure>
 
 <h2>Convertir AVIF a algo universal</h2>
 <p>En vez de actualizar cada programa por separado, puedes convertir el AVIF a JPG o PNG. Obtendrás un archivo compatible con muchas más aplicaciones, aunque normalmente ocupará algo más que el original.</p>

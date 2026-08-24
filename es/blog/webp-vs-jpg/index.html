@@ -73,6 +73,10 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 .article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
 .article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
 .article-body li{margin-bottom:8px;}
+.theme-figure{margin:10px 0 26px 0;}
+.theme-figure svg{display:block;width:100%;height:auto;}
+.theme-figure img{display:block;width:100%;height:auto;border-radius:10px;border:1px solid var(--border);}
+.theme-figure figcaption{font-size:13.5px;color:var(--muted-text);margin-top:10px;line-height:1.5;}
 .compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
 .compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
 .compare-table th{background:var(--card-bg);}
@@ -149,7 +153,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <div class="article-body">
 
 <h2>¿Qué es WebP?</h2>
-<p>WebP es un formato de imagen desarrollado por Google específicamente para la web. Puede hacer todo lo que hace JPG — compresión con pérdida para fotos — pero de forma más eficiente, produciendo normalmente archivos entre un 25 y 35 % más pequeños que un JPG de calidad equivalente. También puede hacer compresión sin pérdida como PNG, y admite transparencia, algo que JPG nunca ha tenido. En resumen, es un formato genuinamente más capaz, diseñado específicamente para cómo se usan realmente las imágenes en línea. Una foto JPG de 2 MB, por ejemplo, podría quedar en unos 1,3 MB como WebP con la misma calidad visual — un ahorro considerable si lo multiplicas por cada imagen de una página.</p>
+<p>WebP es un formato de imagen desarrollado por Google específicamente para la web. Puede hacer todo lo que hace JPG — compresión con pérdida para fotos — pero de forma más eficiente, produciendo normalmente archivos entre un 25 y 35 % más pequeños que un JPG de calidad equivalente. También puede hacer compresión sin pérdida como PNG, y admite transparencia, algo que JPG nunca ha tenido. En resumen, es un formato genuinamente más capaz, diseñado específicamente para cómo se usan realmente las imágenes en línea. Una foto JPG de 1,1 MB, por ejemplo, podría quedar en unos 770 KB como WebP con la misma calidad visual — un ahorro considerable si lo multiplicas por cada imagen de una página.</p>
 
 <h2>Por qué tantos sitios web usan WebP ahora</h2>
 <p>Archivos de imagen más pequeños significan páginas que cargan más rápido, y la velocidad de carga afecta desde la experiencia del usuario hasta el posicionamiento en buscadores. Una vez que los navegadores principales agregaron soporte nativo para WebP, los sitios web tuvieron un incentivo claro para cambiar sus imágenes — misma calidad visual, considerablemente menos datos para descargar. La mayoría de los sitios web modernos, sistemas de gestión de contenido, e incluso plataformas sociales ahora sirven imágenes como WebP por defecto, a menudo sin que el visitante promedio note el cambio de formato. Desde la perspectiva del sitio web, básicamente no hay desventaja — los visitantes obtienen una página más rápida, y el cambio de formato ocurre automáticamente detrás de escena.</p>
@@ -165,6 +169,19 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <tr><td>Soporte universal de software</td><td>Inconsistente</td><td>Casi universal</td></tr>
   <tr><td>Ideal para</td><td>Sitios web, apps modernas</td><td>Compartir, editar, software antiguo</td></tr>
 </table>
+<figure class="theme-figure">
+<svg viewBox="0 0 500 320" width="500" height="320" role="img" aria-label="Gráfico de barras que compara la misma foto guardada como JPG (1.1 MB) y WebP (773 KB) con la misma calidad" xmlns="http://www.w3.org/2000/svg">
+<title>Gráfico de barras que compara la misma foto guardada como JPG (1.1 MB) y WebP (773 KB) con la misma calidad</title>
+<line x1="60" y1="280" x2="440" y2="280" stroke="var(--border)" stroke-width="1"></line>
+<rect x="125.5" y="90.0" width="104.5" height="190.0" rx="4" fill="var(--muted-text)"></rect>
+<text x="177.8" y="76.0" text-anchor="middle" font-size="18" font-weight="bold" fill="var(--text)">1.1 MB</text>
+<text x="177.8" y="304.0" text-anchor="middle" font-size="15" fill="var(--muted-text)">JPG</text>
+<rect x="270.0" y="149.1" width="104.5" height="130.9" rx="4" fill="var(--accent)"></rect>
+<text x="322.2" y="135.1" text-anchor="middle" font-size="18" font-weight="bold" fill="var(--text)">773 KB</text>
+<text x="322.2" y="304.0" text-anchor="middle" font-size="15" fill="var(--muted-text)">WebP</text>
+</svg>
+<figcaption>Medido en una foto de prueba de 3000×2250, Pillow 12.3.0 (libwebp), JPG y WebP ambos en calidad 85 — una reducción del 31 %. Trátalo como este ejemplo concreto, no como una garantía universal.</figcaption>
+</figure>
 
 <h2>Por qué a menudo no puedes evitar descargar WebP</h2>
 <p>Normalmente no eliges el formato. Al guardar una imagen, el navegador descarga la versión que ofrece el sitio, y cada vez con más frecuencia es WebP, aunque el original se haya creado en otro formato. Si la aplicación donde necesitas usarla no lo admite, convertir el archivo suele ser la solución más práctica.</p>

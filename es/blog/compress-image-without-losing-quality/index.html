@@ -73,6 +73,10 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 .article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
 .article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
 .article-body li{margin-bottom:8px;}
+.theme-figure{margin:10px 0 26px 0;}
+.theme-figure svg{display:block;width:100%;height:auto;}
+.theme-figure img{display:block;width:100%;height:auto;border-radius:10px;border:1px solid var(--border);}
+.theme-figure figcaption{font-size:13.5px;color:var(--muted-text);margin-top:10px;line-height:1.5;}
 .compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
 .compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
 .compare-table th{background:var(--card-bg);}
@@ -155,10 +159,59 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <p>Hay dos enfoques fundamentalmente distintos. La compresión sin pérdida (cómo funciona PNG) reduce un archivo sin descartar ningún dato — obtienes un archivo más pequeño, pero la reducción de tamaño es limitada, típicamente mucho menos drástica que lo posible con fotos. La compresión con pérdida (cómo funciona JPG) descarta permanentemente algunos datos a cambio de reducciones de tamaño mucho mayores. Para fotografías específicamente, la compresión con pérdida es casi siempre la mejor opción, ya que los datos descartados se eligen específicamente por ser los visualmente menos importantes.</p>
 
 <h2>El punto ideal de calidad</h2>
-<p>La mayoría de herramientas de compresión te permiten fijar un nivel de calidad, normalmente como porcentaje o control deslizante. La relación entre ese ajuste y el tamaño de archivo no es lineal — bajar de 100 % a 80 % de calidad suele reducir el archivo dramáticamente con casi ningún cambio visible, mientras que bajar más de 40 % a 20 % apenas ahorra más espacio pero introduce artefactos de bloques evidentes. En la práctica, los ajustes de calidad entre aproximadamente 65 % y 80 % dan con el punto ideal para la mayoría de las fotos: archivos considerablemente más pequeños sin pérdida de calidad visible a tamaños de visualización normales.</p>
+<p>La mayoría de herramientas de compresión te permiten fijar un nivel de calidad, normalmente como porcentaje o control deslizante. La relación entre ese ajuste y el tamaño de archivo no es lineal — bajar de 90 % a 70 % de calidad suele reducir el archivo dramáticamente con casi ningún cambio visible, mientras que bajar más de 40 % a 10 % apenas ahorra más espacio pero introduce artefactos de bloques evidentes. En la práctica, los ajustes de calidad entre aproximadamente 65 % y 80 % dan con el punto ideal para la mayoría de las fotos: archivos considerablemente más pequeños sin pérdida de calidad visible a tamaños de visualización normales.</p>
+<figure class="theme-figure">
+<svg viewBox="0 0 700 380" width="700" height="380" role="img" aria-label="Gráfico de línea que muestra cómo el tamaño baja con fuerza entre 90% y 70% de calidad, y luego se estabiliza entre 40% y 10%" xmlns="http://www.w3.org/2000/svg">
+<title>Gráfico de línea que muestra cómo el tamaño baja con fuerza entre 90% y 70% de calidad, y luego se estabiliza entre 40% y 10%</title>
+<line x1="56" y1="30" x2="56" y2="320" stroke="var(--border)" stroke-width="1"/>
+<line x1="56" y1="320" x2="670" y2="320" stroke="var(--border)" stroke-width="1"/>
+<rect x="478.1" y="30" width="115.1" height="290" fill="var(--accent)" opacity="0.08"/>
+<line x1="56" y1="320.0" x2="670" y2="320.0" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="3 3"/>
+<text x="46.0" y="324.0" text-anchor="end" font-size="12" fill="var(--muted-text)">0%</text>
+<line x1="56" y1="247.5" x2="670" y2="247.5" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="3 3"/>
+<text x="46.0" y="251.5" text-anchor="end" font-size="12" fill="var(--muted-text)">25%</text>
+<line x1="56" y1="175.0" x2="670" y2="175.0" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="3 3"/>
+<text x="46.0" y="179.0" text-anchor="end" font-size="12" fill="var(--muted-text)">50%</text>
+<line x1="56" y1="102.5" x2="670" y2="102.5" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="3 3"/>
+<text x="46.0" y="106.5" text-anchor="end" font-size="12" fill="var(--muted-text)">75%</text>
+<line x1="56" y1="30.0" x2="670" y2="30.0" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="3 3"/>
+<text x="46.0" y="34.0" text-anchor="end" font-size="12" fill="var(--muted-text)">100%</text>
+<path d="M 670.0,108.3 L 593.2,183.7 L 516.5,209.8 L 439.8,224.3 L 363.0,235.9 L 286.2,244.6 L 209.5,256.2 L 132.8,267.8 L 56.0,285.2" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="670.0" cy="108.3" r="4" fill="var(--accent)"/>
+<text x="670.0" y="96.3" text-anchor="middle" font-size="11.5" fill="var(--text)">73%</text>
+<text x="670.0" y="342.0" text-anchor="middle" font-size="12" fill="var(--muted-text)">90</text>
+<circle cx="593.2" cy="183.7" r="4" fill="var(--accent)"/>
+<text x="593.2" y="171.7" text-anchor="middle" font-size="11.5" fill="var(--text)">47%</text>
+<text x="593.2" y="342.0" text-anchor="middle" font-size="12" fill="var(--muted-text)">80</text>
+<circle cx="516.5" cy="209.8" r="4" fill="var(--accent)"/>
+<text x="516.5" y="197.8" text-anchor="middle" font-size="11.5" fill="var(--text)">38%</text>
+<text x="516.5" y="342.0" text-anchor="middle" font-size="12" fill="var(--muted-text)">70</text>
+<circle cx="439.8" cy="224.3" r="4" fill="var(--accent)"/>
+<text x="439.8" y="212.3" text-anchor="middle" font-size="11.5" fill="var(--text)">33%</text>
+<text x="439.8" y="342.0" text-anchor="middle" font-size="12" fill="var(--muted-text)">60</text>
+<circle cx="363.0" cy="235.9" r="4" fill="var(--accent)"/>
+<text x="363.0" y="223.9" text-anchor="middle" font-size="11.5" fill="var(--text)">29%</text>
+<text x="363.0" y="342.0" text-anchor="middle" font-size="12" fill="var(--muted-text)">50</text>
+<circle cx="286.2" cy="244.6" r="4" fill="var(--accent)"/>
+<text x="286.2" y="232.6" text-anchor="middle" font-size="11.5" fill="var(--text)">26%</text>
+<text x="286.2" y="342.0" text-anchor="middle" font-size="12" fill="var(--muted-text)">40</text>
+<circle cx="209.5" cy="256.2" r="4" fill="var(--accent)"/>
+<text x="209.5" y="244.2" text-anchor="middle" font-size="11.5" fill="var(--text)">22%</text>
+<text x="209.5" y="342.0" text-anchor="middle" font-size="12" fill="var(--muted-text)">30</text>
+<circle cx="132.8" cy="267.8" r="4" fill="var(--accent)"/>
+<text x="132.8" y="255.8" text-anchor="middle" font-size="11.5" fill="var(--text)">18%</text>
+<text x="132.8" y="342.0" text-anchor="middle" font-size="12" fill="var(--muted-text)">20</text>
+<circle cx="56.0" cy="285.2" r="4" fill="var(--accent)"/>
+<text x="56.0" y="273.2" text-anchor="middle" font-size="11.5" fill="var(--text)">12%</text>
+<text x="56.0" y="342.0" text-anchor="middle" font-size="12" fill="var(--muted-text)">10</text>
+<text x="363.0" y="372.0" text-anchor="middle" font-size="13" fill="var(--muted-text)">Ajuste de calidad (%)</text>
+<text x="18" y="175.0" text-anchor="middle" font-size="13" fill="var(--muted-text)" transform="rotate(-90 18 175.0)">Tamaño del archivo (% del original)</text>
+</svg>
+<figcaption>Medido con la herramienta Comprimir Imagen de Orisod (codificación JPEG por canvas) en una foto de prueba de 2.0 MB, ajustes de calidad de 90 a 10, 2026-08-24. La franja sombreada marca el rango "punto ideal" de 65-80 %. Trátalo como este ejemplo concreto, no como una garantía universal.</figcaption>
+</figure>
 
 <h2>Un ejemplo concreto</h2>
-<p>Toma una foto típica de teléfono de 12 megapíxeles, a menudo de 4–6 MB directamente de la cámara. Comprimida al 75 % de calidad sin cambiar sus dimensiones, esa misma foto comúnmente baja a algún punto entre 800 KB y 1,2 MB — una reducción de tamaño del 75-80 % — mientras se ve idéntica a tamaños de visualización normales en pantalla. Baja la calidad al 30 % en cambio, y quizás ahorres solo unos cientos de KB más, pero ahora probablemente verás bloques visibles en los bordes y en áreas suaves como cielos o tonos de piel. El grueso del ahorro útil ocurre temprano; el riesgo para la calidad se concentra en el extremo bajo.</p>
+<p>Toma una foto típica de teléfono de 12 megapíxeles — en las mediciones de arriba, una foto de prueba de 2.0 MB. Comprimida al 80 % de calidad sin cambiar sus dimensiones, bajó a unos 950 KB, una reducción de tamaño del 53 % — mientras se ve idéntica a tamaños de visualización normales en pantalla. Baja la calidad al 30 % en cambio, y solo baja un poco más, a unos 459 KB, pero ahora probablemente verás bloques visibles en los bordes y en áreas suaves como cielos o tonos de piel. El grueso del ahorro útil ocurre temprano; el riesgo para la calidad se concentra en el extremo bajo.</p>
 
 <h2>Otras cosas que reducen un archivo además de la calidad</h2>
 <ul>
