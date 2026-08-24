@@ -73,6 +73,10 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 .article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
 .article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
 .article-body li{margin-bottom:8px;}
+.theme-figure{margin:10px 0 26px 0;}
+.theme-figure svg{display:block;width:100%;height:auto;}
+.theme-figure img{display:block;width:100%;height:auto;border-radius:10px;border:1px solid var(--border);}
+.theme-figure figcaption{font-size:13.5px;color:var(--muted-text);margin-top:10px;line-height:1.5;}
 .compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
 .compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
 .compare-table th{background:var(--card-bg);}
@@ -174,6 +178,26 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <tr><td>Captura de pantalla con texto</td><td>Nítida, sin artefactos</td><td>Bordes ligeramente difuminados</td></tr>
 </table>
 <p>Para una foto, esa diferencia de tamaño es enorme y la pérdida de calidad visible es mínima — la mayoría de la gente no puede distinguir ambas a un tamaño de visualización normal. Para una captura de pantalla llena de texto, en cambio, la compresión sin pérdida de PNG mantiene cada letra nítida, mientras que JPG puede introducir un aspecto suave y ligeramente borroso alrededor de los bordes definidos.</p>
+<figure class="theme-figure">
+  <img src="/assets/blog/png-vs-jpg/png-vs-jpg-text-crop-comparison.webp" alt="Recorte ampliado del mismo gráfico de texto que muestra bordes nítidos en PNG junto a una versión JPG con difuminado visible y artefactos de bloque alrededor de las letras" width="1330" height="319" loading="lazy">
+  <figcaption>Un recorte ampliado del mismo gráfico de texto — PNG a la izquierda, JPG guardado con una calidad baja a la derecha. PNG mantiene cada borde nítido; la versión JPG muestra difuminado visible y artefactos de bloque alrededor de las letras — exactamente el efecto "ligeramente borroso" que describe la tabla anterior.</figcaption>
+</figure>
+<figure class="theme-figure">
+<svg viewBox="0 0 700 340" width="700" height="340" role="img" aria-label="Gráfico de barras: para este gráfico de texto, el PNG (20 KB) pesa casi lo mismo que un JPG visualmente limpio (22 KB); solo un JPG visiblemente degradado (13 KB) es más pequeño" xmlns="http://www.w3.org/2000/svg">
+<title>Gráfico de barras: para este gráfico de texto, el PNG (20 KB) pesa casi lo mismo que un JPG visualmente limpio (22 KB); solo un JPG visiblemente degradado (13 KB) es más pequeño</title>
+<line x1="60" y1="280" x2="640" y2="280" stroke="var(--border)" stroke-width="1"></line>
+<rect x="60.0" y="107.3" width="106.3" height="172.7" rx="4" fill="var(--muted-text)"></rect>
+<text x="113.2" y="93.3" text-anchor="middle" font-size="18" font-weight="bold" fill="var(--text)">20 KB</text>
+<text x="113.2" y="304.0" text-anchor="middle" font-size="15" fill="var(--muted-text)">PNG</text>
+<rect x="296.8" y="90.0" width="106.3" height="190.0" rx="4" fill="var(--muted-text)"></rect>
+<text x="350.0" y="76.0" text-anchor="middle" font-size="18" font-weight="bold" fill="var(--text)">22 KB</text>
+<text x="350.0" y="304.0" text-anchor="middle" font-size="15" fill="var(--muted-text)">JPG (limpio)</text>
+<rect x="533.7" y="167.7" width="106.3" height="112.3" rx="4" fill="var(--accent)"></rect>
+<text x="586.8" y="153.7" text-anchor="middle" font-size="18" font-weight="bold" fill="var(--text)">13 KB</text>
+<text x="586.8" y="304.0" text-anchor="middle" font-size="15" fill="var(--muted-text)">JPG (degradado)</text>
+</svg>
+<figcaption>Medido sobre el gráfico de texto de arriba (Pillow 12.3.0): un JPG visualmente limpio (calidad 85) es en realidad un poco más grande que el PNG — para este tipo de contenido de colores planos y bordes definidos, el JPG solo se vuelve más pequeño al bajar la calidad lo suficiente como para ver los artefactos de arriba (calidad 35). Trátalo como este ejemplo concreto, no como una garantía universal.</figcaption>
+</figure>
 
 <h2>¿Por qué mi computadora usa PNG por defecto para las capturas de pantalla?</h2>
 <p>Tanto Windows como macOS guardan las capturas de pantalla como PNG por defecto, y no es casualidad — una captura de pantalla es exactamente el tipo de imagen para el que PNG fue diseñado. Está llena de colores planos, líneas rectas y texto, justo lo que la compresión con pérdida de JPG maneja peor. Si tu sistema operativo guardara las capturas como JPG, terminarías con texto ligeramente borroso y artefactos de compresión visibles alrededor de cada borde de ventana e icono. La contrapartida es que una carpeta de capturas de pantalla puede ocupar mucho más espacio del esperado en comparación con la misma cantidad de fotos.</p>

@@ -73,6 +73,10 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 .article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
 .article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
 .article-body li{margin-bottom:8px;}
+.theme-figure{margin:10px 0 26px 0;}
+.theme-figure svg{display:block;width:100%;height:auto;}
+.theme-figure img{display:block;width:100%;height:auto;border-radius:10px;border:1px solid var(--border);}
+.theme-figure figcaption{font-size:13.5px;color:var(--muted-text);margin-top:10px;line-height:1.5;}
 .compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
 .compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
 .compare-table th{background:var(--card-bg);}
@@ -153,6 +157,28 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <h2>How much smaller does a PNG actually get as WebP?</h2>
 <p>Converted losslessly — meaning every pixel stays identical, nothing is discarded — a PNG typically shrinks by around 20-30% as WebP. A 500KB PNG screenshot might come out around 350-400KB, with zero visible or measurable difference. Convert the same file to lossy WebP instead, and the savings jump dramatically: that same 500KB PNG can often drop under 100KB at a quality setting where the difference is still not noticeable to the eye. The gap is even bigger for PNGs of photographs, since PNG's lossless compression was never well suited to photographic detail in the first place.</p>
+<figure class="theme-figure">
+<svg viewBox="0 0 700 340" width="700" height="340" role="img" aria-label="Bar chart comparing the same screenshot-style PNG (480 KB) to lossless WebP (423 KB) and lossy WebP (85 KB)" xmlns="http://www.w3.org/2000/svg">
+<title>Bar chart comparing the same screenshot-style PNG (480 KB) to lossless WebP (423 KB) and lossy WebP (85 KB)</title>
+<line x1="60" y1="280" x2="640" y2="280" stroke="var(--border)" stroke-width="1"></line>
+<rect x="60.0" y="90.0" width="106.3" height="190.0" rx="4" fill="var(--muted-text)"></rect>
+<text x="113.2" y="76.0" text-anchor="middle" font-size="18" font-weight="bold" fill="var(--text)">480 KB</text>
+<text x="113.2" y="304.0" text-anchor="middle" font-size="15" fill="var(--muted-text)">PNG</text>
+<rect x="296.8" y="112.6" width="106.3" height="167.4" rx="4" fill="var(--accent)"></rect>
+<text x="350.0" y="98.6" text-anchor="middle" font-size="18" font-weight="bold" fill="var(--text)">423 KB</text>
+<text x="350.0" y="304.0" text-anchor="middle" font-size="15" fill="var(--muted-text)">WebP (lossless)</text>
+<rect x="533.7" y="246.4" width="106.3" height="33.6" rx="4" fill="var(--accent)"></rect>
+<text x="586.8" y="232.4" text-anchor="middle" font-size="18" font-weight="bold" fill="var(--text)">85 KB</text>
+<text x="586.8" y="304.0" text-anchor="middle" font-size="15" fill="var(--muted-text)">WebP (lossy)</text>
+</svg>
+<figcaption>Measured on a 1600×1000 synthetic UI-screenshot test image, Pillow 12.3.0 (libwebp): lossless WebP encoding vs. lossy WebP at quality 80. Treat as this example, not a universal guarantee — actual savings vary by image content.</figcaption>
+</figure>
+<table class="compare-table">
+  <tr><th>Format</th><th>File size</th></tr>
+  <tr><td>PNG</td><td>480 KB</td></tr>
+  <tr><td>WebP (lossless)</td><td>423 KB</td></tr>
+  <tr><td>WebP (lossy, quality 80)</td><td>85 KB</td></tr>
+</table>
 
 <h2>Does WebP keep the transparency?</h2>
 <p>Yes — this is one of WebP's biggest advantages over JPG. WebP supports a full alpha channel, exactly like PNG, so a transparent PNG logo or graphic converts to WebP with its transparency fully intact. JPG can't do this at all, which is why WebP (not JPG) is the real modern alternative to PNG for anything that needs a see-through background.</p>

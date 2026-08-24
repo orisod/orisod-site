@@ -73,6 +73,10 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 .article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
 .article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
 .article-body li{margin-bottom:8px;}
+.theme-figure{margin:10px 0 26px 0;}
+.theme-figure svg{display:block;width:100%;height:auto;}
+.theme-figure img{display:block;width:100%;height:auto;border-radius:10px;border:1px solid var(--border);}
+.theme-figure figcaption{font-size:13.5px;color:var(--muted-text);margin-top:10px;line-height:1.5;}
 .compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
 .compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
 .compare-table th{background:var(--card-bg);}
@@ -160,6 +164,52 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <li><strong>Una referencia en el manifest</strong> — para aplicaciones web progresivas, uniendo el conjunto de íconos.</li>
 </ul>
 <p>Hacer todo esto correctamente a mano significa exportar tu logotipo en media docena de tamaños distintos y nombrar cada archivo exactamente como se espera — tedioso incluso para alguien cómodo con software de edición de imágenes, y una verdadera barrera si no lo estás.</p>
+<figure class="theme-figure">
+<svg viewBox="0 0 432 378" width="432" height="378" role="img" aria-label="Cuadrícula de referencia con los seis archivos que incluye un paquete de favicon completo, cada uno con sus dimensiones exactas en píxeles y su uso" xmlns="http://www.w3.org/2000/svg">
+<title>Cuadrícula de referencia con los seis archivos que incluye un paquete de favicon completo, cada uno con sus dimensiones exactas en píxeles y su uso</title>
+<rect x="30" y="24" width="88" height="88" rx="14" fill="var(--card-bg)" stroke="var(--border)" stroke-width="1.5"/>
+<rect x="48.0" y="42.0" width="52" height="52" rx="8" fill="none" stroke="var(--accent)" stroke-width="2" stroke-dasharray="4 3"/>
+<rect x="61.0" y="55.0" width="26" height="26" rx="5" fill="var(--accent)"/>
+<text x="74.0" y="132.0" text-anchor="middle" font-size="11" font-weight="bold" fill="var(--text)">favicon.ico</text>
+<text x="74.0" y="149.0" text-anchor="middle" font-size="11.5" fill="var(--accent)">16x16 + 32x32</text>
+<text x="74.0" y="165.0" text-anchor="middle" font-size="10.5" fill="var(--muted-text)">Icono de pestaña (navegadores antiguos)</text>
+<rect x="172" y="24" width="88" height="88" rx="14" fill="var(--card-bg)" stroke="var(--border)" stroke-width="1.5"/>
+<rect x="194.0" y="46.0" width="44" height="44" rx="9" fill="var(--accent)"/>
+<text x="216.0" y="132.0" text-anchor="middle" font-size="11" font-weight="bold" fill="var(--text)">favicon-16x16.png</text>
+<text x="216.0" y="149.0" text-anchor="middle" font-size="11.5" fill="var(--accent)">16x16px</text>
+<text x="216.0" y="165.0" text-anchor="middle" font-size="10.5" fill="var(--muted-text)">Pestaña del navegador (estándar)</text>
+<rect x="314" y="24" width="88" height="88" rx="14" fill="var(--card-bg)" stroke="var(--border)" stroke-width="1.5"/>
+<rect x="336.0" y="46.0" width="44" height="44" rx="9" fill="var(--accent)"/>
+<text x="358.0" y="132.0" text-anchor="middle" font-size="11" font-weight="bold" fill="var(--text)">favicon-32x32.png</text>
+<text x="358.0" y="149.0" text-anchor="middle" font-size="11.5" fill="var(--accent)">32x32px</text>
+<text x="358.0" y="165.0" text-anchor="middle" font-size="10.5" fill="var(--muted-text)">Pestaña del navegador (alta densidad)</text>
+<rect x="30" y="204" width="88" height="88" rx="14" fill="var(--card-bg)" stroke="var(--border)" stroke-width="1.5"/>
+<rect x="52.0" y="226.0" width="44" height="44" rx="9" fill="var(--accent)"/>
+<text x="74.0" y="312.0" text-anchor="middle" font-size="11" font-weight="bold" fill="var(--text)">apple-touch-icon</text>
+<text x="74.0" y="329.0" text-anchor="middle" font-size="11.5" fill="var(--accent)">180x180px</text>
+<text x="74.0" y="345.0" text-anchor="middle" font-size="10.5" fill="var(--muted-text)">Pantalla de inicio de iOS</text>
+<rect x="172" y="204" width="88" height="88" rx="14" fill="var(--card-bg)" stroke="var(--border)" stroke-width="1.5"/>
+<rect x="194.0" y="226.0" width="44" height="44" rx="9" fill="var(--accent)"/>
+<text x="216.0" y="312.0" text-anchor="middle" font-size="11" font-weight="bold" fill="var(--text)">android-chrome-192</text>
+<text x="216.0" y="329.0" text-anchor="middle" font-size="11.5" fill="var(--accent)">192x192px</text>
+<text x="216.0" y="345.0" text-anchor="middle" font-size="10.5" fill="var(--muted-text)">Pantalla de inicio de Android</text>
+<rect x="314" y="204" width="88" height="88" rx="14" fill="var(--card-bg)" stroke="var(--border)" stroke-width="1.5"/>
+<rect x="336.0" y="226.0" width="44" height="44" rx="9" fill="var(--accent)"/>
+<text x="358.0" y="312.0" text-anchor="middle" font-size="11" font-weight="bold" fill="var(--text)">android-chrome-512</text>
+<text x="358.0" y="329.0" text-anchor="middle" font-size="11.5" fill="var(--accent)">512x512px</text>
+<text x="358.0" y="345.0" text-anchor="middle" font-size="10.5" fill="var(--muted-text)">Splash de Android / PWA</text>
+</svg>
+<figcaption>Refleja exactamente lo que genera la propia herramienta Generador de Favicon de Orisod: favicon.ico (16×16 + 32×32 combinados), favicon-16x16.png, favicon-32x32.png, apple-touch-icon.png (180×180), android-chrome-192x192.png y android-chrome-512x512.png. No todos los sitios necesitan los seis — un sitio mínimo puede bastar con favicon.ico y un tamaño PNG — pero este es el conjunto completo multiplataforma.</figcaption>
+</figure>
+<table class="compare-table">
+  <tr><th>Archivo</th><th>Tamaño</th><th>Se usa para</th></tr>
+  <tr><td>favicon.ico</td><td>16×16 + 32×32 (combinados)</td><td>Icono de pestaña (navegadores antiguos)</td></tr>
+  <tr><td>favicon-16x16.png</td><td>16×16px</td><td>Pestaña del navegador (estándar)</td></tr>
+  <tr><td>favicon-32x32.png</td><td>32×32px</td><td>Pestaña del navegador (alta densidad)</td></tr>
+  <tr><td>apple-touch-icon.png</td><td>180×180px</td><td>Pantalla de inicio de iOS</td></tr>
+  <tr><td>android-chrome-192x192.png</td><td>192×192px</td><td>Pantalla de inicio de Android</td></tr>
+  <tr><td>android-chrome-512x512.png</td><td>512×512px</td><td>Splash de Android / PWA</td></tr>
+</table>
 
 <h2>Por dónde empezar: tu logotipo o una imagen sencilla</h2>
 <p>No necesitas un diseño profesional — de hecho, una imagen limpia y sencilla funciona mejor, ya que un favicon se muestra a un tamaño diminuto donde el detalle fino desaparece. Un símbolo de logotipo, una o dos iniciales, o un ícono simple que represente tu sitio funcionan bien. Evita cualquier cosa con mucho texto pequeño o detalle intrincado; a 16 × 16 píxeles, simplemente se verá como una mancha borrosa.</p>

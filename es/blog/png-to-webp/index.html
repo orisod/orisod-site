@@ -73,6 +73,10 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 .article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
 .article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
 .article-body li{margin-bottom:8px;}
+.theme-figure{margin:10px 0 26px 0;}
+.theme-figure svg{display:block;width:100%;height:auto;}
+.theme-figure img{display:block;width:100%;height:auto;border-radius:10px;border:1px solid var(--border);}
+.theme-figure figcaption{font-size:13.5px;color:var(--muted-text);margin-top:10px;line-height:1.5;}
 .compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
 .compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
 .compare-table th{background:var(--card-bg);}
@@ -153,6 +157,28 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <h2>¿Cuánto más pequeño se vuelve un PNG como WebP?</h2>
 <p>Convertido sin pérdida — es decir, cada píxel permanece idéntico, no se descarta nada — un PNG normalmente se reduce entre un 20 y 30 % como WebP. Una captura de pantalla PNG de 500 KB podría quedar en unos 350–400 KB, sin diferencia visible ni medible. Convierte ese mismo archivo a WebP con pérdida en cambio, y el ahorro se dispara: ese mismo PNG de 500 KB a menudo puede bajar de 100 KB con un ajuste de calidad donde la diferencia sigue sin ser perceptible a simple vista. La brecha es todavía mayor para PNG de fotografías, ya que la compresión sin pérdida de PNG nunca fue especialmente adecuada para el detalle fotográfico.</p>
+<figure class="theme-figure">
+<svg viewBox="0 0 700 340" width="700" height="340" role="img" aria-label="Gráfico de barras que compara la misma imagen tipo captura de pantalla en PNG (480 KB), WebP sin pérdida (423 KB) y WebP con pérdida (85 KB)" xmlns="http://www.w3.org/2000/svg">
+<title>Gráfico de barras que compara la misma imagen tipo captura de pantalla en PNG (480 KB), WebP sin pérdida (423 KB) y WebP con pérdida (85 KB)</title>
+<line x1="60" y1="280" x2="640" y2="280" stroke="var(--border)" stroke-width="1"></line>
+<rect x="60.0" y="90.0" width="106.3" height="190.0" rx="4" fill="var(--muted-text)"></rect>
+<text x="113.2" y="76.0" text-anchor="middle" font-size="18" font-weight="bold" fill="var(--text)">480 KB</text>
+<text x="113.2" y="304.0" text-anchor="middle" font-size="15" fill="var(--muted-text)">PNG</text>
+<rect x="296.8" y="112.6" width="106.3" height="167.4" rx="4" fill="var(--accent)"></rect>
+<text x="350.0" y="98.6" text-anchor="middle" font-size="18" font-weight="bold" fill="var(--text)">423 KB</text>
+<text x="350.0" y="304.0" text-anchor="middle" font-size="15" fill="var(--muted-text)">WebP (sin pérdida)</text>
+<rect x="533.7" y="246.4" width="106.3" height="33.6" rx="4" fill="var(--accent)"></rect>
+<text x="586.8" y="232.4" text-anchor="middle" font-size="18" font-weight="bold" fill="var(--text)">85 KB</text>
+<text x="586.8" y="304.0" text-anchor="middle" font-size="15" fill="var(--muted-text)">WebP (con pérdida)</text>
+</svg>
+<figcaption>Medido en una imagen de prueba tipo interfaz de 1600×1000, Pillow 12.3.0 (libwebp): codificación WebP sin pérdida frente a WebP con pérdida en calidad 80. Trátalo como este ejemplo concreto, no como una garantía universal — el ahorro real varía según el contenido de la imagen.</figcaption>
+</figure>
+<table class="compare-table">
+  <tr><th>Formato</th><th>Tamaño</th></tr>
+  <tr><td>PNG</td><td>480 KB</td></tr>
+  <tr><td>WebP (sin pérdida)</td><td>423 KB</td></tr>
+  <tr><td>WebP (con pérdida, calidad 80)</td><td>85 KB</td></tr>
+</table>
 
 <h2>¿WebP mantiene la transparencia?</h2>
 <p>Sí — esta es una de las mayores ventajas de WebP sobre JPG. WebP admite un canal alfa completo, igual que PNG, así que un logotipo o gráfico PNG transparente se convierte a WebP con su transparencia totalmente intacta. JPG no puede hacer esto en absoluto, por lo que WebP (no JPG) es la verdadera alternativa moderna a PNG para cualquier cosa que necesite un fondo transparente.</p>
