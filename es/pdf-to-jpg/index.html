@@ -66,13 +66,6 @@
 .tool-sub{font-size:16px;max-width:640px;margin:0 auto 20px auto;}
 .workspace{max-width:1040px;margin:0 auto;}
 .workspace-controls{margin-top:20px;text-align:center;}
-.result-card{display:flex;align-items:center;gap:16px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-top:20px;text-align:left;}
-.result-card .icon-box{width:46px;height:46px;}
-.result-card .icon-box svg{width:24px;height:24px;}
-.result-card .result-body{flex:1 1 auto;min-width:0;}
-.result-card .result-filename{font-size:14px;font-weight:bold;margin-bottom:4px;word-break:break-all;}
-.result-stat{font-size:15px;opacity:0.9;}
-.result-stat .saved{color:#4ade80;font-weight:bold;}
 .site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
 .site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);display:inline-flex;align-items:center;gap:8px;}
 .site-nav-logo img{height:26px;width:auto;display:block;}
@@ -132,7 +125,7 @@ input[type="file"]{
 input[type="range"]{
   width:200px;
 }
-button, .back{
+button{
   display:inline-block;
   margin-top:20px;
   padding:14px 20px;
@@ -148,7 +141,7 @@ button:disabled{
   opacity:0.4;
   cursor:not-allowed;
 }
-button:hover:not(:disabled), .back:hover{
+button:hover:not(:disabled){
   filter:brightness(1.08);
 }
 .note{
@@ -230,9 +223,6 @@ button:hover:not(:disabled), .back:hover{
 }
 .result-item a:hover{
   text-decoration:underline;
-}
-.download-all{
-  margin-top:20px;
 }
 .site-footer{
   margin-top:40px;
