@@ -121,6 +121,9 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 :root[data-theme="light"] .blog-cat.cat-guide{background:#eff6ff;color:#1e40af;}
 :root[data-theme="light"] .blog-cat.cat-tip{background:#fffbeb;color:#92400e;}
 :root[data-theme="light"] .blog-cat.cat-comparison{background:#f5f3ff;color:#5b21b6;}
+.theme-figure{margin:10px 0 26px 0;}
+.theme-figure img{display:block;width:100%;height:auto;border-radius:10px;border:1px solid var(--border);}
+.theme-figure figcaption{font-size:13.5px;color:var(--muted-text);margin-top:10px;line-height:1.5;}
 </style>
 </head>
 <body>
@@ -163,6 +166,11 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <h2>Qué significa "redondear" un archivo</h2>
 <p>Para producir una imagen genuinamente redondeada, las esquinas (o todo lo que esté fuera de un círculo) necesitan volverse realmente píxeles transparentes, no solo ocultarse visualmente — lo que significa que el resultado tiene que ser un formato que admita transparencia, como PNG, en lugar de JPG. Una imagen redondeada guardada como JPG no puede tener esquinas transparentes en absoluto; JPG rellenará esas áreas con un color sólido en su lugar, normalmente blanco, que se ve bien sobre un fondo blanco y visiblemente mal sobre cualquier otra cosa.</p>
+
+<figure class="theme-figure">
+  <img src="/assets/blog/round-image-corners-guide/circle-crop-transparency.webp" alt="Una foto cuadrada junto a su versión recortada en círculo, con un patrón de cuadros que indica transparencia real" width="666" height="386" loading="lazy">
+  <figcaption>El patrón de cuadros muestra píxeles realmente transparentes, no un truco visual.</figcaption>
+</figure>
 
 <h2>Recorte circular vs rectángulo redondeado</h2>
 <p>Un recorte circular elimina todo lo que esté fuera de un límite circular — la forma estándar para avatares y fotos de perfil. Un rectángulo redondeado mantiene la forma original de la imagen pero suaviza solo las cuatro esquinas con un radio elegido — más común para tarjetas, miniaturas e íconos donde todavía quieres una imagen mayormente rectangular. Ambos dependen del mismo mecanismo de transparencia por debajo; la diferencia es solo la forma de la máscara aplicada.</p>
