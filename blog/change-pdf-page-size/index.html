@@ -118,6 +118,9 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 :root[data-theme="light"] .blog-cat.cat-guide{background:#eff6ff;color:#1e40af;}
 :root[data-theme="light"] .blog-cat.cat-tip{background:#fffbeb;color:#92400e;}
 :root[data-theme="light"] .blog-cat.cat-comparison{background:#f5f3ff;color:#5b21b6;}
+.theme-figure{margin:10px 0 26px 0;}
+.theme-figure svg{display:block;width:100%;height:auto;}
+.theme-figure figcaption{font-size:13.5px;color:var(--muted-text);margin-top:10px;line-height:1.5;}
 </style>
 </head>
 <body>
@@ -149,6 +152,20 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <h2>Why this mismatch happens so often</h2>
 <p>Letter (used mainly in the US and Canada) and A4 (used almost everywhere else) are close in size but not identical — Letter is slightly wider and shorter, A4 slightly narrower and taller. A document created in one region and opened in another routinely carries the "wrong" page size for whoever's printing it, and the same mismatch shows up with Legal-sized paper for contracts or forms.</p>
+
+<figure class="theme-figure">
+<svg viewBox="0 0 700 380" width="700" height="380" role="img" aria-label="Outline comparison of US Letter and A4 page sizes showing their slightly different proportions" xmlns="http://www.w3.org/2000/svg">
+<rect x="260.0" y="45.0" width="172.2" height="243.5" rx="4" fill="none" stroke="var(--muted-text)" stroke-width="2.5" stroke-dasharray="7 6"/>
+<rect x="260.0" y="45.0" width="177.0" height="229.1" rx="4" fill="none" stroke="var(--accent)" stroke-width="3"/>
+<circle cx="471.0" cy="85.0" r="6" fill="var(--accent)"/>
+<text x="487.0" y="90.0" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="bold" fill="var(--text)">8.5 &#215; 11 in</text>
+<text x="487.0" y="111.0" font-family="Arial, Helvetica, sans-serif" font-size="14" fill="var(--muted-text)">215.9 &#215; 279.4 mm</text>
+<circle cx="471.0" cy="155.0" r="6" fill="var(--muted-text)"/>
+<text x="487.0" y="160.0" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="bold" fill="var(--text)">A4</text>
+<text x="487.0" y="181.0" font-family="Arial, Helvetica, sans-serif" font-size="14" fill="var(--muted-text)">210 &#215; 297 mm</text>
+</svg>
+<figcaption>Letter and A4 are close in size, but not identical.</figcaption>
+</figure>
 
 <h2>What resizing actually does</h2>
 <p>Resizing changes a PDF's physical page dimensions and scales the content on each page proportionally to fit the new size — nothing is cropped or cut off, it's stretched or shrunk to match. If the new page has a different aspect ratio than the original (which A4 and Letter do, slightly), the content stretches a little to fill it rather than leaving blank strips — the same trade-off any "resize to fit" approach makes.</p>

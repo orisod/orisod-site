@@ -121,6 +121,9 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 :root[data-theme="light"] .blog-cat.cat-guide{background:#eff6ff;color:#1e40af;}
 :root[data-theme="light"] .blog-cat.cat-tip{background:#fffbeb;color:#92400e;}
 :root[data-theme="light"] .blog-cat.cat-comparison{background:#f5f3ff;color:#5b21b6;}
+.theme-figure{margin:10px 0 26px 0;}
+.theme-figure svg{display:block;width:100%;height:auto;}
+.theme-figure figcaption{font-size:13.5px;color:var(--muted-text);margin-top:10px;line-height:1.5;}
 </style>
 </head>
 <body>
@@ -166,6 +169,58 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <h2>Static vs "dynamic" QR codes</h2>
 <p>The distinction paid services rely on is between static and dynamic codes. A static code has your actual content — the link, the text, the WiFi credentials — baked directly into the pattern, permanently. A dynamic code instead points to a short redirect URL controlled by a company's server, which then forwards the scan to your real destination; this lets the company offer scan analytics and let you change the destination later without reprinting the code, but it also means the code stops working the moment that company's redirect service goes away or your subscription lapses. For a menu, a WiFi network, or a link to a page that won't change, a static code has no such dependency.</p>
+
+<figure class="theme-figure">
+<svg viewBox="0 0 700 380" width="700" height="380" role="img" aria-label="Diagram comparing a static QR code that encodes content directly versus a dynamic QR code that points to a company's redirect server" xmlns="http://www.w3.org/2000/svg">
+<rect x="85.0" y="50.0" width="90" height="90" rx="6" fill="var(--card-bg)" stroke="var(--border)" stroke-width="2"/>
+<rect x="92.7" y="57.7" width="25.7" height="25.7" fill="none" stroke="var(--text)" stroke-width="4.5"/><rect x="100.4" y="65.4" width="10.3" height="10.3" fill="var(--text)"/>
+<rect x="141.6" y="57.7" width="25.7" height="25.7" fill="none" stroke="var(--text)" stroke-width="4.5"/><rect x="149.3" y="65.4" width="10.3" height="10.3" fill="var(--text)"/>
+<rect x="92.7" y="106.6" width="25.7" height="25.7" fill="none" stroke="var(--text)" stroke-width="4.5"/><rect x="100.4" y="114.3" width="10.3" height="10.3" fill="var(--text)"/>
+<rect x="128.7" y="93.7" width="8.4" height="8.4" fill="var(--text)" opacity="0.75"/>
+<rect x="128.7" y="104.0" width="8.4" height="8.4" fill="var(--text)" opacity="0.75"/>
+<rect x="139.0" y="93.7" width="8.4" height="8.4" fill="var(--text)" opacity="0.75"/>
+<rect x="139.0" y="104.0" width="8.4" height="8.4" fill="var(--text)" opacity="0.75"/>
+<rect x="139.0" y="114.3" width="8.4" height="8.4" fill="var(--text)" opacity="0.75"/>
+<rect x="149.3" y="93.7" width="8.4" height="8.4" fill="var(--text)" opacity="0.75"/>
+<rect x="149.3" y="104.0" width="8.4" height="8.4" fill="var(--text)" opacity="0.75"/>
+<rect x="149.3" y="114.3" width="8.4" height="8.4" fill="var(--text)" opacity="0.75"/>
+<text x="130.0" y="165.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="bold" fill="var(--text)">Static</text>
+<text x="130.0" y="185.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12.5" fill="var(--muted-text)">content baked in</text>
+<line x1="185.0" y1="95.0" x2="318.0" y2="95.0" stroke="var(--accent)" stroke-width="2.5"/>
+<polygon points="318.0,89.0 318.0,101.0 328.0,95.0" fill="var(--accent)"/>
+<circle cx="350.0" cy="95.0" r="26" fill="var(--accent)"/>
+<path d="M 339.0,95.0 a 7,7 0 0 1 0,-9 l 5,-5 a 7,7 0 0 1 10,10 l -3,3" stroke="var(--card-bg)" stroke-width="3" fill="none" stroke-linecap="round"/>
+<path d="M 361.0,95.0 a 7,7 0 0 1 0,9 l -5,5 a 7,7 0 0 1 -10,-10 l 3,-3" stroke="var(--card-bg)" stroke-width="3" fill="none" stroke-linecap="round"/>
+<rect x="85.0" y="210.0" width="90" height="90" rx="6" fill="var(--card-bg)" stroke="var(--border)" stroke-width="2"/>
+<rect x="92.7" y="217.7" width="25.7" height="25.7" fill="none" stroke="var(--text)" stroke-width="4.5"/><rect x="100.4" y="225.4" width="10.3" height="10.3" fill="var(--text)"/>
+<rect x="141.6" y="217.7" width="25.7" height="25.7" fill="none" stroke="var(--text)" stroke-width="4.5"/><rect x="149.3" y="225.4" width="10.3" height="10.3" fill="var(--text)"/>
+<rect x="92.7" y="266.6" width="25.7" height="25.7" fill="none" stroke="var(--text)" stroke-width="4.5"/><rect x="100.4" y="274.3" width="10.3" height="10.3" fill="var(--text)"/>
+<rect x="128.7" y="253.7" width="8.4" height="8.4" fill="var(--text)" opacity="0.75"/>
+<rect x="128.7" y="264.0" width="8.4" height="8.4" fill="var(--text)" opacity="0.75"/>
+<rect x="139.0" y="253.7" width="8.4" height="8.4" fill="var(--text)" opacity="0.75"/>
+<rect x="139.0" y="264.0" width="8.4" height="8.4" fill="var(--text)" opacity="0.75"/>
+<rect x="139.0" y="274.3" width="8.4" height="8.4" fill="var(--text)" opacity="0.75"/>
+<rect x="149.3" y="253.7" width="8.4" height="8.4" fill="var(--text)" opacity="0.75"/>
+<rect x="149.3" y="264.0" width="8.4" height="8.4" fill="var(--text)" opacity="0.75"/>
+<rect x="149.3" y="274.3" width="8.4" height="8.4" fill="var(--text)" opacity="0.75"/>
+<text x="130.0" y="325.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="bold" fill="var(--text)">Dynamic</text>
+<text x="130.0" y="345.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12.5" fill="var(--muted-text)">points to a redirect</text>
+<line x1="185.0" y1="255.0" x2="318.0" y2="255.0" stroke="var(--muted-text)" stroke-width="2.5"/>
+<polygon points="318.0,249.0 318.0,261.0 328.0,255.0" fill="var(--muted-text)"/>
+<circle cx="350.0" cy="255.0" r="26" fill="var(--muted-text)"/>
+<rect x="337.0" y="242.0" width="26" height="11" rx="2.5" fill="none" stroke="var(--card-bg)" stroke-width="2.3"/>
+<rect x="337.0" y="257.0" width="26" height="11" rx="2.5" fill="none" stroke="var(--card-bg)" stroke-width="2.3"/>
+<circle cx="342.0" cy="247.5" r="1.6" fill="var(--card-bg)"/>
+<circle cx="342.0" cy="262.5" r="1.6" fill="var(--card-bg)"/>
+<text x="350.0" y="300.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="var(--muted-text)">redirect service</text>
+<line x1="376.0" y1="255.0" x2="509.0" y2="255.0" stroke="var(--muted-text)" stroke-width="2.5"/>
+<polygon points="509.0,249.0 509.0,261.0 519.0,255.0" fill="var(--muted-text)"/>
+<circle cx="541.0" cy="255.0" r="26" fill="var(--muted-text)"/>
+<path d="M 530.0,255.0 a 7,7 0 0 1 0,-9 l 5,-5 a 7,7 0 0 1 10,10 l -3,3" stroke="var(--card-bg)" stroke-width="3" fill="none" stroke-linecap="round"/>
+<path d="M 552.0,255.0 a 7,7 0 0 1 0,9 l -5,5 a 7,7 0 0 1 -10,-10 l 3,-3" stroke="var(--card-bg)" stroke-width="3" fill="none" stroke-linecap="round"/>
+</svg>
+<figcaption>A static QR stores its destination directly. A dynamic QR depends on a redirect service.</figcaption>
+</figure>
 
 <h2>A couple of practical tips</h2>
 <p>QR codes have built-in error correction, meaning they still scan correctly even if part of the pattern is damaged, obscured, or covered by a small logo — which is why you'll sometimes see a company logo sitting in the middle of one. If you're printing a QR code physically, size matters more than people expect: a code that scans fine on a phone screen can be too small to scan reliably once printed on a poster or business card, so it's worth testing a printed version at actual size before mass-printing anything.</p>
