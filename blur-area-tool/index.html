@@ -510,11 +510,19 @@ function renderPreview() {
   const ctx = previewCanvas.getContext('2d');
   ctx.drawImage(img, 0, 0, previewCanvas.width, previewCanvas.height);
   const blockSize = Math.max(2, parseInt(intensitySlider.value, 10));
+  // regions are stored in the canvas's CSS-displayed pixel space (to match the
+  // drag-selection overlay boxes), but previewCanvas is drawn at the canvas's
+  // internal resolution, which differs whenever the canvas is scaled down by
+  // max-width:100%. Convert before applying the blur so the selected region
+  // lands where it was actually drawn.
+  const rect = sourceCanvas.getBoundingClientRect();
+  const scaleX = sourceCanvas.width / rect.width;
+  const scaleY = sourceCanvas.height / rect.height;
   regions.forEach((r) => {
-    const x = Math.max(0, Math.round(r.x));
-    const y = Math.max(0, Math.round(r.y));
-    const w = Math.min(Math.round(r.w), previewCanvas.width - x);
-    const h = Math.min(Math.round(r.h), previewCanvas.height - y);
+    const x = Math.max(0, Math.round(r.x * scaleX));
+    const y = Math.max(0, Math.round(r.y * scaleY));
+    const w = Math.min(Math.round(r.w * scaleX), previewCanvas.width - x);
+    const h = Math.min(Math.round(r.h * scaleY), previewCanvas.height - y);
     if (w > 0 && h > 0) pixelateRegion(ctx, x, y, w, h, blockSize);
   });
 }
@@ -566,11 +574,17 @@ applyBtn.addEventListener('click', () => {
 
   const blockSize = Math.max(2, parseInt(intensitySlider.value, 10));
 
+  // regions are stored in the canvas's CSS-displayed pixel space; convert to
+  // sourceCanvas-internal pixels first (matching renderPreview's correction),
+  // then to full original-image pixels via the existing img-to-canvas scale.
+  const rect = sourceCanvas.getBoundingClientRect();
+  const scaleX = sourceCanvas.width / rect.width;
+  const scaleY = sourceCanvas.height / rect.height;
   regions.forEach((r) => {
-    const realX = Math.round(r.x / scale);
-    const realY = Math.round(r.y / scale);
-    const realW = Math.round(r.w / scale);
-    const realH = Math.round(r.h / scale);
+    const realX = Math.round((r.x * scaleX) / scale);
+    const realY = Math.round((r.y * scaleY) / scale);
+    const realW = Math.round((r.w * scaleX) / scale);
+    const realH = Math.round((r.h * scaleY) / scale);
     pixelateRegion(ctx, realX, realY, realW, realH, blockSize);
   });
 
