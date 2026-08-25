@@ -121,6 +121,9 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 :root[data-theme="light"] .blog-cat.cat-guide{background:#eff6ff;color:#1e40af;}
 :root[data-theme="light"] .blog-cat.cat-tip{background:#fffbeb;color:#92400e;}
 :root[data-theme="light"] .blog-cat.cat-comparison{background:#f5f3ff;color:#5b21b6;}
+.theme-figure{margin:10px 0 26px 0;}
+.theme-figure svg{display:block;width:100%;height:auto;}
+.theme-figure figcaption{font-size:13.5px;color:var(--muted-text);margin-top:10px;line-height:1.5;}
 </style>
 </head>
 <body>
@@ -152,6 +155,39 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <h2>No siempre son los píxeles los que están girados</h2>
 <p>Aquí está la parte que confunde a la gente: un archivo de foto puede estar técnicamente almacenado de lado mientras se muestra derecho, gracias a un pequeño dato de metadatos llamado la bandera de orientación EXIF. En lugar de rotar físicamente cada píxel cuando inclinas tu teléfono para tomar una foto, muchas cámaras guardan los datos de la imagen exactamente como los capturó el sensor y simplemente añaden una etiqueta que dice "muestra esto girado 90 grados". Las aplicaciones que leen esa etiqueta muestran la foto correctamente. Las aplicaciones que la ignoran muestran los datos de píxeles crudos, sin rotar — por eso el mismo archivo puede verse perfectamente bien en una aplicación y de lado en otra.</p>
+
+<figure class="theme-figure">
+<svg viewBox="0 0 700 380" width="700" height="380" role="img" aria-label="Diagrama de una foto almacenada de lado con una etiqueta EXIF de orientación que indica mostrarla rotada 90 grados" xmlns="http://www.w3.org/2000/svg">
+<g transform="rotate(0 145 195)">
+<rect x="70.0" y="145.0" width="150" height="100" rx="6" fill="var(--card-bg)" stroke="var(--muted-text)" stroke-width="2.5"/>
+<circle cx="112.0" cy="175.0" r="10.0" fill="var(--muted-text)"/>
+<polygon points="88.0,230.0 137.5,190.0 172.0,213.0 202.0,185.0 205.0,230.0" fill="var(--muted-text)" opacity="0.85"/>
+</g>
+<rect x="87.0" y="265.0" width="116" height="30" rx="15" fill="var(--card-bg)" stroke="var(--accent)" stroke-width="2"/>
+<text x="145.0" y="285.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="var(--accent)">Orientation: 6</text>
+
+<line x1="230.0" y1="175.0" x2="406.0" y2="110.0" stroke="var(--border)" stroke-width="2.5" stroke-dasharray="2 6" stroke-linecap="round"/>
+<line x1="230.0" y1="215.0" x2="381.0" y2="280.0" stroke="var(--border)" stroke-width="2.5" stroke-dasharray="2 6" stroke-linecap="round"/>
+
+<g transform="rotate(0 480 100)">
+<rect x="430.0" y="25.0" width="100" height="150" rx="6" fill="var(--card-bg)" stroke="var(--accent)" stroke-width="2.5"/>
+<circle cx="458.0" cy="70.0" r="10.0" fill="var(--accent)"/>
+<polygon points="442.0,152.5 475.0,92.5 498.0,127.0 518.0,85.0 520.0,152.5" fill="var(--accent)" opacity="0.85"/>
+</g>
+<circle cx="556.0" cy="39.0" r="13" fill="var(--accent)"/>
+<path d="M 550.0,39.0 l 4,5 l 8,-9" stroke="var(--card-bg)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+<g transform="rotate(0 480 290)">
+<rect x="405.0" y="240.0" width="150" height="100" rx="6" fill="var(--card-bg)" stroke="var(--muted-text)" stroke-width="2.5"/>
+<circle cx="447.0" cy="270.0" r="10.0" fill="var(--muted-text)"/>
+<polygon points="423.0,325.0 472.5,285.0 507.0,308.0 537.0,280.0 540.0,325.0" fill="var(--muted-text)" opacity="0.85"/>
+</g>
+<circle cx="581.0" cy="254.0" r="13" fill="var(--muted-text)"/>
+<line x1="575.0" y1="248.0" x2="587.0" y2="260.0" stroke="var(--card-bg)" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="587.0" y1="248.0" x2="575.0" y2="260.0" stroke="var(--card-bg)" stroke-width="2.5" stroke-linecap="round"/>
+</svg>
+<figcaption>Algunas aplicaciones leen la etiqueta de orientación; otras muestran los píxeles tal como están almacenados.</figcaption>
+</figure>
 
 <h2>Por qué esto causa tanta confusión</h2>
 <p>Distintos programas tienen un soporte muy inconsistente para leer la bandera de orientación. Las galerías de teléfonos modernos y la mayoría de los navegadores actuales la leen correctamente. Pero algunos visores de imágenes antiguos, ciertos formularios de subida, algunos clientes de correo, y varios sistemas de backend que procesan imágenes (redimensionándolas, convirtiendo formatos, eliminando metadatos) o bien ignoran la bandera por completo o la eliminan en el proceso — momento en el cual la foto vuelve a mostrarse como estén orientados realmente los datos de píxeles crudos. No hiciste nada mal; el software simplemente no se puso de acuerdo sobre cuál orientación confiar.</p>
