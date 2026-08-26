@@ -73,6 +73,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 .intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
 .article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
 .article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body p a{color:var(--accent);text-decoration:underline;}
 .article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
 .article-body li{margin-bottom:8px;}
 .theme-figure{margin:0 0 26px 0;}
@@ -169,7 +170,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <tr><td>YouTube thumbnail</td><td>1280×720px</td></tr>
   <tr><td>YouTube channel banner</td><td>2560×1440px (safe area 1235×338px)</td></tr>
   <tr><td>X (Twitter) header</td><td>1500×500px</td></tr>
-  <tr><td>X (Twitter) in-post image</td><td>1200×675px</td></tr>
+  <tr><td>X (Twitter) in-post image</td><td>1200×675px (practical 16:9 target)</td></tr>
 </table>
 <figure class="theme-figure">
 <svg viewBox="0 0 434 406" width="434" height="406" role="img" aria-label="Aspect-ratio comparison of recommended image sizes across Instagram, Facebook, LinkedIn, YouTube, and X placements" xmlns="http://www.w3.org/2000/svg">
@@ -217,8 +218,8 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 </svg>
 <figcaption>Relative shape of each recommended size. The YouTube banner tile shows the full 2560×1440px upload (dashed outline) alongside its narrower 1235×338px safe area.</figcaption>
 </figure>
-<p>Treat these as current best targets rather than absolute law — platforms round differently and occasionally shift a few pixels, but staying close to these numbers keeps your image away from the crop lines a platform applies to anything wildly off-spec. When a platform doesn't publish an exact number for a specific placement, matching the closest listed size is a safer bet than guessing at something entirely new.</p>
-<p>Sizes current as of August 2026 — platforms adjust specs periodically, so for a high-stakes upload, double-check against the platform's own help center first.</p>
+<p>Treat these as current best targets rather than absolute law — platforms round differently and occasionally shift a few pixels, but staying close to these numbers keeps your image away from the crop lines a platform applies to anything wildly off-spec. When a platform doesn't publish an exact number for a specific placement, matching the closest listed size is a safer bet than guessing at something entirely new. X is a partial exception: it doesn't enforce one fixed size for in-post photos — any image with an aspect ratio between 2:1 and 3:4 displays in full, uncropped. 1200×675px (16:9) is simply a practical, widely-used target that sits comfortably in that range, not a fixed spec the way the header size is.</p>
+<p>Last verified: August 2026, against each platform's own help center — <a href="https://www.facebook.com/business/help/www/125379114252045/" target="_blank" rel="noopener">Facebook</a>, <a href="https://support.google.com/youtube/answer/10456525" target="_blank" rel="noopener">YouTube</a>, and <a href="https://help.x.com/en/using-x/posting-gifs-and-pictures" target="_blank" rel="noopener">X</a>. Platforms adjust specs periodically, so for a high-stakes upload, double-check there directly.</p>
 
 <h2>The "safe area" trap on banners</h2>
 <p>Wide banner formats — LinkedIn banners, YouTube channel art, Facebook covers — often get partially covered by a profile photo, buttons, or UI elements depending on whether someone's viewing on desktop or mobile. That's why YouTube specifically publishes a smaller "safe area" inside its 2560×1440 banner: anything important (a logo, text, a face) needs to sit inside that safe zone, or it risks being cropped off entirely on some devices even though the full image technically uploaded fine.</p>

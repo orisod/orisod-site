@@ -150,6 +150,17 @@ h1{font-size:44px;margin-bottom:10px;}
 :root[data-theme="light"] .blog-cat.cat-guide{background:#eff6ff;color:#1e40af;}
 :root[data-theme="light"] .blog-cat.cat-tip{background:#fffbeb;color:#92400e;}
 :root[data-theme="light"] .blog-cat.cat-comparison{background:#f5f3ff;color:#5b21b6;}
+.featured-card{display:flex;gap:28px;align-items:center;max-width:900px;margin:0 auto 34px auto;background:var(--card-bg);border:1px solid var(--border);border-radius:14px;padding:26px;text-decoration:none;color:var(--text);transition:0.2s;}
+.featured-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.featured-card .featured-img{flex:0 0 44%;border-radius:10px;overflow:hidden;border:1px solid var(--border);}
+.featured-card .featured-img img{display:block;width:100%;height:auto;}
+.featured-card .featured-body{flex:1 1 auto;min-width:0;}
+.featured-label{display:block;font-size:11px;font-weight:bold;text-transform:uppercase;letter-spacing:.5px;color:var(--accent);margin-bottom:10px;}
+.featured-card h2{font-size:24px;margin:6px 0 10px 0;line-height:1.3;}
+.featured-card p{font-size:15px;color:var(--muted-text);line-height:1.6;margin:0 0 14px 0;}
+.featured-card .read-more{font-size:14px;font-weight:bold;color:#60a5fa;}
+:root[data-theme="light"] .featured-card .read-more{color:var(--accent);}
+@media (max-width:640px){.featured-card{flex-direction:column;align-items:stretch;padding:20px;}.featured-card .featured-img{flex:none;}}
 </style>
 </head>
 <body>
@@ -174,19 +185,25 @@ h1{font-size:44px;margin-bottom:10px;}
 <h1>Blog</h1>
 <p class="subtitle">Guías y tutoriales sobre imágenes y PDF: formatos explicados, consejos prácticos y herramientas gratuitas para resolver cada tarea.</p>
 
+<a class="featured-card" href="/es/blog/png-vs-jpg/">
+  <div class="featured-img">
+    <img src="/assets/blog/png-vs-jpg/png-vs-jpg-text-crop-comparison.webp" alt="Recorte ampliado del mismo gráfico de texto que muestra bordes nítidos en PNG junto a una versión JPG con difuminado visible y artefactos de bloque alrededor de las letras" width="1330" height="319" loading="lazy">
+  </div>
+  <div class="featured-body">
+    <span class="featured-label">Destacado</span>
+    <span class="blog-cat cat-comparison">Comparativas</span>
+    <h2>PNG vs. JPG: qué formato usar y cómo convertirlos</h2>
+    <p>La diferencia real entre estos dos formatos, cuándo usar cada uno, y cómo convertir entre ellos gratis.</p>
+    <span class="read-more">Leer más →</span>
+  </div>
+</a>
+
 <div class="blog-grid">
 
   <a class="blog-card" href="/es/blog/heic-to-jpg-guide/">
     <span class="blog-cat cat-guide">Guías</span>
     <h2>HEIC a JPG: qué es y cómo convertir fotos del iPhone</h2>
     <p>Por qué las fotos de iPhone se guardan en HEIC, por qué no se abren en todas partes, y dos formas de solucionarlo en menos de un minuto.</p>
-    <span class="read-more">Leer más →</span>
-  </a>
-
-  <a class="blog-card" href="/es/blog/png-vs-jpg/">
-    <span class="blog-cat cat-comparison">Comparativas</span>
-    <h2>PNG vs. JPG: qué formato usar y cómo convertirlos</h2>
-    <p>La diferencia real entre estos dos formatos, cuándo usar cada uno, y cómo convertir entre ellos gratis.</p>
     <span class="read-more">Leer más →</span>
   </a>
 
