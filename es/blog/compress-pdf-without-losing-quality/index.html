@@ -121,6 +121,9 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 :root[data-theme="light"] .blog-cat.cat-guide{background:#eff6ff;color:#1e40af;}
 :root[data-theme="light"] .blog-cat.cat-tip{background:#fffbeb;color:#92400e;}
 :root[data-theme="light"] .blog-cat.cat-comparison{background:#f5f3ff;color:#5b21b6;}
+.theme-figure{margin:10px 0 26px 0;}
+.theme-figure img{display:block;width:100%;height:auto;border-radius:10px;border:1px solid var(--border);}
+.theme-figure figcaption{font-size:13.5px;color:var(--muted-text);margin-top:10px;line-height:1.5;}
 </style>
 </head>
 <body>
@@ -161,32 +164,37 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 </ul>
 
 <h2>Qué hace la compresión dentro de un PDF</h2>
-<p>Esta herramienta comprime el PDF convirtiendo cada página en una imagen y reconstruyendo después el documento con el nivel de calidad elegido. Esto puede reducir considerablemente el tamaño de archivos escaneados o con abundante contenido visual, aunque el texto original deja de ser seleccionable y buscable. El diseño general y el número de páginas se conservan; elige un nivel de compresión que mantenga una legibilidad adecuada.</p>
+<p>Esta herramienta ofrece dos formas distintas de reducir un PDF, y funcionan de maneras completamente diferentes. <strong>Limpieza rápida</strong> vuelve a guardar el PDF con una estructura interna más eficiente — el texto, las fuentes y el contenido vectorial quedan completamente intactos, así que nada se convierte en imagen y el texto sigue siendo tan seleccionable y buscable como antes. Es la mejor opción por defecto para cualquier documento escrito: informes, contratos, formularios, cualquier cosa exportada directamente desde un procesador de texto. <strong>Compresión fuerte</strong> funciona de forma totalmente distinta: convierte cada página en una imagen comprimida y reconstruye el documento a partir de esas imágenes, la misma idea que comprimir una foto normal. Eso reduce mucho el tamaño de PDF escaneados o con abundantes fotos, pero el archivo resultante está formado por imágenes, así que el texto que antes era seleccionable deja de serlo. Qué modo conviene depende de lo que realmente hay dentro del archivo — una página escaneada no tiene texto seleccionable que proteger, así que la reducción mucho mayor de la Compresión fuerte no cuesta nada real; un documento escrito sí tiene texto real que merece la pena conservar intacto, que es exactamente lo que hace la Limpieza rápida.</p>
+
+<figure class="theme-figure">
+  <img class="theme-img" data-dark="/assets/blog/compress-pdf-without-losing-quality/compress-pdf-two-modes-dark-es.webp" data-light="/assets/blog/compress-pdf-without-losing-quality/compress-pdf-two-modes-light-es.webp" src="/assets/blog/compress-pdf-without-losing-quality/compress-pdf-two-modes-dark-es.webp" alt="Herramienta Comprimir PDF de Orisod comparando Limpieza rápida en un documento con texto y Compresión fuerte en un documento escaneado, con resultados reales de tamaño de archivo para cada uno" width="1672" height="678" loading="lazy">
+  <figcaption>La Limpieza rápida apenas cambia el tamaño de un archivo con texto pero mantiene cada carácter seleccionable; la Compresión fuerte reduce mucho un escaneo al convertirlo en imágenes.</figcaption>
+</figure>
 
 <h2>Cómo conservar una buena calidad visual</h2>
-<p>Como el tamaño de archivo de un PDF está dominado por la resolución de imagen más que por el detalle visual genuino, normalmente hay mucho margen para comprimir antes de que la pérdida de calidad se vuelva visible. Una página escaneada capturada a 600 DPI pero que solo se verá en pantalla o se imprimirá a tamaño normal lleva mucha más resolución de la que nadie percibirá jamás — comprimirla a un nivel más razonable elimina datos redundantes, no nitidez visible.</p>
+<p>La Limpieza rápida no toca ni un solo píxel de contenido — solo elimina la sobrecarga redundante de cómo el PDF almacena su estructura interna, así que no hay ninguna contrapartida visual que valorar. La Compresión fuerte funciona de otra manera: como el tamaño de archivo de un PDF está dominado por la resolución de imagen más que por el detalle visual genuino, normalmente hay mucho margen para comprimir antes de que la pérdida de calidad se vuelva visible. Una página escaneada a 300 DPI pero que solo se verá en pantalla o se imprimirá a tamaño normal lleva mucha más resolución de la que nadie percibirá jamás — reducirla elimina datos redundantes, no nitidez visible.</p>
 
 <h2>Lo que la compresión no soluciona</h2>
-<p>La compresión reduce los datos de imagen, pero no elimina páginas, no borra contenido innecesario, ni reestructura un documento genuinamente enorme. Si un PDF es enorme porque contiene 300 páginas de escaneos a resolución completa que realmente se necesitan todas, la compresión ayuda pero no hace milagros — en ese caso, combinar la compresión con eliminar cualquier página verdaderamente innecesaria da un mejor resultado que la compresión sola.</p>
+<p>Ningún modo elimina páginas, borra contenido innecesario, ni reestructura un documento genuinamente enorme — la Compresión fuerte reduce los datos de imagen, pero eso es todo lo que la compresión toca. Si un PDF es enorme porque contiene 300 páginas de escaneos a resolución completa que realmente se necesitan todas, la compresión ayuda pero no hace milagros — en ese caso, combinar la compresión con eliminar cualquier página verdaderamente innecesaria da un mejor resultado que la compresión sola.</p>
 
 <h2>Un objetivo práctico</h2>
-<p>La mayoría de los PDF cotidianos — informes, formularios, documentos escaneados — se comprimen cómodamente a una fracción de su tamaño original, a menudo entre 60 y 90 % más pequeños, mientras siguen siendo perfectamente legibles en pantalla y en papel. Si un archivo necesita caber en un límite de adjunto de correo o un límite de subida estricto, eso normalmente está bien al alcance sin ninguna contrapartida visible.</p>
+<p>Cuánto se reduce un archivo depende de lo que contiene y de qué modo elijas. La Compresión fuerte sobre un PDF escaneado o con abundantes fotos puede lograr una reducción enorme — mira el ejemplo real medido más abajo. Los ahorros de la Limpieza rápida en un documento escrito son más modestos en términos de porcentaje, ya que un PDF de texto bien formado tiene menos estructura redundante que eliminar de entrada — pero es el único modo que mantiene cada carácter seleccionable, algo que la Compresión fuerte no puede ofrecer con ningún ajuste.</p>
 
 <h2>Un ejemplo concreto</h2>
-<p>Un contrato de 15 páginas escaneado a alta resolución podría pesar 35 MB — muy por encima del límite de 25 MB de adjuntos de Gmail. Comprimido correctamente, ese mismo archivo suele bajar a algo entre 3 MB y 6 MB, cómodamente por debajo de cualquier límite de correo, mientras cada línea de texto y firma se mantiene exactamente tan legible como en el escaneo original. Los 30 MB que desaparecieron nunca fueron detalle visible para empezar — eran resolución que el documento nunca necesitó.</p>
+<p>En una prueba real, un contrato escaneado de 12 páginas — cada página una foto a 300 DPI de la página impresa, 7,9 MB en total — se comprimió con Compresión fuerte hasta 370 KB, una reducción del 95 %, con cada página viéndose idéntica a tamaño normal de visualización. Pasar ese mismo archivo por Limpieza rápida apenas cambió su tamaño, ya que la Limpieza rápida no toca los datos de imagen — precisamente por eso importa qué modo elijas. Un informe escrito de 20 páginas, ya de por sí ligero con 18,3 KB porque el texto escrito es intrínsecamente compacto, bajó a 13,7 KB con Limpieza rápida — una reducción real pero modesta del 25 % — mientras cada palabra seguía siendo seleccionable. Pasar ese mismo informe por Compresión fuerte en cambio hizo el archivo más grande, ya que convertir texto simple en una imagen es menos eficiente que el propio texto; la herramienta detecta esto y conserva el original en lugar de devolver algo más pesado.</p>
 
 <h2>Respuestas rápidas</h2>
-<p><strong>¿Comprimir un PDF afecta al texto?</strong> Sí. Como esta herramienta reconstruye cada página como una imagen comprimida, el texto del archivo resultante deja de ser seleccionable y buscable, aunque visualmente pueda verse igual. En los documentos formados únicamente por imágenes no hay texto seleccionable que perder; si un PDF escaneado incluye una capa de texto generada mediante OCR, esa capa también se perderá.</p>
+<p><strong>¿Comprimir un PDF afecta al texto?</strong> Depende del modo. La Limpieza rápida nunca convierte nada en imagen, así que el texto sigue siendo tan seleccionable y buscable como en el original. La Compresión fuerte reconstruye cada página como una imagen, así que el texto del archivo resultante deja de ser seleccionable o buscable, aunque visualmente pueda verse igual — un documento formado únicamente por imágenes no tiene texto seleccionable que perder, pero si un PDF escaneado incluye una capa de texto generada mediante OCR, esa capa también se pierde.</p>
 <p><strong>¿Puedo comprimir un PDF que ya se comprimió una vez?</strong> Sí, pero comprimir repetidamente el mismo archivo puede empezar a mostrar pérdida de calidad visible, similar a volver a guardar un JPG varias veces — comprime desde el archivo original cuando sea posible.</p>
 <p><strong>¿Un PDF más pequeño significa menos páginas?</strong> No — la compresión no elimina páginas ni contenido, solo la resolución de las imágenes que ya están dentro de ellas.</p>
 
 <div class="cta-box">
   <h3>Comprime tu PDF ahora</h3>
-  <p>El compresor de PDF de Orisod reduce el tamaño de documentos escaneados o con abundante contenido visual, conservando el diseño general y el número de páginas. Todo se procesa localmente en tu navegador y tus archivos permanecen en tu dispositivo. Si necesitas mantener el texto seleccionable y buscable, utiliza un método de compresión que preserve la estructura original del PDF.</p>
+  <p>El compresor de PDF de Orisod ofrece dos modos: Limpieza rápida para documentos escritos que necesitan seguir siendo seleccionables y buscables, y Compresión fuerte para PDF escaneados o con abundantes fotos que necesitan una reducción de tamaño mucho mayor. Todo ocurre en tu navegador, sin subir nada a un servidor.</p>
   <a class="cta-button" href="/es/compress-pdf/">Comprimir un PDF →</a>
 </div>
 
-<p>En muchos archivos grandes, las imágenes son la principal fuente de peso. Un nivel de compresión adecuado puede hacer que el documento quepa en un correo y conserve una buena legibilidad, aunque debes recordar que el resultado ya no tendrá texto seleccionable ni buscable.</p>
+<p>El tamaño de archivo de un PDF casi siempre depende de lo que hay dentro, no del documento en sí — elige el modo que corresponda a lo que realmente es ese archivo, y un documento que no cabía en un correo cabrá con margen de sobra, sin renunciar a lo que de verdad importa para ese archivo en concreto.</p>
 
 </div>
 
@@ -248,7 +256,15 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   function updateIcon(){
     btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
   }
+  function updateThemeImages(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    document.querySelectorAll('.theme-img').forEach(function(img){
+      var target = isLight ? img.dataset.light : img.dataset.dark;
+      if(img.getAttribute('src') !== target) img.src = target;
+    });
+  }
   updateIcon();
+  updateThemeImages();
   btn.addEventListener('click', function(){
     var isLight = document.documentElement.getAttribute('data-theme')==='light';
     if(isLight){
@@ -259,6 +275,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
       localStorage.setItem('orisod-theme','light');
     }
     updateIcon();
+    updateThemeImages();
   });
 })();
 </script>
