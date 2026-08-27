@@ -26,6 +26,7 @@ Orisod (orisod.com) is a free, browser-based toolkit for images and PDFs — thi
   - **JSZip** (`jszip/3.10.1/jszip.min.js`) — packaging multi-file downloads as ZIP
   - **qrcodejs** (`qrcodejs/1.0.0/qrcode.min.js`) — QR generation
   - **html2canvas** (`html2canvas/1.4.1/html2canvas.min.js`) — rasterizing rendered HTML/DOM to canvas (used with jsPDF for HTML to PDF)
+  - **docx** (`docx@9.7.1/dist/index.iife.js`) — building .docx Word files client-side (used for PDF to Word). The one library not on cdnjs (confirmed unavailable there); loaded from jsdelivr instead (`cdn.jsdelivr.net/npm/docx@9.7.1/dist/index.iife.js`), exposing a global `docx` object (`docx.Document`, `docx.Paragraph`, `docx.Packer`, etc.). Every other library above stays on cdnjs — this is the sole exception.
 
 ## Visual design system (must stay consistent across every page)
 
@@ -83,11 +84,11 @@ here as a record so they don't get reintroduced:
 
 **Base pages:** `/` (home), `/tools` (catalog, 3 categories), `/about`, `/privacy`
 
-**44 tools**, organized into 3 categories on `/tools`:
+**45 tools**, organized into 3 categories on `/tools`:
 
 **🖼️ Image Tools (20):** webp-to-jpg, heic-to-jpg, png-to-jpg, png-to-webp, jpg-to-webp, webp-to-png, avif-to-jpg-png, gif-to-jpg-png, bmp-to-jpg-png, svg-to-png, resize-image, crop-image, compress-image, rotate-image, social-media-crop, round-image-corners, add-border-to-image, image-color-filters, watermark-adder, blur-area-tool
 
-**📄 PDF Tools (17):** jpg-to-pdf, image-to-pdf, pdf-to-jpg, merge-pdf, split-pdf, compress-pdf, rotate-pdf, pdf-page-organizer, add-page-numbers, edit-pdf-metadata, crop-pdf-pages, resize-pdf-pages, delete-pdf-pages, extract-pdf-text, watermark-pdf, sign-pdf, html-to-pdf
+**📄 PDF Tools (18):** jpg-to-pdf, image-to-pdf, pdf-to-jpg, pdf-to-word, merge-pdf, split-pdf, compress-pdf, rotate-pdf, pdf-page-organizer, add-page-numbers, edit-pdf-metadata, crop-pdf-pages, resize-pdf-pages, delete-pdf-pages, extract-pdf-text, watermark-pdf, sign-pdf, html-to-pdf
 
 **🛠️ Utility Tools (7):** exif-remover, image-metadata-viewer, favicon-generator, qr-code-generator, image-to-base64, color-picker-from-image, image-dimension-checker
 
@@ -95,7 +96,7 @@ here as a record so they don't get reintroduced:
 
 ## Homepage search suggestions (added Phase 9.10)
 
-The homepage search box (`#homeSearch`) shows a live autocomplete-style dropdown as you type, sourced from a hand-written `TOOLS` array inlined directly in `index.html`'s (and `es/index.html`'s) own `<script>` block — **not** fetched from `/tools` at runtime. `/tools` has no JS data array of its own to source from; its 44 tools are plain server-rendered `<a class="card tool-card">` markup, so duplicating the list inline was the simplest option that keeps the homepage self-contained and instant (no network round-trip per keystroke). This is the same manual-sync duplication pattern already used for the "Related tools" cards on every tool page — keep both in sync by hand, same as that convention, and update this array whenever a tool is added/renamed/removed (see the tool-page checklist above).
+The homepage search box (`#homeSearch`) shows a live autocomplete-style dropdown as you type, sourced from a hand-written `TOOLS` array inlined directly in `index.html`'s (and `es/index.html`'s) own `<script>` block — **not** fetched from `/tools` at runtime. `/tools` has no JS data array of its own to source from; its 45 tools are plain server-rendered `<a class="card tool-card">` markup, so duplicating the list inline was the simplest option that keeps the homepage self-contained and instant (no network round-trip per keystroke). This is the same manual-sync duplication pattern already used for the "Related tools" cards on every tool page — keep both in sync by hand, same as that convention, and update this array whenever a tool is added/renamed/removed (see the tool-page checklist above).
 
 Behavior: matches on name+description substring (name-starts-with ranked above name/desc-contains), capped at 6 suggestions, each showing a color-coded category tag reusing the site's existing Image/PDF/Utility → blue/amber/violet mapping. Arrow keys cycle through suggestions with wraparound; Enter navigates to the highlighted suggestion, or falls back to the pre-existing `/tools/?q=...` behavior if nothing is highlighted; Escape/click-outside closes it. Known pre-existing gap, not addressed here: the `⌘K` hint pill in the search box has no mobile-specific hide treatment.
 
