@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Extract PDF Text – Free Online Tool | Orisod</title>
-<meta name="description" content="Pull all the selectable text out of a PDF and copy it or download it as a .txt file, free and online. Works directly in your browser — no files are uploaded.">
-<link rel="canonical" href="https://orisod.com/extract-pdf-text/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/extract-pdf-text/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/extract-pdf-text/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/extract-pdf-text/">
+<title>PDF to Word – Free Online Converter | Orisod</title>
+<meta name="description" content="Convert a PDF's text into an editable .docx file, free and online. Text-only conversion — layout, images, and tables are not preserved. Works directly in your browser — no files are uploaded.">
+<link rel="canonical" href="https://orisod.com/pdf-to-word/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/pdf-to-word/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/pdf-to-word/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/pdf-to-word/">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
 <link rel="icon" href="/favicon.ico">
@@ -33,6 +33,7 @@
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/docx@9.7.1/dist/index.iife.js"></script>
 <style>
 :root{
   --bg:#0b0f1a;
@@ -65,8 +66,27 @@
 .tool-sub{font-size:16px;max-width:640px;margin:0 auto 20px auto;}
 .workspace{max-width:1040px;margin:0 auto;}
 .workspace-controls{margin-top:20px;text-align:center;}
-.stage-panel{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:left;}
-.stage-label{display:inline-block;font-size:12px;font-weight:bold;color:var(--accent);background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:3px 10px;margin-bottom:12px;}
+.disclaimer{
+  background:#1f1a0f;
+  border:1px solid #78350f;
+  border-radius:8px;
+  padding:14px 18px;
+  margin-bottom:22px;
+  text-align:left;
+  font-size:14px;
+  color:#fbbf24;
+  line-height:1.6;
+}
+:root[data-theme="light"] .disclaimer{
+  background:#fffbeb;
+  border-color:#fde68a;
+  color:#92400e;
+}
+.result-card{display:flex;align-items:center;gap:16px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-top:20px;text-align:left;}
+.result-card .icon-box{width:46px;height:46px;}
+.result-card .icon-box svg{width:24px;height:24px;}
+.result-card .result-body{flex:1 1 auto;min-width:0;}
+.result-card .result-filename{font-size:14px;font-weight:bold;margin-bottom:4px;word-break:break-all;}
 .result-stat{font-size:15px;opacity:0.9;text-align:left;margin-top:20px;}
 .site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
 .site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);display:inline-flex;align-items:center;gap:8px;}
@@ -90,16 +110,8 @@ p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-heigh
 .dropzone:hover, .dropzone.dragover{border-color:var(--accent);}
 input[type="file"]{display:none;}
 .page-count{margin-top:16px;font-size:14px;opacity:0.75;}
-.text-output{margin-top:20px;text-align:left;display:none;}
-.text-output textarea{
-  width:100%;min-height:320px;padding:14px;border-radius:8px;border:1px solid var(--dropzone-border);background:var(--card-bg);color:var(--text);
-  font-size:13px;font-family:"Courier New", monospace;line-height:1.5;resize:vertical;
-}
-.output-actions{display:flex;gap:12px;flex-wrap:wrap;}
 .warn-note{color:#f87171;font-size:14px;margin-top:12px;}
 button, .back{display:inline-block;margin-top:16px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
-button.secondary{background:var(--card-bg);border:1px solid var(--border);color:var(--text);}
-button.secondary:hover:not(:disabled){border-color:var(--accent);filter:none;}
 button:disabled{opacity:0.4;cursor:not-allowed;}
 button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
 .note{margin-top:20px;font-size:14px;opacity:0.6;}
@@ -162,7 +174,7 @@ h2{margin-top:50px;font-size:22px;}
   </nav>
   <div class="site-nav-right">
     <span class="lang-flag active">EN</span>
-    <a class="lang-flag" href="/es/extract-pdf-text/">ES</a>
+    <a class="lang-flag" href="/es/pdf-to-word/">ES</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
   </div>
 </header>
@@ -170,13 +182,17 @@ h2{margin-top:50px;font-size:22px;}
 <main>
 <div class="container">
   <div class="tool-hero">
-    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M8 11h6M8 14h7M8 17h4"/><path d="M20 14h-3m3 0l-2-2m2 2l-2 2"/></svg></div>
-    <h1>Extract PDF Text</h1>
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17V5"/><path d="M4 8l3-3 3 3"/><path d="M17 7v12"/><path d="M20 16l-3 3-3-3"/></svg></div>
+    <h1>PDF to Word</h1>
   </div>
-  <p class="tool-sub">Pull all the selectable text out of a PDF, then copy it or download it as a plain .txt file. Everything happens locally in your browser.</p>
+  <p class="tool-sub">Convert a PDF's text into an editable .docx file you can open in Word or Google Docs. Everything happens locally in your browser.</p>
 
   <div class="workspace">
     <div class="box">
+      <div class="disclaimer">
+        ℹ️ <strong>Text-only conversion:</strong> this pulls the selectable text out of the PDF and rebuilds it as editable paragraphs in a .docx file. It does <strong>not</strong> preserve the original layout, fonts, or images. <strong>Tables are flattened into plain text lines</strong> (columns separated by spaces), not rebuilt as real, editable Word tables. This works best for text-heavy documents like letters, reports, and contracts — for anything with complex layout, expect to do some manual cleanup afterward.
+      </div>
+
       <label class="dropzone" id="dropzone" for="fileInput">
         <div id="dropzoneText">📁 Click to select a PDF or drag and drop it here</div>
       </label>
@@ -186,65 +202,55 @@ h2{margin-top:50px;font-size:22px;}
       <div class="page-count" id="pageCount"></div>
 
       <div class="workspace-controls">
-        <button id="extractBtn" style="display:none;">Extract Text</button>
+        <button id="convertBtn" style="display:none;">Convert to Word</button>
         <div class="progress" id="progressMsg"></div>
       </div>
 
-      <div class="text-output" id="textOutput">
-        <div class="result-stat" id="outputMeta"></div>
-        <div class="stage-panel">
-          <span class="stage-label">Extracted Text</span>
-          <textarea id="textArea" readonly></textarea>
-        </div>
-        <div class="warn-note" id="warnNote" style="display:none;"></div>
-        <div class="output-actions">
-          <button class="secondary" id="copyBtn">📋 Copy Text</button>
-          <button id="downloadBtn">⬇️ Download .txt</button>
-        </div>
-      </div>
+      <div class="warn-note" id="warnNote" style="display:none;"></div>
+      <div class="result" id="result"></div>
     </div>
   </div>
 
   <div class="seo-content">
     <h2>What does this tool do?</h2>
-    <p>This tool reads every page of a PDF and pulls out the underlying selectable text — the same text you could highlight and copy in a PDF viewer — and lays it out as plain text you can copy or save as a .txt file. Page breaks are marked so you can still tell where one page ends and the next begins.</p>
+    <p>This tool reads every page of a PDF, pulls out the underlying selectable text — grouped back into lines the way it appeared on the page — and rebuilds it as a .docx file you can open and edit in Microsoft Word, Google Docs, or any word processor. It's a text extraction and rebuild, not a full layout-preserving conversion: fonts, exact spacing, images, and multi-column layouts are not recreated, and any table in the source PDF comes through as a line of space-separated text rather than a real, editable Word table grid.</p>
 
     <h2>When should you use this tool?</h2>
     <ul>
-      <li>You need to paste a PDF's content into an email, document, or spreadsheet</li>
-      <li>You want to search or process a PDF's text with a tool that only accepts plain text</li>
-      <li>You're archiving a document's text separately from its layout</li>
-      <li>You need a quick way to check how much text a PDF actually contains</li>
+      <li>You have a PDF report, letter, or contract and need to edit its wording in Word</li>
+      <li>You want to reuse a PDF's text in a new document without retyping it</li>
+      <li>Your source PDF is mostly text, with few or no tables and images</li>
+      <li>You're fine doing light manual cleanup afterward for anything with complex formatting</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
-      <div class="q">Why is the output empty or very short?</div>
+      <div class="q">Will tables come through as real Word tables?</div>
+      <div>No. This is a text-only conversion — a table row in the PDF becomes one line of text with its columns separated by spaces, not an editable Word table grid. This matches how other text-extraction-based PDF-to-Word tools behave; it's not a bug.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Will images or the original layout be preserved?</div>
+      <div>No. Only the selectable text is extracted. Images, exact fonts, columns, and precise spacing are not recreated in the output .docx.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Why is my output empty or missing text?</div>
       <div>If a PDF is a scanned image without a real text layer, there's no selectable text to extract — the pages are just pictures. This tool can't OCR scanned documents.</div>
     </div>
     <div class="faq-item">
-      <div class="q">Will the extracted text keep the original formatting?</div>
-      <div>No, formatting like fonts, columns, and tables is not preserved — this is a plain-text extraction, not a layout-preserving conversion.</div>
-    </div>
-    <div class="faq-item">
-      <div class="q">Can I extract text from just one page?</div>
-      <div>The tool extracts all pages at once, but the output includes page markers so you can easily copy just the section you need.</div>
-    </div>
-    <div class="faq-item">
       <div class="q">Is my PDF uploaded to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No, the entire process happens locally in your browser using JavaScript. Your file never leaves your device.</div>
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/extract-text-from-pdf/" style="color:var(--accent);text-decoration:none;">How to Extract Text From a PDF (Copy or Save as .txt)</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/convert-pdf-to-word/" style="color:var(--accent);text-decoration:none;">How to Convert a PDF to Word (and What Actually Happens to Tables)</a></p>
 
   <h2>Related tools</h2>
   <div class="related-grid">
-  <a class="related-card" href="/pdf-to-jpg/">
-    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2h6l4 4v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M10 2v4h4"/><path d="M13.5 10.5l2.5 2.5-2.5 2.5"/><path d="M19 15.5l3.5 6.5h-7z" fill="currentColor" stroke="none"/></svg></div>
+  <a class="related-card" href="/extract-pdf-text/">
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M8 11h6M8 14h7M8 17h4"/><path d="M20 14h-3m3 0l-2-2m2 2l-2 2"/></svg></div>
     <div class="body">
-      <div class="title">PDF to JPG</div>
-      <div class="desc">Extract PDF pages as JPG images.</div>
+      <div class="title">Extract PDF Text</div>
+      <div class="desc">Copy or download a PDF's text as .txt.</div>
     </div>
     <div class="arrow">→</div>
   </a>
@@ -256,11 +262,11 @@ h2{margin-top:50px;font-size:22px;}
     </div>
     <div class="arrow">→</div>
   </a>
-  <a class="related-card" href="/pdf-to-word/">
-    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17V5"/><path d="M4 8l3-3 3 3"/><path d="M17 7v12"/><path d="M20 16l-3 3-3-3"/></svg></div>
+  <a class="related-card" href="/compress-pdf/">
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M9 13l3 2 3-2M9 17l3-2 3 2"/></svg></div>
     <div class="body">
-      <div class="title">PDF to Word</div>
-      <div class="desc">Convert a PDF's text into an editable .docx.</div>
+      <div class="title">Compress PDF</div>
+      <div class="desc">Shrink scanned or image-heavy PDFs.</div>
     </div>
     <div class="arrow">→</div>
   </a>
@@ -321,16 +327,11 @@ const dropzoneText = document.getElementById('dropzoneText');
 const errorMsg = document.getElementById('errorMsg');
 const progressMsg = document.getElementById('progressMsg');
 const pageCount = document.getElementById('pageCount');
-const extractBtn = document.getElementById('extractBtn');
-const textOutput = document.getElementById('textOutput');
-const textArea = document.getElementById('textArea');
-const outputMeta = document.getElementById('outputMeta');
+const convertBtn = document.getElementById('convertBtn');
 const warnNote = document.getElementById('warnNote');
-const copyBtn = document.getElementById('copyBtn');
-const downloadBtn = document.getElementById('downloadBtn');
+const resultEl = document.getElementById('result');
 
 let selectedFile = null;
-let extractedText = '';
 
 fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
 dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
@@ -345,9 +346,9 @@ async function handleFile(file) {
   errorMsg.textContent = '';
   progressMsg.textContent = '';
   pageCount.textContent = '';
-  extractBtn.style.display = 'none';
-  textOutput.style.display = 'none';
-  extractedText = '';
+  convertBtn.style.display = 'none';
+  warnNote.style.display = 'none';
+  resultEl.innerHTML = '';
 
   if (!file || !/\.pdf$/i.test(file.name)) {
     errorMsg.textContent = 'Please select a valid PDF file.';
@@ -361,72 +362,132 @@ async function handleFile(file) {
 
     pageCount.textContent = `Loaded: ${pdf.numPages} page${pdf.numPages === 1 ? '' : 's'}`;
     dropzoneText.textContent = `✅ ${file.name} loaded`;
-    extractBtn.style.display = 'inline-block';
+    convertBtn.style.display = 'inline-block';
   } catch (err) {
     errorMsg.textContent = 'Could not read this PDF. It may be corrupted or password-protected.';
   }
 }
 
-extractBtn.addEventListener('click', async () => {
+// Groups a page's positioned text items back into lines (by y-position), then into
+// a single line of text (by x-position). A wide horizontal gap between two items —
+// wider than about 2 character-widths — is treated as a column break and rendered as
+// extra spacing, so a PDF table row becomes one readable line rather than scrambled text.
+function pageTextToLines(textContent) {
+  const items = textContent.items.filter((item) => item.str && item.str.trim().length > 0);
+  if (items.length === 0) return [];
+
+  const sorted = items.slice().sort((a, b) => {
+    const dy = b.transform[5] - a.transform[5];
+    return Math.abs(dy) > 0.01 ? dy : a.transform[4] - b.transform[4];
+  });
+
+  const rows = [];
+  let current = [];
+  let currentY = null;
+  const Y_TOLERANCE = 3;
+
+  sorted.forEach((item) => {
+    const y = item.transform[5];
+    if (currentY === null || Math.abs(y - currentY) > Y_TOLERANCE) {
+      if (current.length) rows.push(current);
+      current = [];
+      currentY = y;
+    }
+    current.push(item);
+  });
+  if (current.length) rows.push(current);
+
+  return rows.map((rowItems) => {
+    rowItems.sort((a, b) => a.transform[4] - b.transform[4]);
+    let line = '';
+    let prevEndX = null;
+    rowItems.forEach((item) => {
+      const x = item.transform[4];
+      const fontSize = Math.abs(item.transform[0]) || item.height || 10;
+      if (prevEndX !== null) {
+        const gap = x - prevEndX;
+        if (gap > fontSize * 2) {
+          line += '    ';
+        } else if (gap > fontSize * 0.25) {
+          line += ' ';
+        }
+      }
+      line += item.str;
+      prevEndX = x + (item.width || 0);
+    });
+    return line.trim();
+  }).filter((line) => line.length > 0);
+}
+
+convertBtn.addEventListener('click', async () => {
   if (!selectedFile) return;
   errorMsg.textContent = '';
   warnNote.style.display = 'none';
-  extractBtn.disabled = true;
+  resultEl.innerHTML = '';
+  convertBtn.disabled = true;
 
   try {
     const arrayBuffer = await selectedFile.arrayBuffer();
     const pdf = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
-    const pageTexts = [];
-    let plainCharCount = 0;
+    const { Document, Paragraph, TextRun, Packer } = docx;
+    const children = [];
+    let totalChars = 0;
+    let linesFound = 0;
 
     for (let i = 1; i <= pdf.numPages; i++) {
-      progressMsg.textContent = `Extracting page ${i} of ${pdf.numPages}...`;
+      progressMsg.textContent = `Converting page ${i} of ${pdf.numPages}...`;
       const page = await pdf.getPage(i);
       const textContent = await page.getTextContent();
-      const pageText = textContent.items.map((item) => item.str).join(' ').trim();
-      plainCharCount += pageText.length;
-      pageTexts.push(`----- Page ${i} -----\n\n${pageText}`);
+      const lines = pageTextToLines(textContent);
+
+      lines.forEach((lineText, idx) => {
+        totalChars += lineText.length;
+        linesFound++;
+        children.push(new Paragraph({
+          children: [new TextRun(lineText)],
+          pageBreakBefore: i > 1 && idx === 0,
+        }));
+      });
     }
 
-    extractedText = pageTexts.join('\n\n');
-    textArea.value = extractedText;
-    outputMeta.textContent = `${pdf.numPages} page${pdf.numPages === 1 ? '' : 's'} · ${plainCharCount.toLocaleString()} characters extracted`;
-
-    if (plainCharCount === 0) {
-      warnNote.textContent = '⚠️ No selectable text was found. This PDF may be a scanned image without a text layer.';
+    if (linesFound === 0) {
+      warnNote.textContent = '⚠️ No selectable text was found. This PDF may be a scanned image without a text layer, so there is nothing to convert.';
       warnNote.style.display = 'block';
+      progressMsg.textContent = '';
+      convertBtn.disabled = false;
+      return;
     }
 
-    textOutput.style.display = 'block';
+    const doc = new Document({ sections: [{ children }] });
+    const blob = await Packer.toBlob(doc);
+    const outName = `${selectedFile.name.replace(/\.pdf$/i, '')}.docx`;
+    const url = URL.createObjectURL(blob);
+
+    const card = document.createElement('div');
+    card.className = 'result-card';
+    card.innerHTML = `
+      <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17V5"/><path d="M4 8l3-3 3 3"/><path d="M17 7v12"/><path d="M20 16l-3 3-3-3"/></svg></div>
+      <div class="result-body">
+        <div class="result-filename">${outName}</div>
+        <div class="result-stat">${pdf.numPages} page${pdf.numPages === 1 ? '' : 's'} · ${totalChars.toLocaleString()} characters converted</div>
+      </div>
+    `;
+    resultEl.appendChild(card);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = outName;
+    link.className = 'back';
+    link.textContent = '⬇️ Download .docx';
+    resultEl.appendChild(link);
+
+    progressMsg.textContent = 'Done — ready to download.';
+  } catch (err) {
+    errorMsg.textContent = err.message || 'Could not convert this PDF.';
     progressMsg.textContent = '';
-  } catch (err) {
-    errorMsg.textContent = err.message || 'Could not extract text from this PDF.';
   }
 
-  extractBtn.disabled = false;
-});
-
-copyBtn.addEventListener('click', async () => {
-  try {
-    await navigator.clipboard.writeText(extractedText);
-    copyBtn.textContent = '✅ Copied!';
-    setTimeout(() => { copyBtn.textContent = '📋 Copy Text'; }, 1500);
-  } catch (err) {
-    errorMsg.textContent = 'Could not copy to clipboard. Select the text manually instead.';
-  }
-});
-
-downloadBtn.addEventListener('click', () => {
-  const blob = new Blob([extractedText], { type: 'text/plain' });
-  const url = URL.createObjectURL(blob);
-  const baseName = selectedFile.name.replace(/\.pdf$/i, '');
-
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `${baseName}.txt`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  convertBtn.disabled = false;
 });
 </script>
 </body>
