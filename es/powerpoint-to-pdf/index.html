@@ -20,20 +20,20 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PDF a Word – Convertidor gratuito en línea | Orisod</title>
-<meta name="description" content="Convierte el texto de un PDF en un archivo .docx editable, gratis y en línea. Conversión de solo texto — el diseño, las imágenes y las tablas no se conservan. Funciona directamente en tu navegador, sin subir archivos.">
-<link rel="canonical" href="https://orisod.com/es/pdf-to-word/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/pdf-to-word/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/pdf-to-word/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/pdf-to-word/">
+<title>PowerPoint a PDF – Convertidor gratuito en línea | Orisod</title>
+<meta name="description" content="Exporta el texto de una presentación PowerPoint (.pptx) como un PDF, gratis y en línea. Solo texto y orden de lectura — sin diseño, imágenes ni maquetación. Funciona directamente en tu navegador, sin subir archivos.">
+<link rel="canonical" href="https://orisod.com/es/powerpoint-to-pdf/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/powerpoint-to-pdf/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/powerpoint-to-pdf/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/powerpoint-to-pdf/">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
 <link rel="icon" href="/favicon.ico">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/docx@9.7.1/dist/index.iife.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root{
   --bg:#0b0f1a;
@@ -173,7 +173,7 @@ h2{margin-top:50px;font-size:22px;}
     <a href="/es/blog/">Blog</a>
   </nav>
   <div class="site-nav-right">
-    <a class="lang-flag" href="/pdf-to-word/">EN</a>
+    <a class="lang-flag" href="/powerpoint-to-pdf/">EN</a>
     <span class="lang-flag active">ES</span>
     <button class="theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro">🌙</button>
   </div>
@@ -183,26 +183,26 @@ h2{margin-top:50px;font-size:22px;}
 <div class="container">
   <div class="tool-hero">
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17V5"/><path d="M4 8l3-3 3 3"/><path d="M17 7v12"/><path d="M20 16l-3 3-3-3"/></svg></div>
-    <h1>PDF a Word</h1>
+    <h1>PowerPoint a PDF</h1>
   </div>
-  <p class="tool-sub">Convierte el texto de un PDF en un archivo .docx editable que puedes abrir en Word o Google Docs. Todo ocurre localmente en tu navegador.</p>
+  <p class="tool-sub">Exporta el texto de una presentación PowerPoint (.pptx) como un PDF. Todo ocurre localmente en tu navegador.</p>
 
   <div class="workspace">
     <div class="box">
       <div class="disclaimer">
-        ℹ️ <strong>Conversión de solo texto:</strong> esto extrae el texto seleccionable del PDF y lo reconstruye como párrafos editables en un archivo .docx. <strong>No</strong> conserva el diseño original, las fuentes ni las imágenes. <strong>Las tablas se convierten en líneas de texto plano</strong> (columnas separadas por espacios), no en tablas de Word reales y editables. Funciona mejor con documentos con mucho texto, como cartas, informes y contratos — para cualquier cosa con diseño complejo, cuenta con hacer algo de limpieza manual después.
+        ℹ️ <strong>Conversión de solo texto:</strong> esto extrae el título y el texto de cada diapositiva, en orden de lectura, y lo organiza como un esquema sencillo en el PDF — <strong>una página por diapositiva con texto</strong>. <strong>No</strong> conserva el diseño, las imágenes, los fondos, los gráficos ni la maquetación de las diapositivas, y las notas del orador no se incluyen. Piensa en esto como una exportación de esquema, no como una copia visual de tus diapositivas. Solo se admite el formato moderno <strong>.pptx</strong> — el formato .ppt anterior no.
       </div>
 
       <label class="dropzone" id="dropzone" for="fileInput">
-        <div id="dropzoneText">📁 Haz clic para seleccionar un PDF o arrástralo y suéltalo aquí</div>
+        <div id="dropzoneText">📁 Haz clic para seleccionar un archivo .pptx o arrástralo y suéltalo aquí</div>
       </label>
-      <input type="file" id="fileInput" accept=".pdf">
+      <input type="file" id="fileInput" accept=".pptx">
       <div class="error" id="errorMsg"></div>
       <div class="trust-strip">🔒 Procesamiento local · Archivos siempre en tu dispositivo · Sin cuenta · Sin marca de agua</div>
       <div class="page-count" id="pageCount"></div>
 
       <div class="workspace-controls">
-        <button id="convertBtn" style="display:none;">Convertir a Word</button>
+        <button id="convertBtn" style="display:none;">Convertir a PDF</button>
         <div class="progress" id="progressMsg"></div>
       </div>
 
@@ -213,60 +213,60 @@ h2{margin-top:50px;font-size:22px;}
 
   <div class="seo-content">
     <h2>¿Qué hace esta herramienta?</h2>
-    <p>Esta herramienta lee cada página de un PDF, extrae el texto seleccionable subyacente — agrupado de nuevo en líneas tal como aparecía en la página — y lo reconstruye como un archivo .docx que puedes abrir y editar en Microsoft Word, Google Docs o cualquier procesador de texto. Es una extracción y reconstrucción de texto, no una conversión que preserve el diseño por completo: las fuentes, el espaciado exacto, las imágenes y los diseños en varias columnas no se recrean, y cualquier tabla del PDF original llega como una línea de texto separada por espacios en lugar de una tabla de Word real y editable.</p>
+    <p>Esta herramienta abre un archivo PowerPoint (.pptx), extrae el texto de cada diapositiva en orden de lectura — títulos y texto del cuerpo, incluyendo viñetas — y lo organiza como un esquema de texto sencillo en un PDF, una página por cada diapositiva que tenga texto. Es una exportación de solo texto: no se incluyen el diseño, las imágenes, los fondos, los gráficos, las transiciones ni las notas del orador, solo las palabras.</p>
 
     <h2>¿Cuándo usar esta herramienta?</h2>
     <ul>
-      <li>Tienes un informe, carta o contrato en PDF y necesitas editar su redacción en Word</li>
-      <li>Quieres reutilizar el texto de un PDF en un documento nuevo sin volver a escribirlo</li>
-      <li>Tu PDF de origen es mayormente texto, con pocas o ninguna tabla e imagen</li>
-      <li>No te importa hacer una pequeña limpieza manual después en las partes con formato complejo</li>
+      <li>Necesitas un esquema rápido y legible del contenido de una presentación sin abrir PowerPoint</li>
+      <li>Quieres hojear o buscar en el texto de una presentación</li>
+      <li>Te sirve una exportación de solo texto en lugar de una copia visual de las diapositivas</li>
+      <li>Quieres que la conversión ocurra en privado, sin subir el archivo a ningún sitio</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
-      <div class="q">¿Las tablas se convertirán en tablas reales de Word?</div>
-      <div>No. Esta es una conversión de solo texto — una fila de tabla en el PDF se convierte en una línea de texto con sus columnas separadas por espacios, no en una tabla de Word editable. Así es como se comportan otras herramientas de PDF a Word basadas en extracción de texto; no es un error.</div>
+      <div class="q">¿El PDF se verá como mis diapositivas reales?</div>
+      <div>No. Este es un esquema de solo texto — el diseño, las imágenes, los fondos y la maquetación de las diapositivas no se recrean. Solo se conserva el contenido de texto y su orden de lectura.</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Se conservarán las imágenes o el diseño original?</div>
-      <div>No. Solo se extrae el texto seleccionable. Las imágenes, las fuentes exactas, las columnas y el espaciado preciso no se recrean en el .docx resultante.</div>
+      <div class="q">¿Se incluyen las notas del orador?</div>
+      <div>No, solo se incluye el texto visible en cada diapositiva; las notas del orador no se extraen.</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Por qué mi resultado está vacío o le falta texto?</div>
-      <div>Si un PDF es una imagen escaneada sin una capa de texto real, no hay texto seleccionable que extraer — las páginas son solo imágenes. Esta herramienta no puede hacer OCR a documentos escaneados.</div>
+      <div class="q">¿Funciona con el formato .ppt anterior?</div>
+      <div>No, solo se admite el formato moderno .pptx (PowerPoint 2007 en adelante). Vuelve a guardar un archivo .ppt antiguo como .pptx en PowerPoint primero.</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Se envía mi PDF a algún servidor?</div>
-      <div>No. Todo se procesa localmente en tu navegador mediante JavaScript; el archivo permanece en tu dispositivo.</div>
+      <div class="q">¿Se sube mi presentación a un servidor?</div>
+      <div>No, todo el proceso ocurre localmente en tu navegador mediante JavaScript. Tu archivo nunca sale de tu dispositivo.</div>
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres profundizar? Lee nuestra guía: <a href="/es/blog/convert-pdf-to-word/" style="color:var(--accent);text-decoration:none;">Cómo convertir un PDF a Word (y qué pasa realmente con las tablas)</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres profundizar? Lee nuestra guía: <a href="/es/blog/convert-powerpoint-to-pdf/" style="color:var(--accent);text-decoration:none;">Cómo convertir un PowerPoint a PDF como esquema de texto</a></p>
 
   <h2>Herramientas relacionadas</h2>
   <div class="related-grid">
-  <a class="related-card" href="/es/extract-pdf-text/">
-    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M8 11h6M8 14h7M8 17h4"/><path d="M20 14h-3m3 0l-2-2m2 2l-2 2"/></svg></div>
-    <div class="body">
-      <div class="title">Extraer texto de PDF</div>
-      <div class="desc">Copia o descarga el texto de un PDF como .txt.</div>
-    </div>
-    <div class="arrow">→</div>
-  </a>
-  <a class="related-card" href="/es/merge-pdf/">
-    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v12M8 6l4-4 4 4"/><path d="M6 22l6-6 6 6"/></svg></div>
-    <div class="body">
-      <div class="title">Unir PDF</div>
-      <div class="desc">Combina varios PDF en uno solo.</div>
-    </div>
-    <div class="arrow">→</div>
-  </a>
   <a class="related-card" href="/es/word-to-pdf/">
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17V5"/><path d="M4 8l3-3 3 3"/><path d="M17 7v12"/><path d="M20 16l-3 3-3-3"/></svg></div>
     <div class="body">
       <div class="title">Word a PDF</div>
       <div class="desc">Convierte un documento Word en PDF.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+  <a class="related-card" href="/es/excel-to-pdf/">
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17V5"/><path d="M4 8l3-3 3 3"/><path d="M17 7v12"/><path d="M20 16l-3 3-3-3"/></svg></div>
+    <div class="body">
+      <div class="title">Excel a PDF</div>
+      <div class="desc">Convierte las hojas de un Excel en un PDF.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+  <a class="related-card" href="/es/html-to-pdf/">
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/></svg></div>
+    <div class="body">
+      <div class="title">HTML a PDF</div>
+      <div class="desc">Pega HTML y conviértelo a PDF.</div>
     </div>
     <div class="arrow">→</div>
   </a>
@@ -319,14 +319,11 @@ h2{margin-top:50px;font-size:22px;}
 </script>
 
 <script>
-pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
-
 const fileInput = document.getElementById('fileInput');
 const dropzone = document.getElementById('dropzone');
 const dropzoneText = document.getElementById('dropzoneText');
 const errorMsg = document.getElementById('errorMsg');
 const progressMsg = document.getElementById('progressMsg');
-const pageCount = document.getElementById('pageCount');
 const convertBtn = document.getElementById('convertBtn');
 const warnNote = document.getElementById('warnNote');
 const resultEl = document.getElementById('result');
@@ -342,82 +339,33 @@ dropzone.addEventListener('drop', (e) => {
   handleFile(e.dataTransfer.files[0]);
 });
 
-async function handleFile(file) {
+function handleFile(file) {
   errorMsg.textContent = '';
   progressMsg.textContent = '';
-  pageCount.textContent = '';
   convertBtn.style.display = 'none';
   warnNote.style.display = 'none';
   resultEl.innerHTML = '';
 
-  if (!file || !/\.pdf$/i.test(file.name)) {
-    errorMsg.textContent = 'Selecciona un archivo PDF válido.';
+  if (!file || !/\.pptx$/i.test(file.name)) {
+    errorMsg.textContent = 'Selecciona un archivo .pptx válido. El formato .ppt anterior no es compatible.';
     return;
   }
 
-  try {
-    const arrayBuffer = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
-    selectedFile = file;
-
-    pageCount.textContent = `Cargado: ${pdf.numPages} página${pdf.numPages === 1 ? '' : 's'}`;
-    dropzoneText.textContent = `✅ ${file.name} cargado`;
-    convertBtn.style.display = 'inline-block';
-  } catch (err) {
-    errorMsg.textContent = 'No se pudo leer este PDF. Puede estar dañado o protegido con contraseña.';
-  }
+  selectedFile = file;
+  dropzoneText.textContent = `✅ ${file.name} cargado`;
+  convertBtn.style.display = 'inline-block';
 }
 
-// Agrupa el texto posicionado de una página en líneas (por posición vertical) y luego
-// en una sola línea de texto (por posición horizontal). Un espacio horizontal amplio
-// entre dos elementos — más ancho que unos 2 caracteres — se trata como un salto de
-// columna y se traduce en espacio extra, para que una fila de tabla del PDF se
-// convierta en una línea legible en vez de texto desordenado.
-function pageTextToLines(textContent) {
-  const items = textContent.items.filter((item) => item.str && item.str.trim().length > 0);
-  if (items.length === 0) return [];
-
-  const sorted = items.slice().sort((a, b) => {
-    const dy = b.transform[5] - a.transform[5];
-    return Math.abs(dy) > 0.01 ? dy : a.transform[4] - b.transform[4];
-  });
-
-  const rows = [];
-  let current = [];
-  let currentY = null;
-  const Y_TOLERANCE = 3;
-
-  sorted.forEach((item) => {
-    const y = item.transform[5];
-    if (currentY === null || Math.abs(y - currentY) > Y_TOLERANCE) {
-      if (current.length) rows.push(current);
-      current = [];
-      currentY = y;
-    }
-    current.push(item);
-  });
-  if (current.length) rows.push(current);
-
-  return rows.map((rowItems) => {
-    rowItems.sort((a, b) => a.transform[4] - b.transform[4]);
-    let line = '';
-    let prevEndX = null;
-    rowItems.forEach((item) => {
-      const x = item.transform[4];
-      const fontSize = Math.abs(item.transform[0]) || item.height || 10;
-      if (prevEndX !== null) {
-        const gap = x - prevEndX;
-        if (gap > fontSize * 2) {
-          line += '    ';
-        } else if (gap > fontSize * 0.25) {
-          line += ' ';
-        }
-      }
-      line += item.str;
-      prevEndX = x + (item.width || 0);
-    });
-    return line.trim();
-  }).filter((line) => line.length > 0);
+function extractSlideTexts(xmlText) {
+  const parser = new DOMParser();
+  const xmlDoc = parser.parseFromString(xmlText, 'application/xml');
+  const textNodes = xmlDoc.getElementsByTagName('a:t');
+  const texts = [];
+  for (let i = 0; i < textNodes.length; i++) {
+    const t = (textNodes[i].textContent || '').trim();
+    if (t) texts.push(t);
+  }
+  return texts;
 }
 
 convertBtn.addEventListener('click', async () => {
@@ -426,42 +374,85 @@ convertBtn.addEventListener('click', async () => {
   warnNote.style.display = 'none';
   resultEl.innerHTML = '';
   convertBtn.disabled = true;
+  progressMsg.textContent = 'Leyendo presentación...';
 
   try {
     const arrayBuffer = await selectedFile.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
-    const { Document, Paragraph, TextRun, Packer } = docx;
-    const children = [];
-    let totalChars = 0;
-    let linesFound = 0;
-
-    for (let i = 1; i <= pdf.numPages; i++) {
-      progressMsg.textContent = `Convirtiendo página ${i} de ${pdf.numPages}...`;
-      const page = await pdf.getPage(i);
-      const textContent = await page.getTextContent();
-      const lines = pageTextToLines(textContent);
-
-      lines.forEach((lineText, idx) => {
-        totalChars += lineText.length;
-        linesFound++;
-        children.push(new Paragraph({
-          children: [new TextRun(lineText)],
-          pageBreakBefore: i > 1 && idx === 0,
-        }));
+    const zip = await JSZip.loadAsync(arrayBuffer);
+    const slideFiles = Object.keys(zip.files)
+      .filter((name) => /^ppt\/slides\/slide\d+\.xml$/.test(name))
+      .sort((a, b) => {
+        const na = parseInt(a.match(/slide(\d+)\.xml/)[1], 10);
+        const nb = parseInt(b.match(/slide(\d+)\.xml/)[1], 10);
+        return na - nb;
       });
-    }
 
-    if (linesFound === 0) {
-      warnNote.textContent = '⚠️ No se encontró texto seleccionable. Este PDF puede ser una imagen escaneada sin capa de texto, así que no hay nada que convertir.';
+    if (slideFiles.length === 0) {
+      warnNote.textContent = '⚠️ No se encontraron diapositivas en este archivo. Asegúrate de que sea un archivo .pptx válido.';
       warnNote.style.display = 'block';
       progressMsg.textContent = '';
       convertBtn.disabled = false;
       return;
     }
 
-    const doc = new Document({ sections: [{ children }] });
-    const blob = await Packer.toBlob(doc);
-    const outName = `${selectedFile.name.replace(/\.pdf$/i, '')}.docx`;
+    const { jsPDF } = window.jspdf;
+    let pdf = null;
+    let pageWidth = 0, pageHeight = 0, margin = 50, maxWidth = 0;
+    let slideCount = 0;
+
+    for (let idx = 0; idx < slideFiles.length; idx++) {
+      progressMsg.textContent = `Leyendo diapositiva ${idx + 1} de ${slideFiles.length}...`;
+      const xmlText = await zip.files[slideFiles[idx]].async('string');
+      const texts = extractSlideTexts(xmlText);
+      if (texts.length === 0) continue;
+
+      const slideNumber = parseInt(slideFiles[idx].match(/slide(\d+)\.xml/)[1], 10);
+
+      if (pdf === null) {
+        pdf = new jsPDF({ unit: 'pt', format: 'letter' });
+        pageWidth = pdf.internal.pageSize.getWidth();
+        pageHeight = pdf.internal.pageSize.getHeight();
+        maxWidth = pageWidth - margin * 2;
+      } else {
+        pdf.addPage();
+      }
+      slideCount++;
+
+      let y = margin + 10;
+      pdf.setFont(undefined, 'bold');
+      pdf.setFontSize(18);
+      const titleLines = pdf.splitTextToSize(texts[0], maxWidth);
+      pdf.text(titleLines, margin, y);
+      y += titleLines.length * 22 + 16;
+
+      pdf.setFont(undefined, 'normal');
+      pdf.setFontSize(12);
+      for (let k = 1; k < texts.length; k++) {
+        const bulletLines = pdf.splitTextToSize('•  ' + texts[k], maxWidth - 16);
+        if (y + bulletLines.length * 16 > pageHeight - margin) {
+          pdf.addPage();
+          y = margin + 10;
+        }
+        pdf.text(bulletLines, margin + 14, y);
+        y += bulletLines.length * 16 + 8;
+      }
+
+      pdf.setFontSize(9);
+      pdf.setTextColor(150, 150, 150);
+      pdf.text(`Diapositiva ${slideNumber}`, margin, pageHeight - 24);
+      pdf.setTextColor(0, 0, 0);
+    }
+
+    if (slideCount === 0) {
+      warnNote.textContent = '⚠️ No se encontró texto legible en ninguna diapositiva de esta presentación.';
+      warnNote.style.display = 'block';
+      progressMsg.textContent = '';
+      convertBtn.disabled = false;
+      return;
+    }
+
+    const blob = pdf.output('blob');
+    const outName = `${selectedFile.name.replace(/\.pptx$/i, '')}.pdf`;
     const url = URL.createObjectURL(blob);
 
     const card = document.createElement('div');
@@ -470,7 +461,7 @@ convertBtn.addEventListener('click', async () => {
       <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17V5"/><path d="M4 8l3-3 3 3"/><path d="M17 7v12"/><path d="M20 16l-3 3-3-3"/></svg></div>
       <div class="result-body">
         <div class="result-filename">${outName}</div>
-        <div class="result-stat">${pdf.numPages} página${pdf.numPages === 1 ? '' : 's'} · ${totalChars.toLocaleString()} caracteres convertidos</div>
+        <div class="result-stat">${slideCount} diapositiva${slideCount === 1 ? '' : 's'} con texto · ${(blob.size / 1024).toFixed(1)} KB</div>
       </div>
     `;
     resultEl.appendChild(card);
@@ -479,12 +470,12 @@ convertBtn.addEventListener('click', async () => {
     link.href = url;
     link.download = outName;
     link.className = 'back';
-    link.textContent = '⬇️ Descargar .docx';
+    link.textContent = '⬇️ Descargar PDF';
     resultEl.appendChild(link);
 
     progressMsg.textContent = 'Listo — para descargar.';
   } catch (err) {
-    errorMsg.textContent = err.message || 'No se pudo convertir este PDF.';
+    errorMsg.textContent = 'No se pudo convertir este archivo. Asegúrate de que sea una presentación .pptx válida.';
     progressMsg.textContent = '';
   }
 
