@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Extract PDF Text – Free Online Tool | Orisod</title>
-<meta name="description" content="Pull all the selectable text out of a PDF and copy it or download it as a .txt file, free and online. Works directly in your browser — no files are uploaded.">
-<link rel="canonical" href="https://orisod.com/extract-pdf-text/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/extract-pdf-text/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/extract-pdf-text/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/extract-pdf-text/">
+<title>OCR PDF – Make a Scanned PDF Searchable | Orisod</title>
+<meta name="description" content="Run OCR on a scanned PDF to make it searchable and selectable, free and online. OCR is never 100% accurate — proofread anything that matters. Works directly in your browser — no files are uploaded.">
+<link rel="canonical" href="https://orisod.com/ocr-pdf/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/ocr-pdf/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/ocr-pdf/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/ocr-pdf/">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
 <link rel="icon" href="/favicon.ico">
@@ -33,6 +33,8 @@
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/7.0.0/tesseract.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <style>
 :root{
   --bg:#0b0f1a;
@@ -65,9 +67,29 @@
 .tool-sub{font-size:16px;max-width:640px;margin:0 auto 20px auto;}
 .workspace{max-width:1040px;margin:0 auto;}
 .workspace-controls{margin-top:20px;text-align:center;}
-.stage-panel{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:left;}
-.stage-label{display:inline-block;font-size:12px;font-weight:bold;color:var(--accent);background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:3px 10px;margin-bottom:12px;}
+.disclaimer{
+  background:#1f1a0f;
+  border:1px solid #78350f;
+  border-radius:8px;
+  padding:14px 18px;
+  margin-bottom:22px;
+  text-align:left;
+  font-size:14px;
+  color:#fbbf24;
+  line-height:1.6;
+}
+:root[data-theme="light"] .disclaimer{
+  background:#fffbeb;
+  border-color:#fde68a;
+  color:#92400e;
+}
+.result-card{display:flex;align-items:center;gap:16px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-top:20px;text-align:left;}
+.result-card .icon-box{width:46px;height:46px;}
+.result-card .icon-box svg{width:24px;height:24px;}
+.result-card .result-body{flex:1 1 auto;min-width:0;}
+.result-card .result-filename{font-size:14px;font-weight:bold;margin-bottom:4px;word-break:break-all;}
 .result-stat{font-size:15px;opacity:0.9;text-align:left;margin-top:20px;}
+.output-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:4px;}
 .site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
 .site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);display:inline-flex;align-items:center;gap:8px;}
 .site-nav-logo img{height:26px;width:auto;display:block;}
@@ -90,13 +112,8 @@ p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-heigh
 .dropzone:hover, .dropzone.dragover{border-color:var(--accent);}
 input[type="file"]{display:none;}
 .page-count{margin-top:16px;font-size:14px;opacity:0.75;}
-.text-output{margin-top:20px;text-align:left;display:none;}
-.text-output textarea{
-  width:100%;min-height:320px;padding:14px;border-radius:8px;border:1px solid var(--dropzone-border);background:var(--card-bg);color:var(--text);
-  font-size:13px;font-family:"Courier New", monospace;line-height:1.5;resize:vertical;
-}
-.output-actions{display:flex;gap:12px;flex-wrap:wrap;}
 .warn-note{color:#f87171;font-size:14px;margin-top:12px;}
+.long-doc-note{color:var(--muted-text);font-size:13px;margin-top:10px;}
 button, .back{display:inline-block;margin-top:16px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
 button.secondary{background:var(--card-bg);border:1px solid var(--border);color:var(--text);}
 button.secondary:hover:not(:disabled){border-color:var(--accent);filter:none;}
@@ -162,7 +179,7 @@ h2{margin-top:50px;font-size:22px;}
   </nav>
   <div class="site-nav-right">
     <span class="lang-flag active">EN</span>
-    <a class="lang-flag" href="/es/extract-pdf-text/">ES</a>
+    <a class="lang-flag" href="/es/ocr-pdf/">ES</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
   </div>
 </header>
@@ -170,89 +187,76 @@ h2{margin-top:50px;font-size:22px;}
 <main>
 <div class="container">
   <div class="tool-hero">
-    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M8 11h6M8 14h7M8 17h4"/><path d="M20 14h-3m3 0l-2-2m2 2l-2 2"/></svg></div>
-    <h1>Extract PDF Text</h1>
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l1.5 5.5L19 9l-5.5 1.5L12 16l-1.5-5.5L5 9l5.5-1.5z"/></svg></div>
+    <h1>OCR PDF</h1>
   </div>
-  <p class="tool-sub">Pull all the selectable text out of a PDF, then copy it or download it as a plain .txt file. Everything happens locally in your browser.</p>
+  <p class="tool-sub">Run OCR on a scanned PDF to make it searchable and selectable. Everything happens locally in your browser.</p>
 
   <div class="workspace">
     <div class="box">
+      <div class="disclaimer">
+        ℹ️ <strong>OCR is never 100% accurate.</strong> This reads each page as an image and recognizes the text on it, adding an invisible, searchable text layer on top of your original scan — the page still looks exactly the same, but you can now select, copy, and search its text. Recognition errors are more likely with low-resolution scans, unusual fonts, or handwriting. <strong>Proofread anything that matters</strong> (numbers, names, legal wording) rather than trusting the result blindly.
+      </div>
+
       <label class="dropzone" id="dropzone" for="fileInput">
-        <div id="dropzoneText">📁 Click to select a PDF or drag and drop it here</div>
+        <div id="dropzoneText">📁 Click to select a scanned PDF or drag and drop it here</div>
       </label>
       <input type="file" id="fileInput" accept=".pdf">
       <div class="error" id="errorMsg"></div>
       <div class="trust-strip">🔒 Processed on your device · No upload · No account · No watermark</div>
       <div class="page-count" id="pageCount"></div>
+      <div class="long-doc-note" id="longDocNote" style="display:none;"></div>
 
       <div class="workspace-controls">
-        <button id="extractBtn" style="display:none;">Extract Text</button>
+        <button id="ocrBtn" style="display:none;">Run OCR</button>
         <div class="progress" id="progressMsg"></div>
       </div>
 
-      <div class="text-output" id="textOutput">
-        <div class="result-stat" id="outputMeta"></div>
-        <div class="stage-panel">
-          <span class="stage-label">Extracted Text</span>
-          <textarea id="textArea" readonly></textarea>
-        </div>
-        <div class="warn-note" id="warnNote" style="display:none;"></div>
-        <div class="output-actions">
-          <button class="secondary" id="copyBtn">📋 Copy Text</button>
-          <button id="downloadBtn">⬇️ Download .txt</button>
-        </div>
-      </div>
+      <div class="warn-note" id="warnNote" style="display:none;"></div>
+      <div class="result" id="result"></div>
     </div>
   </div>
 
   <div class="seo-content">
     <h2>What does this tool do?</h2>
-    <p>This tool reads every page of a PDF and pulls out the underlying selectable text — the same text you could highlight and copy in a PDF viewer — and lays it out as plain text you can copy or save as a .txt file. Page breaks are marked so you can still tell where one page ends and the next begins.</p>
+    <p>This tool reads a scanned PDF page by page, recognizes the text on each page using OCR (optical character recognition), and rebuilds the PDF with the recognized text placed invisibly on top of the original page image. The page looks exactly like your original scan, but a PDF viewer can now find, select, and copy its text — something a plain scanned image can never do on its own. As a byproduct of the same OCR pass, you can also download the recognized text as a plain .txt file.</p>
 
     <h2>When should you use this tool?</h2>
     <ul>
-      <li>You need to paste a PDF's content into an email, document, or spreadsheet</li>
-      <li>You want to search or process a PDF's text with a tool that only accepts plain text</li>
-      <li>You're archiving a document's text separately from its layout</li>
-      <li>You need a quick way to check how much text a PDF actually contains</li>
+      <li>You have a scanned document and need to search it for a specific word or phrase</li>
+      <li>You want to select and copy a passage from a scan instead of retyping it</li>
+      <li>Orisod's <a href="/extract-pdf-text/" style="color:var(--accent);">Extract PDF Text</a> tool told you "no selectable text was found" — that's exactly the case this tool is for</li>
+      <li>You want the OCR'd text as a plain .txt file, not just embedded in the PDF</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
-      <div class="q">Why is the output empty or very short?</div>
-      <div>If a PDF is a scanned image without a real text layer, there's no selectable text to extract — the pages are just pictures. This tool can't OCR scanned documents.</div>
+      <div class="q">Will the PDF look any different afterward?</div>
+      <div>No. The recognized text is added invisibly, on top of the exact same page image. Visually, the output PDF looks identical to what you uploaded.</div>
     </div>
     <div class="faq-item">
-      <div class="q">Will the extracted text keep the original formatting?</div>
-      <div>No, formatting like fonts, columns, and tables is not preserved — this is a plain-text extraction, not a layout-preserving conversion.</div>
+      <div class="q">How accurate is the OCR?</div>
+      <div>It depends heavily on scan quality. Clean, high-resolution, well-lit scans of printed text recognize very well; blurry photos, low resolution, unusual fonts, or handwriting will have more errors. Always proofread anything that matters.</div>
     </div>
     <div class="faq-item">
-      <div class="q">Can I extract text from just one page?</div>
-      <div>The tool extracts all pages at once, but the output includes page markers so you can easily copy just the section you need.</div>
+      <div class="q">Does this work with a large, many-page document?</div>
+      <div>Yes, there's no page limit, but OCR runs one page at a time and can take a while on longer documents — expect roughly half a second to a few seconds per page depending on your device. Keep the tab open while it runs.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my PDF uploaded to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No, the entire process — rendering, OCR, and rebuilding the PDF — happens locally in your browser using JavaScript. Your file never leaves your device. The one exception is the first time you use this tool, when your browser downloads the OCR language data (a public, generic language model, not your file) and caches it for next time.</div>
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/extract-text-from-pdf/" style="color:var(--accent);text-decoration:none;">How to Extract Text From a PDF (Copy or Save as .txt)</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/ocr-scanned-pdf/" style="color:var(--accent);text-decoration:none;">How to Make a Scanned PDF Searchable With OCR</a></p>
 
   <h2>Related tools</h2>
   <div class="related-grid">
-  <a class="related-card" href="/pdf-to-jpg/">
-    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2h6l4 4v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M10 2v4h4"/><path d="M13.5 10.5l2.5 2.5-2.5 2.5"/><path d="M19 15.5l3.5 6.5h-7z" fill="currentColor" stroke="none"/></svg></div>
+  <a class="related-card" href="/extract-pdf-text/">
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M8 11h6M8 14h7M8 17h4"/><path d="M20 14h-3m3 0l-2-2m2 2l-2 2"/></svg></div>
     <div class="body">
-      <div class="title">PDF to JPG</div>
-      <div class="desc">Extract PDF pages as JPG images.</div>
-    </div>
-    <div class="arrow">→</div>
-  </a>
-  <a class="related-card" href="/ocr-pdf/">
-    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l1.5 5.5L19 9l-5.5 1.5L12 16l-1.5-5.5L5 9l5.5-1.5z"/></svg></div>
-    <div class="body">
-      <div class="title">OCR PDF</div>
-      <div class="desc">Make a scanned PDF searchable.</div>
+      <div class="title">Extract PDF Text</div>
+      <div class="desc">Copy or download a PDF's text as .txt.</div>
     </div>
     <div class="arrow">→</div>
   </a>
@@ -261,6 +265,14 @@ h2{margin-top:50px;font-size:22px;}
     <div class="body">
       <div class="title">PDF to Word</div>
       <div class="desc">Convert a PDF's text into an editable .docx.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+  <a class="related-card" href="/compress-pdf/">
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M9 13l3 2 3-2M9 17l3-2 3 2"/></svg></div>
+    <div class="body">
+      <div class="title">Compress PDF</div>
+      <div class="desc">Shrink scanned or image-heavy PDFs.</div>
     </div>
     <div class="arrow">→</div>
   </a>
@@ -315,22 +327,22 @@ h2{margin-top:50px;font-size:22px;}
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
+const OCR_LANG = 'eng';
+const LONG_DOC_THRESHOLD = 20;
+const RENDER_SCALE = 2;
+
 const fileInput = document.getElementById('fileInput');
 const dropzone = document.getElementById('dropzone');
 const dropzoneText = document.getElementById('dropzoneText');
 const errorMsg = document.getElementById('errorMsg');
 const progressMsg = document.getElementById('progressMsg');
 const pageCount = document.getElementById('pageCount');
-const extractBtn = document.getElementById('extractBtn');
-const textOutput = document.getElementById('textOutput');
-const textArea = document.getElementById('textArea');
-const outputMeta = document.getElementById('outputMeta');
+const longDocNote = document.getElementById('longDocNote');
+const ocrBtn = document.getElementById('ocrBtn');
 const warnNote = document.getElementById('warnNote');
-const copyBtn = document.getElementById('copyBtn');
-const downloadBtn = document.getElementById('downloadBtn');
+const resultEl = document.getElementById('result');
 
 let selectedFile = null;
-let extractedText = '';
 
 fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
 dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
@@ -345,9 +357,10 @@ async function handleFile(file) {
   errorMsg.textContent = '';
   progressMsg.textContent = '';
   pageCount.textContent = '';
-  extractBtn.style.display = 'none';
-  textOutput.style.display = 'none';
-  extractedText = '';
+  longDocNote.style.display = 'none';
+  ocrBtn.style.display = 'none';
+  warnNote.style.display = 'none';
+  resultEl.innerHTML = '';
 
   if (!file || !/\.pdf$/i.test(file.name)) {
     errorMsg.textContent = 'Please select a valid PDF file.';
@@ -361,72 +374,143 @@ async function handleFile(file) {
 
     pageCount.textContent = `Loaded: ${pdf.numPages} page${pdf.numPages === 1 ? '' : 's'}`;
     dropzoneText.textContent = `✅ ${file.name} loaded`;
-    extractBtn.style.display = 'inline-block';
+    if (pdf.numPages > LONG_DOC_THRESHOLD) {
+      longDocNote.textContent = `This file has ${pdf.numPages} pages — OCR runs one page at a time and may take a few minutes. Keep this tab open while it runs.`;
+      longDocNote.style.display = 'block';
+    }
+    ocrBtn.style.display = 'inline-block';
   } catch (err) {
     errorMsg.textContent = 'Could not read this PDF. It may be corrupted or password-protected.';
   }
 }
 
-extractBtn.addEventListener('click', async () => {
+ocrBtn.addEventListener('click', async () => {
   if (!selectedFile) return;
   errorMsg.textContent = '';
   warnNote.style.display = 'none';
-  extractBtn.disabled = true;
+  resultEl.innerHTML = '';
+  ocrBtn.disabled = true;
+  progressMsg.textContent = 'Loading OCR engine...';
 
   try {
     const arrayBuffer = await selectedFile.arrayBuffer();
     const pdf = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
+    const worker = await Tesseract.createWorker(OCR_LANG);
+    const outDoc = await PDFLib.PDFDocument.create();
+    const font = await outDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+
     const pageTexts = [];
-    let plainCharCount = 0;
+    let totalConfidence = 0;
+    let confidenceSamples = 0;
 
     for (let i = 1; i <= pdf.numPages; i++) {
-      progressMsg.textContent = `Extracting page ${i} of ${pdf.numPages}...`;
+      progressMsg.textContent = `Recognizing page ${i} of ${pdf.numPages}...`;
+
       const page = await pdf.getPage(i);
-      const textContent = await page.getTextContent();
-      const pageText = textContent.items.map((item) => item.str).join(' ').trim();
-      plainCharCount += pageText.length;
-      pageTexts.push(`----- Page ${i} -----\n\n${pageText}`);
+      const viewport = page.getViewport({ scale: RENDER_SCALE });
+      const canvas = document.createElement('canvas');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      const ctx = canvas.getContext('2d');
+      await page.render({ canvasContext: ctx, viewport }).promise;
+
+      const { data } = await worker.recognize(canvas, {}, { blocks: true });
+      if (typeof data.confidence === 'number') {
+        totalConfidence += data.confidence;
+        confidenceSamples++;
+      }
+
+      const words = [];
+      (data.blocks || []).forEach((block) => {
+        (block.paragraphs || []).forEach((para) => {
+          (para.lines || []).forEach((line) => {
+            (line.words || []).forEach((word) => words.push(word));
+          });
+        });
+      });
+
+      const jpegDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+      const jpegBytes = Uint8Array.from(atob(jpegDataUrl.split(',')[1]), (c) => c.charCodeAt(0));
+      const jpegImage = await outDoc.embedJpg(jpegBytes);
+
+      const pageWidthPt = canvas.width / RENDER_SCALE;
+      const pageHeightPt = canvas.height / RENDER_SCALE;
+      const pdfPage = outDoc.addPage([pageWidthPt, pageHeightPt]);
+      pdfPage.drawImage(jpegImage, { x: 0, y: 0, width: pageWidthPt, height: pageHeightPt });
+
+      words.forEach((word) => {
+        if (!word.text || !word.text.trim()) return;
+        const { x0, y0, x1, y1 } = word.bbox;
+        const hPt = (y1 - y0) / RENDER_SCALE;
+        const xPt = x0 / RENDER_SCALE;
+        const yPt = pageHeightPt - (y1 / RENDER_SCALE);
+        const fontSize = Math.max(4, hPt * 0.85);
+        try {
+          pdfPage.drawText(word.text, { x: xPt, y: yPt, size: fontSize, font, opacity: 0 });
+        } catch (e) {
+          // a character this font can't encode; skip that word from the invisible layer
+        }
+      });
+
+      pageTexts.push(`----- Page ${i} -----\n\n${(data.text || '').trim()}`);
     }
 
-    extractedText = pageTexts.join('\n\n');
-    textArea.value = extractedText;
-    outputMeta.textContent = `${pdf.numPages} page${pdf.numPages === 1 ? '' : 's'} · ${plainCharCount.toLocaleString()} characters extracted`;
+    await worker.terminate();
 
-    if (plainCharCount === 0) {
-      warnNote.innerHTML = '⚠️ No selectable text was found. This PDF may be a scanned image without a text layer — try <a href="/ocr-pdf/" style="color:inherit;text-decoration:underline;">OCR PDF</a> to make it searchable first.';
+    const outBytes = await outDoc.save();
+    const outBlob = new Blob([outBytes], { type: 'application/pdf' });
+    const outName = `${selectedFile.name.replace(/\.pdf$/i, '')}-ocr.pdf`;
+    const pdfUrl = URL.createObjectURL(outBlob);
+
+    const fullText = pageTexts.join('\n\n');
+    const txtBlob = new Blob([fullText], { type: 'text/plain' });
+    const txtUrl = URL.createObjectURL(txtBlob);
+    const txtName = `${selectedFile.name.replace(/\.pdf$/i, '')}-ocr.txt`;
+
+    const avgConfidence = confidenceSamples > 0 ? Math.round(totalConfidence / confidenceSamples) : null;
+
+    const card = document.createElement('div');
+    card.className = 'result-card';
+    card.innerHTML = `
+      <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l1.5 5.5L19 9l-5.5 1.5L12 16l-1.5-5.5L5 9l5.5-1.5z"/></svg></div>
+      <div class="result-body">
+        <div class="result-filename">${outName}</div>
+        <div class="result-stat">${pdf.numPages} page${pdf.numPages === 1 ? '' : 's'} OCR'd${avgConfidence !== null ? ` · ~${avgConfidence}% average confidence` : ''}</div>
+      </div>
+    `;
+    resultEl.appendChild(card);
+
+    const actions = document.createElement('div');
+    actions.className = 'output-actions';
+
+    const pdfLink = document.createElement('a');
+    pdfLink.href = pdfUrl;
+    pdfLink.download = outName;
+    pdfLink.className = 'back';
+    pdfLink.textContent = '⬇️ Download Searchable PDF';
+    actions.appendChild(pdfLink);
+
+    const txtLink = document.createElement('a');
+    txtLink.href = txtUrl;
+    txtLink.download = txtName;
+    txtLink.className = 'back secondary';
+    txtLink.textContent = '⬇️ Download Extracted Text (.txt)';
+    actions.appendChild(txtLink);
+
+    resultEl.appendChild(actions);
+
+    if (avgConfidence !== null && avgConfidence < 70) {
+      warnNote.textContent = '⚠️ Recognition confidence was low for this document — expect more OCR errors than usual. This can happen with blurry scans, unusual fonts, or handwriting.';
       warnNote.style.display = 'block';
     }
 
-    textOutput.style.display = 'block';
+    progressMsg.textContent = 'Done — ready to download.';
+  } catch (err) {
+    errorMsg.textContent = err.message || 'Could not run OCR on this PDF.';
     progressMsg.textContent = '';
-  } catch (err) {
-    errorMsg.textContent = err.message || 'Could not extract text from this PDF.';
   }
 
-  extractBtn.disabled = false;
-});
-
-copyBtn.addEventListener('click', async () => {
-  try {
-    await navigator.clipboard.writeText(extractedText);
-    copyBtn.textContent = '✅ Copied!';
-    setTimeout(() => { copyBtn.textContent = '📋 Copy Text'; }, 1500);
-  } catch (err) {
-    errorMsg.textContent = 'Could not copy to clipboard. Select the text manually instead.';
-  }
-});
-
-downloadBtn.addEventListener('click', () => {
-  const blob = new Blob([extractedText], { type: 'text/plain' });
-  const url = URL.createObjectURL(blob);
-  const baseName = selectedFile.name.replace(/\.pdf$/i, '');
-
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `${baseName}.txt`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  ocrBtn.disabled = false;
 });
 </script>
 </body>
