@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF Editor – Free Online Annotation Tool | Orisod</title>
+<meta name="description" content="Add text boxes, highlight, underline, or strike through text directly on a PDF, then download the result. Free, no upload, works in your browser.">
+<link rel="canonical" href="https://orisod.com/pdf-editor/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/pdf-editor/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/pdf-editor/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/pdf-editor/">
+<link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#2563eb">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+  --icon-alpha:.30;
+  --grid-alpha:.05;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+  --icon-alpha:.24;
+  --grid-alpha:.10;
+}
+*{box-sizing:border-box;}
+.tool-hero{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:4px;}
+.tool-hero .icon-box{width:52px;height:52px;}
+.tool-hero .icon-box svg{width:28px;height:28px;}
+.tool-hero h1{margin:0;font-size:32px;}
+@media (max-width:600px){.tool-hero{flex-direction:column;gap:8px;}}
+.tool-sub{font-size:16px;max-width:640px;margin:0 auto 20px auto;}
+.workspace{max-width:1040px;margin:0 auto;}
+.workspace-controls{margin-top:20px;text-align:center;}
+.result-card{display:flex;align-items:center;gap:16px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-top:20px;text-align:left;}
+.result-card .icon-box{width:46px;height:46px;}
+.result-card .icon-box svg{width:24px;height:24px;}
+.result-card .result-body{flex:1 1 auto;min-width:0;}
+.result-card .result-filename{font-size:14px;font-weight:bold;margin-bottom:4px;word-break:break-all;}
+.result-stat{font-size:15px;opacity:0.9;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);display:inline-flex;align-items:center;gap:8px;}
+.site-nav-logo img{height:26px;width:auto;display:block;}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:5px 14px;margin:-5px 0;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:40px 20px 60px 20px;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background-color:var(--bg);background-image:linear-gradient(rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px),linear-gradient(90deg, rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px);background-size:42px 42px;color:var(--text);text-align:center;transition:background-color 0.2s, color 0.2s;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:44px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:30px 20px;margin-top:30px;}
+.dropzone{border:2px dashed var(--dropzone-border);border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
+.dropzone:hover, .dropzone.dragover{border-color:var(--accent);}
+input[type="file"]{display:none;}
+.page-count{margin-top:10px;font-size:13px;opacity:0.7;}
+.disclaimer{background:rgba(245,158,11,.12);border:1px solid #f59e0b;border-radius:8px;padding:12px 16px;margin-top:16px;font-size:13px;line-height:1.5;text-align:left;color:#fbbf24;}
+:root[data-theme="light"] .disclaimer{background:rgba(245,158,11,.12);border-color:#f59e0b;color:#92400e;}
+.editor-workspace{margin-top:20px;display:none;text-align:left;}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;position:sticky;top:0;background:var(--card-bg);padding:8px 0;z-index:5;}
+.mode-btn{font-family:inherit;font-size:13px;padding:9px 14px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer;margin:0;display:inline-flex;align-items:center;gap:6px;}
+.mode-btn:hover:not(:disabled){border-color:var(--accent);}
+.mode-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.mode-btn:disabled{opacity:0.35;cursor:not-allowed;}
+.editor-page-wrap{position:relative;margin:0 auto 24px auto;line-height:0;}
+.editor-page-wrap canvas{display:block;width:100%;height:auto;border-radius:6px;border:1px solid var(--border);}
+.page-label{font-size:12px;opacity:0.6;margin:0 0 6px 0;text-align:center;}
+.pdf-text-layer{position:absolute;left:0;top:0;overflow:hidden;line-height:1;}
+.pdf-text-layer span{position:absolute;white-space:pre;color:transparent;transform-origin:0 0;cursor:text;}
+.pdf-text-layer.mode-textbox{pointer-events:none;user-select:none;}
+.pdf-text-layer ::selection{background:rgba(37,99,235,.35);}
+.overlay-layer{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;}
+.hl-mark{position:absolute;background:rgba(255,224,0,.55);border-radius:1px;}
+.ul-mark, .st-mark{position:absolute;background:#dc2626;}
+.textbox-mark{position:absolute;color:#0f172a;background:rgba(255,255,255,.85);border:1px dashed var(--accent);padding:1px 3px;white-space:pre-wrap;font-family:Arial, Helvetica, sans-serif;line-height:1.15;}
+.textbox-input{position:absolute;z-index:10;pointer-events:auto;border:1.5px solid var(--accent);background:#ffffff;color:#0f172a;font-family:Arial, Helvetica, sans-serif;padding:2px 4px;resize:none;min-width:120px;min-height:26px;}
+.annotations-panel{margin-top:20px;border-top:1px solid var(--border);padding-top:16px;}
+.annotations-panel h3{font-size:14px;margin:0 0 10px 0;opacity:0.85;}
+.annotation-item{display:flex;align-items:center;gap:10px;font-size:13px;padding:7px 10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;margin-bottom:6px;}
+.annotation-item .tag{flex:none;font-size:10px;font-weight:bold;text-transform:uppercase;padding:2px 6px;border-radius:4px;background:var(--card-bg);color:var(--muted-text);}
+.annotation-item .desc{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;opacity:0.9;}
+.annotation-item button{margin:0;padding:4px 8px;font-size:12px;background:transparent;border:1px solid var(--border);color:var(--muted-text);border-radius:5px;}
+.annotation-item button:hover{border-color:#dc2626;color:#dc2626;}
+.no-annotations{font-size:13px;opacity:0.6;}
+.clear-all-btn{margin-top:10px;padding:8px 14px;font-size:13px;background:transparent;border:1px solid var(--border);color:var(--muted-text);}
+.clear-all-btn:hover{border-color:#dc2626;color:#dc2626;}
+button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
+button:disabled{opacity:0.4;cursor:not-allowed;}
+button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.note{margin-top:12px;font-size:14px;opacity:0.6;}
+.site-footer{
+  margin-top:40px;
+  padding:40px 24px 30px 24px;
+  border-top:1px solid var(--border);
+  text-align:left;
+}
+.footer-inner{
+  max-width:1000px;
+  margin:0 auto;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  gap:40px;
+}
+.footer-brand{max-width:280px;}
+.footer-brand-logo{font-size:16px;font-weight:bold;letter-spacing:0.5px;margin-bottom:10px;}
+.footer-brand-desc{font-size:13px;color:var(--muted-text);line-height:1.5;margin-bottom:14px;}
+.footer-copy{font-size:12px;color:var(--muted-text);opacity:0.7;}
+.footer-col h3{font-size:13px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-text);margin:0 0 14px 0;}
+.footer-col a{display:block;font-size:14px;color:var(--text);text-decoration:none;opacity:0.8;margin-bottom:10px;}
+.footer-col a:hover{opacity:1;color:var(--accent);}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+.progress{font-size:14px;opacity:0.7;margin-top:10px;}
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related-grid{display:grid;grid-template-columns:repeat(2, 1fr);gap:12px;}
+@media (max-width:600px){.related-grid{grid-template-columns:1fr;}}
+.related-card{display:flex;align-items:center;gap:14px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.icon-box{flex:none;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;border:2px solid transparent;}
+.icon-box.cat-image{background:rgba(37,99,235,var(--icon-alpha));border-color:#2563eb;color:#2563eb;}
+.icon-box.cat-pdf{background:rgba(245,158,11,var(--icon-alpha));border-color:#f59e0b;color:#f59e0b;}
+.icon-box.cat-utility{background:rgba(139,92,246,var(--icon-alpha));border-color:#8b5cf6;color:#8b5cf6;}
+.icon-box svg{width:22px;height:22px;display:block;}
+.related-card .body{flex:1 1 auto;min-width:0;}
+.related-card .title{font-size:14px;font-weight:bold;margin-bottom:2px;}
+.related-card .desc{font-size:12px;color:var(--muted-text);line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.related-card .arrow{flex:none;font-size:16px;color:var(--muted-text);transition:0.2s;}
+.related-card:hover .arrow{color:var(--accent);transform:translateX(2px);}
+.trust-strip{font-size:12px;color:var(--muted-text);margin-top:12px;line-height:1.5;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/tools/">All Tools</a>
+    <a href="/tools/#image">Image Tools</a>
+    <span class="active-category">PDF Tools</span>
+    <a href="/tools/#utility">Utility Tools</a>
+    <a href="/blog/">Blog</a>
+  </nav>
+  <div class="site-nav-right">
+    <span class="lang-flag active">EN</span>
+    <a class="lang-flag" href="/es/pdf-editor/">ES</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+  <div class="tool-hero">
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M9 16l5-5 2 2-5 5H9v-2z"/><path d="M8 20h4"/></svg></div>
+    <h1>PDF Editor</h1>
+  </div>
+  <p class="tool-sub">Add text boxes, highlight, underline, or strike through text directly on your PDF, then download the result.</p>
+
+  <div class="workspace">
+    <div class="box">
+      <label class="dropzone" id="dropzone" for="fileInput">
+        <div id="dropzoneText">📁 Click to select a PDF or drag and drop it here</div>
+      </label>
+      <input type="file" id="fileInput" accept=".pdf">
+      <div class="error" id="errorMsg"></div>
+      <div class="trust-strip">🔒 Processed on your device · No upload · No account</div>
+      <div class="page-count" id="pageCount"></div>
+      <div class="disclaimer" id="disclaimer" style="display:none;"></div>
+
+      <div class="editor-workspace" id="editorWorkspace">
+        <div class="toolbar" id="toolbar">
+          <button class="mode-btn" data-mode="text" type="button">✏️ Text Box</button>
+          <button class="mode-btn" data-mode="highlight" type="button">🖍️ Highlight</button>
+          <button class="mode-btn" data-mode="underline" type="button">📏 Underline</button>
+          <button class="mode-btn" data-mode="strikethrough" type="button">〰️ Strikethrough</button>
+        </div>
+        <div class="note" id="modeHint">Click anywhere on the page to add a text box.</div>
+        <div id="pagesContainer"></div>
+
+        <div class="annotations-panel">
+          <h3>Pending changes (<span id="annCount">0</span>)</h3>
+          <div id="annotationsList"><div class="no-annotations">Nothing added yet.</div></div>
+          <button class="clear-all-btn" id="clearAllBtn" style="display:none;">Clear all</button>
+        </div>
+      </div>
+
+      <div class="workspace-controls">
+        <button id="downloadBtn" style="display:none;">Save &amp; Download</button>
+      </div>
+
+      <div class="progress" id="progressMsg"></div>
+      <div class="result" id="result"></div>
+    </div>
+  </div>
+
+  <div class="seo-content">
+    <h2>What does this tool do?</h2>
+    <p>This tool lets you mark up a PDF the way you would a paper printout: click anywhere to drop in a text box, or drag across existing text to highlight, underline, or strike it through. Everything you add is a preview until you click "Save &amp; Download," which draws it permanently into the page as real content.</p>
+
+    <h2>When should you use this tool?</h2>
+    <ul>
+      <li>You're reviewing a document and want to mark up sections without printing it</li>
+      <li>You need to add a note, correction, or comment directly onto a PDF page</li>
+      <li>You want to highlight the important parts of a contract or report before sharing it</li>
+    </ul>
+
+    <h2>Why Orisod</h2>
+    <p>Everything happens locally in your browser — your PDF and everything you add to it never leave your device.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <div class="q">Can I highlight text on a scanned PDF?</div>
+      <div>Only if it has a real, selectable text layer. A plain scan has none to select — if that's the case, this tool tells you so and only offers text boxes, which work on any PDF regardless of whether its text is selectable. Run it through <a href="/ocr-pdf/" style="color:var(--accent);">OCR PDF</a> first to add a searchable, selectable text layer to a scan.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Can I undo a mistake?</div>
+      <div>Yes — everything you add appears in the "Pending changes" list with its own delete button, or use "Clear all" to start over. Nothing is written into the actual PDF until you click "Save &amp; Download."</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Can I change the highlight color?</div>
+      <div>Not in this version — highlights use a standard yellow, and underline/strikethrough use red, matching common markup conventions.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Is my PDF uploaded to a server?</div>
+      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+    </div>
+  </div>
+
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/edit-pdf-online/" style="color:var(--accent);text-decoration:none;">How to Edit a PDF Online (Text Boxes, Highlights, and Markup)</a></p>
+
+  <h2>Related tools</h2>
+  <div class="related-grid">
+  <a class="related-card" href="/fill-pdf-forms/">
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M8 12h1M8 16h1M11 12h6M11 16h5"/></svg></div>
+    <div class="body">
+      <div class="title">Fill PDF Forms</div>
+      <div class="desc">Type into real fillable PDF form fields.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+  <a class="related-card" href="/sign-pdf/">
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18c3 1 4-2 6-2s2 3 5 1 4-4 7-2"/></svg></div>
+    <div class="body">
+      <div class="title">Sign PDF</div>
+      <div class="desc">Draw and place a signature.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+  <a class="related-card" href="/extract-pdf-text/">
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M8 11h6M8 14h7M8 17h4"/><path d="M20 14h-3m3 0l-2-2m2 2l-2 2"/></svg></div>
+    <div class="body">
+      <div class="title">Extract PDF Text</div>
+      <div class="desc">Copy or download a PDF's text as .txt.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+</div>
+
+  <footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-brand-logo">ORISOD</div>
+      <div class="footer-brand-desc">Free, browser-based image and PDF tools. 100% local processing — your files are never uploaded anywhere.</div>
+      <div class="footer-copy">© Orisod Labs</div>
+    </div>
+    <div class="footer-col">
+      <h3>Tools</h3>
+      <a href="/tools/#image">Image Tools</a>
+      <a href="/tools/#pdf">PDF Tools</a>
+      <a href="/tools/#utility">Utility Tools</a>
+    </div>
+    <div class="footer-col">
+      <h3>Company</h3>
+      <a href="/about/">About</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/blog/">Blog</a>
+    </div>
+  </div>
+</footer>
+</div>
+
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+const fileInput = document.getElementById('fileInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const errorMsg = document.getElementById('errorMsg');
+const progressMsg = document.getElementById('progressMsg');
+const pageCount = document.getElementById('pageCount');
+const disclaimer = document.getElementById('disclaimer');
+const editorWorkspace = document.getElementById('editorWorkspace');
+const pagesContainer = document.getElementById('pagesContainer');
+const toolbar = document.getElementById('toolbar');
+const modeHint = document.getElementById('modeHint');
+const annotationsList = document.getElementById('annotationsList');
+const annCountEl = document.getElementById('annCount');
+const clearAllBtn = document.getElementById('clearAllBtn');
+const downloadBtn = document.getElementById('downloadBtn');
+const resultEl = document.getElementById('result');
+
+let selectedFile = null;
+let pdfJsDoc = null;
+let numPages = 0;
+let currentMode = 'text';
+let hasAnySelectableText = false;
+
+// pageMeta[pageIndex] = { scale, nativeWidth, nativeHeight, wrapEl, overlayEl, textLayerEl }
+let pageMeta = [];
+// annotations = [{ id, type, pageIndex, rects:[{x,y,width,height}], text, fontSizePx, x, y, els:[...] }]
+let annotations = [];
+let nextAnnId = 1;
+
+const MODE_HINTS = {
+  text: 'Click anywhere on the page to add a text box.',
+  highlight: 'Drag across text to highlight it.',
+  underline: 'Drag across text to underline it.',
+  strikethrough: 'Drag across text to strike it through.',
+};
+
+fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  handleFile(e.dataTransfer.files[0]);
+});
+
+toolbar.addEventListener('click', (e) => {
+  const btn = e.target.closest('.mode-btn');
+  if (!btn || btn.disabled) return;
+  setMode(btn.dataset.mode);
+});
+
+function setMode(mode) {
+  currentMode = mode;
+  toolbar.querySelectorAll('.mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
+  modeHint.textContent = MODE_HINTS[mode] || '';
+  pageMeta.forEach(pm => {
+    pm.textLayerEl.classList.toggle('mode-textbox', mode === 'text');
+  });
+}
+
+async function handleFile(file) {
+  errorMsg.textContent = '';
+  progressMsg.textContent = '';
+  editorWorkspace.style.display = 'none';
+  pagesContainer.innerHTML = '';
+  disclaimer.style.display = 'none';
+  downloadBtn.style.display = 'none';
+  pageCount.textContent = '';
+  pageMeta = [];
+  annotations = [];
+  updateAnnotationsList();
+
+  if (!file || !/\.pdf$/i.test(file.name)) {
+    errorMsg.textContent = 'Please select a valid PDF file.';
+    return;
+  }
+
+  try {
+    const arrayBuffer = await file.arrayBuffer();
+    pdfJsDoc = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
+    selectedFile = file;
+    numPages = pdfJsDoc.numPages;
+
+    pageCount.textContent = `Loaded: ${numPages} page${numPages === 1 ? '' : 's'}`;
+    dropzoneText.textContent = `✅ ${file.name} loaded`;
+
+    await buildPages();
+
+    if (!hasAnySelectableText) {
+      disclaimer.style.display = 'block';
+      disclaimer.innerHTML = '⚠️ No selectable text was found in this PDF (likely a scan or image-only file), so Highlight, Underline, and Strikethrough are disabled. Text boxes still work. Run it through <a href="/ocr-pdf/" style="color:inherit;text-decoration:underline;">OCR PDF</a> first if you need to mark up existing text.';
+      toolbar.querySelectorAll('.mode-btn[data-mode="highlight"], .mode-btn[data-mode="underline"], .mode-btn[data-mode="strikethrough"]').forEach(b => b.disabled = true);
+    }
+
+    setMode('text');
+    editorWorkspace.style.display = 'block';
+    downloadBtn.style.display = 'inline-block';
+  } catch (err) {
+    errorMsg.textContent = 'Could not read this PDF. It may be corrupted or password-protected.';
+  }
+}
+
+async function buildPages() {
+  hasAnySelectableText = false;
+  for (let i = 1; i <= numPages; i++) {
+    const page = await pdfJsDoc.getPage(i);
+    const nativeViewport = page.getViewport({ scale: 1 });
+    const scale = Math.min(1, 760 / nativeViewport.width);
+    const viewport = page.getViewport({ scale });
+
+    const label = document.createElement('div');
+    label.className = 'page-label';
+    label.textContent = `Page ${i}`;
+    pagesContainer.appendChild(label);
+
+    const wrap = document.createElement('div');
+    wrap.className = 'editor-page-wrap';
+    wrap.style.width = viewport.width + 'px';
+    wrap.style.maxWidth = '100%';
+
+    const canvas = document.createElement('canvas');
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+    await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+    wrap.appendChild(canvas);
+
+    const textLayerEl = document.createElement('div');
+    textLayerEl.className = 'pdf-text-layer';
+    textLayerEl.style.setProperty('--scale-factor', scale);
+    wrap.appendChild(textLayerEl);
+
+    const overlayEl = document.createElement('div');
+    overlayEl.className = 'overlay-layer';
+    wrap.appendChild(overlayEl);
+
+    pagesContainer.appendChild(wrap);
+
+    const textContent = await page.getTextContent();
+    if (textContent.items.some(it => (it.str || '').trim().length > 0)) hasAnySelectableText = true;
+    try {
+      await pdfjsLib.renderTextLayer({ textContentSource: textContent, container: textLayerEl, viewport }).promise;
+    } catch (e) { /* non-fatal: page just won't be selectable */ }
+
+    const pageIndex = i - 1;
+    pageMeta[pageIndex] = {
+      scale, nativeWidth: nativeViewport.width, nativeHeight: nativeViewport.height,
+      wrapEl: wrap, overlayEl, textLayerEl,
+    };
+
+    wrap.addEventListener('mouseup', () => onPageMouseUp(pageIndex));
+    wrap.addEventListener('click', (e) => onPageClick(pageIndex, e));
+  }
+}
+
+function onPageMouseUp(pageIndex) {
+  if (currentMode === 'text') return;
+  const sel = window.getSelection();
+  if (!sel || sel.isCollapsed) return;
+  const range = sel.getRangeAt(0);
+  if (!pageMeta[pageIndex].textLayerEl.contains(range.commonAncestorContainer) &&
+      !pageMeta[pageIndex].textLayerEl.contains(range.commonAncestorContainer.parentElement)) return;
+
+  const wrapRect = pageMeta[pageIndex].wrapEl.getBoundingClientRect();
+  const rawRects = Array.from(range.getClientRects());
+  const rects = rawRects
+    .filter(r => r.width > 1 && r.height > 1)
+    .map(r => ({ x: r.x - wrapRect.x, y: r.y - wrapRect.y, width: r.width, height: r.height }));
+
+  sel.removeAllRanges();
+  if (rects.length === 0) return;
+
+  // range.toString() concatenates across line breaks with no space, so a
+  // multi-line selection reads as one run-together word; only trust the
+  // literal text for a single-line selection and describe the rest generically.
+  const selectedText = rects.length > 1
+    ? `selected text (${rects.length} lines)`
+    : range.toString().replace(/\s+/g, ' ').trim();
+  addAnnotation({ type: currentMode, pageIndex, rects, label: selectedText });
+}
+
+function onPageClick(pageIndex, e) {
+  if (currentMode !== 'text') return;
+  if (e.target.closest('.textbox-input')) return;
+  const wrap = pageMeta[pageIndex].wrapEl;
+  const wrapRect = wrap.getBoundingClientRect();
+  const x = e.clientX - wrapRect.x;
+  const y = e.clientY - wrapRect.y;
+
+  const input = document.createElement('textarea');
+  input.className = 'textbox-input';
+  input.style.left = x + 'px';
+  input.style.top = y + 'px';
+  wrap.appendChild(input);
+  input.focus();
+
+  function finalize() {
+    const text = input.value;
+    input.remove();
+    if (!text.trim()) return;
+    addAnnotation({ type: 'text', pageIndex, x, y, text, fontSizePx: 15 });
+  }
+  input.addEventListener('blur', finalize);
+  input.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' && !ev.shiftKey) { ev.preventDefault(); input.blur(); } });
+}
+
+function addAnnotation(data) {
+  const id = nextAnnId++;
+  const overlayEl = pageMeta[data.pageIndex].overlayEl;
+  const els = [];
+
+  if (data.type === 'highlight') {
+    data.rects.forEach(r => {
+      const div = document.createElement('div');
+      div.className = 'hl-mark';
+      div.style.left = r.x + 'px'; div.style.top = r.y + 'px';
+      div.style.width = r.width + 'px'; div.style.height = r.height + 'px';
+      overlayEl.appendChild(div);
+      els.push(div);
+    });
+  } else if (data.type === 'underline' || data.type === 'strikethrough') {
+    const cls = data.type === 'underline' ? 'ul-mark' : 'st-mark';
+    const yFrac = data.type === 'underline' ? 0.9 : 0.5;
+    data.rects.forEach(r => {
+      const div = document.createElement('div');
+      div.className = cls;
+      div.style.left = r.x + 'px'; div.style.top = (r.y + r.height * yFrac) + 'px';
+      div.style.width = r.width + 'px'; div.style.height = Math.max(1.5, r.height * 0.06) + 'px';
+      overlayEl.appendChild(div);
+      els.push(div);
+    });
+  } else if (data.type === 'text') {
+    const div = document.createElement('div');
+    div.className = 'textbox-mark';
+    div.style.left = data.x + 'px'; div.style.top = data.y + 'px';
+    div.style.fontSize = data.fontSizePx + 'px';
+    div.textContent = data.text;
+    overlayEl.appendChild(div);
+    els.push(div);
+  }
+
+  annotations.push({ id, els, ...data });
+  updateAnnotationsList();
+}
+
+function removeAnnotation(id) {
+  const idx = annotations.findIndex(a => a.id === id);
+  if (idx === -1) return;
+  annotations[idx].els.forEach(el => el.remove());
+  annotations.splice(idx, 1);
+  updateAnnotationsList();
+}
+
+const TAG_LABELS = { text: 'Text', highlight: 'Highlight', underline: 'Underline', strikethrough: 'Strike' };
+
+function updateAnnotationsList() {
+  annCountEl.textContent = annotations.length;
+  clearAllBtn.style.display = annotations.length ? 'inline-block' : 'none';
+  if (annotations.length === 0) {
+    annotationsList.innerHTML = '<div class="no-annotations">Nothing added yet.</div>';
+    return;
+  }
+  annotationsList.innerHTML = '';
+  annotations.forEach(a => {
+    const row = document.createElement('div');
+    row.className = 'annotation-item';
+    const desc = a.type === 'text' ? a.text : (a.label || '(selected text)');
+    row.innerHTML = `<span class="tag">${TAG_LABELS[a.type]}</span><span class="desc">Page ${a.pageIndex + 1}: ${escapeHtml(desc)}</span>`;
+    const delBtn = document.createElement('button');
+    delBtn.type = 'button';
+    delBtn.textContent = 'Delete';
+    delBtn.addEventListener('click', () => removeAnnotation(a.id));
+    row.appendChild(delBtn);
+    annotationsList.appendChild(row);
+  });
+}
+
+function escapeHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+clearAllBtn.addEventListener('click', () => {
+  annotations.forEach(a => a.els.forEach(el => el.remove()));
+  annotations = [];
+  updateAnnotationsList();
+});
+
+downloadBtn.addEventListener('click', async () => {
+  if (!selectedFile) return;
+  errorMsg.textContent = '';
+  progressMsg.textContent = '';
+  resultEl.innerHTML = '';
+  downloadBtn.disabled = true;
+  downloadBtn.textContent = 'Saving...';
+
+  try {
+    const { PDFDocument, rgb, StandardFonts } = PDFLib;
+    const arrayBuffer = await selectedFile.arrayBuffer();
+    const pdfDoc = await PDFDocument.load(arrayBuffer);
+    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const pages = pdfDoc.getPages();
+
+    for (const a of annotations) {
+      const meta = pageMeta[a.pageIndex];
+      const pdfPage = pages[a.pageIndex];
+      const scale = meta.scale;
+      const nativeHeight = meta.nativeHeight;
+
+      if (a.type === 'highlight') {
+        a.rects.forEach(r => {
+          pdfPage.drawRectangle({
+            x: r.x / scale,
+            y: nativeHeight - (r.y + r.height) / scale,
+            width: r.width / scale,
+            height: r.height / scale,
+            color: rgb(1, 0.878, 0), opacity: 0.45,
+          });
+        });
+      } else if (a.type === 'underline' || a.type === 'strikethrough') {
+        const yFrac = a.type === 'underline' ? 0.9 : 0.5;
+        a.rects.forEach(r => {
+          const yPx = r.y + r.height * yFrac;
+          pdfPage.drawLine({
+            start: { x: r.x / scale, y: nativeHeight - yPx / scale },
+            end: { x: (r.x + r.width) / scale, y: nativeHeight - yPx / scale },
+            thickness: Math.max(0.75, (r.height * 0.06) / scale),
+            color: rgb(0.86, 0.15, 0.15),
+          });
+        });
+      } else if (a.type === 'text') {
+        const fontSizePt = a.fontSizePx / scale;
+        let val;
+        try { val = a.text; pdfPage.drawText(val, { x: a.x / scale, y: nativeHeight - a.y / scale - fontSizePt, size: fontSizePt, font, color: rgb(0.06, 0.09, 0.16), lineHeight: fontSizePt * 1.15, maxWidth: (meta.nativeWidth - a.x / scale - 4) }); }
+        catch (drawErr) { /* skip a single bad annotation rather than aborting the whole save */ }
+      }
+    }
+
+    const outBytes = await pdfDoc.save();
+    const blob = new Blob([outBytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const baseName = selectedFile.name.replace(/\.pdf$/i, '');
+    const outName = `${baseName}-edited.pdf`;
+
+    progressMsg.textContent = 'Done — ready to download.';
+
+    const card = document.createElement('div');
+    card.className = 'result-card';
+    card.innerHTML = `
+      <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M9 16l5-5 2 2-5 5H9v-2z"/><path d="M8 20h4"/></svg></div>
+      <div class="result-body">
+        <div class="result-filename">${outName}</div>
+        <div class="result-stat">${annotations.length} change${annotations.length === 1 ? '' : 's'} applied · ${(blob.size / 1024).toFixed(1)} KB</div>
+      </div>
+    `;
+    resultEl.appendChild(card);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = outName;
+    link.className = 'back';
+    link.textContent = 'Download Edited PDF';
+    resultEl.appendChild(link);
+  } catch (err) {
+    errorMsg.textContent = err.message || 'Could not save this PDF.';
+  }
+
+  downloadBtn.disabled = false;
+  downloadBtn.textContent = 'Save & Download';
+});
+</script>
+</body>
+</html>
