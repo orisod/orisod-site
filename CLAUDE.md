@@ -30,6 +30,7 @@ Orisod (orisod.com) is a free, browser-based toolkit for images and PDFs — thi
   - **mammoth** (`mammoth@1.12.1/mammoth.browser.min.js`) — converting .docx content to HTML client-side (used for Word to PDF, piped into the html2canvas/jsPDF rasterize pipeline). Also not on cdnjs; loaded from jsdelivr (`cdn.jsdelivr.net/npm/mammoth@1.12.1/mammoth.browser.min.js`).
   - **SheetJS / xlsx** (`xlsx@0.20.3`) — reading Excel workbooks client-side (used for Excel to PDF). Not on npm/cdnjs/jsdelivr (SheetJS stopped publishing current releases there) — loaded from their own CDN instead (`cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js`), exposing a global `XLSX` object. **Always pin the exact version in the URL** (never a `-latest` alias) so the site never silently picks up an unreviewed new release.
   - **jspdf-autotable** (`jspdf-autotable/3.8.4/jspdf.plugin.autotable.min.js`) — drawing real, selectable-text PDF tables with jsPDF (used for Excel to PDF). On cdnjs; version pinned to 3.8.4 specifically because it's the last major version whose peer dependency (`jspdf@^2.5.1`) matches this site's pinned jsPDF version — a newer autotable major targets jsPDF 3.x and would silently break table rendering against our jsPDF 2.5.1.
+  - **tesseract.js** (`tesseract.js/7.0.0/tesseract.min.js`) — client-side OCR (used for OCR PDF). On cdnjs. At runtime it fetches its own additional resources (the OCR language data — `eng` or `spa` depending on the page — and a core WASM binary) from Tesseract's own default CDN endpoints, cached by the browser after first use; this is separate from, and doesn't change, the "files never uploaded" promise — it's the tool downloading a public language model, not sending the user's PDF anywhere.
   - Three CDN hosts are now in play: cdnjs (default for everything above unless noted), jsdelivr (docx, mammoth — anything not on cdnjs), and cdn.sheetjs.com (xlsx specifically, per SheetJS's own current publishing practice).
 
 ## Visual design system (must stay consistent across every page)
@@ -88,11 +89,11 @@ here as a record so they don't get reintroduced:
 
 **Base pages:** `/` (home), `/tools` (catalog, 3 categories), `/about`, `/privacy`
 
-**48 tools**, organized into 3 categories on `/tools`:
+**49 tools**, organized into 3 categories on `/tools`:
 
 **🖼️ Image Tools (20):** webp-to-jpg, heic-to-jpg, png-to-jpg, png-to-webp, jpg-to-webp, webp-to-png, avif-to-jpg-png, gif-to-jpg-png, bmp-to-jpg-png, svg-to-png, resize-image, crop-image, compress-image, rotate-image, social-media-crop, round-image-corners, add-border-to-image, image-color-filters, watermark-adder, blur-area-tool
 
-**📄 PDF Tools (21):** jpg-to-pdf, image-to-pdf, pdf-to-jpg, pdf-to-word, word-to-pdf, excel-to-pdf, powerpoint-to-pdf, merge-pdf, split-pdf, compress-pdf, rotate-pdf, pdf-page-organizer, add-page-numbers, edit-pdf-metadata, crop-pdf-pages, resize-pdf-pages, delete-pdf-pages, extract-pdf-text, watermark-pdf, sign-pdf, html-to-pdf
+**📄 PDF Tools (22):** jpg-to-pdf, image-to-pdf, pdf-to-jpg, pdf-to-word, word-to-pdf, excel-to-pdf, powerpoint-to-pdf, merge-pdf, split-pdf, compress-pdf, rotate-pdf, pdf-page-organizer, add-page-numbers, edit-pdf-metadata, crop-pdf-pages, resize-pdf-pages, delete-pdf-pages, extract-pdf-text, ocr-pdf, watermark-pdf, sign-pdf, html-to-pdf
 
 **🛠️ Utility Tools (7):** exif-remover, image-metadata-viewer, favicon-generator, qr-code-generator, image-to-base64, color-picker-from-image, image-dimension-checker
 
@@ -100,7 +101,7 @@ here as a record so they don't get reintroduced:
 
 ## Homepage search suggestions (added Phase 9.10)
 
-The homepage search box (`#homeSearch`) shows a live autocomplete-style dropdown as you type, sourced from a hand-written `TOOLS` array inlined directly in `index.html`'s (and `es/index.html`'s) own `<script>` block — **not** fetched from `/tools` at runtime. `/tools` has no JS data array of its own to source from; its 48 tools are plain server-rendered `<a class="card tool-card">` markup, so duplicating the list inline was the simplest option that keeps the homepage self-contained and instant (no network round-trip per keystroke). This is the same manual-sync duplication pattern already used for the "Related tools" cards on every tool page — keep both in sync by hand, same as that convention, and update this array whenever a tool is added/renamed/removed (see the tool-page checklist above).
+The homepage search box (`#homeSearch`) shows a live autocomplete-style dropdown as you type, sourced from a hand-written `TOOLS` array inlined directly in `index.html`'s (and `es/index.html`'s) own `<script>` block — **not** fetched from `/tools` at runtime. `/tools` has no JS data array of its own to source from; its 49 tools are plain server-rendered `<a class="card tool-card">` markup, so duplicating the list inline was the simplest option that keeps the homepage self-contained and instant (no network round-trip per keystroke). This is the same manual-sync duplication pattern already used for the "Related tools" cards on every tool page — keep both in sync by hand, same as that convention, and update this array whenever a tool is added/renamed/removed (see the tool-page checklist above).
 
 Behavior: matches on name+description substring (name-starts-with ranked above name/desc-contains), capped at 6 suggestions, each showing a color-coded category tag reusing the site's existing Image/PDF/Utility → blue/amber/violet mapping. Arrow keys cycle through suggestions with wraparound; Enter navigates to the highlighted suggestion, or falls back to the pre-existing `/tools/?q=...` behavior if nothing is highlighted; Escape/click-outside closes it. Known pre-existing gap, not addressed here: the `⌘K` hint pill in the search box has no mobile-specific hide treatment.
 
