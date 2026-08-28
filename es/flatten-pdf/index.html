@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
 <script>
 (function(){
@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Edit PDF Metadata – Free Online Tool | Orisod</title>
-<meta name="description" content="View and edit a PDF's title, author, subject and keywords, or clear them all, online for free. Works directly in your browser — no files are uploaded.">
-<link rel="canonical" href="https://orisod.com/edit-pdf-metadata/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/edit-pdf-metadata/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/edit-pdf-metadata/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/edit-pdf-metadata/">
+<title>Aplanar PDF – Herramienta Gratuita | Orisod</title>
+<meta name="description" content="Aplana un formulario PDF rellenable en un documento permanente y no editable — los valores de los campos se convierten en contenido normal de la página. Gratis, funciona en tu navegador, nada se sube.">
+<link rel="canonical" href="https://orisod.com/es/flatten-pdf/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/flatten-pdf/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/flatten-pdf/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/flatten-pdf/">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
 <link rel="icon" href="/favicon.ico">
@@ -71,7 +71,6 @@
 .result-card .result-body{flex:1 1 auto;min-width:0;}
 .result-card .result-filename{font-size:14px;font-weight:bold;margin-bottom:4px;word-break:break-all;}
 .result-stat{font-size:15px;opacity:0.9;}
-.result-stat .saved{color:#4ade80;font-weight:bold;}
 .site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
 .site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);display:inline-flex;align-items:center;gap:8px;}
 .site-nav-logo img{height:26px;width:auto;display:block;}
@@ -93,14 +92,6 @@ p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-heigh
 .dropzone{border:2px dashed var(--dropzone-border);border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
 .dropzone:hover, .dropzone.dragover{border-color:var(--accent);}
 input[type="file"]{display:none;}
-.meta-fields{margin-top:20px;text-align:left;}
-.field-row{margin-bottom:14px;}
-.field-row label{display:block;font-size:13px;font-weight:bold;margin-bottom:6px;opacity:0.85;}
-.field-row input[type="text"]{
-  width:100%;padding:10px 12px;border-radius:6px;border:1px solid var(--dropzone-border);background:var(--card-bg);color:var(--text);font-size:14px;
-}
-.clear-link{display:inline-block;margin-top:2px;font-size:13px;color:var(--muted-text);cursor:pointer;text-decoration:underline;}
-.clear-link:hover{color:var(--accent);}
 button, .back{display:inline-block;margin-top:16px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
 button:disabled{opacity:0.4;cursor:not-allowed;}
 button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
@@ -127,6 +118,7 @@ button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
 .footer-col a{display:block;font-size:14px;color:var(--text);text-decoration:none;opacity:0.8;margin-bottom:10px;}
 .footer-col a:hover{opacity:1;color:var(--accent);}
 .error{color:#f87171;font-size:14px;margin-top:10px;}
+.info-msg{color:var(--muted-text);font-size:14px;margin-top:14px;}
 .progress{font-size:14px;opacity:0.7;margin-top:10px;}
 h2{margin-top:50px;font-size:22px;}
 .seo-content{max-width:700px;margin:0 auto;text-align:left;}
@@ -154,145 +146,101 @@ h2{margin-top:50px;font-size:22px;}
 <body>
 
 <header class="site-nav">
-  <a class="site-nav-logo" href="/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
+  <a class="site-nav-logo" href="/es/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
   <nav class="site-nav-links">
-    <a href="/tools/">All Tools</a>
-    <a href="/tools/#image">Image Tools</a>
-    <span class="active-category">PDF Tools</span>
-    <a href="/tools/#utility">Utility Tools</a>
-    <a href="/blog/">Blog</a>
+    <a href="/es/tools/">Todas las herramientas</a>
+    <a href="/es/tools/#image">Herramientas de imagen</a>
+    <span class="active-category">Herramientas PDF</span>
+    <a href="/es/tools/#utility">Utilidades</a>
+    <a href="/es/blog/">Blog</a>
   </nav>
   <div class="site-nav-right">
-    <span class="lang-flag active">EN</span>
-    <a class="lang-flag" href="/es/edit-pdf-metadata/">ES</a>
-    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
+    <a class="lang-flag" href="/flatten-pdf/">EN</a>
+    <span class="lang-flag active">ES</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
   </div>
 </header>
 
 <main>
 <div class="container">
   <div class="tool-hero">
-    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M9.5 17l1-4L15 8.5 16.5 10 12 14.5z"/></svg></div>
-    <h1>Edit PDF Metadata</h1>
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg></div>
+    <h1>Aplanar PDF</h1>
   </div>
-  <p class="tool-sub">View and edit a PDF's title, author, subject and keywords — or clear them all. Everything happens locally in your browser.</p>
+  <p class="tool-sub">Convierte un formulario PDF rellenable en un documento permanente y no editable — el valor de cada campo se convierte en contenido normal de la página, y el formulario deja de ser rellenable. Todo ocurre localmente en tu navegador.</p>
 
   <div class="workspace">
     <div class="box">
       <label class="dropzone" id="dropzone" for="fileInput">
-        <div id="dropzoneText">📁 Click to select a PDF or drag and drop it here</div>
+        <div id="dropzoneText">📁 Haz clic para elegir un PDF o arrástralo aquí</div>
       </label>
       <input type="file" id="fileInput" accept=".pdf">
       <div class="error" id="errorMsg"></div>
-      <div class="trust-strip">🔒 Processed on your device · No upload · No account · No watermark</div>
-
-      <div class="meta-fields" id="metaFields" style="display:none;">
-        <div class="field-row">
-          <label for="titleField">Title</label>
-          <input type="text" id="titleField" placeholder="(none)">
-        </div>
-        <div class="field-row">
-          <label for="authorField">Author</label>
-          <input type="text" id="authorField" placeholder="(none)">
-        </div>
-        <div class="field-row">
-          <label for="subjectField">Subject</label>
-          <input type="text" id="subjectField" placeholder="(none)">
-        </div>
-        <div class="field-row">
-          <label for="keywordsField">Keywords <span style="font-weight:normal;opacity:0.6;">(comma separated)</span></label>
-          <input type="text" id="keywordsField" placeholder="(none)">
-        </div>
-        <span class="clear-link" id="clearLink">Clear all fields</span>
-
-        <div class="workspace-controls">
-          <button id="saveBtn">Save & Download</button>
-          <div class="progress" id="progressMsg"></div>
-        </div>
-      </div>
+      <div class="info-msg" id="infoMsg"></div>
+      <div class="progress" id="progressMsg"></div>
+      <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subidas · Sin cuenta · Sin marca de agua</div>
 
       <div class="result" id="result"></div>
     </div>
   </div>
 
   <div class="seo-content">
-    <h2>What is PDF metadata?</h2>
-    <p>Every PDF carries a small set of document properties alongside its visible content — title, author, subject and keywords. This metadata doesn't appear on the page itself, but it's what shows up in a file's "Properties" panel, in some search results, and sometimes reveals who created a document or what software was used, even after you've renamed the file.</p>
+    <h2>¿Qué significa "aplanar" un PDF?</h2>
+    <p>Un formulario PDF rellenable tiene campos interactivos superpuestos a la página — cuadros de texto, casillas de verificación, listas desplegables — todos editables por quien abra el archivo. Aplanarlo combina el valor actual de cada campo directamente con el contenido de la página y elimina por completo la capa interactiva, dejando un PDF plano y estático que se ve idéntico pero ya no se puede editar ni rellenar de nuevo.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>¿Cuándo usar esta herramienta?</h2>
     <ul>
-      <li>You're sharing a PDF and don't want your name or company left in the author field</li>
-      <li>A document was generated by software that filled in a generic or outdated title</li>
-      <li>You want to add a clear title, author or keywords to a PDF you're publishing</li>
-      <li>You're cleaning up a file's properties before archiving or distributing it</li>
+      <li>Ya rellenaste un formulario (aquí o en otra herramienta) y quieres fijar los valores antes de enviarlo</li>
+      <li>Necesitas garantizar que quien lo reciba no pueda cambiar accidentalmente las respuestas de un formulario ya enviado</li>
+      <li>Una aplicación, programa o sistema exige un PDF "plano" y rechaza archivos con campos de formulario activos</li>
+      <li>Quieres que los campos de un formulario se vean igual en todas partes, ya que algunos lectores de PDF muestran los campos interactivos de forma distinta</li>
     </ul>
 
-    <h2>Frequently asked questions</h2>
+    <h2>Por qué Orisod</h2>
+    <p>El aplanado se ejecuta con <code style="background:var(--bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;">pdf-lib</code>, completamente en tu navegador — la misma biblioteca que este sitio usa para Rellenar Formularios PDF. Tu PDF nunca se sube a ningún sitio.</p>
+
+    <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
-      <div class="q">Does this change the visible content of my PDF?</div>
-      <div>No, only the document properties (title, author, subject, keywords) are changed — the pages, text and layout stay exactly as they were.</div>
+      <div class="q">¿Aplanar cambia el aspecto del PDF?</div>
+      <div>No — visualmente, un PDF aplanado se ve idéntico al formulario rellenado. La única diferencia es que los campos ya no son interactivos; sus valores ahora forman parte del contenido estático de la página.</div>
     </div>
     <div class="faq-item">
-      <div class="q">Can I remove all metadata at once?</div>
-      <div>Yes, click "Clear all fields" to empty every field, then save — the downloaded PDF will have blank metadata.</div>
+      <div class="q">¿Qué pasa si mi PDF no tiene campos rellenables?</div>
+      <div>Verás un mensaje indicando que no hay nada que aplanar, en lugar de una descarga — un PDF sin campos de formulario ya es, en la práctica, "plano".</div>
     </div>
     <div class="faq-item">
-      <div class="q">What if a field is already empty?</div>
-      <div>Some PDFs don't have certain fields set. Those inputs will simply show as empty — you can leave them blank or fill them in.</div>
+      <div class="q">¿Puedo deshacer el aplanado después?</div>
+      <div>No — aplanar es una conversión de un solo sentido. Conserva tu PDF original rellenado por si necesitas volver a editar los valores de los campos más adelante.</div>
     </div>
     <div class="faq-item">
-      <div class="q">Is my PDF uploaded to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div class="q">¿Mi PDF se sube a un servidor?</div>
+      <div>No, todo el proceso ocurre localmente en tu navegador con JavaScript.</div>
     </div>
   </div>
 
-  <h2>Related tools</h2>
+  <h2>Herramientas relacionadas</h2>
   <div class="related-grid">
-  <a class="related-card" href="/exif-remover/">
-    <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
-    <div class="body">
-      <div class="title">EXIF Remover</div>
-      <div class="desc">Strip hidden metadata from a photo.</div>
-    </div>
-    <div class="arrow">→</div>
-  </a>
-  <a class="related-card" href="/add-page-numbers/">
-    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><circle cx="17" cy="17" r="3"/><path d="M17 15.5v3"/></svg></div>
-    <div class="body">
-      <div class="title">Add Page Numbers</div>
-      <div class="desc">Stamp page numbers on a PDF.</div>
-    </div>
-    <div class="arrow">→</div>
-  </a>
-  <a class="related-card" href="/fill-pdf-forms/">
+  <a class="related-card" href="/es/fill-pdf-forms/">
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M8 12h1M8 16h1M11 12h6M11 16h5"/></svg></div>
     <div class="body">
-      <div class="title">Fill PDF Forms</div>
-      <div class="desc">Type into real fillable PDF form fields.</div>
+      <div class="title">Rellenar Formularios PDF</div>
+      <div class="desc">Escribe en campos reales de un formulario PDF.</div>
     </div>
     <div class="arrow">→</div>
   </a>
-  <a class="related-card" href="/watermark-pdf/">
-    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.8 6 11.2A6 6 0 0 1 6 14.2C6 9.8 12 3 12 3z"/></svg></div>
+  <a class="related-card" href="/es/pdf-editor/">
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M9.5 17l1-4L15 8.5 16.5 10 12 14.5z"/></svg></div>
     <div class="body">
-      <div class="title">Watermark PDF</div>
-      <div class="desc">Stamp text across every page.</div>
+      <div class="title">Editor de PDF</div>
+      <div class="desc">Añade cuadros de texto y resaltados a un PDF.</div>
     </div>
     <div class="arrow">→</div>
   </a>
-  <a class="related-card" href="/sign-pdf/">
-    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18c3 1 4-2 6-2s2 3 5 1 4-4 7-2"/></svg></div>
+  <a class="related-card" href="/es/edit-pdf-metadata/">
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M9.5 17l1-4L15 8.5 16.5 10 12 14.5z"/></svg></div>
     <div class="body">
-      <div class="title">Sign PDF</div>
-      <div class="desc">Draw and place a signature.</div>
-    </div>
-    <div class="arrow">→</div>
-  </a>
-  <a class="related-card" href="/flatten-pdf/">
-    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg></div>
-    <div class="body">
-      <div class="title">Flatten PDF</div>
-      <div class="desc">Make a fillable PDF form permanent.</div>
+      <div class="title">Editar Metadatos de PDF</div>
+      <div class="desc">Ve y edita el título y autor de un PDF.</div>
     </div>
     <div class="arrow">→</div>
   </a>
@@ -302,20 +250,20 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Free, browser-based image and PDF tools. 100% local processing — your files are never uploaded anywhere.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF en tu navegador. Procesamiento 100% local — tus archivos nunca se suben a ningún sitio.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">
-      <h3>Tools</h3>
-      <a href="/tools/#image">Image Tools</a>
-      <a href="/tools/#pdf">PDF Tools</a>
-      <a href="/tools/#utility">Utility Tools</a>
+      <h3>Herramientas</h3>
+      <a href="/es/tools/#image">Herramientas de imagen</a>
+      <a href="/es/tools/#pdf">Herramientas PDF</a>
+      <a href="/es/tools/#utility">Utilidades</a>
     </div>
     <div class="footer-col">
-      <h3>Company</h3>
-      <a href="/about/">About</a>
-      <a href="/privacy/">Privacy</a>
-      <a href="/blog/">Blog</a>
+      <h3>Empresa</h3>
+      <a href="/es/about/">Acerca de</a>
+      <a href="/es/privacy/">Privacidad</a>
+      <a href="/es/blog/">Blog</a>
     </div>
   </div>
 </footer>
@@ -349,17 +297,9 @@ const fileInput = document.getElementById('fileInput');
 const dropzone = document.getElementById('dropzone');
 const dropzoneText = document.getElementById('dropzoneText');
 const errorMsg = document.getElementById('errorMsg');
-const metaFields = document.getElementById('metaFields');
-const titleField = document.getElementById('titleField');
-const authorField = document.getElementById('authorField');
-const subjectField = document.getElementById('subjectField');
-const keywordsField = document.getElementById('keywordsField');
-const clearLink = document.getElementById('clearLink');
-const saveBtn = document.getElementById('saveBtn');
+const infoMsg = document.getElementById('infoMsg');
 const progressMsg = document.getElementById('progressMsg');
 const resultEl = document.getElementById('result');
-
-let selectedFile = null;
 
 fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
 dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
@@ -372,73 +312,49 @@ dropzone.addEventListener('drop', (e) => {
 
 async function handleFile(file) {
   errorMsg.textContent = '';
+  infoMsg.textContent = '';
   progressMsg.textContent = '';
+  resultEl.innerHTML = '';
+
   if (!file || !/\.pdf$/i.test(file.name)) {
-    errorMsg.textContent = 'Please select a valid PDF file.';
+    errorMsg.textContent = 'Por favor selecciona un archivo PDF válido.';
     return;
   }
+
+  dropzoneText.textContent = `📄 ${file.name}`;
+  progressMsg.textContent = 'Leyendo PDF...';
 
   try {
     const { PDFDocument } = PDFLib;
     const arrayBuffer = await file.arrayBuffer();
     const pdf = await PDFDocument.load(arrayBuffer);
-    selectedFile = file;
+    const form = pdf.getForm();
+    const fieldCount = form.getFields().length;
 
-    dropzoneText.textContent = `✅ ${file.name} loaded`;
-    titleField.value = pdf.getTitle() || '';
-    authorField.value = pdf.getAuthor() || '';
-    subjectField.value = pdf.getSubject() || '';
-    keywordsField.value = (pdf.getKeywords() || '').toString();
-    metaFields.style.display = 'block';
-  } catch (err) {
-    errorMsg.textContent = 'Could not read this PDF. It may be corrupted or password-protected.';
-    metaFields.style.display = 'none';
-  }
-}
+    if (fieldCount === 0) {
+      progressMsg.textContent = '';
+      infoMsg.textContent = 'Este PDF no tiene campos de formulario rellenables — no hay nada que aplanar.';
+      return;
+    }
 
-clearLink.addEventListener('click', () => {
-  titleField.value = '';
-  authorField.value = '';
-  subjectField.value = '';
-  keywordsField.value = '';
-});
-
-saveBtn.addEventListener('click', async () => {
-  if (!selectedFile) return;
-  errorMsg.textContent = '';
-  progressMsg.textContent = '';
-  resultEl.innerHTML = '';
-  saveBtn.disabled = true;
-  saveBtn.textContent = 'Saving...';
-
-  try {
-    const { PDFDocument } = PDFLib;
-    const arrayBuffer = await selectedFile.arrayBuffer();
-    const pdf = await PDFDocument.load(arrayBuffer);
-
-    pdf.setTitle(titleField.value);
-    pdf.setAuthor(authorField.value);
-    pdf.setSubject(subjectField.value);
-    const keywords = keywordsField.value.split(',').map(k => k.trim()).filter(Boolean);
-    pdf.setKeywords(keywords);
+    progressMsg.textContent = 'Aplanando...';
+    form.flatten();
 
     const bytes = await pdf.save();
     const blob = new Blob([bytes], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
-    const baseName = selectedFile.name.replace(/\.pdf$/i, '');
-    const outName = `${baseName}-metadata.pdf`;
+    const baseName = file.name.replace(/\.pdf$/i, '');
+    const outName = `${baseName}-aplanado.pdf`;
 
-    progressMsg.textContent = 'Done — ready to download.';
-
-    const filledCount = [titleField.value, authorField.value, subjectField.value, keywordsField.value].filter(Boolean).length;
+    progressMsg.textContent = 'Listo — preparado para descargar.';
 
     const card = document.createElement('div');
     card.className = 'result-card';
     card.innerHTML = `
-      <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M9.5 17l1-4L15 8.5 16.5 10 12 14.5z"/></svg></div>
+      <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg></div>
       <div class="result-body">
         <div class="result-filename">${outName}</div>
-        <div class="result-stat">${filledCount} of 4 metadata fields set</div>
+        <div class="result-stat">${fieldCount} campo${fieldCount === 1 ? '' : 's'} de formulario aplanado${fieldCount === 1 ? '' : 's'}</div>
       </div>
     `;
     resultEl.appendChild(card);
@@ -447,15 +363,13 @@ saveBtn.addEventListener('click', async () => {
     link.href = url;
     link.download = outName;
     link.className = 'back';
-    link.textContent = 'Download PDF';
+    link.textContent = 'Descargar PDF';
     resultEl.appendChild(link);
   } catch (err) {
-    errorMsg.textContent = err.message || 'Could not update this PDF.';
+    progressMsg.textContent = '';
+    errorMsg.textContent = err.message || 'No se pudo leer o aplanar este PDF. Puede estar dañado o protegido con contraseña.';
   }
-
-  saveBtn.disabled = false;
-  saveBtn.textContent = 'Save & Download';
-});
+}
 </script>
 </body>
 </html>
