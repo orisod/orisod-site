@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How to Generate a Strong Password (and Why Length Matters More Than Tricks) | Orisod Blog</title>
-<meta name="description" content="What actually makes a password hard to crack, why 'clever' substitutions like P@ssw0rd help less than people think, and how much length alone actually buys you.">
-<link rel="canonical" href="https://orisod.com/blog/generate-a-strong-password/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/blog/generate-a-strong-password/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/generate-a-strong-password/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/generate-a-strong-password/">
+<title>How to Format and Validate JSON (and the Syntax Rules That Actually Matter) | Orisod Blog</title>
+<meta name="description" content="Why copy-pasted JavaScript objects fail as JSON, the exact rules JSON.parse enforces, and when to pretty-print versus minify.">
+<link rel="canonical" href="https://orisod.com/blog/format-json/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/format-json/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/format-json/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/format-json/">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
 <link rel="icon" href="/favicon.ico">
@@ -137,7 +137,7 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
   </nav>
   <div class="site-nav-right">
     <span class="lang-flag active">EN</span>
-    <a class="lang-flag" href="/es/blog/generate-a-strong-password/">ES</a>
+    <a class="lang-flag" href="/es/blog/format-json/">ES</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
   </div>
 </header>
@@ -146,78 +146,83 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guides</span>
-<h1>How to Generate a Strong Password (and Why Length Matters More Than Tricks)</h1>
-<p class="intro">Swapping letters for symbols — "password" becomes "P@ssw0rd" — feels like it should make a password much harder to crack. In practice, it barely moves the needle, while making the password harder for you to remember. What actually determines how hard a password is to guess is simpler, and more mathematical, than clever substitutions.</p>
+<h1>How to Format and Validate JSON (and the Syntax Rules That Actually Matter)</h1>
+<p class="intro">JSON looks close enough to a JavaScript object literal that it's easy to assume they're interchangeable — paste one where the other is expected, and a strict JSON parser will reject it. Here's exactly what JSON requires that plain JavaScript doesn't.</p>
 
 <div class="article-body">
 
-<h2>What "strength" actually measures</h2>
-<p>A password's strength is usually measured in bits of entropy — roughly, the number of guesses a brute-force attacker working through every possibility would need, expressed as a power of two. Every character position multiplies the total number of possible passwords by however many characters could go there. A password built from a bigger pool of possible characters, or one that's simply longer, has exponentially more combinations to search through — and length affects that exponent far more directly than character variety does.</p>
-
-<h2>Why substitutions don't help as much as they feel like they should</h2>
-<p>Swapping "a" for "@" or "o" for "0" barely changes the brute-force math, and it does essentially nothing against how real attacks actually work. Attackers don't try every possible string in order — they try dictionaries of real words first, then apply exactly these common substitution patterns to each one, because so many people use them. "P@ssw0rd" isn't meaningfully harder to guess than "password" against a real attacker; it's just harder for you to type correctly.</p>
+<h2>Where JSON is stricter than a JS object literal</h2>
+<p>JSON was deliberately designed as a small, unambiguous subset of JavaScript's object literal syntax — which makes the differences easy to overlook until <code>JSON.parse()</code> throws on something that looks perfectly reasonable. The four rules that trip people up most often: every key must be a double-quoted string (not unquoted, not single-quoted), every string value must also use double quotes, there can be no trailing comma after the last item in an object or array, and comments aren't allowed anywhere, even though they're valid JavaScript.</p>
 
 <figure class="theme-figure">
-<svg viewBox="0 0 700 340" width="700" height="340" role="img" aria-label="Bar chart of password entropy in bits: 8 lowercase-only characters (38 bits), 8 characters from a full character set (52 bits), 16 characters (105 bits), and 20 characters (131 bits) — entropy grows fastest with length, not character variety alone." xmlns="http://www.w3.org/2000/svg">
-<title>Bar chart of password entropy in bits: 8 lowercase-only characters (38 bits), 8 characters from a full character set (52 bits), 16 characters (105 bits), and 20 characters (131 bits)</title>
-<line x1="40" y1="280" x2="660" y2="280" stroke="var(--border)" stroke-width="1"></line>
-<rect x="60" y="216.9" width="90" height="63.1" rx="4" fill="var(--muted-text)"></rect>
-<text x="105" y="202.9" text-anchor="middle" font-size="16" font-weight="bold" fill="var(--text)">38 bits</text>
-<text x="105" y="300" text-anchor="middle" font-size="12.5" fill="var(--muted-text)">8 chars,</text>
-<text x="105" y="314" text-anchor="middle" font-size="12.5" fill="var(--muted-text)">lowercase only</text>
-<rect x="200" y="192.1" width="90" height="87.9" rx="4" fill="var(--muted-text)"></rect>
-<text x="245" y="178.1" text-anchor="middle" font-size="16" font-weight="bold" fill="var(--text)">52 bits</text>
-<text x="245" y="300" text-anchor="middle" font-size="12.5" fill="var(--muted-text)">8 chars,</text>
-<text x="245" y="314" text-anchor="middle" font-size="12.5" fill="var(--muted-text)">full character set</text>
-<rect x="340" y="104.0" width="90" height="176.0" rx="4" fill="var(--accent)"></rect>
-<text x="385" y="90.0" text-anchor="middle" font-size="16" font-weight="bold" fill="var(--text)">105 bits</text>
-<text x="385" y="300" text-anchor="middle" font-size="12.5" fill="var(--muted-text)">16 chars,</text>
-<text x="385" y="314" text-anchor="middle" font-size="12.5" fill="var(--muted-text)">full character set</text>
-<rect x="480" y="60.0" width="90" height="220.0" rx="4" fill="var(--accent)"></rect>
-<text x="525" y="46.0" text-anchor="middle" font-size="16" font-weight="bold" fill="var(--text)">131 bits</text>
-<text x="525" y="300" text-anchor="middle" font-size="12.5" fill="var(--muted-text)">20 chars,</text>
-<text x="525" y="314" text-anchor="middle" font-size="12.5" fill="var(--muted-text)">full character set</text>
+<svg viewBox="0 0 700 230" width="700" height="230" role="img" aria-label="Comparison table of four JSON syntax rules: object keys must be double-quoted, strings must be double-quoted, no trailing commas are allowed, and comments are not allowed at all — each shown with an invalid example in red and the valid equivalent in green." xmlns="http://www.w3.org/2000/svg">
+<text x="24" y="28" text-anchor="start" font-size="13" font-weight="bold" fill="var(--muted-text)">RULE</text>
+<text x="260" y="28" text-anchor="start" font-size="13" font-weight="bold" fill="#f87171">✗ INVALID</text>
+<text x="480" y="28" text-anchor="start" font-size="13" font-weight="bold" fill="#4ade80">✓ VALID</text>
+<line x1="0" y1="40" x2="700" y2="40" stroke="var(--border)" stroke-width="1.5"/>
+<text x="24" y="72" text-anchor="start" font-size="14" fill="var(--text)">Object keys</text>
+<text x="260" y="72" text-anchor="start" font-family="Courier New, monospace" font-size="14" fill="#f87171">name:</text>
+<text x="480" y="72" text-anchor="start" font-family="Courier New, monospace" font-size="14" fill="#4ade80">"name":</text>
+<text x="24" y="108" text-anchor="start" font-size="14" fill="var(--text)">String values</text>
+<text x="260" y="108" text-anchor="start" font-family="Courier New, monospace" font-size="14" fill="#f87171">'Ada'</text>
+<text x="480" y="108" text-anchor="start" font-family="Courier New, monospace" font-size="14" fill="#4ade80">"Ada"</text>
+<text x="24" y="144" text-anchor="start" font-size="14" fill="var(--text)">Trailing commas</text>
+<text x="260" y="144" text-anchor="start" font-family="Courier New, monospace" font-size="14" fill="#f87171">["a","b",]</text>
+<text x="480" y="144" text-anchor="start" font-family="Courier New, monospace" font-size="14" fill="#4ade80">["a","b"]</text>
+<text x="24" y="180" text-anchor="start" font-size="14" fill="var(--text)">Comments</text>
+<text x="260" y="180" text-anchor="start" font-family="Courier New, monospace" font-size="14" fill="#f87171">// a note</text>
+<text x="480" y="180" text-anchor="start" font-family="Courier New, monospace" font-size="13" fill="var(--muted-text)">(not allowed at all)</text>
+<line x1="0" y1="198" x2="700" y2="198" stroke="var(--border)" stroke-width="1.5"/>
+<text x="350" y="220" text-anchor="middle" font-size="13" fill="var(--muted-text)">JSON.parse() enforces all four — the error message tells you the exact line and column that broke.</text>
 </svg>
-<figcaption>Entropy bits for four password strategies (calculated directly: length × log₂(character pool size), not measured against any specific attack). Going from 8 to 16 characters roughly doubles the bit count — which means squaring the actual number of combinations, a far bigger jump than adding symbols to a short password ever provides.</figcaption>
 </figure>
 
-<h2>What length alone buys you</h2>
-<p>Going from an 8-character password to a 16-character one, keeping the same character pool, nearly doubles the entropy bit count in the chart above — and because entropy is measured on a doubling (bits) scale, that near-doubling represents squaring the actual number of possible passwords, not just doubling it. Adding a longer, still-random tail to a password does more for its real-world strength than any amount of character substitution on a short one.</p>
+<h2>Why pretty-printing matters</h2>
+<p>An API response or a minified config file is usually returned as a single unbroken line — technically valid, but unreadable the moment you need to check a nested value or compare it against something else. Pretty-printing (adding consistent indentation and line breaks) doesn't change the data at all, it just re-serializes the same parsed structure with whitespace a human can actually scan.</p>
 
-<h2>Why a password manager changes the calculation entirely</h2>
-<p>None of this matters if you have to remember and type the password yourself — a 20-character fully random string is unusable without help. A password manager removes that constraint: it generates and stores a long random password per site, and you only need to remember one master password to unlock it. That's what actually makes maximum-entropy, no-compromises passwords practical for everyday use.</p>
+<h2>When to minify instead</h2>
+<p>Minifying does the opposite: it strips every non-essential space, so the same data takes less room. That matters when you're pasting JSON somewhere with a character limit, storing it compactly, or sending it over a network where every byte counts — none of which benefit from indentation that a machine doesn't need.</p>
+
+<h2>Common JSON syntax errors and what causes them</h2>
+<ul>
+  <li><strong>Trailing comma</strong> — leaving a comma after the last property or array item, a habit carried over from JavaScript (where it's harmless) or from editing a list and forgetting to remove the old separator.</li>
+  <li><strong>Single-quoted strings</strong> — copying a JavaScript object literal directly, where single and double quotes are interchangeable; JSON only accepts double quotes.</li>
+  <li><strong>Unquoted keys</strong> — same source: JavaScript allows bare identifier keys like <code>name:</code>, JSON requires <code>"name":</code>.</li>
+  <li><strong>Mismatched or missing brackets</strong> — an extra or missing <code>{</code>, <code>}</code>, <code>[</code>, or <code>]</code>, usually from manually editing nested data by hand.</li>
+  <li><strong>A missing comma between properties</strong> — easy to miss when reformatting JSON by hand instead of letting a formatter do it.</li>
+</ul>
 
 <h2>Quick answers</h2>
-<p><strong>Should I still add symbols to my password?</strong> It doesn't hurt, but if you're choosing between a longer password with fewer character types or a shorter one packed with symbols, length wins by a wide margin.</p>
-<p><strong>Is a random password actually better than a memorable passphrase?</strong> A long passphrase built from several truly random, unrelated words can reach similar entropy while staying typeable — the key word is random; a quote or common phrase is guessable regardless of length.</p>
-<p><strong>How long should a password be?</strong> 16 characters from a full character set is a reasonable default for most accounts; use your password manager's maximum where a site allows it.</p>
+<p><strong>Can JSON have comments?</strong> No — not <code>//</code>, not <code>/* */</code>. If you need annotated config, JSON isn't the right format (JSON5 and JSONC are separate, non-standard extensions that add comment support, but a strict JSON parser rejects both).</p>
+<p><strong>Does key order matter in JSON?</strong> Not to the data itself — two objects with the same keys in a different order represent the same value. It only matters if you're comparing raw text (like diffing two files), which is exactly what sorting keys before comparing is for.</p>
+<p><strong>Why does my JSON.parse error just say "position 45" instead of a line number?</strong> That's how V8 (Chrome's JavaScript engine) reports it — a formatter can convert that character offset into a line and column by counting newlines up to that position, which is exactly what a helpful error message should show instead.</p>
 
 <div class="cta-box">
-  <h3>Generate a Strong Password</h3>
-  <p>Orisod's Password Generator uses your browser's cryptographically secure random number generator to build a password with the exact length and character set you choose — entirely in your browser.</p>
-  <a class="cta-button" href="/password-generator/">Generate a Password →</a>
+  <h3>Format your JSON</h3>
+  <p>Orisod's JSON Formatter pretty-prints, minifies, sorts keys, and points to the exact line and column of any syntax error — entirely in your browser.</p>
+  <a class="cta-button" href="/json-formatter/">Format JSON →</a>
 </div>
 
-<p>A password's real strength comes almost entirely from how long and how genuinely random it is — not from how clever its substitutions look. Length is the lever that actually moves the number that matters.</p>
+<p>Most "JSON.parse unexpected token" errors come down to one of the same handful of causes — a stray trailing comma, a copy-pasted single quote, or an unquoted key. Once you know the short list of rules, the fix is usually a five-second read of the error message away.</p>
 
 </div>
 
 <div class="related-section">
   <h2>Related articles</h2>
   <div class="related-grid">
+    <a class="blog-card" href="/blog/generate-uuids/">
+      <h3>What Is a UUID, and When Do You Actually Need One?</h3>
+      <p>What the 32 hex digits in a UUID actually encode, and the real collision math.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/generate-a-strong-password/">
+      <h3>How to Generate a Strong Password (and Why Length Matters More Than Tricks)</h3>
+      <p>What actually makes a password hard to crack, in real, computed entropy bits.</p>
+    </a>
+
     <a class="blog-card" href="/blog/what-is-image-metadata/">
       <h3>What Is Image Metadata and How to View It</h3>
       <p>What EXIF data actually contains, and why you might want to remove it.</p>
-    </a>
-
-    <a class="blog-card" href="/blog/format-json/">
-      <h3>How to Format and Validate JSON (and the Syntax Rules That Actually Matter)</h3>
-      <p>Why copy-pasted JavaScript objects fail as JSON, and the exact rules JSON.parse enforces.</p>
-    </a>
-
-    <a class="blog-card" href="/blog/fill-pdf-forms-online/">
-      <h3>How to Fill Out a PDF Form Online</h3>
-      <p>How real fillable PDF fields work, and how to fill one out and lock it down.</p>
     </a>
   </div>
 </div>
