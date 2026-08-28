@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>What Is a UUID, and When Do You Actually Need One? | Orisod Blog</title>
-<meta name="description" content="What the 32 hex digits in a UUID actually encode, how unlikely a real collision is (with the actual math), and when a UUID is the wrong choice.">
-<link rel="canonical" href="https://orisod.com/blog/generate-uuids/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/blog/generate-uuids/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/generate-uuids/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/generate-uuids/">
+<title>Text Case Styles Explained: When to Use camelCase, snake_case, and More | Orisod Blog</title>
+<meta name="description" content="What camelCase, PascalCase, snake_case, kebab-case, and CONSTANT_CASE are each actually used for, and why most languages settled on a house style instead of letting developers pick freely.">
+<link rel="canonical" href="https://orisod.com/blog/text-case-styles-explained/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/text-case-styles-explained/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/text-case-styles-explained/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/text-case-styles-explained/">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
 <link rel="icon" href="/favicon.ico">
@@ -137,7 +137,7 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
   </nav>
   <div class="site-nav-right">
     <span class="lang-flag active">EN</span>
-    <a class="lang-flag" href="/es/blog/generate-uuids/">ES</a>
+    <a class="lang-flag" href="/es/blog/text-case-styles-explained/">ES</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
   </div>
 </header>
@@ -146,69 +146,64 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guides</span>
-<h1>What Is a UUID, and When Do You Actually Need One?</h1>
-<p class="intro">A UUID looks like 32 random-looking hex digits split into five groups, and for the most common version, that's almost exactly what it is — with a couple of fixed bits hidden inside that tell you which version and variant you're looking at.</p>
+<h1>Text Case Styles Explained: When to Use camelCase, snake_case, and More</h1>
+<p class="intro">Every programming ecosystem has a house style for naming things, and it's rarely arbitrary — it usually comes down to what the language's own conventions expect, and what a case-insensitive filesystem or URL can and can't handle safely.</p>
 
 <div class="article-body">
 
-<h2>What the digits actually encode</h2>
-<p>A UUID is a 128-bit number, written as 32 hexadecimal digits in the pattern <code>8-4-4-4-12</code>. For version 4 (by far the most common kind, and what "UUID" means in casual use), all but 6 of those 128 bits are genuinely random. The other 6 are fixed markers: 4 bits that always read "0100" in binary — which is why the first digit of the third group is always the literal character <code>4</code> — identifying this as version 4, and 2 more bits at the start of the fourth group that always start with <code>10</code> in binary, which is why that group's first hex digit is always <code>8</code>, <code>9</code>, <code>a</code>, or <code>b</code>. Every other digit is drawn from a secure random source.</p>
-
-<figure class="theme-figure">
-<svg viewBox="0 0 700 190" width="700" height="190" role="img" aria-label="Diagram of a UUID v4 broken into its five hyphen-separated groups, with the version marker '4' in the third group and the variant digit in the fourth group highlighted as fixed, non-random positions; every other digit is randomly generated." xmlns="http://www.w3.org/2000/svg">
-<text x="350" y="35" text-anchor="middle" font-family="Courier New, monospace" font-size="26" font-weight="bold" fill="var(--muted-text)">550e8400-e29b-<tspan fill="var(--accent)">4</tspan>1d4-<tspan fill="var(--accent)">a</tspan>716-446655440000</text>
-<line x1="303" y1="46" x2="303" y2="70" stroke="var(--accent)" stroke-width="1.6"/>
-<text x="303" y="88" text-anchor="middle" font-size="13" fill="var(--accent)">version = 4</text>
-<line x1="393" y1="46" x2="393" y2="70" stroke="var(--accent)" stroke-width="1.6"/>
-<text x="393" y="88" text-anchor="middle" font-size="13" fill="var(--accent)">variant bit</text>
-<line x1="40" y1="120" x2="660" y2="120" stroke="var(--border)" stroke-width="1.5"/>
-<text x="350" y="145" text-anchor="middle" font-size="14" fill="var(--muted-text)">122 of the 128 bits are randomly generated — only these 2 marker digits are fixed by the format.</text>
-<text x="350" y="168" text-anchor="middle" font-size="13" fill="var(--muted-text)">2^122 possible values ≈ 5.3 × 10³⁶</text>
-</svg>
-<figcaption>A real UUID v4, with its two fixed marker digits highlighted. Everything else is random — that's what makes collisions vanishingly unlikely (see the math below).</figcaption>
-</figure>
-
-<h2>How unlikely a real collision is</h2>
-<p>With 122 random bits, the space of possible UUIDs is 2¹²² — about 5.3 × 10³⁶ values. Using the standard birthday-paradox approximation for when a collision becomes likely in a growing set, you'd need to generate roughly 2.7 × 10¹⁸ UUIDs (2.7 quintillion) before there's even a 50% chance that any two of them match. That number is large enough that "will two of my UUIDs collide" is not a realistic concern for essentially any application, including ones generating millions of records a day.</p>
-
-<h2>When a UUID is the wrong tool</h2>
+<h2>The naming styles, and what each one is actually for</h2>
+<p>Five styles cover almost every case you'll run into:</p>
 <ul>
-  <li><strong>When you need sortability.</strong> A version 4 UUID is fully random, so a list of them sorts in no meaningful order — if you need IDs that sort roughly by creation time (useful for database index performance), a time-ordered scheme like UUID version 7 or a ULID is the better fit, not version 4.</li>
-  <li><strong>When a short, human-typeable ID will do.</strong> A UUID is long and meant to be copy-pasted, not read aloud or typed from memory — a short code (like a 6-character reference number) is friendlier for anything a person needs to communicate verbally.</li>
-  <li><strong>When you just need a counter.</strong> A simple auto-incrementing integer is smaller, sorts naturally, and is easier to debug — UUIDs solve the specific problem of generating unique IDs without coordination between multiple systems, which a single database's auto-increment already handles fine on its own.</li>
+  <li><strong>camelCase</strong> — first word lowercase, every following word capitalized, no separators (<code>firstName</code>). The default for variables and function names in JavaScript, Java, and most C-family languages.</li>
+  <li><strong>PascalCase</strong> — same as camelCase but the first word is also capitalized (<code>FirstName</code>). Used for class and type names in the same languages, precisely to distinguish a type from a variable at a glance.</li>
+  <li><strong>snake_case</strong> — all lowercase, words separated by underscores (<code>first_name</code>). The standard for variables and functions in Python and Ruby, and for database column names almost everywhere.</li>
+  <li><strong>kebab-case</strong> — all lowercase, words separated by hyphens (<code>first-name</code>). Used for URL slugs and CSS class names — hyphens are the one separator that's always safe in a URL without encoding.</li>
+  <li><strong>CONSTANT_CASE</strong> (also called SCREAMING_SNAKE_CASE) — all uppercase, words separated by underscores (<code>FIRST_NAME</code>). Reserved specifically for constants, so an all-caps identifier signals "this value never changes" at a glance.</li>
+</ul>
+
+<h2>Why the convention matters more than the choice</h2>
+<p>None of these styles is technically superior — a JavaScript variable named <code>first_name</code> instead of <code>firstName</code> still works exactly the same. What breaks is consistency: mixing styles within one codebase forces every reader to context-switch for no reason, and some tools genuinely can't cross styles safely (a CSS class must be kebab-case-safe, a URL slug can't contain characters that need encoding, and a case-sensitive filesystem will treat <code>MyFile</code> and <code>myfile</code> as two different files while a case-insensitive one won't). The style itself is a convention; picking one and applying it consistently is what actually matters.</p>
+
+<h2>Where each style tends to show up</h2>
+<ul>
+  <li><strong>Variables and functions:</strong> camelCase (JavaScript, Java) or snake_case (Python, Ruby) — pick whichever your language's own standard library and style guide already use, not a personal preference.</li>
+  <li><strong>Classes and types:</strong> PascalCase, almost universally, across the languages that distinguish them from variables at all.</li>
+  <li><strong>URLs and file slugs:</strong> kebab-case — search engines and browsers treat hyphens as word separators in a URL, which underscores and camelCase don't get for free.</li>
+  <li><strong>CSS classes:</strong> kebab-case is the long-standing convention (<code>.nav-link</code>), though some component-based frameworks use camelCase for CSS-in-JS.</li>
+  <li><strong>Constants and environment variables:</strong> CONSTANT_CASE — the all-caps convention originated with C preprocessor macros and is still the standard for env vars and true constants today.</li>
 </ul>
 
 <h2>Quick answers</h2>
-<p><strong>Are UUIDs case-sensitive?</strong> By convention they're written in lowercase, but most systems treat them case-insensitively — uppercase and lowercase versions represent the same value.</p>
-<p><strong>Can I use a UUID as a primary key?</strong> Yes, commonly done — the main tradeoff versus an auto-incrementing integer is index performance on very large tables, since random UUIDs don't insert in sorted order (version 7 exists specifically to fix this).</p>
-<p><strong>Is a UUID the same as a GUID?</strong> Functionally yes — GUID (Globally Unique Identifier) is Microsoft's historical name for the same concept, and the two terms are used interchangeably today.</p>
+<p><strong>Is there a "correct" case for JSON keys?</strong> No hard rule, but camelCase is the de facto convention in JavaScript-heavy APIs, while snake_case shows up often in APIs written by Python/Ruby-first teams — match whatever the rest of that API already uses.</p>
+<p><strong>What's the difference between kebab-case and "dash-case" or "spinal-case"?</strong> Nothing — they're the same style under different names, all referring to lowercase words joined by hyphens.</p>
+<p><strong>Why do some style guides avoid underscores in URLs?</strong> Older search engines didn't reliably treat an underscore as a word separator (some still read <code>first_name</code> as one word, "first_name," rather than two), while a hyphen reliably splits into separate words — kebab-case avoids the ambiguity entirely.</p>
 
 <div class="cta-box">
-  <h3>Generate a UUID</h3>
-  <p>Orisod's UUID Generator creates version 4 UUIDs using your browser's secure random number generator, one at a time or in bulk — entirely in your browser.</p>
-  <a class="cta-button" href="/uuid-generator/">Generate a UUID →</a>
+  <h3>Convert between cases</h3>
+  <p>Orisod's Case Converter switches text between UPPERCASE, lowercase, Title Case, Sentence case, camelCase, PascalCase, snake_case, kebab-case, and CONSTANT_CASE — entirely in your browser.</p>
+  <a class="cta-button" href="/case-converter/">Convert text case →</a>
 </div>
 
-<p>For the overwhelming majority of "I need a unique ID" situations, a version 4 UUID is the right, boring, well-understood answer — the exceptions are specific enough (sortability, human-readability, single-database counters) that you'll usually know when you've hit one.</p>
+<p>The specific style rarely matters on its own — what matters is matching whatever convention the language, framework, or system you're working in already expects, and staying consistent once you've picked it.</p>
 
 </div>
 
 <div class="related-section">
   <h2>Related articles</h2>
   <div class="related-grid">
-    <a class="blog-card" href="/blog/generate-a-strong-password/">
-      <h3>How to Generate a Strong Password (and Why Length Matters More Than Tricks)</h3>
-      <p>What actually makes a password hard to crack, in real, computed entropy bits.</p>
-    </a>
-
     <a class="blog-card" href="/blog/format-json/">
       <h3>How to Format and Validate JSON (and the Syntax Rules That Actually Matter)</h3>
       <p>Why copy-pasted JavaScript objects fail as JSON, and the exact rules JSON.parse enforces.</p>
     </a>
 
-    <a class="blog-card" href="/blog/text-case-styles-explained/">
-      <h3>Text Case Styles Explained: When to Use camelCase, snake_case, and More</h3>
-      <p>What each naming style is actually for, and why the convention matters more than the choice.</p>
+    <a class="blog-card" href="/blog/generate-uuids/">
+      <h3>What Is a UUID, and When Do You Actually Need One?</h3>
+      <p>What the 32 hex digits in a UUID actually encode, and the real collision math.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/generate-a-strong-password/">
+      <h3>How to Generate a Strong Password (and Why Length Matters More Than Tricks)</h3>
+      <p>What actually makes a password hard to crack, in real, computed entropy bits.</p>
     </a>
   </div>
 </div>

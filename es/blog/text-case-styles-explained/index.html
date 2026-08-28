@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Qué es un UUID y cuándo lo necesitas realmente | Blog de Orisod</title>
-<meta name="description" content="Qué codifican realmente los 32 dígitos hexadecimales de un UUID, cuán improbable es una coincidencia real (con las matemáticas reales), y cuándo un UUID no es la elección adecuada.">
-<link rel="canonical" href="https://orisod.com/es/blog/generate-uuids/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/blog/generate-uuids/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/generate-uuids/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/generate-uuids/">
+<title>Estilos de mayúsculas y minúsculas explicados: cuándo usar camelCase, snake_case y más | Blog de Orisod</title>
+<meta name="description" content="Para qué se usan realmente camelCase, PascalCase, snake_case, kebab-case y CONSTANT_CASE, y por qué la mayoría de los lenguajes adoptaron un estilo fijo en lugar de dejarlo a elección libre.">
+<link rel="canonical" href="https://orisod.com/es/blog/text-case-styles-explained/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/text-case-styles-explained/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/text-case-styles-explained/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/text-case-styles-explained/">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
 <link rel="icon" href="/favicon.ico">
@@ -136,9 +136,9 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
     <span class="active-category">Blog</span>
   </nav>
   <div class="site-nav-right">
-    <a class="lang-flag" href="/blog/generate-uuids/">EN</a>
+    <a class="lang-flag" href="/blog/text-case-styles-explained/">EN</a>
     <span class="lang-flag active">ES</span>
-    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro">🌙</button>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
   </div>
 </header>
 
@@ -146,69 +146,64 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guías</span>
-<h1>Qué es un UUID y cuándo lo necesitas realmente</h1>
-<p class="intro">Un UUID parece 32 dígitos hexadecimales con aspecto aleatorio divididos en cinco grupos, y para la versión más común, eso es casi exactamente lo que es — con un par de bits fijos escondidos dentro que indican qué versión y variante estás viendo.</p>
+<h1>Estilos de mayúsculas y minúsculas explicados: cuándo usar camelCase, snake_case y más</h1>
+<p class="intro">Cada ecosistema de programación tiene un estilo propio para nombrar cosas, y rara vez es arbitrario — normalmente depende de lo que espera la convención del propio lenguaje, y de lo que un sistema de archivos que no distingue mayúsculas o una URL pueden manejar sin problemas.</p>
 
 <div class="article-body">
 
-<h2>Qué codifican realmente los dígitos</h2>
-<p>Un UUID es un número de 128 bits, escrito como 32 dígitos hexadecimales en el patrón <code>8-4-4-4-12</code>. Para la versión 4 (con diferencia la más común, y lo que "UUID" significa en el uso habitual), todos los bits salvo 6 de esos 128 son genuinamente aleatorios. Los otros 6 son marcadores fijos: 4 bits que siempre valen "0100" en binario — por eso el primer dígito del tercer grupo es siempre el carácter literal <code>4</code> — identificando esto como versión 4, y 2 bits más al inicio del cuarto grupo que siempre empiezan por <code>10</code> en binario, por lo que el primer dígito hexadecimal de ese grupo es siempre <code>8</code>, <code>9</code>, <code>a</code> o <code>b</code>. Cualquier otro dígito procede de una fuente aleatoria segura.</p>
-
-<figure class="theme-figure">
-<svg viewBox="0 0 700 190" width="700" height="190" role="img" aria-label="Diagrama de un UUID v4 dividido en sus cinco grupos separados por guiones, con el marcador de versión '4' en el tercer grupo y el dígito de variante en el cuarto grupo resaltados como posiciones fijas y no aleatorias; el resto de dígitos se generan aleatoriamente." xmlns="http://www.w3.org/2000/svg">
-<text x="350" y="35" text-anchor="middle" font-family="Courier New, monospace" font-size="26" font-weight="bold" fill="var(--muted-text)">550e8400-e29b-<tspan fill="var(--accent)">4</tspan>1d4-<tspan fill="var(--accent)">a</tspan>716-446655440000</text>
-<line x1="303" y1="46" x2="303" y2="70" stroke="var(--accent)" stroke-width="1.6"/>
-<text x="303" y="88" text-anchor="middle" font-size="13" fill="var(--accent)">versión = 4</text>
-<line x1="393" y1="46" x2="393" y2="70" stroke="var(--accent)" stroke-width="1.6"/>
-<text x="393" y="88" text-anchor="middle" font-size="13" fill="var(--accent)">bit de variante</text>
-<line x1="40" y1="120" x2="660" y2="120" stroke="var(--border)" stroke-width="1.5"/>
-<text x="350" y="145" text-anchor="middle" font-size="14" fill="var(--muted-text)">122 de los 128 bits se generan aleatoriamente — solo estos dos dígitos marcadores son fijos por el formato.</text>
-<text x="350" y="168" text-anchor="middle" font-size="13" fill="var(--muted-text)">2^122 valores posibles ≈ 5.3 × 10³⁶</text>
-</svg>
-<figcaption>Un UUID v4 real, con sus dos dígitos marcadores fijos resaltados. Todo lo demás es aleatorio — eso es lo que hace que las coincidencias sean extremadamente improbables (ver las matemáticas más abajo).</figcaption>
-</figure>
-
-<h2>Cuán improbable es una coincidencia real</h2>
-<p>Con 122 bits aleatorios, el espacio de UUID posibles es 2¹²² — unos 5.3 × 10³⁶ valores. Usando la aproximación estándar del problema del cumpleaños para cuándo una coincidencia se vuelve probable en un conjunto creciente, necesitarías generar aproximadamente 2.7 × 10¹⁸ UUID (2.7 trillones, en la escala larga) antes de que exista siquiera un 50% de probabilidad de que dos de ellos coincidan. Ese número es lo bastante grande como para que "¿coincidirán dos de mis UUID?" no sea una preocupación realista para prácticamente ninguna aplicación, incluidas las que generan millones de registros al día.</p>
-
-<h2>Cuándo un UUID no es la herramienta adecuada</h2>
+<h2>Los estilos de nomenclatura, y para qué sirve cada uno</h2>
+<p>Cinco estilos cubren casi todos los casos que te vas a encontrar:</p>
 <ul>
-  <li><strong>Cuando necesitas que se puedan ordenar.</strong> Un UUID versión 4 es totalmente aleatorio, así que una lista de ellos no tiene un orden significativo — si necesitas identificadores que se ordenen aproximadamente por fecha de creación (útil para el rendimiento de los índices de base de datos), un esquema ordenado cronológicamente como UUID versión 7 o un ULID encaja mejor, no la versión 4.</li>
-  <li><strong>Cuando basta con un identificador corto y fácil de teclear.</strong> Un UUID es largo y está pensado para copiar y pegar, no para leerlo en voz alta ni teclearlo de memoria — un código corto (como un número de referencia de 6 caracteres) es más amigable para cualquier cosa que una persona necesite comunicar verbalmente.</li>
-  <li><strong>Cuando solo necesitas un contador.</strong> Un simple entero autoincremental es más pequeño, se ordena de forma natural y es más fácil de depurar — los UUID resuelven el problema concreto de generar identificadores únicos sin coordinación entre varios sistemas, algo que el autoincremento de una única base de datos ya resuelve bien por sí solo.</li>
+  <li><strong>camelCase</strong> — primera palabra en minúscula, cada palabra siguiente capitalizada, sin separadores (<code>firstName</code>). El estilo por defecto para variables y nombres de funciones en JavaScript, Java y la mayoría de los lenguajes de la familia C.</li>
+  <li><strong>PascalCase</strong> — igual que camelCase pero la primera palabra también va capitalizada (<code>FirstName</code>). Se usa para nombres de clases y tipos en esos mismos lenguajes, precisamente para distinguir un tipo de una variable de un vistazo.</li>
+  <li><strong>snake_case</strong> — todo en minúsculas, palabras separadas por guiones bajos (<code>first_name</code>). El estándar para variables y funciones en Python y Ruby, y para nombres de columnas de bases de datos casi en todas partes.</li>
+  <li><strong>kebab-case</strong> — todo en minúsculas, palabras separadas por guiones (<code>first-name</code>). Se usa para slugs de URL y nombres de clases CSS — el guion es el único separador que siempre es seguro en una URL sin necesidad de codificación.</li>
+  <li><strong>CONSTANT_CASE</strong> (también llamado SCREAMING_SNAKE_CASE) — todo en mayúsculas, palabras separadas por guiones bajos (<code>FIRST_NAME</code>). Reservado específicamente para constantes, así que un identificador en mayúsculas señala de un vistazo "este valor nunca cambia".</li>
+</ul>
+
+<h2>Por qué importa más la convención que la elección</h2>
+<p>Ninguno de estos estilos es técnicamente superior — una variable de JavaScript llamada <code>first_name</code> en lugar de <code>firstName</code> funciona exactamente igual. Lo que se rompe es la consistencia: mezclar estilos dentro de un mismo código obliga a cada persona que lo lee a cambiar de contexto sin necesidad, y algunas herramientas realmente no pueden mezclar estilos sin problemas (una clase CSS debe ser compatible con kebab-case, un slug de URL no puede contener caracteres que necesiten codificación, y un sistema de archivos sensible a mayúsculas tratará <code>MiArchivo</code> y <code>miarchivo</code> como dos archivos distintos mientras que uno insensible no lo hará). El estilo en sí es una convención; elegir uno y aplicarlo con consistencia es lo que realmente importa.</p>
+
+<h2>Dónde suele aparecer cada estilo</h2>
+<ul>
+  <li><strong>Variables y funciones:</strong> camelCase (JavaScript, Java) o snake_case (Python, Ruby) — usa el que ya use la biblioteca estándar y la guía de estilo de tu lenguaje, no una preferencia personal.</li>
+  <li><strong>Clases y tipos:</strong> PascalCase, casi universalmente, en los lenguajes que los distinguen de las variables.</li>
+  <li><strong>URLs y slugs de archivos:</strong> kebab-case — los motores de búsqueda y los navegadores tratan los guiones como separadores de palabras en una URL, algo que los guiones bajos y el camelCase no obtienen de forma gratuita.</li>
+  <li><strong>Clases CSS:</strong> kebab-case es la convención de siempre (<code>.nav-link</code>), aunque algunos frameworks basados en componentes usan camelCase para CSS-in-JS.</li>
+  <li><strong>Constantes y variables de entorno:</strong> CONSTANT_CASE — la convención de mayúsculas totales se originó con las macros del preprocesador de C y sigue siendo el estándar para variables de entorno y constantes reales hoy en día.</li>
 </ul>
 
 <h2>Respuestas rápidas</h2>
-<p><strong>¿Los UUID distinguen mayúsculas de minúsculas?</strong> Por convención se escriben en minúsculas, pero la mayoría de sistemas los tratan sin distinguir mayúsculas de minúsculas — las versiones en mayúsculas y minúsculas representan el mismo valor.</p>
-<p><strong>¿Puedo usar un UUID como clave primaria?</strong> Sí, es algo habitual — la principal contrapartida frente a un entero autoincremental es el rendimiento de los índices en tablas muy grandes, ya que los UUID aleatorios no se insertan en orden — la versión 7 existe precisamente para solucionar esto.</p>
-<p><strong>¿Un UUID es lo mismo que un GUID?</strong> A efectos prácticos sí — GUID (Identificador Único Global) es el nombre histórico de Microsoft para el mismo concepto, y hoy ambos términos se usan indistintamente.</p>
+<p><strong>¿Hay un estilo "correcto" para las claves de un JSON?</strong> No hay una regla estricta, pero camelCase es la convención de facto en APIs con mucho JavaScript, mientras que snake_case aparece a menudo en APIs escritas por equipos que priorizan Python o Ruby — usa el que ya utilice el resto de esa API.</p>
+<p><strong>¿Cuál es la diferencia entre kebab-case y "dash-case" o "spinal-case"?</strong> Ninguna — son el mismo estilo con distintos nombres, todos se refieren a palabras en minúscula unidas por guiones.</p>
+<p><strong>¿Por qué algunas guías de estilo evitan los guiones bajos en las URLs?</strong> Los motores de búsqueda más antiguos no siempre trataban un guion bajo como separador de palabras (algunos todavía leen <code>first_name</code> como una sola palabra, "first_name", en lugar de dos), mientras que un guion siempre divide en palabras separadas — kebab-case evita esa ambigüedad por completo.</p>
 
 <div class="cta-box">
-  <h3>Genera un UUID</h3>
-  <p>El Generador de UUID de Orisod crea UUID versión 4 usando el generador de números aleatorios seguro de tu navegador, uno a uno o en lote — todo en tu navegador.</p>
-  <a class="cta-button" href="/es/uuid-generator/">Generar un UUID →</a>
+  <h3>Convierte entre estilos</h3>
+  <p>El Conversor de Mayúsculas y Minúsculas de Orisod cambia texto entre MAYÚSCULAS, minúsculas, Tipo Título, Tipo oración, camelCase, PascalCase, snake_case, kebab-case y CONSTANT_CASE — todo en tu navegador.</p>
+  <a class="cta-button" href="/es/case-converter/">Convertir texto →</a>
 </div>
 
-<p>Para la inmensa mayoría de situaciones de "necesito un identificador único", un UUID versión 4 es la respuesta correcta, poco emocionante y bien entendida — las excepciones son lo bastante concretas (poder ordenarlos, legibilidad humana, contadores de una sola base de datos) que normalmente sabrás cuándo te has topado con una.</p>
+<p>El estilo específico rara vez importa por sí solo — lo que importa es respetar la convención que ya espera el lenguaje, el framework o el sistema en el que estás trabajando, y mantenerla una vez que la has elegido.</p>
 
 </div>
 
 <div class="related-section">
   <h2>Artículos relacionados</h2>
   <div class="related-grid">
-    <a class="blog-card" href="/es/blog/generate-a-strong-password/">
-      <h3>Cómo generar una contraseña fuerte (y por qué la longitud importa más que los trucos)</h3>
-      <p>Qué hace realmente que una contraseña sea difícil de descifrar, en bits de entropía reales.</p>
-    </a>
-
     <a class="blog-card" href="/es/blog/format-json/">
       <h3>Cómo formatear y validar JSON (y las reglas de sintaxis que realmente importan)</h3>
       <p>Por qué un objeto de JavaScript copiado falla como JSON, y las reglas exactas que exige JSON.parse.</p>
     </a>
 
-    <a class="blog-card" href="/es/blog/text-case-styles-explained/">
-      <h3>Estilos de mayúsculas y minúsculas explicados: cuándo usar camelCase, snake_case y más</h3>
-      <p>Para qué sirve realmente cada estilo de nomenclatura, y por qué importa más la convención que la elección.</p>
+    <a class="blog-card" href="/es/blog/generate-uuids/">
+      <h3>Qué es un UUID y cuándo lo necesitas realmente</h3>
+      <p>Qué codifican realmente los 32 dígitos hexadecimales de un UUID, y la matemática real de colisión.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/generate-a-strong-password/">
+      <h3>Cómo generar una contraseña fuerte (y por qué la longitud importa más que los trucos)</h3>
+      <p>Qué hace realmente difícil de descifrar una contraseña, en bits de entropía reales y calculados.</p>
     </a>
   </div>
 </div>
@@ -221,7 +216,7 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF basadas en el navegador. Procesamiento 100% local — tus archivos nunca se suben a ningún sitio.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF en tu navegador. Procesamiento 100% local — tus archivos nunca se suben a ningún sitio.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">
