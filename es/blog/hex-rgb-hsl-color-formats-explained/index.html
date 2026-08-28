@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Estilos de mayúsculas y minúsculas explicados: cuándo usar camelCase, snake_case y más | Blog de Orisod</title>
-<meta name="description" content="Para qué se usan realmente camelCase, PascalCase, snake_case, kebab-case y CONSTANT_CASE, y por qué la mayoría de los lenguajes adoptaron un estilo fijo en lugar de dejarlo a elección libre.">
-<link rel="canonical" href="https://orisod.com/es/blog/text-case-styles-explained/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/blog/text-case-styles-explained/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/text-case-styles-explained/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/text-case-styles-explained/">
+<title>HEX, RGB y HSL explicados: qué codifica realmente cada formato de color | Blog de Orisod</title>
+<meta name="description" content="Qué representan realmente los dígitos de un valor de color HEX, RGB o HSL, por qué los tres describen exactamente el mismo color, y por qué HSL suele ser más fácil de editar a mano.">
+<link rel="canonical" href="https://orisod.com/es/blog/hex-rgb-hsl-color-formats-explained/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/hex-rgb-hsl-color-formats-explained/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/hex-rgb-hsl-color-formats-explained/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/hex-rgb-hsl-color-formats-explained/">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
 <link rel="icon" href="/favicon.ico">
@@ -136,7 +136,7 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
     <span class="active-category">Blog</span>
   </nav>
   <div class="site-nav-right">
-    <a class="lang-flag" href="/blog/text-case-styles-explained/">EN</a>
+    <a class="lang-flag" href="/blog/hex-rgb-hsl-color-formats-explained/">EN</a>
     <span class="lang-flag active">ES</span>
     <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
   </div>
@@ -146,64 +146,69 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guías</span>
-<h1>Estilos de mayúsculas y minúsculas explicados: cuándo usar camelCase, snake_case y más</h1>
-<p class="intro">Cada ecosistema de programación tiene un estilo propio para nombrar cosas, y rara vez es arbitrario — normalmente depende de lo que espera la convención del propio lenguaje, y de lo que un sistema de archivos que no distingue mayúsculas o una URL pueden manejar sin problemas.</p>
+<h1>HEX, RGB y HSL explicados: qué codifica realmente cada formato de color</h1>
+<p class="intro">HEX, RGB y HSL no son tres colores distintos escritos de tres formas distintas — son tres formas distintas de escribir exactamente el mismo color. Una vez que sabes qué codifica realmente cada uno, convertir entre ellos (o elegir el adecuado para cada tarea) deja de ser adivinar.</p>
 
 <div class="article-body">
 
-<h2>Los estilos de nomenclatura, y para qué sirve cada uno</h2>
-<p>Cinco estilos cubren casi todos los casos que te vas a encontrar:</p>
-<ul>
-  <li><strong>camelCase</strong> — primera palabra en minúscula, cada palabra siguiente capitalizada, sin separadores (<code>firstName</code>). El estilo por defecto para variables y nombres de funciones en JavaScript, Java y la mayoría de los lenguajes de la familia C.</li>
-  <li><strong>PascalCase</strong> — igual que camelCase pero la primera palabra también va capitalizada (<code>FirstName</code>). Se usa para nombres de clases y tipos en esos mismos lenguajes, precisamente para distinguir un tipo de una variable de un vistazo.</li>
-  <li><strong>snake_case</strong> — todo en minúsculas, palabras separadas por guiones bajos (<code>first_name</code>). El estándar para variables y funciones en Python y Ruby, y para nombres de columnas de bases de datos casi en todas partes.</li>
-  <li><strong>kebab-case</strong> — todo en minúsculas, palabras separadas por guiones (<code>first-name</code>). Se usa para slugs de URL y nombres de clases CSS — el guion es el único separador que siempre es seguro en una URL sin necesidad de codificación.</li>
-  <li><strong>CONSTANT_CASE</strong> (también llamado SCREAMING_SNAKE_CASE) — todo en mayúsculas, palabras separadas por guiones bajos (<code>FIRST_NAME</code>). Reservado específicamente para constantes, así que un identificador en mayúsculas señala de un vistazo "este valor nunca cambia".</li>
-</ul>
+<h2>Los tres describen el mismo color subyacente</h2>
+<p>Todo color en una pantalla es, en el fondo, una mezcla de luz roja, verde y azul, cada canal con una intensidad que va de ninguna a total. HEX y RGB codifican exactamente eso — tres números para rojo, verde y azul — solo que con notaciones distintas. HSL redescribe el mismo color usando un conjunto de ejes distinto y más intuitivo: matiz (qué color de la rueda), saturación (qué tan vívido frente a grisáceo) y luminosidad (qué tan cerca del negro o del blanco). Convertir entre ellos es pura matemática, no una traducción con pérdida — el mismo color sale al otro lado.</p>
 
-<h2>Por qué importa más la convención que la elección</h2>
-<p>Ninguno de estos estilos es técnicamente superior — una variable de JavaScript llamada <code>first_name</code> en lugar de <code>firstName</code> funciona exactamente igual. Lo que se rompe es la consistencia: mezclar estilos dentro de un mismo código obliga a cada persona que lo lee a cambiar de contexto sin necesidad, y algunas herramientas realmente no pueden mezclar estilos sin problemas (una clase CSS debe ser compatible con kebab-case, un slug de URL no puede contener caracteres que necesiten codificación, y un sistema de archivos sensible a mayúsculas tratará <code>MiArchivo</code> y <code>miarchivo</code> como dos archivos distintos mientras que uno insensible no lo hará). El estilo en sí es una convención; elegir uno y aplicarlo con consistencia es lo que realmente importa.</p>
+<figure class="theme-figure">
+<svg viewBox="0 0 700 235" width="700" height="235" role="img" aria-label="Diagrama que muestra un color real expresado en tres formatos equivalentes: HEX 2563eb, RGB 37 99 235 y HSL 221 grados 83 por ciento 53 por ciento, con una muestra del color real junto a cada uno." xmlns="http://www.w3.org/2000/svg">
+<rect x="30" y="20" width="60" height="60" rx="8" fill="#2563eb"/>
+<text x="110" y="45" text-anchor="start" font-family="Courier New, monospace" font-size="20" font-weight="bold" fill="var(--text)">#2563eb</text>
+<text x="110" y="66" text-anchor="start" font-size="13" fill="var(--muted-text)">HEX — 3 bytes, base 16</text>
+<rect x="30" y="95" width="60" height="60" rx="8" fill="#2563eb"/>
+<text x="110" y="120" text-anchor="start" font-family="Courier New, monospace" font-size="20" font-weight="bold" fill="var(--text)">rgb(37, 99, 235)</text>
+<text x="110" y="141" text-anchor="start" font-size="13" fill="var(--muted-text)">RGB — los mismos 3 bytes, base 10</text>
+<rect x="30" y="170" width="60" height="60" rx="8" fill="#2563eb"/>
+<text x="110" y="195" text-anchor="start" font-family="Courier New, monospace" font-size="20" font-weight="bold" fill="var(--text)">hsl(221, 83%, 53%)</text>
+<text x="110" y="216" text-anchor="start" font-size="13" fill="var(--muted-text)">HSL — matiz, saturación, luminosidad</text>
+</svg>
+<figcaption>El mismo color real — el azul de acento propio de Orisod — expresado como HEX, RGB y HSL. Los tres describen el mismo píxel exacto; convertir entre ellos solo cambia la notación.</figcaption>
+</figure>
 
-<h2>Dónde suele aparecer cada estilo</h2>
-<ul>
-  <li><strong>Variables y funciones:</strong> camelCase (JavaScript, Java) o snake_case (Python, Ruby) — usa el que ya use la biblioteca estándar y la guía de estilo de tu lenguaje, no una preferencia personal.</li>
-  <li><strong>Clases y tipos:</strong> PascalCase, casi universalmente, en los lenguajes que los distinguen de las variables.</li>
-  <li><strong>URLs y slugs de archivos:</strong> kebab-case — los motores de búsqueda y los navegadores tratan los guiones como separadores de palabras en una URL, algo que los guiones bajos y el camelCase no obtienen de forma gratuita.</li>
-  <li><strong>Clases CSS:</strong> kebab-case es la convención de siempre (<code>.nav-link</code>), aunque algunos frameworks basados en componentes usan camelCase para CSS-in-JS.</li>
-  <li><strong>Constantes y variables de entorno:</strong> CONSTANT_CASE — la convención de mayúsculas totales se originó con las macros del preprocesador de C y sigue siendo el estándar para variables de entorno y constantes reales hoy en día.</li>
-</ul>
+<h2>Qué significan realmente los dígitos del HEX</h2>
+<p>Un código HEX de 6 dígitos como <code>#2563eb</code> son tres números hexadecimales (base 16) de 2 dígitos, uno tras otro: <code>25</code> para el rojo, <code>63</code> para el verde, <code>eb</code> para el azul. Cada par va de <code>00</code> (ninguna intensidad) a <code>ff</code> (intensidad total, 255 en decimal) — <code>25</code> en hexadecimal equivale a 37 en decimal, <code>63</code> equivale a 99, y <code>eb</code> equivale a 235, que es exactamente el valor RGB del mismo color. Un cuarto par opcional (un código HEX de 8 dígitos) añade un canal alfa para la transparencia, usando la misma escala de 00 a ff.</p>
+
+<h2>Por qué HSL suele ser más fácil de editar a mano</h2>
+<p>Supongamos que quieres una versión más clara de un azul. En RGB, "más claro" significa aumentar los tres canales juntos manteniendo su proporción más o menos constante — algo que no puedes hacer a ojo sin recalcular tres números. En HSL, la luminosidad es su propio eje independiente: mantén el matiz y la saturación exactamente iguales y simplemente sube el porcentaje de luminosidad, y obtienes una versión más clara del mismo color exacto, sin riesgo de desviar accidentalmente el matiz. Por eso HSL aparece a menudo en herramientas de diseño y en sistemas de propiedades personalizadas de CSS construidos para generar tonos y matices de forma programática a partir de un color base.</p>
+
+<h2>Qué controla realmente el canal alfa</h2>
+<p>El alfa controla la transparencia, no el brillo — un color al 50% de alfa no es una versión más oscura del color, es el mismo color mostrado a la mitad de opacidad, dejando ver lo que hay detrás. Por eso un blanco semitransparente puede seguir viéndose "claro" incluso con un valor de alfa bajo sobre un fondo oscuro, mientras que ese mismo color con ese mismo alfa se ve distinto sobre un fondo claro — el valor de alfa por sí solo no determina el resultado final en pantalla, lo que hay detrás también influye.</p>
 
 <h2>Respuestas rápidas</h2>
-<p><strong>¿Hay un estilo "correcto" para las claves de un JSON?</strong> No hay una regla estricta, pero camelCase es la convención de facto en APIs con mucho JavaScript, mientras que snake_case aparece a menudo en APIs escritas por equipos que priorizan Python o Ruby — usa el que ya utilice el resto de esa API.</p>
-<p><strong>¿Cuál es la diferencia entre kebab-case y "dash-case" o "spinal-case"?</strong> Ninguna — son el mismo estilo con distintos nombres, todos se refieren a palabras en minúscula unidas por guiones.</p>
-<p><strong>¿Por qué algunas guías de estilo evitan los guiones bajos en las URLs?</strong> Los motores de búsqueda más antiguos no siempre trataban un guion bajo como separador de palabras (algunos todavía leen <code>first_name</code> como una sola palabra, "first_name", en lugar de dos), mientras que un guion siempre divide en palabras separadas — kebab-case evita esa ambigüedad por completo.</p>
+<p><strong>¿El HEX de 3 dígitos (como #fff) es realmente igual que el de 6?</strong> Sí — cada dígito simplemente se duplica: <code>#fff</code> se expande a <code>#ffffff</code>, <code>#2a5</code> se expande a <code>#22aa55</code>. Es una abreviatura, no un espacio de color distinto.</p>
+<p><strong>¿HSL admite más colores que RGB, o menos?</strong> Ninguno de los dos — describen exactamente el mismo espacio de color (color de 24 bits, alrededor de 16.7 millones de colores), solo parametrizado de forma distinta. Convertir HSL→RGB→HSL de nuevo devuelve el mismo color.</p>
+<p><strong>¿Por qué a veces aparecen pequeñas diferencias de redondeo al convertir ida y vuelta?</strong> El matiz, la saturación y la luminosidad de HSL normalmente se guardan como grados/porcentajes en números enteros, lo que pierde un poco de precisión comparado con los canales enteros de 0 a 255 de RGB — convertir RGB→HSL→RGB ocasionalmente puede quedar una unidad distinta del original por ese redondeo, no porque los formatos no coincidan sobre el color.</p>
 
 <div class="cta-box">
-  <h3>Convierte entre estilos</h3>
-  <p>El Conversor de Mayúsculas y Minúsculas de Orisod cambia texto entre MAYÚSCULAS, minúsculas, Tipo Título, Tipo oración, camelCase, PascalCase, snake_case, kebab-case y CONSTANT_CASE — todo en tu navegador.</p>
-  <a class="cta-button" href="/es/case-converter/">Convertir texto →</a>
+  <h3>Elige y convierte un color</h3>
+  <p>El Selector y Conversor de Color de Orisod convierte en vivo entre HEX, RGB y HSL, con soporte de canal alfa — todo en tu navegador.</p>
+  <a class="cta-button" href="/es/color-picker-converter/">Elegir y convertir un color →</a>
 </div>
 
-<p>El estilo específico rara vez importa por sí solo — lo que importa es respetar la convención que ya espera el lenguaje, el framework o el sistema en el que estás trabajando, y mantenerla una vez que la has elegido.</p>
+<p>HEX, RGB y HSL son tres ventanas hacia el mismo color, no tres estándares en competencia — cuál usar depende de qué eje necesitas controlar (bytes exactos, o matiz/luminosidad intuitivos), no de cuál es más "correcto".</p>
 
 </div>
 
 <div class="related-section">
   <h2>Artículos relacionados</h2>
   <div class="related-grid">
+    <a class="blog-card" href="/es/blog/what-is-image-metadata/">
+      <h3>Qué son los metadatos de una imagen y cómo consultarlos</h3>
+      <p>Qué contienen realmente los datos EXIF, y por qué podrías querer eliminarlos.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/text-case-styles-explained/">
+      <h3>Estilos de mayúsculas y minúsculas explicados: cuándo usar camelCase, snake_case y más</h3>
+      <p>Para qué sirve realmente cada estilo de nomenclatura, y por qué importa más la convención que la elección.</p>
+    </a>
+
     <a class="blog-card" href="/es/blog/format-json/">
       <h3>Cómo formatear y validar JSON (y las reglas de sintaxis que realmente importan)</h3>
       <p>Por qué un objeto de JavaScript copiado falla como JSON, y las reglas exactas que exige JSON.parse.</p>
-    </a>
-
-    <a class="blog-card" href="/es/blog/word-count-and-reading-time-explained/">
-      <h3>Cómo funcionan realmente el conteo de palabras y las estimaciones de tiempo de lectura</h3>
-      <p>Cómo dividen el texto los contadores, por qué el conteo de oraciones es una heurística, y la matemática detrás de un "5 min de lectura".</p>
-    </a>
-
-    <a class="blog-card" href="/es/blog/hex-rgb-hsl-color-formats-explained/">
-      <h3>HEX, RGB y HSL explicados: qué codifica realmente cada formato de color</h3>
-      <p>Qué representan realmente los dígitos, y por qué HSL suele ser más fácil de editar a mano que RGB.</p>
     </a>
   </div>
 </div>
