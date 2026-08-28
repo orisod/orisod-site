@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Qué hace realmente "aplanar" un PDF (y por qué es un viaje solo de ida) | Blog de Orisod</title>
-<meta name="description" content="Qué son realmente los campos AcroForm de un PDF, qué les hace el aplanado por dentro, y por qué imprimir a PDF es un sustituto tosco y peor.">
-<link rel="canonical" href="https://orisod.com/es/blog/flatten-pdf-forms-explained/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/blog/flatten-pdf-forms-explained/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/flatten-pdf-forms-explained/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/flatten-pdf-forms-explained/">
+<title>Cómo funcionan realmente el ajuste de línea y la paginación al convertir texto a PDF | Blog de Orisod</title>
+<meta name="description" content="Por qué el PDF no tiene ajuste de línea integrado, cómo mide un generador el ancho del texto para decidir dónde cortar líneas, y la matemática real detrás de las métricas de fuente.">
+<link rel="canonical" href="https://orisod.com/es/blog/text-to-pdf-word-wrap-explained/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/text-to-pdf-word-wrap-explained/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/text-to-pdf-word-wrap-explained/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/text-to-pdf-word-wrap-explained/">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
 <link rel="icon" href="/favicon.ico">
@@ -136,7 +136,7 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
     <span class="active-category">Blog</span>
   </nav>
   <div class="site-nav-right">
-    <a class="lang-flag" href="/blog/flatten-pdf-forms-explained/">EN</a>
+    <a class="lang-flag" href="/blog/text-to-pdf-word-wrap-explained/">EN</a>
     <span class="lang-flag active">ES</span>
     <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
   </div>
@@ -146,61 +146,58 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guías</span>
-<h1>Qué hace realmente "aplanar" un PDF (y por qué es un viaje solo de ida)</h1>
-<p class="intro">Un formulario PDF rellenable no es realmente una sola capa — es contenido de página con una capa interactiva separada de campos de formulario encima. Aplanar es lo que ocurre cuando esa segunda capa se fusiona permanentemente con la primera, y una vez hecho, no hay forma de volver a separarlas.</p>
+<h1>Cómo funcionan realmente el ajuste de línea y la paginación al convertir texto a PDF</h1>
+<p class="intro">Un procesador de textos ajusta el texto automáticamente, así que es fácil suponer que generar un PDF funciona igual. No es así — el formato PDF en sí no tiene ningún concepto de ajuste de línea. Cada herramienta de "pega texto, obtén un PDF" tiene que medir y cortar las líneas por sí misma, palabra por palabra.</p>
 
 <div class="article-body">
 
-<h2>Qué es realmente un campo de formulario dentro de un PDF</h2>
-<p>Por dentro, un formulario PDF rellenable se construye sobre lo que la especificación PDF llama un AcroForm: una lista de objetos de campo (cuadros de texto, casillas de verificación, botones de radio, listas desplegables) que cada uno lleva un valor actual y un conjunto de coordenadas que le indican a un lector de PDF dónde dibujar un widget editable sobre la página. El flujo de contenido real de la página — el texto y los gráficos que ya estaban ahí antes de que alguien rellenara algo — no se toca al rellenar un campo. El valor vive en el objeto de campo, no en la página misma, que es exactamente por qué un lector todavía puede dejarte editarlo después de guardarlo.</p>
+<h2>Por qué el PDF no tiene ajuste de línea integrado</h2>
+<p>El texto de una página PDF no es un párrafo fluido como en un procesador de textos — es una serie de instrucciones de dibujo explícitas, cada una colocando una cadena específica de caracteres en una coordenada x/y específica de la página. No hay ningún equivalente al ajuste automático de línea de HTML en el borde de un contenedor. Si un generador quiere que el texto se ajuste al margen derecho, tiene que averiguar, línea por línea, exactamente qué palabras caben antes de ese margen y emitir una instrucción de dibujo separada para cada línea resultante.</p>
+
+<h2>Cómo mide un generador dónde cortar una línea</h2>
+<p>La operación central es medir el ancho en puntos que ocuparía una cadena de texto en una fuente y tamaño específicos — cada fuente tiene datos de métricas exactamente para esto, ya que cada carácter tiene un ancho definido a un tamaño dado. Un generador construye una línea palabra por palabra: añade la siguiente palabra, mide el ancho resultante de la línea, y si sigue siendo más estrecho que el ancho disponible de la página (el ancho de la página menos los márgenes izquierdo y derecho), la conserva; si añadir la palabra desbordaría el ancho, esa palabra inicia una nueva línea en su lugar.</p>
 
 <figure class="theme-figure">
-<svg viewBox="0 0 700 190" width="700" height="190" role="img" aria-label="Diagrama comparativo: antes de aplanar, un campo de nombre se muestra como un cuadro interactivo con borde discontinuo etiquetado como editable; después de aplanar, el mismo valor aparece como texto estático plano sin borde, etiquetado como no editable." xmlns="http://www.w3.org/2000/svg">
-<text x="175" y="30" text-anchor="middle" font-size="14" font-weight="bold" fill="var(--muted-text)">ANTES — CAMPO INTERACTIVO</text>
-<rect x="75" y="55" width="200" height="40" rx="4" fill="none" stroke="var(--accent)" stroke-width="2" stroke-dasharray="6 4"/>
-<text x="175" y="80" text-anchor="middle" font-family="Arial" font-size="16" fill="var(--text)">Ada Lovelace</text>
-<text x="175" y="118" text-anchor="middle" font-size="13" fill="var(--accent)">todavía editable</text>
-<line x1="350" y1="40" x2="350" y2="150" stroke="var(--border)" stroke-width="1.5"/>
-<path d="M370 95 L410 95 M400 87 L410 95 L400 103" stroke="var(--muted-text)" stroke-width="2" fill="none"/>
-<text x="390" y="75" text-anchor="middle" font-size="12" fill="var(--muted-text)">flatten()</text>
-<text x="525" y="30" text-anchor="middle" font-size="14" font-weight="bold" fill="var(--muted-text)">DESPUÉS — APLANADO</text>
-<rect x="425" y="55" width="200" height="40" rx="4" fill="none" stroke="none"/>
-<text x="525" y="80" text-anchor="middle" font-family="Arial" font-size="16" fill="var(--text)">Ada Lovelace</text>
-<text x="525" y="118" text-anchor="middle" font-size="13" fill="#4ade80">no editable — ahora es contenido de página</text>
+<svg viewBox="0 0 700 190" width="700" height="190" role="img" aria-label="Diagrama que muestra que la palabra Helvetica, renderizada en fuente Helvetica de 12 puntos, mide 49.044 puntos de ancho, comparado con el ancho de texto disponible de una página A4 de 495.28 puntos tras márgenes de 50 puntos en cada lado, cabiendo aproximadamente 10 palabras de esa longitud por línea." xmlns="http://www.w3.org/2000/svg">
+<text x="350" y="35" text-anchor="middle" font-size="16" fill="var(--text)">Medir una palabra para decidir si cabe</text>
+<rect x="60" y="55" width="580" height="50" rx="6" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+<text x="80" y="85" text-anchor="start" font-family="Helvetica, Arial" font-size="24" fill="var(--accent)">Helvetica</text>
+<line x1="80" y1="95" x2="129" y2="95" stroke="var(--accent)" stroke-width="2"/>
+<text x="500" y="85" text-anchor="start" font-size="14" fill="var(--muted-text)">= 49.044pt de ancho a 12pt</text>
+<line x1="60" y1="130" x2="640" y2="130" stroke="var(--border)" stroke-width="1.5"/>
+<text x="350" y="155" text-anchor="middle" font-size="14" fill="var(--muted-text)">Ancho de página A4 (595.28pt) − 50pt de margen por lado = 495.28pt disponibles para texto</text>
+<text x="350" y="178" text-anchor="middle" font-size="13" fill="var(--muted-text)">≈ 10 palabras de esta longitud caben en una línea antes de ajustar</text>
 </svg>
-<figcaption>El texto visible no cambia — lo que cambia es si es un objeto de campo activo o contenido permanente de la página.</figcaption>
+<figcaption>Valores reales medidos: "Helvetica" a 12pt en fuente Helvetica mide exactamente 49.044 puntos de ancho (calculado con las propias métricas de fuente de pdf-lib) — esa es la unidad con la que realmente trabaja un algoritmo de ajuste de línea.</figcaption>
 </figure>
 
-<h2>Qué hace realmente el aplanado</h2>
-<p>Aplanar toma la apariencia actual de cada campo — como se renderiza en ese momento, incluido su valor — y la dibuja directamente en el flujo de contenido de la página, y luego elimina por completo el objeto de campo (y su anotación de widget interactivo asociada). El AcroForm queda, en la práctica, vacío. Nada del resultado visual cambia; un PDF aplanado y su origen previo al aplanado se ven idénticos píxel por píxel al abrirlos uno junto al otro. Lo que desaparece es la posibilidad de hacer clic en ese campo y cambiarlo.</p>
+<h2>Cómo la paginación sigue la misma lógica en vertical</h2>
+<p>Una vez que un generador tiene la lista completa de líneas ajustadas, las coloca una debajo de otra, bajando una altura de línea cada vez, hasta que la siguiente línea caería por debajo del margen inferior — en ese momento, comienza una nueva página y continúa desde el margen superior. Es el mismo enfoque codicioso, elemento por elemento, que el ajuste de línea, solo que aplicado a líneas en lugar de palabras, y a espacio vertical en lugar de horizontal.</p>
 
-<h2>Por qué es irreversible</h2>
-<p>Una vez que el valor de un campo se fusiona con el flujo de contenido de la página, ya no queda ningún metadato que conecte ese texto dibujado con "esto solía ser un campo editable llamado <code>email</code>". El flujo de contenido de un PDF son solo instrucciones de dibujo — líneas, posiciones de texto, fuentes — sin ningún concepto de "este texto solía ser interactivo". Deshacer el aplanado no es una operación compatible en ninguna herramienta de PDF porque la información necesaria para revertirlo (qué texto específico corresponde a qué campo original, y dónde estaban los límites del campo) simplemente no se conserva.</p>
-
-<h2>Por qué "imprimir a PDF" es un sustituto peor</h2>
-<p>Imprimir un formulario rellenado a un nuevo PDF (a través de una impresora virtual) también elimina los campos interactivos, por eso algunas personas lo usan como método alternativo de aplanado — pero es una herramienta mucho más tosca. Dependiendo del controlador de impresión, puede rasterizar toda la página en una imagen, lo que significa que el texto deja de ser seleccionable, buscable o copiable, y el tamaño del archivo a menudo se dispara porque el texto se convirtió en píxeles. El aplanado real mediante una biblioteca de PDF mantiene el texto subyacente como texto real — seleccionable y buscable — al mismo tiempo que elimina la capa interactiva, que es el resultado que la mayoría de la gente realmente quiere.</p>
+<h2>Por qué el texto PDF real es mejor que una imagen rasterizada del texto</h2>
+<p>Como este proceso construye instrucciones reales de dibujo de texto PDF (no una imagen), el PDF resultante tiene texto genuinamente seleccionable, buscable y copiable — abrirlo y arrastrar para seleccionar una frase funciona exactamente igual que en cualquier PDF basado en texto. Un generador que en cambio renderizara tu texto en un lienzo y colocara ese lienzo como imagen produciría un PDF que se ve idéntico a simple vista pero sin ningún texto seleccionable, y normalmente con un tamaño de archivo notablemente mayor.</p>
 
 <h2>Respuestas rápidas</h2>
-<p><strong>¿Aplanar reduce el tamaño del archivo?</strong> Normalmente solo un poco, si acaso — elimina los objetos de campo/widget, pero el contenido subyacente (texto, imágenes) no cambia, así que la mayor parte del tamaño del archivo se mantiene igual.</p>
-<p><strong>¿Un PDF aplanado seguirá mostrando correctamente las marcas de casillas y las selecciones de botones de radio?</strong> Sí — lo que el campo mostraba en el momento de aplanar (marcado, sin marcar, qué opción de radio estaba seleccionada) se convierte en el resultado visual permanente.</p>
-<p><strong>¿Un campo de firma se aplana de la misma manera?</strong> Sí, en principio — la apariencia actual de un campo de firma (una imagen o una firma dibujada) se fusiona con la página igual que el valor de cualquier otro campo, aunque los objetos de validación de firma digital son una función de PDF distinta de los campos AcroForm y se comportan de forma diferente.</p>
+<p><strong>¿Qué pasa con una sola palabra más larga que todo el ancho de línea?</strong> Un generador bien diseñado recurre a cortar la propia palabra, carácter por carácter, en lugar de dejar que desborde la página o quedarse atascado en un bucle infinito — esto importa para cosas como URLs largas sin espacios.</p>
+<p><strong>¿Distintas fuentes ajustan el texto de forma diferente al mismo tamaño?</strong> Sí — cada fuente tiene sus propios anchos de carácter (una fuente monoespaciada como Courier tiene anchos idénticos para cada carácter, mientras que Helvetica o Times tienen anchos variables por carácter), así que el mismo texto al mismo tamaño de punto puede ajustarse en un número distinto de líneas según la fuente.</p>
+<p><strong>¿Por qué importan las líneas en blanco de mi texto pegado?</strong> Una línea en blanco normalmente indica un salto de párrafo — un generador que las ignorara por completo uniría todos los párrafos, así que conservarlas como líneas vacías (con su propio espacio vertical) mantiene reconocible la estructura original.</p>
 
 <div class="cta-box">
-  <h3>Aplana un formulario PDF</h3>
-  <p>La herramienta Aplanar PDF de Orisod convierte un formulario rellenable en un documento permanente y no editable — todo en tu navegador.</p>
-  <a class="cta-button" href="/es/flatten-pdf/">Aplanar un PDF →</a>
+  <h3>Convierte texto a PDF</h3>
+  <p>La herramienta Texto a PDF de Orisod ajusta y pagina texto plano automáticamente, con opción de tamaño de página, fuente y tamaño de fuente — todo en tu navegador.</p>
+  <a class="cta-button" href="/es/text-to-pdf/">Convertir texto a PDF →</a>
 </div>
 
-<p>Aplanar es una operación estrecha y específica — fusionar la capa de campos con la página, y luego descartar la capa de campos — que es exactamente por qué es tan sencilla de entender como imposible de deshacer. Conserva el archivo original rellenado (sin aplanar) por si hay alguna posibilidad de que necesites volver a editar los valores.</p>
+<p>El ajuste de línea y la paginación en un generador de PDF no son magia — son una medición de métricas de fuente repetida palabra por palabra y línea por línea hasta que se acaba el texto. Una vez que sabes que ese es todo el algoritmo, el caso límite ocasional (palabras muy largas, texto con espaciado extraño) deja de sorprender.</p>
 
 </div>
 
 <div class="related-section">
   <h2>Artículos relacionados</h2>
   <div class="related-grid">
-    <a class="blog-card" href="/es/blog/fill-pdf-forms-online/">
-      <h3>Cómo rellenar un formulario PDF en línea</h3>
-      <p>Cómo funcionan los campos reales de un PDF, y cómo rellenarlo y bloquearlo.</p>
+    <a class="blog-card" href="/es/blog/flatten-pdf-forms-explained/">
+      <h3>Qué hace realmente "aplanar" un PDF (y por qué es un viaje solo de ida)</h3>
+      <p>Qué son los campos AcroForm, qué hace flatten() por dentro, y por qué imprimir a PDF es un sustituto peor.</p>
     </a>
 
     <a class="blog-card" href="/es/blog/edit-pdf-online/">
@@ -208,9 +205,9 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
       <p>En qué consiste la anotación real de PDF, y cómo añadirla sin software especial.</p>
     </a>
 
-    <a class="blog-card" href="/es/blog/text-to-pdf-word-wrap-explained/">
-      <h3>Cómo funcionan realmente el ajuste de línea y la paginación al convertir texto a PDF</h3>
-      <p>Por qué el PDF no tiene ajuste de línea integrado, y la matemática real de las métricas de fuente.</p>
+    <a class="blog-card" href="/es/blog/fill-pdf-forms-online/">
+      <h3>Cómo rellenar un formulario PDF en línea</h3>
+      <p>Cómo funcionan los campos reales de un PDF, y cómo rellenarlo y bloquearlo.</p>
     </a>
   </div>
 </div>
