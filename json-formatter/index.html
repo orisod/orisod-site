@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UUID Generator – Free Online Tool | Orisod</title>
-<meta name="description" content="Generate random UUID v4 identifiers using your browser's built-in secure random number generator. Free, generate multiple at once, nothing is sent anywhere.">
-<link rel="canonical" href="https://orisod.com/uuid-generator/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/uuid-generator/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/uuid-generator/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/uuid-generator/">
+<title>JSON Formatter – Free Online Tool | Orisod</title>
+<meta name="description" content="Format, validate, and minify JSON online. Pretty-print with 2/4-space or tab indentation, sort keys alphabetically, and see the exact line and column of any syntax error — 100% in your browser, nothing uploaded.">
+<link rel="canonical" href="https://orisod.com/json-formatter/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/json-formatter/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/json-formatter/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/json-formatter/">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
 <link rel="icon" href="/favicon.ico">
@@ -74,30 +74,24 @@ body{margin:0;font-family:Arial, Helvetica, sans-serif;background-color:var(--bg
 h1{font-size:48px;margin-bottom:10px;}
 p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
 .box{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:30px 20px;margin-top:30px;}
-.controls-row{display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;margin-bottom:20px;font-size:15px;}
+.jf-label{display:block;text-align:left;font-size:13px;font-weight:bold;margin:0 0 6px 0;color:var(--muted-text);text-transform:uppercase;letter-spacing:.3px;}
+.jf-textarea{width:100%;min-height:200px;padding:12px 14px;border-radius:8px;border:1px solid var(--dropzone-border);background:var(--bg);color:var(--text);font-family:"Courier New", monospace;font-size:13.5px;line-height:1.5;resize:vertical;}
+.jf-textarea:focus{outline:none;border-color:var(--accent);}
+.jf-textarea[readonly]{opacity:0.92;}
+.controls-row{display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;margin:18px 0;font-size:15px;}
 .controls-row label{display:flex;align-items:center;gap:8px;}
-.controls-row input[type="number"]{
-  width:70px;padding:8px 10px;border-radius:6px;border:1px solid var(--dropzone-border);
-  background:var(--bg);color:var(--text);font-size:15px;text-align:center;
+.controls-row select{
+  padding:7px 10px;border-radius:6px;border:1px solid var(--dropzone-border);
+  background:var(--bg);color:var(--text);font-size:14px;
 }
 .controls-row input[type="checkbox"]{width:17px;height:17px;accent-color:var(--accent);cursor:pointer;}
-.uuid-list{max-width:560px;margin:0 auto;text-align:left;}
-.uuid-row{
-  display:flex;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--border);
-  border-radius:6px;padding:10px 14px;margin-bottom:8px;
-}
-.uuid-row span{
-  flex:1 1 auto;min-width:0;font-family:"Courier New", monospace;font-size:15px;
-  word-break:break-all;text-align:left;color:var(--text);
-}
-.uuid-row button{margin:0;padding:7px 12px;font-size:12px;flex:none;}
 .action-row{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;}
 button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
 button.secondary{background:var(--card-bg);border:1px solid var(--border);color:var(--text);}
 button.secondary:hover:not(:disabled){border-color:var(--accent);filter:none;}
 button:disabled{opacity:0.4;cursor:not-allowed;}
 button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
-.error{color:#f87171;font-size:14px;margin-top:10px;}
+.error{color:#f87171;font-size:14px;margin-top:10px;text-align:left;}
 .trust-strip{font-size:12px;color:var(--muted-text);margin-top:16px;line-height:1.5;}
 h2{margin-top:50px;font-size:22px;}
 .seo-content{max-width:700px;margin:0 auto;text-align:left;}
@@ -155,71 +149,93 @@ h2{margin-top:50px;font-size:22px;}
   </nav>
   <div class="site-nav-right">
     <span class="lang-flag active">EN</span>
-    <a class="lang-flag" href="/es/uuid-generator/">ES</a>
+    <a class="lang-flag" href="/es/json-formatter/">ES</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
   </div>
 </header>
 
 <main>
 <div class="container">
-  <h1>UUID Generator</h1>
-  <p>Generate random UUID v4 identifiers using your browser's built-in secure random number generator. Nothing you generate is sent anywhere.</p>
+  <h1>JSON Formatter</h1>
+  <p>Format, validate, and minify JSON right in your browser. Paste JSON below, adjust indentation or sort keys, and get an exact line and column for any syntax error — nothing you paste is ever uploaded.</p>
 
   <div class="box">
-    <div class="controls-row">
-      <label for="countInput">How many:
-        <input type="number" id="countInput" min="1" max="100" value="1">
-      </label>
-      <label><input type="checkbox" id="uppercaseToggle"> Uppercase</label>
-    </div>
+    <label class="jf-label" for="jsonInput">Paste your JSON</label>
+    <textarea id="jsonInput" class="jf-textarea" spellcheck="false"></textarea>
 
-    <div class="uuid-list" id="uuidList"></div>
+    <div class="controls-row">
+      <label for="indentSelect">Indent:
+        <select id="indentSelect">
+          <option value="2" selected>2 spaces</option>
+          <option value="4">4 spaces</option>
+          <option value="tab">Tab</option>
+        </select>
+      </label>
+      <label><input type="checkbox" id="sortKeysToggle"> Sort keys A–Z</label>
+    </div>
 
     <div class="action-row">
-      <button id="generateBtn">🔄 Generate</button>
-      <button class="secondary" id="copyAllBtn">📋 Copy All</button>
+      <button id="formatBtn">✨ Format</button>
+      <button class="secondary" id="minifyBtn">📦 Minify</button>
     </div>
+
     <div class="error" id="errorMsg"></div>
-    <div class="trust-strip">🔒 Generated on your device · Never sent anywhere · Not stored</div>
+
+    <label class="jf-label" for="jsonOutput" style="margin-top:20px;">Formatted output</label>
+    <textarea id="jsonOutput" class="jf-textarea" readonly spellcheck="false"></textarea>
+
+    <div class="action-row" style="margin-top:0;">
+      <button class="secondary" id="copyBtn">📋 Copy Output</button>
+    </div>
+    <div class="trust-strip">🔒 Processed on your device · Never sent anywhere · Not stored</div>
   </div>
 
   <div class="seo-content">
-    <h2>What is a UUID?</h2>
-    <p>A UUID (Universally Unique Identifier) is a 128-bit value, usually written as 32 hexadecimal digits in five groups (like <code style="background:var(--bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;">550e8400-e29b-41d4-a716-446655440000</code>). It's used to label records, sessions, database rows, or API objects with an identifier that's effectively guaranteed not to collide with any other UUID ever generated, anywhere, without needing a central authority to hand them out.</p>
+    <h2>What does a JSON formatter do?</h2>
+    <p>JSON (JavaScript Object Notation) is a plain-text data format, but it's picky about syntax — a missing quote, a trailing comma, or a single-quoted string will make it invalid. This tool runs your JSON through your browser's own strict JSON parser, then either pretty-prints it with readable indentation or minifies it into a single compact line, and points out exactly where any syntax error is if parsing fails.</p>
 
     <h2>When should you use this tool?</h2>
     <ul>
-      <li>You need a unique ID for a database record, test fixture, or API request during development</li>
-      <li>You're generating sample or seed data and need realistic-looking unique identifiers</li>
-      <li>You need several unique IDs at once and don't want to call a library or write a script for it</li>
+      <li>You're debugging an API response and need to read a wall of minified JSON</li>
+      <li>You have a config file or payload with inconsistent or missing indentation</li>
+      <li>You want to compare two JSON payloads and need their keys in the same order first</li>
+      <li>You need to shrink JSON before pasting it somewhere with a size limit</li>
     </ul>
 
     <h2>Why Orisod</h2>
-    <p>This generator uses your browser's built-in <code style="background:var(--bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;">crypto.randomUUID()</code>, the same cryptographically secure random source used across the Web Crypto API, entirely on your device. Nothing you generate is transmitted anywhere.</p>
+    <p>Formatting and validation both run through your browser's native <code style="background:var(--bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;">JSON.parse()</code> and <code style="background:var(--bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;">JSON.stringify()</code> — the same JSON engine every browser already ships with. Nothing you paste is transmitted anywhere, so it's safe to use on real API responses, config files, or anything else you wouldn't want leaving your machine.</p>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
-      <div class="q">What UUID version does this generate?</div>
-      <div>Version 4 — fully random, the most widely used version and the standard choice unless a specific system requires a different one (like version 1, which encodes a timestamp, or version 7, which is time-ordered). Version 4 is what most "UUID generator" requests actually mean.</div>
+      <div class="q">Does this validate my JSON?</div>
+      <div>Yes — clicking Format or Minify runs your input through strict JSON parsing. If there's a syntax error, you'll see the exact line and column instead of just a generic "invalid JSON" message.</div>
     </div>
     <div class="faq-item">
-      <div class="q">Can two generated UUIDs ever collide?</div>
-      <div>In theory yes, in practice effectively never — a version 4 UUID has 122 random bits, making the odds of a collision astronomically small even across billions of generated values.</div>
+      <div class="q">What happens to duplicate keys in an object?</div>
+      <div>JSON.parse keeps the last occurrence of a duplicate key and discards the earlier ones — that's standard behavior for every JSON parser, not something this tool changes.</div>
     </div>
     <div class="faq-item">
-      <div class="q">Are these UUIDs stored anywhere?</div>
-      <div>No — nothing is saved on this device or any server. Once you leave or reload the page, they're gone unless you've copied and saved them yourself.</div>
+      <div class="q">Does sorting keys change my data?</div>
+      <div>No — it only reorders keys within each object alphabetically. Values, array order, and nested structure stay exactly the same. It's mainly useful for comparing two JSON payloads that should be identical except for key order.</div>
     </div>
     <div class="faq-item">
-      <div class="q">Is anything sent to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div class="q">Is there a size limit?</div>
+      <div>No hard limit is enforced by this tool — the practical ceiling is how much text your browser can hold in memory, which is comfortably megabytes of JSON on any modern device.</div>
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/generate-uuids/" style="color:var(--accent);text-decoration:none;">What Is a UUID, and When Do You Actually Need One?</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/format-json/" style="color:var(--accent);text-decoration:none;">How to Format and Validate JSON (and the Syntax Rules That Actually Matter)</a></p>
 
   <h2>Related tools</h2>
   <div class="related-grid">
+  <a class="related-card" href="/uuid-generator/">
+    <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 0 0-9 9c0 3 1 5 2 6M12 3a9 9 0 0 1 9 9c0 3-1 5-2 6"/><path d="M8 20c1-2 1-4 1-6a3 3 0 0 1 6 0c0 2 0 4 1 6"/><path d="M12 7a5 5 0 0 0-5 5c0 2 .5 3 1 4"/></svg></div>
+    <div class="body">
+      <div class="title">UUID Generator</div>
+      <div class="desc">Generate random UUID v4 identifiers.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
   <a class="related-card" href="/password-generator/">
     <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="12" r="4"/><path d="M11.5 12H21M17 12v4M20 12v3"/></svg></div>
     <div class="body">
@@ -233,14 +249,6 @@ h2{margin-top:50px;font-size:22px;}
     <div class="body">
       <div class="title">Image to Base64</div>
       <div class="desc">Encode/decode images as Base64.</div>
-    </div>
-    <div class="arrow">→</div>
-  </a>
-  <a class="related-card" href="/json-formatter/">
-    <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4H6a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h3"/><path d="M15 4h3a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-3"/><circle cx="9" cy="12" r="0.8" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="0.8" fill="currentColor" stroke="none"/><circle cx="15" cy="12" r="0.8" fill="currentColor" stroke="none"/></svg></div>
-    <div class="body">
-      <div class="title">JSON Formatter</div>
-      <div class="desc">Format, validate, and minify JSON.</div>
     </div>
     <div class="arrow">→</div>
   </a>
@@ -293,70 +301,89 @@ h2{margin-top:50px;font-size:22px;}
 </script>
 
 <script>
-const countInput = document.getElementById('countInput');
-const uppercaseToggle = document.getElementById('uppercaseToggle');
-const uuidList = document.getElementById('uuidList');
-const generateBtn = document.getElementById('generateBtn');
-const copyAllBtn = document.getElementById('copyAllBtn');
+const jsonInput = document.getElementById('jsonInput');
+const jsonOutput = document.getElementById('jsonOutput');
+const indentSelect = document.getElementById('indentSelect');
+const sortKeysToggle = document.getElementById('sortKeysToggle');
+const formatBtn = document.getElementById('formatBtn');
+const minifyBtn = document.getElementById('minifyBtn');
+const copyBtn = document.getElementById('copyBtn');
 const errorMsg = document.getElementById('errorMsg');
 
-let currentUuids = [];
+const SAMPLE = '{\n  "name": "Ada Lovelace",\n  "born": 1815,\n  "skills": ["math", "programming"],\n  "active": true\n}';
+jsonInput.value = SAMPLE;
 
-function formatUuid(u) {
-  return uppercaseToggle.checked ? u.toUpperCase() : u;
+function sortKeysDeep(value) {
+  if (Array.isArray(value)) {
+    return value.map(sortKeysDeep);
+  }
+  if (value !== null && typeof value === 'object') {
+    const sorted = {};
+    Object.keys(value).sort().forEach((k) => { sorted[k] = sortKeysDeep(value[k]); });
+    return sorted;
+  }
+  return value;
 }
 
-function render() {
-  uuidList.innerHTML = '';
-  currentUuids.forEach((u, i) => {
-    const row = document.createElement('div');
-    row.className = 'uuid-row';
-    const span = document.createElement('span');
-    span.textContent = formatUuid(u);
-    row.appendChild(span);
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.textContent = '📋 Copy';
-    btn.addEventListener('click', () => copyText(formatUuid(u), btn));
-    row.appendChild(btn);
-    uuidList.appendChild(row);
-  });
+function getIndent() {
+  const v = indentSelect.value;
+  if (v === 'tab') return '\t';
+  return parseInt(v, 10);
 }
 
-async function copyText(text, btn) {
+function describeError(err, raw) {
+  const msg = err.message || 'Invalid JSON';
+  const lineColMatch = msg.match(/line (\d+) column (\d+)/i);
+  if (lineColMatch) {
+    return `Invalid JSON — line ${lineColMatch[1]}, column ${lineColMatch[2]}. (${msg})`;
+  }
+  const posMatch = msg.match(/position (\d+)/i);
+  if (posMatch) {
+    const pos = parseInt(posMatch[1], 10);
+    const before = raw.slice(0, pos).split('\n');
+    const line = before.length;
+    const col = before[before.length - 1].length + 1;
+    return `Invalid JSON — line ${line}, column ${col}. (${msg})`;
+  }
+  return `Invalid JSON. (${msg})`;
+}
+
+function process(mode) {
+  errorMsg.textContent = '';
+  const raw = jsonInput.value;
+  if (!raw.trim()) {
+    jsonOutput.value = '';
+    errorMsg.textContent = 'Paste some JSON first.';
+    return;
+  }
+  let parsed;
   try {
-    await navigator.clipboard.writeText(text);
-    if (btn) {
-      const original = btn.textContent;
-      btn.textContent = '✅ Copied!';
-      setTimeout(() => { btn.textContent = original; }, 1200);
-    }
+    parsed = JSON.parse(raw);
+  } catch (err) {
+    jsonOutput.value = '';
+    errorMsg.textContent = describeError(err, raw);
+    return;
+  }
+  if (sortKeysToggle.checked) parsed = sortKeysDeep(parsed);
+  jsonOutput.value = mode === 'minify' ? JSON.stringify(parsed) : JSON.stringify(parsed, null, getIndent());
+}
+
+formatBtn.addEventListener('click', () => process('format'));
+minifyBtn.addEventListener('click', () => process('minify'));
+
+copyBtn.addEventListener('click', async () => {
+  if (!jsonOutput.value) return;
+  try {
+    await navigator.clipboard.writeText(jsonOutput.value);
+    const original = copyBtn.textContent;
+    copyBtn.textContent = '✅ Copied!';
+    setTimeout(() => { copyBtn.textContent = original; }, 1200);
   } catch (err) {
     errorMsg.textContent = 'Could not copy automatically — select and copy manually.';
   }
-}
-
-function generate() {
-  errorMsg.textContent = '';
-  let count = parseInt(countInput.value, 10);
-  if (!count || count < 1) count = 1;
-  if (count > 100) count = 100;
-  countInput.value = count;
-
-  currentUuids = Array.from({ length: count }, () => crypto.randomUUID());
-  render();
-}
-
-generateBtn.addEventListener('click', generate);
-uppercaseToggle.addEventListener('change', render);
-countInput.addEventListener('change', generate);
-
-copyAllBtn.addEventListener('click', () => {
-  if (currentUuids.length === 0) return;
-  copyText(currentUuids.map(formatUuid).join('\n'), copyAllBtn);
 });
 
-generate();
+process('format');
 </script>
 </body>
 </html>
