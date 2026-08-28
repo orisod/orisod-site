@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Conversor de Mayúsculas y Minúsculas – Herramienta Gratuita | Orisod</title>
-<meta name="description" content="Convierte texto entre MAYÚSCULAS, minúsculas, Tipo Título, Tipo oración, camelCase, PascalCase, snake_case, kebab-case y CONSTANT_CASE — al instante, en tu navegador, nada se sube.">
-<link rel="canonical" href="https://orisod.com/es/case-converter/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/case-converter/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/case-converter/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/case-converter/">
+<title>Contador de Palabras y Caracteres – Herramienta Gratuita | Orisod</title>
+<meta name="description" content="Cuenta palabras, caracteres, oraciones y párrafos mientras escribes, además de un tiempo de lectura estimado — al instante, en tu navegador, nada se sube.">
+<link rel="canonical" href="https://orisod.com/es/word-character-counter/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/word-character-counter/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/word-character-counter/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/word-character-counter/">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
 <link rel="icon" href="/favicon.ico">
@@ -74,14 +74,14 @@ body{margin:0;font-family:Arial, Helvetica, sans-serif;background-color:var(--bg
 h1{font-size:48px;margin-bottom:10px;}
 p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
 .box{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:30px 20px;margin-top:30px;}
-.cc-label{display:block;text-align:left;font-size:13px;font-weight:bold;margin:0 0 6px 0;color:var(--muted-text);text-transform:uppercase;letter-spacing:.3px;}
-.cc-textarea{width:100%;min-height:180px;padding:12px 14px;border-radius:8px;border:1px solid var(--dropzone-border);background:var(--bg);color:var(--text);font-family:Arial, Helvetica, sans-serif;font-size:15px;line-height:1.5;resize:vertical;}
-.cc-textarea:focus{outline:none;border-color:var(--accent);}
-.case-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:10px;margin:20px 0;}
-@media (max-width:600px){.case-grid{grid-template-columns:repeat(2, 1fr);}}
-.case-btn{margin:0;padding:12px 10px;font-size:14px;background:var(--bg);border:1px solid var(--dropzone-border);color:var(--text);border-radius:8px;cursor:pointer;}
-.case-btn:hover{border-color:var(--accent);}
-.case-btn.active{border-color:var(--accent);background:rgba(37,99,235,var(--icon-alpha));color:var(--accent);font-weight:bold;}
+.wc-label{display:block;text-align:left;font-size:13px;font-weight:bold;margin:0 0 6px 0;color:var(--muted-text);text-transform:uppercase;letter-spacing:.3px;}
+.wc-textarea{width:100%;min-height:220px;padding:12px 14px;border-radius:8px;border:1px solid var(--dropzone-border);background:var(--bg);color:var(--text);font-family:Arial, Helvetica, sans-serif;font-size:15px;line-height:1.5;resize:vertical;}
+.wc-textarea:focus{outline:none;border-color:var(--accent);}
+.stat-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:10px;margin:20px 0 8px 0;}
+@media (max-width:600px){.stat-grid{grid-template-columns:repeat(2, 1fr);}}
+.stat-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px 10px;}
+.stat-card .num{font-size:24px;font-weight:bold;color:var(--accent);line-height:1.2;}
+.stat-card .label{font-size:12px;color:var(--muted-text);margin-top:2px;}
 .action-row{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;}
 button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
 button.secondary{background:var(--card-bg);border:1px solid var(--border);color:var(--text);}
@@ -144,7 +144,7 @@ h2{margin-top:50px;font-size:22px;}
     <a href="/es/blog/">Blog</a>
   </nav>
   <div class="site-nav-right">
-    <a class="lang-flag" href="/case-converter/">EN</a>
+    <a class="lang-flag" href="/word-character-counter/">EN</a>
     <span class="lang-flag active">ES</span>
     <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
   </div>
@@ -152,59 +152,55 @@ h2{margin-top:50px;font-size:22px;}
 
 <main>
 <div class="container">
-  <h1>Conversor de Mayúsculas y Minúsculas</h1>
-  <p>Pega tu texto una vez y haz clic en cualquier estilo para convertirlo — cada conversión siempre parte de tu texto original, así que cambiar entre estilos nunca se acumula ni pierde información. Nada de lo que escribes se sube a ningún sitio.</p>
+  <h1>Contador de Palabras y Caracteres</h1>
+  <p>Escribe o pega tu texto abajo — cada conteo se actualiza al instante mientras escribes. Nada de lo que escribes se sube a ningún sitio.</p>
 
   <div class="box">
-    <label class="cc-label" for="textInput">Tu texto</label>
-    <textarea id="textInput" class="cc-textarea" placeholder="Pega o escribe tu texto aquí..."></textarea>
+    <label class="wc-label" for="textInput">Tu texto</label>
+    <textarea id="textInput" class="wc-textarea" placeholder="Empieza a escribir o pega tu texto aquí..."></textarea>
 
-    <div class="case-grid">
-      <button class="case-btn secondary" data-case="upper">MAYÚSCULAS</button>
-      <button class="case-btn secondary" data-case="lower">minúsculas</button>
-      <button class="case-btn secondary" data-case="title">Tipo Título</button>
-      <button class="case-btn secondary" data-case="sentence">Tipo oración</button>
-      <button class="case-btn secondary" data-case="camel">camelCase</button>
-      <button class="case-btn secondary" data-case="pascal">PascalCase</button>
-      <button class="case-btn secondary" data-case="snake">snake_case</button>
-      <button class="case-btn secondary" data-case="kebab">kebab-case</button>
-      <button class="case-btn secondary" data-case="constant">CONSTANT_CASE</button>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="num" id="statWords">0</div><div class="label">Palabras</div></div>
+      <div class="stat-card"><div class="num" id="statChars">0</div><div class="label">Caracteres</div></div>
+      <div class="stat-card"><div class="num" id="statCharsNoSpace">0</div><div class="label">Caracteres (sin espacios)</div></div>
+      <div class="stat-card"><div class="num" id="statSentences">0</div><div class="label">Oraciones</div></div>
+      <div class="stat-card"><div class="num" id="statParagraphs">0</div><div class="label">Párrafos</div></div>
+      <div class="stat-card"><div class="num" id="statReadTime">0 min</div><div class="label">Tiempo de lectura</div></div>
     </div>
 
     <div class="action-row">
-      <button class="secondary" id="copyBtn">📋 Copiar</button>
-      <button class="secondary" id="resetBtn">↺ Restablecer</button>
+      <button class="secondary" id="clearBtn">🗑️ Borrar</button>
     </div>
     <div class="trust-strip">🔒 Procesado en tu dispositivo · Nunca se envía a ningún sitio · No se guarda</div>
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué hace esta herramienta?</h2>
-    <p>Pega cualquier texto una vez y haz clic en un estilo para reescribirlo al instante. Cada botón convierte tu texto original pegado, no lo que el cuadro muestra en ese momento — así que hacer clic en MAYÚSCULAS y luego en camelCase da exactamente el mismo resultado que hacer clic en camelCase directamente. Las conversiones nunca se encadenan ni se acumulan entre sí.</p>
+    <h2>¿Qué cuenta esta herramienta?</h2>
+    <p>Seis estadísticas en vivo, actualizadas con cada pulsación: número de palabras (separadas por espacios), caracteres totales, caracteres sin espacios, número de oraciones, número de párrafos y un tiempo de lectura estimado. Todo se ejecuta localmente mientras escribes — nada se envía a un servidor, así que es seguro usarlo con borradores que aún no has publicado.</p>
 
     <h2>¿Cuándo usar esta herramienta?</h2>
     <ul>
-      <li>Alguien pegó un párrafo en MAYÚSCULAS o en minúsculas y necesitas que sea legible</li>
-      <li>Estás renombrando una variable, archivo o clase CSS y la necesitas en camelCase, snake_case o kebab-case</li>
-      <li>Estás formateando un título y necesitas un Tipo Título consistente</li>
-      <li>Necesitas el nombre de una constante en CONSTANT_CASE para un archivo de configuración</li>
+      <li>Estás escribiendo con un límite estricto de palabras o caracteres — un ensayo, una descripción para redes sociales, una meta descripción</li>
+      <li>Quieres una estimación rápida de cuánto tardará en leerse un artículo</li>
+      <li>Estás comprobando si la estructura de párrafos se ve bien antes de publicar</li>
+      <li>Necesitas un conteo exacto de caracteres, con o sin espacios</li>
     </ul>
 
     <h2>Por qué Orisod</h2>
-    <p>Cada conversión se ejecuta con métodos de cadena de JavaScript simples, completamente en tu navegador. Nada de lo que pegas se transmite a ningún sitio, así que es seguro usarlo con código real, borradores o cualquier otra cosa que no quieras que salga de tu dispositivo.</p>
+    <p>Cada conteo se ejecuta con JavaScript simple, completamente en tu navegador, actualizándose en vivo mientras escribes. Nada de lo que escribes se transmite a ningún sitio, así que es seguro usarlo con borradores, notas privadas o cualquier otra cosa que no quieras que salga de tu dispositivo.</p>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
-      <div class="q">¿Los botones de conversión se acumulan entre sí?</div>
-      <div>No — cada botón siempre convierte tu entrada original, nunca el resultado mostrado en ese momento. Puedes hacer clic en los nueve estilos en cualquier orden y cada uno siempre da el mismo resultado para ese estilo.</div>
+      <div class="q">¿Cómo se calcula el número de palabras?</div>
+      <div>Dividiendo tu texto por los espacios en blanco y contando los fragmentos resultantes — el mismo método que usan la mayoría de los procesadores de texto. Las palabras con guion cuentan como una sola palabra; una cadena de caracteres sin espacios cuenta como una palabra sin importar su longitud.</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Cómo decide el Tipo Título qué palabras capitalizar?</div>
-      <div>Capitaliza la primera letra de cada palabra, separando por espacios en blanco. No aplica excepciones de estilo editorial para palabras cortas — se capitaliza cada palabra.</div>
+      <div class="q">¿Qué tan preciso es el conteo de oraciones?</div>
+      <div>Es una heurística simple basada en la puntuación <code style="background:var(--bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;">. ! ?</code>, no un análisis lingüístico completo — abreviaturas como "Sr." o "p. ej." se contarán como fin de oración aunque no lo sean. Trátalo como una estimación cercana, no como un conteo lingüístico exacto.</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Cómo manejan camelCase y los demás estilos de desarrollo los espacios o la puntuación existente?</div>
-      <div>La entrada primero se divide en palabras por espacios, guiones, guiones bajos y los límites existentes de camelCase/PascalCase, y luego se vuelve a unir en el estilo de destino — así que pegar "nombre-de_usuario" o "NombreDeUsuario" se convierte igual de bien en la misma lista de palabras.</div>
+      <div class="q">¿Cómo se estima el tiempo de lectura?</div>
+      <div>El número de palabras dividido entre 200 palabras por minuto, una velocidad de lectura silenciosa promedio comúnmente usada, redondeado al minuto más cercano (mínimo 1 minuto para cualquier texto no vacío). La velocidad real de lectura varía mucho según el lector y el contenido, así que trátalo como una estimación aproximada.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se envía algo a un servidor?</div>
@@ -212,23 +208,23 @@ h2{margin-top:50px;font-size:22px;}
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres la explicación completa? Lee nuestra guía: <a href="/es/blog/text-case-styles-explained/" style="color:var(--accent);text-decoration:none;">Estilos de mayúsculas y minúsculas explicados: cuándo usar camelCase, snake_case y más</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres la explicación completa? Lee nuestra guía: <a href="/es/blog/word-count-and-reading-time-explained/" style="color:var(--accent);text-decoration:none;">Cómo funcionan realmente el conteo de palabras y las estimaciones de tiempo de lectura</a></p>
 
   <h2>Herramientas relacionadas</h2>
   <div class="related-grid">
+  <a class="related-card" href="/es/case-converter/">
+    <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 16l4-11 4 11M4.5 12h5"/><path d="M14 10a3 3 0 1 1 0 6 3 3 0 0 1 0-6zM20 10v6"/></svg></div>
+    <div class="body">
+      <div class="title">Conversor de Mayúsculas y Minúsculas</div>
+      <div class="desc">Convierte texto entre estilos de mayúsculas.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
   <a class="related-card" href="/es/json-formatter/">
     <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4H6a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h3"/><path d="M15 4h3a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-3"/><circle cx="9" cy="12" r="0.8" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="0.8" fill="currentColor" stroke="none"/><circle cx="15" cy="12" r="0.8" fill="currentColor" stroke="none"/></svg></div>
     <div class="body">
       <div class="title">Formateador de JSON</div>
       <div class="desc">Formatea, valida y minifica JSON.</div>
-    </div>
-    <div class="arrow">→</div>
-  </a>
-  <a class="related-card" href="/es/word-character-counter/">
-    <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4" cy="6" r="1.3"/><circle cx="4" cy="12" r="1.3"/><circle cx="4" cy="18" r="1.3"/></svg></div>
-    <div class="body">
-      <div class="title">Contador de Palabras y Caracteres</div>
-      <div class="desc">Cuenta palabras, caracteres y tiempo de lectura.</div>
     </div>
     <div class="arrow">→</div>
   </a>
@@ -290,99 +286,62 @@ h2{margin-top:50px;font-size:22px;}
 
 <script>
 const textInput = document.getElementById('textInput');
-const copyBtn = document.getElementById('copyBtn');
-const resetBtn = document.getElementById('resetBtn');
-const caseButtons = document.querySelectorAll('.case-btn');
+const statWords = document.getElementById('statWords');
+const statChars = document.getElementById('statChars');
+const statCharsNoSpace = document.getElementById('statCharsNoSpace');
+const statSentences = document.getElementById('statSentences');
+const statParagraphs = document.getElementById('statParagraphs');
+const statReadTime = document.getElementById('statReadTime');
+const clearBtn = document.getElementById('clearBtn');
 
-let originalText = '';
-
-function splitWords(str) {
-  return str
-    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
-    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')
-    .split(/[\s_\-]+/)
-    .filter(Boolean);
+function countWords(str) {
+  const trimmed = str.trim();
+  return trimmed === '' ? 0 : trimmed.split(/\s+/).length;
 }
 
-function toUpper(str) { return str.toUpperCase(); }
-function toLower(str) { return str.toLowerCase(); }
-
-function toTitle(str) {
-  return str.replace(/\S+/g, (w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
+function countSentences(str) {
+  const trimmed = str.trim();
+  if (trimmed === '') return 0;
+  const matches = trimmed.match(/[^.!?]*[.!?]+/g) || [];
+  let count = matches.filter((s) => s.trim().length > 0).length;
+  const consumed = matches.join('');
+  const remainder = trimmed.slice(consumed.length).trim();
+  if (remainder.length > 0) count += 1;
+  return count;
 }
 
-function toSentence(str) {
-  const lower = str.toLowerCase();
-  return lower.replace(/(^\s*\S|[.!?]\s+\S)/g, (m) => m.toUpperCase());
+function countParagraphs(str) {
+  const trimmed = str.trim();
+  if (trimmed === '') return 0;
+  return trimmed.split(/\n\s*\n+/).filter((p) => p.trim().length > 0).length;
 }
 
-function toCamel(str) {
-  const words = splitWords(str).map((w) => w.toLowerCase());
-  return words
-    .map((w, i) => (i === 0 ? w : w.charAt(0).toUpperCase() + w.slice(1)))
-    .join('');
+function estimateReadTime(words) {
+  if (words === 0) return '0 min';
+  const minutes = Math.max(1, Math.round(words / 200));
+  return minutes + ' min';
 }
 
-function toPascal(str) {
-  const words = splitWords(str).map((w) => w.toLowerCase());
-  return words.map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join('');
+function update() {
+  const text = textInput.value;
+  const words = countWords(text);
+  statWords.textContent = words;
+  statChars.textContent = text.length;
+  statCharsNoSpace.textContent = text.replace(/\s/g, '').length;
+  statSentences.textContent = countSentences(text);
+  statParagraphs.textContent = countParagraphs(text);
+  statReadTime.textContent = estimateReadTime(words);
 }
 
-function toSnake(str) {
-  return splitWords(str).map((w) => w.toLowerCase()).join('_');
-}
+textInput.addEventListener('input', update);
 
-function toKebab(str) {
-  return splitWords(str).map((w) => w.toLowerCase()).join('-');
-}
-
-function toConstant(str) {
-  return splitWords(str).map((w) => w.toUpperCase()).join('_');
-}
-
-const CONVERTERS = {
-  upper: toUpper,
-  lower: toLower,
-  title: toTitle,
-  sentence: toSentence,
-  camel: toCamel,
-  pascal: toPascal,
-  snake: toSnake,
-  kebab: toKebab,
-  constant: toConstant,
-};
-
-textInput.addEventListener('input', () => {
-  originalText = textInput.value;
-  caseButtons.forEach((b) => b.classList.remove('active'));
+clearBtn.addEventListener('click', () => {
+  textInput.value = '';
+  update();
+  textInput.focus();
 });
 
-caseButtons.forEach((btn) => {
-  btn.addEventListener('click', () => {
-    const caseKey = btn.getAttribute('data-case');
-    const converter = CONVERTERS[caseKey];
-    textInput.value = converter(originalText);
-    caseButtons.forEach((b) => b.classList.remove('active'));
-    btn.classList.add('active');
-  });
-});
-
-copyBtn.addEventListener('click', async () => {
-  if (!textInput.value) return;
-  try {
-    await navigator.clipboard.writeText(textInput.value);
-    const original = copyBtn.textContent;
-    copyBtn.textContent = '✅ ¡Copiado!';
-    setTimeout(() => { copyBtn.textContent = original; }, 1200);
-  } catch (err) {
-    /* permiso de portapapeles denegado — el usuario puede seleccionar y copiar manualmente */
-  }
-});
-
-resetBtn.addEventListener('click', () => {
-  textInput.value = originalText;
-  caseButtons.forEach((b) => b.classList.remove('active'));
-});
+update();
 </script>
 </body>
 </html>

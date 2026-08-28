@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cómo formatear y validar JSON (y las reglas de sintaxis que realmente importan) | Blog de Orisod</title>
-<meta name="description" content="Por qué un objeto de JavaScript copiado y pegado falla como JSON, las reglas exactas que exige JSON.parse, y cuándo formatear con sangría frente a minificar.">
-<link rel="canonical" href="https://orisod.com/es/blog/format-json/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/blog/format-json/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/format-json/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/format-json/">
+<title>Cómo funcionan realmente el conteo de palabras y las estimaciones de tiempo de lectura | Blog de Orisod</title>
+<meta name="description" content="Cómo dividen realmente el texto en palabras los contadores, por qué el conteo de oraciones es una heurística y no algo exacto, y la matemática simple detrás de una etiqueta &quot;5 min de lectura&quot;.">
+<link rel="canonical" href="https://orisod.com/es/blog/word-count-and-reading-time-explained/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/word-count-and-reading-time-explained/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/word-count-and-reading-time-explained/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/word-count-and-reading-time-explained/">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
 <link rel="icon" href="/favicon.ico">
@@ -136,7 +136,7 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
     <span class="active-category">Blog</span>
   </nav>
   <div class="site-nav-right">
-    <a class="lang-flag" href="/blog/format-json/">EN</a>
+    <a class="lang-flag" href="/blog/word-count-and-reading-time-explained/">EN</a>
     <span class="lang-flag active">ES</span>
     <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
   </div>
@@ -146,83 +146,65 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guías</span>
-<h1>Cómo formatear y validar JSON (y las reglas de sintaxis que realmente importan)</h1>
-<p class="intro">JSON se parece tanto a un objeto literal de JavaScript que es fácil asumir que son intercambiables — pega uno donde se espera el otro, y un analizador JSON estricto lo rechazará. Esto es exactamente lo que JSON exige y JavaScript no.</p>
+<h1>Cómo funcionan realmente el conteo de palabras y las estimaciones de tiempo de lectura</h1>
+<p class="intro">Un "conteo de palabras" parece que debería ser un número inequívoco, y una etiqueta de "5 min de lectura" parece una medición — ninguna de las dos cosas lo es realmente. Ambas son aproximaciones simples y útiles, construidas sobre reglas que vale la pena conocer antes de confiar en ellas para algo importante.</p>
 
 <div class="article-body">
 
-<h2>Dónde JSON es más estricto que un objeto literal de JS</h2>
-<p>JSON fue diseñado deliberadamente como un subconjunto pequeño e inequívoco de la sintaxis de objetos literales de JavaScript — lo que hace que las diferencias sean fáciles de pasar por alto hasta que <code>JSON.parse()</code> falla con algo que parecía perfectamente razonable. Las cuatro reglas que más confunden: cada clave debe ser una cadena entre comillas dobles (no sin comillas, no con comillas simples), cada valor de tipo cadena también debe usar comillas dobles, no puede haber una coma sobrante después del último elemento de un objeto o array, y los comentarios no están permitidos en ningún lugar, aunque sean válidos en JavaScript.</p>
+<h2>Cómo funciona realmente el conteo de palabras</h2>
+<p>El método estándar — usado prácticamente por todos los contadores de palabras, incluidos los procesadores de texto — consiste en dividir el texto por los espacios en blanco y contar los fragmentos resultantes. Eso significa que una palabra compuesta con guion como "bien conocido" cuenta como dos palabras (porque hay un espacio), mientras que "well-known" en inglés cuenta como una sola (sin espacio en medio), y una URL sin espacios cuenta como una sola palabra sin importar su longitud. Por eso el conteo de palabras a veces se siente "raro" con texto de puntuación inusual — el contador no se equivoca, simplemente aplica una regla simple y consistente en lugar de juzgar caso por caso qué es una "palabra real".</p>
+
+<h2>Por qué el conteo de oraciones es una heurística, no una ciencia exacta</h2>
+<p>El conteo de oraciones busca <code>.</code>, <code>!</code> y <code>?</code> como puntuación de fin de oración. Es una aproximación razonable, pero falla de forma predecible: las abreviaturas. "El Dr. García llegó a las 3 p. m. y se fue una hora después" contiene puntos que no son fin de oración en absoluto — un contador basado solo en puntuación seguirá contándolos como tales, sobrestimando ligeramente el número real de oraciones. La detección real de oraciones en lenguaje natural (la que sabe que "Dr." no es un fin de oración) requiere un diccionario de abreviaturas conocidas y análisis lingüístico real — mucho más de lo que necesita un contador ligero del lado del cliente para cumplir su función real: dar una estimación cercana y útil, no un análisis lingüístico de nivel editorial.</p>
+
+<h2>La matemática detrás de una estimación de tiempo de lectura</h2>
+<p>Una etiqueta de "tiempo de lectura" es simplemente el número de palabras dividido entre una velocidad de lectura asumida, redondeado a un número entero de minutos. La velocidad promedio de lectura silenciosa de un adulto que más se cita ronda las 200–250 palabras por minuto; 200 es la referencia más conservadora y ampliamente usada.</p>
 
 <figure class="theme-figure">
-<svg viewBox="0 0 700 230" width="700" height="230" role="img" aria-label="Tabla comparativa de cuatro reglas de sintaxis JSON: las claves de los objetos deben ir entre comillas dobles, las cadenas deben ir entre comillas dobles, no se permiten comas sobrantes, y los comentarios no están permitidos en absoluto — cada una mostrada con un ejemplo inválido en rojo y su equivalente válido en verde." xmlns="http://www.w3.org/2000/svg">
-<text x="24" y="28" text-anchor="start" font-size="13" font-weight="bold" fill="var(--muted-text)">REGLA</text>
-<text x="260" y="28" text-anchor="start" font-size="13" font-weight="bold" fill="#f87171">✗ INVÁLIDO</text>
-<text x="480" y="28" text-anchor="start" font-size="13" font-weight="bold" fill="#4ade80">✓ VÁLIDO</text>
-<line x1="0" y1="40" x2="700" y2="40" stroke="var(--border)" stroke-width="1.5"/>
-<text x="24" y="72" text-anchor="start" font-size="14" fill="var(--text)">Claves del objeto</text>
-<text x="260" y="72" text-anchor="start" font-family="Courier New, monospace" font-size="14" fill="#f87171">nombre:</text>
-<text x="480" y="72" text-anchor="start" font-family="Courier New, monospace" font-size="14" fill="#4ade80">"nombre":</text>
-<text x="24" y="108" text-anchor="start" font-size="14" fill="var(--text)">Valores de cadena</text>
-<text x="260" y="108" text-anchor="start" font-family="Courier New, monospace" font-size="14" fill="#f87171">'Ada'</text>
-<text x="480" y="108" text-anchor="start" font-family="Courier New, monospace" font-size="14" fill="#4ade80">"Ada"</text>
-<text x="24" y="144" text-anchor="start" font-size="14" fill="var(--text)">Comas sobrantes</text>
-<text x="260" y="144" text-anchor="start" font-family="Courier New, monospace" font-size="14" fill="#f87171">["a","b",]</text>
-<text x="480" y="144" text-anchor="start" font-family="Courier New, monospace" font-size="14" fill="#4ade80">["a","b"]</text>
-<text x="24" y="180" text-anchor="start" font-size="14" fill="var(--text)">Comentarios</text>
-<text x="260" y="180" text-anchor="start" font-family="Courier New, monospace" font-size="14" fill="#f87171">// una nota</text>
-<text x="480" y="180" text-anchor="start" font-family="Courier New, monospace" font-size="13" fill="var(--muted-text)">(no permitidos)</text>
-<line x1="0" y1="198" x2="700" y2="198" stroke="var(--border)" stroke-width="1.5"/>
-<text x="350" y="220" text-anchor="middle" font-size="13" fill="var(--muted-text)">JSON.parse() exige las cuatro — el mensaje de error indica la línea y columna exactas donde falló.</text>
+<svg viewBox="0 0 700 170" width="700" height="170" role="img" aria-label="Diagrama que muestra la fórmula del tiempo de lectura: número de palabras dividido entre 200 palabras por minuto es igual a los minutos estimados, ilustrado con un ejemplo de 1200 palabras divididas entre 200 igual a 6 minutos." xmlns="http://www.w3.org/2000/svg">
+<text x="350" y="45" text-anchor="middle" font-size="20" fill="var(--text)">n.º de palabras ÷ 200 palabras/min = minutos estimados</text>
+<line x1="60" y1="70" x2="640" y2="70" stroke="var(--border)" stroke-width="1.5"/>
+<text x="350" y="105" text-anchor="middle" font-family="Courier New, monospace" font-size="20" font-weight="bold" fill="var(--accent)">1,200 palabras ÷ 200 = 6 min de lectura</text>
+<text x="350" y="145" text-anchor="middle" font-size="13" fill="var(--muted-text)">Redondeado al minuto más cercano, con un mínimo de 1 minuto para cualquier texto no vacío.</text>
 </svg>
 </figure>
 
-<h2>Por qué importa la sangría (pretty-printing)</h2>
-<p>Una respuesta de API o un archivo de configuración minificado suele venir como una sola línea sin cortes — técnicamente válido, pero ilegible en el momento en que necesitas revisar un valor anidado o compararlo con otra cosa. Aplicar sangría no cambia los datos en absoluto, simplemente vuelve a serializar la misma estructura ya analizada con espacios en blanco que una persona puede leer.</p>
+<p>Ese es todo el cálculo — no hay ajuste por la complejidad de las oraciones, la dificultad del vocabulario ni la velocidad propia del lector, porque un contador de propósito general no tiene forma de saber nada de eso. Trata el número como una estimación aproximada, de orden de magnitud ("un par de minutos" frente a "como un cuarto de hora"), no como una predicción precisa.</p>
 
-<h2>Cuándo minificar en su lugar</h2>
-<p>Minificar hace lo contrario: elimina todo espacio no esencial, así que los mismos datos ocupan menos espacio. Eso importa cuando vas a pegar el JSON en algún sitio con límite de caracteres, guardarlo de forma compacta, o enviarlo por una red donde cada byte cuenta — ninguno de esos casos se beneficia de una sangría que una máquina no necesita.</p>
-
-<h2>Errores de sintaxis JSON comunes y sus causas</h2>
-<ul>
-  <li><strong>Coma sobrante</strong> — dejar una coma después de la última propiedad o elemento de un array, un hábito heredado de JavaScript (donde es inofensivo) o de editar una lista y olvidar quitar el separador anterior.</li>
-  <li><strong>Cadenas con comillas simples</strong> — copiar directamente un objeto literal de JavaScript, donde comillas simples y dobles son intercambiables; JSON solo acepta comillas dobles.</li>
-  <li><strong>Claves sin comillas</strong> — misma causa: JavaScript permite claves como identificadores sin comillas (<code>nombre:</code>), JSON exige <code>"nombre":</code>.</li>
-  <li><strong>Corchetes o llaves que no coinciden o faltan</strong> — un <code>{</code>, <code>}</code>, <code>[</code> o <code>]</code> de más o de menos, normalmente por editar datos anidados a mano.</li>
-  <li><strong>Falta una coma entre propiedades</strong> — fácil de pasar por alto al reformatear JSON a mano en lugar de dejar que lo haga un formateador.</li>
-</ul>
+<h2>Por qué los límites de palabras o caracteres varían según la plataforma</h2>
+<p>Distintas plataformas imponen límites por razones distintas, por eso no existe un límite "correcto" único sobre el cual diseñar: una meta descripción de un buscador se corta en un ancho de píxeles que varía según el dispositivo (comúnmente aproximado en ~155–160 caracteres), un mensaje SMS está limitado a 160 caracteres por razones históricas del protocolo, y el límite de una publicación en redes sociales es simplemente una decisión de producto de esa plataforma. Si estás escribiendo con un límite específico en mente, consulta el número oficial actual de esa plataforma en lugar de una regla general — estos límites cambian con el tiempo.</p>
 
 <h2>Respuestas rápidas</h2>
-<p><strong>¿Puede el JSON tener comentarios?</strong> No — ni <code>//</code> ni <code>/* */</code>. Si necesitas configuración con anotaciones, JSON no es el formato adecuado (JSON5 y JSONC son extensiones separadas y no estándar que añaden soporte de comentarios, pero un analizador JSON estricto rechaza ambas).</p>
-<p><strong>¿Importa el orden de las claves en JSON?</strong> No para los datos en sí — dos objetos con las mismas claves en distinto orden representan el mismo valor. Solo importa si estás comparando el texto sin procesar (como al comparar dos archivos), que es exactamente para lo que sirve ordenar las claves antes de comparar.</p>
-<p><strong>¿Por qué mi error de JSON.parse solo dice "position 45" en lugar de un número de línea?</strong> Así lo reporta V8 (el motor de JavaScript de Chrome) — un formateador puede convertir ese desplazamiento de caracteres en una línea y columna contando los saltos de línea hasta esa posición, que es exactamente lo que debería mostrar un mensaje de error útil.</p>
+<p><strong>¿Por qué mi conteo de palabras difiere ligeramente del de otra herramienta?</strong> Distintas herramientas a veces toman decisiones diferentes en casos límite — cómo tratan varios espacios consecutivos, saltos de línea, o "palabras" formadas solo por puntuación. Las diferencias pequeñas (unas pocas palabras en un documento largo) suelen ser solo reglas de desempate distintas, no un error en ninguna de las dos herramientas.</p>
+<p><strong>¿El conteo de párrafos incluye los saltos de línea simples?</strong> No, según la convención habitual (y la que usa el contador de este sitio) un párrafo es un bloque de texto separado por al menos una línea completamente en blanco — varias líneas de texto sin ninguna línea en blanco entre ellas cuentan como un solo párrafo.</p>
+<p><strong>¿200 palabras por minuto es preciso para mí en particular?</strong> Probablemente no exactamente — la velocidad de lectura varía mucho según la persona, el idioma, la familiaridad con el tema y el formato (lectura rápida frente a lectura cuidadosa). 200 ppm es un promedio poblacional usado como valor por defecto razonable, no una medición personalizada.</p>
 
 <div class="cta-box">
-  <h3>Formatea tu JSON</h3>
-  <p>El Formateador de JSON de Orisod aplica sangría, minifica, ordena claves y señala la línea y columna exactas de cualquier error de sintaxis — todo en tu navegador.</p>
-  <a class="cta-button" href="/es/json-formatter/">Formatear JSON →</a>
+  <h3>Cuenta tu texto</h3>
+  <p>El Contador de Palabras y Caracteres de Orisod rastrea palabras, caracteres, oraciones, párrafos y el tiempo de lectura estimado en vivo mientras escribes — todo en tu navegador.</p>
+  <a class="cta-button" href="/es/word-character-counter/">Contar palabras y caracteres →</a>
 </div>
 
-<p>La mayoría de los errores "JSON.parse unexpected token" se reducen a una de las mismas causas: una coma sobrante, una comilla simple copiada y pegada, o una clave sin comillas. Una vez que conoces la breve lista de reglas, la solución suele estar a cinco segundos de leer el mensaje de error.</p>
+<p>Tanto el conteo de palabras como las estimaciones de tiempo de lectura son útiles precisamente porque son simples y consistentes, no porque sean perfectamente precisos. Conocer la regla detrás del número suele ser suficiente para saber cuándo confiar en él y cuándo tomarlo solo como una guía aproximada.</p>
 
 </div>
 
 <div class="related-section">
   <h2>Artículos relacionados</h2>
   <div class="related-grid">
-    <a class="blog-card" href="/es/blog/word-count-and-reading-time-explained/">
-      <h3>Cómo funcionan realmente el conteo de palabras y las estimaciones de tiempo de lectura</h3>
-      <p>Cómo dividen el texto los contadores, por qué el conteo de oraciones es una heurística, y la matemática detrás de un "5 min de lectura".</p>
+    <a class="blog-card" href="/es/blog/text-case-styles-explained/">
+      <h3>Estilos de mayúsculas y minúsculas explicados: cuándo usar camelCase, snake_case y más</h3>
+      <p>Para qué sirve realmente cada estilo de nomenclatura, y por qué importa más la convención que la elección.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/format-json/">
+      <h3>Cómo formatear y validar JSON (y las reglas de sintaxis que realmente importan)</h3>
+      <p>Por qué un objeto de JavaScript copiado falla como JSON, y las reglas exactas que exige JSON.parse.</p>
     </a>
 
     <a class="blog-card" href="/es/blog/generate-a-strong-password/">
       <h3>Cómo generar una contraseña fuerte (y por qué la longitud importa más que los trucos)</h3>
       <p>Qué hace realmente difícil de descifrar una contraseña, en bits de entropía reales y calculados.</p>
-    </a>
-
-    <a class="blog-card" href="/es/blog/text-case-styles-explained/">
-      <h3>Estilos de mayúsculas y minúsculas explicados: cuándo usar camelCase, snake_case y más</h3>
-      <p>Para qué sirve realmente cada estilo de nomenclatura, y por qué importa más la convención que la elección.</p>
     </a>
   </div>
 </div>

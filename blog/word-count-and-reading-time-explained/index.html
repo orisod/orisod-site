@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Text Case Styles Explained: When to Use camelCase, snake_case, and More | Orisod Blog</title>
-<meta name="description" content="What camelCase, PascalCase, snake_case, kebab-case, and CONSTANT_CASE are each actually used for, and why most languages settled on a house style instead of letting developers pick freely.">
-<link rel="canonical" href="https://orisod.com/blog/text-case-styles-explained/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/blog/text-case-styles-explained/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/text-case-styles-explained/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/text-case-styles-explained/">
+<title>How Word Count and Reading Time Estimates Actually Work | Orisod Blog</title>
+<meta name="description" content="How word counters actually split text into words, why sentence counting is a heuristic rather than exact, and the simple math behind a &quot;5 min read&quot; label.">
+<link rel="canonical" href="https://orisod.com/blog/word-count-and-reading-time-explained/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/word-count-and-reading-time-explained/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/word-count-and-reading-time-explained/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/word-count-and-reading-time-explained/">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
 <link rel="icon" href="/favicon.ico">
@@ -137,7 +137,7 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
   </nav>
   <div class="site-nav-right">
     <span class="lang-flag active">EN</span>
-    <a class="lang-flag" href="/es/blog/text-case-styles-explained/">ES</a>
+    <a class="lang-flag" href="/es/blog/word-count-and-reading-time-explained/">ES</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
   </div>
 </header>
@@ -146,59 +146,60 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guides</span>
-<h1>Text Case Styles Explained: When to Use camelCase, snake_case, and More</h1>
-<p class="intro">Every programming ecosystem has a house style for naming things, and it's rarely arbitrary — it usually comes down to what the language's own conventions expect, and what a case-insensitive filesystem or URL can and can't handle safely.</p>
+<h1>How Word Count and Reading Time Estimates Actually Work</h1>
+<p class="intro">A "word count" feels like it should be an unambiguous number, and a "5 min read" label feels like a measurement — neither one really is. Both are simple, useful approximations built on rules that are worth knowing before you trust them for something that matters.</p>
 
 <div class="article-body">
 
-<h2>The naming styles, and what each one is actually for</h2>
-<p>Five styles cover almost every case you'll run into:</p>
-<ul>
-  <li><strong>camelCase</strong> — first word lowercase, every following word capitalized, no separators (<code>firstName</code>). The default for variables and function names in JavaScript, Java, and most C-family languages.</li>
-  <li><strong>PascalCase</strong> — same as camelCase but the first word is also capitalized (<code>FirstName</code>). Used for class and type names in the same languages, precisely to distinguish a type from a variable at a glance.</li>
-  <li><strong>snake_case</strong> — all lowercase, words separated by underscores (<code>first_name</code>). The standard for variables and functions in Python and Ruby, and for database column names almost everywhere.</li>
-  <li><strong>kebab-case</strong> — all lowercase, words separated by hyphens (<code>first-name</code>). Used for URL slugs and CSS class names — hyphens are the one separator that's always safe in a URL without encoding.</li>
-  <li><strong>CONSTANT_CASE</strong> (also called SCREAMING_SNAKE_CASE) — all uppercase, words separated by underscores (<code>FIRST_NAME</code>). Reserved specifically for constants, so an all-caps identifier signals "this value never changes" at a glance.</li>
-</ul>
+<h2>How word counting actually works</h2>
+<p>The standard method — used by virtually every word counter, including word processors — is to split text on whitespace and count the resulting chunks. That means a hyphenated compound like "well-known" counts as one word, an em-dash-joined pair like "state—of—the—art" (no surrounding spaces) also counts as one, and a URL with no spaces in it counts as a single word no matter how long it is. This is why word counts can feel slightly "off" for text with unusual punctuation — the counter isn't wrong, it's just applying a consistent, simple rule rather than making judgment calls about what a "real" word is.</p>
 
-<h2>Why the convention matters more than the choice</h2>
-<p>None of these styles is technically superior — a JavaScript variable named <code>first_name</code> instead of <code>firstName</code> still works exactly the same. What breaks is consistency: mixing styles within one codebase forces every reader to context-switch for no reason, and some tools genuinely can't cross styles safely (a CSS class must be kebab-case-safe, a URL slug can't contain characters that need encoding, and a case-sensitive filesystem will treat <code>MyFile</code> and <code>myfile</code> as two different files while a case-insensitive one won't). The style itself is a convention; picking one and applying it consistently is what actually matters.</p>
+<h2>Why sentence counting is a heuristic, not an exact science</h2>
+<p>Sentence counting works by looking for <code>.</code>, <code>!</code>, and <code>?</code> as sentence-ending punctuation. That's a reasonable approximation, but it breaks in a predictable way: abbreviations. "Dr. Smith arrived at 3 p.m. and left an hour later" contains two periods that aren't sentence endings at all — a simple punctuation-based counter will still count them as one, overcounting the true sentence count by a small amount. Full natural-language sentence detection (the kind that knows "Dr." isn't a sentence boundary) requires a dictionary of known abbreviations and real linguistic parsing — well beyond what a lightweight, client-side counter needs for its actual job: giving you a close, useful estimate, not a publication-grade linguistic analysis.</p>
 
-<h2>Where each style tends to show up</h2>
-<ul>
-  <li><strong>Variables and functions:</strong> camelCase (JavaScript, Java) or snake_case (Python, Ruby) — pick whichever your language's own standard library and style guide already use, not a personal preference.</li>
-  <li><strong>Classes and types:</strong> PascalCase, almost universally, across the languages that distinguish them from variables at all.</li>
-  <li><strong>URLs and file slugs:</strong> kebab-case — search engines and browsers treat hyphens as word separators in a URL, which underscores and camelCase don't get for free.</li>
-  <li><strong>CSS classes:</strong> kebab-case is the long-standing convention (<code>.nav-link</code>), though some component-based frameworks use camelCase for CSS-in-JS.</li>
-  <li><strong>Constants and environment variables:</strong> CONSTANT_CASE — the all-caps convention originated with C preprocessor macros and is still the standard for env vars and true constants today.</li>
-</ul>
+<h2>The math behind a reading-time estimate</h2>
+<p>A "reading time" label is just word count divided by an assumed reading speed, rounded to a whole number of minutes. The most commonly cited average adult silent-reading speed is around 200–250 words per minute; 200 is the more conservative, widely used baseline.</p>
+
+<figure class="theme-figure">
+<svg viewBox="0 0 700 170" width="700" height="170" role="img" aria-label="Diagram showing the reading time formula: word count divided by 200 words per minute equals estimated minutes, illustrated with a worked example of 1200 words divided by 200 equals 6 minutes." xmlns="http://www.w3.org/2000/svg">
+<text x="350" y="45" text-anchor="middle" font-size="22" fill="var(--text)">word count ÷ 200 words/min = estimated minutes</text>
+<line x1="60" y1="70" x2="640" y2="70" stroke="var(--border)" stroke-width="1.5"/>
+<text x="350" y="105" text-anchor="middle" font-family="Courier New, monospace" font-size="20" font-weight="bold" fill="var(--accent)">1,200 words ÷ 200 = 6 min read</text>
+<text x="350" y="145" text-anchor="middle" font-size="13" fill="var(--muted-text)">Rounded to the nearest minute, with a 1-minute floor for any non-empty text.</text>
+</svg>
+</figure>
+
+<p>That's the entire calculation — there's no adjustment for sentence complexity, vocabulary difficulty, or the reader's own speed, because a general-purpose counter has no way to know any of that. Treat the number as a rough, order-of-magnitude estimate ("a couple of minutes" vs. "about a quarter hour"), not a precise prediction.</p>
+
+<h2>Why word/character limits differ by platform</h2>
+<p>Different platforms impose limits for different reasons, which is why there's no single "correct" limit to design around: a search engine meta description gets truncated at a pixel width that varies by device (commonly approximated as ~155–160 characters), an SMS message is capped at 160 characters for historical protocol reasons, and a social post's limit is simply a product decision by that platform. If you're writing against a specific limit, check that platform's current, official number rather than a rule of thumb — these limits change over time.</p>
 
 <h2>Quick answers</h2>
-<p><strong>Is there a "correct" case for JSON keys?</strong> No hard rule, but camelCase is the de facto convention in JavaScript-heavy APIs, while snake_case shows up often in APIs written by Python/Ruby-first teams — match whatever the rest of that API already uses.</p>
-<p><strong>What's the difference between kebab-case and "dash-case" or "spinal-case"?</strong> Nothing — they're the same style under different names, all referring to lowercase words joined by hyphens.</p>
-<p><strong>Why do some style guides avoid underscores in URLs?</strong> Older search engines didn't reliably treat an underscore as a word separator (some still read <code>first_name</code> as one word, "first_name," rather than two), while a hyphen reliably splits into separate words — kebab-case avoids the ambiguity entirely.</p>
+<p><strong>Why does my word count differ slightly from another tool's?</strong> Different tools sometimes make different calls on edge cases — how they treat multiple consecutive spaces, line breaks, or punctuation-only "words." Small differences (a handful of words on a long document) are usually just different tie-breaking rules, not a bug in either tool.</p>
+<p><strong>Does paragraph count include single line breaks?</strong> No, in the common convention (and the one this site's counter uses) a paragraph is a block of text separated by at least one fully blank line — several lines of text with no blank line between them count as one paragraph.</p>
+<p><strong>Is 200 words per minute accurate for me personally?</strong> Probably not exactly — reading speed varies widely by individual, language, familiarity with the topic, and format (skimming vs. careful reading). 200 wpm is a population-level average used as a reasonable default, not a personalized measurement.</p>
 
 <div class="cta-box">
-  <h3>Convert between cases</h3>
-  <p>Orisod's Case Converter switches text between UPPERCASE, lowercase, Title Case, Sentence case, camelCase, PascalCase, snake_case, kebab-case, and CONSTANT_CASE — entirely in your browser.</p>
-  <a class="cta-button" href="/case-converter/">Convert text case →</a>
+  <h3>Count your text</h3>
+  <p>Orisod's Word & Character Counter tracks words, characters, sentences, paragraphs, and estimated reading time live as you type — entirely in your browser.</p>
+  <a class="cta-button" href="/word-character-counter/">Count words and characters →</a>
 </div>
 
-<p>The specific style rarely matters on its own — what matters is matching whatever convention the language, framework, or system you're working in already expects, and staying consistent once you've picked it.</p>
+<p>Both word counts and reading-time estimates are useful precisely because they're simple and consistent — not because they're perfectly precise. Knowing the rule behind the number is usually enough to know when to trust it and when it's just a rough guide.</p>
 
 </div>
 
 <div class="related-section">
   <h2>Related articles</h2>
   <div class="related-grid">
+    <a class="blog-card" href="/blog/text-case-styles-explained/">
+      <h3>Text Case Styles Explained: When to Use camelCase, snake_case, and More</h3>
+      <p>What each naming style is actually for, and why the convention matters more than the choice.</p>
+    </a>
+
     <a class="blog-card" href="/blog/format-json/">
       <h3>How to Format and Validate JSON (and the Syntax Rules That Actually Matter)</h3>
       <p>Why copy-pasted JavaScript objects fail as JSON, and the exact rules JSON.parse enforces.</p>
-    </a>
-
-    <a class="blog-card" href="/blog/word-count-and-reading-time-explained/">
-      <h3>How Word Count and Reading Time Estimates Actually Work</h3>
-      <p>How word counters split text, why sentence counting is a heuristic, and the math behind a "5 min read" label.</p>
     </a>
 
     <a class="blog-card" href="/blog/generate-a-strong-password/">
