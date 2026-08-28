@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Case Converter – Free Online Tool | Orisod</title>
-<meta name="description" content="Convert text between UPPERCASE, lowercase, Title Case, Sentence case, camelCase, PascalCase, snake_case, kebab-case, and CONSTANT_CASE — instantly, in your browser, nothing uploaded.">
-<link rel="canonical" href="https://orisod.com/case-converter/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/case-converter/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/case-converter/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/case-converter/">
+<title>Word & Character Counter – Free Online Tool | Orisod</title>
+<meta name="description" content="Count words, characters, sentences, and paragraphs as you type, plus an estimated reading time — instantly, in your browser, nothing uploaded.">
+<link rel="canonical" href="https://orisod.com/word-character-counter/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/word-character-counter/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/word-character-counter/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/word-character-counter/">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
 <link rel="icon" href="/favicon.ico">
@@ -74,14 +74,14 @@ body{margin:0;font-family:Arial, Helvetica, sans-serif;background-color:var(--bg
 h1{font-size:48px;margin-bottom:10px;}
 p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
 .box{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:30px 20px;margin-top:30px;}
-.cc-label{display:block;text-align:left;font-size:13px;font-weight:bold;margin:0 0 6px 0;color:var(--muted-text);text-transform:uppercase;letter-spacing:.3px;}
-.cc-textarea{width:100%;min-height:180px;padding:12px 14px;border-radius:8px;border:1px solid var(--dropzone-border);background:var(--bg);color:var(--text);font-family:Arial, Helvetica, sans-serif;font-size:15px;line-height:1.5;resize:vertical;}
-.cc-textarea:focus{outline:none;border-color:var(--accent);}
-.case-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:10px;margin:20px 0;}
-@media (max-width:600px){.case-grid{grid-template-columns:repeat(2, 1fr);}}
-.case-btn{margin:0;padding:12px 10px;font-size:14px;background:var(--bg);border:1px solid var(--dropzone-border);color:var(--text);border-radius:8px;cursor:pointer;}
-.case-btn:hover{border-color:var(--accent);}
-.case-btn.active{border-color:var(--accent);background:rgba(37,99,235,var(--icon-alpha));color:var(--accent);font-weight:bold;}
+.wc-label{display:block;text-align:left;font-size:13px;font-weight:bold;margin:0 0 6px 0;color:var(--muted-text);text-transform:uppercase;letter-spacing:.3px;}
+.wc-textarea{width:100%;min-height:220px;padding:12px 14px;border-radius:8px;border:1px solid var(--dropzone-border);background:var(--bg);color:var(--text);font-family:Arial, Helvetica, sans-serif;font-size:15px;line-height:1.5;resize:vertical;}
+.wc-textarea:focus{outline:none;border-color:var(--accent);}
+.stat-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:10px;margin:20px 0 8px 0;}
+@media (max-width:600px){.stat-grid{grid-template-columns:repeat(2, 1fr);}}
+.stat-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px 10px;}
+.stat-card .num{font-size:24px;font-weight:bold;color:var(--accent);line-height:1.2;}
+.stat-card .label{font-size:12px;color:var(--muted-text);margin-top:2px;}
 .action-row{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;}
 button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
 button.secondary{background:var(--card-bg);border:1px solid var(--border);color:var(--text);}
@@ -145,66 +145,62 @@ h2{margin-top:50px;font-size:22px;}
   </nav>
   <div class="site-nav-right">
     <span class="lang-flag active">EN</span>
-    <a class="lang-flag" href="/es/case-converter/">ES</a>
+    <a class="lang-flag" href="/es/word-character-counter/">ES</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
   </div>
 </header>
 
 <main>
 <div class="container">
-  <h1>Case Converter</h1>
-  <p>Paste your text once, then click any case to convert it — every conversion always runs on your original text, so switching between cases never compounds or loses information. Nothing you type is ever uploaded.</p>
+  <h1>Word & Character Counter</h1>
+  <p>Type or paste your text below — every count updates instantly as you type. Nothing you write is ever uploaded.</p>
 
   <div class="box">
-    <label class="cc-label" for="textInput">Your text</label>
-    <textarea id="textInput" class="cc-textarea" placeholder="Paste or type your text here..."></textarea>
+    <label class="wc-label" for="textInput">Your text</label>
+    <textarea id="textInput" class="wc-textarea" placeholder="Start typing or paste your text here..."></textarea>
 
-    <div class="case-grid">
-      <button class="case-btn secondary" data-case="upper">UPPERCASE</button>
-      <button class="case-btn secondary" data-case="lower">lowercase</button>
-      <button class="case-btn secondary" data-case="title">Title Case</button>
-      <button class="case-btn secondary" data-case="sentence">Sentence case</button>
-      <button class="case-btn secondary" data-case="camel">camelCase</button>
-      <button class="case-btn secondary" data-case="pascal">PascalCase</button>
-      <button class="case-btn secondary" data-case="snake">snake_case</button>
-      <button class="case-btn secondary" data-case="kebab">kebab-case</button>
-      <button class="case-btn secondary" data-case="constant">CONSTANT_CASE</button>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="num" id="statWords">0</div><div class="label">Words</div></div>
+      <div class="stat-card"><div class="num" id="statChars">0</div><div class="label">Characters</div></div>
+      <div class="stat-card"><div class="num" id="statCharsNoSpace">0</div><div class="label">Characters (no spaces)</div></div>
+      <div class="stat-card"><div class="num" id="statSentences">0</div><div class="label">Sentences</div></div>
+      <div class="stat-card"><div class="num" id="statParagraphs">0</div><div class="label">Paragraphs</div></div>
+      <div class="stat-card"><div class="num" id="statReadTime">0 min</div><div class="label">Reading time</div></div>
     </div>
 
     <div class="action-row">
-      <button class="secondary" id="copyBtn">📋 Copy</button>
-      <button class="secondary" id="resetBtn">↺ Reset</button>
+      <button class="secondary" id="clearBtn">🗑️ Clear</button>
     </div>
     <div class="trust-strip">🔒 Processed on your device · Never sent anywhere · Not stored</div>
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>Paste any text once, then click a case to instantly rewrite it. Every button converts your original pasted text, not whatever the box currently shows — so clicking UPPERCASE and then camelCase gives the exact same result as clicking camelCase first. Conversions never chain or compound on top of each other.</p>
+    <h2>What does this tool count?</h2>
+    <p>Six live stats, updated on every keystroke: word count (whitespace-separated), total characters, characters excluding spaces, sentence count, paragraph count, and an estimated reading time. Everything runs locally as you type — nothing is sent to a server, so it's safe to use on drafts you haven't published yet.</p>
 
     <h2>When should you use this tool?</h2>
     <ul>
-      <li>Someone pasted a paragraph in ALL CAPS or all lowercase and you need it readable</li>
-      <li>You're renaming a variable, file, or CSS class and need it in camelCase, snake_case, or kebab-case</li>
-      <li>You're formatting a heading and need consistent Title Case</li>
-      <li>You need a constant name in CONSTANT_CASE for a config file</li>
+      <li>You're writing to a strict word or character limit — an essay, a social media caption, a meta description</li>
+      <li>You want a quick estimate of how long an article will take to read</li>
+      <li>You're checking whether a paragraph structure looks right before publishing</li>
+      <li>You need an exact character count including or excluding spaces</li>
     </ul>
 
     <h2>Why Orisod</h2>
-    <p>Every conversion runs with plain JavaScript string methods, entirely in your browser. Nothing you paste is transmitted anywhere, so it's safe to use on real code, drafts, or anything else you wouldn't want leaving your device.</p>
+    <p>Every count runs with plain JavaScript, entirely in your browser, updating live as you type. Nothing you write is transmitted anywhere, so it's safe to use on drafts, private notes, or anything else you wouldn't want leaving your device.</p>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
-      <div class="q">Do the case buttons stack on top of each other?</div>
-      <div>No — every button always converts your original input, never the currently displayed result. You can click through all nine cases in any order and each one always gives the same output for that case.</div>
+      <div class="q">How is the word count calculated?</div>
+      <div>By splitting your text on whitespace and counting the resulting chunks — the same approach most word processors use. Hyphenated words count as one word; a string of characters with no spaces counts as one word regardless of length.</div>
     </div>
     <div class="faq-item">
-      <div class="q">How does Title Case decide what to capitalize?</div>
-      <div>It capitalizes the first letter of every word, splitting on whitespace. It doesn't apply style-guide exceptions for short words like "a" or "the" — every word is capitalized.</div>
+      <div class="q">How accurate is sentence counting?</div>
+      <div>It's a simple heuristic based on <code style="background:var(--bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;">. ! ?</code> punctuation, not full natural-language parsing — abbreviations like "Mr." or "e.g." will be counted as sentence breaks even though they aren't. Treat it as a close estimate, not an exact linguistic count.</div>
     </div>
     <div class="faq-item">
-      <div class="q">How do camelCase and the other developer cases handle spaces or existing punctuation?</div>
-      <div>Input is first split into words on spaces, hyphens, underscores, and existing camelCase/PascalCase boundaries, then rejoined in the target style — so pasting "user-first_name" or "UserFirstName" both convert cleanly to the same word list.</div>
+      <div class="q">How is reading time estimated?</div>
+      <div>Word count divided by 200 words per minute, a commonly used average adult silent-reading speed, rounded to the nearest minute (minimum 1 minute for any non-empty text). Actual reading speed varies a lot by reader and content, so treat this as a rough estimate.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is anything sent to a server?</div>
@@ -212,23 +208,23 @@ h2{margin-top:50px;font-size:22px;}
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/text-case-styles-explained/" style="color:var(--accent);text-decoration:none;">Text Case Styles Explained: When to Use camelCase, snake_case, and More</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/word-count-and-reading-time-explained/" style="color:var(--accent);text-decoration:none;">How Word Count and Reading Time Estimates Actually Work</a></p>
 
   <h2>Related tools</h2>
   <div class="related-grid">
+  <a class="related-card" href="/case-converter/">
+    <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 16l4-11 4 11M4.5 12h5"/><path d="M14 10a3 3 0 1 1 0 6 3 3 0 0 1 0-6zM20 10v6"/></svg></div>
+    <div class="body">
+      <div class="title">Case Converter</div>
+      <div class="desc">Convert text between case styles.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
   <a class="related-card" href="/json-formatter/">
     <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4H6a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h3"/><path d="M15 4h3a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-3"/><circle cx="9" cy="12" r="0.8" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="0.8" fill="currentColor" stroke="none"/><circle cx="15" cy="12" r="0.8" fill="currentColor" stroke="none"/></svg></div>
     <div class="body">
       <div class="title">JSON Formatter</div>
       <div class="desc">Format, validate, and minify JSON.</div>
-    </div>
-    <div class="arrow">→</div>
-  </a>
-  <a class="related-card" href="/word-character-counter/">
-    <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4" cy="6" r="1.3"/><circle cx="4" cy="12" r="1.3"/><circle cx="4" cy="18" r="1.3"/></svg></div>
-    <div class="body">
-      <div class="title">Word & Character Counter</div>
-      <div class="desc">Count words, characters, and reading time.</div>
     </div>
     <div class="arrow">→</div>
   </a>
@@ -290,99 +286,62 @@ h2{margin-top:50px;font-size:22px;}
 
 <script>
 const textInput = document.getElementById('textInput');
-const copyBtn = document.getElementById('copyBtn');
-const resetBtn = document.getElementById('resetBtn');
-const caseButtons = document.querySelectorAll('.case-btn');
+const statWords = document.getElementById('statWords');
+const statChars = document.getElementById('statChars');
+const statCharsNoSpace = document.getElementById('statCharsNoSpace');
+const statSentences = document.getElementById('statSentences');
+const statParagraphs = document.getElementById('statParagraphs');
+const statReadTime = document.getElementById('statReadTime');
+const clearBtn = document.getElementById('clearBtn');
 
-let originalText = '';
-
-function splitWords(str) {
-  return str
-    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
-    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')
-    .split(/[\s_\-]+/)
-    .filter(Boolean);
+function countWords(str) {
+  const trimmed = str.trim();
+  return trimmed === '' ? 0 : trimmed.split(/\s+/).length;
 }
 
-function toUpper(str) { return str.toUpperCase(); }
-function toLower(str) { return str.toLowerCase(); }
-
-function toTitle(str) {
-  return str.replace(/\S+/g, (w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
+function countSentences(str) {
+  const trimmed = str.trim();
+  if (trimmed === '') return 0;
+  const matches = trimmed.match(/[^.!?]*[.!?]+/g) || [];
+  let count = matches.filter((s) => s.trim().length > 0).length;
+  const consumed = matches.join('');
+  const remainder = trimmed.slice(consumed.length).trim();
+  if (remainder.length > 0) count += 1;
+  return count;
 }
 
-function toSentence(str) {
-  const lower = str.toLowerCase();
-  return lower.replace(/(^\s*\S|[.!?]\s+\S)/g, (m) => m.toUpperCase());
+function countParagraphs(str) {
+  const trimmed = str.trim();
+  if (trimmed === '') return 0;
+  return trimmed.split(/\n\s*\n+/).filter((p) => p.trim().length > 0).length;
 }
 
-function toCamel(str) {
-  const words = splitWords(str).map((w) => w.toLowerCase());
-  return words
-    .map((w, i) => (i === 0 ? w : w.charAt(0).toUpperCase() + w.slice(1)))
-    .join('');
+function estimateReadTime(words) {
+  if (words === 0) return '0 min';
+  const minutes = Math.max(1, Math.round(words / 200));
+  return minutes + ' min';
 }
 
-function toPascal(str) {
-  const words = splitWords(str).map((w) => w.toLowerCase());
-  return words.map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join('');
+function update() {
+  const text = textInput.value;
+  const words = countWords(text);
+  statWords.textContent = words;
+  statChars.textContent = text.length;
+  statCharsNoSpace.textContent = text.replace(/\s/g, '').length;
+  statSentences.textContent = countSentences(text);
+  statParagraphs.textContent = countParagraphs(text);
+  statReadTime.textContent = estimateReadTime(words);
 }
 
-function toSnake(str) {
-  return splitWords(str).map((w) => w.toLowerCase()).join('_');
-}
+textInput.addEventListener('input', update);
 
-function toKebab(str) {
-  return splitWords(str).map((w) => w.toLowerCase()).join('-');
-}
-
-function toConstant(str) {
-  return splitWords(str).map((w) => w.toUpperCase()).join('_');
-}
-
-const CONVERTERS = {
-  upper: toUpper,
-  lower: toLower,
-  title: toTitle,
-  sentence: toSentence,
-  camel: toCamel,
-  pascal: toPascal,
-  snake: toSnake,
-  kebab: toKebab,
-  constant: toConstant,
-};
-
-textInput.addEventListener('input', () => {
-  originalText = textInput.value;
-  caseButtons.forEach((b) => b.classList.remove('active'));
+clearBtn.addEventListener('click', () => {
+  textInput.value = '';
+  update();
+  textInput.focus();
 });
 
-caseButtons.forEach((btn) => {
-  btn.addEventListener('click', () => {
-    const caseKey = btn.getAttribute('data-case');
-    const converter = CONVERTERS[caseKey];
-    textInput.value = converter(originalText);
-    caseButtons.forEach((b) => b.classList.remove('active'));
-    btn.classList.add('active');
-  });
-});
-
-copyBtn.addEventListener('click', async () => {
-  if (!textInput.value) return;
-  try {
-    await navigator.clipboard.writeText(textInput.value);
-    const original = copyBtn.textContent;
-    copyBtn.textContent = '✅ Copied!';
-    setTimeout(() => { copyBtn.textContent = original; }, 1200);
-  } catch (err) {
-    /* clipboard permission denied — user can select and copy manually */
-  }
-});
-
-resetBtn.addEventListener('click', () => {
-  textInput.value = originalText;
-  caseButtons.forEach((b) => b.classList.remove('active'));
-});
+update();
 </script>
 </body>
 </html>
