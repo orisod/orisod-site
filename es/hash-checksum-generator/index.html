@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generador de Hash y Checksum – Herramienta Gratuita | Orisod</title>
+<meta name="description" content="Calcula hashes MD5, SHA-1, SHA-256, SHA-384 y SHA-512 de texto o un archivo, y verifícalos contra un checksum esperado, gratis y en línea. Funciona directamente en tu navegador — no se sube ningún archivo.">
+<link rel="canonical" href="https://orisod.com/es/hash-checksum-generator/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/hash-checksum-generator/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/hash-checksum-generator/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/hash-checksum-generator/">
+<link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#2563eb">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/spark-md5/3.0.2/spark-md5.min.js"></script>
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+  --icon-alpha:.30;
+  --grid-alpha:.05;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+  --icon-alpha:.24;
+  --grid-alpha:.10;
+}
+*{box-sizing:border-box;}
+.tool-hero{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:4px;}
+.tool-hero .icon-box{width:52px;height:52px;}
+.tool-hero .icon-box svg{width:28px;height:28px;}
+.tool-hero h1{margin:0;font-size:32px;}
+@media (max-width:600px){.tool-hero{flex-direction:column;gap:8px;}}
+.tool-sub{font-size:16px;max-width:640px;margin:0 auto 20px auto;}
+.workspace{max-width:1040px;margin:0 auto;}
+.mode-row{display:flex;justify-content:center;gap:10px;margin-bottom:20px;}
+.mode-btn{padding:10px 18px;border-radius:8px;border:1px solid var(--border);background:var(--card-bg);color:var(--text);cursor:pointer;font-size:14px;font-weight:bold;transition:0.2s;}
+.mode-btn.active{background:var(--accent);border-color:var(--accent);color:white;}
+.tp-textarea{width:100%;min-height:160px;padding:12px 14px;border-radius:8px;border:1px solid var(--dropzone-border);background:var(--bg);color:var(--text);font-family:"Courier New", monospace;font-size:14px;line-height:1.5;resize:vertical;}
+.tp-textarea:focus{outline:none;border-color:var(--accent);}
+.dropzone{border:2px dashed var(--dropzone-border);border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
+.dropzone:hover, .dropzone.dragover{border-color:var(--accent);}
+input[type="file"]{display:none;}
+.file-info{margin-top:10px;font-size:13px;opacity:0.7;}
+.verify-row{display:flex;align-items:center;gap:10px;margin-top:20px;flex-wrap:wrap;}
+.verify-row label{font-size:14px;font-weight:bold;opacity:0.85;white-space:nowrap;}
+.verify-row input[type="text"]{
+  flex:1 1 260px;padding:10px 12px;border-radius:6px;border:1px solid var(--dropzone-border);background:var(--bg);color:var(--text);font-size:14px;font-family:"Courier New", monospace;
+}
+.verify-result{margin-top:10px;font-size:14px;font-weight:bold;text-align:left;display:none;}
+.verify-result.match{color:#4ade80;}
+.verify-result.mismatch{color:#f87171;}
+.hash-list{margin-top:24px;text-align:left;}
+.hash-row{background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin-bottom:10px;}
+.hash-row.highlight{border-color:#4ade80;}
+.hash-label{font-size:12px;font-weight:bold;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+.hash-value-row{display:flex;align-items:center;gap:10px;}
+.hash-value{flex:1 1 auto;font-family:"Courier New", monospace;font-size:13px;word-break:break-all;}
+.copy-btn{flex:none;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px 10px;font-size:12px;cursor:pointer;margin:0;}
+.copy-btn:hover{border-color:var(--accent);}
+button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
+button:disabled{opacity:0.4;cursor:not-allowed;}
+button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.note{margin-top:12px;font-size:14px;opacity:0.6;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);display:inline-flex;align-items:center;gap:8px;}
+.site-nav-logo img{height:26px;width:auto;display:block;}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:5px 14px;margin:-5px 0;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:40px 20px 60px 20px;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background-color:var(--bg);background-image:linear-gradient(rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px),linear-gradient(90deg, rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px);background-size:42px 42px;color:var(--text);text-align:center;transition:background-color 0.2s, color 0.2s;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:44px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:30px 20px;margin-top:30px;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+.progress{font-size:14px;opacity:0.7;margin-top:10px;}
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related-grid{display:grid;grid-template-columns:repeat(2, 1fr);gap:12px;}
+@media (max-width:600px){.related-grid{grid-template-columns:1fr;}}
+.related-card{display:flex;align-items:center;gap:14px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.icon-box{flex:none;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;border:2px solid transparent;}
+.icon-box.cat-image{background:rgba(37,99,235,var(--icon-alpha));border-color:#2563eb;color:#2563eb;}
+.icon-box.cat-pdf{background:rgba(245,158,11,var(--icon-alpha));border-color:#f59e0b;color:#f59e0b;}
+.icon-box.cat-utility{background:rgba(139,92,246,var(--icon-alpha));border-color:#8b5cf6;color:#8b5cf6;}
+.icon-box svg{width:22px;height:22px;display:block;}
+.related-card .body{flex:1 1 auto;min-width:0;}
+.related-card .title{font-size:14px;font-weight:bold;margin-bottom:2px;}
+.related-card .desc{font-size:12px;color:var(--muted-text);line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.related-card .arrow{flex:none;font-size:16px;color:var(--muted-text);transition:0.2s;}
+.related-card:hover .arrow{color:var(--accent);transform:translateX(2px);}
+.trust-strip{font-size:12px;color:var(--muted-text);margin-top:16px;line-height:1.5;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/es/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/es/tools/">Todas las herramientas</a>
+    <a href="/es/tools/#image">Herramientas de imagen</a>
+    <a href="/es/tools/#pdf">Herramientas PDF</a>
+    <span class="active-category">Utilidades</span>
+    <a href="/es/blog/">Blog</a>
+  </nav>
+  <div class="site-nav-right">
+    <a class="lang-flag" href="/hash-checksum-generator/">EN</a>
+    <span class="lang-flag active">ES</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+  <div class="tool-hero">
+    <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h16M4 15h16M10 3L8 21M16 3l-2 18"/></svg></div>
+    <h1>Generador de Hash y Checksum</h1>
+  </div>
+  <p class="tool-sub">Calcula hashes MD5, SHA-1, SHA-256, SHA-384 y SHA-512 de texto o un archivo, y compáralos con un checksum esperado. Todo ocurre localmente en tu navegador.</p>
+
+  <div class="workspace">
+    <div class="box">
+      <div class="mode-row" id="modeRow">
+        <div class="mode-btn active" data-mode="text">Texto</div>
+        <div class="mode-btn" data-mode="file">Archivo</div>
+      </div>
+
+      <div id="textPanel">
+        <textarea id="textInput" class="tp-textarea" placeholder="Escribe o pega texto aquí..."></textarea>
+      </div>
+
+      <div id="filePanel" style="display:none;">
+        <label class="dropzone" id="dropzone" for="fileInput">
+          <div id="dropzoneText">📁 Haz clic para elegir un archivo o arrástralo aquí</div>
+        </label>
+        <input type="file" id="fileInput">
+        <div class="file-info" id="fileInfo"></div>
+      </div>
+
+      <div class="error" id="errorMsg"></div>
+      <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subidas · Sin cuenta</div>
+      <div class="progress" id="progressMsg"></div>
+
+      <div class="verify-row">
+        <label for="expectedHash">Verificar contra:</label>
+        <input type="text" id="expectedHash" placeholder="Pega un hash esperado para comparar">
+      </div>
+      <div class="verify-result" id="verifyResult"></div>
+
+      <div class="hash-list" id="hashList"></div>
+    </div>
+  </div>
+
+  <div class="seo-content">
+    <h2>¿Qué hace esta herramienta?</h2>
+    <p>Escribe o pega texto, o suelta un archivo, y esta herramienta calcula sus hashes MD5, SHA-1, SHA-256, SHA-384 y SHA-512 todos a la vez — sin necesidad de adivinar qué algoritmo usa un checksum publicado. Pega un hash esperado en el campo de verificación y se comprueba automáticamente contra el que coincida en longitud de los cinco calculados.</p>
+
+    <h2>¿Cuándo usar esta herramienta?</h2>
+    <ul>
+      <li>Confirmar que un archivo descargado coincide con el checksum publicado por su autor</li>
+      <li>Generar un checksum para compartir junto a un archivo que estás distribuyendo</li>
+      <li>Comparar dos archivos para ver si son idénticos byte a byte sin abrir ninguno</li>
+      <li>Calcular un hash rápido de un fragmento de texto o una contraseña como referencia</li>
+    </ul>
+
+    <h2>Por qué Orisod</h2>
+    <p>SHA-1, SHA-256, SHA-384 y SHA-512 se calculan con la <code style="background:var(--bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;">Web Crypto API</code> nativa del navegador. MD5 no forma parte de esa API (se dejó fuera de la especificación deliberadamente), así que se calcula con <code style="background:var(--bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;">SparkMD5</code> en su lugar. Nada de lo que escribas o subas sale nunca de tu navegador.</p>
+
+    <h2>Preguntas frecuentes</h2>
+    <div class="faq-item">
+      <div class="q">¿Es seguro usar MD5 o SHA-1?</div>
+      <div>No para fines de seguridad — ambos tienen debilidades de colisión conocidas y no deben usarse para contraseñas ni firmas digitales. Se incluyen aquí porque las comprobaciones de integridad de archivos (confirmar que una descarga no se corrompió) todavía publican comúnmente checksums MD5 o SHA-1, un caso de uso distinto y no adversarial.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Cómo sabe el campo de verificación qué algoritmo comprobar?</div>
+      <div>Cada algoritmo de hash siempre produce una longitud fija de salida (MD5 son 32 caracteres hexadecimales, SHA-1 son 40, y así sucesivamente), así que la herramienta hace coincidir la longitud del hash que pegaste con el algoritmo correcto automáticamente.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Hay un límite de tamaño de archivo?</div>
+      <div>No hay un límite estricto, pero el archivo completo se carga en memoria para calcular los hashes, así que los archivos extremadamente grandes (varios gigabytes) pueden ser lentos o toparse con los límites de memoria de tu navegador.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Se sube mi archivo o texto a un servidor?</div>
+      <div>No, todo el proceso ocurre localmente en tu navegador con JavaScript.</div>
+    </div>
+  </div>
+
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres verlo con más detalle? Lee nuestra guía: <a href="/es/blog/what-is-a-checksum/" style="color:var(--accent);text-decoration:none;">Qué demuestra realmente un checksum (y qué no)</a></p>
+
+  <h2>Herramientas relacionadas</h2>
+  <div class="related-grid">
+  <a class="related-card" href="/es/uuid-generator/">
+    <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 0 0-9 9c0 3 1 5 2 6M12 3a9 9 0 0 1 9 9c0 3-1 5-2 6"/><path d="M8 20c1-2 1-4 1-6a3 3 0 0 1 6 0c0 2 0 4 1 6"/><path d="M12 7a5 5 0 0 0-5 5c0 2 .5 3 1 4"/></svg></div>
+    <div class="body">
+      <div class="title">Generador de UUID</div>
+      <div class="desc">Genera identificadores UUID v4 aleatorios.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+  <a class="related-card" href="/es/password-generator/">
+    <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="12" r="4"/><path d="M11.5 12H21M17 12v4M20 12v3"/></svg></div>
+    <div class="body">
+      <div class="title">Generador de Contraseñas</div>
+      <div class="desc">Genera una contraseña fuerte y aleatoria.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+  <a class="related-card" href="/es/image-to-base64/">
+    <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3c-2.5 0-3 1.5-3 4v2c0 1.5-.5 3-2.5 3 2 0 2.5 1.5 2.5 3v2c0 2.5.5 4 3 4"/><path d="M15 3c2.5 0 3 1.5 3 4v2c0 1.5.5 3 2.5 3-2 0-2.5 1.5-2.5 3v2c0 2.5-.5 4-3 4"/></svg></div>
+    <div class="body">
+      <div class="title">Imagen a Base64</div>
+      <div class="desc">Codifica y decodifica imágenes en Base64.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+</div>
+
+  <footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-brand-logo">ORISOD</div>
+      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF en tu navegador. Procesamiento 100% local — tus archivos nunca se suben a ningún sitio.</div>
+      <div class="footer-copy">© Orisod Labs</div>
+    </div>
+    <div class="footer-col">
+      <h3>Herramientas</h3>
+      <a href="/es/tools/#image">Herramientas de imagen</a>
+      <a href="/es/tools/#pdf">Herramientas PDF</a>
+      <a href="/es/tools/#utility">Utilidades</a>
+    </div>
+    <div class="footer-col">
+      <h3>Empresa</h3>
+      <a href="/es/about/">Acerca de</a>
+      <a href="/es/privacy/">Privacidad</a>
+      <a href="/es/blog/">Blog</a>
+    </div>
+  </div>
+</footer>
+</div>
+
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+<script>
+const modeRow = document.getElementById('modeRow');
+const textPanel = document.getElementById('textPanel');
+const filePanel = document.getElementById('filePanel');
+const textInput = document.getElementById('textInput');
+const dropzone = document.getElementById('dropzone');
+const dropzoneText = document.getElementById('dropzoneText');
+const fileInput = document.getElementById('fileInput');
+const fileInfo = document.getElementById('fileInfo');
+const errorMsg = document.getElementById('errorMsg');
+const progressMsg = document.getElementById('progressMsg');
+const expectedHash = document.getElementById('expectedHash');
+const verifyResult = document.getElementById('verifyResult');
+const hashList = document.getElementById('hashList');
+
+const ALGOS = [
+  { id: 'MD5', len: 32 },
+  { id: 'SHA-1', len: 40 },
+  { id: 'SHA-256', len: 64 },
+  { id: 'SHA-384', len: 96 },
+  { id: 'SHA-512', len: 128 },
+];
+
+let mode = 'text';
+let currentHashes = {};
+let textTimer = null;
+
+function bufToHex(buffer) {
+  return Array.from(new Uint8Array(buffer)).map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function computeHashes(arrayBuffer) {
+  const results = {};
+  results['MD5'] = SparkMD5.ArrayBuffer.hash(arrayBuffer);
+  for (const algo of ['SHA-1', 'SHA-256', 'SHA-384', 'SHA-512']) {
+    const digest = await crypto.subtle.digest(algo, arrayBuffer);
+    results[algo] = bufToHex(digest);
+  }
+  return results;
+}
+
+function renderHashes(hashes) {
+  currentHashes = hashes;
+  hashList.innerHTML = '';
+  ALGOS.forEach(({ id }) => {
+    const row = document.createElement('div');
+    row.className = 'hash-row';
+    row.dataset.algo = id;
+    row.innerHTML = `
+      <div class="hash-label">${id}</div>
+      <div class="hash-value-row">
+        <div class="hash-value">${hashes[id]}</div>
+        <button type="button" class="copy-btn" data-algo="${id}">📋 Copiar</button>
+      </div>
+    `;
+    hashList.appendChild(row);
+  });
+  updateVerify();
+}
+
+hashList.addEventListener('click', async (e) => {
+  const btn = e.target.closest('.copy-btn');
+  if (!btn) return;
+  try {
+    await navigator.clipboard.writeText(currentHashes[btn.dataset.algo]);
+    const original = btn.textContent;
+    btn.textContent = '✅ ¡Copiado!';
+    setTimeout(() => { btn.textContent = original; }, 1200);
+  } catch (err) {
+    errorMsg.textContent = 'No se pudo copiar al portapapeles.';
+  }
+});
+
+modeRow.querySelectorAll('.mode-btn').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    modeRow.querySelectorAll('.mode-btn').forEach((b) => b.classList.remove('active'));
+    btn.classList.add('active');
+    mode = btn.dataset.mode;
+    textPanel.style.display = mode === 'text' ? 'block' : 'none';
+    filePanel.style.display = mode === 'file' ? 'block' : 'none';
+    errorMsg.textContent = '';
+    hashList.innerHTML = '';
+    verifyResult.style.display = 'none';
+    if (mode === 'text') hashText();
+  });
+});
+
+async function hashText() {
+  const value = textInput.value;
+  if (!value) {
+    hashList.innerHTML = '';
+    verifyResult.style.display = 'none';
+    return;
+  }
+  const buffer = new TextEncoder().encode(value).buffer;
+  const hashes = await computeHashes(buffer);
+  renderHashes(hashes);
+}
+
+textInput.addEventListener('input', () => {
+  clearTimeout(textTimer);
+  textTimer = setTimeout(hashText, 150);
+});
+
+fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  handleFile(e.dataTransfer.files[0]);
+});
+
+async function handleFile(file) {
+  errorMsg.textContent = '';
+  hashList.innerHTML = '';
+  verifyResult.style.display = 'none';
+  if (!file) return;
+
+  dropzoneText.textContent = `✅ ${file.name}`;
+  fileInfo.textContent = `${(file.size / 1024).toFixed(1)} KB`;
+  progressMsg.textContent = 'Calculando hash del archivo...';
+
+  try {
+    const buffer = await file.arrayBuffer();
+    const hashes = await computeHashes(buffer);
+    renderHashes(hashes);
+    progressMsg.textContent = '';
+  } catch (err) {
+    progressMsg.textContent = '';
+    errorMsg.textContent = err.message || 'No se pudo calcular el hash de este archivo.';
+  }
+}
+
+function updateVerify() {
+  const value = expectedHash.value.trim().toLowerCase();
+  if (!value) {
+    verifyResult.style.display = 'none';
+    return;
+  }
+  const algo = ALGOS.find((a) => a.len === value.length);
+  const matchingRow = hashList.querySelector('.hash-row.highlight');
+  if (matchingRow) matchingRow.classList.remove('highlight');
+
+  if (!algo || !currentHashes[algo.id]) {
+    verifyResult.className = 'verify-result mismatch';
+    verifyResult.textContent = '✗ No coincide con ningún hash calculado';
+    verifyResult.style.display = 'block';
+    return;
+  }
+
+  if (currentHashes[algo.id].toLowerCase() === value) {
+    verifyResult.className = 'verify-result match';
+    verifyResult.textContent = `✓ Coincide con ${algo.id}`;
+    verifyResult.style.display = 'block';
+    const row = hashList.querySelector(`.hash-row[data-algo="${algo.id}"]`);
+    if (row) row.classList.add('highlight');
+  } else {
+    verifyResult.className = 'verify-result mismatch';
+    verifyResult.textContent = `✗ No coincide con ${algo.id}`;
+    verifyResult.style.display = 'block';
+  }
+}
+
+expectedHash.addEventListener('input', updateVerify);
+</script>
+</body>
+</html>

@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>What Is a UUID, and When Do You Actually Need One? | Orisod Blog</title>
-<meta name="description" content="What the 32 hex digits in a UUID actually encode, how unlikely a real collision is (with the actual math), and when a UUID is the wrong choice.">
-<link rel="canonical" href="https://orisod.com/blog/generate-uuids/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/blog/generate-uuids/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/generate-uuids/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/generate-uuids/">
+<title>What a Checksum Actually Proves (and What It Doesn't) | Orisod Blog</title>
+<meta name="description" content="What a hash function is actually doing when it turns a file into a short string, why a matching checksum proves a download is intact but nothing about who sent it, and why MD5 is fine for one job and terrible for another.">
+<link rel="canonical" href="https://orisod.com/blog/what-is-a-checksum/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/what-is-a-checksum/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/what-is-a-checksum/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/what-is-a-checksum/">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
 <link rel="icon" href="/favicon.ico">
@@ -137,7 +137,7 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
   </nav>
   <div class="site-nav-right">
     <span class="lang-flag active">EN</span>
-    <a class="lang-flag" href="/es/blog/generate-uuids/">ES</a>
+    <a class="lang-flag" href="/es/blog/what-is-a-checksum/">ES</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
   </div>
 </header>
@@ -146,69 +146,76 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guides</span>
-<h1>What Is a UUID, and When Do You Actually Need One?</h1>
-<p class="intro">A UUID looks like 32 random-looking hex digits split into five groups, and for the most common version, that's almost exactly what it is — with a couple of fixed bits hidden inside that tell you which version and variant you're looking at.</p>
+<h1>What a Checksum Actually Proves (and What It Doesn't)</h1>
+<p class="intro">A software vendor publishes a line like <code>a3f5...9c2</code> next to a download link, and somehow that's supposed to reassure you the file is fine. It's a reasonable thing to trust without knowing why — but the "why" turns out to be a genuinely useful piece of computer science, with a real boundary on what it can and can't tell you.</p>
 
 <div class="article-body">
 
-<h2>What the digits actually encode</h2>
-<p>A UUID is a 128-bit number, written as 32 hexadecimal digits in the pattern <code>8-4-4-4-12</code>. For version 4 (by far the most common kind, and what "UUID" means in casual use), all but 6 of those 128 bits are genuinely random. The other 6 are fixed markers: 4 bits that always read "0100" in binary — which is why the first digit of the third group is always the literal character <code>4</code> — identifying this as version 4, and 2 more bits at the start of the fourth group that always start with <code>10</code> in binary, which is why that group's first hex digit is always <code>8</code>, <code>9</code>, <code>a</code>, or <code>b</code>. Every other digit is drawn from a secure random source.</p>
+<h2>A hash function's one job</h2>
+<p>A hash function takes an input of any size — a word, a sentence, a multi-gigabyte file — and produces a fixed-length string of characters, deterministically: the same input always produces the exact same output, every time, on any computer. Feed it a different input, even one bit different, and the output looks completely unrelated to the previous one. That's the entire mechanism. A "checksum" is just that output, used specifically to check that something matches.</p>
+
+<h2>Why one flipped bit changes everything</h2>
+<p>This is the property that makes a checksum useful at all: a well-designed hash function is built so that changing even a single bit of the input scrambles roughly half of the output bits, unpredictably. There's no "mostly the same" hash for "mostly the same" file — a one-byte difference and a completely rewritten file both produce outputs that look equally unrelated to the original. This is called the avalanche effect, and it's precisely why a matching hash is meaningful: there's essentially no way for corrupted or altered data to accidentally produce the same hash as the original.</p>
 
 <figure class="theme-figure">
-<svg viewBox="0 0 700 190" width="700" height="190" role="img" aria-label="Diagram of a UUID v4 broken into its five hyphen-separated groups, with the version marker '4' in the third group and the variant digit in the fourth group highlighted as fixed, non-random positions; every other digit is randomly generated." xmlns="http://www.w3.org/2000/svg">
-<text x="350" y="35" text-anchor="middle" font-family="Courier New, monospace" font-size="26" font-weight="bold" fill="var(--muted-text)">550e8400-e29b-<tspan fill="var(--accent)">4</tspan>1d4-<tspan fill="var(--accent)">a</tspan>716-446655440000</text>
-<line x1="303" y1="46" x2="303" y2="70" stroke="var(--accent)" stroke-width="1.6"/>
-<text x="303" y="88" text-anchor="middle" font-size="13" fill="var(--accent)">version = 4</text>
-<line x1="393" y1="46" x2="393" y2="70" stroke="var(--accent)" stroke-width="1.6"/>
-<text x="393" y="88" text-anchor="middle" font-size="13" fill="var(--accent)">variant bit</text>
-<line x1="40" y1="120" x2="660" y2="120" stroke="var(--border)" stroke-width="1.5"/>
-<text x="350" y="145" text-anchor="middle" font-size="14" fill="var(--muted-text)">122 of the 128 bits are randomly generated — only these 2 marker digits are fixed by the format.</text>
-<text x="350" y="168" text-anchor="middle" font-size="13" fill="var(--muted-text)">2^122 possible values ≈ 5.3 × 10³⁶</text>
+<svg viewBox="0 0 700 220" width="700" height="220" role="img" aria-label="Diagram showing the text hello world hashed with SHA-256 to b94d27b...2efcde9, and the text hello world with a period added hashed to the completely different value 7ddb227...9faeb87, illustrating that a tiny input change produces a totally different hash output." xmlns="http://www.w3.org/2000/svg">
+<rect x="40" y="30" width="280" height="70" rx="6" fill="var(--card-bg)" stroke="var(--border)" stroke-width="2"/>
+<text x="180" y="58" text-anchor="middle" font-family="Courier New, monospace" font-size="15" fill="var(--text)">"hello world"</text>
+<text x="180" y="82" text-anchor="middle" font-size="11" fill="var(--muted-text)">11 characters</text>
+<rect x="40" y="130" width="280" height="70" rx="6" fill="var(--card-bg)" stroke="#f59e0b" stroke-width="2"/>
+<text x="180" y="158" text-anchor="middle" font-family="Courier New, monospace" font-size="15" fill="var(--text)">"hello world."</text>
+<text x="180" y="182" text-anchor="middle" font-size="11" fill="#f59e0b">12 characters — one period added</text>
+<path d="M 330 65 L 400 65" stroke="var(--muted-text)" stroke-width="2"/>
+<polygon points="400,65 390,60 390,70" fill="var(--muted-text)"/>
+<path d="M 330 165 L 400 165" stroke="var(--muted-text)" stroke-width="2"/>
+<polygon points="400,165 390,160 390,170" fill="var(--muted-text)"/>
+<rect x="410" y="30" width="260" height="70" rx="6" fill="var(--card-bg)" stroke="var(--accent)" stroke-width="2"/>
+<text x="540" y="65" text-anchor="middle" font-family="Courier New, monospace" font-size="13" fill="var(--accent)">b94d27b...2efcde9</text>
+<text x="540" y="85" text-anchor="middle" font-size="10" fill="var(--muted-text)">SHA-256</text>
+<rect x="410" y="130" width="260" height="70" rx="6" fill="var(--card-bg)" stroke="#f59e0b" stroke-width="2"/>
+<text x="540" y="165" text-anchor="middle" font-family="Courier New, monospace" font-size="13" fill="#f59e0b">7ddb227...9faeb87</text>
+<text x="540" y="185" text-anchor="middle" font-size="10" fill="var(--muted-text)">SHA-256</text>
 </svg>
-<figcaption>A real UUID v4, with its two fixed marker digits highlighted. Everything else is random — that's what makes collisions vanishingly unlikely (see the math below).</figcaption>
+<figcaption>Real, independently computed SHA-256 values: adding a single period to the input produces a hash that shares no visible resemblance to the original — that's the avalanche effect working as intended, not a coincidence.</figcaption>
 </figure>
 
-<h2>How unlikely a real collision is</h2>
-<p>With 122 random bits, the space of possible UUIDs is 2¹²² — about 5.3 × 10³⁶ values. Using the standard birthday-paradox approximation for when a collision becomes likely in a growing set, you'd need to generate roughly 2.7 × 10¹⁸ UUIDs (2.7 quintillion) before there's even a 50% chance that any two of them match. That number is large enough that "will two of my UUIDs collide" is not a realistic concern for essentially any application, including ones generating millions of records a day.</p>
+<h2>Integrity is not authenticity</h2>
+<p>Here's the boundary that matters most: a matching checksum proves the file you have is byte-for-byte identical to the file the checksum was computed from. It proves nothing about who computed that checksum or where the file actually came from. If both the file and its published checksum are hosted on a compromised server, an attacker can replace both together, and everything will still "match." A checksum answers "was this corrupted in transit?", not "can I trust the source?" — for the second question, you need something like a cryptographic signature, which relies on a private key an attacker doesn't have, not just a hash anyone can recompute.</p>
 
-<h2>When a UUID is the wrong tool</h2>
-<ul>
-  <li><strong>When you need sortability.</strong> A version 4 UUID is fully random, so a list of them sorts in no meaningful order — if you need IDs that sort roughly by creation time (useful for database index performance), a time-ordered scheme like UUID version 7 or a ULID is the better fit, not version 4.</li>
-  <li><strong>When a short, human-typeable ID will do.</strong> A UUID is long and meant to be copy-pasted, not read aloud or typed from memory — a short code (like a 6-character reference number) is friendlier for anything a person needs to communicate verbally.</li>
-  <li><strong>When you just need a counter.</strong> A simple auto-incrementing integer is smaller, sorts naturally, and is easier to debug — UUIDs solve the specific problem of generating unique IDs without coordination between multiple systems, which a single database's auto-increment already handles fine on its own.</li>
-</ul>
+<h2>Why "broken" algorithms are still around</h2>
+<p>MD5 and SHA-1 are considered cryptographically broken because researchers found practical ways to construct two different inputs that hash to the same output — a "collision" — through deliberate, expensive effort. That matters enormously for security-critical uses like digital signatures, where an adversary might want to swap in a malicious document that hashes the same as a legitimate one. It matters far less for catching accidental corruption — a truncated download, a bad disk sector, a network glitch — because those failures aren't an adversary engineering a specific collision, they're essentially random damage, and even a "broken" hash function still fails an avalanche test against random damage. That's the real reason file-integrity checksums still commonly use MD5 or SHA-1: the threat model is corruption, not an adversary.</p>
 
 <h2>Quick answers</h2>
-<p><strong>Are UUIDs case-sensitive?</strong> By convention they're written in lowercase, but most systems treat them case-insensitively — uppercase and lowercase versions represent the same value.</p>
-<p><strong>Can I use a UUID as a primary key?</strong> Yes, commonly done — the main tradeoff versus an auto-incrementing integer is index performance on very large tables, since random UUIDs don't insert in sorted order (version 7 exists specifically to fix this).</p>
-<p><strong>Is a UUID the same as a GUID?</strong> Functionally yes — GUID (Globally Unique Identifier) is Microsoft's historical name for the same concept, and the two terms are used interchangeably today.</p>
+<p><strong>If two files have the same hash, are they definitely identical?</strong> For any hash function without a known practical collision method (SHA-256 and above, currently), yes for all realistic purposes — the odds of two different files matching by chance are astronomically small.</p>
+<p><strong>Why do checksums look like random letters and numbers?</strong> They're just a byte sequence (the raw output of the hash function) displayed in hexadecimal, since raw bytes aren't easy to read or copy-paste reliably as text.</p>
+<p><strong>Does a longer hash mean a more secure algorithm?</strong> Generally yes within the same algorithm family — SHA-512 has more output bits than SHA-256, making brute-force and collision attacks harder — but algorithm design matters more than length alone, which is why MD5's 128-bit output is weaker than SHA-1's 160-bit output by more than the length difference alone would suggest.</p>
 
 <div class="cta-box">
-  <h3>Generate a UUID</h3>
-  <p>Orisod's UUID Generator creates version 4 UUIDs using your browser's secure random number generator, one at a time or in bulk — entirely in your browser.</p>
-  <a class="cta-button" href="/uuid-generator/">Generate a UUID →</a>
+  <h3>Compute a hash or checksum</h3>
+  <p>Orisod's Hash & Checksum Generator computes MD5, SHA-1, SHA-256, SHA-384, and SHA-512 for text or a file, and checks them against an expected value automatically — entirely in your browser.</p>
+  <a class="cta-button" href="/hash-checksum-generator/">Generate a checksum →</a>
 </div>
 
-<p>For the overwhelming majority of "I need a unique ID" situations, a version 4 UUID is the right, boring, well-understood answer — the exceptions are specific enough (sortability, human-readability, single-database counters) that you'll usually know when you've hit one.</p>
+<p>A checksum is a small, deterministic fingerprint with one honest job: telling you whether two things are exactly the same. It's remarkably good at that job, and it's worth knowing exactly where that job ends, so a green checkmark doesn't get asked to answer a question it was never built to answer.</p>
 
 </div>
 
 <div class="related-section">
   <h2>Related articles</h2>
   <div class="related-grid">
+    <a class="blog-card" href="/blog/generate-uuids/">
+      <h3>What Is a UUID, and When Do You Actually Need One?</h3>
+      <p>What makes a UUID different from an auto-incrementing ID, and when uniqueness actually matters.</p>
+    </a>
+
     <a class="blog-card" href="/blog/generate-a-strong-password/">
       <h3>How to Generate a Strong Password (and Why Length Matters More Than Tricks)</h3>
       <p>What actually makes a password hard to crack, in real, computed entropy bits.</p>
     </a>
 
-    <a class="blog-card" href="/blog/format-json/">
-      <h3>How to Format and Validate JSON (and the Syntax Rules That Actually Matter)</h3>
-      <p>Why copy-pasted JavaScript objects fail as JSON, and the exact rules JSON.parse enforces.</p>
-    </a>
-
-    <a class="blog-card" href="/blog/what-is-a-checksum/">
-      <h3>What a Checksum Actually Proves (and What It Doesn't)</h3>
-      <p>Why a matching hash proves integrity but not authenticity, and why "broken" algorithms still work fine for file checks.</p>
+    <a class="blog-card" href="/blog/base64-encoding-explained/">
+      <h3>What Is Base64 Encoding and When Developers Need It for Images</h3>
+      <p>Why binary data gets encoded as text, and when that tradeoff actually makes sense.</p>
     </a>
   </div>
 </div>
