@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How Word Count and Reading Time Estimates Actually Work | Orisod Blog</title>
-<meta name="description" content="How word counters actually split text into words, why sentence counting is a heuristic rather than exact, and the simple math behind a &quot;5 min read&quot; label.">
-<link rel="canonical" href="https://orisod.com/blog/word-count-and-reading-time-explained/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/blog/word-count-and-reading-time-explained/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/word-count-and-reading-time-explained/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/word-count-and-reading-time-explained/">
+<title>How Browser Text-to-Speech Actually Works (and What It Can't Do) | Orisod Blog</title>
+<meta name="description" content="How the Web Speech API turns text into live speech using your own device's voices, why it can't export an audio file, and why long text sometimes cuts off partway through.">
+<link rel="canonical" href="https://orisod.com/blog/text-to-speech-explained/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/text-to-speech-explained/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/text-to-speech-explained/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/text-to-speech-explained/">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
 <link rel="icon" href="/favicon.ico">
@@ -137,7 +137,7 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
   </nav>
   <div class="site-nav-right">
     <span class="lang-flag active">EN</span>
-    <a class="lang-flag" href="/es/blog/word-count-and-reading-time-explained/">ES</a>
+    <a class="lang-flag" href="/es/blog/text-to-speech-explained/">ES</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
   </div>
 </header>
@@ -146,65 +146,72 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guides</span>
-<h1>How Word Count and Reading Time Estimates Actually Work</h1>
-<p class="intro">A "word count" feels like it should be an unambiguous number, and a "5 min read" label feels like a measurement — neither one really is. Both are simple, useful approximations built on rules that are worth knowing before you trust them for something that matters.</p>
+<h1>How Browser Text-to-Speech Actually Works (and What It Can't Do)</h1>
+<p class="intro">Any page that reads text aloud is leaning on a browser feature called the Web Speech API — not a service the site itself provides. That distinction explains almost everything about how these tools behave: why voices look different on every device, why there's no "download as MP3" button, and why very long text sometimes cuts off partway through.</p>
 
 <div class="article-body">
 
-<h2>How word counting actually works</h2>
-<p>The standard method — used by virtually every word counter, including word processors — is to split text on whitespace and count the resulting chunks. That means a hyphenated compound like "well-known" counts as one word, an em-dash-joined pair like "state—of—the—art" (no surrounding spaces) also counts as one, and a URL with no spaces in it counts as a single word no matter how long it is. This is why word counts can feel slightly "off" for text with unusual punctuation — the counter isn't wrong, it's just applying a consistent, simple rule rather than making judgment calls about what a "real" word is.</p>
+<h2>The browser calls your operating system, not a server</h2>
+<p>When a page asks to speak some text, it hands that text to <code>speechSynthesis</code>, a browser interface defined by the Web Speech API. The browser doesn't generate the audio itself — it passes the text down to whichever text-to-speech engine your operating system already has installed, gets audio back, and plays it through your speakers. Nothing about that round trip involves a network request. The text never has to leave your device for the speech to happen, which is exactly why a tool like this can make an honest "nothing uploaded" claim.</p>
 
-<h2>Why sentence counting is a heuristic, not an exact science</h2>
-<p>Sentence counting works by looking for <code>.</code>, <code>!</code>, and <code>?</code> as sentence-ending punctuation. That's a reasonable approximation, but it breaks in a predictable way: abbreviations. "Dr. Smith arrived at 3 p.m. and left an hour later" contains two periods that aren't sentence endings at all — a simple punctuation-based counter will still count them as one, overcounting the true sentence count by a small amount. Full natural-language sentence detection (the kind that knows "Dr." isn't a sentence boundary) requires a dictionary of known abbreviations and real linguistic parsing — well beyond what a lightweight, client-side counter needs for its actual job: giving you a close, useful estimate, not a publication-grade linguistic analysis.</p>
-
-<h2>The math behind a reading-time estimate</h2>
-<p>A "reading time" label is just word count divided by an assumed reading speed, rounded to a whole number of minutes. The most commonly cited average adult silent-reading speed is around 200–250 words per minute; 200 is the more conservative, widely used baseline.</p>
+<h2>Why the voice list looks completely different from device to device</h2>
+<p>Because the actual speech engine is supplied by the operating system, not the website, the list of available voices is really a list of whatever your OS and browser combination happens to ship with. macOS and iOS tend to include a broad set of natural-sounding voices out of the box; some Windows, Linux, and older Android setups expose far fewer, more mechanical-sounding options. A page has no way to add voices to that list or make a thin one sound better — it can only offer whatever <code>speechSynthesis.getVoices()</code> reports back.</p>
 
 <figure class="theme-figure">
-<svg viewBox="0 0 700 170" width="700" height="170" role="img" aria-label="Diagram showing the reading time formula: word count divided by 200 words per minute equals estimated minutes, illustrated with a worked example of 1200 words divided by 200 equals 6 minutes." xmlns="http://www.w3.org/2000/svg">
-<text x="350" y="45" text-anchor="middle" font-size="22" fill="var(--text)">word count ÷ 200 words/min = estimated minutes</text>
-<line x1="60" y1="70" x2="640" y2="70" stroke="var(--border)" stroke-width="1.5"/>
-<text x="350" y="105" text-anchor="middle" font-family="Courier New, monospace" font-size="20" font-weight="bold" fill="var(--accent)">1,200 words ÷ 200 = 6 min read</text>
-<text x="350" y="145" text-anchor="middle" font-size="13" fill="var(--muted-text)">Rounded to the nearest minute, with a 1-minute floor for any non-empty text.</text>
+<svg viewBox="0 0 700 220" width="700" height="220" role="img" aria-label="Diagram showing text flowing into the browser's speech synthesis engine, which uses operating-system-provided voices, and out to live speaker playback only — with a separate, crossed-out box showing that audio file export is not a possible output of this pipeline." xmlns="http://www.w3.org/2000/svg">
+<rect x="20" y="78" width="130" height="64" rx="8" fill="none" stroke="var(--text)" stroke-width="1.5"/>
+<text x="85" y="115" text-anchor="middle" font-size="14" fill="var(--text)">Your text</text>
+<line x1="150" y1="110" x2="205" y2="110" stroke="var(--muted-text)" stroke-width="1.5"/>
+<rect x="205" y="60" width="220" height="100" rx="8" fill="none" stroke="var(--accent)" stroke-width="2"/>
+<text x="315" y="102" text-anchor="middle" font-size="14" fill="var(--accent)">Browser speech engine</text>
+<text x="315" y="122" text-anchor="middle" font-size="12" fill="var(--muted-text)">(uses OS-installed voices)</text>
+<line x1="425" y1="95" x2="480" y2="95" stroke="var(--muted-text)" stroke-width="1.5"/>
+<rect x="480" y="65" width="160" height="60" rx="8" fill="none" stroke="var(--text)" stroke-width="1.5"/>
+<text x="560" y="100" text-anchor="middle" font-size="14" fill="var(--text)">🔊 Live playback</text>
+<line x1="315" y1="160" x2="315" y2="180" stroke="#f87171" stroke-width="1.5" stroke-dasharray="4 3"/>
+<rect x="230" y="180" width="170" height="34" rx="8" fill="none" stroke="#f87171" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="315" y="202" text-anchor="middle" font-size="12.5" fill="#f87171">❌ Audio file export</text>
 </svg>
+<figcaption>There's no stage in this pipeline that produces a saved file — the API was designed for live playback only, so an audio export is architecturally not something a webpage can add on top of it.</figcaption>
 </figure>
 
-<p>That's the entire calculation — there's no adjustment for sentence complexity, vocabulary difficulty, or the reader's own speed, because a general-purpose counter has no way to know any of that. Treat the number as a rough, order-of-magnitude estimate ("a couple of minutes" vs. "about a quarter hour"), not a precise prediction.</p>
+<h2>Why there's no "download as MP3" option</h2>
+<p>This isn't a missing feature Orisod chose to leave out — the Web Speech API simply never defined a way to capture its output as a file. It has one job: turn text into sound and play it, live, through the device's audio output. There's no encoding step, no buffer handed back to the page, nothing a script could redirect into a downloadable <code>.mp3</code> or <code>.wav</code>. Any tool that tells you otherwise is either running actual server-side speech synthesis (which usually means your text left your device) or using browser-specific recording workarounds that don't work reliably across devices. Being upfront about that limitation up front is more useful than quietly overpromising and letting people find out the hard way.</p>
 
-<h2>Why word/character limits differ by platform</h2>
-<p>Different platforms impose limits for different reasons, which is why there's no single "correct" limit to design around: a search engine meta description gets truncated at a pixel width that varies by device (commonly approximated as ~155–160 characters), an SMS message is capped at 160 characters for historical protocol reasons, and a social post's limit is simply a product decision by that platform. If you're writing against a specific limit, check that platform's current, official number rather than a rule of thumb — these limits change over time.</p>
+<h2>Why long text sometimes stops partway through</h2>
+<p>Several major browsers have long-standing, well-documented bugs where speaking one very long block of text in a single request stops partway through, with no error and no explanation. It's a real quirk of the underlying browser implementations, not something specific to any one website. The practical workaround is to split long text into sentence-sized pieces and speak them as a queue, one utterance at a time — which also has the side benefit of making it possible to track and highlight exactly which sentence is currently playing.</p>
 
 <h2>Quick answers</h2>
-<p><strong>Why does my word count differ slightly from another tool's?</strong> Different tools sometimes make different calls on edge cases — how they treat multiple consecutive spaces, line breaks, or punctuation-only "words." Small differences (a handful of words on a long document) are usually just different tie-breaking rules, not a bug in either tool.</p>
-<p><strong>Does paragraph count include single line breaks?</strong> No, in the common convention (and the one this site's counter uses) a paragraph is a block of text separated by at least one fully blank line — several lines of text with no blank line between them count as one paragraph.</p>
-<p><strong>Is 200 words per minute accurate for me personally?</strong> Probably not exactly — reading speed varies widely by individual, language, familiarity with the topic, and format (skimming vs. careful reading). 200 wpm is a population-level average used as a reasonable default, not a personalized measurement.</p>
+<p><strong>Does closing the tab stop the speech?</strong> Yes — speech synthesis is tied to the page that started it, so navigating away or closing the tab stops playback immediately.</p>
+<p><strong>Can I get a more natural-sounding voice than what my device offers?</strong> Only by installing additional voices at the operating system level, if your OS supports that (some do, through system accessibility settings) — a webpage has no ability to supply better voices on its own.</p>
+<p><strong>Why does pause/resume sometimes behave oddly?</strong> Pausing and resuming mid-utterance is handled by the same OS-level speech engine, and its behavior isn't perfectly consistent across every browser and platform — this is a known rough edge of the underlying technology, not something a website's code controls.</p>
 
 <div class="cta-box">
-  <h3>Count your text</h3>
-  <p>Orisod's Word & Character Counter tracks words, characters, sentences, paragraphs, and estimated reading time live as you type — entirely in your browser.</p>
-  <a class="cta-button" href="/word-character-counter/">Count words and characters →</a>
+  <h3>Try text-to-speech in your browser</h3>
+  <p>Orisod's Read Aloud tool reads pasted text using your browser's own voices, with speed, pitch, and live sentence highlighting — entirely local, no upload, no audio file.</p>
+  <a class="cta-button" href="/read-aloud/">Read text aloud →</a>
 </div>
 
-<p>Both word counts and reading-time estimates are useful precisely because they're simple and consistent — not because they're perfectly precise. Knowing the rule behind the number is usually enough to know when to trust it and when it's just a rough guide.</p>
+<p>The honest summary is simple: browser text-to-speech is a live playback feature built on top of whatever your operating system already provides, not a speech-generation service a website controls. Once that's clear, everything else about how these tools behave — the varying voices, the missing download button, the occasional cutoff on long text — stops looking like a bug and starts looking like exactly what the underlying technology was built to do.</p>
 
 </div>
 
 <div class="related-section">
   <h2>Related articles</h2>
   <div class="related-grid">
-    <a class="blog-card" href="/blog/text-case-styles-explained/">
-      <h3>Text Case Styles Explained: When to Use camelCase, snake_case, and More</h3>
-      <p>What each naming style is actually for, and why the convention matters more than the choice.</p>
+    <a class="blog-card" href="/blog/word-count-and-reading-time-explained/">
+      <h3>How Word Count and Reading Time Estimates Actually Work</h3>
+      <p>How word counters split text, why sentence counting is a heuristic, and the math behind a "5 min read" label.</p>
     </a>
 
-    <a class="blog-card" href="/blog/format-json/">
-      <h3>How to Format and Validate JSON (and the Syntax Rules That Actually Matter)</h3>
-      <p>Why copy-pasted JavaScript objects fail as JSON, and the exact rules JSON.parse enforces.</p>
+    <a class="blog-card" href="/blog/can-you-detect-ai-writing/">
+      <h3>Why "AI Detectors" Can't Actually Detect AI Writing</h3>
+      <p>Why there's no reliable fingerprint separating AI-written text from human-written text.</p>
     </a>
 
-    <a class="blog-card" href="/blog/text-to-speech-explained/">
-      <h3>How Browser Text-to-Speech Actually Works (and What It Can't Do)</h3>
-      <p>Why voices vary by device, why there's no audio-file export, and why long text sometimes cuts off partway through.</p>
+    <a class="blog-card" href="/blog/html-to-markdown-explained/">
+      <h3>How HTML Actually Becomes Markdown</h3>
+      <p>Why conversion is a tree walk with one rule per element, and why Markdown can't represent everything HTML can.</p>
     </a>
   </div>
 </div>

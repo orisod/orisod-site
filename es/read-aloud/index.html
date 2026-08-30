@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leer en Voz Alta – Herramienta Gratis de Texto a Voz | Orisod</title>
+<meta name="description" content="Haz que cualquier texto se lea en voz alta directamente en tu navegador. Elige una voz, ajusta la velocidad y el tono, y sigue la lectura con resaltado en vivo — nada se sube, no se crea ningún archivo de audio.">
+<link rel="canonical" href="https://orisod.com/es/read-aloud/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/read-aloud/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/read-aloud/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/read-aloud/">
+<link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#2563eb">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+  --icon-alpha:.30;
+  --grid-alpha:.05;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+  --icon-alpha:.24;
+  --grid-alpha:.10;
+}
+*{box-sizing:border-box;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);display:inline-flex;align-items:center;gap:8px;}
+.site-nav-logo img{height:26px;width:auto;display:block;}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:5px 14px;margin:-5px 0;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:40px 20px 60px 20px;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background-color:var(--bg);background-image:linear-gradient(rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px),linear-gradient(90deg, rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px);background-size:42px 42px;color:var(--text);text-align:center;transition:background-color 0.2s, color 0.2s;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:48px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:30px 20px;margin-top:30px;}
+.wc-label{display:block;text-align:left;font-size:13px;font-weight:bold;margin:0 0 6px 0;color:var(--muted-text);text-transform:uppercase;letter-spacing:.3px;}
+.wc-textarea{width:100%;min-height:220px;padding:12px 14px;border-radius:8px;border:1px solid var(--dropzone-border);background:var(--bg);color:var(--text);font-family:Arial, Helvetica, sans-serif;font-size:15px;line-height:1.6;resize:vertical;text-align:left;}
+.wc-textarea:focus{outline:none;border-color:var(--accent);}
+.preview-view{white-space:pre-wrap;word-wrap:break-word;overflow-y:auto;}
+.sentence{border-radius:3px;}
+.sentence.active{background:rgba(37,99,235,.35);}
+.file-row{text-align:left;margin-top:14px;}
+.file-btn{display:inline-flex;align-items:center;gap:6px;padding:11px 18px;border-radius:8px;background:var(--card-bg);border:1px solid var(--border);color:var(--text);font-size:14px;cursor:pointer;}
+.file-btn:hover{border-color:var(--accent);}
+.control-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:20px 0;text-align:left;}
+@media (max-width:700px){.control-row{grid-template-columns:1fr;}}
+.control-item select{width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--dropzone-border);background:var(--bg);color:var(--text);font-family:Arial, Helvetica, sans-serif;font-size:14px;}
+.control-item input[type="range"]{width:100%;margin-top:8px;}
+.stat-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:10px;margin:20px 0 8px 0;}
+.action-row{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;}
+button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
+button.secondary{background:var(--card-bg);border:1px solid var(--border);color:var(--text);}
+button.secondary:hover:not(:disabled){border-color:var(--accent);filter:none;}
+button:disabled{opacity:0.4;cursor:not-allowed;}
+button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.trust-strip{font-size:12px;color:var(--muted-text);margin-top:16px;line-height:1.5;}
+.disclosure-banner{background:rgba(245,158,11,.10);border:1px solid #f59e0b;border-radius:10px;padding:14px 18px;margin-top:20px;text-align:left;font-size:14px;line-height:1.6;color:var(--text);}
+.disclosure-banner strong{color:#f59e0b;}
+.unsupported-banner{display:none;margin-top:16px;padding:14px 18px;border-radius:10px;background:rgba(248,113,113,.10);border:1px solid #f87171;text-align:left;font-size:14px;line-height:1.6;color:var(--text);}
+.unsupported-banner strong{color:#f87171;}
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related-grid{display:grid;grid-template-columns:repeat(2, 1fr);gap:12px;}
+@media (max-width:600px){.related-grid{grid-template-columns:1fr;}}
+.related-card{display:flex;align-items:center;gap:14px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-card .icon-box{flex:none;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;border:2px solid transparent;}
+.related-card .icon-box.cat-image{background:rgba(37,99,235,var(--icon-alpha));border-color:#2563eb;color:#2563eb;}
+.related-card .icon-box.cat-pdf{background:rgba(245,158,11,var(--icon-alpha));border-color:#f59e0b;color:#f59e0b;}
+.related-card .icon-box.cat-utility{background:rgba(139,92,246,var(--icon-alpha));border-color:#8b5cf6;color:#8b5cf6;}
+.related-card .icon-box svg{width:22px;height:22px;display:block;}
+.related-card .body{flex:1 1 auto;min-width:0;}
+.related-card .title{font-size:14px;font-weight:bold;margin-bottom:2px;}
+.related-card .desc{font-size:12px;color:var(--muted-text);line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.related-card .arrow{flex:none;font-size:16px;color:var(--muted-text);transition:0.2s;}
+.related-card:hover .arrow{color:var(--accent);transform:translateX(2px);}
+.site-footer{
+  margin-top:40px;
+  padding:40px 24px 30px 24px;
+  border-top:1px solid var(--border);
+  text-align:left;
+}
+.footer-inner{
+  max-width:1000px;
+  margin:0 auto;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  gap:40px;
+}
+.footer-brand{max-width:280px;}
+.footer-brand-logo{font-size:16px;font-weight:bold;letter-spacing:0.5px;margin-bottom:10px;}
+.footer-brand-desc{font-size:13px;color:var(--muted-text);line-height:1.5;margin-bottom:14px;}
+.footer-copy{font-size:12px;color:var(--muted-text);opacity:0.7;}
+.footer-col h3{font-size:13px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-text);margin:0 0 14px 0;}
+.footer-col a{display:block;font-size:14px;color:var(--text);text-decoration:none;opacity:0.8;margin-bottom:10px;}
+.footer-col a:hover{opacity:1;color:var(--accent);}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/es/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/es/tools/">Todas las Herramientas</a>
+    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/#pdf">Herramientas PDF</a>
+    <span class="active-category">Herramientas de Utilidad</span>
+    <a href="/es/blog/">Blog</a>
+  </nav>
+  <div class="site-nav-right">
+    <a class="lang-flag" href="/read-aloud/">EN</a>
+    <span class="lang-flag active">ES</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+  <h1>Leer en Voz Alta</h1>
+  <p>Pega tu texto abajo y haz que se lea en voz alta directamente en tu navegador — elige una voz, ajusta la velocidad y el tono, y sigue la lectura mientras cada frase se resalta.</p>
+
+  <div class="box">
+    <label class="wc-label" for="textInput">Tu texto</label>
+    <textarea id="textInput" class="wc-textarea" placeholder="Pega o escribe el texto que quieres que se lea en voz alta..."></textarea>
+    <div id="previewView" class="wc-textarea preview-view" style="display:none;"></div>
+
+    <div class="file-row">
+      <label class="file-btn" for="fileInput">📄 Cargar archivo .txt</label>
+      <input type="file" id="fileInput" accept=".txt,text/plain" hidden>
+    </div>
+
+    <div class="control-row">
+      <div class="control-item">
+        <label class="wc-label" for="voiceSelect">Voz</label>
+        <select id="voiceSelect"></select>
+      </div>
+      <div class="control-item">
+        <label class="wc-label" for="rateSlider">Velocidad: <span id="rateVal">1.0x</span></label>
+        <input type="range" id="rateSlider" min="0.5" max="2" step="0.1" value="1">
+      </div>
+      <div class="control-item">
+        <label class="wc-label" for="pitchSlider">Tono: <span id="pitchVal">1.0</span></label>
+        <input type="range" id="pitchSlider" min="0" max="2" step="0.1" value="1">
+      </div>
+    </div>
+
+    <div class="action-row">
+      <button id="playBtn">▶️ Reproducir</button>
+      <button class="secondary" id="pauseBtn" disabled>⏸️ Pausar</button>
+      <button class="secondary" id="stopBtn" disabled>⏹️ Detener</button>
+      <button class="secondary" id="clearBtn">🗑️ Borrar</button>
+    </div>
+
+    <div class="trust-strip">🔒 Procesado en tu dispositivo · Nunca se envía a ningún lado · No se almacena</div>
+
+    <div class="disclosure-banner">
+      <strong>Qué es realmente esto:</strong> Leer en Voz Alta usa el motor de texto a voz integrado de tu propio navegador para leer tu texto en voz alta, en vivo, aquí mismo en esta página. No puede generar ni exportar un archivo de audio descargable (un MP3, por ejemplo) — la API Web Speech en la que se basa el navegador solo admite reproducción en vivo, no exportación de audio. Las voces disponibles dependen totalmente de tu dispositivo y navegador, no de Orisod — un teléfono, una Mac y una PC con Windows normalmente ofrecerán voces distintas.
+    </div>
+
+    <div class="unsupported-banner" id="unsupportedNotice">
+      <strong>No compatible con este navegador.</strong> Leer en Voz Alta necesita la API Web Speech, que este navegador no ofrece. Prueba con una versión reciente de Chrome, Edge, Safari o Firefox.
+    </div>
+  </div>
+
+  <div class="seo-content">
+    <h2>¿Qué hace esta herramienta?</h2>
+    <p>Leer en Voz Alta lee en voz alta cualquier texto que pegues, usando las voces de texto a voz integradas de tu propio navegador. Mientras lee, la frase actual se resalta para que puedas seguir la lectura visualmente mientras escuchas. Todo — dividir el texto, elegir una voz y generar el habla en sí — ocurre localmente en tu navegador mediante la API Web Speech. Nada de lo que escribas o pegues se envía nunca a un servidor.</p>
+
+    <h2>¿Cuándo deberías usar esta herramienta?</h2>
+    <ul>
+      <li>Para corregir un borrador — escuchar tu propio texto en voz alta hace que sea mucho más fácil detectar frases torpes o errores</li>
+      <li>Para escuchar un artículo largo, un guion o unas notas mientras haces otra cosa</li>
+      <li>Para practicar la pronunciación mientras aprendes un idioma</li>
+      <li>Para hacer que un contenido escrito sea más accesible para quien prefiera o necesite escuchar en lugar de leer</li>
+    </ul>
+
+    <h2>Por qué Orisod</h2>
+    <p>Sin cuenta, sin subir archivos, sin ida y vuelta a un servidor — tu texto permanece en tu dispositivo todo el tiempo, y el habla la genera tu propio navegador. También somos claros sobre lo que esto no puede hacer: es solo reproducción en vivo, no un generador de archivos de audio, porque la API Web Speech simplemente no admite exportar un archivo.</p>
+
+    <h2>Preguntas frecuentes</h2>
+    <div class="faq-item">
+      <div class="q">¿Puedo descargar el audio como un archivo?</div>
+      <div>No. La API Web Speech en la que se basa esta herramienta solo admite reproducción en vivo dentro del navegador — no ofrece ninguna forma de guardar lo que lee como un MP3, WAV u otro archivo de audio. Es una limitación de la tecnología del navegador, no algo que Orisod pueda añadir.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Por qué solo veo unas pocas voces, o por qué suenan robóticas?</div>
+      <div>Todas las voces que aparecen provienen de tu propio dispositivo y navegador, no de Orisod — nosotros no instalamos ni distribuimos ninguna voz. macOS e iOS suelen incluir varias voces de sonido natural de fábrica; otras configuraciones pueden ofrecer menos opciones, y más robóticas. El conjunto que ves depende por completo de tu sistema operativo.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Se envía mi texto a algún servidor?</div>
+      <div>No. La lectura de tu texto, incluida la generación del habla, ocurre completamente en tu dispositivo mediante la API <code style="background:var(--bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;">speechSynthesis</code> integrada de tu navegador. Nada se sube.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Por qué se detuvo la reproducción a mitad de un texto largo?</div>
+      <div>El texto se divide automáticamente en fragmentos del tamaño de una frase antes de leerse, lo cual evita un error conocido en algunos navegadores donde bloques de texto muy largos se cortan a mitad de camino. Si la reproducción sigue deteniéndose antes de tiempo, prueba a pulsar Reproducir de nuevo o a cambiar a otra voz instalada.</div>
+    </div>
+  </div>
+
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres saber más? Lee nuestra guía: <a href="/es/blog/text-to-speech-explained/" style="color:var(--accent);text-decoration:none;">Cómo Funciona Realmente el Texto a Voz del Navegador (y Qué No Puede Hacer)</a></p>
+
+  <h2>Herramientas relacionadas</h2>
+  <div class="related-grid">
+  <a class="related-card" href="/es/word-character-counter/">
+    <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4" cy="6" r="1.3"/><circle cx="4" cy="12" r="1.3"/><circle cx="4" cy="18" r="1.3"/></svg></div>
+    <div class="body">
+      <div class="title">Contador de Palabras y Caracteres</div>
+      <div class="desc">Cuenta palabras, caracteres y tiempo de lectura.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+  <a class="related-card" href="/es/convert-to-markdown/">
+    <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M6 15V9l3 3 3-3v6"/><path d="M15 9v4"/><path d="M13 11l2 2 2-2"/></svg></div>
+    <div class="body">
+      <div class="title">Convertir a Markdown</div>
+      <div class="desc">Convierte HTML o texto enriquecido a Markdown.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+  <a class="related-card" href="/es/ai-writing-checker/">
+    <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="14" height="18" rx="2"/><path d="M5 7h8M5 11h6M5 15h4"/><circle cx="16.5" cy="16.5" r="3.5"/><path d="M19 19l3 3"/></svg></div>
+    <div class="body">
+      <div class="title">Verificador de Escritura con IA</div>
+      <div class="desc">Detecta frases genéricas y patrones repetitivos.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+</div>
+
+  <footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-brand-logo">ORISOD</div>
+      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF basadas en el navegador. Procesamiento 100% local — tus archivos nunca se suben a ningún lado.</div>
+      <div class="footer-copy">© Orisod Labs</div>
+    </div>
+    <div class="footer-col">
+      <h3>Herramientas</h3>
+      <a href="/es/tools/#image">Herramientas de Imagen</a>
+      <a href="/es/tools/#pdf">Herramientas PDF</a>
+      <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    </div>
+    <div class="footer-col">
+      <h3>Empresa</h3>
+      <a href="/es/about/">Acerca de</a>
+      <a href="/es/privacy/">Privacidad</a>
+      <a href="/es/blog/">Blog</a>
+    </div>
+  </div>
+</footer>
+</div>
+
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+<script>
+(function(){
+  const textInput = document.getElementById('textInput');
+  const previewView = document.getElementById('previewView');
+  const fileInput = document.getElementById('fileInput');
+  const voiceSelect = document.getElementById('voiceSelect');
+  const rateSlider = document.getElementById('rateSlider');
+  const rateVal = document.getElementById('rateVal');
+  const pitchSlider = document.getElementById('pitchSlider');
+  const pitchVal = document.getElementById('pitchVal');
+  const playBtn = document.getElementById('playBtn');
+  const pauseBtn = document.getElementById('pauseBtn');
+  const stopBtn = document.getElementById('stopBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const unsupportedNotice = document.getElementById('unsupportedNotice');
+
+  rateSlider.addEventListener('input', () => { rateVal.textContent = parseFloat(rateSlider.value).toFixed(1) + 'x'; });
+  pitchSlider.addEventListener('input', () => { pitchVal.textContent = parseFloat(pitchSlider.value).toFixed(1); });
+
+  fileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => { textInput.value = reader.result; };
+    reader.readAsText(file);
+  });
+
+  if (!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === 'undefined') {
+    unsupportedNotice.style.display = '';
+    playBtn.disabled = true;
+    pauseBtn.disabled = true;
+    stopBtn.disabled = true;
+    voiceSelect.disabled = true;
+    rateSlider.disabled = true;
+    pitchSlider.disabled = true;
+    return;
+  }
+
+  const synth = window.speechSynthesis;
+  let voices = [];
+  let chunks = [];
+  let queueIndices = [];
+  let isPausedState = false;
+
+  function escapeHtml(str){
+    return str.replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  function chunkText(text){
+    const result = [];
+    let start = 0;
+    const re = /[.!?]+["'”’)]?(\s+|$)/g;
+    let m;
+    while ((m = re.exec(text)) !== null) {
+      const end = m.index + m[0].length;
+      result.push(text.slice(start, end));
+      start = end;
+    }
+    if (start < text.length) result.push(text.slice(start));
+    return result;
+  }
+
+  const MAX_CHUNK = 200;
+  function splitLongChunk(chunk){
+    if (chunk.length <= MAX_CHUNK) return [chunk];
+    let idx = chunk.lastIndexOf(' ', MAX_CHUNK);
+    if (idx <= 0) idx = MAX_CHUNK;
+    return [chunk.slice(0, idx + 1)].concat(splitLongChunk(chunk.slice(idx + 1)));
+  }
+
+  function buildChunks(text){
+    let out = [];
+    chunkText(text).forEach((c) => { out = out.concat(splitLongChunk(c)); });
+    return out;
+  }
+
+  function buildPreview(){
+    previewView.innerHTML = chunks.map((c, i) => '<span class="sentence" data-i="' + i + '">' + escapeHtml(c) + '</span>').join('');
+  }
+
+  function highlightChunk(idx){
+    const prev = previewView.querySelector('.sentence.active');
+    if (prev) prev.classList.remove('active');
+    const el = previewView.querySelector('.sentence[data-i="' + idx + '"]');
+    if (el) {
+      el.classList.add('active');
+      el.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+  }
+
+  function clearHighlight(){
+    const prev = previewView.querySelector('.sentence.active');
+    if (prev) prev.classList.remove('active');
+  }
+
+  function loadVoices(){
+    const prevValue = voiceSelect.value;
+    voices = synth.getVoices();
+    voiceSelect.innerHTML = '';
+    voices.forEach((v, i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = v.name + ' (' + v.lang + ')';
+      voiceSelect.appendChild(opt);
+    });
+    if (voices.length === 0) return;
+    if (prevValue !== '' && voices[prevValue]) {
+      voiceSelect.value = prevValue;
+      return;
+    }
+    const pageLang = (document.documentElement.lang || 'es').toLowerCase();
+    let defaultIdx = voices.findIndex((v) => v.lang.toLowerCase().indexOf(pageLang) === 0);
+    if (defaultIdx === -1) defaultIdx = 0;
+    voiceSelect.value = defaultIdx;
+  }
+
+  loadVoices();
+  if ('onvoiceschanged' in synth) {
+    synth.addEventListener('voiceschanged', loadVoices);
+  }
+
+  function setState(state){
+    if (state === 'idle') {
+      playBtn.disabled = false;
+      pauseBtn.disabled = true;
+      pauseBtn.textContent = '⏸️ Pausar';
+      stopBtn.disabled = true;
+      textInput.style.display = '';
+      previewView.style.display = 'none';
+    } else if (state === 'playing') {
+      playBtn.disabled = true;
+      pauseBtn.disabled = false;
+      pauseBtn.textContent = '⏸️ Pausar';
+      stopBtn.disabled = false;
+      textInput.style.display = 'none';
+      previewView.style.display = '';
+    } else if (state === 'paused') {
+      playBtn.disabled = true;
+      pauseBtn.disabled = false;
+      pauseBtn.textContent = '▶️ Reanudar';
+      stopBtn.disabled = false;
+    }
+  }
+
+  function speakFrom(pos){
+    if (pos >= queueIndices.length) {
+      setState('idle');
+      clearHighlight();
+      return;
+    }
+    const idx = queueIndices[pos];
+    const utter = new SpeechSynthesisUtterance(chunks[idx].trim());
+    const v = voices[voiceSelect.value];
+    if (v) utter.voice = v;
+    utter.rate = parseFloat(rateSlider.value);
+    utter.pitch = parseFloat(pitchSlider.value);
+    utter.onstart = () => highlightChunk(idx);
+    utter.onend = () => speakFrom(pos + 1);
+    utter.onerror = (e) => {
+      if (e.error === 'interrupted' || e.error === 'canceled') return;
+      speakFrom(pos + 1);
+    };
+    synth.speak(utter);
+  }
+
+  playBtn.addEventListener('click', () => {
+    const text = textInput.value;
+    if (!text.trim()) return;
+    chunks = buildChunks(text);
+    queueIndices = [];
+    chunks.forEach((c, i) => { if (c.trim().length > 0) queueIndices.push(i); });
+    buildPreview();
+    isPausedState = false;
+    synth.cancel();
+    setState('playing');
+    speakFrom(0);
+  });
+
+  pauseBtn.addEventListener('click', () => {
+    if (!isPausedState) {
+      synth.pause();
+      isPausedState = true;
+      setState('paused');
+    } else {
+      synth.resume();
+      isPausedState = false;
+      setState('playing');
+    }
+  });
+
+  stopBtn.addEventListener('click', () => {
+    synth.cancel();
+    isPausedState = false;
+    setState('idle');
+    clearHighlight();
+  });
+
+  clearBtn.addEventListener('click', () => {
+    synth.cancel();
+    isPausedState = false;
+    textInput.value = '';
+    setState('idle');
+    textInput.focus();
+  });
+
+  window.addEventListener('beforeunload', () => { synth.cancel(); });
+})();
+</script>
+</body>
+</html>
