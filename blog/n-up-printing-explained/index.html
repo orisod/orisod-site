@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How to Change a PDF's Page Size (A4, Letter, Legal or Custom) | Orisod Blog</title>
-<meta name="description" content="Turning a Letter-sized PDF into A4, or the reverse, without redesigning the document — how page resizing actually works and when you need it.">
-<link rel="canonical" href="https://orisod.com/blog/change-pdf-page-size/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/blog/change-pdf-page-size/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/change-pdf-page-size/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/change-pdf-page-size/">
+<title>What N-Up Printing Actually Does to a PDF | Orisod Blog</title>
+<meta name="description" content="What the '2 pages per sheet' option in a print dialog is really doing under the hood, and why doing it as a standalone PDF can keep every page's text fully selectable.">
+<link rel="canonical" href="https://orisod.com/blog/n-up-printing-explained/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/n-up-printing-explained/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/n-up-printing-explained/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/n-up-printing-explained/">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
 <link rel="icon" href="/favicon.ico">
@@ -121,6 +121,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 .theme-figure{margin:10px 0 26px 0;}
 .theme-figure svg{display:block;width:100%;height:auto;}
 .theme-figure figcaption{font-size:13.5px;color:var(--muted-text);margin-top:10px;line-height:1.5;}
+code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;}
 </style>
 </head>
 <body>
@@ -136,7 +137,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   </nav>
   <div class="site-nav-right">
     <span class="lang-flag active">EN</span>
-    <a class="lang-flag" href="/es/blog/change-pdf-page-size/">ES</a>
+    <a class="lang-flag" href="/es/blog/n-up-printing-explained/">ES</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
   </div>
 </header>
@@ -145,71 +146,84 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <div class="container">
 
 <span class="blog-cat cat-guide">Guides</span>
-<h1>How to Change a PDF's Page Size (A4, Letter, Legal or Custom)</h1>
-<p class="intro">You received a PDF sized for US Letter paper, but you're printing on A4 — or the other way around. The content is fine, the file just isn't sized for the paper you actually have. Resizing an existing PDF's pages takes one pass; redesigning the document to a different page size from scratch doesn't need to happen.</p>
+<h1>What N-Up Printing Actually Does to a PDF</h1>
+<p class="intro">Almost every print dialog has a quiet little option called "pages per sheet" — 2, 4, sometimes more. It's easy to use without ever wondering what it's actually doing to the document, but the mechanism behind it is simple enough to be worth knowing, especially if you want the same result as a standalone file instead of a one-time print job.</p>
 
 <div class="article-body">
 
-<h2>Why this mismatch happens so often</h2>
-<p>Letter (used mainly in the US and Canada) and A4 (used almost everywhere else) are close in size but not identical — Letter is slightly wider and shorter, A4 slightly narrower and taller. A document created in one region and opened in another routinely carries the "wrong" page size for whoever's printing it, and the same mismatch shows up with Legal-sized paper for contracts or forms.</p>
+<h2>"N-up" is just a name for a grid</h2>
+<p>N-up printing means placing N of a document's pages onto a single physical sheet, arranged in a grid — 2-up is a 1×2 grid, 4-up is 2×2, 6-up is 2×3, 9-up is 3×3. Each original page gets shrunk down to fit inside one grid cell, and the sheets keep going until every original page has a spot somewhere. It's a layout operation, not a content operation — nothing about the pages themselves changes, only where and how large they're drawn.</p>
+
+<h2>Why this only works cleanly with vector pages</h2>
+<p>Because N-up is fundamentally "take an existing page, then draw it smaller at a new position," it's a natural fit for a PDF whose pages are stored as vector instructions — the exact instructions that draw the page at full size can be replayed at a smaller scale and a shifted position, with no quality loss, since vector content has no fixed pixel grid to blur. A tool that instead rasterized each page to shrink it (the technique other filter-style PDF tools reach for, because filtering does need pixels) would trade away the one thing N-up should preserve for free: crisp, selectable text at the new smaller size.</p>
 
 <figure class="theme-figure">
-<svg viewBox="0 0 700 380" width="700" height="380" role="img" aria-label="Outline comparison of US Letter and A4 page sizes showing their slightly different proportions" xmlns="http://www.w3.org/2000/svg">
-<rect x="260.0" y="45.0" width="172.2" height="243.5" rx="4" fill="none" stroke="var(--muted-text)" stroke-width="2.5" stroke-dasharray="7 6"/>
-<rect x="260.0" y="45.0" width="177.0" height="229.1" rx="4" fill="none" stroke="var(--accent)" stroke-width="3"/>
-<circle cx="471.0" cy="85.0" r="6" fill="var(--accent)"/>
-<text x="487.0" y="90.0" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="bold" fill="var(--text)">8.5 &#215; 11 in</text>
-<text x="487.0" y="111.0" font-family="Arial, Helvetica, sans-serif" font-size="14" fill="var(--muted-text)">215.9 &#215; 279.4 mm</text>
-<circle cx="471.0" cy="155.0" r="6" fill="var(--muted-text)"/>
-<text x="487.0" y="160.0" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="bold" fill="var(--text)">A4</text>
-<text x="487.0" y="181.0" font-family="Arial, Helvetica, sans-serif" font-size="14" fill="var(--muted-text)">210 &#215; 297 mm</text>
+<svg viewBox="0 0 700 300" width="700" height="300" role="img" aria-label="Diagram showing four original PDF pages on the left, and a single sheet on the right divided into a two-by-two grid, with each of the four original pages drawn smaller into one grid cell, labeled with cell coordinates based on column and row position." xmlns="http://www.w3.org/2000/svg">
+<text x="140" y="26" text-anchor="middle" font-size="14" fill="var(--muted-text)">4 original pages</text>
+<rect x="60" y="40" width="70" height="95" rx="4" fill="var(--card-bg)" stroke="var(--border)" stroke-width="2"/>
+<text x="95" y="92" text-anchor="middle" font-size="18" font-weight="bold" fill="var(--accent)">1</text>
+<rect x="150" y="40" width="70" height="95" rx="4" fill="var(--card-bg)" stroke="var(--border)" stroke-width="2"/>
+<text x="185" y="92" text-anchor="middle" font-size="18" font-weight="bold" fill="var(--accent)">2</text>
+<rect x="60" y="150" width="70" height="95" rx="4" fill="var(--card-bg)" stroke="var(--border)" stroke-width="2"/>
+<text x="95" y="202" text-anchor="middle" font-size="18" font-weight="bold" fill="var(--accent)">3</text>
+<rect x="150" y="150" width="70" height="95" rx="4" fill="var(--card-bg)" stroke="var(--border)" stroke-width="2"/>
+<text x="185" y="202" text-anchor="middle" font-size="18" font-weight="bold" fill="var(--accent)">4</text>
+<path d="M 250 145 L 350 145" stroke="var(--muted-text)" stroke-width="2.5" fill="none"/>
+<polygon points="350,145 339,139 339,151" fill="var(--muted-text)"/>
+<text x="300" y="128" text-anchor="middle" font-size="12.5" font-weight="bold" fill="var(--text)">4-up</text>
+<text x="490" y="26" text-anchor="middle" font-size="14" fill="var(--muted-text)">One sheet, 2×2 grid</text>
+<rect x="390" y="40" width="200" height="205" rx="4" fill="var(--card-bg)" stroke="#f59e0b" stroke-width="2"/>
+<line x1="490" y1="40" x2="490" y2="245" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4 3"/>
+<line x1="390" y1="142.5" x2="590" y2="142.5" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="440" y="98" text-anchor="middle" font-size="16" font-weight="bold" fill="#f59e0b">1</text>
+<text x="540" y="98" text-anchor="middle" font-size="16" font-weight="bold" fill="#f59e0b">2</text>
+<text x="440" y="200" text-anchor="middle" font-size="16" font-weight="bold" fill="#f59e0b">3</text>
+<text x="540" y="200" text-anchor="middle" font-size="16" font-weight="bold" fill="#f59e0b">4</text>
+<text x="490" y="270" text-anchor="middle" font-size="12" fill="var(--muted-text)">cellX = col × cellWidth, cellY = sheetHeight − (row+1) × cellHeight</text>
 </svg>
-<figcaption>Letter and A4 are close in size, but not identical.</figcaption>
+<figcaption>Each cell's position comes from simple column/row arithmetic on the sheet's dimensions — the same math whether it's 4 cells or 9.</figcaption>
 </figure>
 
-<h2>What resizing actually does</h2>
-<p>Resizing changes a PDF's physical page dimensions and scales the content on each page proportionally to fit the new size — nothing is cropped or cut off, it's stretched or shrunk to match. If the new page has a different aspect ratio than the original (which A4 and Letter do, slightly), the content stretches a little to fill it rather than leaving blank strips — the same trade-off any "resize to fit" approach makes.</p>
+<h2>Fitting a page into its cell without distorting it</h2>
+<p>A grid cell rarely has exactly the same aspect ratio as the original page, so the page can't just be stretched to fill it — that would visibly squash or stretch the content. The standard fix is to scale the page down uniformly (same factor for width and height) until it fits entirely within the cell in whichever dimension is more constraining, then center it in the remaining space. This is the identical "fit inside a box without distortion" logic used anywhere an image needs to sit inside a frame of a different shape.</p>
 
-<h2>Standard sizes vs. custom dimensions</h2>
-<p>A4, Letter and Legal cover most cases, but a custom width and height is sometimes necessary — a printer with specific size requirements, a non-standard booklet format, or a page size that isn't part of the usual presets. Either way, the underlying operation is the same: define a target width and height, and every page in the document gets scaled to match it.</p>
+<h2>Choosing sheet orientation to match the grid</h2>
+<p>A 1×2 grid (2-up) is wider than it is tall, so it fits more comfortably on a landscape sheet; a 2×2, 2×3, or 3×3 grid is closer to square or taller-than-wide, so a portrait sheet wastes less space. This isn't a hard rule — either orientation technically works for any grid — but matching the sheet's shape to the grid's shape keeps each cell, and therefore each shrunk page, as large and legible as possible.</p>
 
-<h2>What doesn't change</h2>
-<p>The number of pages, their order, and their content all stay exactly as they were — only the physical dimensions and the scale of what's on each page change. File size typically stays close to the original too, since images and embedded content aren't recompressed, just redrawn at a new scale.</p>
-
-<h2>A concrete example</h2>
-<p>A US-based client sends you a Letter-sized contract to sign and return, but your printer is loaded with A4 and keeps producing a slightly cropped or oddly-margined page. Rather than fighting printer settings, resizing the PDF to A4 before printing gets you a page that matches the paper in the tray, with everything scaled to fit properly.</p>
+<h2>The tradeoff nobody skips: legibility</h2>
+<p>Shrinking N pages onto one sheet is a genuine tradeoff, not a free lunch — a 9-up sheet holds nine times the content of a single page but at roughly a third of the linear size each, which can make dense text genuinely hard to read without magnification. This is exactly why 2-up and 4-up are far more common in practice than 6-up or 9-up: they save real paper while keeping most documents' text at a size a person can still comfortably read.</p>
 
 <h2>Quick answers</h2>
-<p><strong>Will resizing distort my content?</strong> Slightly, if the target size has a different aspect ratio than the original — the same stretch-to-fit trade-off any resize tool makes. Between A4 and Letter, the difference is small enough to rarely be noticeable.</p>
-<p><strong>Does this affect file size much?</strong> Not usually — the underlying content isn't recompressed, only the page dimensions and content scale change.</p>
-<p><strong>Can I use a size that isn't A4, Letter or Legal?</strong> Yes, most resizing tools support a custom width and height alongside the standard presets.</p>
+<p><strong>What happens to a page count that doesn't divide evenly into the grid?</strong> The final sheet just has empty cells for the leftover space — nothing gets duplicated or stretched to fill the gap.</p>
+<p><strong>Does N-up change the order pages appear in?</strong> No — pages are placed into cells left to right, top to bottom, in their original order, so the document reads the same way, just across fewer sheets.</p>
+<p><strong>Is this different from just printing at a smaller paper size?</strong> Yes — printing at a smaller size scales one page onto one smaller sheet; N-up puts multiple pages onto one sheet at the original sheet size, which is what actually reduces the page count.</p>
 
 <div class="cta-box">
-  <h3>Resize Your PDF's Pages</h3>
-  <p>Orisod's Resize PDF Pages tool switches between A4, Letter, Legal or a custom size, scaling every page to match — entirely in your browser.</p>
-  <a class="cta-button" href="/resize-pdf-pages/">Resize PDF Pages →</a>
+  <h3>Put multiple pages on one sheet</h3>
+  <p>Orisod's N-Up PDF tool combines 2, 4, 6, or 9 pages per sheet, with a live layout preview, entirely in your browser — and because it repositions vector pages instead of rasterizing them, the text stays selectable.</p>
+  <a class="cta-button" href="/n-up-pdf/">Combine PDF pages →</a>
 </div>
 
-<p>A mismatched page size is one of the most common (and most avoidable) printing headaches — resizing the file to match your paper takes one pass, and there's no need to redesign or recreate the document to fix it.</p>
+<p>N-up printing isn't magic — it's a grid, some division to find cell positions, and a uniform scale-to-fit for each page. Once that's visible, it's obvious why doing it with vector pages instead of rasterized images is the version worth keeping as an actual file rather than a one-time print job.</p>
 
 </div>
 
 <div class="related-section">
   <h2>Related articles</h2>
   <div class="related-grid">
-    <a class="blog-card" href="/blog/trim-pdf-margins/">
-      <h3>How to Trim the Margins on a PDF (Without Reprinting It)</h3>
-      <p>Wide or uneven margins on a scanned or exported PDF, and how to trim them to exact measurements.</p>
+    <a class="blog-card" href="/blog/change-pdf-page-size/">
+      <h3>How to Change a PDF's Page Size (A4, Letter, Legal or Custom)</h3>
+      <p>Turning a Letter-sized PDF into A4, or the reverse, without redesigning the document.</p>
     </a>
 
-    <a class="blog-card" href="/blog/compress-pdf-without-losing-quality/">
-      <h3>How to Make a PDF File Smaller Without Losing Quality</h3>
-      <p>What actually makes a PDF huge, and how to shrink it without hurting quality.</p>
+    <a class="blog-card" href="/blog/reorder-delete-pdf-pages/">
+      <h3>How to Reorder or Delete Pages in a PDF</h3>
+      <p>How to fix a scanned PDF's page order or remove a stray blank page.</p>
     </a>
 
-    <a class="blog-card" href="/blog/n-up-printing-explained/">
-      <h3>What N-Up Printing Actually Does to a PDF</h3>
-      <p>The grid math behind "pages per sheet," and why doing it with vector pages keeps text selectable.</p>
+    <a class="blog-card" href="/blog/merge-multiple-pdfs/">
+      <h3>How to Merge Multiple PDFs Into One File (Free)</h3>
+      <p>How merging actually works, the mistakes to avoid, and how to combine PDFs without losing quality.</p>
     </a>
   </div>
 </div>
