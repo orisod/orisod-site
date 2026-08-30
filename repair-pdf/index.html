@@ -20,18 +20,19 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Extract PDF Text – Free Online Tool | Orisod</title>
-<meta name="description" content="Pull all the selectable text out of a PDF and copy it or download it as a .txt file, free and online. Works directly in your browser — no files are uploaded.">
-<link rel="canonical" href="https://orisod.com/extract-pdf-text/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/extract-pdf-text/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/extract-pdf-text/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/extract-pdf-text/">
+<title>Repair PDF – Free Online Tool | Orisod</title>
+<meta name="description" content="Attempt to fix a corrupted or malformed PDF so it opens correctly again. Diagnoses the problem honestly, repairs what's recoverable, and verifies the result — all in your browser.">
+<link rel="canonical" href="https://orisod.com/repair-pdf/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/repair-pdf/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/repair-pdf/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/repair-pdf/">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
 <link rel="icon" href="/favicon.ico">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
 :root{
@@ -65,9 +66,12 @@
 .tool-sub{font-size:16px;max-width:640px;margin:0 auto 20px auto;}
 .workspace{max-width:1040px;margin:0 auto;}
 .workspace-controls{margin-top:20px;text-align:center;}
-.stage-panel{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:left;}
-.stage-label{display:inline-block;font-size:12px;font-weight:bold;color:var(--accent);background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:3px 10px;margin-bottom:12px;}
-.result-stat{font-size:15px;opacity:0.9;text-align:left;margin-top:20px;}
+.result-card{display:flex;align-items:center;gap:16px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-top:20px;text-align:left;}
+.result-card .icon-box{width:46px;height:46px;}
+.result-card .icon-box svg{width:24px;height:24px;}
+.result-card .result-body{flex:1 1 auto;min-width:0;}
+.result-card .result-filename{font-size:14px;font-weight:bold;margin-bottom:4px;word-break:break-all;}
+.result-stat{font-size:15px;opacity:0.9;}
 .site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
 .site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);display:inline-flex;align-items:center;gap:8px;}
 .site-nav-logo img{height:26px;width:auto;display:block;}
@@ -89,14 +93,13 @@ p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-heigh
 .dropzone{border:2px dashed var(--dropzone-border);border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;}
 .dropzone:hover, .dropzone.dragover{border-color:var(--accent);}
 input[type="file"]{display:none;}
-.page-count{margin-top:16px;font-size:14px;opacity:0.75;}
-.text-output{margin-top:20px;text-align:left;display:none;}
-.text-output textarea{
-  width:100%;min-height:320px;padding:14px;border-radius:8px;border:1px solid var(--dropzone-border);background:var(--card-bg);color:var(--text);
-  font-size:13px;font-family:"Courier New", monospace;line-height:1.5;resize:vertical;
-}
-.output-actions{display:flex;gap:12px;flex-wrap:wrap;}
-.warn-note{color:#f87171;font-size:14px;margin-top:12px;}
+.diagnosis{margin-top:20px;text-align:left;padding:16px 18px;border-radius:10px;font-size:14px;line-height:1.6;display:none;}
+.diagnosis.state-clean{background:rgba(74,222,128,.10);border:1px solid #4ade80;color:var(--text);}
+.diagnosis.state-clean strong{color:#4ade80;}
+.diagnosis.state-repairable{background:rgba(245,158,11,.10);border:1px solid #f59e0b;color:var(--text);}
+.diagnosis.state-repairable strong{color:#f59e0b;}
+.diagnosis.state-encrypted, .diagnosis.state-unrepairable{background:rgba(248,113,113,.10);border:1px solid #f87171;color:var(--text);}
+.diagnosis.state-encrypted strong, .diagnosis.state-unrepairable strong{color:#f87171;}
 button, .back{display:inline-block;margin-top:16px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
 button.secondary{background:var(--card-bg);border:1px solid var(--border);color:var(--text);}
 button.secondary:hover:not(:disabled){border-color:var(--accent);filter:none;}
@@ -126,6 +129,7 @@ button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
 .footer-col a:hover{opacity:1;color:var(--accent);}
 .error{color:#f87171;font-size:14px;margin-top:10px;}
 .progress{font-size:14px;opacity:0.7;margin-top:10px;}
+.trust-strip{font-size:12px;color:var(--muted-text);margin-top:12px;line-height:1.5;}
 h2{margin-top:50px;font-size:22px;}
 .seo-content{max-width:700px;margin:0 auto;text-align:left;}
 .seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
@@ -146,7 +150,6 @@ h2{margin-top:50px;font-size:22px;}
 .related-card .desc{font-size:12px;color:var(--muted-text);line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .related-card .arrow{flex:none;font-size:16px;color:var(--muted-text);transition:0.2s;}
 .related-card:hover .arrow{color:var(--accent);transform:translateX(2px);}
-.trust-strip{font-size:12px;color:var(--muted-text);margin-top:12px;line-height:1.5;}
 </style>
 </head>
 <body>
@@ -162,7 +165,7 @@ h2{margin-top:50px;font-size:22px;}
   </nav>
   <div class="site-nav-right">
     <span class="lang-flag active">EN</span>
-    <a class="lang-flag" href="/es/extract-pdf-text/">ES</a>
+    <a class="lang-flag" href="/es/repair-pdf/">ES</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
   </div>
 </header>
@@ -170,10 +173,10 @@ h2{margin-top:50px;font-size:22px;}
 <main>
 <div class="container">
   <div class="tool-hero">
-    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M8 11h6M8 14h7M8 17h4"/><path d="M20 14h-3m3 0l-2-2m2 2l-2 2"/></svg></div>
-    <h1>Extract PDF Text</h1>
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M8.5 13l2 2 4.5-4.5"/></svg></div>
+    <h1>Repair PDF</h1>
   </div>
-  <p class="tool-sub">Pull all the selectable text out of a PDF, then copy it or download it as a plain .txt file. Everything happens locally in your browser.</p>
+  <p class="tool-sub">Attempt to fix a corrupted or malformed PDF so it opens correctly again. Everything is diagnosed and repaired locally in your browser.</p>
 
   <div class="workspace">
     <div class="box">
@@ -183,52 +186,45 @@ h2{margin-top:50px;font-size:22px;}
       <input type="file" id="fileInput" accept=".pdf">
       <div class="error" id="errorMsg"></div>
       <div class="trust-strip">🔒 Processed on your device · No upload · No account · No watermark</div>
-      <div class="page-count" id="pageCount"></div>
 
-      <div class="workspace-controls">
-        <button id="extractBtn" style="display:none;">Extract Text</button>
+      <div class="diagnosis" id="diagnosis"></div>
+
+      <div class="workspace-controls" id="workspaceControls" style="display:none;">
+        <button id="repairBtn"></button>
         <div class="progress" id="progressMsg"></div>
       </div>
 
-      <div class="text-output" id="textOutput">
-        <div class="result-stat" id="outputMeta"></div>
-        <div class="stage-panel">
-          <span class="stage-label">Extracted Text</span>
-          <textarea id="textArea" readonly></textarea>
-        </div>
-        <div class="warn-note" id="warnNote" style="display:none;"></div>
-        <div class="output-actions">
-          <button class="secondary" id="copyBtn">📋 Copy Text</button>
-          <button id="downloadBtn">⬇️ Download .txt</button>
-        </div>
-      </div>
+      <div class="result" id="result"></div>
     </div>
   </div>
 
   <div class="seo-content">
     <h2>What does this tool do?</h2>
-    <p>This tool reads every page of a PDF and pulls out the underlying selectable text — the same text you could highlight and copy in a PDF viewer — and lays it out as plain text you can copy or save as a .txt file. Page breaks are marked so you can still tell where one page ends and the next begins.</p>
+    <p>Repair PDF reads a PDF and tells you honestly what it finds: whether the file has no detected structural problems, whether it has issues that can likely be fixed, whether it's password-protected (a different problem this tool doesn't attempt to solve), or whether it's too damaged to open at all. When a repair is attempted, the file is re-parsed while skipping only the specific pieces that can't be read, then rebuilt with a fresh, valid file structure — and the result is verified by opening it again with a second, independent PDF engine before being offered for download.</p>
 
     <h2>When should you use this tool?</h2>
     <ul>
-      <li>You need to paste a PDF's content into an email, document, or spreadsheet</li>
-      <li>You want to search or process a PDF's text with a tool that only accepts plain text</li>
-      <li>You're archiving a document's text separately from its layout</li>
-      <li>You need a quick way to check how much text a PDF actually contains</li>
+      <li>A PDF fails to open, or opens with errors, in one or more PDF viewers</li>
+      <li>A file was interrupted mid-download or mid-transfer and now behaves oddly</li>
+      <li>You want an honest read on whether a specific PDF is actually salvageable before spending more time on it</li>
+      <li>A PDF opens but a viewer shows warnings about its structure</li>
     </ul>
+
+    <h2>Why Orisod</h2>
+    <p>No account, no upload — every diagnostic check and repair attempt happens locally using two separate, well-established open-source PDF engines (pdf-lib and pdf.js). We report what was actually found and fixed rather than a blanket "Fixed!" message, including telling you plainly when a file has no problems to begin with, or when it's too damaged for an automatic fix to help.</p>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
-      <div class="q">Why is the output empty or very short?</div>
-      <div>If a PDF is a scanned image without a real text layer, there's no selectable text to extract — the pages are just pictures. This tool can't OCR scanned documents.</div>
+      <div class="q">Can this recover a page that's genuinely damaged, not just the file's structure?</div>
+      <div>No. Repair works by skipping pieces of the file it can't read and rebuilding a clean structure around whatever's left — it can't reconstruct content that's actually corrupted or missing, such as a damaged image or font inside a specific page.</div>
     </div>
     <div class="faq-item">
-      <div class="q">Will the extracted text keep the original formatting?</div>
-      <div>No, formatting like fonts, columns, and tables is not preserved — this is a plain-text extraction, not a layout-preserving conversion.</div>
+      <div class="q">Can this remove a password from a protected PDF?</div>
+      <div>No, that's a different problem from structural corruption, and this tool doesn't attempt it. If a PDF is password-protected, repair simply isn't possible until it's decrypted.</div>
     </div>
     <div class="faq-item">
-      <div class="q">Can I extract text from just one page?</div>
-      <div>The tool extracts all pages at once, but the output includes page markers so you can easily copy just the section you need.</div>
+      <div class="q">Why does it say "no problems detected" instead of "fixed"?</div>
+      <div>Because that's what's actually true — many PDFs that display oddly in one viewer have no detectable structural issues at all, and it would be dishonest to claim a fix on a file that wasn't broken. You can still re-save it anyway if you're troubleshooting a viewer-specific display issue.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my PDF uploaded to a server?</div>
@@ -236,31 +232,31 @@ h2{margin-top:50px;font-size:22px;}
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/extract-text-from-pdf/" style="color:var(--accent);text-decoration:none;">How to Extract Text From a PDF (Copy or Save as .txt)</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/how-pdf-repair-actually-works/" style="color:var(--accent);text-decoration:none;">How PDF Repair Actually Works (and What It Can't Fix)</a></p>
 
   <h2>Related tools</h2>
   <div class="related-grid">
-  <a class="related-card" href="/fill-pdf-forms/">
-    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M8 12h1M8 16h1M11 12h6M11 16h5"/></svg></div>
+  <a class="related-card" href="/compress-pdf/">
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M9 13l3 2 3-2M9 17l3-2 3 2"/></svg></div>
     <div class="body">
-      <div class="title">Fill PDF Forms</div>
-      <div class="desc">Type into real fillable PDF form fields.</div>
+      <div class="title">Compress PDF</div>
+      <div class="desc">Shrink scanned or image-heavy PDFs.</div>
     </div>
     <div class="arrow">→</div>
   </a>
-  <a class="related-card" href="/ocr-pdf/">
-    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l1.5 5.5L19 9l-5.5 1.5L12 16l-1.5-5.5L5 9l5.5-1.5z"/></svg></div>
+  <a class="related-card" href="/extract-pdf-text/">
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M8 11h6M8 14h7M8 17h4"/><path d="M20 14h-3m3 0l-2-2m2 2l-2 2"/></svg></div>
     <div class="body">
-      <div class="title">OCR PDF</div>
-      <div class="desc">Make a scanned PDF searchable.</div>
+      <div class="title">Extract PDF Text</div>
+      <div class="desc">Copy or download a PDF's text as .txt.</div>
     </div>
     <div class="arrow">→</div>
   </a>
-  <a class="related-card" href="/repair-pdf/">
-    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M8.5 13l2 2 4.5-4.5"/></svg></div>
+  <a class="related-card" href="/flatten-pdf/">
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg></div>
     <div class="body">
-      <div class="title">Repair PDF</div>
-      <div class="desc">Fix a corrupted or malformed PDF.</div>
+      <div class="title">Flatten PDF</div>
+      <div class="desc">Make a fillable PDF form permanent.</div>
     </div>
     <div class="arrow">→</div>
   </a>
@@ -319,18 +315,14 @@ const fileInput = document.getElementById('fileInput');
 const dropzone = document.getElementById('dropzone');
 const dropzoneText = document.getElementById('dropzoneText');
 const errorMsg = document.getElementById('errorMsg');
+const diagnosisEl = document.getElementById('diagnosis');
+const workspaceControls = document.getElementById('workspaceControls');
+const repairBtn = document.getElementById('repairBtn');
 const progressMsg = document.getElementById('progressMsg');
-const pageCount = document.getElementById('pageCount');
-const extractBtn = document.getElementById('extractBtn');
-const textOutput = document.getElementById('textOutput');
-const textArea = document.getElementById('textArea');
-const outputMeta = document.getElementById('outputMeta');
-const warnNote = document.getElementById('warnNote');
-const copyBtn = document.getElementById('copyBtn');
-const downloadBtn = document.getElementById('downloadBtn');
+const resultEl = document.getElementById('result');
 
 let selectedFile = null;
-let extractedText = '';
+let diagnosisState = null;
 
 fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
 dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
@@ -341,92 +333,124 @@ dropzone.addEventListener('drop', (e) => {
   handleFile(e.dataTransfer.files[0]);
 });
 
+function showDiagnosis(state, html) {
+  diagnosisEl.className = 'diagnosis state-' + state;
+  diagnosisEl.innerHTML = html;
+  diagnosisEl.style.display = 'block';
+}
+
 async function handleFile(file) {
   errorMsg.textContent = '';
   progressMsg.textContent = '';
-  pageCount.textContent = '';
-  extractBtn.style.display = 'none';
-  textOutput.style.display = 'none';
-  extractedText = '';
+  resultEl.innerHTML = '';
+  diagnosisEl.style.display = 'none';
+  workspaceControls.style.display = 'none';
+  diagnosisState = null;
 
   if (!file || !/\.pdf$/i.test(file.name)) {
     errorMsg.textContent = 'Please select a valid PDF file.';
     return;
   }
 
-  try {
-    const arrayBuffer = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
-    selectedFile = file;
+  selectedFile = file;
+  dropzoneText.textContent = `✅ ${file.name} loaded`;
 
-    pageCount.textContent = `Loaded: ${pdf.numPages} page${pdf.numPages === 1 ? '' : 's'}`;
-    dropzoneText.textContent = `✅ ${file.name} loaded`;
-    extractBtn.style.display = 'inline-block';
-  } catch (err) {
-    errorMsg.textContent = 'Could not read this PDF. It may be corrupted or password-protected.';
+  const { PDFDocument, EncryptedPDFError } = PDFLib;
+  const arrayBuffer = await file.arrayBuffer();
+
+  try {
+    await PDFDocument.load(arrayBuffer.slice(0), { throwOnInvalidObject: true });
+    diagnosisState = 'clean';
+    showDiagnosis('clean', '<strong>No structural problems detected.</strong> This PDF already parses without any invalid or unreadable objects. Repair isn\'t necessary, but you can still re-save it below if you\'re troubleshooting a display issue in a specific viewer.');
+    repairBtn.textContent = 'Repair Anyway & Download';
+    repairBtn.className = 'secondary';
+    workspaceControls.style.display = 'block';
+    return;
+  } catch (strictErr) {
+    if (strictErr instanceof EncryptedPDFError) {
+      diagnosisState = 'encrypted';
+      showDiagnosis('encrypted', '<strong>This PDF is password-protected.</strong> Repair works on structural corruption, not encryption, and can\'t run on a file it can\'t open in the first place — this isn\'t something an automatic repair can fix.');
+      return;
+    }
+  }
+
+  try {
+    await PDFDocument.load(arrayBuffer.slice(0));
+    diagnosisState = 'repairable';
+    showDiagnosis('repairable', '<strong>Structural problems detected.</strong> Part of this PDF couldn\'t be read normally, but enough of it parsed successfully that a repair attempt is worth trying. Repair will rebuild the file\'s structure from what can be recovered — any specific page content that was itself damaged, rather than just the file\'s structure, may still be missing afterward.');
+    repairBtn.textContent = 'Repair & Download';
+    repairBtn.className = '';
+    workspaceControls.style.display = 'block';
+  } catch (lenientErr) {
+    diagnosisState = 'unrepairable';
+    showDiagnosis('unrepairable', '<strong>This file is too damaged to repair automatically.</strong> Even the most permissive parsing couldn\'t make sense of it — it may not be a valid PDF at all, or the damage may be too severe for this kind of automatic fix.');
   }
 }
 
-extractBtn.addEventListener('click', async () => {
-  if (!selectedFile) return;
+repairBtn.addEventListener('click', async () => {
   errorMsg.textContent = '';
-  warnNote.style.display = 'none';
-  extractBtn.disabled = true;
+  progressMsg.textContent = '';
+  resultEl.innerHTML = '';
+  repairBtn.disabled = true;
+  progressMsg.textContent = 'Repairing...';
 
   try {
+    const { PDFDocument } = PDFLib;
     const arrayBuffer = await selectedFile.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
-    const pageTexts = [];
-    let plainCharCount = 0;
+    const pdf = await PDFDocument.load(arrayBuffer.slice(0));
+    const repairedBytes = await pdf.save();
 
-    for (let i = 1; i <= pdf.numPages; i++) {
-      progressMsg.textContent = `Extracting page ${i} of ${pdf.numPages}...`;
-      const page = await pdf.getPage(i);
-      const textContent = await page.getTextContent();
-      const pageText = textContent.items.map((item) => item.str).join(' ').trim();
-      plainCharCount += pageText.length;
-      pageTexts.push(`----- Page ${i} -----\n\n${pageText}`);
+    progressMsg.textContent = 'Verifying with a second PDF engine...';
+    let verifiedPageCount = null;
+    try {
+      const verifyDoc = await pdfjsLib.getDocument({ data: repairedBytes.slice(0) }).promise;
+      verifiedPageCount = verifyDoc.numPages;
+    } catch (verifyErr) {
+      verifiedPageCount = null;
     }
 
-    extractedText = pageTexts.join('\n\n');
-    textArea.value = extractedText;
-    outputMeta.textContent = `${pdf.numPages} page${pdf.numPages === 1 ? '' : 's'} · ${plainCharCount.toLocaleString()} characters extracted`;
-
-    if (plainCharCount === 0) {
-      warnNote.innerHTML = '⚠️ No selectable text was found. This PDF may be a scanned image without a text layer — try <a href="/ocr-pdf/" style="color:inherit;text-decoration:underline;">OCR PDF</a> to make it searchable first.';
-      warnNote.style.display = 'block';
-    }
-
-    textOutput.style.display = 'block';
     progressMsg.textContent = '';
+
+    if (verifiedPageCount === null) {
+      errorMsg.textContent = 'The repair attempt finished, but the result still couldn\'t be verified as a working PDF by a second, independent engine. This file may be too damaged to fully recover.';
+      repairBtn.disabled = false;
+      return;
+    }
+
+    const blob = new Blob([repairedBytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const baseName = selectedFile.name.replace(/\.pdf$/i, '');
+    const outName = `${baseName}-repaired.pdf`;
+
+    const card = document.createElement('div');
+    card.className = 'result-card';
+    card.innerHTML = `
+      <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M8.5 13l2 2 4.5-4.5"/></svg></div>
+      <div class="result-body">
+        <div class="result-filename">${outName}</div>
+        <div class="result-stat">Verified with a second PDF engine · opens with ${verifiedPageCount} page${verifiedPageCount !== 1 ? 's' : ''} · ${(blob.size / 1024).toFixed(1)} KB</div>
+      </div>
+    `;
+    resultEl.appendChild(card);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = outName;
+    link.className = 'back';
+    link.textContent = 'Download Repaired PDF';
+    resultEl.appendChild(link);
+
+    if (diagnosisState === 'repairable') {
+      const caveat = document.createElement('div');
+      caveat.style.cssText = 'margin-top:14px;font-size:13px;opacity:0.7;text-align:left;';
+      caveat.textContent = 'Note: only the file\'s structure was rebuilt. If specific page content (an image, font, or text block) was itself damaged rather than just the file\'s index, it may still be missing from this result.';
+      resultEl.appendChild(caveat);
+    }
   } catch (err) {
-    errorMsg.textContent = err.message || 'Could not extract text from this PDF.';
+    errorMsg.textContent = err.message || 'Could not repair this PDF.';
   }
 
-  extractBtn.disabled = false;
-});
-
-copyBtn.addEventListener('click', async () => {
-  try {
-    await navigator.clipboard.writeText(extractedText);
-    copyBtn.textContent = '✅ Copied!';
-    setTimeout(() => { copyBtn.textContent = '📋 Copy Text'; }, 1500);
-  } catch (err) {
-    errorMsg.textContent = 'Could not copy to clipboard. Select the text manually instead.';
-  }
-});
-
-downloadBtn.addEventListener('click', () => {
-  const blob = new Blob([extractedText], { type: 'text/plain' });
-  const url = URL.createObjectURL(blob);
-  const baseName = selectedFile.name.replace(/\.pdf$/i, '');
-
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `${baseName}.txt`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  repairBtn.disabled = false;
 });
 </script>
 </body>
