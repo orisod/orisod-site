@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How to Extract Text From a PDF (Copy or Save as .txt) | Orisod Blog</title>
-<meta name="description" content="Pulling the actual text out of a PDF instead of retyping it by hand — how text extraction works, why it sometimes comes back empty, and how to fix that.">
-<link rel="canonical" href="https://orisod.com/blog/extract-text-from-pdf/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/blog/extract-text-from-pdf/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/extract-text-from-pdf/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/extract-text-from-pdf/">
+<title>How to Compare Two PDFs (and What "Compare" Actually Means) | Orisod Blog</title>
+<meta name="description" content="What comparing two PDFs actually measures, how a line-by-line text diff is built, and why a tool that says it compares PDFs almost never compares pixels.">
+<link rel="canonical" href="https://orisod.com/blog/how-to-compare-pdfs/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/how-to-compare-pdfs/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/how-to-compare-pdfs/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/how-to-compare-pdfs/">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
 <link rel="icon" href="/favicon.ico">
@@ -121,6 +121,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 .theme-figure{margin:10px 0 26px 0;}
 .theme-figure svg{display:block;width:100%;height:auto;}
 .theme-figure figcaption{font-size:13.5px;color:var(--muted-text);margin-top:10px;line-height:1.5;}
+code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;}
 </style>
 </head>
 <body>
@@ -136,7 +137,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   </nav>
   <div class="site-nav-right">
     <span class="lang-flag active">EN</span>
-    <a class="lang-flag" href="/es/blog/extract-text-from-pdf/">ES</a>
+    <a class="lang-flag" href="/es/blog/how-to-compare-pdfs/">ES</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
   </div>
 </header>
@@ -145,89 +146,81 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <div class="container">
 
 <span class="blog-cat cat-guide">Guides</span>
-<h1>How to Extract Text From a PDF (Copy or Save as .txt)</h1>
-<p class="intro">You need the words inside a PDF — to search them, paste them into an email, or process them with something that only accepts plain text — but retyping a multi-page document by hand isn't a real option. Extracting the text that's already there takes seconds, when the PDF actually has selectable text to extract.</p>
+<h1>How to Compare Two PDFs (and What "Compare" Actually Means)</h1>
+<p class="intro">"Compare these two PDFs" sounds like one request, but it hides a real question: compare them as what — as pictures, or as words? Almost every practical PDF-comparison tool, including this one, answers "as words," and understanding why changes what you should expect from the result.</p>
 
 <div class="article-body">
 
-<h2>What text extraction actually does</h2>
-<p>Every page of a text-based PDF stores its content as actual characters, positioned on the page — the same text you can highlight and copy in a PDF viewer. Extraction reads through every page and pulls that text out as plain text, stripping away the fonts, columns and layout and leaving just the words themselves, in reading order.</p>
+<h2>Two very different ideas of "compare"</h2>
+<p>A pixel-level comparison would render both PDFs to images and diff the images themselves — technically possible, but brittle in practice: a document re-exported at a slightly different resolution, with antialiasing turned on or off, or with a font substituted for a missing one, would show up as "different" everywhere even if the words are identical. A text-level comparison instead pulls out each PDF's underlying selectable text and compares that — immune to rendering noise, but blind to anything that isn't text: a moved image, a recolored heading, a swapped font are all invisible to it. Neither approach is "the" correct one; they answer different questions, and a text diff is the one that matches what most people actually mean when they ask "what changed in this document."</p>
 
-<h2>Why some PDFs give you nothing</h2>
-<p>A scanned document — a photographed page, or a document run through a scanner — is normally stored as an image of a page, not as characters. There's usually no text to extract because the page is just pixels that happen to look like letters to a human eye, with no real text underneath. This is the single most common reason extraction comes back empty, and it's not a bug in the extraction tool — it's a limitation of what a plain scanned image contains. Making a scanned document's text extractable requires OCR (optical character recognition), a separate process that recognizes those shapes as letters and embeds them as a real text layer — if a scan has already been through OCR, this tool can extract that text directly.</p>
+<h2>How the extracted text becomes lines</h2>
+<p>A PDF's text isn't stored as lines — it's stored as a sequence of positioned text runs, the same fact that makes <a href="/blog/text-to-pdf-word-wrap-explained/">word wrap something a PDF generator has to build itself</a>. Reconstructing lines for a comparison means walking through those runs in order and watching for the flag a PDF-reading library reports whenever a run is meant to be followed by a line break, grouping every run up to that point into one line of text. It's an approximation — a PDF that encodes its line breaks unusually can produce coarser lines than expected — but it's a reasonable one for the vast majority of ordinary documents.</p>
+
+<h2>What a line-by-line diff is actually computing</h2>
+<p>Once both PDFs are broken into a list of lines, the comparison problem becomes: find the longest sequence of lines that appears, in the same order, in both lists. Every line in File A that isn't part of that shared sequence is something removed; every line in File B that isn't part of it is something added. This is the same core idea — the "longest common subsequence" — that powers `git diff` and every other line-based diff tool; a PDF comparison tool doesn't need to invent a new algorithm, just a way to turn PDF pages into line lists that algorithm can consume.</p>
 
 <figure class="theme-figure">
-<svg viewBox="0 0 700 380" width="700" height="380" role="img" aria-label="Side-by-side comparison of a PDF with a selectable text layer, an image-only scan, and a scanned PDF with an OCR text layer." xmlns="http://www.w3.org/2000/svg">
-<rect x="77.5" y="70.0" width="135.0" height="130" rx="6" fill="var(--card-bg)" stroke="var(--border)" stroke-width="2.5"/>
-<rect x="93.5" y="88.0" width="92.7" height="7" rx="3" fill="var(--accent)" opacity="0.85"/>
-<rect x="93.5" y="106.0" width="92.7" height="7" rx="3" fill="var(--accent)" opacity="0.85"/>
-<rect x="93.5" y="124.0" width="56.7" height="7" rx="3" fill="var(--accent)" opacity="0.85"/>
-<rect x="93.5" y="142.0" width="92.7" height="7" rx="3" fill="var(--accent)" opacity="0.85"/>
-<rect x="93.5" y="160.0" width="92.7" height="7" rx="3" fill="var(--accent)" opacity="0.85"/>
-<circle cx="210.5" cy="70.0" r="13" fill="var(--accent)"/><path d="M 204.5,70.0 l 4,5 l 8,-9" stroke="var(--card-bg)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="145.0" y="225.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14.5" font-weight="bold" fill="var(--text)">Native text</text>
-<text x="145.0" y="245.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12.5" fill="var(--muted-text)">extractable</text>
-<rect x="282.5" y="70.0" width="135.0" height="130" rx="6" fill="var(--card-bg)" stroke="var(--border)" stroke-width="2.5"/>
-<circle cx="320.6" cy="115.0" r="9" fill="var(--muted-text)" opacity="0.7"/>
-<polygon points="305.9,178.0 339.5,133.0 362.6,155.0 383.6,125.0 396.2,178.0" fill="var(--muted-text)" opacity="0.7"/>
-<circle cx="415.5" cy="70.0" r="13" fill="var(--muted-text)"/><line x1="409.5" y1="64.0" x2="421.5" y2="76.0" stroke="var(--card-bg)" stroke-width="2.5" stroke-linecap="round"/><line x1="421.5" y1="64.0" x2="409.5" y2="76.0" stroke="var(--card-bg)" stroke-width="2.5" stroke-linecap="round"/>
-<text x="350.0" y="225.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14.5" font-weight="bold" fill="var(--text)">Image-only scan</text>
-<text x="350.0" y="245.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12.5" fill="var(--muted-text)">nothing to extract</text>
-<rect x="487.5" y="70.0" width="135.0" height="130" rx="6" fill="var(--card-bg)" stroke="var(--border)" stroke-width="2.5"/>
-<circle cx="525.6" cy="115.0" r="9" fill="var(--muted-text)" opacity="0.7"/>
-<polygon points="510.9,178.0 544.5,133.0 567.6,155.0 588.6,125.0 601.2,178.0" fill="var(--muted-text)" opacity="0.7"/>
-<rect x="503.5" y="88.0" width="92.7" height="7" rx="3" fill="var(--accent)" opacity="0.85"/>
-<rect x="503.5" y="106.0" width="92.7" height="7" rx="3" fill="var(--accent)" opacity="0.85"/>
-<rect x="503.5" y="124.0" width="56.7" height="7" rx="3" fill="var(--accent)" opacity="0.85"/>
-<rect x="503.5" y="142.0" width="92.7" height="7" rx="3" fill="var(--accent)" opacity="0.85"/>
-<rect x="503.5" y="160.0" width="92.7" height="7" rx="3" fill="var(--accent)" opacity="0.85"/>
-<circle cx="620.5" cy="70.0" r="13" fill="var(--accent)"/><path d="M 614.5,70.0 l 4,5 l 8,-9" stroke="var(--card-bg)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-<text x="555.0" y="225.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14.5" font-weight="bold" fill="var(--text)">Scanned + OCR</text>
-<text x="555.0" y="245.0" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12.5" fill="var(--muted-text)">extractable</text>
+<svg viewBox="0 0 700 210" width="700" height="210" role="img" aria-label="Diagram showing File A's four lines and File B's four lines side by side, with two lines matched as shared between them, one line only in File A marked as removed, and one line only in File B marked as added." xmlns="http://www.w3.org/2000/svg">
+<text x="175" y="26" text-anchor="middle" font-size="15" fill="var(--text)">File A</text>
+<text x="525" y="26" text-anchor="middle" font-size="15" fill="var(--text)">File B</text>
+<rect x="60" y="40" width="230" height="26" rx="4" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+<text x="70" y="57" font-size="12.5" fill="var(--text)">Introduction</text>
+<rect x="60" y="74" width="230" height="26" rx="4" fill="#f87171" fill-opacity="0.15" stroke="#f87171" stroke-width="1.5"/>
+<text x="70" y="91" font-size="12.5" fill="#f87171">Draft — internal only</text>
+<rect x="60" y="108" width="230" height="26" rx="4" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+<text x="70" y="125" font-size="12.5" fill="var(--text)">Pricing: $49/month</text>
+<rect x="60" y="142" width="230" height="26" rx="4" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+<text x="70" y="159" font-size="12.5" fill="var(--text)">Contact sales@example.com</text>
+<rect x="410" y="40" width="230" height="26" rx="4" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+<text x="420" y="57" font-size="12.5" fill="var(--text)">Introduction</text>
+<rect x="410" y="74" width="230" height="26" rx="4" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+<text x="420" y="91" font-size="12.5" fill="var(--text)">Pricing: $49/month</text>
+<rect x="410" y="108" width="230" height="26" rx="4" fill="#4ade80" fill-opacity="0.15" stroke="#4ade80" stroke-width="1.5"/>
+<text x="420" y="125" font-size="12.5" fill="#4ade80">Now billed annually</text>
+<rect x="410" y="142" width="230" height="26" rx="4" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+<text x="420" y="159" font-size="12.5" fill="var(--text)">Contact sales@example.com</text>
+<line x1="290" y1="53" x2="410" y2="53" stroke="var(--muted-text)" stroke-width="1.5" stroke-dasharray="3,3"/>
+<line x1="290" y1="155" x2="410" y2="155" stroke="var(--muted-text)" stroke-width="1.5" stroke-dasharray="3,3"/>
+<text x="350" y="190" text-anchor="middle" font-size="13" fill="var(--muted-text)">Shared lines stay unmatched-and-still; only the two unmatched lines are flagged</text>
 </svg>
-<figcaption>Text can be extracted when a PDF contains a text layer. Image-only scans need OCR first.</figcaption>
+<figcaption>A one-line change ("Draft" removed, "Now billed annually" added) leaves the two lines around it untouched — the diff only flags what genuinely isn't shared.</figcaption>
 </figure>
 
-<h2>What a good extraction keeps track of</h2>
-<p>Page boundaries matter even in plain text — knowing where one page ends and the next begins helps you find something later, especially in a long document. A good extraction marks those boundaries clearly in the output rather than running every page's text together into one undifferentiated block.</p>
-
-<h2>What gets lost in the process</h2>
-<p>Plain text extraction is exactly that — plain. Fonts, bold and italic styling, column layout, and table structure aren't preserved, since none of that exists in plain text to begin with. If you need the visual layout intact, extraction isn't the right tool; you'd want to keep working with the PDF itself, or convert it to a format like Word that can hold formatting.</p>
-
-<h2>A concrete example</h2>
-<p>You have a 40-page report and need to search it for every mention of a specific clause — something a PDF viewer's search can sometimes struggle with across a long, image-heavy document. Extracting the full text into one file lets you search or process it with a plain-text tool, or paste specific passages into an email without retyping them.</p>
+<h2>Why the result can still surprise you</h2>
+<p>Because the comparison is purely textual, a handful of situations produce results that are technically correct but easy to misread. A paragraph reflowed differently — same words, different line breaks — can show as several removed and added lines even though no wording actually changed, since the diff compares whole reconstructed lines, not the underlying sentences. A scanned page with no real text layer contributes nothing to compare at all, silently, unless the tool explicitly flags it. And a change to color, font, or image placement never appears, because none of that is text in the first place.</p>
 
 <h2>Quick answers</h2>
-<p><strong>Why is my extracted text empty or very short?</strong> The PDF is likely a scanned image without a real text layer — there's no selectable text to pull out, only pixels. OCR is a separate process for making scanned documents searchable.</p>
-<p><strong>Does extraction keep the original formatting?</strong> No — it's a plain-text extraction, not a layout-preserving conversion. Fonts, columns and tables aren't preserved.</p>
-<p><strong>Can I tell which page a piece of text came from?</strong> Yes, if the extraction marks page boundaries in the output — look for page markers rather than one continuous block of text.</p>
+<p><strong>Will formatting-only changes (bold, color, font) show up?</strong> No — a text-based comparison only sees the characters, never how they're styled or laid out.</p>
+<p><strong>Why does "ignore whitespace" matter for PDFs specifically?</strong> PDF text extraction sometimes inserts slightly different spacing between runs depending on how the original document encoded them, so two functionally identical lines can differ by a stray space unless whitespace differences are deliberately ignored.</p>
+<p><strong>Is this the same thing Word's "Compare Documents" feature does?</strong> Conceptually yes — both reduce a document to text and diff it — but a PDF has already lost the paragraph/style metadata a word processor's native format keeps, so a PDF-to-PDF comparison works purely off reconstructed lines instead.</p>
 
 <div class="cta-box">
-  <h3>Extract Text From Your PDF</h3>
-  <p>Orisod's Extract PDF Text tool pulls the text out of every page, with page markers, and lets you copy it or download it as a .txt file — entirely in your browser.</p>
-  <a class="cta-button" href="/extract-pdf-text/">Extract PDF Text →</a>
+  <h3>Compare two PDFs</h3>
+  <p>Orisod's Compare PDFs tool extracts and diffs the text of two PDFs line by line, with an added/removed count and an optional ignore-whitespace toggle — entirely in your browser.</p>
+  <a class="cta-button" href="/compare-pdfs/">Compare two PDFs →</a>
 </div>
 
-<p>If a PDF has real, selectable text, getting it out as plain text takes seconds — the only real obstacle is a scanned document with no text layer at all, which is a limitation of the source file, not of extraction itself.</p>
+<p>A PDF comparison tool isn't reading the document the way a person does — it's reducing it to a list of lines and asking a well-known question about two lists. Knowing that turns a surprising diff into an expected one: it only ever tells you what changed in the words, never in the way they were dressed up.</p>
 
 </div>
 
 <div class="related-section">
   <h2>Related articles</h2>
   <div class="related-grid">
-    <a class="blog-card" href="/blog/reorder-delete-pdf-pages/">
-      <h3>How to Reorder or Delete Pages in a PDF</h3>
-      <p>How to fix a scanned PDF's page order or remove a stray blank page.</p>
+    <a class="blog-card" href="/blog/extract-text-from-pdf/">
+      <h3>How to Extract Text From a PDF (Copy or Save as .txt)</h3>
+      <p>How PDF text extraction actually works, and what to do when a PDF has no text layer.</p>
     </a>
 
-    <a class="blog-card" href="/blog/split-pdf-guide/">
-      <h3>How to Split a PDF Into Separate Files</h3>
-      <p>How to pull specific pages out of a PDF or split one file into several.</p>
+    <a class="blog-card" href="/blog/ocr-scanned-pdf/">
+      <h3>How to Make a Scanned PDF Searchable With OCR</h3>
+      <p>Why a scanned PDF has no real text, and how OCR gives it a searchable text layer.</p>
     </a>
 
-    <a class="blog-card" href="/blog/how-to-compare-pdfs/">
-      <h3>How to Compare Two PDFs (and What "Compare" Actually Means)</h3>
-      <p>What comparing two PDFs actually measures, and why a text diff isn't the same as a visual one.</p>
+    <a class="blog-card" href="/blog/edit-pdf-online/">
+      <h3>How to Edit a PDF Online (Text Boxes, Highlights, and Markup)</h3>
+      <p>What real PDF annotation involves, and how to add it without special software.</p>
     </a>
   </div>
 </div>
