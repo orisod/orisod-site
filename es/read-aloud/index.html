@@ -179,6 +179,7 @@ h2{margin-top:50px;font-size:22px;}
       <div class="control-item">
         <label class="wc-label" for="voiceSelect">Voz</label>
         <select id="voiceSelect"></select>
+        <div id="noSpanishVoiceNote" style="display:none;margin-top:8px;font-size:12px;color:var(--muted-text);line-height:1.4;">⚠️ No se encontró ninguna voz en español instalada en tu dispositivo. La lista de arriba muestra las voces que tu navegador tiene disponibles, que solo están en otros idiomas — Orisod no puede añadir una voz en español que tu sistema no tenga.</div>
       </div>
       <div class="control-item">
         <label class="wc-label" for="rateSlider">Velocidad: <span id="rateVal">1.0x</span></label>
@@ -200,7 +201,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="trust-strip">🔒 Procesado en tu dispositivo · Nunca se envía a ningún lado · No se almacena</div>
 
     <div class="disclosure-banner">
-      <strong>Qué es realmente esto:</strong> Leer en Voz Alta usa el motor de texto a voz integrado de tu propio navegador para leer tu texto en voz alta, en vivo, aquí mismo en esta página. No puede generar ni exportar un archivo de audio descargable (un MP3, por ejemplo) — la API Web Speech en la que se basa el navegador solo admite reproducción en vivo, no exportación de audio. Las voces disponibles dependen totalmente de tu dispositivo y navegador, no de Orisod — un teléfono, una Mac y una PC con Windows normalmente ofrecerán voces distintas.
+      <strong>Qué es realmente esto:</strong> Leer en Voz Alta usa el motor de texto a voz integrado de tu propio navegador para leer tu texto en voz alta, en vivo, aquí mismo en esta página. No puede generar ni exportar un archivo de audio descargable (un MP3, por ejemplo) — la API Web Speech en la que se basa el navegador solo admite reproducción en vivo, no exportación de audio. Las voces disponibles dependen totalmente de tu dispositivo y navegador, no de Orisod — un teléfono, una Mac y una PC con Windows normalmente ofrecerán voces distintas, y no podemos añadir, garantizar ni mejorar ninguna voz o idioma concreto que no esté ya instalado en tu sistema.
     </div>
 
     <div class="unsupported-banner" id="unsupportedNotice">
@@ -324,6 +325,7 @@ h2{margin-top:50px;font-size:22px;}
   const previewView = document.getElementById('previewView');
   const fileInput = document.getElementById('fileInput');
   const voiceSelect = document.getElementById('voiceSelect');
+  const noSpanishVoiceNote = document.getElementById('noSpanishVoiceNote');
   const rateSlider = document.getElementById('rateSlider');
   const rateVal = document.getElementById('rateVal');
   const pitchSlider = document.getElementById('pitchSlider');
@@ -426,6 +428,10 @@ h2{margin-top:50px;font-size:22px;}
       voiceSelect.appendChild(opt);
     });
     if (voices.length === 0) return;
+
+    const hasSpanishVoice = voices.some((v) => v.lang.toLowerCase().indexOf('es') === 0);
+    noSpanishVoiceNote.style.display = hasSpanishVoice ? 'none' : 'block';
+
     if (prevValue !== '' && voices[prevValue]) {
       voiceSelect.value = prevValue;
       return;
