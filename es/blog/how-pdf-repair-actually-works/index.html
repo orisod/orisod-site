@@ -147,53 +147,61 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 
 <span class="blog-cat cat-guide">Guías</span>
 <h1>Cómo Funciona Realmente la Reparación de PDF (y Qué No Puede Arreglar)</h1>
-<p class="intro">Un PDF que "no se abre" normalmente no le falta su contenido — le falta un índice funcional hacia ese contenido. Entender esa distinción es la diferencia entre una herramienta de reparación que realmente puede ayudar y una que simplemente vuelve a guardar el archivo con la esperanza de que funcione.</p>
+<p class="intro">Un PDF que "no se abre" normalmente no es que le falte su contenido — es que algo intenta leerlo y no lo consigue correctamente. Lo sorprendente es que la causa que la mayoría asume, un índice roto, a menudo ni siquiera es el problema real — y entender por qué cambia lo que la "reparación" puede prometer honestamente arreglar.</p>
 
 <div class="article-body">
 
 <h2>Un PDF tiene dos partes separables: el contenido y el mapa hacia él</h2>
-<p>Debajo de las páginas visibles de un PDF, el archivo es en realidad un montón grande y desordenado de objetos — texto, imágenes, fuentes, definiciones de página — más un índice aparte al final del archivo llamado tabla de referencias cruzadas (xref), que registra la posición exacta en bytes de cada objeto, y un tráiler que le dice a un lector por dónde empezar a buscar. Un visor de PDF no escanea todo el archivo de principio a fin para encontrar las cosas; salta directamente a la tabla xref, busca dónde vive cada pieza, y lee solo eso. Esta separación importa porque significa que el índice y el contenido pueden dañarse de forma independiente entre sí — un archivo puede tener todas sus páginas perfectamente intactas mientras su tabla xref está truncada, duplicada o apuntando a posiciones de byte completamente equivocadas.</p>
+<p>Debajo de las páginas visibles de un PDF, el archivo es en realidad un montón grande y desordenado de objetos — texto, imágenes, fuentes, definiciones de página — más un índice aparte al final del archivo llamado tabla de referencias cruzadas (xref), que registra la posición exacta en bytes de cada objeto, y un tráiler que le dice a un lector por dónde empezar a buscar. En principio, un lector de PDF puede usar ese índice para saltar directamente a cada pieza en lugar de escanear todo el archivo. Esta separación importa por una razón concreta: el índice y el contenido pueden dañarse de forma independiente entre sí — un archivo puede tener todas sus páginas perfectamente intactas mientras su tabla xref está truncada, duplicada o apuntando a posiciones de byte completamente equivocadas.</p>
 
-<h2>Por qué ese tipo específico de daño es común y reparable</h2>
-<p>Las tablas xref son exactamente el tipo de estructura que se rompe cuando una descarga se interrumpe, una transferencia se trunca, o una herramienta con errores añade datos sin actualizar el índice para que coincida — fallos pequeños y mecánicos que corrompen el mapa sin tocar el territorio. Como los objetos de contenido reales suelen seguir estando intactos en el archivo, un lector dispuesto a ser permisivo — saltándose el índice roto y leyendo directamente los datos de objeto en bruto, o descartando solo los objetos concretos que realmente no puede interpretar — a menudo puede recuperar todo (o casi todo) lo que realmente estaba ahí. Reconstruir un índice nuevo y correcto a partir de lo recuperado es una solución real, no cosmética, para toda esta clase de problemas.</p>
+<h2>Por qué un índice roto a menudo no es realmente fatal</h2>
+<p>Aquí está la parte que sorprende: muchos motores de lectura de PDF no confían del todo en el índice, precisamente porque es exactamente el tipo de estructura pequeña y mecánica que se rompe cuando una descarga se interrumpe o una herramienta añade datos sin actualizarlo para que coincida. En su lugar, un lector robusto escanea el archivo en bruto directamente en busca de cada marcador de objeto, construyendo su propio mapa de lo que realmente hay — y solo recurre al índice registrado como una comodidad, no como un requisito. Eso significa que un archivo con una tabla xref completamente rota, pero con los objetos de contenido por lo demás intactos, a menudo no es algo que necesite "arreglarse" en absoluto — un lector construido así encuentra todo de todas formas, en silencio, sin ningún paso de reparación. Esto es en realidad una buena noticia, pero también significa que una herramienta de reparación construida sobre ese mismo tipo de lector va a informar correctamente "no se detectaron problemas" precisamente en los archivos que la intuición no técnica espera que se marquen como rotos.</p>
+
+<h2>Lo que realmente necesita repararse: daño dentro de un objeto concreto</h2>
+<p>El daño que realmente requiere un arreglo no está en el índice — está dentro del contenido propio de un objeto individual. Un lector que escanea el archivo directamente puede <em>encontrar</em> todos los marcadores de objeto incluso cuando el archivo está dañado, pero encontrar un objeto e interpretarlo correctamente son dos pasos distintos. Si la sintaxis interna de un objeto concreto está rota — un diccionario al que le falta un corchete de cierre, un flujo cuya longitud declarada no coincide con sus datos reales — el lector lo localiza sin problema y luego falla al intentar leerlo. La solución honesta para eso es limitada: omitir el único objeto que realmente está roto, conservar todos los demás objetos que se analizaron correctamente, y escribir un índice nuevo que refleje solo lo que realmente está ahí. Eso es una reparación real y con sentido — solo que mucho más específica que "el índice estaba roto así que arreglé el índice".</p>
 
 <figure class="theme-figure">
-<svg viewBox="0 0 700 200" width="700" height="200" role="img" aria-label="Diagrama de un archivo PDF que muestra una sección de cuerpo con objetos de contenido intactos, y una sección de índice separada al final (tabla de referencias cruzadas y tráiler) mostrada como rota, con una flecha que muestra que la reparación lee los objetos intactos directamente y escribe un índice nuevo y correcto." xmlns="http://www.w3.org/2000/svg">
-<rect x="20" y="60" width="280" height="100" rx="8" fill="none" stroke="var(--accent)" stroke-width="2"/>
-<text x="160" y="95" text-anchor="middle" font-size="14" fill="var(--accent)">Cuerpo: objetos de contenido</text>
-<text x="160" y="115" text-anchor="middle" font-size="12" fill="var(--muted-text)">(páginas, texto, imágenes, fuentes)</text>
-<text x="160" y="140" text-anchor="middle" font-size="12" fill="var(--muted-text)">— a menudo totalmente intactos —</text>
-<rect x="330" y="60" width="180" height="100" rx="8" fill="none" stroke="#f87171" stroke-width="1.5" stroke-dasharray="4 3"/>
-<text x="420" y="100" text-anchor="middle" font-size="13" fill="#f87171">Índice (xref + tráiler)</text>
-<text x="420" y="118" text-anchor="middle" font-size="12" fill="#f87171">— roto —</text>
-<line x1="160" y1="160" x2="160" y2="180" stroke="var(--muted-text)" stroke-width="1.5"/>
-<text x="160" y="195" text-anchor="middle" font-size="12" fill="var(--muted-text)">se lee directamente, evitando el índice roto</text>
-<rect x="540" y="60" width="140" height="100" rx="8" fill="none" stroke="#4ade80" stroke-width="2"/>
-<text x="610" y="100" text-anchor="middle" font-size="13" fill="#4ade80">Índice nuevo</text>
-<text x="610" y="118" text-anchor="middle" font-size="12" fill="#4ade80">escrito desde cero</text>
-<line x1="160" y1="110" x2="540" y2="110" stroke="#4ade80" stroke-width="1.5" stroke-dasharray="4 3"/>
+<svg viewBox="0 0 700 210" width="700" height="210" role="img" aria-label="Diagrama que muestra cinco objetos encontrados escaneando un archivo PDF directamente, con un objeto marcado como dañado y el resto intactos, que alimentan un archivo reconstruido que contiene solo los cuatro objetos no dañados más un índice recién escrito." xmlns="http://www.w3.org/2000/svg">
+<text x="350" y="20" text-anchor="middle" font-size="12" fill="var(--muted-text)">Objetos encontrados escaneando el archivo directamente</text>
+<rect x="20" y="35" width="80" height="50" rx="6" fill="none" stroke="var(--accent)" stroke-width="2"/>
+<text x="60" y="65" text-anchor="middle" font-size="12" fill="var(--accent)">Obj 1</text>
+<rect x="115" y="35" width="80" height="50" rx="6" fill="none" stroke="var(--accent)" stroke-width="2"/>
+<text x="155" y="65" text-anchor="middle" font-size="12" fill="var(--accent)">Obj 2</text>
+<rect x="210" y="35" width="90" height="50" rx="6" fill="none" stroke="#f87171" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="255" y="58" text-anchor="middle" font-size="12" fill="#f87171">Obj 3</text>
+<text x="255" y="74" text-anchor="middle" font-size="10" fill="#f87171">dañado</text>
+<rect x="315" y="35" width="80" height="50" rx="6" fill="none" stroke="var(--accent)" stroke-width="2"/>
+<text x="355" y="65" text-anchor="middle" font-size="12" fill="var(--accent)">Obj 4</text>
+<rect x="410" y="35" width="80" height="50" rx="6" fill="none" stroke="var(--accent)" stroke-width="2"/>
+<text x="450" y="65" text-anchor="middle" font-size="12" fill="var(--accent)">Obj 5</text>
+<line x1="255" y1="85" x2="255" y2="110" stroke="var(--muted-text)" stroke-width="1.5"/>
+<text x="255" y="123" text-anchor="middle" font-size="11" fill="var(--muted-text)">omitido — el resto pasa sin tocar</text>
+<rect x="140" y="140" width="300" height="55" rx="8" fill="none" stroke="#4ade80" stroke-width="2"/>
+<text x="290" y="164" text-anchor="middle" font-size="13" fill="#4ade80">Archivo reconstruido: objetos 1, 2, 4, 5</text>
+<text x="290" y="181" text-anchor="middle" font-size="12" fill="#4ade80">+ un índice nuevo que enumera exactamente esos</text>
 </svg>
-<figcaption>La reparación lee el contenido intacto directamente en lugar de confiar en el índice roto, y luego escribe un índice correcto desde cero — una solución real cuando el contenido sobrevivió y solo falló el mapa hacia él.</figcaption>
+<figcaption>El lector encuentra cada objeto escaneando el archivo directamente, no confiando en el índice — así que un índice dañado rara vez importa por sí solo. Cuando el contenido propio de un objeto está dañado, solo se descarta ese objeto; todo lo demás pasa sin tocar y se escribe un índice nuevo correcto para lo que queda.</figcaption>
 </figure>
 
-<h2>Lo que la reparación no puede tocar: daño dentro del propio contenido</h2>
-<p>Nada de esto ayuda si el daño no está en el índice sino en los propios objetos de contenido — los datos de imagen de una página truncados a mitad de camino, la tabla de glifos de una fuente corrupta, un flujo de contenido al que realmente le faltan bytes. La única opción real de un lector permisivo cuando encuentra un daño a nivel de objeto así es saltarse el objeto roto por completo, lo que significa que esa pieza concreta — una imagen, un párrafo, una página entera — vuelve faltante en lugar de arreglada. No hay forma de reconstruir datos que ya no existen; la reparación puede reconstruir el mapa, no inventar territorio que ha desaparecido.</p>
+<h2>Lo que la reparación no puede tocar: daño tan grave que no queda nada que encontrar</h2>
+<p>Nada de esto ayuda una vez que el daño va más allá de un solo objeto recuperable — un archivo truncado tan pronto que secciones enteras nunca llegaron a incluirse, o un flujo de contenido al que le faltan tantos bytes que no queda nada coherente que analizar. La única opción real de un lector permisivo cuando encuentra un daño así es saltarse la pieza rota por completo, lo que significa que esa pieza — una imagen, un párrafo, una página entera, a veces el documento completo — vuelve faltante en lugar de arreglada. No hay forma de reconstruir datos que ya no existen; la reparación puede recuperar lo que sobrevivió, no inventar lo que no lo hizo.</p>
 
 <h2>Por qué importa verificar el resultado con un segundo analizador distinto</h2>
 <p>Una herramienta de reparación que usa la misma biblioteca de análisis tanto para intentar el arreglo como para confirmar que funcionó se está calificando a sí misma — si esa biblioteca tiene un punto ciego, puede convencerse de que una reparación rota tuvo éxito. Abrir el archivo recién reparado con un código de análisis completamente separado es una comprobación real e independiente: si una segunda herramienta, construida por personas distintas y con supuestos distintos, también puede abrir el resultado y leer sus páginas, eso es evidencia genuina de que el archivo funciona — no solo evidencia de que una biblioteca cree que funciona.</p>
 
 <h2>Respuestas rápidas</h2>
-<p><strong>¿Por qué un archivo "reparado" a veces tiene menos páginas de las esperadas?</strong> Si el árbol de páginas en sí — el objeto que enumera qué páginas existen y en qué orden — estaba entre las piezas dañadas, un lector permisivo puede solo poder reconstruir parte de él, recuperando menos páginas de las que tenía el documento original.</p>
-<p><strong>¿Puede la reparación arreglar un PDF que no se abre porque está protegido con contraseña?</strong> No — ese es un problema de control de acceso, no estructural. El contenido y el índice del archivo pueden estar perfectamente bien; simplemente al lector no se le permite verlos sin la contraseña, lo cual es un tipo de "no se abre" completamente distinto.</p>
-<p><strong>¿Un archivo reparado es idéntico al original sin daños?</strong> No necesariamente — es la mejor reconstrucción posible a partir de lo que realmente sobrevivió. Si nada estaba realmente dañado dentro del contenido, el archivo recuperado será efectivamente idéntico; si algo lo estaba, esa pieza concreta realmente desapareció, no se disimuló.</p>
+<p><strong>Si mi PDF tiene un índice dañado, ¿la reparación lo "arreglará"?</strong> Normalmente no hay nada que arreglar — un lector construido para escanear el archivo directamente ya evita por sí solo un índice roto, así que un archivo así típicamente vuelve como "no se detectaron problemas" en lugar de "reparado". Eso no es que no se detecte el daño; el daño simplemente nunca impidió que el archivo se pudiera leer.</p>
+<p><strong>¿Por qué un archivo "reparado" a veces tiene menos páginas de las esperadas?</strong> Si el árbol de páginas en sí — el objeto que enumera qué páginas existen y en qué orden — fue el objeto concreto que resultó dañado, un lector permisivo puede solo poder reconstruir parte de él, recuperando menos páginas de las que tenía el documento original.</p>
+<p><strong>¿Puede la reparación arreglar un PDF que no se abre porque está protegido con contraseña?</strong> No — ese es un problema de control de acceso, no de daño. Los objetos del archivo pueden estar perfectamente bien; simplemente al lector no se le permite verlos sin la contraseña, lo cual es un tipo de "no se abre" completamente distinto.</p>
+<p><strong>¿Un archivo reparado es idéntico al original sin daños?</strong> No necesariamente — es la mejor reconstrucción posible a partir de lo que realmente sobrevivió. Si nada estaba realmente dañado dentro del contenido, el archivo recuperado será efectivamente idéntico; si un objeto concreto lo estaba, esa pieza realmente desapareció, no se disimuló.</p>
 
 <div class="cta-box">
   <h3>Intenta reparar un PDF corrupto</h3>
-  <p>La herramienta Reparar PDF de Orisod diagnostica qué está realmente mal, intenta una solución estructural real, y verifica el resultado con un segundo motor de PDF independiente — todo en tu navegador.</p>
+  <p>La herramienta Reparar PDF de Orisod diagnostica qué está realmente mal, intenta un arreglo real para lo que se puede recuperar, y verifica el resultado con un segundo motor de PDF independiente — todo en tu navegador.</p>
   <a class="cta-button" href="/es/repair-pdf/">Reparar un PDF →</a>
 </div>
 
-<p>La versión honesta de "reparar un PDF" no es un arreglo mágico para cualquier cosa que le pase a un archivo — es una técnica específica y bien entendida para un fallo específico y común: un índice roto sobre un contenido que a menudo sigue ahí. Cuando ese es el problema real, reconstruir el índice es una solución real y completa. Cuando el daño va más profundo que eso, la respuesta honesta es que parte de lo que se perdió no va a volver — y una herramienta que lo dice con claridad es más útil que una que afirma lo contrario.</p>
+<p>La versión honesta de "reparar un PDF" no es un arreglo mágico para cualquier cosa que le pase a un archivo, y ni siquiera apunta al fallo que la mayoría imagina primero — un índice roto resulta ser algo que muchos lectores ya toleran por su cuenta. El arreglo real y más limitado es para el daño dentro de un objeto concreto que sobrevive a ser encontrado pero no a ser entendido: omitir esa única pieza, conservar todo lo demás, escribir un índice que coincida con la realidad. Cuando ese es el problema real, esto es una solución real y completa. Cuando el daño va más profundo que un solo objeto, la respuesta honesta es que parte de lo que se perdió no va a volver — y una herramienta que lo dice con claridad es más útil que una que afirma lo contrario.</p>
 
 </div>
 
