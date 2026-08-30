@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How to Combine Multiple Photos Into One PDF | Orisod Blog</title>
-<meta name="description" content="Got a stack of separate photos that need to become one multi-page PDF — a scanned packet, a portfolio, a photo album? Here's how combining images into a PDF actually works.">
-<link rel="canonical" href="https://orisod.com/blog/combine-photos-into-pdf/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/blog/combine-photos-into-pdf/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/combine-photos-into-pdf/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/combine-photos-into-pdf/">
+<title>How Images Get Pulled Out of a PDF (and Why They Come Back as PNG) | Orisod Blog</title>
+<meta name="description" content="How a PDF actually stores embedded pictures, why extracting them means decoding pixels rather than copying a file, and why PNG is the only format that can hold the result losslessly.">
+<link rel="canonical" href="https://orisod.com/blog/extract-images-from-pdf-explained/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/extract-images-from-pdf-explained/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/extract-images-from-pdf-explained/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/extract-images-from-pdf-explained/">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
 <link rel="icon" href="/favicon.ico">
@@ -75,12 +75,6 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 .article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
 .article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
 .article-body li{margin-bottom:8px;}
-.theme-figure{margin:10px 0 26px 0;}
-.theme-figure img{display:block;width:100%;height:auto;border-radius:10px;border:1px solid var(--border);}
-.theme-figure figcaption{font-size:13.5px;color:var(--muted-text);margin-top:10px;line-height:1.5;}
-.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
-.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
-.compare-table th{background:var(--card-bg);}
 .cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
 .cta-box h3{margin:0 0 10px 0;font-size:19px;}
 .cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
@@ -124,6 +118,10 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 :root[data-theme="light"] .blog-cat.cat-guide{background:#eff6ff;color:#1e40af;}
 :root[data-theme="light"] .blog-cat.cat-tip{background:#fffbeb;color:#92400e;}
 :root[data-theme="light"] .blog-cat.cat-comparison{background:#f5f3ff;color:#5b21b6;}
+.theme-figure{margin:10px 0 26px 0;}
+.theme-figure svg{display:block;width:100%;height:auto;}
+.theme-figure figcaption{font-size:13.5px;color:var(--muted-text);margin-top:10px;line-height:1.5;}
+code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;}
 </style>
 </head>
 <body>
@@ -139,7 +137,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   </nav>
   <div class="site-nav-right">
     <span class="lang-flag active">EN</span>
-    <a class="lang-flag" href="/es/blog/combine-photos-into-pdf/">ES</a>
+    <a class="lang-flag" href="/es/blog/extract-images-from-pdf-explained/">ES</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
   </div>
 </header>
@@ -148,71 +146,76 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <div class="container">
 
 <span class="blog-cat cat-guide">Guides</span>
-<h1>How to Combine Multiple Photos Into One PDF</h1>
-<p class="intro">A single converted photo is easy. The more common real-world need is several photos — pages of a document, a set of portfolio images, a photographed packet of forms — that all need to land in one PDF, in the right order. Here's how that works.</p>
+<h1>How Images Get Pulled Out of a PDF (and Why They Come Back as PNG)</h1>
+<p class="intro">A PDF doesn't store a folder of neat, separate image files the way a ZIP archive does. Getting a picture back out means walking the page's actual drawing instructions, decoding whatever image data those instructions point to, and rebuilding it as a standalone file — which is exactly why the result comes back as PNG, regardless of what format went in.</p>
 
 <div class="article-body">
 
-<h2>How this differs from converting one image</h2>
-<p>Turning a single JPG into a PDF is a one-to-one job: one image in, one PDF page out. Combining photos into a PDF is a different task entirely — several separate image files go in, and a single multi-page PDF comes out, with each photo becoming its own page in a specific order. The distinction matters because the tools and the workflow are built around that ordering step, which a single-image conversion doesn't need at all.</p>
+<h2>A PDF page is a list of drawing instructions, not a layout file</h2>
+<p>Underneath the page you see, a PDF page is a sequence of low-level drawing operators: draw this line, fill this shape, set this font and draw this text, and — critically — paint this image at this position and size. An image embedded in a PDF is stored as a separate object somewhere in the file, and the page simply references it with a "paint this object here" instruction. Extracting images means walking through that instruction list, finding every "paint an image" operator, and following the reference back to the actual image data.</p>
 
-<h2>Where this comes up in real life</h2>
-<ul>
-  <li><strong>A scanned packet taken as photos.</strong> Instead of using a scanner, you photograph each page of a multi-page form or contract one at a time, and need all of those photos to become a single document rather than five separate attachments.</li>
-  <li><strong>A photo portfolio or lookbook.</strong> A photographer or designer assembling a set of images into one shareable PDF for a client, rather than sending a folder of individual files.</li>
-  <li><strong>A photo album or keepsake.</strong> Turning a set of personal photos into a single printable or shareable document.</li>
-  <li><strong>Receipts or documentation for an expense report.</strong> Several receipt photos need to become one PDF attachment instead of many.</li>
-</ul>
-
-<h2>Why order matters more here than it seems</h2>
-<p>Because each photo becomes a page, the order you add the images in determines the order the pages appear in the final PDF. This is easy to get wrong with photos specifically, since phone camera filenames (like IMG_2841.jpg) don't always reflect the order you actually took them in, especially if you deleted and retook a shot partway through. It's worth a quick visual check of the photo order before combining, rather than assuming filename order matches page order.</p>
+<h2>Why the original file format doesn't survive the trip</h2>
+<p>PDF can embed images in a handful of different internal formats — plain JPEG, JPEG2000, CCITT fax compression (common for scanned black-and-white documents), raw bitmap data, indexed color with a small palette, and more. Reading a PDF page — for rendering it on screen, printing it, or extracting an image from it — requires decoding all of those formats into one common representation: a plain grid of pixel values. That decoding step is unavoidable, and it's also where the original compressed file is effectively left behind. What comes out the other side is decoded pixels, not a copy of whatever bytes were originally embedded.</p>
 
 <figure class="theme-figure">
-  <img class="theme-img" data-dark="/assets/blog/combine-photos-into-pdf/combine-photos-into-pdf-dark-en.webp" data-light="/assets/blog/combine-photos-into-pdf/combine-photos-into-pdf-light-en.webp" src="/assets/blog/combine-photos-into-pdf/combine-photos-into-pdf-dark-en.webp" alt="Orisod's Image to PDF tool showing several photos selected, listed in the order they'll become PDF pages, each removable before converting" width="800" height="426" loading="lazy">
-  <figcaption>The order you select photos in becomes the page order — remove any before converting.</figcaption>
+<svg viewBox="0 0 700 200" width="700" height="200" role="img" aria-label="Diagram showing a PDF page's drawing instructions branching into a paint-image instruction that leads through image decoding to plain pixel data, and a separate draw-shape instruction that leads to vector paths instead — illustrating that only the image branch produces extractable raster data." xmlns="http://www.w3.org/2000/svg">
+<rect x="20" y="80" width="140" height="50" rx="8" fill="none" stroke="var(--text)" stroke-width="1.5"/>
+<text x="90" y="110" text-anchor="middle" font-size="13" fill="var(--text)">Page instructions</text>
+<line x1="160" y1="95" x2="220" y2="55" stroke="var(--accent)" stroke-width="1.5"/>
+<line x1="160" y1="115" x2="220" y2="150" stroke="var(--muted-text)" stroke-width="1.5" stroke-dasharray="4 3"/>
+<rect x="220" y="30" width="180" height="50" rx="8" fill="none" stroke="var(--accent)" stroke-width="2"/>
+<text x="310" y="60" text-anchor="middle" font-size="13" fill="var(--accent)">"Paint image" op</text>
+<rect x="220" y="130" width="180" height="50" rx="8" fill="none" stroke="var(--muted-text)" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="310" y="160" text-anchor="middle" font-size="13" fill="var(--muted-text)">"Draw shape" op</text>
+<line x1="400" y1="55" x2="460" y2="55" stroke="var(--accent)" stroke-width="1.5"/>
+<rect x="460" y="30" width="200" height="50" rx="8" fill="none" stroke="var(--accent)" stroke-width="2"/>
+<text x="560" y="52" text-anchor="middle" font-size="13" fill="var(--accent)">Decoded pixels</text>
+<text x="560" y="68" text-anchor="middle" font-size="11" fill="var(--muted-text)">→ extractable as PNG</text>
+<line x1="400" y1="155" x2="460" y2="155" stroke="var(--muted-text)" stroke-width="1.5" stroke-dasharray="4 3"/>
+<rect x="460" y="130" width="200" height="50" rx="8" fill="none" stroke="var(--muted-text)" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="560" y="152" text-anchor="middle" font-size="13" fill="var(--muted-text)">Vector path</text>
+<text x="560" y="168" text-anchor="middle" font-size="11" fill="var(--muted-text)">→ not a raster image</text>
+</svg>
+<figcaption>Only the "paint image" branch produces raster pixel data that can be saved as a picture file — shape and path instructions describe geometry, not a photo, so there's nothing to extract from them.</figcaption>
 </figure>
 
-<h2>What happens to image quality and orientation</h2>
-<p>Each photo is placed onto its own PDF page at essentially its original quality — combining doesn't recompress or degrade the images beyond whatever the tool's page-fitting does. Orientation is inherited from each individual photo, so a mix of upright and sideways photos will produce a PDF with mixed page orientations unless you rotate the sideways ones first.</p>
+<h2>Why PNG specifically, and not always JPEG</h2>
+<p>Once an image is decoded into plain pixels, re-saving it needs a format that can hold exactly that data without a second round of lossy compression on top of whatever loss already happened during the PDF's own original encoding. PNG is lossless by design — it stores pixels as-is, however many of them there are, without re-guessing or discarding detail. Re-exporting as JPEG at that point would mean compressing already-decoded data a second time, adding new artifacts that weren't in the source. PNG being larger in file size is the trade-off for not doing that.</p>
 
-<h2>Sizing: one consistent page size, or match each photo?</h2>
-<p>Photos taken at different distances or on different devices often have different pixel dimensions and aspect ratios. A combining tool typically either fits every photo onto a uniform page size (so the document looks consistent when printed or scrolled through) or sizes each page to match its photo exactly (so nothing gets cropped or padded). Which one matters depends on whether you're optimizing for print consistency or for preserving each image exactly as it was.</p>
-
-<h2>A concrete example</h2>
-<p>Say you photograph a five-page rental agreement with your phone because the only copy is on paper and you need to submit it digitally today. Photographed one page at a time, that's five separate JPG files sitting in your camera roll — not something most portals will accept as five individual attachments for one document. Combined in the correct page order into a single PDF, it becomes exactly the kind of file a submission form expects: one document, five pages, in sequence.</p>
+<h2>Why the same image doesn't show up once per page</h2>
+<p>PDF generators frequently reuse a single embedded image across many pages — a repeated header logo or a letterhead graphic is a common example — specifically so the file doesn't have to embed dozens of identical copies of the same picture. A tool extracting images can take advantage of that same structure: when the same underlying image is referenced from multiple pages, it only needs to be decoded and offered for download once, with a note of every page it appears on, instead of once per occurrence.</p>
 
 <h2>Quick answers</h2>
-<p><strong>Is there a limit to how many photos I can combine?</strong> Practical limits usually come from your device's memory rather than the tool itself — combining a handful of photos, or even a few dozen, is well within normal use.</p>
-<p><strong>Can I reorder photos after I've added them, before combining?</strong> A good browser-based tool lets you rearrange the order before you commit, so you're not stuck starting over if the initial order was wrong.</p>
-<p><strong>Do the photos need to be the same format?</strong> No — you can typically mix JPG, PNG, and other common image formats in the same combined PDF.</p>
-<p><strong>Is this the same as scanning?</strong> Not technically — a real scanner captures a page directly, while this process starts from photos you already took. The end result looks and behaves the same to whoever receives it, but the source is a photo rather than a scan.</p>
+<p><strong>Why didn't any images come out of my PDF?</strong> If the PDF was built entirely from text and vector graphics — shapes, lines, and gradients described as paths rather than pictures — there's no raster image data anywhere in it to extract, even if the page visually looks like it contains graphics.</p>
+<p><strong>Can extraction recover a higher-resolution version of the image than what's shown on the page?</strong> No — it can only recover the resolution that was actually embedded in the PDF. If the source image was already downscaled or heavily compressed before being placed into the PDF, that's the ceiling on what comes back out.</p>
+<p><strong>Does this work on scanned documents?</strong> A scanned page is usually itself one large embedded image per page, so yes — it can be extracted as a picture, though it's the whole scanned page as one image, not separate photos within it (unless the scan itself contains embedded photos of its own).</p>
 
 <div class="cta-box">
-  <h3>Combine Your Photos Into One PDF</h3>
-  <p>Orisod's image-to-PDF tool combines multiple photos into a single, properly ordered PDF — entirely in your browser, with nothing uploaded to a server.</p>
-  <a class="cta-button" href="/image-to-pdf/">Combine Photos Into a PDF →</a>
+  <h3>Pull the images out of a PDF</h3>
+  <p>Orisod's Extract Images from PDF finds every embedded picture in a PDF and lets you download it as a PNG, one at a time or all together as a ZIP — entirely in your browser.</p>
+  <a class="cta-button" href="/extract-images-from-pdf/">Extract images →</a>
 </div>
 
-<p>Whether it's a scanned packet, a portfolio, or a stack of receipts, turning several photos into one well-ordered PDF takes a minute once you've got them in the right sequence — and it turns a scattered folder of images into the single document most processes actually expect.</p>
+<p>The short version: a PDF doesn't contain a folder of image files waiting to be copied out — it contains instructions for painting pixels, and extracting an image means actually running enough of those instructions to get real pixel data back, then saving that data in a format built to hold it without loss. PNG isn't a limitation of any particular tool; it's the natural output of that process.</p>
 
 </div>
 
 <div class="related-section">
   <h2>Related articles</h2>
   <div class="related-grid">
+    <a class="blog-card" href="/blog/combine-photos-into-pdf/">
+      <h3>How to Combine Multiple Photos Into One PDF</h3>
+      <p>How to turn several photos into a single multi-page PDF instead of separate files.</p>
+    </a>
+
     <a class="blog-card" href="/blog/pdf-page-to-image/">
       <h3>How to Convert a PDF Page Into an Image</h3>
       <p>Why a PDF page isn't already an image, and how to convert one into a JPG or PNG.</p>
     </a>
 
-    <a class="blog-card" href="/blog/jpg-to-pdf-guide/">
-      <h3>How to Turn a JPG Into a PDF in Seconds</h3>
-      <p>Why a photographed document often needs to become a PDF, and how to do it in seconds.</p>
-    </a>
-
-    <a class="blog-card" href="/blog/extract-images-from-pdf-explained/">
-      <h3>How Images Get Pulled Out of a PDF (and Why They Come Back as PNG)</h3>
-      <p>Why extracting an embedded picture means decoding pixels, and why PNG is the only lossless output format.</p>
+    <a class="blog-card" href="/blog/extract-text-from-pdf/">
+      <h3>How to Extract Text From a PDF (Copy or Save as .txt)</h3>
+      <p>Pulling the actual text out of a PDF instead of retyping it by hand.</p>
     </a>
   </div>
 </div>
@@ -250,15 +253,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   function updateIcon(){
     btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
   }
-  function updateThemeImages(){
-    var isLight = document.documentElement.getAttribute('data-theme')==='light';
-    document.querySelectorAll('.theme-img').forEach(function(img){
-      var target = isLight ? img.dataset.light : img.dataset.dark;
-      if(img.getAttribute('src') !== target) img.src = target;
-    });
-  }
   updateIcon();
-  updateThemeImages();
   btn.addEventListener('click', function(){
     var isLight = document.documentElement.getAttribute('data-theme')==='light';
     if(isLight){
@@ -269,7 +264,6 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
       localStorage.setItem('orisod-theme','light');
     }
     updateIcon();
-    updateThemeImages();
   });
 })();
 </script>

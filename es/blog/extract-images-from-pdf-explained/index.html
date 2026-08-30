@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cómo se Extraen las Imágenes de un PDF (y Por Qué Salen como PNG) | Orisod Blog</title>
+<meta name="description" content="Cómo almacena realmente un PDF las imágenes incrustadas, por qué extraerlas significa decodificar píxeles en lugar de copiar un archivo, y por qué PNG es el único formato que puede contener el resultado sin pérdida.">
+<link rel="canonical" href="https://orisod.com/es/blog/extract-images-from-pdf-explained/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/extract-images-from-pdf-explained/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/extract-images-from-pdf-explained/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/extract-images-from-pdf-explained/">
+<link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#2563eb">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+  --grid-alpha:.05;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+  --grid-alpha:.10;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background-color:var(--bg);background-image:linear-gradient(rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px),linear-gradient(90deg, rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px);background-size:42px 42px;color:var(--text);text-align:center;transition:background-color 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);display:inline-flex;align-items:center;gap:8px;}
+.site-nav-logo img{height:26px;width:auto;display:block;}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:5px 14px;margin:-5px 0;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.site-footer{
+  margin-top:40px;
+  padding:40px 24px 30px 24px;
+  border-top:1px solid var(--border);
+  text-align:left;
+}
+.footer-inner{
+  max-width:1000px;
+  margin:0 auto;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  gap:40px;
+}
+.footer-brand{max-width:280px;}
+.footer-brand-logo{font-size:16px;font-weight:bold;letter-spacing:0.5px;margin-bottom:10px;}
+.footer-brand-desc{font-size:13px;color:var(--muted-text);line-height:1.5;margin-bottom:14px;}
+.footer-copy{font-size:12px;color:var(--muted-text);opacity:0.7;}
+.footer-col h3{font-size:13px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-text);margin:0 0 14px 0;}
+.footer-col a{display:block;font-size:14px;color:var(--text);text-decoration:none;opacity:0.8;margin-bottom:10px;}
+.footer-col a:hover{opacity:1;color:var(--accent);}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+.blog-cat{display:inline-block;font-size:11px;font-weight:bold;text-transform:uppercase;letter-spacing:.3px;padding:3px 9px;border-radius:999px;margin-bottom:12px;cursor:default;}
+.blog-card .blog-cat{margin-bottom:0;}
+.blog-cat.cat-guide{background:#16213d;color:#60a5fa;}
+.blog-cat.cat-tip{background:#1f1a0f;color:#fbbf24;}
+.blog-cat.cat-comparison{background:#241c3d;color:#a78bfa;}
+:root[data-theme="light"] .blog-cat.cat-guide{background:#eff6ff;color:#1e40af;}
+:root[data-theme="light"] .blog-cat.cat-tip{background:#fffbeb;color:#92400e;}
+:root[data-theme="light"] .blog-cat.cat-comparison{background:#f5f3ff;color:#5b21b6;}
+.theme-figure{margin:10px 0 26px 0;}
+.theme-figure svg{display:block;width:100%;height:auto;}
+.theme-figure figcaption{font-size:13.5px;color:var(--muted-text);margin-top:10px;line-height:1.5;}
+code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/es/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/es/tools/">Todas las Herramientas</a>
+    <a href="/es/tools/#image">Herramientas de Imagen</a>
+    <a href="/es/tools/#pdf">Herramientas PDF</a>
+    <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <a class="lang-flag" href="/blog/extract-images-from-pdf-explained/">EN</a>
+    <span class="lang-flag active">ES</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<span class="blog-cat cat-guide">Guías</span>
+<h1>Cómo se Extraen las Imágenes de un PDF (y Por Qué Salen como PNG)</h1>
+<p class="intro">Un PDF no guarda una carpeta con archivos de imagen separados y ordenados como lo haría un archivo ZIP. Recuperar una imagen significa recorrer las instrucciones de dibujo reales de la página, decodificar cualquier dato de imagen al que apunten esas instrucciones, y reconstruirlo como un archivo independiente — precisamente por eso el resultado sale como PNG, sin importar qué formato entró.</p>
+
+<div class="article-body">
+
+<h2>Una página de PDF es una lista de instrucciones de dibujo, no un archivo de diseño</h2>
+<p>Debajo de la página que ves, una página de PDF es una secuencia de operadores de dibujo de bajo nivel: dibuja esta línea, rellena esta forma, define esta fuente y dibuja este texto, y — de forma crucial — pinta esta imagen en esta posición y tamaño. Una imagen incrustada en un PDF se almacena como un objeto separado en algún lugar del archivo, y la página simplemente la referencia con una instrucción de "pinta este objeto aquí". Extraer imágenes significa recorrer esa lista de instrucciones, encontrar cada operador de "pintar una imagen", y seguir la referencia hasta los datos reales de la imagen.</p>
+
+<h2>Por qué el formato de archivo original no sobrevive el viaje</h2>
+<p>Un PDF puede incrustar imágenes en varios formatos internos distintos — JPEG normal, JPEG2000, compresión de fax CCITT (común en documentos escaneados en blanco y negro), datos de mapa de bits sin procesar, color indexado con una paleta pequeña, y más. Leer una página de PDF — para mostrarla en pantalla, imprimirla o extraer una imagen de ella — requiere decodificar todos esos formatos en una representación común: una simple cuadrícula de valores de píxel. Ese paso de decodificación es inevitable, y también es donde el archivo comprimido original se queda efectivamente atrás. Lo que sale al otro lado son píxeles decodificados, no una copia de los bytes originalmente incrustados.</p>
+
+<figure class="theme-figure">
+<svg viewBox="0 0 700 200" width="700" height="200" role="img" aria-label="Diagrama que muestra las instrucciones de una página de PDF ramificándose hacia una instrucción de pintar imagen que lleva, a través de la decodificación de imagen, a datos de píxeles simples, y una instrucción separada de dibujar forma que lleva a trazos vectoriales en su lugar — ilustrando que solo la rama de imagen produce datos ráster extraíbles." xmlns="http://www.w3.org/2000/svg">
+<rect x="20" y="80" width="140" height="50" rx="8" fill="none" stroke="var(--text)" stroke-width="1.5"/>
+<text x="90" y="110" text-anchor="middle" font-size="13" fill="var(--text)">Instrucciones de página</text>
+<line x1="160" y1="95" x2="220" y2="55" stroke="var(--accent)" stroke-width="1.5"/>
+<line x1="160" y1="115" x2="220" y2="150" stroke="var(--muted-text)" stroke-width="1.5" stroke-dasharray="4 3"/>
+<rect x="220" y="30" width="180" height="50" rx="8" fill="none" stroke="var(--accent)" stroke-width="2"/>
+<text x="310" y="60" text-anchor="middle" font-size="13" fill="var(--accent)">Op. "pintar imagen"</text>
+<rect x="220" y="130" width="180" height="50" rx="8" fill="none" stroke="var(--muted-text)" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="310" y="160" text-anchor="middle" font-size="13" fill="var(--muted-text)">Op. "dibujar forma"</text>
+<line x1="400" y1="55" x2="460" y2="55" stroke="var(--accent)" stroke-width="1.5"/>
+<rect x="460" y="30" width="200" height="50" rx="8" fill="none" stroke="var(--accent)" stroke-width="2"/>
+<text x="560" y="52" text-anchor="middle" font-size="13" fill="var(--accent)">Píxeles decodificados</text>
+<text x="560" y="68" text-anchor="middle" font-size="11" fill="var(--muted-text)">→ extraíble como PNG</text>
+<line x1="400" y1="155" x2="460" y2="155" stroke="var(--muted-text)" stroke-width="1.5" stroke-dasharray="4 3"/>
+<rect x="460" y="130" width="200" height="50" rx="8" fill="none" stroke="var(--muted-text)" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="560" y="152" text-anchor="middle" font-size="13" fill="var(--muted-text)">Trazo vectorial</text>
+<text x="560" y="168" text-anchor="middle" font-size="11" fill="var(--muted-text)">→ no es una imagen ráster</text>
+</svg>
+<figcaption>Solo la rama de "pintar imagen" produce datos de píxeles ráster que se pueden guardar como un archivo de imagen — las instrucciones de forma y trazo describen geometría, no una foto, así que no hay nada que extraer de ellas.</figcaption>
+</figure>
+
+<h2>Por qué específicamente PNG y no siempre JPEG</h2>
+<p>Una vez que una imagen se decodifica en píxeles simples, volver a guardarla necesita un formato capaz de contener exactamente esos datos sin una segunda ronda de compresión con pérdida encima de la que ya pudo haber ocurrido durante la codificación original del propio PDF. PNG no tiene pérdida por diseño — almacena los píxeles tal cual, sean los que sean, sin volver a adivinar ni descartar detalle. Volver a exportar como JPEG en ese punto significaría comprimir datos ya decodificados por segunda vez, añadiendo artefactos nuevos que no estaban en la fuente. Que PNG sea más grande en tamaño de archivo es la contrapartida de no hacer eso.</p>
+
+<h2>Por qué la misma imagen no aparece una vez por página</h2>
+<p>Los generadores de PDF suelen reutilizar una sola imagen incrustada en muchas páginas — un logotipo de encabezado repetido o un gráfico de membrete son ejemplos comunes — específicamente para que el archivo no tenga que incrustar docenas de copias idénticas de la misma imagen. Una herramienta que extrae imágenes puede aprovechar esa misma estructura: cuando la misma imagen subyacente se referencia desde varias páginas, solo necesita decodificarse y ofrecerse para descarga una vez, con una nota de en qué páginas aparece, en lugar de una vez por aparición.</p>
+
+<h2>Respuestas rápidas</h2>
+<p><strong>¿Por qué no salió ninguna imagen de mi PDF?</strong> Si el PDF se creó completamente con texto y gráficos vectoriales — formas, líneas y degradados descritos como trazos en lugar de fotos — no hay ningún dato de imagen ráster en ninguna parte que extraer, aunque la página parezca visualmente contener gráficos.</p>
+<p><strong>¿Puede la extracción recuperar una versión de mayor resolución que la que se muestra en la página?</strong> No — solo puede recuperar la resolución que realmente se incrustó en el PDF. Si la imagen de origen ya estaba reducida o muy comprimida antes de colocarse en el PDF, ese es el límite de lo que puede salir.</p>
+<p><strong>¿Funciona con documentos escaneados?</strong> Una página escaneada suele ser en sí misma una gran imagen incrustada por página, así que sí — se puede extraer como una imagen, aunque sería toda la página escaneada como una sola imagen, no fotos separadas dentro de ella (a menos que el propio escaneo contenga fotos incrustadas propias).</p>
+
+<div class="cta-box">
+  <h3>Extrae las imágenes de un PDF</h3>
+  <p>Extraer Imágenes de un PDF de Orisod encuentra cada imagen incrustada en un PDF y te permite descargarla como PNG, una por una o todas juntas en un ZIP — completamente en tu navegador.</p>
+  <a class="cta-button" href="/es/extract-images-from-pdf/">Extraer imágenes →</a>
+</div>
+
+<p>La versión corta: un PDF no contiene una carpeta de archivos de imagen esperando ser copiados — contiene instrucciones para pintar píxeles, y extraer una imagen significa realmente ejecutar suficientes de esas instrucciones para obtener datos de píxeles reales, y luego guardar esos datos en un formato diseñado para contenerlos sin pérdida. PNG no es una limitación de ninguna herramienta en particular; es el resultado natural de ese proceso.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Artículos relacionados</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/es/blog/combine-photos-into-pdf/">
+      <h3>Cómo combinar varias fotos en un solo PDF</h3>
+      <p>Cómo convertir varias fotos en un solo PDF de múltiples páginas en lugar de archivos separados.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/pdf-page-to-image/">
+      <h3>Cómo convertir una página PDF en una imagen</h3>
+      <p>Por qué una página de PDF no es ya una imagen, y cómo convertirla en JPG o PNG.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/extract-text-from-pdf/">
+      <h3>Cómo extraer texto de un PDF (copiar o guardar como .txt)</h3>
+      <p>Sacar el texto real de un PDF en vez de volver a escribirlo a mano.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/es/blog/">← Volver al Blog</a>
+
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-brand-logo">ORISOD</div>
+      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF basadas en el navegador. Procesamiento 100% local — tus archivos nunca se suben a ningún lado.</div>
+      <div class="footer-copy">© Orisod Labs</div>
+    </div>
+    <div class="footer-col">
+      <h3>Herramientas</h3>
+      <a href="/es/tools/#image">Herramientas de Imagen</a>
+      <a href="/es/tools/#pdf">Herramientas PDF</a>
+      <a href="/es/tools/#utility">Herramientas de Utilidad</a>
+    </div>
+    <div class="footer-col">
+      <h3>Empresa</h3>
+      <a href="/es/about/">Acerca de</a>
+      <a href="/es/privacy/">Privacidad</a>
+      <a href="/es/blog/">Blog</a>
+    </div>
+  </div>
+</footer>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>
