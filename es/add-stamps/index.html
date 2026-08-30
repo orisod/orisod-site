@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
 <script>
 (function(){
@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sign PDF – Free Online Tool | Orisod</title>
-<meta name="description" content="Draw your signature and place it anywhere on a PDF page, free and online. Works directly in your browser — no files are uploaded, no account needed.">
-<link rel="canonical" href="https://orisod.com/sign-pdf/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/sign-pdf/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/sign-pdf/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/sign-pdf/">
+<title>Añadir Sellos a un PDF – Herramienta Gratuita | Orisod</title>
+<meta name="description" content="Sella APROBADO, BORRADOR, CONFIDENCIAL o tu propio texto personalizado en una página de un PDF, gratis y en línea. Funciona directamente en tu navegador — no se sube ningún archivo, no se necesita cuenta.">
+<link rel="canonical" href="https://orisod.com/es/add-stamps/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/add-stamps/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/add-stamps/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/add-stamps/">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
 <link rel="icon" href="/favicon.ico">
@@ -72,7 +72,6 @@
 .result-card .result-body{flex:1 1 auto;min-width:0;}
 .result-card .result-filename{font-size:14px;font-weight:bold;margin-bottom:4px;word-break:break-all;}
 .result-stat{font-size:15px;opacity:0.9;}
-.result-stat .saved{color:#4ade80;font-weight:bold;}
 .site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
 .site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);display:inline-flex;align-items:center;gap:8px;}
 .site-nav-logo img{height:26px;width:auto;display:block;}
@@ -97,12 +96,17 @@ input[type="file"]{display:none;}
 .page-count{margin-top:10px;font-size:13px;opacity:0.7;}
 .controls{margin-top:20px;text-align:left;display:none;}
 .step-label{font-size:14px;font-weight:bold;margin-bottom:8px;opacity:0.9;}
-.sig-pad-wrap{margin-bottom:10px;}
-#sigCanvas{width:100%;max-width:500px;height:170px;touch-action:none;background:white;border-radius:6px;border:1px solid var(--border);cursor:crosshair;display:block;}
-.sig-actions{display:flex;gap:10px;align-items:center;margin-bottom:20px;}
-.sig-actions button{margin-top:0;padding:9px 14px;font-size:13px;}
-button.secondary{background:var(--card-bg);border:1px solid var(--border);color:var(--text);}
-button.secondary:hover:not(:disabled){border-color:var(--accent);filter:none;}
+.stamp-presets{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;}
+.stamp-btn{margin:0;padding:10px 16px;font-size:14px;font-weight:bold;border-radius:8px;border:2px solid var(--dropzone-border);background:var(--card-bg);color:var(--text);cursor:pointer;}
+.stamp-btn.active{border-color:currentColor;}
+.stamp-btn[data-preset="approved"]{color:#15803d;}
+.stamp-btn[data-preset="draft"]{color:#374151;}
+:root[data-theme="light"] .stamp-btn[data-preset="draft"]{color:#111827;}
+.stamp-btn[data-preset="confidential"]{color:#dc2626;}
+.custom-row{display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap;}
+.custom-row input[type="text"]{
+  flex:1 1 220px;padding:10px 12px;border-radius:6px;border:1px solid var(--dropzone-border);background:var(--bg);color:var(--text);font-size:14px;
+}
 .opt-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;font-size:14px;flex-wrap:wrap;}
 .opt-row label{min-width:100px;opacity:0.85;text-align:left;}
 .opt-row input[type="number"]{
@@ -164,66 +168,69 @@ h2{margin-top:50px;font-size:22px;}
 <body>
 
 <header class="site-nav">
-  <a class="site-nav-logo" href="/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
+  <a class="site-nav-logo" href="/es/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
   <nav class="site-nav-links">
-    <a href="/tools/">All Tools</a>
-    <a href="/tools/#image">Image Tools</a>
-    <span class="active-category">PDF Tools</span>
-    <a href="/tools/#utility">Utility Tools</a>
-    <a href="/blog/">Blog</a>
+    <a href="/es/tools/">Todas las herramientas</a>
+    <a href="/es/tools/#image">Herramientas de imagen</a>
+    <span class="active-category">Herramientas PDF</span>
+    <a href="/es/tools/#utility">Utilidades</a>
+    <a href="/es/blog/">Blog</a>
   </nav>
   <div class="site-nav-right">
-    <span class="lang-flag active">EN</span>
-    <a class="lang-flag" href="/es/sign-pdf/">ES</a>
-    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
+    <a class="lang-flag" href="/add-stamps/">EN</a>
+    <span class="lang-flag active">ES</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
   </div>
 </header>
 
 <main>
 <div class="container">
   <div class="tool-hero">
-    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18c3 1 4-2 6-2s2 3 5 1 4-4 7-2"/></svg></div>
-    <h1>Sign PDF</h1>
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="5" rx="1"/><path d="M7 7h10l2 5H5z"/><path d="M4 15h16"/><path d="M6 19h12"/></svg></div>
+    <h1>Añadir Sellos a un PDF</h1>
   </div>
-  <p class="tool-sub">Draw your signature and place it anywhere on a PDF page, then download the signed file. Everything happens locally in your browser.</p>
+  <p class="tool-sub">Sella APROBADO, BORRADOR, CONFIDENCIAL o tu propio texto en una página de un PDF y descárgalo. Todo ocurre localmente en tu navegador.</p>
 
   <div class="workspace">
     <div class="box">
       <label class="dropzone" id="dropzone" for="fileInput">
-        <div id="dropzoneText">📁 Click to select a PDF or drag and drop it here</div>
+        <div id="dropzoneText">📁 Haz clic para elegir un PDF o arrástralo aquí</div>
       </label>
       <input type="file" id="fileInput" accept=".pdf">
       <div class="error" id="errorMsg"></div>
-      <div class="trust-strip">🔒 Processed on your device · No upload · No account</div>
+      <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subidas · Sin cuenta</div>
       <div class="page-count" id="pageCount"></div>
 
       <div class="controls" id="controls">
-        <div class="step-label">1. Draw your signature</div>
-        <div class="sig-pad-wrap">
-          <canvas id="sigCanvas" width="600" height="200"></canvas>
+        <div class="step-label">1. Elige un sello</div>
+        <div class="stamp-presets">
+          <button type="button" class="stamp-btn" data-preset="approved" data-text="APROBADO" data-color="#15803d">APROBADO</button>
+          <button type="button" class="stamp-btn" data-preset="draft" data-text="BORRADOR" data-color="#374151">BORRADOR</button>
+          <button type="button" class="stamp-btn" data-preset="confidential" data-text="CONFIDENCIAL" data-color="#dc2626">CONFIDENCIAL</button>
         </div>
-        <div class="sig-actions">
-          <button class="secondary" id="clearSigBtn">Clear Signature</button>
+        <div class="custom-row">
+          <label for="customText" style="min-width:auto;opacity:0.85;">O texto personalizado:</label>
+          <input type="text" id="customText" placeholder="Escribe tu propio texto de sello" maxlength="30">
         </div>
 
-        <div class="step-label">2. Choose the page and click to place it</div>
+        <div class="step-label">2. Elige la página y haz clic para colocarlo</div>
         <div class="opt-row">
-          <label for="pageInput">Page number:</label>
+          <label for="pageInput">Número de página:</label>
           <input type="number" id="pageInput" min="1" value="1">
         </div>
         <div class="opt-row">
-          <label>Signature width:</label>
-          <input type="range" id="sizeSlider" min="60" max="300" value="150"><span id="sizeValue">150</span>pt
+          <label>Ancho del sello:</label>
+          <input type="range" id="sizeSlider" min="80" max="300" value="170"><span id="sizeValue">170</span>pt
         </div>
 
         <div class="placement-wrap">
           <canvas id="placementCanvas"></canvas>
-          <div class="note">Click anywhere on the page to move your signature there.</div>
+          <div class="note">Haz clic en cualquier parte de la página para mover el sello ahí.</div>
         </div>
       </div>
 
       <div class="workspace-controls">
-        <button id="downloadBtn" style="display:none;">Sign & Download</button>
+        <button id="downloadBtn" style="display:none;">Sellar y Descargar</button>
       </div>
 
       <div class="progress" id="progressMsg"></div>
@@ -232,61 +239,61 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>This tool lets you draw a signature with your mouse or finger, then click anywhere on a chosen PDF page to place it. A live preview shows exactly where the signature will land before you download the signed file.</p>
+    <h2>¿Qué hace esta herramienta?</h2>
+    <p>Elige un sello predefinido (APROBADO, BORRADOR, CONFIDENCIAL) o escribe tu propio texto, luego haz clic en cualquier parte de una página del PDF para colocarlo — una vista previa en vivo muestra exactamente dónde quedará antes de descargarlo.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>¿Cuándo usar esta herramienta?</h2>
     <ul>
-      <li>You need to sign a contract, form, or agreement without printing and scanning it</li>
-      <li>You're returning a signed document quickly by email</li>
-      <li>You want a simple, no-account way to add a signature to a one-off PDF</li>
-      <li>You're filling out a form that just needs a signature, not a full e-signature workflow</li>
+      <li>Marcar un documento como revisado y aprobado antes de compartirlo</li>
+      <li>Etiquetar un documento como BORRADOR para que no se confunda con la versión final</li>
+      <li>Marcar páginas sensibles como CONFIDENCIAL antes de distribuirlas</li>
+      <li>Añadir cualquier sello personalizado de una palabra o frase corta que un flujo de trabajo necesite</li>
     </ul>
 
-    <h2>Frequently asked questions</h2>
+    <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
-      <div class="q">Is this a legally binding e-signature?</div>
-      <div>This tool draws and embeds an image of your signature onto the PDF — it doesn't provide cryptographic signing, identity verification, or an audit trail like dedicated e-signature services. For documents that require legal e-signature compliance, use a service built for that purpose.</div>
+      <div class="q">¿Puedo sellar más de una página?</div>
+      <div>Puedes colocar un sello en una página por pasada. Para sellar varias páginas, vuelve a ejecutar la herramienta sobre el archivo descargado y colócalo en otra página.</div>
     </div>
     <div class="faq-item">
-      <div class="q">Can I sign more than one page?</div>
-      <div>You can place your signature on one page per pass. To sign multiple pages, run the tool again on the downloaded file and place it on a different page.</div>
+      <div class="q">¿Cuánto texto personalizado puedo usar?</div>
+      <div>Hasta 30 caracteres — el texto largo se reduce automáticamente para caber dentro del recuadro del sello en lugar de desbordarlo.</div>
     </div>
     <div class="faq-item">
-      <div class="q">Can I resize my signature after placing it?</div>
-      <div>Yes, use the width slider before downloading — the preview updates instantly so you can see the new size before committing.</div>
+      <div class="q">¿Puedo cambiar el tamaño del sello después de colocarlo?</div>
+      <div>Sí, usa el control deslizante de ancho antes de descargar — la vista previa se actualiza al instante para que veas el nuevo tamaño antes de confirmarlo.</div>
     </div>
     <div class="faq-item">
-      <div class="q">Is my PDF uploaded to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div class="q">¿Se sube mi PDF a un servidor?</div>
+      <div>No, todo el proceso ocurre localmente en tu navegador con JavaScript.</div>
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/sign-pdf-online/" style="color:var(--accent);text-decoration:none;">How to Sign a PDF Online (No Printing or Scanning)</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres verlo con más detalle? Lee nuestra guía: <a href="/es/blog/how-to-stamp-a-pdf/" style="color:var(--accent);text-decoration:none;">Cómo sellar un PDF (APROBADO, BORRADOR, CONFIDENCIAL y personalizado)</a></p>
 
-  <h2>Related tools</h2>
+  <h2>Herramientas relacionadas</h2>
   <div class="related-grid">
-  <a class="related-card" href="/watermark-pdf/">
+  <a class="related-card" href="/es/watermark-pdf/">
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.8 6 11.2A6 6 0 0 1 6 14.2C6 9.8 12 3 12 3z"/></svg></div>
     <div class="body">
-      <div class="title">Watermark PDF</div>
-      <div class="desc">Stamp text across every page.</div>
+      <div class="title">Marca de agua en PDF</div>
+      <div class="desc">Estampa texto en cada página.</div>
     </div>
     <div class="arrow">→</div>
   </a>
-  <a class="related-card" href="/pdf-editor/">
+  <a class="related-card" href="/es/sign-pdf/">
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18c3 1 4-2 6-2s2 3 5 1 4-4 7-2"/></svg></div>
+    <div class="body">
+      <div class="title">Firmar PDF</div>
+      <div class="desc">Dibuja y coloca una firma.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+  <a class="related-card" href="/es/pdf-editor/">
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M9 16l5-5 2 2-5 5H9v-2z"/><path d="M8 20h4"/></svg></div>
     <div class="body">
-      <div class="title">PDF Editor</div>
-      <div class="desc">Add text boxes, highlights, and markup.</div>
-    </div>
-    <div class="arrow">→</div>
-  </a>
-  <a class="related-card" href="/add-stamps/">
-    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="5" rx="1"/><path d="M7 7h10l2 5H5z"/><path d="M4 15h16"/><path d="M6 19h12"/></svg></div>
-    <div class="body">
-      <div class="title">Add Stamps to PDF</div>
-      <div class="desc">Stamp APPROVED, DRAFT, or custom text.</div>
+      <div class="title">Editor de PDF</div>
+      <div class="desc">Añade cuadros de texto y resaltados.</div>
     </div>
     <div class="arrow">→</div>
   </a>
@@ -296,20 +303,20 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Free, browser-based image and PDF tools. 100% local processing — your files are never uploaded anywhere.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF en tu navegador. Procesamiento 100% local — tus archivos nunca se suben a ningún sitio.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">
-      <h3>Tools</h3>
-      <a href="/tools/#image">Image Tools</a>
-      <a href="/tools/#pdf">PDF Tools</a>
-      <a href="/tools/#utility">Utility Tools</a>
+      <h3>Herramientas</h3>
+      <a href="/es/tools/#image">Herramientas de imagen</a>
+      <a href="/es/tools/#pdf">Herramientas PDF</a>
+      <a href="/es/tools/#utility">Utilidades</a>
     </div>
     <div class="footer-col">
-      <h3>Company</h3>
-      <a href="/about/">About</a>
-      <a href="/privacy/">Privacy</a>
-      <a href="/blog/">Blog</a>
+      <h3>Empresa</h3>
+      <a href="/es/about/">Acerca de</a>
+      <a href="/es/privacy/">Privacidad</a>
+      <a href="/es/blog/">Blog</a>
     </div>
   </div>
 </footer>
@@ -348,8 +355,8 @@ const errorMsg = document.getElementById('errorMsg');
 const progressMsg = document.getElementById('progressMsg');
 const pageCount = document.getElementById('pageCount');
 const controls = document.getElementById('controls');
-const sigCanvas = document.getElementById('sigCanvas');
-const clearSigBtn = document.getElementById('clearSigBtn');
+const stampButtons = document.querySelectorAll('.stamp-btn');
+const customText = document.getElementById('customText');
 const pageInput = document.getElementById('pageInput');
 const sizeSlider = document.getElementById('sizeSlider');
 const sizeValue = document.getElementById('sizeValue');
@@ -364,10 +371,68 @@ let baseImageCanvas = null;
 let pageScale = 1;
 let pageWidthPt = 0;
 let pageHeightPt = 0;
-let hasSignature = false;
 let placeX = 0;
 let placeY = 0;
 let placed = false;
+let activeStamp = { text: 'APROBADO', color: '#15803d' };
+let stampCanvas = null;
+
+const STAMP_ASPECT = 100 / 300; // height / width
+
+function renderStampCanvas(text, color) {
+  const w = 300, h = Math.round(300 * STAMP_ASPECT);
+  const canvas = document.createElement('canvas');
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, w, h);
+  ctx.save();
+  ctx.translate(w / 2, h / 2);
+  ctx.rotate((15 * Math.PI) / 180);
+  const boxW = w * 0.92, boxH = h * 0.72;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 6;
+  ctx.strokeRect(-boxW / 2, -boxH / 2, boxW, boxH);
+  ctx.fillStyle = color;
+  let fontSize = 34;
+  ctx.font = `bold ${fontSize}px Arial`;
+  while (ctx.measureText(text).width > boxW - 24 && fontSize > 10) {
+    fontSize -= 2;
+    ctx.font = `bold ${fontSize}px Arial`;
+  }
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, 0, 2);
+  ctx.restore();
+  return canvas;
+}
+
+function setActiveStamp(text, color) {
+  activeStamp = { text: text.toUpperCase(), color };
+  stampCanvas = renderStampCanvas(activeStamp.text, activeStamp.color);
+  updatePlacementPreview();
+}
+
+stampButtons.forEach((btn) => {
+  btn.addEventListener('click', () => {
+    stampButtons.forEach((b) => b.classList.remove('active'));
+    btn.classList.add('active');
+    customText.value = '';
+    setActiveStamp(btn.dataset.text, btn.dataset.color);
+  });
+});
+
+customText.addEventListener('input', () => {
+  const val = customText.value.trim();
+  if (val) {
+    stampButtons.forEach((b) => b.classList.remove('active'));
+    setActiveStamp(val, '#dc2626');
+  } else {
+    const approvedBtn = document.querySelector('.stamp-btn[data-preset="approved"]');
+    approvedBtn.classList.add('active');
+    setActiveStamp(approvedBtn.dataset.text, approvedBtn.dataset.color);
+  }
+});
 
 fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
 dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
@@ -387,7 +452,7 @@ async function handleFile(file) {
   placed = false;
 
   if (!file || !/\.pdf$/i.test(file.name)) {
-    errorMsg.textContent = 'Please select a valid PDF file.';
+    errorMsg.textContent = 'Selecciona un archivo PDF válido.';
     return;
   }
 
@@ -397,15 +462,19 @@ async function handleFile(file) {
     selectedFile = file;
     numPages = pdfJsDoc.numPages;
 
-    pageCount.textContent = `Loaded: ${numPages} page${numPages === 1 ? '' : 's'}`;
-    dropzoneText.textContent = `✅ ${file.name} loaded`;
+    pageCount.textContent = `Cargado: ${numPages} página${numPages === 1 ? '' : 's'}`;
+    dropzoneText.textContent = `✅ ${file.name} cargado`;
     pageInput.max = numPages;
-    pageInput.value = numPages;
+    pageInput.value = 1;
     controls.style.display = 'block';
     downloadBtn.style.display = 'inline-block';
-    await loadPlacementPage(numPages);
+
+    document.querySelector('.stamp-btn[data-preset="approved"]').classList.add('active');
+    setActiveStamp('APROBADO', '#15803d');
+
+    await loadPlacementPage(1);
   } catch (err) {
-    errorMsg.textContent = 'Could not read this PDF. It may be corrupted or password-protected.';
+    errorMsg.textContent = 'No se pudo leer este PDF. Puede estar dañado o protegido con contraseña.';
   }
 }
 
@@ -427,9 +496,9 @@ async function loadPlacementPage(pageNum) {
   baseImageCanvas = off;
 
   const widthPx = parseInt(sizeSlider.value, 10) * pageScale;
-  const heightPx = widthPx * (sigCanvas.height / sigCanvas.width);
+  const heightPx = widthPx * STAMP_ASPECT;
   placeX = viewport.width - widthPx - 20;
-  placeY = viewport.height - heightPx - 20;
+  placeY = 20;
   placed = true;
 
   updatePlacementPreview();
@@ -441,15 +510,10 @@ function updatePlacementPreview() {
   ctx.clearRect(0, 0, placementCanvas.width, placementCanvas.height);
   ctx.drawImage(baseImageCanvas, 0, 0);
 
-  if (hasSignature) {
+  if (stampCanvas) {
     const widthPx = parseInt(sizeSlider.value, 10) * pageScale;
-    const heightPx = widthPx * (sigCanvas.height / sigCanvas.width);
-    ctx.drawImage(sigCanvas, placeX, placeY, widthPx, heightPx);
-    ctx.save();
-    ctx.strokeStyle = 'rgba(37, 99, 235, 0.8)';
-    ctx.setLineDash([4, 3]);
-    ctx.strokeRect(placeX, placeY, widthPx, heightPx);
-    ctx.restore();
+    const heightPx = widthPx * STAMP_ASPECT;
+    ctx.drawImage(stampCanvas, placeX, placeY, widthPx, heightPx);
   }
 }
 
@@ -474,58 +538,10 @@ placementCanvas.addEventListener('click', (e) => {
   const clickY = (e.clientY - rect.top) * scaleY;
 
   const widthPx = parseInt(sizeSlider.value, 10) * pageScale;
-  const heightPx = widthPx * (sigCanvas.height / sigCanvas.width);
+  const heightPx = widthPx * STAMP_ASPECT;
   placeX = clickX - widthPx / 2;
   placeY = clickY - heightPx / 2;
   placed = true;
-  updatePlacementPreview();
-});
-
-// Signature pad drawing
-let drawing = false;
-let lastX = 0;
-let lastY = 0;
-
-function sigPos(e) {
-  const rect = sigCanvas.getBoundingClientRect();
-  const scaleX = sigCanvas.width / rect.width;
-  const scaleY = sigCanvas.height / rect.height;
-  return { x: (e.clientX - rect.left) * scaleX, y: (e.clientY - rect.top) * scaleY };
-}
-
-sigCanvas.addEventListener('pointerdown', (e) => {
-  drawing = true;
-  hasSignature = true;
-  const pos = sigPos(e);
-  lastX = pos.x;
-  lastY = pos.y;
-  sigCanvas.setPointerCapture(e.pointerId);
-});
-sigCanvas.addEventListener('pointermove', (e) => {
-  if (!drawing) return;
-  const pos = sigPos(e);
-  const ctx = sigCanvas.getContext('2d');
-  ctx.strokeStyle = '#000';
-  ctx.lineWidth = 3;
-  ctx.lineCap = 'round';
-  ctx.lineJoin = 'round';
-  ctx.beginPath();
-  ctx.moveTo(lastX, lastY);
-  ctx.lineTo(pos.x, pos.y);
-  ctx.stroke();
-  lastX = pos.x;
-  lastY = pos.y;
-});
-sigCanvas.addEventListener('pointerup', () => {
-  drawing = false;
-  updatePlacementPreview();
-});
-sigCanvas.addEventListener('pointerleave', () => { drawing = false; });
-
-clearSigBtn.addEventListener('click', () => {
-  const ctx = sigCanvas.getContext('2d');
-  ctx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
-  hasSignature = false;
   updatePlacementPreview();
 });
 
@@ -534,17 +550,13 @@ downloadBtn.addEventListener('click', async () => {
   errorMsg.textContent = '';
   progressMsg.textContent = '';
 
-  if (!hasSignature) {
-    errorMsg.textContent = 'Draw a signature first.';
-    return;
-  }
   if (!placed) {
-    errorMsg.textContent = 'Choose a page first.';
+    errorMsg.textContent = 'Elige una página primero.';
     return;
   }
 
   downloadBtn.disabled = true;
-  downloadBtn.textContent = 'Signing...';
+  downloadBtn.textContent = 'Sellando...';
   resultEl.innerHTML = '';
 
   try {
@@ -553,11 +565,11 @@ downloadBtn.addEventListener('click', async () => {
     const pdfDoc = await PDFDocument.load(arrayBuffer);
 
     const widthPt = parseInt(sizeSlider.value, 10);
-    const heightPt = widthPt * (sigCanvas.height / sigCanvas.width);
+    const heightPt = widthPt * STAMP_ASPECT;
     const xPt = placeX / pageScale;
     const yPt = pageHeightPt - (placeY / pageScale) - heightPt;
 
-    const pngDataUrl = sigCanvas.toDataURL('image/png');
+    const pngDataUrl = stampCanvas.toDataURL('image/png');
     const pngImage = await pdfDoc.embedPng(pngDataUrl);
 
     const pageNum = parseInt(pageInput.value, 10);
@@ -568,17 +580,17 @@ downloadBtn.addEventListener('click', async () => {
     const blob = new Blob([bytes], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
     const baseName = selectedFile.name.replace(/\.pdf$/i, '');
-    const outName = `${baseName}-signed.pdf`;
+    const outName = `${baseName}-sellado.pdf`;
 
-    progressMsg.textContent = 'Done — ready to download.';
+    progressMsg.textContent = 'Listo — preparado para descargar.';
 
     const card = document.createElement('div');
     card.className = 'result-card';
     card.innerHTML = `
-      <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18c3 1 4-2 6-2s2 3 5 1 4-4 7-2"/></svg></div>
+      <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="5" rx="1"/><path d="M7 7h10l2 5H5z"/><path d="M4 15h16"/><path d="M6 19h12"/></svg></div>
       <div class="result-body">
         <div class="result-filename">${outName}</div>
-        <div class="result-stat">Signed on page ${pageNum} · ${(blob.size / 1024).toFixed(1)} KB</div>
+        <div class="result-stat">Sello "${activeStamp.text}" en la página ${pageNum}</div>
       </div>
     `;
     resultEl.appendChild(card);
@@ -587,14 +599,14 @@ downloadBtn.addEventListener('click', async () => {
     link.href = url;
     link.download = outName;
     link.className = 'back';
-    link.textContent = 'Download Signed PDF';
+    link.textContent = 'Descargar PDF Sellado';
     resultEl.appendChild(link);
   } catch (err) {
-    errorMsg.textContent = err.message || 'Could not sign this PDF.';
+    errorMsg.textContent = err.message || 'No se pudo sellar este PDF.';
   }
 
   downloadBtn.disabled = false;
-  downloadBtn.textContent = 'Sign & Download';
+  downloadBtn.textContent = 'Sellar y Descargar';
 });
 </script>
 </body>
