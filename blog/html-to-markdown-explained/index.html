@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How to Format and Validate JSON (and the Syntax Rules That Actually Matter) | Orisod Blog</title>
-<meta name="description" content="Why copy-pasted JavaScript objects fail as JSON, the exact rules JSON.parse enforces, and when to pretty-print versus minify.">
-<link rel="canonical" href="https://orisod.com/blog/format-json/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/blog/format-json/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/format-json/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/format-json/">
+<title>How HTML Actually Becomes Markdown | Orisod Blog</title>
+<meta name="description" content="Why converting HTML to Markdown is a tree walk with one rule per element type, why Markdown can't represent everything HTML can, and why a table needs a header row to convert at all.">
+<link rel="canonical" href="https://orisod.com/blog/html-to-markdown-explained/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/html-to-markdown-explained/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/html-to-markdown-explained/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/html-to-markdown-explained/">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
 <link rel="icon" href="/favicon.ico">
@@ -137,7 +137,7 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
   </nav>
   <div class="site-nav-right">
     <span class="lang-flag active">EN</span>
-    <a class="lang-flag" href="/es/blog/format-json/">ES</a>
+    <a class="lang-flag" href="/es/blog/html-to-markdown-explained/">ES</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
   </div>
 </header>
@@ -146,83 +146,76 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guides</span>
-<h1>How to Format and Validate JSON (and the Syntax Rules That Actually Matter)</h1>
-<p class="intro">JSON looks close enough to a JavaScript object literal that it's easy to assume they're interchangeable — paste one where the other is expected, and a strict JSON parser will reject it. Here's exactly what JSON requires that plain JavaScript doesn't.</p>
+<h1>How HTML Actually Becomes Markdown</h1>
+<p class="intro">Copy a formatted paragraph from a webpage, paste it somewhere that only understands Markdown, and it just works — headings stay headings, bold stays bold, links stay links. That conversion looks instant, but it's really a small, structured translation process running underneath, one HTML element at a time.</p>
 
 <div class="article-body">
 
-<h2>Where JSON is stricter than a JS object literal</h2>
-<p>JSON was deliberately designed as a small, unambiguous subset of JavaScript's object literal syntax — which makes the differences easy to overlook until <code>JSON.parse()</code> throws on something that looks perfectly reasonable. The four rules that trip people up most often: every key must be a double-quoted string (not unquoted, not single-quoted), every string value must also use double quotes, there can be no trailing comma after the last item in an object or array, and comments aren't allowed anywhere, even though they're valid JavaScript.</p>
+<h2>A tree walk, not a text transformation</h2>
+<p>The browser doesn't hand a converter raw HTML text to pattern-match against — it hands over the DOM, the parsed tree structure the browser already built to render the page: this paragraph contains this bold span, which contains this text node, and so on. A converter walks that tree from the top down, and for every node it encounters, asks one question: what Markdown syntax represents this specific element? A `<strong>` becomes text wrapped in `**`, an `<h2>` becomes a line starting with `##`, an `<a>` becomes `[text](url)`. The output is built by recursively converting each node's children first, then wrapping the result in whatever syntax that node's tag calls for.</p>
+
+<h2>Why this is a mapping, not a translation</h2>
+<p>Every HTML element needs an explicit rule saying what Markdown it becomes — there's no automatic or general-purpose way to derive one from the other, because Markdown wasn't designed to represent everything HTML can. A `<div>` with a custom CSS class carries no Markdown equivalent at all; a converter simply treats it as an invisible wrapper and keeps its content. This is why a mature converter ships with dozens of built-in rules (one per common tag) and lets you register more for anything unusual it encounters.</p>
 
 <figure class="theme-figure">
-<svg viewBox="0 0 700 230" width="700" height="230" role="img" aria-label="Comparison table of four JSON syntax rules: object keys must be double-quoted, strings must be double-quoted, no trailing commas are allowed, and comments are not allowed at all — each shown with an invalid example in red and the valid equivalent in green." xmlns="http://www.w3.org/2000/svg">
-<text x="24" y="28" text-anchor="start" font-size="13" font-weight="bold" fill="var(--muted-text)">RULE</text>
-<text x="260" y="28" text-anchor="start" font-size="13" font-weight="bold" fill="#f87171">✗ INVALID</text>
-<text x="480" y="28" text-anchor="start" font-size="13" font-weight="bold" fill="#4ade80">✓ VALID</text>
-<line x1="0" y1="40" x2="700" y2="40" stroke="var(--border)" stroke-width="1.5"/>
-<text x="24" y="72" text-anchor="start" font-size="14" fill="var(--text)">Object keys</text>
-<text x="260" y="72" text-anchor="start" font-family="Courier New, monospace" font-size="14" fill="#f87171">name:</text>
-<text x="480" y="72" text-anchor="start" font-family="Courier New, monospace" font-size="14" fill="#4ade80">"name":</text>
-<text x="24" y="108" text-anchor="start" font-size="14" fill="var(--text)">String values</text>
-<text x="260" y="108" text-anchor="start" font-family="Courier New, monospace" font-size="14" fill="#f87171">'Ada'</text>
-<text x="480" y="108" text-anchor="start" font-family="Courier New, monospace" font-size="14" fill="#4ade80">"Ada"</text>
-<text x="24" y="144" text-anchor="start" font-size="14" fill="var(--text)">Trailing commas</text>
-<text x="260" y="144" text-anchor="start" font-family="Courier New, monospace" font-size="14" fill="#f87171">["a","b",]</text>
-<text x="480" y="144" text-anchor="start" font-family="Courier New, monospace" font-size="14" fill="#4ade80">["a","b"]</text>
-<text x="24" y="180" text-anchor="start" font-size="14" fill="var(--text)">Comments</text>
-<text x="260" y="180" text-anchor="start" font-family="Courier New, monospace" font-size="14" fill="#f87171">// a note</text>
-<text x="480" y="180" text-anchor="start" font-family="Courier New, monospace" font-size="13" fill="var(--muted-text)">(not allowed at all)</text>
-<line x1="0" y1="198" x2="700" y2="198" stroke="var(--border)" stroke-width="1.5"/>
-<text x="350" y="220" text-anchor="middle" font-size="13" fill="var(--muted-text)">JSON.parse() enforces all four — the error message tells you the exact line and column that broke.</text>
+<svg viewBox="0 0 700 260" width="700" height="260" role="img" aria-label="Diagram showing an HTML DOM tree on the left with an h2 element containing bold and plain text, an arrow labeled walk tree and apply one rule per element, and the resulting Markdown text on the right reading two hash marks then the word Really then two asterisks around important then more text." xmlns="http://www.w3.org/2000/svg">
+<text x="150" y="26" text-anchor="middle" font-size="14" fill="var(--muted-text)">DOM tree</text>
+<rect x="60" y="45" width="180" height="34" rx="4" fill="var(--card-bg)" stroke="var(--accent)" stroke-width="2"/>
+<text x="150" y="67" text-anchor="middle" font-family="Courier New, monospace" font-size="13" fill="var(--accent)">&lt;h2&gt;</text>
+<line x1="90" y1="79" x2="60" y2="115" stroke="var(--border)" stroke-width="1.5"/>
+<line x1="210" y1="79" x2="240" y2="115" stroke="var(--border)" stroke-width="1.5"/>
+<rect x="20" y="115" width="90" height="34" rx="4" fill="var(--card-bg)" stroke="var(--border)" stroke-width="2"/>
+<text x="65" y="137" text-anchor="middle" font-family="Courier New, monospace" font-size="12" fill="var(--text)">"Really "</text>
+<rect x="150" y="115" width="130" height="34" rx="4" fill="var(--card-bg)" stroke="#f59e0b" stroke-width="2"/>
+<text x="215" y="137" text-anchor="middle" font-family="Courier New, monospace" font-size="12" fill="#f59e0b">&lt;strong&gt;important&lt;/&gt;</text>
+<path d="M 300 100 L 380 100" stroke="var(--muted-text)" stroke-width="2"/>
+<polygon points="380,100 369,94 369,106" fill="var(--muted-text)"/>
+<text x="340" y="85" text-anchor="middle" font-size="11.5" font-weight="bold" fill="var(--text)">walk tree,</text>
+<text x="340" y="120" text-anchor="middle" font-size="11.5" font-weight="bold" fill="var(--text)">apply rules</text>
+<rect x="400" y="60" width="260" height="90" rx="6" fill="var(--card-bg)" stroke="var(--border)" stroke-width="2"/>
+<text x="530" y="95" text-anchor="middle" font-family="Courier New, monospace" font-size="15" fill="var(--text)">## Really <tspan fill="#f59e0b">**important**</tspan></text>
+<text x="530" y="125" text-anchor="middle" font-size="11.5" fill="var(--muted-text)">heading rule + bold rule, composed</text>
 </svg>
+<figcaption>The h2 rule wraps its content in "## "; the strong rule found inside it wraps its own content in "**" — each rule only knows about its own element, and the results nest naturally.</figcaption>
 </figure>
 
-<h2>Why pretty-printing matters</h2>
-<p>An API response or a minified config file is usually returned as a single unbroken line — technically valid, but unreadable the moment you need to check a nested value or compare it against something else. Pretty-printing (adding consistent indentation and line breaks) doesn't change the data at all, it just re-serializes the same parsed structure with whitespace a human can actually scan.</p>
+<h2>Why a table needs a heading row to convert at all</h2>
+<p>Markdown's table syntax has a hard requirement HTML tables don't: a separator line of dashes directly under the header row, which is what tells a Markdown renderer where the header ends and the body begins. An HTML table with no `<th>` header cells has no natural source for that line, so a converter genuinely cannot produce a valid Markdown table from it — the honest options are to skip the conversion and leave the original table as raw HTML embedded in the output, or to treat the first row as a header by assumption. This isn't a limitation of the converter; it's a structural requirement of the Markdown table format itself.</p>
 
-<h2>When to minify instead</h2>
-<p>Minifying does the opposite: it strips every non-essential space, so the same data takes less room. That matters when you're pasting JSON somewhere with a character limit, storing it compactly, or sending it over a network where every byte counts — none of which benefit from indentation that a machine doesn't need.</p>
-
-<h2>Common JSON syntax errors and what causes them</h2>
-<ul>
-  <li><strong>Trailing comma</strong> — leaving a comma after the last property or array item, a habit carried over from JavaScript (where it's harmless) or from editing a list and forgetting to remove the old separator.</li>
-  <li><strong>Single-quoted strings</strong> — copying a JavaScript object literal directly, where single and double quotes are interchangeable; JSON only accepts double quotes.</li>
-  <li><strong>Unquoted keys</strong> — same source: JavaScript allows bare identifier keys like <code>name:</code>, JSON requires <code>"name":</code>.</li>
-  <li><strong>Mismatched or missing brackets</strong> — an extra or missing <code>{</code>, <code>}</code>, <code>[</code>, or <code>]</code>, usually from manually editing nested data by hand.</li>
-  <li><strong>A missing comma between properties</strong> — easy to miss when reformatting JSON by hand instead of letting a formatter do it.</li>
-</ul>
+<h2>What never survives the trip</h2>
+<p>Markdown was deliberately kept small: it standardizes headings, emphasis, links, lists, quotes, code, and (in extended dialects) tables — and nothing else. Font choices, custom colors, precise spacing, multi-column layouts, and embedded scripts or styles have no Markdown representation, so a converter drops them rather than inventing non-standard syntax to approximate them. This is a feature, not a gap: Markdown's whole value proposition is being readable as plain text and portable across tools, which only holds if everyone agrees on the same small vocabulary.</p>
 
 <h2>Quick answers</h2>
-<p><strong>Can JSON have comments?</strong> No — not <code>//</code>, not <code>/* */</code>. If you need annotated config, JSON isn't the right format (JSON5 and JSONC are separate, non-standard extensions that add comment support, but a strict JSON parser rejects both).</p>
-<p><strong>Does key order matter in JSON?</strong> Not to the data itself — two objects with the same keys in a different order represent the same value. It only matters if you're comparing raw text (like diffing two files), which is exactly what sorting keys before comparing is for.</p>
-<p><strong>Why does my JSON.parse error just say "position 45" instead of a line number?</strong> That's how V8 (Chrome's JavaScript engine) reports it — a formatter can convert that character offset into a line and column by counting newlines up to that position, which is exactly what a helpful error message should show instead.</p>
+<p><strong>Why does pasted content sometimes carry unexpected formatting?</strong> Rich-text paste from apps like Word or Google Docs often wraps content in extra styling elements the app added for its own rendering — a converter still extracts the underlying structure correctly, but very unusual source formatting can occasionally produce noisier output than clean HTML would.</p>
+<p><strong>Can a link with no visible text convert properly?</strong> Yes — the link's own text content becomes the bracketed label and its href becomes the URL, exactly as with any other link, regardless of how that text was styled.</p>
+<p><strong>Is HTML-to-Markdown conversion reversible?</strong> Not perfectly — converting Markdown back to HTML recovers the structure, but anything Markdown couldn't represent in the first place (custom styling, layout) is already gone and can't be reconstructed from the Markdown alone.</p>
 
 <div class="cta-box">
-  <h3>Format your JSON</h3>
-  <p>Orisod's JSON Formatter pretty-prints, minifies, sorts keys, and points to the exact line and column of any syntax error — entirely in your browser.</p>
-  <a class="cta-button" href="/json-formatter/">Format JSON →</a>
+  <h3>Convert HTML or rich text to Markdown</h3>
+  <p>Orisod's Convert to Markdown tool handles both a normal rich-text paste and raw HTML source, including tables — entirely in your browser.</p>
+  <a class="cta-button" href="/convert-to-markdown/">Convert to Markdown →</a>
 </div>
 
-<p>Most "JSON.parse unexpected token" errors come down to one of the same handful of causes — a stray trailing comma, a copy-pasted single quote, or an unquoted key. Once you know the short list of rules, the fix is usually a five-second read of the error message away.</p>
+<p>Converting HTML to Markdown isn't a single clever trick — it's dozens of small, independent rules, one per element type, applied consistently as a tree gets walked from the top down. Once that's visible, both what survives the conversion and what quietly doesn't stop being a mystery.</p>
 
 </div>
 
 <div class="related-section">
   <h2>Related articles</h2>
   <div class="related-grid">
+    <a class="blog-card" href="/blog/format-json/">
+      <h3>How to Format and Validate JSON (and the Syntax Rules That Actually Matter)</h3>
+      <p>Why copy-pasted JavaScript objects fail as JSON, and the exact rules JSON.parse enforces.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/text-case-styles-explained/">
+      <h3>Text Case Styles Explained: When to Use camelCase, snake_case, and More</h3>
+      <p>What each naming style is actually for, and why the convention matters more than the choice.</p>
+    </a>
+
     <a class="blog-card" href="/blog/word-count-and-reading-time-explained/">
       <h3>How Word Count and Reading Time Estimates Actually Work</h3>
       <p>How word counters split text, why sentence counting is a heuristic, and the math behind a "5 min read" label.</p>
-    </a>
-
-    <a class="blog-card" href="/blog/hex-rgb-hsl-color-formats-explained/">
-      <h3>HEX, RGB, and HSL Explained: What Each Color Format Actually Encodes</h3>
-      <p>What the digits actually represent, and why HSL is often easier to hand-edit than RGB.</p>
-    </a>
-
-    <a class="blog-card" href="/blog/html-to-markdown-explained/">
-      <h3>How HTML Actually Becomes Markdown</h3>
-      <p>Why conversion is a tree walk with one rule per element, and why Markdown can't represent everything HTML can.</p>
     </a>
   </div>
 </div>

@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cómo funcionan realmente el conteo de palabras y las estimaciones de tiempo de lectura | Blog de Orisod</title>
-<meta name="description" content="Cómo dividen realmente el texto en palabras los contadores, por qué el conteo de oraciones es una heurística y no algo exacto, y la matemática simple detrás de una etiqueta &quot;5 min de lectura&quot;.">
-<link rel="canonical" href="https://orisod.com/es/blog/word-count-and-reading-time-explained/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/blog/word-count-and-reading-time-explained/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/word-count-and-reading-time-explained/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/word-count-and-reading-time-explained/">
+<title>Cómo el HTML se convierte realmente en Markdown | Blog de Orisod</title>
+<meta name="description" content="Por qué convertir HTML a Markdown es un recorrido de árbol con una regla por tipo de elemento, por qué Markdown no puede representar todo lo que HTML sí, y por qué una tabla necesita una fila de encabezado para convertirse.">
+<link rel="canonical" href="https://orisod.com/es/blog/html-to-markdown-explained/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/html-to-markdown-explained/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/html-to-markdown-explained/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/html-to-markdown-explained/">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
 <link rel="icon" href="/favicon.ico">
@@ -127,7 +127,7 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <body>
 
 <header class="site-nav">
-  <a class="site-nav-logo" href="/es/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
+  <a class="site-nav-logo" href="/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
   <nav class="site-nav-links">
     <a href="/es/tools/">Todas las herramientas</a>
     <a href="/es/tools/#image">Herramientas de imagen</a>
@@ -136,7 +136,7 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
     <span class="active-category">Blog</span>
   </nav>
   <div class="site-nav-right">
-    <a class="lang-flag" href="/blog/word-count-and-reading-time-explained/">EN</a>
+    <a class="lang-flag" href="/blog/html-to-markdown-explained/">EN</a>
     <span class="lang-flag active">ES</span>
     <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
   </div>
@@ -146,65 +146,76 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guías</span>
-<h1>Cómo funcionan realmente el conteo de palabras y las estimaciones de tiempo de lectura</h1>
-<p class="intro">Un "conteo de palabras" parece que debería ser un número inequívoco, y una etiqueta de "5 min de lectura" parece una medición — ninguna de las dos cosas lo es realmente. Ambas son aproximaciones simples y útiles, construidas sobre reglas que vale la pena conocer antes de confiar en ellas para algo importante.</p>
+<h1>Cómo el HTML se convierte realmente en Markdown</h1>
+<p class="intro">Copia un párrafo con formato de una página web, pégalo en algo que solo entienda Markdown, y simplemente funciona — los encabezados siguen siendo encabezados, la negrita sigue siendo negrita, los enlaces siguen siendo enlaces. Esa conversión parece instantánea, pero en realidad es un proceso de traducción pequeño y estructurado que se ejecuta por debajo, un elemento HTML a la vez.</p>
 
 <div class="article-body">
 
-<h2>Cómo funciona realmente el conteo de palabras</h2>
-<p>El método estándar — usado prácticamente por todos los contadores de palabras, incluidos los procesadores de texto — consiste en dividir el texto por los espacios en blanco y contar los fragmentos resultantes. Eso significa que una palabra compuesta con guion como "bien conocido" cuenta como dos palabras (porque hay un espacio), mientras que "well-known" en inglés cuenta como una sola (sin espacio en medio), y una URL sin espacios cuenta como una sola palabra sin importar su longitud. Por eso el conteo de palabras a veces se siente "raro" con texto de puntuación inusual — el contador no se equivoca, simplemente aplica una regla simple y consistente en lugar de juzgar caso por caso qué es una "palabra real".</p>
+<h2>Un recorrido de árbol, no una transformación de texto</h2>
+<p>El navegador no le entrega a un conversor texto HTML crudo para buscar patrones — le entrega el DOM, la estructura de árbol ya interpretada que el navegador construyó para renderizar la página: este párrafo contiene este span en negrita, que contiene este nodo de texto, y así sucesivamente. Un conversor recorre ese árbol de arriba hacia abajo, y para cada nodo que encuentra, hace una pregunta: ¿qué sintaxis de Markdown representa este elemento específico? Un `<strong>` se convierte en texto envuelto en `**`, un `<h2>` se convierte en una línea que empieza con `##`, un `<a>` se convierte en `[texto](url)`. El resultado se construye convirtiendo recursivamente primero los hijos de cada nodo, y luego envolviendo el resultado con la sintaxis que exige la etiqueta de ese nodo.</p>
 
-<h2>Por qué el conteo de oraciones es una heurística, no una ciencia exacta</h2>
-<p>El conteo de oraciones busca <code>.</code>, <code>!</code> y <code>?</code> como puntuación de fin de oración. Es una aproximación razonable, pero falla de forma predecible: las abreviaturas. "El Dr. García llegó a las 3 p. m. y se fue una hora después" contiene puntos que no son fin de oración en absoluto — un contador basado solo en puntuación seguirá contándolos como tales, sobrestimando ligeramente el número real de oraciones. La detección real de oraciones en lenguaje natural (la que sabe que "Dr." no es un fin de oración) requiere un diccionario de abreviaturas conocidas y análisis lingüístico real — mucho más de lo que necesita un contador ligero del lado del cliente para cumplir su función real: dar una estimación cercana y útil, no un análisis lingüístico de nivel editorial.</p>
-
-<h2>La matemática detrás de una estimación de tiempo de lectura</h2>
-<p>Una etiqueta de "tiempo de lectura" es simplemente el número de palabras dividido entre una velocidad de lectura asumida, redondeado a un número entero de minutos. La velocidad promedio de lectura silenciosa de un adulto que más se cita ronda las 200–250 palabras por minuto; 200 es la referencia más conservadora y ampliamente usada.</p>
+<h2>Por qué esto es un mapeo, no una traducción</h2>
+<p>Cada elemento HTML necesita una regla explícita que diga en qué Markdown se convierte — no existe una forma automática o de propósito general de derivar uno del otro, porque Markdown no fue diseñado para representar todo lo que HTML puede. Un `<div>` con una clase CSS personalizada no tiene ningún equivalente en Markdown; un conversor simplemente lo trata como un envoltorio invisible y conserva su contenido. Por eso un conversor maduro incluye decenas de reglas integradas (una por cada etiqueta común) y permite registrar más para cualquier cosa inusual que encuentre.</p>
 
 <figure class="theme-figure">
-<svg viewBox="0 0 700 170" width="700" height="170" role="img" aria-label="Diagrama que muestra la fórmula del tiempo de lectura: número de palabras dividido entre 200 palabras por minuto es igual a los minutos estimados, ilustrado con un ejemplo de 1200 palabras divididas entre 200 igual a 6 minutos." xmlns="http://www.w3.org/2000/svg">
-<text x="350" y="45" text-anchor="middle" font-size="20" fill="var(--text)">n.º de palabras ÷ 200 palabras/min = minutos estimados</text>
-<line x1="60" y1="70" x2="640" y2="70" stroke="var(--border)" stroke-width="1.5"/>
-<text x="350" y="105" text-anchor="middle" font-family="Courier New, monospace" font-size="20" font-weight="bold" fill="var(--accent)">1,200 palabras ÷ 200 = 6 min de lectura</text>
-<text x="350" y="145" text-anchor="middle" font-size="13" fill="var(--muted-text)">Redondeado al minuto más cercano, con un mínimo de 1 minuto para cualquier texto no vacío.</text>
+<svg viewBox="0 0 700 260" width="700" height="260" role="img" aria-label="Diagrama que muestra un árbol DOM de HTML a la izquierda con un elemento h2 que contiene texto en negrita y texto normal, una flecha etiquetada recorrer el árbol y aplicar una regla por elemento, y el texto Markdown resultante a la derecha que dice dos signos de almohadilla, luego la palabra Really, luego dos asteriscos alrededor de important, y más texto." xmlns="http://www.w3.org/2000/svg">
+<text x="150" y="26" text-anchor="middle" font-size="14" fill="var(--muted-text)">Árbol DOM</text>
+<rect x="60" y="45" width="180" height="34" rx="4" fill="var(--card-bg)" stroke="var(--accent)" stroke-width="2"/>
+<text x="150" y="67" text-anchor="middle" font-family="Courier New, monospace" font-size="13" fill="var(--accent)">&lt;h2&gt;</text>
+<line x1="90" y1="79" x2="60" y2="115" stroke="var(--border)" stroke-width="1.5"/>
+<line x1="210" y1="79" x2="240" y2="115" stroke="var(--border)" stroke-width="1.5"/>
+<rect x="20" y="115" width="90" height="34" rx="4" fill="var(--card-bg)" stroke="var(--border)" stroke-width="2"/>
+<text x="65" y="137" text-anchor="middle" font-family="Courier New, monospace" font-size="12" fill="var(--text)">"Really "</text>
+<rect x="150" y="115" width="130" height="34" rx="4" fill="var(--card-bg)" stroke="#f59e0b" stroke-width="2"/>
+<text x="215" y="137" text-anchor="middle" font-family="Courier New, monospace" font-size="12" fill="#f59e0b">&lt;strong&gt;important&lt;/&gt;</text>
+<path d="M 300 100 L 380 100" stroke="var(--muted-text)" stroke-width="2"/>
+<polygon points="380,100 369,94 369,106" fill="var(--muted-text)"/>
+<text x="340" y="85" text-anchor="middle" font-size="11.5" font-weight="bold" fill="var(--text)">recorrer árbol,</text>
+<text x="340" y="120" text-anchor="middle" font-size="11.5" font-weight="bold" fill="var(--text)">aplicar reglas</text>
+<rect x="400" y="60" width="260" height="90" rx="6" fill="var(--card-bg)" stroke="var(--border)" stroke-width="2"/>
+<text x="530" y="95" text-anchor="middle" font-family="Courier New, monospace" font-size="15" fill="var(--text)">## Really <tspan fill="#f59e0b">**important**</tspan></text>
+<text x="530" y="125" text-anchor="middle" font-size="11.5" fill="var(--muted-text)">regla de encabezado + regla de negrita, combinadas</text>
 </svg>
+<figcaption>La regla del h2 envuelve su contenido en "## "; la regla de strong encontrada dentro envuelve su propio contenido en "**" — cada regla solo conoce su propio elemento, y los resultados se anidan de forma natural.</figcaption>
 </figure>
 
-<p>Ese es todo el cálculo — no hay ajuste por la complejidad de las oraciones, la dificultad del vocabulario ni la velocidad propia del lector, porque un contador de propósito general no tiene forma de saber nada de eso. Trata el número como una estimación aproximada, de orden de magnitud ("un par de minutos" frente a "como un cuarto de hora"), no como una predicción precisa.</p>
+<h2>Por qué una tabla necesita una fila de encabezado para convertirse siquiera</h2>
+<p>La sintaxis de tablas de Markdown tiene un requisito estricto que las tablas HTML no tienen: una línea separadora de guiones justo debajo de la fila de encabezado, que es lo que le indica a un renderizador de Markdown dónde termina el encabezado y empieza el cuerpo. Una tabla HTML sin celdas `<th>` de encabezado no tiene una fuente natural para esa línea, así que un conversor genuinamente no puede producir una tabla Markdown válida a partir de ella — las opciones honestas son omitir la conversión y dejar la tabla original como HTML crudo incrustado en el resultado, o tratar la primera fila como encabezado por suposición. Esto no es una limitación del conversor; es un requisito estructural del propio formato de tabla de Markdown.</p>
 
-<h2>Por qué los límites de palabras o caracteres varían según la plataforma</h2>
-<p>Distintas plataformas imponen límites por razones distintas, por eso no existe un límite "correcto" único sobre el cual diseñar: una meta descripción de un buscador se corta en un ancho de píxeles que varía según el dispositivo (comúnmente aproximado en ~155–160 caracteres), un mensaje SMS está limitado a 160 caracteres por razones históricas del protocolo, y el límite de una publicación en redes sociales es simplemente una decisión de producto de esa plataforma. Si estás escribiendo con un límite específico en mente, consulta el número oficial actual de esa plataforma en lugar de una regla general — estos límites cambian con el tiempo.</p>
+<h2>Qué nunca sobrevive al viaje</h2>
+<p>Markdown se mantuvo deliberadamente pequeño: estandariza encabezados, énfasis, enlaces, listas, citas, código y (en dialectos extendidos) tablas — y nada más. Las fuentes personalizadas, los colores, el espaciado preciso, los diseños de varias columnas y los scripts o estilos incrustados no tienen representación en Markdown, así que un conversor los descarta en vez de inventar sintaxis no estándar para aproximarlos. Esto es una característica, no una carencia: todo el valor de Markdown está en ser legible como texto plano y portable entre herramientas, algo que solo se sostiene si todos usan el mismo vocabulario reducido.</p>
 
 <h2>Respuestas rápidas</h2>
-<p><strong>¿Por qué mi conteo de palabras difiere ligeramente del de otra herramienta?</strong> Distintas herramientas a veces toman decisiones diferentes en casos límite — cómo tratan varios espacios consecutivos, saltos de línea, o "palabras" formadas solo por puntuación. Las diferencias pequeñas (unas pocas palabras en un documento largo) suelen ser solo reglas de desempate distintas, no un error en ninguna de las dos herramientas.</p>
-<p><strong>¿El conteo de párrafos incluye los saltos de línea simples?</strong> No, según la convención habitual (y la que usa el contador de este sitio) un párrafo es un bloque de texto separado por al menos una línea completamente en blanco — varias líneas de texto sin ninguna línea en blanco entre ellas cuentan como un solo párrafo.</p>
-<p><strong>¿200 palabras por minuto es preciso para mí en particular?</strong> Probablemente no exactamente — la velocidad de lectura varía mucho según la persona, el idioma, la familiaridad con el tema y el formato (lectura rápida frente a lectura cuidadosa). 200 ppm es un promedio poblacional usado como valor por defecto razonable, no una medición personalizada.</p>
+<p><strong>¿Por qué el contenido pegado a veces trae formato inesperado?</strong> El pegado de texto enriquecido desde apps como Word o Google Docs suele envolver el contenido en elementos de estilo extra que la app añadió para su propio renderizado — un conversor sigue extrayendo la estructura subyacente correctamente, pero un formato de origen muy inusual puede producir ocasionalmente un resultado más ruidoso que un HTML limpio.</p>
+<p><strong>¿Un enlace sin texto visible se convierte correctamente?</strong> Sí — el propio contenido de texto del enlace se convierte en la etiqueta entre corchetes y su href se convierte en la URL, igual que con cualquier otro enlace, sin importar cómo se haya estilizado ese texto.</p>
+<p><strong>¿La conversión de HTML a Markdown es reversible?</strong> No perfectamente — convertir Markdown de vuelta a HTML recupera la estructura, pero cualquier cosa que Markdown no pudiera representar desde el principio (estilo personalizado, diseño) ya se perdió y no puede reconstruirse solo a partir del Markdown.</p>
 
 <div class="cta-box">
-  <h3>Cuenta tu texto</h3>
-  <p>El Contador de Palabras y Caracteres de Orisod rastrea palabras, caracteres, oraciones, párrafos y el tiempo de lectura estimado en vivo mientras escribes — todo en tu navegador.</p>
-  <a class="cta-button" href="/es/word-character-counter/">Contar palabras y caracteres →</a>
+  <h3>Convierte HTML o texto enriquecido a Markdown</h3>
+  <p>La herramienta Convertir a Markdown de Orisod maneja tanto un pegado normal de texto enriquecido como código HTML crudo, incluidas tablas — todo en tu navegador.</p>
+  <a class="cta-button" href="/es/convert-to-markdown/">Convertir a Markdown →</a>
 </div>
 
-<p>Tanto el conteo de palabras como las estimaciones de tiempo de lectura son útiles precisamente porque son simples y consistentes, no porque sean perfectamente precisos. Conocer la regla detrás del número suele ser suficiente para saber cuándo confiar en él y cuándo tomarlo solo como una guía aproximada.</p>
+<p>Convertir HTML a Markdown no es un único truco ingenioso — son decenas de reglas pequeñas e independientes, una por tipo de elemento, aplicadas de forma consistente mientras se recorre un árbol de arriba hacia abajo. Una vez que eso se hace visible, tanto lo que sobrevive a la conversión como lo que calladamente no lo hace dejan de ser un misterio.</p>
 
 </div>
 
 <div class="related-section">
   <h2>Artículos relacionados</h2>
   <div class="related-grid">
-    <a class="blog-card" href="/es/blog/text-case-styles-explained/">
-      <h3>Estilos de mayúsculas y minúsculas explicados: cuándo usar camelCase, snake_case y más</h3>
-      <p>Para qué sirve realmente cada estilo de nomenclatura, y por qué importa más la convención que la elección.</p>
-    </a>
-
     <a class="blog-card" href="/es/blog/format-json/">
       <h3>Cómo formatear y validar JSON (y las reglas de sintaxis que realmente importan)</h3>
       <p>Por qué un objeto de JavaScript copiado falla como JSON, y las reglas exactas que exige JSON.parse.</p>
     </a>
 
-    <a class="blog-card" href="/es/blog/html-to-markdown-explained/">
-      <h3>Cómo el HTML se convierte realmente en Markdown</h3>
-      <p>Por qué la conversión es un recorrido de árbol con una regla por elemento, y por qué Markdown no puede representar todo lo que HTML sí.</p>
+    <a class="blog-card" href="/es/blog/text-case-styles-explained/">
+      <h3>Estilos de mayúsculas y minúsculas explicados: cuándo usar camelCase, snake_case y más</h3>
+      <p>Para qué sirve realmente cada estilo de nomenclatura, y por qué importa más la convención que la elección.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/word-count-and-reading-time-explained/">
+      <h3>Cómo funcionan realmente el conteo de palabras y las estimaciones de tiempo de lectura</h3>
+      <p>Cómo dividen el texto los contadores, por qué el conteo de oraciones es una heurística, y la matemática detrás de un "5 min de lectura".</p>
     </a>
   </div>
 </div>
