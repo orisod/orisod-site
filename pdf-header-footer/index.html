@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Add Page Numbers to PDF – Free Online Tool | Orisod</title>
-<meta name="description" content="Stamp page numbers onto a PDF online for free. Choose the position and starting number — works directly in your browser, no files are uploaded.">
-<link rel="canonical" href="https://orisod.com/add-page-numbers/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/add-page-numbers/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/add-page-numbers/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/add-page-numbers/">
+<title>PDF Header & Footer – Free Online Tool | Orisod</title>
+<meta name="description" content="Add custom header and footer text to every page of a PDF — titles, dates, page numbers, confidentiality notices. Works directly in your browser, no files are uploaded.">
+<link rel="canonical" href="https://orisod.com/pdf-header-footer/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/pdf-header-footer/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/pdf-header-footer/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/pdf-header-footer/">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
 <link rel="icon" href="/favicon.ico">
@@ -71,7 +71,6 @@
 .result-card .result-body{flex:1 1 auto;min-width:0;}
 .result-card .result-filename{font-size:14px;font-weight:bold;margin-bottom:4px;word-break:break-all;}
 .result-stat{font-size:15px;opacity:0.9;}
-.result-stat .saved{color:#4ade80;font-weight:bold;}
 .site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
 .site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);display:inline-flex;align-items:center;gap:8px;}
 .site-nav-logo img{height:26px;width:auto;display:block;}
@@ -94,13 +93,21 @@ p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-heigh
 .dropzone:hover, .dropzone.dragover{border-color:var(--accent);}
 input[type="file"]{display:none;}
 .page-info{margin-top:16px;font-size:14px;opacity:0.75;}
-.number-options{margin-top:20px;text-align:left;}
+.hf-options{margin-top:20px;text-align:left;}
 .option-card{color:var(--text);background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:18px;margin-bottom:14px;}
-.option-card h3{margin:0 0 8px 0;font-size:15px;}
+.option-card h3{margin:0 0 8px 0;font-size:15px;display:flex;align-items:center;gap:10px;}
 .option-card p{margin:0 0 12px 0;font-size:13px;opacity:0.7;text-align:left;}
-.position-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:8px;max-width:360px;margin:10px auto 0 auto;}
-.position-btn{padding:10px 8px;border-radius:6px;border:1px solid var(--dropzone-border);background:var(--card-bg);color:var(--text);cursor:pointer;font-size:12px;text-align:center;}
-.position-btn.active{background:var(--accent);border-color:var(--accent);color:white;}
+.hf-toggle{display:flex;align-items:center;gap:8px;cursor:pointer;}
+.hf-toggle input{width:16px;height:16px;cursor:pointer;}
+.hf-body{margin-top:12px;}
+.hf-body.disabled{opacity:0.4;pointer-events:none;}
+.hf-text-input{width:100%;padding:10px 12px;border-radius:6px;border:1px solid var(--dropzone-border);background:var(--card-bg);color:var(--text);font-size:14px;font-family:Arial, Helvetica, sans-serif;}
+.align-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:8px;max-width:280px;margin:10px 0 0 0;}
+.align-btn{padding:9px 8px;border-radius:6px;border:1px solid var(--dropzone-border);background:var(--card-bg);color:var(--text);cursor:pointer;font-size:12px;text-align:center;}
+.align-btn.active{background:var(--accent);border-color:var(--accent);color:white;}
+.token-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+.token-btn{padding:7px 12px;border-radius:6px;border:1px solid var(--dropzone-border);background:var(--bg);color:var(--text);cursor:pointer;font-size:12px;margin-top:0;}
+.token-btn:hover{border-color:var(--accent);}
 .option-card input[type="number"]{
   padding:10px;border-radius:6px;border:1px solid var(--dropzone-border);background:var(--card-bg);color:var(--text);font-size:14px;width:100px;
 }
@@ -132,6 +139,7 @@ button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
 .footer-col a:hover{opacity:1;color:var(--accent);}
 .error{color:#f87171;font-size:14px;margin-top:10px;}
 .progress{font-size:14px;opacity:0.7;margin-top:10px;}
+.trust-strip{font-size:12px;color:var(--muted-text);margin-top:12px;line-height:1.5;}
 h2{margin-top:50px;font-size:22px;}
 .seo-content{max-width:700px;margin:0 auto;text-align:left;}
 .seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
@@ -152,7 +160,6 @@ h2{margin-top:50px;font-size:22px;}
 .related-card .desc{font-size:12px;color:var(--muted-text);line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .related-card .arrow{flex:none;font-size:16px;color:var(--muted-text);transition:0.2s;}
 .related-card:hover .arrow{color:var(--accent);transform:translateX(2px);}
-.trust-strip{font-size:12px;color:var(--muted-text);margin-top:12px;line-height:1.5;}
 </style>
 </head>
 <body>
@@ -168,7 +175,7 @@ h2{margin-top:50px;font-size:22px;}
   </nav>
   <div class="site-nav-right">
     <span class="lang-flag active">EN</span>
-    <a class="lang-flag" href="/es/add-page-numbers/">ES</a>
+    <a class="lang-flag" href="/es/pdf-header-footer/">ES</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
   </div>
 </header>
@@ -176,10 +183,10 @@ h2{margin-top:50px;font-size:22px;}
 <main>
 <div class="container">
   <div class="tool-hero">
-    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><circle cx="17" cy="17" r="3"/><path d="M17 15.5v3"/></svg></div>
-    <h1>Add Page Numbers</h1>
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="1.5"/><path d="M7 6h10M7 18h10"/></svg></div>
+    <h1>PDF Header & Footer</h1>
   </div>
-  <p class="tool-sub">Stamp page numbers onto every page of a PDF. Choose the position and starting number — everything happens locally in your browser.</p>
+  <p class="tool-sub">Add custom header and/or footer text to every page — a title, date, confidentiality notice, or page count. Everything happens locally in your browser.</p>
 
   <div class="workspace">
     <div class="box">
@@ -191,27 +198,48 @@ h2{margin-top:50px;font-size:22px;}
       <div class="trust-strip">🔒 Processed on your device · No upload · No account · No watermark</div>
       <div class="page-info" id="pageInfo"></div>
 
-      <div class="number-options" id="numberOptions" style="display:none;">
+      <div class="hf-options" id="hfOptions" style="display:none;">
         <div class="option-card">
-          <h3>Position</h3>
-          <div class="position-grid">
-            <div class="position-btn" data-pos="top-left">Top Left</div>
-            <div class="position-btn" data-pos="top-center">Top Center</div>
-            <div class="position-btn" data-pos="top-right">Top Right</div>
-            <div class="position-btn" data-pos="bottom-left">Bottom Left</div>
-            <div class="position-btn active" data-pos="bottom-center">Bottom Center</div>
-            <div class="position-btn" data-pos="bottom-right">Bottom Right</div>
+          <h3><label class="hf-toggle"><input type="checkbox" id="headerEnable"> Header</label></h3>
+          <div class="hf-body disabled" id="headerBody">
+            <input type="text" class="hf-text-input" id="headerText" placeholder="e.g. Company Name">
+            <div class="align-grid">
+              <div class="align-btn" data-target="header" data-align="left">Left</div>
+              <div class="align-btn active" data-target="header" data-align="center">Center</div>
+              <div class="align-btn" data-target="header" data-align="right">Right</div>
+            </div>
+            <div class="token-btns">
+              <button type="button" class="token-btn" data-target="header" data-token="{page}">Insert Page #</button>
+              <button type="button" class="token-btn" data-target="header" data-token="{pages}">Insert Total Pages</button>
+              <button type="button" class="token-btn" data-target="header" data-token="{date}">Insert Date</button>
+            </div>
           </div>
         </div>
 
         <div class="option-card">
-          <h3>Starting number</h3>
-          <p>The first page will show this number, counting up from there.</p>
-          <input type="number" id="startNumberInput" min="0" value="1">
+          <h3><label class="hf-toggle"><input type="checkbox" id="footerEnable" checked> Footer</label></h3>
+          <div class="hf-body" id="footerBody">
+            <input type="text" class="hf-text-input" id="footerText" placeholder="e.g. Page {page} of {pages}" value="Page {page} of {pages}">
+            <div class="align-grid">
+              <div class="align-btn" data-target="footer" data-align="left">Left</div>
+              <div class="align-btn active" data-target="footer" data-align="center">Center</div>
+              <div class="align-btn" data-target="footer" data-align="right">Right</div>
+            </div>
+            <div class="token-btns">
+              <button type="button" class="token-btn" data-target="footer" data-token="{page}">Insert Page #</button>
+              <button type="button" class="token-btn" data-target="footer" data-token="{pages}">Insert Total Pages</button>
+              <button type="button" class="token-btn" data-target="footer" data-token="{date}">Insert Date</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="option-card">
+          <h3>Font size</h3>
+          <input type="number" id="fontSizeInput" min="6" max="36" value="10">
         </div>
 
         <div class="workspace-controls">
-          <button id="addNumbersBtn">Add Page Numbers &amp; Download</button>
+          <button id="applyBtn">Add Header/Footer & Download</button>
           <div class="progress" id="progressMsg"></div>
         </div>
       </div>
@@ -222,28 +250,31 @@ h2{margin-top:50px;font-size:22px;}
 
   <div class="seo-content">
     <h2>What does this tool do?</h2>
-    <p>This tool stamps a page number onto every page of your PDF, at the position you choose, starting from whatever number you set. The underlying PDF content stays exactly as it was — text remains selectable, only a number is added to each page.</p>
+    <p>This tool draws your own header and/or footer text onto every page of a PDF — a title, company name, confidentiality notice, date, or page count, aligned left, center, or right. Small "insert" buttons let you drop in a page number, the total page count, or today's date without needing to type any special syntax yourself. The underlying PDF content is untouched — text stays selectable, only your header/footer text is added.</p>
 
-    <h2>When should you use it?</h2>
+    <h2>When should you use this tool?</h2>
     <ul>
-      <li>You're preparing a document for printing and readers need to reference specific pages</li>
-      <li>You're assembling a report, contract, or manuscript that needs page references</li>
-      <li>Your document doesn't start at page 1 (for example, it continues from another document) and you need a custom starting number</li>
-      <li>You want page numbers in a specific corner instead of wherever a printer defaults to</li>
+      <li>You need a document title or company name repeated at the top of every page</li>
+      <li>You want "Page 3 of 12" style page counts instead of a bare number</li>
+      <li>You're marking a document as a draft, confidential, or dated for a specific version</li>
+      <li>You just want a plain page number in a corner — for that simpler case, see <a href="/add-page-numbers/" style="color:var(--accent);text-decoration:none;">Add Page Numbers</a> instead</li>
     </ul>
+
+    <h2>Why Orisod</h2>
+    <p>No account, no upload, no watermark — the PDF is read and modified entirely on your device with pdf-lib, so the file's existing text and structure stay exactly as they were. Header and footer text are added as real, selectable text, not flattened images.</p>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
-      <div class="q">Does this affect text selectability?</div>
-      <div>No, the existing PDF content is preserved exactly — only a page number is drawn onto each page.</div>
+      <div class="q">What's the difference between this and Add Page Numbers?</div>
+      <div>Add Page Numbers stamps a single number in one of six corners — it's the simplest option if that's literally all you need. This tool is for actual header/footer text — a title, notice, or date — which can optionally include a page number as part of a longer line, like "Draft — Page 3 of 12".</div>
     </div>
     <div class="faq-item">
-      <div class="q">Can I start counting from a number other than 1?</div>
-      <div>Yes, set any starting number and the count will continue upward from there across the document.</div>
+      <div class="q">What date format does {date} insert?</div>
+      <div>Today's date in the unambiguous <code style="background:var(--bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;">YYYY-MM-DD</code> format, so it reads the same way regardless of which country's date convention a reader is used to.</div>
     </div>
     <div class="faq-item">
-      <div class="q">Can I choose where the number appears?</div>
-      <div>Yes, pick from six positions — top or bottom, left, center, or right.</div>
+      <div class="q">Can I use different fonts, colors, or bold text?</div>
+      <div>Not currently — header and footer text is drawn in a single default font at a size you choose, kept simple on purpose. If you need heavier styling or a logo image, see Watermark PDF or the full PDF Editor.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my PDF uploaded to a server?</div>
@@ -251,47 +282,31 @@ h2{margin-top:50px;font-size:22px;}
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/add-page-numbers-to-pdf/" style="color:var(--accent);text-decoration:none;">How to Add Page Numbers to a PDF</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/pdf-header-footer-explained/" style="color:var(--accent);text-decoration:none;">How to Add a Header or Footer to Every Page of a PDF</a></p>
 
   <h2>Related tools</h2>
   <div class="related-grid">
-  <a class="related-card" href="/merge-pdf/">
-    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v12M8 6l4-4 4 4"/><path d="M6 22l6-6 6 6"/></svg></div>
+  <a class="related-card" href="/add-page-numbers/">
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><circle cx="17" cy="17" r="3"/><path d="M17 15.5v3"/></svg></div>
     <div class="body">
-      <div class="title">Merge PDF</div>
-      <div class="desc">Combine multiple PDFs into one.</div>
+      <div class="title">Add Page Numbers</div>
+      <div class="desc">Stamp a page number in any corner.</div>
     </div>
     <div class="arrow">→</div>
   </a>
-  <a class="related-card" href="/pdf-page-organizer/">
-    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="7" width="12" height="14" rx="1"/><rect x="8" y="3" width="12" height="14" rx="1"/></svg></div>
+  <a class="related-card" href="/watermark-pdf/">
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.8 6 11.2A6 6 0 0 1 6 14.2C6 9.8 12 3 12 3z"/></svg></div>
     <div class="body">
-      <div class="title">PDF Page Organizer</div>
-      <div class="desc">Drag to reorder or delete pages.</div>
+      <div class="title">Watermark PDF</div>
+      <div class="desc">Stamp text across every page.</div>
     </div>
     <div class="arrow">→</div>
   </a>
-  <a class="related-card" href="/rotate-pdf/">
-    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 1 3 6.7"/><path d="M3 19v-5h5"/></svg></div>
+  <a class="related-card" href="/pdf-editor/">
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M9 16l5-5 2 2-5 5H9v-2z"/><path d="M8 20h4"/></svg></div>
     <div class="body">
-      <div class="title">Rotate PDF Pages</div>
-      <div class="desc">Rotate all or specific pages.</div>
-    </div>
-    <div class="arrow">→</div>
-  </a>
-  <a class="related-card" href="/edit-pdf-metadata/">
-    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M9.5 17l1-4L15 8.5 16.5 10 12 14.5z"/></svg></div>
-    <div class="body">
-      <div class="title">Edit PDF Metadata</div>
-      <div class="desc">Change title, author, subject &amp; keywords.</div>
-    </div>
-    <div class="arrow">→</div>
-  </a>
-  <a class="related-card" href="/pdf-header-footer/">
-    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="1.5"/><path d="M7 6h10M7 18h10"/></svg></div>
-    <div class="body">
-      <div class="title">PDF Header & Footer</div>
-      <div class="desc">Add custom header/footer text to every page.</div>
+      <div class="title">PDF Editor</div>
+      <div class="desc">Add text boxes, highlights, and markup.</div>
     </div>
     <div class="arrow">→</div>
   </a>
@@ -349,21 +364,53 @@ const dropzone = document.getElementById('dropzone');
 const dropzoneText = document.getElementById('dropzoneText');
 const errorMsg = document.getElementById('errorMsg');
 const pageInfo = document.getElementById('pageInfo');
-const numberOptions = document.getElementById('numberOptions');
-const startNumberInput = document.getElementById('startNumberInput');
-const addNumbersBtn = document.getElementById('addNumbersBtn');
+const hfOptions = document.getElementById('hfOptions');
+const headerEnable = document.getElementById('headerEnable');
+const footerEnable = document.getElementById('footerEnable');
+const headerBody = document.getElementById('headerBody');
+const footerBody = document.getElementById('footerBody');
+const headerText = document.getElementById('headerText');
+const footerText = document.getElementById('footerText');
+const fontSizeInput = document.getElementById('fontSizeInput');
+const applyBtn = document.getElementById('applyBtn');
 const resultEl = document.getElementById('result');
 const progressMsg = document.getElementById('progressMsg');
 
 let selectedFile = null;
 let totalPages = 0;
-let selectedPosition = 'bottom-center';
+let headerAlign = 'center';
+let footerAlign = 'center';
 
-document.querySelectorAll('.position-btn').forEach(btn => {
+headerEnable.addEventListener('change', () => {
+  headerBody.classList.toggle('disabled', !headerEnable.checked);
+});
+footerEnable.addEventListener('change', () => {
+  footerBody.classList.toggle('disabled', !footerEnable.checked);
+});
+
+document.querySelectorAll('.align-btn').forEach((btn) => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.position-btn').forEach(b => b.classList.remove('active'));
+    const target = btn.dataset.target;
+    document.querySelectorAll(`.align-btn[data-target="${target}"]`).forEach((b) => b.classList.remove('active'));
     btn.classList.add('active');
-    selectedPosition = btn.dataset.pos;
+    if (target === 'header') headerAlign = btn.dataset.align;
+    else footerAlign = btn.dataset.align;
+  });
+});
+
+function insertAtCursor(input, text) {
+  const start = input.selectionStart != null ? input.selectionStart : input.value.length;
+  const end = input.selectionEnd != null ? input.selectionEnd : input.value.length;
+  input.value = input.value.slice(0, start) + text + input.value.slice(end);
+  const pos = start + text.length;
+  input.focus();
+  input.setSelectionRange(pos, pos);
+}
+
+document.querySelectorAll('.token-btn').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const target = btn.dataset.target === 'header' ? headerText : footerText;
+    insertAtCursor(target, btn.dataset.token);
   });
 });
 
@@ -393,71 +440,95 @@ async function handleFile(file) {
 
     dropzoneText.textContent = `✅ ${file.name} loaded`;
     pageInfo.textContent = `This PDF has ${totalPages} page${totalPages !== 1 ? 's' : ''}.`;
-    numberOptions.style.display = 'block';
+    hfOptions.style.display = 'block';
   } catch (err) {
     errorMsg.textContent = 'Could not read this PDF. It may be corrupted or password-protected.';
-    numberOptions.style.display = 'none';
+    hfOptions.style.display = 'none';
     pageInfo.textContent = '';
   }
 }
 
-function getPosition(position, pageWidth, pageHeight, textWidth, fontSize) {
-  const margin = 24;
-  let x, y;
-
-  if (position.endsWith('left')) x = margin;
-  else if (position.endsWith('right')) x = pageWidth - textWidth - margin;
-  else x = (pageWidth - textWidth) / 2;
-
-  if (position.startsWith('top')) y = pageHeight - margin - fontSize;
-  else y = margin;
-
-  return { x, y };
+function todayStr() {
+  const d = new Date();
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
 
-addNumbersBtn.addEventListener('click', async () => {
+function resolveTokens(template, pageNum, pageCount) {
+  return template
+    .split('{page}').join(String(pageNum))
+    .split('{pages}').join(String(pageCount))
+    .split('{date}').join(todayStr());
+}
+
+function getX(align, pageWidth, textWidth) {
+  const margin = 30;
+  if (align === 'left') return margin;
+  if (align === 'right') return pageWidth - textWidth - margin;
+  return (pageWidth - textWidth) / 2;
+}
+
+applyBtn.addEventListener('click', async () => {
   errorMsg.textContent = '';
   progressMsg.textContent = '';
   resultEl.innerHTML = '';
-  addNumbersBtn.disabled = true;
-  addNumbersBtn.textContent = 'Adding numbers...';
+
+  const doHeader = headerEnable.checked && headerText.value.trim() !== '';
+  const doFooter = footerEnable.checked && footerText.value.trim() !== '';
+
+  if (!doHeader && !doFooter) {
+    errorMsg.textContent = 'Enable a header or footer and enter some text first.';
+    return;
+  }
+
+  applyBtn.disabled = true;
+  applyBtn.textContent = 'Applying...';
 
   try {
-    const startNumber = parseInt(startNumberInput.value, 10);
-    if (isNaN(startNumber)) {
-      throw new Error('Please enter a valid starting number.');
-    }
-
+    const fontSize = parseInt(fontSizeInput.value, 10) || 10;
     const { PDFDocument, StandardFonts } = PDFLib;
     const arrayBuffer = await selectedFile.arrayBuffer();
     const pdf = await PDFDocument.load(arrayBuffer);
     const font = await pdf.embedFont(StandardFonts.Helvetica);
-    const fontSize = 11;
     const pages = pdf.getPages();
+    const margin = 30;
 
     pages.forEach((page, i) => {
-      const label = String(startNumber + i);
       const { width, height } = page.getSize();
-      const textWidth = font.widthOfTextAtSize(label, fontSize);
-      const { x, y } = getPosition(selectedPosition, width, height, textWidth, fontSize);
-      page.drawText(label, { x, y, size: fontSize, font });
+      const pageNum = i + 1;
+
+      if (doHeader) {
+        const label = resolveTokens(headerText.value, pageNum, pages.length);
+        const textWidth = font.widthOfTextAtSize(label, fontSize);
+        const x = getX(headerAlign, width, textWidth);
+        const y = height - margin - fontSize;
+        page.drawText(label, { x, y, size: fontSize, font });
+      }
+
+      if (doFooter) {
+        const label = resolveTokens(footerText.value, pageNum, pages.length);
+        const textWidth = font.widthOfTextAtSize(label, fontSize);
+        const x = getX(footerAlign, width, textWidth);
+        const y = margin;
+        page.drawText(label, { x, y, size: fontSize, font });
+      }
     });
 
     const bytes = await pdf.save();
     const blob = new Blob([bytes], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
     const baseName = selectedFile.name.replace(/\.pdf$/i, '');
-    const outName = `${baseName}-numbered.pdf`;
+    const outName = `${baseName}-header-footer.pdf`;
 
     progressMsg.textContent = 'Done — ready to download.';
 
     const card = document.createElement('div');
     card.className = 'result-card';
     card.innerHTML = `
-      <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><circle cx="17" cy="17" r="3"/><path d="M17 15.5v3"/></svg></div>
+      <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="1.5"/><path d="M7 6h10M7 18h10"/></svg></div>
       <div class="result-body">
         <div class="result-filename">${outName}</div>
-        <div class="result-stat">Page numbers added to ${pages.length} page${pages.length !== 1 ? 's' : ''} · ${(blob.size / 1024).toFixed(1)} KB</div>
+        <div class="result-stat">Applied to ${pages.length} page${pages.length !== 1 ? 's' : ''} · ${(blob.size / 1024).toFixed(1)} KB</div>
       </div>
     `;
     resultEl.appendChild(card);
@@ -469,11 +540,11 @@ addNumbersBtn.addEventListener('click', async () => {
     link.textContent = 'Download PDF';
     resultEl.appendChild(link);
   } catch (err) {
-    errorMsg.textContent = err.message || 'Could not add page numbers to this PDF.';
+    errorMsg.textContent = err.message || 'Could not add a header or footer to this PDF.';
   }
 
-  addNumbersBtn.disabled = false;
-  addNumbersBtn.textContent = 'Add Page Numbers & Download';
+  applyBtn.disabled = false;
+  applyBtn.textContent = 'Add Header/Footer & Download';
 });
 </script>
 </body>
