@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PDF Varias Páginas por Hoja (N-Up) – Herramienta Gratuita | Orisod</title>
-<meta name="description" content="Combina 2, 4, 6 o 9 páginas de un PDF en una sola hoja para ahorrar papel al imprimir, gratis y en línea. Funciona directamente en tu navegador — no se sube ningún archivo.">
-<link rel="canonical" href="https://orisod.com/es/n-up-pdf/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/n-up-pdf/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/n-up-pdf/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/n-up-pdf/">
+<title>Creador de Folletos PDF – Herramienta Gratuita | Orisod</title>
+<meta name="description" content="Reordena las páginas de un PDF en orden de imposición de folleto para que se lea correctamente al imprimir a doble cara y doblar por la mitad, gratis y en línea. Funciona directamente en tu navegador — no se sube ningún archivo.">
+<link rel="canonical" href="https://orisod.com/es/pdf-booklet-maker/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/pdf-booklet-maker/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/pdf-booklet-maker/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/pdf-booklet-maker/">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
 <link rel="icon" href="/favicon.ico">
@@ -67,15 +67,15 @@
 .workspace{max-width:1040px;margin:0 auto;}
 .workspace-controls{margin-top:20px;text-align:center;}
 .opt-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;font-size:14px;flex-wrap:wrap;justify-content:center;}
-.opt-row label{min-width:auto;opacity:0.85;}
-.layout-row{display:flex;justify-content:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
-.layout-btn{padding:10px 18px;border-radius:8px;border:1px solid var(--border);background:var(--card-bg);color:var(--text);cursor:pointer;font-size:14px;font-weight:bold;transition:0.2s;}
-.layout-btn.active{background:var(--accent);border-color:var(--accent);color:white;}
 select{padding:7px 10px;border-radius:6px;border:1px solid var(--dropzone-border);background:var(--bg);color:var(--text);font-size:14px;}
-.preview-wrap{margin:20px auto 0 auto;max-width:340px;}
-.preview-sheet{display:grid;gap:2px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin:0 auto;}
-.preview-sheet.no-border{gap:0;background:transparent;}
-.preview-cell{background:white;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.instructions-box{background:rgba(37,99,235,.08);border:1px solid var(--accent);border-radius:10px;padding:16px 18px;margin-top:16px;text-align:left;font-size:14px;line-height:1.6;}
+.instructions-box strong{color:var(--accent);}
+.sheet-count{margin-top:12px;font-size:14px;opacity:0.85;}
+.warn-note{color:#f59e0b;font-size:13px;margin-top:10px;line-height:1.5;text-align:left;}
+.preview-row{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:20px;}
+.preview-col{text-align:center;}
+.preview-sheet{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden;width:260px;}
+.preview-cell{background:white;display:flex;align-items:center;justify-content:center;overflow:hidden;aspect-ratio:1/1.35;}
 .preview-cell canvas{max-width:100%;max-height:100%;display:block;}
 .preview-cell.empty{background:var(--card-bg);}
 .preview-label{font-size:12px;opacity:0.6;margin-top:8px;}
@@ -112,27 +112,6 @@ p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-heigh
 input[type="file"]{display:none;}
 .page-count{margin-top:10px;font-size:13px;opacity:0.7;}
 .controls{margin-top:20px;text-align:left;display:none;}
-.site-footer{
-  margin-top:40px;
-  padding:40px 24px 30px 24px;
-  border-top:1px solid var(--border);
-  text-align:left;
-}
-.footer-inner{
-  max-width:1000px;
-  margin:0 auto;
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:space-between;
-  gap:40px;
-}
-.footer-brand{max-width:280px;}
-.footer-brand-logo{font-size:16px;font-weight:bold;letter-spacing:0.5px;margin-bottom:10px;}
-.footer-brand-desc{font-size:13px;color:var(--muted-text);line-height:1.5;margin-bottom:14px;}
-.footer-copy{font-size:12px;color:var(--muted-text);opacity:0.7;}
-.footer-col h3{font-size:13px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-text);margin:0 0 14px 0;}
-.footer-col a{display:block;font-size:14px;color:var(--text);text-decoration:none;opacity:0.8;margin-bottom:10px;}
-.footer-col a:hover{opacity:1;color:var(--accent);}
 .error{color:#f87171;font-size:14px;margin-top:10px;}
 .progress{font-size:14px;opacity:0.7;margin-top:10px;}
 h2{margin-top:50px;font-size:22px;}
@@ -170,7 +149,7 @@ h2{margin-top:50px;font-size:22px;}
     <a href="/es/blog/">Blog</a>
   </nav>
   <div class="site-nav-right">
-    <a class="lang-flag" href="/n-up-pdf/">EN</a>
+    <a class="lang-flag" href="/pdf-booklet-maker/">EN</a>
     <span class="lang-flag active">ES</span>
     <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
   </div>
@@ -179,10 +158,10 @@ h2{margin-top:50px;font-size:22px;}
 <main>
 <div class="container">
   <div class="tool-hero">
-    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg></div>
-    <h1>PDF Varias Páginas por Hoja</h1>
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5c2-1.5 5-1.5 7 0v14c-2-1.5-5-1.5-7 0z"/><path d="M22 5c-2-1.5-5-1.5-7 0v14c2-1.5 5-1.5 7 0z"/></svg></div>
+    <h1>Creador de Folletos PDF</h1>
   </div>
-  <p class="tool-sub">Combina 2, 4, 6 o 9 páginas de un PDF en una sola hoja — una vista previa en vivo muestra el diseño antes de descargar. Todo ocurre localmente en tu navegador.</p>
+  <p class="tool-sub">Reordena las páginas de un PDF en orden de folleto, para que al imprimirlo a doble cara y doblarlo por la mitad se lea correctamente. Todo ocurre localmente en tu navegador.</p>
 
   <div class="workspace">
     <div class="box">
@@ -195,13 +174,6 @@ h2{margin-top:50px;font-size:22px;}
       <div class="page-count" id="pageCount"></div>
 
       <div class="controls" id="controls">
-        <div class="layout-row" id="layoutRow">
-          <div class="layout-btn active" data-n="2" data-cols="2" data-rows="1" data-orientation="landscape">2 por hoja</div>
-          <div class="layout-btn" data-n="4" data-cols="2" data-rows="2" data-orientation="portrait">4 por hoja</div>
-          <div class="layout-btn" data-n="6" data-cols="2" data-rows="3" data-orientation="portrait">6 por hoja</div>
-          <div class="layout-btn" data-n="9" data-cols="3" data-rows="3" data-orientation="portrait">9 por hoja</div>
-        </div>
-
         <div class="opt-row">
           <label for="pageSizeSelect">Tamaño de hoja:
             <select id="pageSizeSelect">
@@ -209,51 +181,63 @@ h2{margin-top:50px;font-size:22px;}
               <option value="letter">Carta</option>
             </select>
           </label>
-          <label><input type="checkbox" id="borderCheckbox" checked> Mostrar borde entre páginas</label>
         </div>
 
-        <div class="preview-wrap">
-          <div class="preview-sheet" id="previewSheet"></div>
-          <div class="preview-label">Vista previa: hoja 1</div>
+        <div class="sheet-count" id="sheetCount"></div>
+        <div class="warn-note" id="warnNote" style="display:none;"></div>
+
+        <div class="preview-row">
+          <div class="preview-col">
+            <div class="preview-sheet" id="previewFront"></div>
+            <div class="preview-label">Hoja 1 — Frente</div>
+          </div>
+          <div class="preview-col">
+            <div class="preview-sheet" id="previewBack"></div>
+            <div class="preview-label">Hoja 1 — Reverso</div>
+          </div>
+        </div>
+
+        <div class="instructions-box">
+          <strong>Cómo imprimir esto:</strong> Imprime a doble cara usando <strong>"Voltear por el lado corto"</strong> (no por el lado largo) en la configuración dúplex de tu diálogo de impresión, luego dobla cada hoja por la mitad y grápalas por el pliegue.
         </div>
       </div>
 
       <div class="workspace-controls">
-        <button id="combineBtn" style="display:none;">Combinar y Descargar</button>
+        <button id="createBtn" style="display:none;">Crear Folleto y Descargar</button>
+        <div class="progress" id="progressMsg"></div>
       </div>
 
-      <div class="progress" id="progressMsg"></div>
       <div class="result" id="result"></div>
     </div>
   </div>
 
   <div class="seo-content">
     <h2>¿Qué hace esta herramienta?</h2>
-    <p>Elige un diseño (2, 4, 6 o 9 páginas por hoja) y esta herramienta organiza las páginas de tu PDF en una cuadrícula sobre hojas nuevas y más pequeñas — la misma función de "páginas por hoja" que ofrecen los diálogos de impresión, pero como un PDF independiente que puedes guardar, compartir o imprimir más tarde. Como reposiciona y escala las páginas existentes en vez de rasterizarlas, el resultado sigue siendo completamente vectorial — el texto sigue siendo seleccionable y buscable.</p>
+    <p>Esta herramienta reordena las páginas de un PDF en orden de imposición de folleto (encuadernación a caballete) — la página 1 y la última página comparten una hoja, la página 2 y la penúltima comparten la siguiente, y así sucesivamente — y coloca dos páginas una junto a otra en cada hoja apaisada. Imprime el resultado a doble cara, dobla cada hoja por la mitad y apílalas: las páginas se leen en el orden correcto desde la portada hasta la contraportada.</p>
 
     <h2>¿Cuándo usar esta herramienta?</h2>
     <ul>
-      <li>Imprimir un documento largo con menos papel al caber varias páginas en cada hoja</li>
-      <li>Crear miniaturas tipo folleto de diapositivas o un cuadernillo para revisión</li>
-      <li>Reducir el número físico de páginas de un documento antes de enviarlo por correo o archivarlo</li>
-      <li>Hacer una hoja resumen compacta de un documento de varias páginas</li>
+      <li>Imprimir un informe corto, un programa o una revista como folleto plegable grapado por el centro</li>
+      <li>Crear un folleto compacto a partir de un documento más largo sin una imprenta</li>
+      <li>Preparar un documento para encuadernación a caballete en casa o en la oficina</li>
+      <li>Crear un programa de evento o un menú que se doble en un pequeño folleto</li>
     </ul>
 
     <h2>Por qué Orisod</h2>
-    <p>Combinar páginas usa la función de incrustación de páginas de <code style="background:var(--bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;">pdf-lib</code>, que referencia el contenido de cada página original directamente en vez de convertirlo en imagen — el resultado conserva texto real y seleccionable.</p>
+    <p>La imposición usa la función de incrustación de páginas de <code style="background:var(--bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;">pdf-lib</code> — la misma técnica que preserva el vector usada por PDF Varias Páginas por Hoja — así que las páginas se escalan y reposicionan sin rasterizarse nunca. El texto sigue siendo seleccionable en el folleto PDF terminado.</p>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
-      <div class="q">¿El texto de mi PDF seguirá siendo seleccionable?</div>
-      <div>Sí — las páginas se reposicionan y escalan como contenido vectorial, no se rasterizan, así que el texto sigue siendo seleccionable y buscable en el PDF combinado.</div>
+      <div class="q">¿Por qué se rellena mi número de páginas con páginas en blanco?</div>
+      <div>Un folleto se construye a partir de hojas completas, y cada hoja contiene exactamente 4 páginas (2 por cara), así que el total de páginas debe ser múltiplo de 4. Las páginas en blanco se añaden al final — normalmente acaban como espacio en blanco cerca de la contraportada interior, sin alterar el orden de tu contenido.</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Qué pasa si el número de páginas no es exacto?</div>
-      <div>La última hoja simplemente tiene celdas vacías para el espacio restante — nada se estira ni se duplica para rellenarlo.</div>
+      <div class="q">¿Por qué "Voltear por el lado corto" específicamente?</div>
+      <div>Las hojas de salida son apaisadas, y doblar una hoja apaisada por la mitad a lo largo de su eje corto es lo que la convierte en dos páginas verticales. La impresión dúplex con volteo por el lado corto mantiene el frente y el reverso alineados correctamente para ese pliegue específico — volteando por el lado largo el reverso saldría al revés respecto al frente.</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Puedo elegir el orden en que se colocan las páginas?</div>
-      <div>Las páginas se colocan de izquierda a derecha y de arriba a abajo, en su orden original — el mismo orden de lectura que usan los diálogos de impresión para "páginas por hoja".</div>
+      <div class="q">¿Hay un límite de páginas?</div>
+      <div>No hay un límite estricto, pero un documento muy largo produce un folleto muy grueso que puede no doblarse ni grapar bien a mano — funciona mejor con documentos más cortos (aproximadamente menos de 60 páginas).</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se sube mi PDF a un servidor?</div>
@@ -261,15 +245,23 @@ h2{margin-top:50px;font-size:22px;}
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres verlo con más detalle? Lee nuestra guía: <a href="/es/blog/n-up-printing-explained/" style="color:var(--accent);text-decoration:none;">Qué le hace realmente la impresión N-Up a un PDF</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres verlo con más detalle? Lee nuestra guía: <a href="/es/blog/pdf-booklet-imposition-explained/" style="color:var(--accent);text-decoration:none;">Cómo la imposición de folletos reordena las páginas para doblarlas</a></p>
 
   <h2>Herramientas relacionadas</h2>
   <div class="related-grid">
-  <a class="related-card" href="/es/resize-pdf-pages/">
-    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M20 20l-5-5M20 20h-4M20 20v-4"/></svg></div>
+  <a class="related-card" href="/es/n-up-pdf/">
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg></div>
     <div class="body">
-      <div class="title">Redimensionar páginas de PDF</div>
-      <div class="desc">Cambia las dimensiones, p. ej. A4 a carta.</div>
+      <div class="title">PDF Varias Páginas por Hoja</div>
+      <div class="desc">Combina varias páginas en una sola hoja.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+  <a class="related-card" href="/es/alternate-mix-pages/">
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h3.5c3 0 4.5 10 7.5 10H18"/><path d="M15 4l3 3-3 3"/><path d="M3 17h3.5c3 0 4.5-10 7.5-10H18"/><path d="M15 20l3-3-3-3"/></svg></div>
+    <div class="body">
+      <div class="title">Alternar y Mezclar Páginas</div>
+      <div class="desc">Intercala las páginas de dos PDF.</div>
     </div>
     <div class="arrow">→</div>
   </a>
@@ -278,14 +270,6 @@ h2{margin-top:50px;font-size:22px;}
     <div class="body">
       <div class="title">Organizador de páginas de PDF</div>
       <div class="desc">Reordena, rota o elimina páginas visualmente.</div>
-    </div>
-    <div class="arrow">→</div>
-  </a>
-  <a class="related-card" href="/es/pdf-booklet-maker/">
-    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5c2-1.5 5-1.5 7 0v14c-2-1.5-5-1.5-7 0z"/><path d="M22 5c-2-1.5-5-1.5-7 0v14c2-1.5 5-1.5 7 0z"/></svg></div>
-    <div class="body">
-      <div class="title">Creador de Folletos PDF</div>
-      <div class="desc">Reordena páginas para imprimir y doblar.</div>
     </div>
     <div class="arrow">→</div>
   </a>
@@ -345,24 +329,36 @@ const dropzone = document.getElementById('dropzone');
 const dropzoneText = document.getElementById('dropzoneText');
 const errorMsg = document.getElementById('errorMsg');
 const progressMsg = document.getElementById('progressMsg');
-const pageCount = document.getElementById('pageCount');
+const pageCountEl = document.getElementById('pageCount');
 const controls = document.getElementById('controls');
-const layoutRow = document.getElementById('layoutRow');
 const pageSizeSelect = document.getElementById('pageSizeSelect');
-const borderCheckbox = document.getElementById('borderCheckbox');
-const previewSheet = document.getElementById('previewSheet');
-const combineBtn = document.getElementById('combineBtn');
+const sheetCountEl = document.getElementById('sheetCount');
+const warnNote = document.getElementById('warnNote');
+const previewFront = document.getElementById('previewFront');
+const previewBack = document.getElementById('previewBack');
+const createBtn = document.getElementById('createBtn');
 const resultEl = document.getElementById('result');
 
 const PAGE_SIZES = {
   a4: [595.28, 841.89],
   letter: [612, 792],
 };
+const LONG_DOC_SHEET_WARNING = 15;
 
 let selectedFile = null;
 let pdfJsDoc = null;
 let numPages = 0;
-let layout = { n: 2, cols: 2, rows: 1, orientation: 'landscape' };
+
+function getSheetSize() {
+  const [baseW, baseH] = PAGE_SIZES[pageSizeSelect.value];
+  return [Math.max(baseW, baseH), Math.min(baseW, baseH)];
+}
+
+function getImposition() {
+  const paddedCount = Math.ceil(numPages / 4) * 4;
+  const numSheets = paddedCount / 4;
+  return { paddedCount, numSheets };
+}
 
 fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
 dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
@@ -377,8 +373,8 @@ async function handleFile(file) {
   errorMsg.textContent = '';
   progressMsg.textContent = '';
   controls.style.display = 'none';
-  combineBtn.style.display = 'none';
-  pageCount.textContent = '';
+  createBtn.style.display = 'none';
+  pageCountEl.textContent = '';
 
   if (!file || !/\.pdf$/i.test(file.name)) {
     errorMsg.textContent = 'Selecciona un archivo PDF válido.';
@@ -391,10 +387,10 @@ async function handleFile(file) {
     selectedFile = file;
     numPages = pdfJsDoc.numPages;
 
-    pageCount.textContent = `Cargado: ${numPages} página${numPages === 1 ? '' : 's'}`;
+    pageCountEl.textContent = `Cargado: ${numPages} página${numPages === 1 ? '' : 's'}`;
     dropzoneText.textContent = `✅ ${file.name} cargado`;
     controls.style.display = 'block';
-    combineBtn.style.display = 'inline-block';
+    createBtn.style.display = 'inline-block';
 
     await updatePreview();
   } catch (err) {
@@ -402,140 +398,120 @@ async function handleFile(file) {
   }
 }
 
-layoutRow.querySelectorAll('.layout-btn').forEach((btn) => {
-  btn.addEventListener('click', () => {
-    layoutRow.querySelectorAll('.layout-btn').forEach((b) => b.classList.remove('active'));
-    btn.classList.add('active');
-    layout = {
-      n: parseInt(btn.dataset.n, 10),
-      cols: parseInt(btn.dataset.cols, 10),
-      rows: parseInt(btn.dataset.rows, 10),
-      orientation: btn.dataset.orientation,
-    };
-    updatePreview();
-  });
-});
-
 pageSizeSelect.addEventListener('change', updatePreview);
-borderCheckbox.addEventListener('change', updatePreview);
+
+async function renderPreviewCell(container, pageNum) {
+  const cell = document.createElement('div');
+  cell.className = 'preview-cell';
+  if (pageNum >= 1 && pageNum <= numPages) {
+    const canvas = document.createElement('canvas');
+    cell.appendChild(canvas);
+    const page = await pdfJsDoc.getPage(pageNum);
+    const viewport = page.getViewport({ scale: Math.min(1, 120 / page.getViewport({ scale: 1 }).width) });
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+    await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+  } else {
+    cell.classList.add('empty');
+  }
+  container.appendChild(cell);
+}
 
 async function updatePreview() {
   if (!pdfJsDoc) return;
 
-  previewSheet.classList.toggle('no-border', !borderCheckbox.checked);
-  previewSheet.style.gridTemplateColumns = `repeat(${layout.cols}, 1fr)`;
-  previewSheet.style.gridTemplateRows = `repeat(${layout.rows}, 1fr)`;
+  const { paddedCount, numSheets } = getImposition();
+  const numBlanks = paddedCount - numPages;
 
-  const [baseW, baseH] = PAGE_SIZES[pageSizeSelect.value];
-  const sheetW = layout.orientation === 'landscape' ? Math.max(baseW, baseH) : Math.min(baseW, baseH);
-  const sheetH = layout.orientation === 'landscape' ? Math.min(baseW, baseH) : Math.max(baseW, baseH);
-  const previewWidth = 300;
-  previewSheet.style.width = previewWidth + 'px';
-  previewSheet.style.height = (previewWidth * (sheetH / sheetW)) + 'px';
+  sheetCountEl.textContent = `${numSheets} hoja${numSheets === 1 ? '' : 's'} de papel` +
+    (numBlanks > 0 ? ` (incluye ${numBlanks} página${numBlanks === 1 ? '' : 's'} en blanco de relleno)` : '');
 
-  previewSheet.innerHTML = '';
-
-  for (let i = 0; i < layout.n; i++) {
-    const cell = document.createElement('div');
-    cell.className = 'preview-cell';
-    if (i < numPages) {
-      const pageNum = i + 1;
-      const canvas = document.createElement('canvas');
-      cell.appendChild(canvas);
-      const page = await pdfJsDoc.getPage(pageNum);
-      const nativeViewport = page.getViewport({ scale: 1 });
-      const cellWpx = previewWidth / layout.cols;
-      const scale = Math.min(cellWpx / nativeViewport.width, (previewWidth * (sheetH / sheetW) / layout.rows) / nativeViewport.height);
-      const viewport = page.getViewport({ scale: Math.max(scale, 0.05) });
-      canvas.width = viewport.width;
-      canvas.height = viewport.height;
-      await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
-    } else {
-      cell.classList.add('empty');
-    }
-    previewSheet.appendChild(cell);
+  if (numSheets > LONG_DOC_SHEET_WARNING) {
+    warnNote.textContent = `⚠️ Este folleto tiene ${numSheets} hojas de grosor — un folleto de este tamaño puede no doblarse ni grapar bien a mano.`;
+    warnNote.style.display = 'block';
+  } else {
+    warnNote.style.display = 'none';
   }
+
+  const frontLeft = paddedCount;
+  const frontRight = 1;
+  const backLeft = 2;
+  const backRight = paddedCount - 1;
+
+  previewFront.innerHTML = '';
+  previewBack.innerHTML = '';
+  await renderPreviewCell(previewFront, frontLeft);
+  await renderPreviewCell(previewFront, frontRight);
+  await renderPreviewCell(previewBack, backLeft);
+  await renderPreviewCell(previewBack, backRight);
 }
 
-combineBtn.addEventListener('click', async () => {
+createBtn.addEventListener('click', async () => {
   if (!selectedFile) return;
   errorMsg.textContent = '';
   progressMsg.textContent = '';
-  combineBtn.disabled = true;
-  combineBtn.textContent = 'Combinando...';
+  createBtn.disabled = true;
+  createBtn.textContent = 'Creando...';
   resultEl.innerHTML = '';
 
   try {
-    const { PDFDocument, rgb } = PDFLib;
+    const { PDFDocument } = PDFLib;
     const arrayBuffer = await selectedFile.arrayBuffer();
     const srcPdf = await PDFDocument.load(arrayBuffer);
     const outPdf = await PDFDocument.create();
 
-    const indices = srcPdf.getPageIndices();
-    const embeddedPages = await outPdf.embedPdf(srcPdf, indices);
+    const embeddedPages = await outPdf.embedPdf(srcPdf, srcPdf.getPageIndices());
+    const getEmbedded = (logicalNum) => (logicalNum >= 1 && logicalNum <= numPages ? embeddedPages[logicalNum - 1] : null);
 
-    const [baseW, baseH] = PAGE_SIZES[pageSizeSelect.value];
-    const sheetW = layout.orientation === 'landscape' ? Math.max(baseW, baseH) : Math.min(baseW, baseH);
-    const sheetH = layout.orientation === 'landscape' ? Math.min(baseW, baseH) : Math.max(baseW, baseH);
-    const cellW = sheetW / layout.cols;
-    const cellH = sheetH / layout.rows;
-    const showBorder = borderCheckbox.checked;
+    const [sheetW, sheetH] = getSheetSize();
+    const { paddedCount, numSheets } = getImposition();
+    const halfW = sheetW / 2;
     const PADDING = 6;
 
-    const totalSheets = Math.ceil(embeddedPages.length / layout.n);
+    function drawHalf(page, embedded, cellX) {
+      if (!embedded) return;
+      const availW = halfW - PADDING * 2;
+      const availH = sheetH - PADDING * 2;
+      const scale = Math.min(availW / embedded.width, availH / embedded.height);
+      const drawW = embedded.width * scale;
+      const drawH = embedded.height * scale;
+      const x = cellX + (halfW - drawW) / 2;
+      const y = (sheetH - drawH) / 2;
+      page.drawPage(embedded, { x, y, width: drawW, height: drawH });
+    }
 
-    for (let sheetIndex = 0; sheetIndex < totalSheets; sheetIndex++) {
-      progressMsg.textContent = `Creando hoja ${sheetIndex + 1} de ${totalSheets}...`;
-      const outPage = outPdf.addPage([sheetW, sheetH]);
+    for (let i = 0; i < numSheets; i++) {
+      progressMsg.textContent = `Creando hoja ${i + 1} de ${numSheets}...`;
 
-      for (let cellIndex = 0; cellIndex < layout.n; cellIndex++) {
-        const pageIndex = sheetIndex * layout.n + cellIndex;
-        if (pageIndex >= embeddedPages.length) break;
+      const frontLeft = paddedCount - 2 * i;
+      const frontRight = 2 * i + 1;
+      const backLeft = 2 * i + 2;
+      const backRight = paddedCount - 2 * i - 1;
 
-        const embedded = embeddedPages[pageIndex];
-        const col = cellIndex % layout.cols;
-        const row = Math.floor(cellIndex / layout.cols);
-        const cellX = col * cellW;
-        const cellY = sheetH - (row + 1) * cellH;
+      const frontPage = outPdf.addPage([sheetW, sheetH]);
+      drawHalf(frontPage, getEmbedded(frontLeft), 0);
+      drawHalf(frontPage, getEmbedded(frontRight), halfW);
 
-        const availW = cellW - PADDING * 2;
-        const availH = cellH - PADDING * 2;
-        const scale = Math.min(availW / embedded.width, availH / embedded.height);
-        const drawW = embedded.width * scale;
-        const drawH = embedded.height * scale;
-        const x = cellX + (cellW - drawW) / 2;
-        const y = cellY + (cellH - drawH) / 2;
-
-        outPage.drawPage(embedded, { x, y, width: drawW, height: drawH });
-      }
-
-      if (showBorder) {
-        for (let c = 1; c < layout.cols; c++) {
-          const x = c * cellW;
-          outPage.drawLine({ start: { x, y: 0 }, end: { x, y: sheetH }, thickness: 0.75, color: rgb(0.7, 0.7, 0.7) });
-        }
-        for (let r = 1; r < layout.rows; r++) {
-          const y = sheetH - r * cellH;
-          outPage.drawLine({ start: { x: 0, y }, end: { x: sheetW, y }, thickness: 0.75, color: rgb(0.7, 0.7, 0.7) });
-        }
-      }
+      const backPage = outPdf.addPage([sheetW, sheetH]);
+      drawHalf(backPage, getEmbedded(backLeft), 0);
+      drawHalf(backPage, getEmbedded(backRight), halfW);
     }
 
     const bytes = await outPdf.save();
     const blob = new Blob([bytes], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
     const baseName = selectedFile.name.replace(/\.pdf$/i, '');
-    const outName = `${baseName}-${layout.n}up.pdf`;
+    const outName = `${baseName}-folleto.pdf`;
 
     progressMsg.textContent = 'Listo — preparado para descargar.';
 
     const card = document.createElement('div');
     card.className = 'result-card';
     card.innerHTML = `
-      <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg></div>
+      <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5c2-1.5 5-1.5 7 0v14c-2-1.5-5-1.5-7 0z"/><path d="M22 5c-2-1.5-5-1.5-7 0v14c2-1.5 5-1.5 7 0z"/></svg></div>
       <div class="result-body">
         <div class="result-filename">${outName}</div>
-        <div class="result-stat">${numPages} páginas → ${totalSheets} hoja${totalSheets === 1 ? '' : 's'} · ${(blob.size / 1024).toFixed(1)} KB</div>
+        <div class="result-stat">${numSheets} hoja${numSheets === 1 ? '' : 's'} (${numSheets * 2} páginas de impresión) · ${(blob.size / 1024).toFixed(1)} KB</div>
       </div>
     `;
     resultEl.appendChild(card);
@@ -544,14 +520,14 @@ combineBtn.addEventListener('click', async () => {
     link.href = url;
     link.download = outName;
     link.className = 'back';
-    link.textContent = 'Descargar PDF Combinado';
+    link.textContent = 'Descargar PDF de Folleto';
     resultEl.appendChild(link);
   } catch (err) {
-    errorMsg.textContent = err.message || 'No se pudo combinar este PDF.';
+    errorMsg.textContent = err.message || 'No se pudo crear este folleto.';
   }
 
-  combineBtn.disabled = false;
-  combineBtn.textContent = 'Combinar y Descargar';
+  createBtn.disabled = false;
+  createBtn.textContent = 'Crear Folleto y Descargar';
 });
 </script>
 </body>
