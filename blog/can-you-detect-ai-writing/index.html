@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Text Case Styles Explained: When to Use camelCase, snake_case, and More | Orisod Blog</title>
-<meta name="description" content="What camelCase, PascalCase, snake_case, kebab-case, and CONSTANT_CASE are each actually used for, and why most languages settled on a house style instead of letting developers pick freely.">
-<link rel="canonical" href="https://orisod.com/blog/text-case-styles-explained/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/blog/text-case-styles-explained/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/text-case-styles-explained/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/text-case-styles-explained/">
+<title>Why "AI Detectors" Can't Actually Detect AI Writing | Orisod Blog</title>
+<meta name="description" content="Why there's no reliable fingerprint that separates AI-written text from human-written text, why detection tools produce real false positives and false negatives, and what a style-pattern checker can honestly tell you instead.">
+<link rel="canonical" href="https://orisod.com/blog/can-you-detect-ai-writing/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/can-you-detect-ai-writing/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/can-you-detect-ai-writing/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/can-you-detect-ai-writing/">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
 <link rel="icon" href="/favicon.ico">
@@ -137,7 +137,7 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
   </nav>
   <div class="site-nav-right">
     <span class="lang-flag active">EN</span>
-    <a class="lang-flag" href="/es/blog/text-case-styles-explained/">ES</a>
+    <a class="lang-flag" href="/es/blog/can-you-detect-ai-writing/">ES</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
   </div>
 </header>
@@ -146,64 +146,67 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guides</span>
-<h1>Text Case Styles Explained: When to Use camelCase, snake_case, and More</h1>
-<p class="intro">Every programming ecosystem has a house style for naming things, and it's rarely arbitrary — it usually comes down to what the language's own conventions expect, and what a case-insensitive filesystem or URL can and can't handle safely.</p>
+<h1>Why "AI Detectors" Can't Actually Detect AI Writing</h1>
+<p class="intro">A tool that claims to tell you, with a confident percentage, whether a piece of text was written by AI sounds like exactly the kind of thing that should be possible. It isn't — not because the engineering is immature, but because of what large language models are actually trained to do in the first place.</p>
 
 <div class="article-body">
 
-<h2>The naming styles, and what each one is actually for</h2>
-<p>Five styles cover almost every case you'll run into:</p>
-<ul>
-  <li><strong>camelCase</strong> — first word lowercase, every following word capitalized, no separators (<code>firstName</code>). The default for variables and function names in JavaScript, Java, and most C-family languages.</li>
-  <li><strong>PascalCase</strong> — same as camelCase but the first word is also capitalized (<code>FirstName</code>). Used for class and type names in the same languages, precisely to distinguish a type from a variable at a glance.</li>
-  <li><strong>snake_case</strong> — all lowercase, words separated by underscores (<code>first_name</code>). The standard for variables and functions in Python and Ruby, and for database column names almost everywhere.</li>
-  <li><strong>kebab-case</strong> — all lowercase, words separated by hyphens (<code>first-name</code>). Used for URL slugs and CSS class names — hyphens are the one separator that's always safe in a URL without encoding.</li>
-  <li><strong>CONSTANT_CASE</strong> (also called SCREAMING_SNAKE_CASE) — all uppercase, words separated by underscores (<code>FIRST_NAME</code>). Reserved specifically for constants, so an all-caps identifier signals "this value never changes" at a glance.</li>
-</ul>
+<h2>What a language model is optimized to do</h2>
+<p>A language model is trained to predict plausible next words given everything written so far, using patterns learned from enormous amounts of human-written text. Its entire objective is to produce output that's statistically consistent with how humans write — not to leave behind some distinctive fingerprint that marks it as machine-generated. There's no equivalent of a watermark baked into the writing itself unless a system deliberately adds one on purpose (some do, as an opt-in, separate feature) — by default, a model's whole job is to blend in with the distribution of text it learned from.</p>
 
-<h2>Why the convention matters more than the choice</h2>
-<p>None of these styles is technically superior — a JavaScript variable named <code>first_name</code> instead of <code>firstName</code> still works exactly the same. What breaks is consistency: mixing styles within one codebase forces every reader to context-switch for no reason, and some tools genuinely can't cross styles safely (a CSS class must be kebab-case-safe, a URL slug can't contain characters that need encoding, and a case-sensitive filesystem will treat <code>MyFile</code> and <code>myfile</code> as two different files while a case-insensitive one won't). The style itself is a convention; picking one and applying it consistently is what actually matters.</p>
+<h2>Why detectors end up guessing at style, not certainty</h2>
+<p>Without a built-in signature to look for, a detector is left inferring authorship from surface statistics: how predictable each word choice is given the words before it, how much sentence structure varies, how often certain phrasings show up. These are genuinely correlated with AI-generated text in aggregate — but they're statistical tendencies, not fixed rules, and human writing spans the same range. A careful, methodical human writer can produce highly predictable, low-variation prose; a language model prompted with unusual instructions can produce erratic, high-variation prose. The two distributions overlap substantially, and a detector has to draw a hard line somewhere inside that overlap.</p>
 
-<h2>Where each style tends to show up</h2>
-<ul>
-  <li><strong>Variables and functions:</strong> camelCase (JavaScript, Java) or snake_case (Python, Ruby) — pick whichever your language's own standard library and style guide already use, not a personal preference.</li>
-  <li><strong>Classes and types:</strong> PascalCase, almost universally, across the languages that distinguish them from variables at all.</li>
-  <li><strong>URLs and file slugs:</strong> kebab-case — search engines and browsers treat hyphens as word separators in a URL, which underscores and camelCase don't get for free.</li>
-  <li><strong>CSS classes:</strong> kebab-case is the long-standing convention (<code>.nav-link</code>), though some component-based frameworks use camelCase for CSS-in-JS.</li>
-  <li><strong>Constants and environment variables:</strong> CONSTANT_CASE — the all-caps convention originated with C preprocessor macros and is still the standard for env vars and true constants today.</li>
-</ul>
+<figure class="theme-figure">
+<svg viewBox="0 0 700 220" width="700" height="220" role="img" aria-label="Diagram showing two heavily overlapping bell curves labeled human-written text and AI-written text along a stylistic-predictability axis, with a vertical decision line drawn through the middle of the overlap region, illustrating that any classification threshold necessarily misclassifies real examples on both sides." xmlns="http://www.w3.org/2000/svg">
+<path d="M 60 170 C 120 170 140 40 220 40 C 300 40 320 170 380 170" fill="none" stroke="var(--accent)" stroke-width="2.5"/>
+<path d="M 180 170 C 240 170 260 40 340 40 C 420 40 440 170 500 170" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+<line x1="330" y1="20" x2="330" y2="180" stroke="var(--text)" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text x="330" y="14" text-anchor="middle" font-size="12" fill="var(--text)">decision threshold</text>
+<text x="130" y="195" text-anchor="middle" font-size="13" fill="var(--accent)">Human-written text</text>
+<text x="430" y="195" text-anchor="middle" font-size="13" fill="#f59e0b">AI-written text</text>
+<text x="330" y="205" text-anchor="middle" font-size="12" fill="var(--muted-text)">shaded overlap = unavoidable misclassifications</text>
+</svg>
+<figcaption>Both distributions span the same stylistic range — any single cutoff point necessarily misclassifies real human text as "AI" and real AI text as "human" somewhere in that overlap.</figcaption>
+</figure>
+
+<h2>Real, documented failure modes</h2>
+<p>This isn't a hypothetical concern — it shows up in practice in well-documented ways. Detectors have been shown to disproportionately flag writing by non-native English speakers as AI-generated, likely because that writing shares statistical properties (simpler sentence structure, more predictable word choices) with model output for reasons that have nothing to do with authorship. Detectors also routinely fail against text that's been lightly edited after AI generation, or against newer models they weren't calibrated against, since the underlying statistical signature shifts every time model architectures and training data change. A tool tuned to catch one generation of models can miss the next one entirely.</p>
+
+<h2>What a heuristic style-pattern checker is actually for</h2>
+<p>Given all that, a more honest tool doesn't try to output a probability of AI authorship at all — it flags specific, nameable patterns that show up often in generic writing (overused stock phrases, repetitive sentence openers, unusually uniform sentence rhythm) and lets a person decide what those patterns mean in context. This is a narrower, more defensible claim: "this phrase appears in the text" is simply true or false, verifiable by anyone reading the flagged span, unlike "this text is 73% likely to be AI-generated," which asserts a precision the underlying method can't actually support.</p>
 
 <h2>Quick answers</h2>
-<p><strong>Is there a "correct" case for JSON keys?</strong> No hard rule, but camelCase is the de facto convention in JavaScript-heavy APIs, while snake_case shows up often in APIs written by Python/Ruby-first teams — match whatever the rest of that API already uses.</p>
-<p><strong>What's the difference between kebab-case and "dash-case" or "spinal-case"?</strong> Nothing — they're the same style under different names, all referring to lowercase words joined by hyphens.</p>
-<p><strong>Why do some style guides avoid underscores in URLs?</strong> Older search engines didn't reliably treat an underscore as a word separator (some still read <code>first_name</code> as one word, "first_name," rather than two), while a hyphen reliably splits into separate words — kebab-case avoids the ambiguity entirely.</p>
+<p><strong>Does this mean AI detectors are useless?</strong> Not entirely — they can be one weak signal among several in a larger judgment call, especially in aggregate across many samples. The problem is treating a single score on a single piece of text as a reliable verdict, which the false-positive and false-negative rates don't support.</p>
+<p><strong>Can writers avoid every flagged pattern to "beat" a checker?</strong> Some of these patterns can be edited out deliberately, but that's the wrong goal — the patterns exist because they're genuinely common in weak or formulaic writing, human or AI. Removing them because they're flagged, rather than because the writing genuinely improves, optimizes for the wrong thing.</p>
+<p><strong>Why do stock phrases show up so often in AI writing in the first place?</strong> These phrases are common across huge volumes of formal and semi-formal writing that models are trained on, so they're statistically "safe," high-probability choices for a model trying to produce fluent, generically appropriate text — the same reason they show up constantly in human corporate writing, marketing copy, and school essays too.</p>
 
 <div class="cta-box">
-  <h3>Convert between cases</h3>
-  <p>Orisod's Case Converter switches text between UPPERCASE, lowercase, Title Case, Sentence case, camelCase, PascalCase, snake_case, kebab-case, and CONSTANT_CASE — entirely in your browser.</p>
-  <a class="cta-button" href="/case-converter/">Convert text case →</a>
+  <h3>Check your text for generic writing patterns</h3>
+  <p>Orisod's AI Writing Checker flags stock phrases, repetitive sentence openers, and other stylistic patterns — clearly labeled as a style signal, not a detector — entirely in your browser.</p>
+  <a class="cta-button" href="/ai-writing-checker/">Check your writing →</a>
 </div>
 
-<p>The specific style rarely matters on its own — what matters is matching whatever convention the language, framework, or system you're working in already expects, and staying consistent once you've picked it.</p>
+<p>The honest version of this problem isn't "can a tool tell you if text is AI-written" — it can't, reliably, and the reasons are structural, not a temporary engineering gap. The useful version is "can a tool show you specific, verifiable patterns worth a second look," which is a claim a heuristic checker can actually back up.</p>
 
 </div>
 
 <div class="related-section">
   <h2>Related articles</h2>
   <div class="related-grid">
-    <a class="blog-card" href="/blog/format-json/">
-      <h3>How to Format and Validate JSON (and the Syntax Rules That Actually Matter)</h3>
-      <p>Why copy-pasted JavaScript objects fail as JSON, and the exact rules JSON.parse enforces.</p>
-    </a>
-
     <a class="blog-card" href="/blog/word-count-and-reading-time-explained/">
       <h3>How Word Count and Reading Time Estimates Actually Work</h3>
       <p>How word counters split text, why sentence counting is a heuristic, and the math behind a "5 min read" label.</p>
     </a>
 
-    <a class="blog-card" href="/blog/can-you-detect-ai-writing/">
-      <h3>Why "AI Detectors" Can't Actually Detect AI Writing</h3>
-      <p>Why there's no reliable fingerprint separating AI text from human text, and what a heuristic checker can honestly tell you.</p>
+    <a class="blog-card" href="/blog/html-to-markdown-explained/">
+      <h3>How HTML Actually Becomes Markdown</h3>
+      <p>Why conversion is a tree walk with one rule per element, and why Markdown can't represent everything HTML can.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/text-case-styles-explained/">
+      <h3>Text Case Styles Explained: When to Use camelCase, snake_case, and More</h3>
+      <p>What each naming style is actually for, and why the convention matters more than the choice.</p>
     </a>
   </div>
 </div>

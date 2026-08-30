@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cómo el HTML se convierte realmente en Markdown | Blog de Orisod</title>
-<meta name="description" content="Por qué convertir HTML a Markdown es un recorrido de árbol con una regla por tipo de elemento, por qué Markdown no puede representar todo lo que HTML sí, y por qué una tabla necesita una fila de encabezado para convertirse.">
-<link rel="canonical" href="https://orisod.com/es/blog/html-to-markdown-explained/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/blog/html-to-markdown-explained/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/html-to-markdown-explained/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/html-to-markdown-explained/">
+<title>Por qué los "detectores de IA" no pueden detectar realmente escritura de IA | Blog de Orisod</title>
+<meta name="description" content="Por qué no existe una huella confiable que separe el texto escrito por IA del escrito por humanos, por qué las herramientas de detección producen falsos positivos y negativos reales, y qué puede decirte honestamente un verificador de patrones de estilo en su lugar.">
+<link rel="canonical" href="https://orisod.com/es/blog/can-you-detect-ai-writing/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/can-you-detect-ai-writing/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/can-you-detect-ai-writing/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/can-you-detect-ai-writing/">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
 <link rel="icon" href="/favicon.ico">
@@ -136,7 +136,7 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
     <span class="active-category">Blog</span>
   </nav>
   <div class="site-nav-right">
-    <a class="lang-flag" href="/blog/html-to-markdown-explained/">EN</a>
+    <a class="lang-flag" href="/blog/can-you-detect-ai-writing/">EN</a>
     <span class="lang-flag active">ES</span>
     <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">🌙</button>
   </div>
@@ -146,76 +146,67 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guías</span>
-<h1>Cómo el HTML se convierte realmente en Markdown</h1>
-<p class="intro">Copia un párrafo con formato de una página web, pégalo en algo que solo entienda Markdown, y simplemente funciona — los encabezados siguen siendo encabezados, la negrita sigue siendo negrita, los enlaces siguen siendo enlaces. Esa conversión parece instantánea, pero en realidad es un proceso de traducción pequeño y estructurado que se ejecuta por debajo, un elemento HTML a la vez.</p>
+<h1>Por qué los "detectores de IA" no pueden detectar realmente escritura de IA</h1>
+<p class="intro">Una herramienta que afirma poder decirte, con un porcentaje confiado, si un texto fue escrito por IA suena exactamente como el tipo de cosa que debería ser posible. No lo es — no porque la ingeniería sea inmadura, sino por lo que los modelos de lenguaje grandes están realmente entrenados para hacer en primer lugar.</p>
 
 <div class="article-body">
 
-<h2>Un recorrido de árbol, no una transformación de texto</h2>
-<p>El navegador no le entrega a un conversor texto HTML crudo para buscar patrones — le entrega el DOM, la estructura de árbol ya interpretada que el navegador construyó para renderizar la página: este párrafo contiene este span en negrita, que contiene este nodo de texto, y así sucesivamente. Un conversor recorre ese árbol de arriba hacia abajo, y para cada nodo que encuentra, hace una pregunta: ¿qué sintaxis de Markdown representa este elemento específico? Un `<strong>` se convierte en texto envuelto en `**`, un `<h2>` se convierte en una línea que empieza con `##`, un `<a>` se convierte en `[texto](url)`. El resultado se construye convirtiendo recursivamente primero los hijos de cada nodo, y luego envolviendo el resultado con la sintaxis que exige la etiqueta de ese nodo.</p>
+<h2>Para qué está optimizado un modelo de lenguaje</h2>
+<p>Un modelo de lenguaje se entrena para predecir la palabra siguiente más plausible dado todo lo escrito hasta el momento, usando patrones aprendidos de enormes cantidades de texto escrito por humanos. Todo su objetivo es producir un resultado que sea estadísticamente coherente con cómo escriben los humanos — no dejar atrás alguna huella distintiva que lo marque como generado por máquina. No hay ningún equivalente a una marca de agua incorporada en la propia escritura a menos que un sistema añada una deliberadamente (algunos lo hacen, como una función opcional y separada) — por defecto, todo el trabajo de un modelo es mezclarse con la distribución de texto de la que aprendió.</p>
 
-<h2>Por qué esto es un mapeo, no una traducción</h2>
-<p>Cada elemento HTML necesita una regla explícita que diga en qué Markdown se convierte — no existe una forma automática o de propósito general de derivar uno del otro, porque Markdown no fue diseñado para representar todo lo que HTML puede. Un `<div>` con una clase CSS personalizada no tiene ningún equivalente en Markdown; un conversor simplemente lo trata como un envoltorio invisible y conserva su contenido. Por eso un conversor maduro incluye decenas de reglas integradas (una por cada etiqueta común) y permite registrar más para cualquier cosa inusual que encuentre.</p>
+<h2>Por qué los detectores terminan adivinando el estilo, no la certeza</h2>
+<p>Sin una firma incorporada que buscar, un detector termina infiriendo la autoría a partir de estadísticas superficiales: qué tan predecible es cada elección de palabra dado lo anterior, cuánto varía la estructura de las oraciones, con qué frecuencia aparecen ciertas frases. Esto está genuinamente correlacionado con el texto generado por IA en conjunto — pero son tendencias estadísticas, no reglas fijas, y la escritura humana abarca el mismo rango. Un escritor humano cuidadoso y metódico puede producir prosa muy predecible y de baja variación; un modelo de lenguaje con instrucciones inusuales puede producir prosa errática y de alta variación. Las dos distribuciones se superponen sustancialmente, y un detector tiene que trazar una línea dura en algún punto dentro de esa superposición.</p>
 
 <figure class="theme-figure">
-<svg viewBox="0 0 700 260" width="700" height="260" role="img" aria-label="Diagrama que muestra un árbol DOM de HTML a la izquierda con un elemento h2 que contiene texto en negrita y texto normal, una flecha etiquetada recorrer el árbol y aplicar una regla por elemento, y el texto Markdown resultante a la derecha que dice dos signos de almohadilla, luego la palabra Really, luego dos asteriscos alrededor de important, y más texto." xmlns="http://www.w3.org/2000/svg">
-<text x="150" y="26" text-anchor="middle" font-size="14" fill="var(--muted-text)">Árbol DOM</text>
-<rect x="60" y="45" width="180" height="34" rx="4" fill="var(--card-bg)" stroke="var(--accent)" stroke-width="2"/>
-<text x="150" y="67" text-anchor="middle" font-family="Courier New, monospace" font-size="13" fill="var(--accent)">&lt;h2&gt;</text>
-<line x1="90" y1="79" x2="60" y2="115" stroke="var(--border)" stroke-width="1.5"/>
-<line x1="210" y1="79" x2="240" y2="115" stroke="var(--border)" stroke-width="1.5"/>
-<rect x="20" y="115" width="90" height="34" rx="4" fill="var(--card-bg)" stroke="var(--border)" stroke-width="2"/>
-<text x="65" y="137" text-anchor="middle" font-family="Courier New, monospace" font-size="12" fill="var(--text)">"Really "</text>
-<rect x="150" y="115" width="130" height="34" rx="4" fill="var(--card-bg)" stroke="#f59e0b" stroke-width="2"/>
-<text x="215" y="137" text-anchor="middle" font-family="Courier New, monospace" font-size="12" fill="#f59e0b">&lt;strong&gt;important&lt;/&gt;</text>
-<path d="M 300 100 L 380 100" stroke="var(--muted-text)" stroke-width="2"/>
-<polygon points="380,100 369,94 369,106" fill="var(--muted-text)"/>
-<text x="340" y="85" text-anchor="middle" font-size="11.5" font-weight="bold" fill="var(--text)">recorrer árbol,</text>
-<text x="340" y="120" text-anchor="middle" font-size="11.5" font-weight="bold" fill="var(--text)">aplicar reglas</text>
-<rect x="400" y="60" width="260" height="90" rx="6" fill="var(--card-bg)" stroke="var(--border)" stroke-width="2"/>
-<text x="530" y="95" text-anchor="middle" font-family="Courier New, monospace" font-size="15" fill="var(--text)">## Really <tspan fill="#f59e0b">**important**</tspan></text>
-<text x="530" y="125" text-anchor="middle" font-size="11.5" fill="var(--muted-text)">regla de encabezado + regla de negrita, combinadas</text>
+<svg viewBox="0 0 700 220" width="700" height="220" role="img" aria-label="Diagrama que muestra dos curvas de campana muy superpuestas etiquetadas texto escrito por humanos y texto escrito por IA a lo largo de un eje de previsibilidad estilística, con una línea de decisión vertical trazada en medio de la región de superposición, ilustrando que cualquier umbral de clasificación clasifica erróneamente necesariamente ejemplos reales de ambos lados." xmlns="http://www.w3.org/2000/svg">
+<path d="M 60 170 C 120 170 140 40 220 40 C 300 40 320 170 380 170" fill="none" stroke="var(--accent)" stroke-width="2.5"/>
+<path d="M 180 170 C 240 170 260 40 340 40 C 420 40 440 170 500 170" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+<line x1="330" y1="20" x2="330" y2="180" stroke="var(--text)" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text x="330" y="14" text-anchor="middle" font-size="12" fill="var(--text)">umbral de decisión</text>
+<text x="130" y="195" text-anchor="middle" font-size="13" fill="var(--accent)">Texto escrito por humanos</text>
+<text x="430" y="195" text-anchor="middle" font-size="13" fill="#f59e0b">Texto escrito por IA</text>
+<text x="330" y="205" text-anchor="middle" font-size="12" fill="var(--muted-text)">superposición sombreada = clasificaciones erróneas inevitables</text>
 </svg>
-<figcaption>La regla del h2 envuelve su contenido en "## "; la regla de strong encontrada dentro envuelve su propio contenido en "**" — cada regla solo conoce su propio elemento, y los resultados se anidan de forma natural.</figcaption>
+<figcaption>Ambas distribuciones abarcan el mismo rango estilístico — cualquier punto de corte único clasifica erróneamente texto humano real como "IA" y texto de IA real como "humano" en algún punto de esa superposición.</figcaption>
 </figure>
 
-<h2>Por qué una tabla necesita una fila de encabezado para convertirse siquiera</h2>
-<p>La sintaxis de tablas de Markdown tiene un requisito estricto que las tablas HTML no tienen: una línea separadora de guiones justo debajo de la fila de encabezado, que es lo que le indica a un renderizador de Markdown dónde termina el encabezado y empieza el cuerpo. Una tabla HTML sin celdas `<th>` de encabezado no tiene una fuente natural para esa línea, así que un conversor genuinamente no puede producir una tabla Markdown válida a partir de ella — las opciones honestas son omitir la conversión y dejar la tabla original como HTML crudo incrustado en el resultado, o tratar la primera fila como encabezado por suposición. Esto no es una limitación del conversor; es un requisito estructural del propio formato de tabla de Markdown.</p>
+<h2>Fallos reales y documentados</h2>
+<p>Esto no es una preocupación hipotética — se manifiesta en la práctica de formas bien documentadas. Se ha demostrado que los detectores señalan de forma desproporcionada como generada por IA la escritura de hablantes no nativos de inglés, probablemente porque esa escritura comparte propiedades estadísticas (estructura de oración más simple, elecciones de palabras más predecibles) con la salida de los modelos por razones que no tienen nada que ver con la autoría. Los detectores también fallan rutinariamente ante texto que ha sido ligeramente editado después de ser generado por IA, o ante modelos más nuevos contra los que no fueron calibrados, ya que la firma estadística subyacente cambia cada vez que cambian las arquitecturas de los modelos y los datos de entrenamiento. Una herramienta ajustada para detectar una generación de modelos puede pasar por alto por completo la siguiente.</p>
 
-<h2>Qué nunca sobrevive al viaje</h2>
-<p>Markdown se mantuvo deliberadamente pequeño: estandariza encabezados, énfasis, enlaces, listas, citas, código y (en dialectos extendidos) tablas — y nada más. Las fuentes personalizadas, los colores, el espaciado preciso, los diseños de varias columnas y los scripts o estilos incrustados no tienen representación en Markdown, así que un conversor los descarta en vez de inventar sintaxis no estándar para aproximarlos. Esto es una característica, no una carencia: todo el valor de Markdown está en ser legible como texto plano y portable entre herramientas, algo que solo se sostiene si todos usan el mismo vocabulario reducido.</p>
+<h2>Para qué sirve realmente un verificador heurístico de patrones de estilo</h2>
+<p>Dado todo esto, una herramienta más honesta no intenta ofrecer una probabilidad de autoría de IA en absoluto — señala patrones específicos y nombrables que aparecen a menudo en escritura genérica (frases hechas sobreutilizadas, aperturas de oración repetitivas, ritmo de oración inusualmente uniforme) y deja que una persona decida qué significan esos patrones en contexto. Esta es una afirmación más limitada y defendible: "esta frase aparece en el texto" es simplemente verdadero o falso, verificable por cualquiera que lea el fragmento señalado, a diferencia de "este texto tiene un 73% de probabilidad de ser generado por IA", que afirma una precisión que el método subyacente no puede realmente sostener.</p>
 
 <h2>Respuestas rápidas</h2>
-<p><strong>¿Por qué el contenido pegado a veces trae formato inesperado?</strong> El pegado de texto enriquecido desde apps como Word o Google Docs suele envolver el contenido en elementos de estilo extra que la app añadió para su propio renderizado — un conversor sigue extrayendo la estructura subyacente correctamente, pero un formato de origen muy inusual puede producir ocasionalmente un resultado más ruidoso que un HTML limpio.</p>
-<p><strong>¿Un enlace sin texto visible se convierte correctamente?</strong> Sí — el propio contenido de texto del enlace se convierte en la etiqueta entre corchetes y su href se convierte en la URL, igual que con cualquier otro enlace, sin importar cómo se haya estilizado ese texto.</p>
-<p><strong>¿La conversión de HTML a Markdown es reversible?</strong> No perfectamente — convertir Markdown de vuelta a HTML recupera la estructura, pero cualquier cosa que Markdown no pudiera representar desde el principio (estilo personalizado, diseño) ya se perdió y no puede reconstruirse solo a partir del Markdown.</p>
+<p><strong>¿Significa esto que los detectores de IA son inútiles?</strong> No del todo — pueden ser una señal débil entre varias en una decisión más amplia, especialmente en conjunto sobre muchas muestras. El problema es tratar una sola puntuación en un solo texto como un veredicto confiable, algo que las tasas de falsos positivos y negativos no respaldan.</p>
+<p><strong>¿Pueden los escritores evitar todos los patrones señalados para "vencer" a un verificador?</strong> Algunos de estos patrones se pueden editar deliberadamente, pero ese es el objetivo equivocado — los patrones existen porque son genuinamente comunes en la escritura débil o formulaica, humana o de IA. Eliminarlos porque están señalados, en lugar de porque la escritura realmente mejora, optimiza para lo incorrecto.</p>
+<p><strong>¿Por qué aparecen tan a menudo las frases hechas en la escritura de IA en primer lugar?</strong> Estas frases son comunes en enormes volúmenes de escritura formal y semiformal con la que se entrenan los modelos, así que son opciones estadísticamente "seguras" y de alta probabilidad para un modelo que intenta producir texto fluido y genéricamente apropiado — la misma razón por la que aparecen constantemente en la escritura corporativa humana, los textos de marketing y los ensayos escolares también.</p>
 
 <div class="cta-box">
-  <h3>Convierte HTML o texto enriquecido a Markdown</h3>
-  <p>La herramienta Convertir a Markdown de Orisod maneja tanto un pegado normal de texto enriquecido como código HTML crudo, incluidas tablas — todo en tu navegador.</p>
-  <a class="cta-button" href="/es/convert-to-markdown/">Convertir a Markdown →</a>
+  <h3>Revisa tu texto en busca de patrones de escritura genérica</h3>
+  <p>El Verificador de Escritura con IA de Orisod señala frases hechas, aperturas de oración repetitivas y otros patrones de estilo — claramente etiquetado como una señal de estilo, no un detector — todo en tu navegador.</p>
+  <a class="cta-button" href="/es/ai-writing-checker/">Revisa tu escritura →</a>
 </div>
 
-<p>Convertir HTML a Markdown no es un único truco ingenioso — son decenas de reglas pequeñas e independientes, una por tipo de elemento, aplicadas de forma consistente mientras se recorre un árbol de arriba hacia abajo. Una vez que eso se hace visible, tanto lo que sobrevive a la conversión como lo que calladamente no lo hace dejan de ser un misterio.</p>
+<p>La versión honesta de este problema no es "¿puede una herramienta decirte si un texto fue escrito por IA?" — no puede, de forma confiable, y las razones son estructurales, no una brecha de ingeniería temporal. La versión útil es "¿puede una herramienta mostrarte patrones específicos y verificables que merecen una segunda mirada?", que es una afirmación que un verificador heurístico sí puede respaldar.</p>
 
 </div>
 
 <div class="related-section">
   <h2>Artículos relacionados</h2>
   <div class="related-grid">
-    <a class="blog-card" href="/es/blog/format-json/">
-      <h3>Cómo formatear y validar JSON (y las reglas de sintaxis que realmente importan)</h3>
-      <p>Por qué un objeto de JavaScript copiado falla como JSON, y las reglas exactas que exige JSON.parse.</p>
+    <a class="blog-card" href="/es/blog/word-count-and-reading-time-explained/">
+      <h3>Cómo funcionan realmente el conteo de palabras y las estimaciones de tiempo de lectura</h3>
+      <p>Cómo dividen el texto los contadores, por qué el conteo de oraciones es una heurística, y la matemática detrás de un "5 min de lectura".</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/html-to-markdown-explained/">
+      <h3>Cómo el HTML se convierte realmente en Markdown</h3>
+      <p>Por qué la conversión es un recorrido de árbol con una regla por elemento, y por qué Markdown no puede representar todo lo que HTML sí.</p>
     </a>
 
     <a class="blog-card" href="/es/blog/text-case-styles-explained/">
       <h3>Estilos de mayúsculas y minúsculas explicados: cuándo usar camelCase, snake_case y más</h3>
       <p>Para qué sirve realmente cada estilo de nomenclatura, y por qué importa más la convención que la elección.</p>
-    </a>
-
-    <a class="blog-card" href="/es/blog/can-you-detect-ai-writing/">
-      <h3>Por qué los "detectores de IA" no pueden detectar realmente escritura de IA</h3>
-      <p>Por qué no existe una huella confiable que separe el texto de IA del humano, y qué puede decirte honestamente un verificador heurístico.</p>
     </a>
   </div>
 </div>
