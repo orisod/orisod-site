@@ -209,8 +209,9 @@ sol</textarea>
       </div>
 
       <div class="option-card">
-        <h3>Filas de práctica en blanco después de cada fila calcada</h3>
-        <input type="number" id="blankRowsInput" min="0" max="5" value="2">
+        <h3>Ciclos de práctica por palabra</h3>
+        <p>Cada ciclo son tres filas: una palabra completa para calcar, la misma palabra con solo la mitad inferior de cada letra visible para completar, y luego una fila en blanco para práctica libre.</p>
+        <input type="number" id="cyclesInput" min="1" max="5" value="2">
       </div>
 
       <div class="option-card">
@@ -232,7 +233,7 @@ sol</textarea>
 
   <div class="seo-content">
     <h2>¿Qué hace esta herramienta?</h2>
-    <p>Esta herramienta construye una ficha de caligrafía imprimible en PDF a partir de una lista de palabras, nombres o letras — una por línea. Cada línea se convierte en una fila de letras punteadas para calcar, repetidas a lo largo de la página, sobre líneas guía de papel pautado, seguida de filas en blanco solo con las guías para práctica libre. Los botones de relleno rápido pueden completar la lista con todo el abecedario o los dígitos con un clic.</p>
+    <p>Esta herramienta construye una ficha de caligrafía imprimible en PDF a partir de una lista de palabras, nombres o letras — una por línea. Cada línea recibe uno o más ciclos de práctica de tres filas: una fila completa para calcar con puntos, luego la misma palabra con solo la mitad inferior de las letras visible para que el niño complete la mitad superior a partir de lo que ya se muestra, y después una fila en blanco solo con las guías para práctica libre — todo sobre líneas guía de papel pautado. Los botones de relleno rápido pueden completar la lista con todo el abecedario o los dígitos con un clic.</p>
 
     <h2>¿Cuándo deberías usar esta herramienta?</h2>
     <ul>
@@ -251,12 +252,16 @@ sol</textarea>
       <div>Actualmente no — esto genera solo letras de imprenta (manuscritas). La cursiva requiere letras conectadas entre sí y un tipo de fuente distinto, que aún no es compatible.</div>
     </div>
     <div class="faq-item">
+      <div class="q">¿Para qué sirve la fila con la mitad visible?</div>
+      <div>Es un paso intermedio entre calcar por completo y la práctica libre — al mostrar solo la mitad inferior de cada letra, el niño tiene que recordar y completar la mitad superior en lugar de volver a calcar un contorno completo, lo cual se acerca más a escribir la letra sin ayuda.</div>
+    </div>
+    <div class="faq-item">
       <div class="q">¿Cuántas repeticiones aparecen en cada fila?</div>
       <div>Las que quepan a lo ancho de la página con el tamaño de letra elegido — se calcula automáticamente, así que no necesitas contar caracteres.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Qué pasa si mi lista no cabe en una página?</div>
-      <div>La ficha continúa automáticamente en páginas adicionales hasta que cada línea de tu lista tenga su propia fila de práctica.</div>
+      <div>La ficha continúa automáticamente en páginas adicionales hasta que cada línea de tu lista haya completado sus ciclos de práctica.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se sube mi lista de palabras a un servidor?</div>
@@ -344,7 +349,7 @@ const fillUpper = document.getElementById('fillUpper');
 const fillLower = document.getElementById('fillLower');
 const fillNumbers = document.getElementById('fillNumbers');
 const clearWords = document.getElementById('clearWords');
-const blankRowsInput = document.getElementById('blankRowsInput');
+const cyclesInput = document.getElementById('cyclesInput');
 const generateBtn = document.getElementById('generateBtn');
 const errorMsg = document.getElementById('errorMsg');
 const progressMsg = document.getElementById('progressMsg');
@@ -403,7 +408,7 @@ function canvasToPngBytes(canvas) {
   });
 }
 
-function renderTracedRowCanvas(text, widthPt, heightPt, fontSizePt, baselineOffsetPt) {
+function renderTracedRowCanvas(text, widthPt, heightPt, fontSizePt, baselineOffsetPt, clipFromTopPt) {
   const canvas = document.createElement('canvas');
   canvas.width = Math.round(widthPt * CANVAS_SCALE);
   canvas.height = Math.round(heightPt * CANVAS_SCALE);
@@ -420,12 +425,23 @@ function renderTracedRowCanvas(text, widthPt, heightPt, fontSizePt, baselineOffs
   ctx.strokeStyle = '#9ca3af';
   ctx.setLineDash([CANVAS_SCALE * 2.5, CANVAS_SCALE * 2.5]);
   ctx.textBaseline = 'alphabetic';
-  ctx.strokeText(repeated, 0, baselineOffsetPt * CANVAS_SCALE);
+
+  if (clipFromTopPt != null) {
+    const clipY = clipFromTopPt * CANVAS_SCALE;
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(0, clipY, canvas.width, canvas.height - clipY);
+    ctx.clip();
+    ctx.strokeText(repeated, 0, baselineOffsetPt * CANVAS_SCALE);
+    ctx.restore();
+  } else {
+    ctx.strokeText(repeated, 0, baselineOffsetPt * CANVAS_SCALE);
+  }
 
   return canvas;
 }
 
-async function generateWorksheet(items, preset, paperKey, blankRows) {
+async function generateWorksheet(items, preset, paperKey, cycles) {
   const { PDFDocument, rgb } = PDFLib;
   const pdfDoc = await PDFDocument.create();
   const pageSize = PAPER_SIZES[paperKey];
@@ -433,6 +449,7 @@ async function generateWorksheet(items, preset, paperKey, blankRows) {
   const fontSizePt = H * 0.65;
   const topOffset = H * 0.10;
   const baselineOffset = H * 0.75;
+  const midOffset = (topOffset + baselineOffset) / 2;
   const usableWidth = pageSize[0] - MARGIN * 2;
 
   let page = pdfDoc.addPage(pageSize);
@@ -456,23 +473,31 @@ async function generateWorksheet(items, preset, paperKey, blankRows) {
     page.drawLine({ start: { x: MARGIN, y: baselineY }, end: { x: MARGIN + usableWidth, y: baselineY }, thickness: 1.3, color: rgb(0.35, 0.55, 0.85) });
   }
 
-  for (const item of items) {
-    progressMsg.textContent = `Generando fila para "${item}"...`;
+  async function drawTracedRow(item, clipFromTopPt) {
     ensureRoom();
     const rowTop = cursorTop;
     drawGuideLines(rowTop);
 
-    const canvas = renderTracedRowCanvas(item, usableWidth, H, fontSizePt, baselineOffset);
+    const canvas = renderTracedRowCanvas(item, usableWidth, H, fontSizePt, baselineOffset, clipFromTopPt);
     const pngBytes = await canvasToPngBytes(canvas);
     const pngImage = await pdfDoc.embedPng(pngBytes);
     page.drawImage(pngImage, { x: MARGIN, y: rowTop - H, width: usableWidth, height: H });
 
     cursorTop -= H;
+  }
 
-    for (let b = 0; b < blankRows; b++) {
-      ensureRoom();
-      drawGuideLines(cursorTop);
-      cursorTop -= H;
+  function drawBlankRow() {
+    ensureRoom();
+    drawGuideLines(cursorTop);
+    cursorTop -= H;
+  }
+
+  for (const item of items) {
+    for (let c = 0; c < cycles; c++) {
+      progressMsg.textContent = `Generando filas para "${item}" (${c + 1}/${cycles})...`;
+      await drawTracedRow(item, null);
+      await drawTracedRow(item, midOffset);
+      drawBlankRow();
     }
   }
 
@@ -491,7 +516,7 @@ generateBtn.addEventListener('click', async () => {
     return;
   }
 
-  const blankRows = Math.max(0, Math.min(5, parseInt(blankRowsInput.value, 10) || 0));
+  const cycles = Math.max(1, Math.min(5, parseInt(cyclesInput.value, 10) || 1));
 
   generateBtn.disabled = true;
   generateBtn.textContent = 'Generando...';
@@ -500,7 +525,7 @@ generateBtn.addEventListener('click', async () => {
     await document.fonts.load('100px Andika');
     await document.fonts.ready;
 
-    const { bytes, pageCount } = await generateWorksheet(items, PRESETS[selectedPreset], selectedPaper, blankRows);
+    const { bytes, pageCount } = await generateWorksheet(items, PRESETS[selectedPreset], selectedPaper, cycles);
     const blob = new Blob([bytes], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
     const outName = 'ficha-de-caligrafia.pdf';

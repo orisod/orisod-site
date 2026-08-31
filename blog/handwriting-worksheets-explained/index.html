@@ -170,6 +170,9 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <figcaption>A practice row is three real vector guide lines plus one dashed letter — everything except the dashed letter itself is drawn directly as PDF line content; the letter is the one piece rendered on a canvas first, because dashing a glyph's outline isn't something PDF text drawing can do on its own.</figcaption>
 </figure>
 
+<h2>Why a "half-visible" row is just a clip, not a second technique</h2>
+<p>Between fully tracing a word and practicing it with no help at all, it's useful to have a middle step: show only part of the letter and ask for the rest from memory. That turns out not to need any new drawing capability — the same canvas that stroked the dashed letters also supports clipping, restricting where anything gets drawn to a chosen region. Rendering the identical word a second time, but with drawing clipped to everything below the row's own midline before stroking, produces a row where only the bottom half of each letter is dashed and the top half is left blank — not because anything was erased, but because nothing was ever drawn there. It's the same stroke call as the fully traceable row, just aimed at a smaller area.</p>
+
 <h2>Why the guide lines follow a three-line system</h2>
 <p>The top line, dashed midline, and solid baseline aren't arbitrary — they're the same convention used on physical primary-ruled paper: the baseline is where every letter sits, the top line marks how tall a capital or tall lowercase letter should reach, and the midline marks the shorter height most lowercase letters top out at. Reproducing that familiar three-line structure means the worksheet behaves the way a child (or a teacher) already expects ruled paper to behave, rather than inventing a new visual convention that needs its own explanation.</p>
 
@@ -180,6 +183,7 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <p><strong>Why does the number of repetitions per row change with letter size?</strong> Each row's letters are repeated until they fill the available page width, measured at whatever font size is selected — bigger letters simply take up more space, so fewer copies fit per row.</p>
 <p><strong>Why is cursive not supported?</strong> Cursive letterforms connect to each other and change shape depending on their neighbors, which is a fundamentally different rendering problem than repeating one independent glyph across a row — it's a reasonable candidate for a separate tool later, not an extension of this one.</p>
 <p><strong>Does using a canvas step for the letters mean the whole PDF is a scanned-looking image?</strong> No — only the thin strip containing that row's dashed letters is an image; the guide lines, page structure, and everything else in the PDF remain real vector content.</p>
+<p><strong>Why clip at the midline specifically, rather than some other height?</strong> The midline is already the shared reference every letter in the row sits against — reusing it as the clip boundary means the visible bottom half lines up exactly with a guide line that's already being drawn, instead of introducing a second, unrelated cutoff height.</p>
 
 <div class="cta-box">
   <h3>Build a handwriting practice worksheet</h3>
