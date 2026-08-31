@@ -210,7 +210,7 @@ sun</textarea>
 
       <div class="option-card">
         <h3>Practice cycles per word</h3>
-        <p>Each cycle is three rows: a full traceable word, the same word with only the bottom half visible to complete, then a blank row for free practice.</p>
+        <p>Each cycle is three rows: a full traceable word, the same word with only the top half visible so you complete the bottom half, then a blank row for free practice.</p>
         <input type="number" id="cyclesInput" min="1" max="5" value="2">
       </div>
 
@@ -233,7 +233,7 @@ sun</textarea>
 
   <div class="seo-content">
     <h2>What does this tool do?</h2>
-    <p>This tool builds a printable PDF handwriting worksheet from a list of words, names, or letters — one per line. Each line gets one or more three-row practice cycles: a fully traceable dotted row, then the same word with only the bottom half of each letter's dashes visible so the child completes the top half from what's already shown, then a blank guide-only row for free practice — all sitting on ruled practice-paper guide lines. Quick-fill buttons can populate the list with the full alphabet or digits in one click.</p>
+    <p>This tool builds a printable PDF handwriting worksheet from a list of words, names, or letters — one per line. Each line gets one or more three-row practice cycles: a fully traceable dotted row, then the same word with only the top half of each letter's dashes visible — measured from the letter's actual full height, ascenders and descenders included, not just a generic guideline — so the child completes the bottom half from what's already shown, then a blank guide-only row for free practice — all sitting on ruled practice-paper guide lines. Quick-fill buttons can populate the list with the full alphabet or digits in one click.</p>
 
     <h2>When should you use this tool?</h2>
     <ul>
@@ -253,7 +253,7 @@ sun</textarea>
     </div>
     <div class="faq-item">
       <div class="q">What's the point of the half-visible row?</div>
-      <div>It's a fading step between full tracing and free practice — with only the bottom half of each letter shown, the child has to recall and complete the top half rather than just tracing a complete outline again, which is closer to actually writing the letter unaided.</div>
+      <div>It's a step between full tracing and free practice — with only the top half of each letter shown, the child has to recall and complete the bottom half rather than just tracing a complete outline again, which is closer to actually writing the letter unaided.</div>
     </div>
     <div class="faq-item">
       <div class="q">How many repetitions appear in each row?</div>
@@ -408,7 +408,7 @@ function canvasToPngBytes(canvas) {
   });
 }
 
-function renderTracedRowCanvas(text, widthPt, heightPt, fontSizePt, baselineOffsetPt, clipFromTopPt) {
+function renderTracedRowCanvas(text, widthPt, heightPt, fontSizePt, baselineOffsetPt, mode) {
   const canvas = document.createElement('canvas');
   canvas.width = Math.round(widthPt * CANVAS_SCALE);
   canvas.height = Math.round(heightPt * CANVAS_SCALE);
@@ -426,16 +426,25 @@ function renderTracedRowCanvas(text, widthPt, heightPt, fontSizePt, baselineOffs
   ctx.setLineDash([CANVAS_SCALE * 2.5, CANVAS_SCALE * 2.5]);
   ctx.textBaseline = 'alphabetic';
 
-  if (clipFromTopPt != null) {
-    const clipY = clipFromTopPt * CANVAS_SCALE;
+  const baselineY = baselineOffsetPt * CANVAS_SCALE;
+
+  if (mode === 'top-half') {
+    // Measure the actual rendered glyphs' full vertical extent (ascenders like "l"
+    // and descenders like "g" included), then clip to only the top half of that
+    // real extent -- not a generic x-height line, since that would cut ascenders
+    // and descenders at the wrong height.
+    const metrics = ctx.measureText(repeated);
+    const ascent = metrics.actualBoundingBoxAscent || fontPx * 0.75;
+    const descent = metrics.actualBoundingBoxDescent || fontPx * 0.25;
+    const midY = baselineY + (descent - ascent) / 2;
     ctx.save();
     ctx.beginPath();
-    ctx.rect(0, clipY, canvas.width, canvas.height - clipY);
+    ctx.rect(0, 0, canvas.width, midY);
     ctx.clip();
-    ctx.strokeText(repeated, 0, baselineOffsetPt * CANVAS_SCALE);
+    ctx.strokeText(repeated, 0, baselineY);
     ctx.restore();
   } else {
-    ctx.strokeText(repeated, 0, baselineOffsetPt * CANVAS_SCALE);
+    ctx.strokeText(repeated, 0, baselineY);
   }
 
   return canvas;
@@ -449,7 +458,6 @@ async function generateWorksheet(items, preset, paperKey, cycles) {
   const fontSizePt = H * 0.65;
   const topOffset = H * 0.10;
   const baselineOffset = H * 0.75;
-  const midOffset = (topOffset + baselineOffset) / 2;
   const usableWidth = pageSize[0] - MARGIN * 2;
 
   let page = pdfDoc.addPage(pageSize);
@@ -473,12 +481,12 @@ async function generateWorksheet(items, preset, paperKey, cycles) {
     page.drawLine({ start: { x: MARGIN, y: baselineY }, end: { x: MARGIN + usableWidth, y: baselineY }, thickness: 1.3, color: rgb(0.35, 0.55, 0.85) });
   }
 
-  async function drawTracedRow(item, clipFromTopPt) {
+  async function drawTracedRow(item, mode) {
     ensureRoom();
     const rowTop = cursorTop;
     drawGuideLines(rowTop);
 
-    const canvas = renderTracedRowCanvas(item, usableWidth, H, fontSizePt, baselineOffset, clipFromTopPt);
+    const canvas = renderTracedRowCanvas(item, usableWidth, H, fontSizePt, baselineOffset, mode);
     const pngBytes = await canvasToPngBytes(canvas);
     const pngImage = await pdfDoc.embedPng(pngBytes);
     page.drawImage(pngImage, { x: MARGIN, y: rowTop - H, width: usableWidth, height: H });
@@ -495,8 +503,8 @@ async function generateWorksheet(items, preset, paperKey, cycles) {
   for (const item of items) {
     for (let c = 0; c < cycles; c++) {
       progressMsg.textContent = `Building rows for "${item}" (${c + 1}/${cycles})...`;
-      await drawTracedRow(item, null);
-      await drawTracedRow(item, midOffset);
+      await drawTracedRow(item, 'full');
+      await drawTracedRow(item, 'top-half');
       drawBlankRow();
     }
   }
