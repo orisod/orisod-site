@@ -44,7 +44,7 @@ Orisod (orisod.com) is a free, browser-based toolkit for images and PDFs — thi
 - Tool card/box: `background:#111827; border:1px solid #1f2937; border-radius:10px`
 - Dropzone pattern: dashed border `#374151`, hover state `border-color:#2563eb`
 - Footer: `© Orisod Labs` (home/tools pages also link to About/Privacy)
-- Every tool page has: dropzone at top (no scroll needed to start converting) → tool UI → site-wide top nav (see **Site-wide navigation**) → SEO content section (what it does / when to use / why Orisod / 4 FAQs) → Related tools (2-3 cards, see below) → footer
+- Every tool page has: dropzone at top (no scroll needed to start converting) → tool UI → site-wide top nav (see **Site-wide navigation**) → SEO content section (what it does / when to use / 4 FAQs — **no "Why Orisod" section**, see **"Why Orisod" section — never re-add** below) → Related tools (2-3 cards, see below) → footer
 - **Related tools card grid (added 2026-08-16):** replaced the old flat `.related` link list with a `.related-grid` of `.related-card` cards — icon in a rounded-square `.icon-box` container, bold title, muted-color description, right-aligned `→` arrow. 2 columns on desktop, 1 column under 600px. Card content (icon/title/desc) is pulled verbatim from that tool's entry in `/tools/index.html` (or `/es/tools/index.html`) — don't hand-write different copy here, keep them in sync. Icon-box background is **color-coded by category**: image = blue (`rgba(37,99,235,var(--icon-alpha))`, reuses `--accent`), PDF = amber (`rgba(245,158,11,var(--icon-alpha))`), utility = violet (`rgba(139,92,246,var(--icon-alpha))`) — chosen to stay clear of the site's existing semantic red (`#f87171` error) and green (`#4ade80` success) so the tint never reads as a status color. `--icon-alpha` is a per-theme token (`.30` dark / `.24` light) added to each page's `:root` blocks. This same Image/PDF/Utility → blue/amber/violet mapping is the one to reuse if color-coding ever extends to `/tools/` itself — don't invent a second mapping.
 
 ## Logo & favicon
@@ -128,12 +128,18 @@ Behavior: matches on name+description substring (name-starts-with ranked above n
 
 ## SEO conventions
 
-- Every tool page: 300–600 words of real content below the tool UI (not filler) — What is X / When to use / Why Orisod / 4 FAQs
+- Every tool page: 300–600 words of real content below the tool UI (not filler) — What is X / When to use / 4 FAQs. **No "Why Orisod" section** — see **"Why Orisod" section — never re-add** below.
 - `sitemap.xml` at repo root lists every page with `<lastmod>` and `<priority>` — update `lastmod` for a URL only when its content meaningfully changes, not for trivial edits
 - Related tools should cross-link reciprocally (if A links to B, B should link back to A)
 - Google Search Console: all English pages submitted and indexed. Spanish pages need submitting once live.
 
-## Business context
+## "Why Orisod" section — never re-add
+
+**Every tool page's SEO content section is exactly: What is X / When to use / 4 FAQs. There is no "Why Orisod" (or "¿Por qué Orisod?") heading+paragraph anywhere in that structure, full stop — not a stub, not a one-liner, nothing.** This was removed site-wide from all 44 tool pages (88 files, EN+ES) in Phase 9.9 (PR #17, commit `ac4993d`, 2026-08-23): it repeated brand-persuasion copy that duplicated what's already in each page's intro, FAQ, and the dedicated About page, on a site where visitors land with tool-specific intent already.
+
+That removal PR never added this rule to CLAUDE.md, and the page-structure and SEO-conventions bullets above kept saying "why Orisod" was required content for years afterward — so **every tool built after Phase 9.9 (all 23 of them as of 2026-08-31, both the original-17 and 7-tool-expansion batches) re-added the exact same section**, just spelled "Why Orisod" / "Por qué Orisod" instead of the original "Why use Orisod for this?" wording. Caught and removed a second time on 2026-08-31 (46 files: the 23 tools × EN+ES). If you're scaffolding a new tool page from an existing one as a template, **explicitly check the copied page doesn't have this section** — copying a pre-Phase-9.9 page you haven't audited, or copying a page that (like all 23 above) already regressed, will reintroduce it a third time.
+
+If you ever find this section on any tool page again — old or new — remove it the same way: drop the `<h2>...</h2>` line and its one following `<p>...</p>` line and the blank line after it, nothing else changes.
 
 - **Monetization plan:** SEO/organic traffic first, then Google AdSense (site already meets AdSense's structural requirements: About, Privacy Policy, real content, Analytics). Affiliate links (cloud storage, design software, VPN/privacy tools) being considered as a faster parallel path. Paid traffic ads (Facebook/etc.) are NOT worth it yet — no monetization is active to make the unit economics work.
 - **Trademark note:** "Orisod" is a registered US trademark for cosmetics/supplements (different class from software) — low risk, monitored, not urgent to act on.
