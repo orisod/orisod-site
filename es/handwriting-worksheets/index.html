@@ -210,7 +210,7 @@ sol</textarea>
 
       <div class="option-card">
         <h3>Ciclos de práctica por palabra</h3>
-        <p>Cada ciclo son tres filas: una palabra completa para calcar, la misma palabra con solo la mitad superior de cada letra visible para que completes la mitad inferior, y luego una fila en blanco para práctica libre.</p>
+        <p>Cada ciclo son tres filas: una palabra completa para calcar, la misma palabra con solo la mitad inferior de cada letra visible para que completes la mitad superior, y luego una fila en blanco para práctica libre.</p>
         <input type="number" id="cyclesInput" min="1" max="5" value="2">
       </div>
 
@@ -233,7 +233,7 @@ sol</textarea>
 
   <div class="seo-content">
     <h2>¿Qué hace esta herramienta?</h2>
-    <p>Esta herramienta construye una ficha de caligrafía imprimible en PDF a partir de una lista de palabras, nombres o letras — una por línea. Cada línea recibe uno o más ciclos de práctica de tres filas: una fila completa para calcar con puntos, luego la misma palabra con solo la mitad superior de las letras visible — medida a partir de la altura real y completa de la letra, ascendentes y descendentes incluidos, no solo una línea guía genérica — para que el niño complete la mitad inferior a partir de lo que ya se muestra, y después una fila en blanco solo con las guías para práctica libre — todo sobre líneas guía de papel pautado. Los botones de relleno rápido pueden completar la lista con todo el abecedario o los dígitos con un clic.</p>
+    <p>Esta herramienta construye una ficha de caligrafía imprimible en PDF a partir de una lista de palabras, nombres o letras — una por línea. Cada línea recibe uno o más ciclos de práctica de tres filas: una fila completa para calcar con puntos, luego la misma palabra con solo la mitad inferior de las letras visible — medida a partir de la altura real y completa de la letra, ascendentes y descendentes incluidos, no solo una línea guía genérica — para que el niño complete la mitad superior a partir de lo que ya se muestra, y después una fila en blanco solo con las guías para práctica libre — todo sobre líneas guía de papel pautado. Los botones de relleno rápido pueden completar la lista con todo el abecedario o los dígitos con un clic.</p>
 
     <h2>¿Cuándo deberías usar esta herramienta?</h2>
     <ul>
@@ -253,7 +253,7 @@ sol</textarea>
     </div>
     <div class="faq-item">
       <div class="q">¿Para qué sirve la fila con la mitad visible?</div>
-      <div>Es un paso intermedio entre calcar por completo y la práctica libre — al mostrar solo la mitad superior de cada letra, el niño tiene que recordar y completar la mitad inferior en lugar de volver a calcar un contorno completo, lo cual se acerca más a escribir la letra sin ayuda.</div>
+      <div>Es un paso intermedio entre calcar por completo y la práctica libre — al mostrar solo la mitad inferior de cada letra, el niño tiene que recordar y completar la mitad superior en lugar de volver a calcar un contorno completo, lo cual se acerca más a escribir la letra sin ayuda.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Cuántas repeticiones aparecen en cada fila?</div>
@@ -428,9 +428,9 @@ function renderTracedRowCanvas(text, widthPt, heightPt, fontSizePt, baselineOffs
 
   const baselineY = baselineOffsetPt * CANVAS_SCALE;
 
-  if (mode === 'top-half') {
+  if (mode === 'bottom-half') {
     // Mide la extensión vertical real de los glifos renderizados (con ascendentes
-    // como "l" y descendentes como "g" incluidos), y recorta solo la mitad superior
+    // como "l" y descendentes como "g" incluidos), y recorta solo la mitad inferior
     // de esa extensión real -- no una línea genérica de altura x, ya que eso
     // cortaría ascendentes y descendentes a la altura equivocada.
     const metrics = ctx.measureText(repeated);
@@ -439,7 +439,7 @@ function renderTracedRowCanvas(text, widthPt, heightPt, fontSizePt, baselineOffs
     const midY = baselineY + (descent - ascent) / 2;
     ctx.save();
     ctx.beginPath();
-    ctx.rect(0, 0, canvas.width, midY);
+    ctx.rect(0, midY, canvas.width, canvas.height - midY);
     ctx.clip();
     ctx.strokeText(repeated, 0, baselineY);
     ctx.restore();
@@ -504,7 +504,7 @@ async function generateWorksheet(items, preset, paperKey, cycles) {
     for (let c = 0; c < cycles; c++) {
       progressMsg.textContent = `Generando filas para "${item}" (${c + 1}/${cycles})...`;
       await drawTracedRow(item, 'full');
-      await drawTracedRow(item, 'top-half');
+      await drawTracedRow(item, 'bottom-half');
       drawBlankRow();
     }
   }

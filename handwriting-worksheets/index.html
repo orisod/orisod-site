@@ -210,7 +210,7 @@ sun</textarea>
 
       <div class="option-card">
         <h3>Practice cycles per word</h3>
-        <p>Each cycle is three rows: a full traceable word, the same word with only the top half visible so you complete the bottom half, then a blank row for free practice.</p>
+        <p>Each cycle is three rows: a full traceable word, the same word with only the bottom half visible so you complete the top half, then a blank row for free practice.</p>
         <input type="number" id="cyclesInput" min="1" max="5" value="2">
       </div>
 
@@ -233,7 +233,7 @@ sun</textarea>
 
   <div class="seo-content">
     <h2>What does this tool do?</h2>
-    <p>This tool builds a printable PDF handwriting worksheet from a list of words, names, or letters — one per line. Each line gets one or more three-row practice cycles: a fully traceable dotted row, then the same word with only the top half of each letter's dashes visible — measured from the letter's actual full height, ascenders and descenders included, not just a generic guideline — so the child completes the bottom half from what's already shown, then a blank guide-only row for free practice — all sitting on ruled practice-paper guide lines. Quick-fill buttons can populate the list with the full alphabet or digits in one click.</p>
+    <p>This tool builds a printable PDF handwriting worksheet from a list of words, names, or letters — one per line. Each line gets one or more three-row practice cycles: a fully traceable dotted row, then the same word with only the bottom half of each letter's dashes visible — measured from the letter's actual full height, ascenders and descenders included, not just a generic guideline — so the child completes the top half from what's already shown, then a blank guide-only row for free practice — all sitting on ruled practice-paper guide lines. Quick-fill buttons can populate the list with the full alphabet or digits in one click.</p>
 
     <h2>When should you use this tool?</h2>
     <ul>
@@ -253,7 +253,7 @@ sun</textarea>
     </div>
     <div class="faq-item">
       <div class="q">What's the point of the half-visible row?</div>
-      <div>It's a step between full tracing and free practice — with only the top half of each letter shown, the child has to recall and complete the bottom half rather than just tracing a complete outline again, which is closer to actually writing the letter unaided.</div>
+      <div>It's a step between full tracing and free practice — with only the bottom half of each letter shown, the child has to recall and complete the top half rather than just tracing a complete outline again, which is closer to actually writing the letter unaided.</div>
     </div>
     <div class="faq-item">
       <div class="q">How many repetitions appear in each row?</div>
@@ -428,9 +428,9 @@ function renderTracedRowCanvas(text, widthPt, heightPt, fontSizePt, baselineOffs
 
   const baselineY = baselineOffsetPt * CANVAS_SCALE;
 
-  if (mode === 'top-half') {
+  if (mode === 'bottom-half') {
     // Measure the actual rendered glyphs' full vertical extent (ascenders like "l"
-    // and descenders like "g" included), then clip to only the top half of that
+    // and descenders like "g" included), then clip to only the bottom half of that
     // real extent -- not a generic x-height line, since that would cut ascenders
     // and descenders at the wrong height.
     const metrics = ctx.measureText(repeated);
@@ -439,7 +439,7 @@ function renderTracedRowCanvas(text, widthPt, heightPt, fontSizePt, baselineOffs
     const midY = baselineY + (descent - ascent) / 2;
     ctx.save();
     ctx.beginPath();
-    ctx.rect(0, 0, canvas.width, midY);
+    ctx.rect(0, midY, canvas.width, canvas.height - midY);
     ctx.clip();
     ctx.strokeText(repeated, 0, baselineY);
     ctx.restore();
@@ -504,7 +504,7 @@ async function generateWorksheet(items, preset, paperKey, cycles) {
     for (let c = 0; c < cycles; c++) {
       progressMsg.textContent = `Building rows for "${item}" (${c + 1}/${cycles})...`;
       await drawTracedRow(item, 'full');
-      await drawTracedRow(item, 'top-half');
+      await drawTracedRow(item, 'bottom-half');
       drawBlankRow();
     }
   }
