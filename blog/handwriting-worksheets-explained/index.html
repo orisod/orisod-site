@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How Printable Handwriting Worksheets Are Actually Built | Orisod Blog</title>
+<meta name="description" content="Why tracing letters need a dashed outline instead of solid text, why that means one small rasterized step in an otherwise all-vector PDF, and why the font itself is a real design decision.">
+<link rel="canonical" href="https://orisod.com/blog/handwriting-worksheets-explained/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/handwriting-worksheets-explained/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/handwriting-worksheets-explained/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/handwriting-worksheets-explained/">
+<link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#2563eb">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+  --grid-alpha:.05;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+  --grid-alpha:.10;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background-color:var(--bg);background-image:linear-gradient(rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px),linear-gradient(90deg, rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px);background-size:42px 42px;color:var(--text);text-align:center;transition:background-color 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);display:inline-flex;align-items:center;gap:8px;}
+.site-nav-logo img{height:26px;width:auto;display:block;}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:5px 14px;margin:-5px 0;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.site-footer{
+  margin-top:40px;
+  padding:40px 24px 30px 24px;
+  border-top:1px solid var(--border);
+  text-align:left;
+}
+.footer-inner{
+  max-width:1000px;
+  margin:0 auto;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  gap:40px;
+}
+.footer-brand{max-width:280px;}
+.footer-brand-logo{font-size:16px;font-weight:bold;letter-spacing:0.5px;margin-bottom:10px;}
+.footer-brand-desc{font-size:13px;color:var(--muted-text);line-height:1.5;margin-bottom:14px;}
+.footer-copy{font-size:12px;color:var(--muted-text);opacity:0.7;}
+.footer-col h3{font-size:13px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-text);margin:0 0 14px 0;}
+.footer-col a{display:block;font-size:14px;color:var(--text);text-decoration:none;opacity:0.8;margin-bottom:10px;}
+.footer-col a:hover{opacity:1;color:var(--accent);}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+.blog-cat{display:inline-block;font-size:11px;font-weight:bold;text-transform:uppercase;letter-spacing:.3px;padding:3px 9px;border-radius:999px;margin-bottom:12px;cursor:default;}
+.blog-card .blog-cat{margin-bottom:0;}
+.blog-cat.cat-guide{background:#16213d;color:#60a5fa;}
+.blog-cat.cat-tip{background:#1f1a0f;color:#fbbf24;}
+.blog-cat.cat-comparison{background:#241c3d;color:#a78bfa;}
+:root[data-theme="light"] .blog-cat.cat-guide{background:#eff6ff;color:#1e40af;}
+:root[data-theme="light"] .blog-cat.cat-tip{background:#fffbeb;color:#92400e;}
+:root[data-theme="light"] .blog-cat.cat-comparison{background:#f5f3ff;color:#5b21b6;}
+.theme-figure{margin:10px 0 26px 0;}
+.theme-figure svg{display:block;width:100%;height:auto;}
+.theme-figure figcaption{font-size:13.5px;color:var(--muted-text);margin-top:10px;line-height:1.5;}
+code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/tools/">All Tools</a>
+    <a href="/tools/#image">Image Tools</a>
+    <a href="/tools/#pdf">PDF Tools</a>
+    <a href="/tools/#utility">Utility Tools</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <span class="lang-flag active">EN</span>
+    <a class="lang-flag" href="/es/blog/handwriting-worksheets-explained/">ES</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<span class="blog-cat cat-guide">Guides</span>
+<h1>How Printable Handwriting Worksheets Are Actually Built</h1>
+<p class="intro">A worksheet full of solid black letters isn't a tracing worksheet — it's just text. The dashed, "connect the dots" look that makes a letter traceable is a specific technique, and it turns out to be the one piece of an otherwise fully vector PDF that has to be built as a small image instead.</p>
+
+<div class="article-body">
+
+<h2>Why solid text can't be a tracing exercise</h2>
+<p>Drawing real PDF text — the way most text-generating tools on this site do it — fills each letter's shape solidly with ink, exactly like a printed word. There's nothing to trace there; a pencil has nowhere to go that isn't already covered. A traceable letter needs to show only the letter's outline, broken into small dashes, so a child's pencil has a path to follow and gaps to fill in. That's a fundamentally different kind of mark than "draw this letter" — it's "draw the outline of this letter, and skip most of it."</p>
+
+<h2>Why that specific effect needs a small raster step</h2>
+<p>A PDF's native text-drawing instruction can fill a letter shape from a font, but it has no concept of stroking just the outline with a broken, dashed line — that capability doesn't exist at the level of "draw this text" in the PDF format itself. Where it does exist natively is in a browser's 2D canvas: canvas drawing supports both filling and stroking any shape, including glyphs, and stroking can be set to draw as a dash pattern instead of a solid line. So each row of traceable letters is rendered once on a canvas — real text, but stroked with a dash instead of filled solid — then captured as a small image and placed onto the PDF page. Everything else on the page (the ruled guide lines) stays genuine vector content, drawn directly; only the dashed letters themselves are pixels.</p>
+
+<figure class="theme-figure">
+<svg viewBox="0 0 700 190" width="700" height="190" role="img" aria-label="Diagram of one practice row showing three horizontal guide lines — a solid top line, a dashed middle line, and a solid baseline — with a dashed, traceable letter A sitting on the baseline between the top line and the baseline." xmlns="http://www.w3.org/2000/svg">
+<line x1="40" y1="40" x2="660" y2="40" stroke="#93c5fd" stroke-width="2"/>
+<text x="670" y="44" font-size="12" fill="var(--muted-text)">top line</text>
+<line x1="40" y1="90" x2="660" y2="90" stroke="#93c5fd" stroke-width="2" stroke-dasharray="6 5"/>
+<text x="670" y="94" font-size="12" fill="var(--muted-text)">midline</text>
+<line x1="40" y1="140" x2="660" y2="140" stroke="#5b8fd6" stroke-width="2.5"/>
+<text x="670" y="144" font-size="12" fill="var(--muted-text)">baseline</text>
+<text x="110" y="132" font-size="110" font-family="Georgia, serif" font-weight="bold" fill="none" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4 4">A</text>
+</svg>
+<figcaption>A practice row is three real vector guide lines plus one dashed letter — everything except the dashed letter itself is drawn directly as PDF line content; the letter is the one piece rendered on a canvas first, because dashing a glyph's outline isn't something PDF text drawing can do on its own.</figcaption>
+</figure>
+
+<h2>Why a "half-visible" row is just a clip, not a second technique</h2>
+<p>Between fully tracing a word and practicing it with no help at all, it's useful to have a middle step: show only part of the letter and ask for the rest from memory. That turns out not to need any new drawing capability — the same canvas that stroked the dashed letters also supports clipping, restricting where anything gets drawn to a chosen region. Rendering the identical word a second time, but with drawing clipped to everything below the letters' own vertical midpoint before stroking, produces a row where only the bottom half of each letter is dashed and the top half is left blank — not because anything was erased, but because nothing was ever drawn there. It's the same stroke call as the fully traceable row, just aimed at a smaller area.</p>
+
+<p>That midpoint isn't a fixed height picked in advance — it's measured from the actual glyphs being rendered, using the browser's own text-measurement API to find exactly how far the tallest ascender (the stem of an "l," say) reaches above the baseline and how far the deepest descender (the tail of a "g") reaches below it. Cutting at a generic reference height would slice a tall letter's ascender off entirely or barely touch a short letter at all; measuring the real rendered extent and cutting at its actual middle keeps the visible fraction consistent letter to letter, no matter how tall or short each one naturally is.</p>
+
+<h2>Why the guide lines follow a three-line system</h2>
+<p>The top line, dashed midline, and solid baseline aren't arbitrary — they're the same convention used on physical primary-ruled paper: the baseline is where every letter sits, the top line marks how tall a capital or tall lowercase letter should reach, and the midline marks the shorter height most lowercase letters top out at. Reproducing that familiar three-line structure means the worksheet behaves the way a child (or a teacher) already expects ruled paper to behave, rather than inventing a new visual convention that needs its own explanation.</p>
+
+<h2>Why the font itself is a real decision, not a cosmetic one</h2>
+<p>Most of the fonts already used across this site are fine for reading but weren't designed with beginning readers in mind — some render a lowercase "a" or "g" with a two-story shape that doesn't match how most children are taught to write it by hand, which can actively work against what a worksheet is trying to teach. Fonts designed for literacy instruction use simpler, single-story letterforms and more generous spacing specifically because early readers rely on shape consistency to recognize letters. That's a real functional requirement, not a style preference, and it's why this specific tool needed its own font rather than reusing whatever's already used for regular text elsewhere on the site.</p>
+
+<h2>Quick answers</h2>
+<p><strong>Why does the number of repetitions per row change with letter size?</strong> Each row's letters are repeated until they fill the available page width, measured at whatever font size is selected — bigger letters simply take up more space, so fewer copies fit per row.</p>
+<p><strong>Why is cursive not supported?</strong> Cursive letterforms connect to each other and change shape depending on their neighbors, which is a fundamentally different rendering problem than repeating one independent glyph across a row — it's a reasonable candidate for a separate tool later, not an extension of this one.</p>
+<p><strong>Does using a canvas step for the letters mean the whole PDF is a scanned-looking image?</strong> No — only the thin strip containing that row's dashed letters is an image; the guide lines, page structure, and everything else in the PDF remain real vector content.</p>
+<p><strong>Why measure the actual letters instead of just clipping at the row's printed guide lines?</strong> The guide lines mark a generic reference height for the alphabet in general, not what a specific word actually needs — a word made only of short letters barely reaches those lines, while one with an "l" or a "g" extends past them. Measuring the real rendered text keeps the cut proportional to what's actually on the page, rather than proportional to a guideline the word may not even touch.</p>
+
+<div class="cta-box">
+  <h3>Build a handwriting practice worksheet</h3>
+  <p>Orisod's Handwriting Worksheets tool turns any word list into a printable PDF with dashed, traceable letters and ruled guide lines — entirely in your browser.</p>
+  <a class="cta-button" href="/handwriting-worksheets/">Build a worksheet →</a>
+</div>
+
+<p>The short version: tracing needs an outline, not a fill, and outlining-with-dashes is a canvas capability, not a PDF text-drawing one — so one small image per practice row is the honest cost of that specific effect, while everything else on the page stays exactly as real and lightweight as the rest of this site's PDF tools.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Related articles</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/blog/add-page-numbers-to-pdf/">
+      <h3>How to Add Page Numbers to a PDF</h3>
+      <p>How to add sequential page numbers to a finished PDF document.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/n-up-printing-explained/">
+      <h3>What N-Up Printing Actually Does to a PDF</h3>
+      <p>How multiple pages get scaled and arranged onto one printed sheet.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/pdf-booklet-imposition-explained/">
+      <h3>How Booklet Imposition Reorders Pages for Folding</h3>
+      <p>The page-order math behind turning a stack of paper into a folded booklet.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/blog/">← Back to Blog</a>
+
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-brand-logo">ORISOD</div>
+      <div class="footer-brand-desc">Free, browser-based image and PDF tools. 100% local processing — your files are never uploaded anywhere.</div>
+      <div class="footer-copy">© Orisod Labs</div>
+    </div>
+    <div class="footer-col">
+      <h3>Tools</h3>
+      <a href="/tools/#image">Image Tools</a>
+      <a href="/tools/#pdf">PDF Tools</a>
+      <a href="/tools/#utility">Utility Tools</a>
+    </div>
+    <div class="footer-col">
+      <h3>Company</h3>
+      <a href="/about/">About</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/blog/">Blog</a>
+    </div>
+  </div>
+</footer>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

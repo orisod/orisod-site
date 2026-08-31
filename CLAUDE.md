@@ -35,6 +35,7 @@ Orisod (orisod.com) is a free, browser-based toolkit for images and PDFs — thi
   - **turndown** (`turndown/7.2.4/turndown.js`) — HTML-to-Markdown conversion (used for Convert to Markdown). On cdnjs. The standard, widely-used library for this exact job, chosen over hand-rolling an HTML parser/converter for the same reason spark-md5 was chosen over hand-rolled MD5 — non-trivial parsing logic is exactly what the project prefers to reuse rather than reimplement.
   - **turndown-plugin-gfm** (`turndown-plugin-gfm@1.0.2/dist/turndown-plugin-gfm.js`) — adds GitHub-Flavored Markdown table, strikethrough, and task-list support on top of Turndown's default element set (used for Convert to Markdown). Not on cdnjs (confirmed via the cdnjs API — 404); loaded from jsdelivr instead, the same fallback already used for docx and mammoth. Exposes a global `turndownPluginGfm` object; register its combined ruleset with `turndownService.use(turndownPluginGfm.gfm)`.
   - Three CDN hosts are now in play: cdnjs (default for everything above unless noted), jsdelivr (docx, mammoth, turndown-plugin-gfm — anything not on cdnjs), and cdn.sheetjs.com (xlsx specifically, per SheetJS's own current publishing practice).
+  - **Andika** (`assets/fonts/Andika-Regular.woff2` + `.ttf` fallback) — the site's first self-hosted font, used only by Handwriting Worksheets for the traceable-letter canvas rendering. SIL International designed it specifically for early-reader/literacy legibility (single-story letterforms, generous spacing); OFL 1.1 licensed (`assets/fonts/Andika-OFL.txt`), sourced from the `google/fonts` GitHub repo and converted from the upstream `.ttf` to `.woff2` locally (via `fontTools`) for a smaller download. Self-hosted rather than loaded from Google Fonts' CDN specifically to keep the "nothing leaves your device" trust-strip claim literally true on this tool — no other page on the site loads a custom font at all, so this is a deliberate one-off, not a new site-wide pattern.
 
 ## Visual design system (must stay consistent across every page)
 
@@ -92,11 +93,11 @@ here as a record so they don't get reintroduced:
 
 **Base pages:** `/` (home), `/tools` (catalog, 3 categories), `/about`, `/privacy`
 
-**72 tools**, organized into 3 categories on `/tools`:
+**73 tools**, organized into 3 categories on `/tools`:
 
 **🖼️ Image Tools (20):** webp-to-jpg, heic-to-jpg, png-to-jpg, png-to-webp, jpg-to-webp, webp-to-png, avif-to-jpg-png, gif-to-jpg-png, bmp-to-jpg-png, svg-to-png, resize-image, crop-image, compress-image, rotate-image, social-media-crop, round-image-corners, add-border-to-image, image-color-filters, watermark-adder, blur-area-tool
 
-**📄 PDF Tools (35):** jpg-to-pdf, image-to-pdf, pdf-to-jpg, pdf-to-word, word-to-pdf, excel-to-pdf, powerpoint-to-pdf, merge-pdf, split-pdf, compress-pdf, rotate-pdf, pdf-page-organizer, add-page-numbers, edit-pdf-metadata, crop-pdf-pages, resize-pdf-pages, delete-pdf-pages, extract-pdf-text, ocr-pdf, fill-pdf-forms, pdf-editor, watermark-pdf, sign-pdf, html-to-pdf, flatten-pdf, text-to-pdf, add-stamps, compare-pdfs, pdf-color-filters, n-up-pdf, alternate-mix-pages, pdf-booklet-maker, extract-images-from-pdf, pdf-header-footer, repair-pdf
+**📄 PDF Tools (36):** jpg-to-pdf, image-to-pdf, pdf-to-jpg, pdf-to-word, word-to-pdf, excel-to-pdf, powerpoint-to-pdf, merge-pdf, split-pdf, compress-pdf, rotate-pdf, pdf-page-organizer, add-page-numbers, edit-pdf-metadata, crop-pdf-pages, resize-pdf-pages, delete-pdf-pages, extract-pdf-text, ocr-pdf, fill-pdf-forms, pdf-editor, watermark-pdf, sign-pdf, html-to-pdf, flatten-pdf, text-to-pdf, add-stamps, compare-pdfs, pdf-color-filters, n-up-pdf, alternate-mix-pages, pdf-booklet-maker, extract-images-from-pdf, pdf-header-footer, repair-pdf, handwriting-worksheets
 
 **🛠️ Utility Tools (17):** exif-remover, image-metadata-viewer, favicon-generator, qr-code-generator, image-to-base64, color-picker-from-image, image-dimension-checker, password-generator, uuid-generator, json-formatter, case-converter, word-character-counter, color-picker-converter, hash-checksum-generator, convert-to-markdown, ai-writing-checker, read-aloud
 
