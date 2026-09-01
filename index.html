@@ -43,6 +43,7 @@
   --dropzone-border:#374151;
   --icon-alpha:.30;
   --grid-alpha:.05;
+  --gear-alpha:.32;
   --card-shadow:0 8px 24px rgba(0,0,0,.35);
 }
 :root[data-theme="light"]{
@@ -55,6 +56,7 @@
   --dropzone-border:#cbd5e1;
   --icon-alpha:.24;
   --grid-alpha:.10;
+  --gear-alpha:.28;
   --card-shadow:0 8px 24px rgba(15,23,42,.08);
 }
 *{box-sizing:border-box;}
@@ -128,10 +130,62 @@ body{
 .theme-toggle:hover{border-color:var(--accent);}
 
 main{padding:60px 20px 0 20px;}
+
+/* Decorative rotating gear mark behind the hero — ambient background only,
+   never interactive, never the thing screen readers or keyboard focus land on. */
+.hero-pin-wrapper{
+  position:relative;
+}
+.hero-pin-inner{
+  position:sticky;
+  top:0;
+}
+/* Real block-level spacer, not padding-bottom on the wrapper: Chromium does not
+   count a containing block's own padding-bottom toward how long a top:0 sticky
+   child can stay stuck, so padding here silently cut the pin to ~50px instead
+   of the intended ~22vh — confirmed by swapping this in and remeasuring. */
+.hero-pin-spacer{
+  height:22vh;
+}
+.hero-gear-bg{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  opacity:var(--gear-alpha);
+  pointer-events:none;
+}
+.hero-gear-stage{
+  position:relative;
+  width:min(46vw, 460px);
+  height:min(46vw, 460px);
+}
+.hero-gear-pos{ position:absolute; transform:translate(-50%,-50%); }
+.hero-gear-pos-big{ left:42%; top:44%; width:60%; }
+.hero-gear-pos-small{ left:67%; top:65%; width:39%; }
+.hero-gear-img{ display:block; width:100%; height:auto; }
+.hero-gear-big{ animation:heroGearSpinCW 20s linear infinite; }
+.hero-gear-small{ animation:heroGearSpinCCW 14s linear infinite; } /* 20s * (7/10) teeth ratio, opposite direction */
+@keyframes heroGearSpinCW{ to{ transform:rotate(360deg); } }
+@keyframes heroGearSpinCCW{ to{ transform:rotate(-360deg); } }
+@media (prefers-reduced-motion: reduce){
+  .hero-gear-big, .hero-gear-small{ animation:none; }
+}
+@media (max-width:700px){
+  /* keep the ambient rotation, drop the pin/extra-scroll — a sticky hero plus
+     added scroll length reads as janky on small screens with real content below */
+  .hero-pin-spacer{ height:0; }
+  .hero-pin-inner{ position:static; }
+  .hero-gear-stage{ width:min(60vw, 320px); height:min(60vw, 320px); }
+}
 .hero{
   max-width:720px;
   margin:0 auto;
   position:relative;
+  z-index:1;
 }
 h1{
   font-size:28px;
@@ -363,16 +417,27 @@ h1{
 </header>
 
 <main>
-<div class="hero">
-  <img class="hero-logo" src="/assets/orisod-logo-full.png" alt="Orisod Labs">
-  <h1>Your toolkit for images, PDFs, and more — all from your browser.</h1>
-  <p class="sub">Convert, compress, resize, crop, merge PDFs, generate QR codes, strip photo metadata, and more — every tool runs locally in your browser. No installs, no sign-up, no files ever sent to a server.</p>
+<div class="hero-pin-wrapper">
+  <div class="hero-pin-inner">
+    <div class="hero-gear-bg" aria-hidden="true">
+      <div class="hero-gear-stage">
+        <div class="hero-gear-pos hero-gear-pos-big"><img class="hero-gear-img hero-gear-big" src="/assets/gear-base.png" width="1254" height="1254" alt="" loading="eager" decoding="async"></div>
+        <div class="hero-gear-pos hero-gear-pos-small"><img class="hero-gear-img hero-gear-small" src="/assets/gear-base.png" width="1254" height="1254" alt="" loading="eager" decoding="async"></div>
+      </div>
+    </div>
+    <div class="hero">
+      <img class="hero-logo" src="/assets/orisod-logo-full.png" alt="Orisod Labs">
+      <h1>Your toolkit for images, PDFs, and more — all from your browser.</h1>
+      <p class="sub">Convert, compress, resize, crop, merge PDFs, generate QR codes, strip photo metadata, and more — every tool runs locally in your browser. No installs, no sign-up, no files ever sent to a server.</p>
 
-  <div class="search-box">
-    <span class="search-icon" aria-hidden="true">🔍</span>
-    <input type="text" id="homeSearch" placeholder="Search tools…" aria-label="Search tools" autocomplete="off">
-    <span class="kbd-hint">⌘K</span>
+      <div class="search-box">
+        <span class="search-icon" aria-hidden="true">🔍</span>
+        <input type="text" id="homeSearch" placeholder="Search tools…" aria-label="Search tools" autocomplete="off">
+        <span class="kbd-hint">⌘K</span>
+      </div>
+    </div>
   </div>
+  <div class="hero-pin-spacer" aria-hidden="true"></div>
 </div>
 
 <section class="tool-category">
