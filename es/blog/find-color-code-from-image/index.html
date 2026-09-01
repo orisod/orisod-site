@@ -149,29 +149,29 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guías</span>
 <h1>Cómo obtener el código de color exacto de cualquier imagen</h1>
-<p class="intro">Ya sea que estés igualando un color de marca, reconstruyendo un diseño, o simplemente intentando recrear un tono que viste en una foto, adivinar el código de color nunca funciona del todo bien. Aquí te explicamos cómo obtener el valor exacto directamente de la imagen.</p>
+<p class="intro">Cuando necesitas obtener un color de un logotipo, una captura o una fotografía, tomar una muestra de la imagen te da el valor almacenado en ese píxel en lugar de una estimación visual. Es un dato útil, pero no garantiza que el color se vea idéntico en todas las pantallas o impresoras.</p>
 
 <div class="article-body">
 
-<h2>Por qué "más o menos" no funciona con el color</h2>
-<p>Los colores engañan al ojo. Dos tonos de azul pueden verse casi idénticos uno junto al otro y aun así ser códigos HEX medibles y distintos — y esa diferencia es exactamente el tipo de cosa que se nota como un desajuste evidente en cuanto lo usas en un diseño, un sitio web, o una pieza impresa junto al original. Si necesitas que un color coincida, necesitas el código real, no tu mejor estimación.</p>
+<h2>Por qué conviene tomar una muestra en lugar de adivinar</h2>
+<p>La iluminación, los colores cercanos y los ajustes de la pantalla cambian nuestra percepción de un tono. Dos azules parecidos pueden contener valores RGB distintos, y el mismo valor puede verse diferente en dos pantallas. Leer el píxel elimina la estimación dentro del archivo; al trasladar el resultado a otros dispositivos o a impresión, la gestión del color sigue siendo importante.</p>
 
-<h2>Qué significan los códigos HEX, RGB y HSL</h2>
-<p>Un código HEX como <code>#2563eb</code> es simplemente una forma compacta de escribir los valores rojo, verde y azul de un color en una sola cadena — la misma información que un código RGB como <code>rgb(37, 99, 235)</code>, solo con otro formato. HSL describe el mismo color de otra manera, usando matiz, saturación y luminosidad. Los tres son solo notaciones distintas para el color idéntico; cuál necesitas depende normalmente de lo que espere el software o el código con el que estés trabajando.</p>
+<h2>Cómo describen un color HEX, RGB y HSL</h2>
+<p>HEX y RGB pueden expresar los mismos canales rojo, verde y azul con notaciones distintas: <code>#2563eb</code> corresponde a <code>rgb(37, 99, 235)</code>. HSL representa ese color mediante matiz, saturación y luminosidad. Los valores HSL convertidos suelen redondearse, por lo que una conversión de regreso puede variar en algún canal. Usa el formato que requiera tu herramienta de diseño o tu código.</p>
 
-<h2>La forma antigua y tediosa</h2>
+<h2>No necesitas abrir un editor de imágenes completo</h2>
 <p>Antes de que existieran las herramientas que funcionan en el navegador, obtener un código de color de una imagen significaba abrirla en un editor de imágenes completo, usar una herramienta de cuentagotas escondida en alguna barra de herramientas, y leer el valor en un cuadro de diálogo de selector de color — suponiendo que tuvieras ese tipo de software instalado. Funciona, pero son muchos pasos para algo que debería tomar cinco segundos, y simplemente no es una opción si estás en un teléfono o en una computadora sin programas de diseño.</p>
 
-<h2>La forma sencilla: haz clic en el píxel, obtén el código</h2>
-<p>Un selector de color que funciona en el navegador se salta todo eso. Subes o arrastras la imagen, haces clic directamente en el píxel cuyo color quieres, y la herramienta lee el valor exacto de ese píxel y te lo muestra como HEX, RGB y normalmente algunos formatos más a la vez. No hay que buscar ningún cuentagotas ni instalar software — la imagen ni siquiera necesita salir de tu dispositivo, ya que el color se lee directamente en el navegador.</p>
+<h2>Selecciona un píxel y consulta su valor</h2>
+<p>Abre la imagen en un selector que funcione en el navegador y marca el punto que quieres examinar. La herramienta lee el píxel decodificado y muestra sus representaciones HEX, RGB y HSL. Si el procesamiento es local, la imagen puede permanecer en tu dispositivo.</p>
 
 <figure class="theme-figure">
   <img class="theme-img" data-dark="/assets/blog/find-color-code-from-image/color-picker-tool-dark-es.webp" data-light="/assets/blog/find-color-code-from-image/color-picker-tool-light-es.webp" src="/assets/blog/find-color-code-from-image/color-picker-tool-dark-es.webp" alt="Selector de color de Orisod mostrando un píxel seleccionado en una foto y sus valores HEX y RGB exactos" width="700" height="742" loading="lazy">
-  <figcaption>Haz clic en un píxel y obtén su código exacto, sin abrir un programa de diseño.</figcaption>
+  <figcaption>Selecciona un punto de la imagen para consultar el valor de ese píxel.</figcaption>
 </figure>
 
 <h2>Qué hacer con el código una vez que lo tienes</h2>
-<p>Cuando tengas el valor exacto, puedes usarlo directamente en lo que estés creando. Pega el código HEX en un archivo CSS, en el campo de color de una herramienta de diseño o en una guía de marca, y obtendrás una coincidencia exacta en lugar de una aproximación. Esto importa especialmente cuando necesitas mantener el mismo color de un logotipo en un sitio web, una presentación y materiales impresos, o reproducir en un nuevo diseño un tono concreto de una foto de referencia.</p>
+<p>Copia el valor en CSS, en una herramienta de diseño o en una paleta de trabajo. Si se trata de una marca establecida, compáralo con su guía oficial cuando exista: una captura o un logotipo comprimido puede no conservar el valor original. En impresión también influyen los perfiles de color, las tintas, el papel y la conversión de RGB a CMYK.</p>
 
 <h2>Situaciones comunes en las que lo necesitarás</h2>
 <ul>
@@ -180,12 +180,12 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <li>Estás recreando una paleta de colores a partir de una foto — un producto, una obra de arte, una habitación que estás decorando — y quieres que sea precisa en lugar de aproximada.</li>
   <li>Estás depurando un problema de CSS y necesitas confirmar si dos elementos que se ven del mismo color realmente comparten el mismo valor exacto.</li>
 </ul>
-<p>En todos estos casos, la alternativa consiste en probar a ciegas: ajustar un selector de color a ojo hasta que parezca lo bastante parecido. Esa aproximación casi nunca resiste una comparación directa con el original.</p>
+<p>La muestra proporciona un valor reproducible. Si la fuente contiene suavizado de bordes, textura, sombras o degradados, examina varios píxeles cercanos antes de decidir cuál representa el color que necesitas.</p>
 
-<h2>Una advertencia sobre las imágenes comprimidas</h2>
-<p>Conviene tener algo en cuenta: si la imagen de origen es un JPG muy comprimido, la muestra puede desviarse ligeramente del color original. La compresión con pérdida altera algunos píxeles, sobre todo cerca de bordes definidos y degradados suaves. La diferencia rara vez se nota, pero si buscas un color de marca exacto, utiliza la versión menos comprimida disponible, preferiblemente un PNG o el archivo original.</p>
+<h2>La compresión, los bordes y los perfiles afectan la muestra</h2>
+<p>La compresión JPEG puede alterar los píxeles, sobre todo cerca de bordes definidos y degradados. El suavizado también puede mezclar un color sólido con el fondo. Toma la muestra en una zona uniforme, lejos de los bordes, y utiliza la fuente menos comprimida disponible. Un perfil de color incrustado también puede cambiar la forma en que distintos programas interpretan y muestran los valores.</p>
 
-<h2>Respuestas rápidas</h2>
+<h2>Preguntas sobre la extracción de colores</h2>
 <p><strong>¿Funciona con capturas de pantalla?</strong> Sí. Cualquier formato que el navegador pueda mostrar, incluidas capturas PNG, JPG o WebP, funciona de la misma manera.</p>
 <p><strong>¿Puedo obtener varios colores de la misma imagen?</strong> Sí. Puedes seleccionar tantos píxeles como necesites, uno por uno, sin volver a elegir el archivo.</p>
 <p><strong>¿Necesito instalar un programa de diseño?</strong> No. Todo el proceso se realiza en el navegador, así que no hay nada que instalar.</p>
@@ -196,7 +196,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <a class="cta-button" href="/es/color-picker-from-image/">Elegir un Color de una Imagen →</a>
 </div>
 
-<p>La próxima vez que necesites igualar un color, no lo calcules a ojo: selecciona el píxel que ya contiene el valor exacto.</p>
+<p>Un píxel seleccionado te ofrece un valor comprobable del archivo de origen. Revisa los píxeles cercanos y el medio de salida antes de adoptarlo como color final de producción.</p>
 
 </div>
 

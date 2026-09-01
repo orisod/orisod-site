@@ -149,18 +149,18 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guides</span>
 <h1>What Is Base64 Encoding and When Developers Need It for Images</h1>
-<p class="intro">You've probably seen it in a CSS file or an API response: a giant block of text starting with something like data:image/png;base64, followed by hundreds of characters that clearly aren't readable text. Here's what's actually happening, and when encoding an image this way is genuinely the right call.</p>
+<p class="intro">A string that begins with data:image/png;base64 may look like corrupted text, but it is an image written in a text-safe form. Developers use it in HTML, CSS, JSON, and other places that cannot carry raw image bytes directly.</p>
 
 <div class="article-body">
 
-<h2>What Base64 actually is</h2>
-<p>Base64 is a way of representing binary data — the raw bytes that make up an image file — using only 64 printable text characters (letters, numbers, and a couple of symbols). Image files are binary by nature, but a lot of contexts a developer works in (CSS files, JSON payloads, HTML attributes, email) are built around plain text and don't handle raw binary data cleanly. Base64 encoding converts that binary image data into a text string that any of those text-based formats can carry without issue.</p>
+<h2>What Base64 is</h2>
+<p>Base64 represents binary data using a set of 64 printable characters. An image is normally stored as raw bytes, while formats such as CSS, HTML, JSON, and email are built to handle text. Encoding bridges that gap by turning the image bytes into a string those formats can carry safely.</p>
 
 <h2>Why images get encoded this way</h2>
 <p>The main reason is embedding: a Base64-encoded image can be pasted directly into an HTML <code>&lt;img&gt;</code> tag's <code>src</code> attribute, a CSS <code>background-image</code> property, or a JSON field, without needing to reference a separate image file at all. That matters because every separate image file a browser needs normally means a separate network request. For a handful of small icons or a tiny logo, embedding them as Base64 directly inside the CSS or HTML means the browser doesn't need to make additional requests just to fetch those small files.</p>
 
-<h2>The trade-off: bigger text, fewer requests</h2>
-<p>Base64 encoding isn't free — converting binary data to text this way increases the size by roughly 33%, since it takes more text characters to represent the same information than the original binary format needed. So a 10KB image becomes roughly 13-14KB of Base64 text. Whether that trade-off is worth it depends entirely on context: for a tiny icon, the savings from skipping an extra network request usually outweigh the modest size increase; for a large photo, the 33% size penalty adds up fast and outweighs any benefit from avoiding a separate request.</p>
+<h2>The size trade-off</h2>
+<p>Encoding increases the data size by roughly one third. A 10 KB image becomes about 13–14 KB of Base64 text. That overhead may be acceptable for a tiny asset embedded once, but it becomes expensive with large images or content repeated across several pages.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 380" width="700" height="380" role="img" aria-label="Diagram showing a small icon's binary data converted into a Base64 text string, roughly 33% larger" xmlns="http://www.w3.org/2000/svg">
@@ -256,26 +256,26 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 </ul>
 
 <h2>When it's the wrong choice</h2>
-<p>For most everyday website images — photos, larger graphics, anything reused across multiple pages — Base64 works against you. Encoded images can't be cached separately by the browser the way a normal image file can, so if the same icon appears on ten pages, a real image file gets downloaded once and reused, while a Base64-embedded version gets re-sent as part of every single page's HTML or CSS. For large or frequently reused images, that adds up to real wasted bandwidth compared to just linking a normal image file.</p>
+<p>Base64 is usually a poor choice for photos, large graphics, and assets reused across many pages. A browser can cache a normal image file independently. An embedded version travels again with each HTML or CSS response, increasing transfer size and preventing the image from being cached on its own.</p>
 
-<h2>How to actually generate a Base64 string from an image</h2>
-<p>Converting an image to Base64 means reading its binary data and re-encoding it into that text format — something you rarely need to do by hand. A browser-based converter handles this directly: you upload the image, and it outputs the encoded text string (with or without the full data URI prefix) ready to paste into whatever CSS, HTML, or JSON you're working with.</p>
+<h2>How to generate a Base64 string from an image</h2>
+<p>A converter reads the image bytes and returns the encoded string, either by itself or with the complete data URI prefix. You can then copy the result into HTML, CSS, or JSON without encoding the file manually.</p>
 
-<h2>A concrete example</h2>
-<p>A small 2KB arrow icon used across a site's navigation is a reasonable candidate for Base64 embedding — encoded, it becomes roughly 2.7KB of text sitting directly in a CSS file, saving the browser a separate request for a file that small. A 500KB product photo is not a good candidate — encoded, it balloons to around 665KB of text bloating an HTML or JSON response, and unlike a normal image file, it can't be cached independently by the browser if it appears on more than one page.</p>
+<h2>Small icon vs. product photo</h2>
+<p>A 2 KB arrow icon becomes roughly 2.7 KB after encoding and may be reasonable inside a self-contained component. A 500 KB product photo grows to about 665 KB, enlarges the surrounding document, and loses independent browser caching. The same mechanism is useful in the first case and wasteful in the second.</p>
 
-<h2>Quick answers</h2>
-<p><strong>Does Base64 encoding compress the image?</strong> No — it doesn't reduce the image's actual data size, it just represents the same data differently, and that representation is actually larger than the original binary.</p>
-<p><strong>Can I convert a Base64 string back into a regular image file?</strong> Yes — decoding reverses the process, turning the text string back into the original binary image data.</p>
-<p><strong>Is Base64 encoding a security measure?</strong> No — it's purely a format conversion, not encryption. Anyone can decode a Base64 string back into the original image with no special key or password involved.</p>
+<h2>Common Base64 questions</h2>
+<p><strong>Does Base64 compress the image?</strong> No. It represents the same data in another form, and the encoded string is larger than the original binary file.</p>
+<p><strong>Can I turn the string back into an image?</strong> Yes. Decoding reconstructs the original binary data.</p>
+<p><strong>Does Base64 protect an image?</strong> No. It is encoding, not encryption, and anyone can decode it without a key or password.</p>
 
 <div class="cta-box">
   <h3>Convert an Image to (or from) Base64</h3>
-  <p>Orisod's Base64 tool encodes an image into a ready-to-use data string, or decodes one back into a regular image file — entirely in your browser, with nothing uploaded to a server.</p>
+  <p>Encode an image into a ready-to-use data string or decode one back into a file. Orisod performs the conversion in your browser without uploading the data.</p>
   <a class="cta-button" href="/image-to-base64/">Convert Image to Base64 →</a>
 </div>
 
-<p>Base64 is neither a trick nor a compression method — it's a text-safe way of carrying binary image data, genuinely useful for small embedded icons and self-contained payloads, and genuinely wasteful for anything bigger or reused often.</p>
+<p>Base64 solves a specific compatibility problem: carrying binary data through text-based formats. Use it for small, self-contained assets; keep large or reusable images as separate files.</p>
 
 </div>
 

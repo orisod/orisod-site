@@ -150,15 +150,15 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guides</span>
 <h1>AVIF Format Explained: How to Open and Convert These Files</h1>
-<p class="intro">If WebP already felt unfamiliar, AVIF is the next format in line — newer, even more efficient, and even less consistently supported. Here's what it actually is and what to do when a .avif file won't open.</p>
+<p class="intro">AVIF can produce compact, high-quality images, but support still varies across older devices and desktop applications. If a .avif file will not open, the first question is whether the file is damaged or the software simply lacks an AVIF decoder.</p>
 
 <div class="article-body">
 
 <h2>What is AVIF?</h2>
-<p>AVIF (AV1 Image File Format) is an image format built on the same compression technology as the AV1 video codec — an open, royalty-free standard developed by a coalition that includes Google, Netflix, and Mozilla, among others. Its whole purpose is squeezing image data into the smallest possible file at a given quality level, and by most benchmarks it currently does that better than WebP, which in turn already beats JPG.</p>
+<p>AVIF (AV1 Image File Format) stores still images using compression derived from the AV1 video codec. The format supports lossy and lossless compression, transparency, HDR, wide color gamuts, and higher bit depths. It often compresses photographic content efficiently, although results depend on the image, encoder, quality target, and features being preserved.</p>
 
-<h2>How much smaller is AVIF, really?</h2>
-<p>Depending on the image and the compression settings used, AVIF files often come in 20-50% smaller than an equivalent WebP file, and sometimes 50% or more smaller than JPG at comparable visual quality. For a website with heavy image traffic, that's a substantial bandwidth saving on top of what switching to WebP alone would already provide.</p>
+<h2>File size depends on the test</h2>
+<p>AVIF can be smaller than WebP or JPG at a similar visual quality, but no percentage applies to every image. Photographs, illustrations, text, transparency, encoder versions, and quality settings can change the result substantially. Compare representative files at the quality your site actually needs before choosing a format.</p>
 
 <h2>Why AVIF compatibility is narrower than WebP's</h2>
 <p>AVIF is newer, and format support takes time to spread through the entire software ecosystem — browsers, operating systems, photo viewers, editing tools, and everything in between. Every major modern browser now supports AVIF for viewing images on the web, but plenty of desktop software, older devices, and offline tools haven't caught up yet. This is the same compatibility curve WebP went through a few years earlier, just at an earlier point in the process.</p>
@@ -170,11 +170,11 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <li><strong>Design and stock photo platforms experimenting with smaller formats</strong> — some are offering AVIF downloads to reduce their own bandwidth costs.</li>
 </ul>
 
-<h2>Why an AVIF file might not open for you</h2>
-<p>The same story as any newer format: the software you're using to open the file — an older photo viewer, an editing tool that hasn't updated, an offline app — simply doesn't have an AVIF decoder yet. The file itself is fine; it's a compatibility gap, not a broken download. This is worth remembering before assuming a download failed or a file got corrupted — nine times out of ten with a newer image format, the file is completely intact and the app just hasn't caught up yet.</p>
+<h2>When an AVIF file will not open</h2>
+<p>An older viewer or editor may not include an AVIF decoder. Try the file in an updated browser or another compatible application before assuming it is corrupt. If several current tools reject it, the download may be incomplete or the file may use a feature that a particular decoder does not support.</p>
 
-<h2>Should you worry about AVIF becoming the new HEIC problem?</h2>
-<p>It's a fair comparison — both are efficient formats that occasionally show up unannounced and cause a "why won't this open" moment. The difference is that AVIF's growth is being driven by websites optimizing for speed rather than a single company defaulting every device to it overnight, the way Apple did with HEIC on iPhone. That means AVIF files show up more gradually and less predictably, but the fix is identical either way: convert to something universal when you need the file to work right now, and don't worry about it further.</p>
+<h2>AVIF and HEIC create a similar compatibility problem</h2>
+<p>Both formats can arrive in a workflow that expects JPG or PNG. HEIC became common through Apple devices, while AVIF is frequently encountered in web delivery and image optimization. Conversion can solve an immediate compatibility problem, but the destination format should match the content: JPG for ordinary photographs, PNG when transparency or lossless output matters.</p>
 
 <h2>AVIF vs WebP vs JPG at a glance</h2>
 <table class="compare-table">
@@ -200,21 +200,21 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <figcaption>Measured on a 3000×2250 test photo, encoded with Pillow 12.3.0 (libwebp / pillow-avif-plugin), JPG quality 80, WebP quality 80, AVIF quality 50 — each near each format's typical "good quality" setting. Treat as this example, not a universal guarantee; actual savings vary by image.</figcaption>
 </figure>
 
-<h2>Converting AVIF to something universal</h2>
-<p>Rather than tracking down updates for every piece of software you might open the file with, converting the AVIF file to JPG or PNG sidesteps the issue in one step — you get a file that opens absolutely anywhere, at the (usually modest) cost of a larger file size than the AVIF original.</p>
+<h2>Choose a compatible destination format</h2>
+<p>Converting to JPG or PNG broadens compatibility, but neither format opens in literally every system. JPG is usually practical for photographs and does not preserve transparency. PNG can preserve transparency and lossless pixel data, although it may produce a much larger file. Standard conversions can also discard HDR, high bit depth, animation, color information, or metadata.</p>
 
-<h2>Quick answers</h2>
+<h2>Questions to ask before converting AVIF</h2>
 <p><strong>Is AVIF better than WebP?</strong> By most measures of compression efficiency, yes, slightly — but WebP currently has broader software support, so which one is "better" depends on whether file size or compatibility matters more for your situation.</p>
 <p><strong>Will AVIF eventually replace JPG the way WebP is trying to?</strong> It's trending that direction as support spreads, but JPG's near-universal compatibility means it won't disappear from general use anytime soon.</p>
-<p><strong>Does converting AVIF to JPG lose much quality?</strong> There's a small re-encoding step, same as any format conversion, but at a reasonable quality setting it's not something you'll notice by eye.</p>
+<p><strong>Does converting AVIF to JPG reduce quality?</strong> It can. JPG requires lossy encoding and cannot preserve every AVIF feature. Inspect gradients, fine texture, transparency, and HDR content after conversion.</p>
 
 <div class="cta-box">
   <h3>Convert Your AVIF File Now</h3>
-  <p>Orisod's AVIF converter runs entirely in your browser — drop in your AVIF file and get back a JPG or PNG that opens anywhere, no waiting on software updates.</p>
+  <p>Orisod's AVIF converter runs in your browser. Choose JPG or PNG according to the image and check the exported file in the application where you plan to use it.</p>
   <a class="cta-button" href="/avif-to-jpg-png/">Convert AVIF to JPG/PNG →</a>
 </div>
 
-<p>AVIF is a genuine step forward in compression efficiency, and its compatibility gaps will keep closing the way WebP's did. Until then, converting is the fastest way past a file that won't open.</p>
+<p>Keep the AVIF original when possible. A converted copy is useful for compatibility, while the source preserves the format's full image data and features for future use.</p>
 
 </div>
 

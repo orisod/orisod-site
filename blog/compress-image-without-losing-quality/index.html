@@ -150,18 +150,18 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guides</span>
 <h1>How to Compress an Image Without Losing Quality</h1>
-<p class="intro">Every time you've tried to shrink a photo's file size, you've probably worried it'll come out looking blurry or blotchy. That fear is reasonable — bad compression really does ruin photos — but done properly, you can cut a file down dramatically with a difference nobody will actually notice.</p>
+<p class="intro">Reducing an image file always involves a tradeoff among pixel dimensions, encoding, metadata, compatibility, and visual fidelity. Lossless optimization can preserve decoded pixels; lossy compression cannot promise zero quality loss, even when the difference is difficult to see at the intended size.</p>
 
 <div class="article-body">
 
 <h2>Why file size and visible quality aren't as connected as you'd think</h2>
-<p>It's tempting to assume that a smaller file automatically means a worse-looking image, but that's only true past a certain point. Photos are full of redundant and near-invisible detail — subtle gradients, noise, and fine texture that the human eye barely registers anyway. Compression works by identifying and discarding exactly that kind of data first, which is why a well-compressed photo at a sensible setting can lose 70-80% of its file size while looking essentially identical to the original.</p>
+<p>A smaller file is not automatically unsuitable, because encoders represent repeated or visually less prominent information efficiently. Results vary by image, format, encoder, settings, display, and viewer. No universal 70–80% saving or invisible difference applies to every photograph. Judge representative exports at the size and conditions in which they will be used.</p>
 
-<h2>Lossy vs lossless compression, quickly</h2>
-<p>There are two fundamentally different approaches. Lossless compression (how PNG works) shrinks a file without discarding any data at all — you get a smaller file, but the size reduction is limited, typically far less dramatic than what's possible with photos. Lossy compression (how JPG works) discards some data permanently in exchange for much bigger size reductions. For photographs specifically, lossy compression is almost always the better trade, since the discarded data is chosen specifically to be the least visually important.</p>
+<h2>Lossless and lossy answer different needs</h2>
+<p>Lossless encoding allows the same decoded pixel values to be recovered, although metadata or unsupported features may still change during conversion. PNG is lossless; JPG is lossy. Photographs often compress efficiently with lossy formats, but archival masters, scientific images, repeated editing, text, and evidence may require a lossless source.</p>
 
-<h2>The quality sweet spot</h2>
-<p>Most compression tools let you set a quality level, usually as a percentage or a slider. The relationship between that setting and file size isn't linear — dropping from 90% to 70% quality often shrinks the file dramatically with almost no visible change, while dropping further from 40% to 10% barely saves any more space but introduces obvious blocky artifacts. In practice, quality settings between roughly 65% and 80% hit the sweet spot for most photos: meaningfully smaller files with no visible quality loss at normal viewing sizes.</p>
+<h2>A quality number is not a universal scale</h2>
+<p>Quality controls are encoder-specific; 75 in one tool is not equivalent to 75 in another format or library. File size and artifacts change nonlinearly with content. Start from a high setting, compare at the intended display size and at 100% zoom, and lower it only until the file meets its real requirement. Do not present 65–80 as a safe range for every photo.</p>
 <figure class="theme-figure">
 <svg viewBox="0 0 700 380" width="700" height="380" role="img" aria-label="Line chart showing file size dropping sharply from 90% to 70% quality, then flattening from 40% down to 10%" xmlns="http://www.w3.org/2000/svg">
 <title>Line chart showing file size dropping sharply from 90% to 70% quality, then flattening from 40% down to 10%</title>
@@ -216,28 +216,28 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <ul>
   <li><strong>Physical dimensions.</strong> A photo resized down from 4000px wide to 1600px wide (still plenty for most web and screen use) will end up far smaller than the same photo merely re-compressed at full size.</li>
   <li><strong>File format.</strong> Switching from PNG to JPG for a photograph alone often cuts the size significantly, independent of any quality slider.</li>
-  <li><strong>Removed metadata.</strong> Camera photos carry EXIF data — camera model, settings, sometimes GPS location — which adds a small but real amount of extra file size that compression tools often strip automatically.</li>
+  <li><strong>Metadata removal.</strong> EXIF, XMP, IPTC, thumbnails, profiles, and GPS fields can add bytes. Removing them may reduce size and improve privacy, but can also discard dates, color information, authorship, and workflow data. Check what the tool preserves.</li>
 </ul>
 <p>Combining a modest quality reduction with an appropriately smaller pixel size is usually more effective, and produces a better-looking result, than pushing the quality slider down aggressively on a huge image.</p>
 
 <h2>A concrete example</h2>
-<p>Take a typical 12-megapixel phone photo — in the measurements above, a 2.0MB test photo. Compressed at 80% quality with no change to its dimensions, it dropped to about 950KB, a 53% size reduction, while looking identical at normal viewing sizes on a screen. Push the quality down to 30% instead, and it only drops a bit further, to about 459KB, but now you'll likely see visible blockiness around edges and in smooth areas like skies or skin tones. The bulk of the useful savings happens early; the risk to quality is concentrated at the low end.</p>
+<p>In the measured Orisod example, one 2.0 MB image became about 950 KB at the tool's quality 80 and about 459 KB at quality 30. Those figures describe that image and encoder only. Compare edges, gradients, skin, text, and fine texture in your own export; a normal-size preview can hide artifacts that become visible when cropped, printed, or edited again.</p>
 
 <h2>How to compress properly</h2>
-<p>The practical approach: use a tool where you control the quality setting directly and can preview or compare the before-and-after file sizes, rather than one that applies a fixed, unknown compression level. Start around 75-80% quality, check that the result looks right at the size you'll actually display or print it, and only drop further if you specifically need a smaller file and can tolerate a bit more visible softness.</p>
+<p>Work from the original, define the required dimensions, format, maximum bytes, transparency, and metadata, then make test exports. Compare the image at its final display or print size and inspect critical details at full resolution. Keep the source and record settings when repeatability matters.</p>
 
-<h2>Quick answers</h2>
-<p><strong>Does compressing an image multiple times keep degrading it?</strong> Yes — each round of lossy compression discards a little more data, so repeatedly re-saving a JPG will gradually reduce quality. Always compress from the original file, not from an already-compressed copy.</p>
-<p><strong>What's the difference between compressing and resizing?</strong> Compressing reduces file size while keeping the same pixel dimensions; resizing changes the actual width and height. They solve different problems and combine well together.</p>
-<p><strong>Is there a "correct" quality setting for every photo?</strong> Not exactly — a photo with fine detail and texture shows compression artifacts sooner than a simpler, smoother image, so the safe range (roughly 65-80%) is a starting point to check visually, not a fixed rule.</p>
+<h2>Questions before replacing the source</h2>
+<p><strong>Does repeated compression cause damage?</strong> Re-encoding with a lossy codec can accumulate artifacts, although the effect depends on settings and content. Export derivatives from the best available source instead of repeatedly recompressing a derivative.</p>
+<p><strong>How do compression and resizing differ?</strong> Encoding can change file size without changing dimensions; resizing changes the pixel grid and also requires resampling and usually re-encoding. Both can alter quality.</p>
+<p><strong>Is there one correct quality setting?</strong> No. Content, format, encoder, destination, later editing, and acceptable risk determine the setting. Use measured outputs, not a universal percentage.</p>
 
 <div class="cta-box">
   <h3>Compress an Image Without the Guesswork</h3>
-  <p>Orisod's image compressor lets you set the exact quality level and see the before/after file size instantly — all processed locally in your browser, nothing uploaded.</p>
+  <p>Orisod's image compressor lets you adjust its encoder quality and compare file sizes in your browser. Treat the number as a control for this implementation, and inspect the downloaded image before replacing anything.</p>
   <a class="cta-button" href="/compress-image/">Compress an Image →</a>
 </div>
 
-<p>Good compression isn't about shrinking a file as much as possible — it's about finding the point where the size drops significantly and the quality loss doesn't. That point exists for almost every photo; you just need a tool that lets you find it.</p>
+<p>The goal is the smallest file that still satisfies the actual visual, technical, and archival requirements. A derivative may be acceptable for sharing while the original remains necessary for editing, printing, or preservation.</p>
 
 </div>
 

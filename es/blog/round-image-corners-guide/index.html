@@ -149,50 +149,60 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guías</span>
 <h1>Cómo redondear las esquinas de una imagen (sin programas de diseño)</h1>
-<p class="intro">Las esquinas redondeadas y los recortes circulares aparecen constantemente — avatares de perfil, íconos de aplicaciones, tarjetas de producto — y aunque parece un simple ajuste visual, producir realmente un archivo de imagen independiente con esquinas redondeadas (no solo una visualización redondeada en una página web) confunde más de lo esperado.</p>
+<p class="intro">Una imagen redondeada puede obtenerse de dos maneras: una página web puede ocultar las esquinas con CSS, o el propio archivo puede incluir zonas transparentes. La opción correcta depende de dónde vayas a utilizar el resultado.</p>
 
 <div class="article-body">
 
-<h2>Dónde aparecen las esquinas redondeadas y los recortes circulares</h2>
+<h2>Usos habituales de las imágenes redondeadas</h2>
 <ul>
-  <li><strong>Avatares de perfil</strong> — la mayoría de las plataformas muestran las fotos de usuario en un círculo, y tener la imagen de origen ya recortada evita que la plataforma haga un recorte automático impredecible.</li>
-  <li><strong>Íconos de aplicaciones </strong>— muchas guías de íconos de tiendas de aplicaciones y pantallas de inicio esperan (o aplican automáticamente) esquinas redondeadas cuadradas con un radio específico.</li>
-  <li><strong>Tarjetas de producto y contenido</strong> — una miniatura con esquinas redondeadas se siente más moderna y coincide con la mayoría de las convenciones de diseño de interfaz actuales.</li>
-  <li><strong>Materiales impresos</strong> — las esquinas redondeadas en fotos son un toque de acabado común para impresiones físicas, tarjetas y credenciales.</li>
+  <li><strong>Fotos de perfil:</strong> preparar el recorte permite controlar el encuadre en lugar de dejarlo en manos del ajuste automático de cada plataforma.</li>
+  <li><strong>Íconos de aplicaciones:</strong> las tiendas y los sistemas operativos suelen mostrarlos dentro de un cuadrado con esquinas redondeadas.</li>
+  <li><strong>Tarjetas y miniaturas:</strong> un radio discreto ayuda a integrar la imagen con el resto de la interfaz.</li>
+  <li><strong>Material impreso:</strong> los retratos circulares y las esquinas suavizadas también funcionan bien en credenciales, tarjetas y composiciones fotográficas.</li>
 </ul>
 
-<h2>Por qué el redondeado con CSS no siempre es la respuesta</h2>
-<p>Si estás colocando una imagen en un sitio web, el <code>border-radius</code> de CSS puede redondear visualmente sus esquinas sin tocar el archivo real — la imagen subyacente sigue siendo un rectángulo plano, y el navegador simplemente recorta cómo se muestra. Eso funciona bien mientras la imagen solo viva dentro de esa página web. Se rompe en el momento en que necesitas un archivo realmente redondeado: subir una foto de perfil a una plataforma que no aplica su propio redondeo, exportar un ícono para una tienda de aplicaciones, adjuntar una imagen a un correo, o imprimirla — ninguno de esos contextos ejecuta tu CSS, así que un archivo rectangular se queda rectangular.</p>
+<h2>Primero decide si necesitas CSS o un archivo nuevo</h2>
+<p>Si la imagen solo aparecerá en un sitio web, CSS puede ser suficiente. La propiedad <code>border-radius</code> cambia la forma en que el navegador muestra la imagen, pero no modifica el archivo. Al abrir ese mismo JPG fuera de la página, seguirá teniendo esquinas rectas.</p>
 
-<h2>Qué significa "redondear" un archivo</h2>
-<p>Para producir una imagen genuinamente redondeada, las esquinas (o todo lo que esté fuera de un círculo) necesitan volverse realmente píxeles transparentes, no solo ocultarse visualmente — lo que significa que el resultado tiene que ser un formato que admita transparencia, como PNG, en lugar de JPG. Una imagen redondeada guardada como JPG no puede tener esquinas transparentes en absoluto; JPG rellenará esas áreas con un color sólido en su lugar, normalmente blanco, que se ve bien sobre un fondo blanco y visiblemente mal sobre cualquier otra cosa.</p>
+<p>Conviene crear un archivo redondeado cuando la forma deba conservarse al mover la imagen. Las fotos de perfil, los archivos adjuntos, los recursos para aplicaciones y los trabajos impresos no pueden depender del CSS de una página.</p>
+
+<h2>Las esquinas transparentes necesitan PNG</h2>
+<p>Para redondear el archivo de forma permanente, la zona exterior debe convertirse en píxeles transparentes. PNG admite transparencia; JPG no.</p>
+
+<p>Al guardar el resultado como JPG, las esquinas tienen que rellenarse con algún color, normalmente blanco. Puede parecer correcto sobre una página blanca, pero el rectángulo se hará visible al colocar la imagen sobre un fondo oscuro o de otro color.</p>
 
 <figure class="theme-figure">
   <img src="/assets/blog/round-image-corners-guide/circle-crop-transparency.webp" alt="Una foto cuadrada junto a su versión recortada en círculo, con un patrón de cuadros que indica transparencia real" width="666" height="386" loading="lazy">
-  <figcaption>El patrón de cuadros muestra píxeles realmente transparentes, no un truco visual.</figcaption>
+  <figcaption>El patrón de cuadros identifica la parte transparente del archivo. El fondo situado detrás del PNG podrá verse a través de esos píxeles.</figcaption>
 </figure>
 
-<h2>Recorte circular vs rectángulo redondeado</h2>
-<p>Un recorte circular elimina todo lo que esté fuera de un límite circular — la forma estándar para avatares y fotos de perfil. Un rectángulo redondeado mantiene la forma original de la imagen pero suaviza solo las cuatro esquinas con un radio elegido — más común para tarjetas, miniaturas e íconos donde todavía quieres una imagen mayormente rectangular. Ambos dependen del mismo mecanismo de transparencia por debajo; la diferencia es solo la forma de la máscara aplicada.</p>
+<h2>¿Recorte circular o rectángulo redondeado?</h2>
+<p>El círculo funciona bien para avatares, retratos y otras imágenes cuyo sujeto está centrado. Todo lo que quede fuera del límite circular se elimina, por lo que conviene revisar el encuadre antes de exportar.</p>
 
-<h2>Eligiendo un radio de esquina que se vea bien</h2>
-<p>Un radio pequeño (un suavizado sutil de esquinas que de otra forma serían nítidas) se lee como moderno y sutil, y funciona bien para tarjetas y miniaturas donde todavía quieres una imagen claramente rectangular. Un radio grande se acerca a verse casi circular en las esquinas, lo que conviene más a elementos pequeños como íconos que a fotos grandes, donde un radio agresivo puede verse involuntario en lugar de estilizado. No hay una regla fija, pero ajustar el radio a cómo se mostrará realmente la imagen — pequeña y densa en una cuadrícula vs grande e independiente — suele guiar la elección correcta.</p>
+<p>El rectángulo redondeado conserva una mayor parte de la composición original. Suele ser la mejor opción para fotos horizontales, miniaturas de productos, tarjetas e íconos que todavía necesitan una forma rectangular.</p>
 
-<h2>Cómo hacerlo sin programas de diseño</h2>
-<p>Una herramienta en el navegador aplica la máscara por ti: selecciona la imagen, elige un recorte circular o un radio para las esquinas y exporta un PNG con las zonas exteriores transparentes. No necesitas capas ni máscaras manuales. Como el efecto forma parte del archivo, se conserva al utilizar la imagen sobre cualquier fondo.</p>
+<h2>Cómo elegir el radio de las esquinas</h2>
+<p>Toma como referencia el tamaño final y el uso de la imagen. Un radio pequeño suaviza los bordes sin cambiar demasiado la forma y suele funcionar bien en fotografías grandes y tarjetas de contenido. Un radio mayor llama más la atención y puede favorecer a íconos compactos o miniaturas cuadradas.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Puedo redondear las esquinas de un JPG?</strong> No directamente manteniéndolo como JPG — el resultado necesita guardarse como PNG (u otro formato con transparencia) para que las áreas redondeadas sean realmente transparentes en lugar de rellenarse con un color de fondo.</p>
-<p><strong>¿Un PNG redondeado se verá bien sobre cualquier fondo?</strong> Sí — porque las esquinas son píxeles genuinamente transparentes, la imagen mostrará cualquier color o imagen de fondo que haya detrás, a diferencia de un JPG con un redondeado simulado.</p>
-<p><strong>¿Un recorte circular es el mismo proceso que redondear esquinas?</strong> Funcionalmente sí — ambos aplican una máscara de transparencia a la imagen, solo con una forma distinta (un círculo completo vs cuatro esquinas redondeadas en una imagen por lo demás rectangular).</p>
+<p>Revisa la vista previa sobre un fondo parecido al que tendrá la imagen. Así podrás detectar si las esquinas quedaron demasiado redondeadas o si el recorte acercó el sujeto en exceso a alguno de los bordes.</p>
+
+<h2>Cómo crear la imagen redondeada</h2>
+<p>Abre la imagen en una herramienta de redondeado, elige el recorte circular o ajusta el radio de las esquinas y exporta el resultado como PNG. La transparencia quedará integrada en el archivo descargado y se conservará al subirlo, enviarlo por correo o imprimirlo.</p>
+
+<h2>Antes de exportar</h2>
+<p><strong>¿La imagen original puede ser JPG?</strong> Sí. Puedes comenzar con JPG, PNG u otro formato compatible. Exporta el resultado como PNG para conservar la transparencia de las esquinas.</p>
+
+<p><strong>¿El PNG funcionará sobre fondos diferentes?</strong> Sí. Las esquinas transparentes dejan ver el color o la imagen que haya detrás, sin añadir un recuadro blanco.</p>
+
+<p><strong>¿El recorte circular utiliza la misma técnica?</strong> Sí. Ambas opciones aplican una máscara de transparencia; lo único que cambia es la forma de esa máscara.</p>
 
 <div class="cta-box">
   <h3>Redondea las esquinas o recorta una imagen en círculo</h3>
-  <p>La herramienta Redondear imagen de Orisod crea un recorte circular o aplica el radio de esquina que elijas y exporta un PNG con transparencia. Todo se procesa en tu navegador.</p>
-  <a class="cta-button" href="/es/round-image-corners/">Redondear Esquinas de Imagen →</a>
+  <p>Elige la forma, revisa la vista previa y exporta un PNG transparente. Orisod procesa la imagen en tu navegador sin subirla.</p>
+  <a class="cta-button" href="/es/round-image-corners/">Redondear esquinas de imagen →</a>
 </div>
 
-<p>Si una imagen necesita verse redondeada en todos los lugares donde se use — no solo en una página web con el CSS correcto — las esquinas necesitan ser realmente transparentes en el archivo mismo, no simuladas con una regla de estilo.</p>
+<p>Usa CSS cuando el efecto redondeado pertenezca a una sola página web. Exporta un PNG transparente cuando la forma deba acompañar a la imagen dondequiera que la utilices.</p>
 
 </div>
 

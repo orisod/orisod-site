@@ -149,15 +149,15 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guías</span>
 <h1>Cómo convertir una página PDF en una imagen</h1>
-<p class="intro">Necesitas una página específica de un PDF para ponerla en una presentación, un sitio web o un foro — algún lugar que espera un JPG o PNG, no un adjunto PDF. Aquí te explicamos por qué eso no es tan simple como parece, y cómo obtener una imagen limpia de una página de PDF.</p>
+<p class="intro">Una presentación, un sitio o una aplicación de mensajería puede aceptar imágenes, pero no una página PDF incrustada. Convertirla exige renderizarla con un tamaño de píxeles determinado. El formato y la resolución de salida decidirán si el texto pequeño sigue siendo legible y si el archivo resulta práctico para compartir.</p>
 
 <div class="article-body">
 
 <h2>Una página de PDF no es ya una imagen</h2>
-<p>Esto confunde a la gente: un PDF se ve como una foto plana de una página cuando lo visualizas, así que parece que ya debería "ser" una imagen que simplemente podrías guardar. Pero la mayoría de los PDF en realidad están construidos con texto, fuentes y gráficos vectoriales — instrucciones de cómo dibujar la página, no una cuadrícula de píxeles. Por eso el texto de un PDF se mantiene nítido a cualquier nivel de zoom y por qué puedes seleccionarlo y copiarlo. Para convertir eso en un JPG o PNG, algo tiene que renderizar esas instrucciones en una cuadrícula real de píxeles primero — un proceso llamado rasterización.</p>
+<p>Una página PDF puede contener texto, fuentes, trazados vectoriales, imágenes de mapa de bits, anotaciones, transparencia y otros objetos. Algunos PDF son principalmente páginas escaneadas; otros combinan varios tipos de contenido. El visor interpreta esos objetos en pantalla. Exportar a JPG o PNG rasteriza el resultado en una cuadrícula fija de píxeles.</p>
 
 <h2>Qué hace la rasterización</h2>
-<p>Rasterizar una página de PDF significa renderizarla a una resolución específica y producir una imagen rasterizada plana — el mismo tipo de cuadrícula de píxeles del que está hecha una foto de cámara. Una vez que eso ocurre, el resultado se comporta como cualquier otra imagen: se puede redimensionar, incrustar, comprimir o subir a cualquier lugar donde se acepten imágenes, pero pierde la precisión de texto y vectores que tenía el PDF original. No hay vuelta atrás de una imagen a texto seleccionable sin un paso separado de OCR.</p>
+<p>Rasterizar toma muestras de la página a una escala elegida y crea un valor de color para cada píxel de salida. La imagen deja de contener texto seleccionable, trazados, enlaces, controles de formulario y estructura del PDF. Un OCR puede generar después un texto nuevo, pero no restaura los objetos originales ni garantiza un reconocimiento perfecto.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 380" width="700" height="380" role="img" aria-label="Diagrama que muestra una página PDF con texto, gráficos vectoriales e imágenes incrustadas renderizada en una cuadrícula fija de píxeles." xmlns="http://www.w3.org/2000/svg">
@@ -491,30 +491,30 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <li><strong>Miniaturas y vistas previas.</strong> Generar una imagen de vista previa que represente un documento PDF, como una miniatura de portada.</li>
 </ul>
 
-<h2>La resolución importa más de lo que crees</h2>
-<p>Como la rasterización renderiza la página a una resolución específica, la nitidez de la imagen resultante depende completamente de ese ajuste — renderiza demasiado pequeño, y el texto que era perfectamente nítido en el PDF se vuelve visiblemente borroso o pixelado como imagen. Un buen conversor te permite elegir una resolución más alta cuando el resultado necesita mantenerse legible, especialmente para páginas con texto pequeño o detalle fino como gráficos y diagramas.</p>
+<h2>Elige las dimensiones según el destino</h2>
+<p>Las dimensiones de salida, la proporción de la página, el motor de renderizado y cualquier escalado posterior influyen en la legibilidad. Muy pocos píxeles dificultan leer texto pequeño y líneas finas; un tamaño excesivo aumenta memoria y peso sin ayudar en una pantalla pequeña. Parte de los requisitos del destino y revisa el resultado al tamaño real de presentación.</p>
 
 <h2>Elegir entre JPG y PNG para el resultado</h2>
-<p>Si la página es principalmente una foto o tiene gradientes de color complejos, JPG normalmente da un archivo más pequeño sin pérdida de calidad visible. Si la página es principalmente texto, arte lineal, o un diagrama con bordes definidos, PNG se mantiene mejor, evitando el aspecto suave y ligeramente borroso que puede introducir la compresión JPG alrededor de líneas finas y texto pequeño — la misma disyuntiva que aplica al elegir entre ambos formatos en general.</p>
+<p>JPG suele ser compacto para páginas fotográficas, pero su compresión con pérdida puede introducir artefactos. PNG conserva sin pérdida los píxeles decodificados y suele funcionar mejor para texto, líneas, diagramas o transparencia, aunque puede pesar más. Compara resultados cuando la página mezcle fotografías y texto fino.</p>
 
 <h2>¿Una página o todo el documento?</h2>
-<p>La mayoría de los PDF que alguien necesita convertir tienen más de una página, pero la necesidad real suele ser solo una página específica — la portada, un gráfico particular, una página de firma. Un buen conversor te permite elegir páginas individuales en lugar de forzarte a convertir todo y luego descartar el resto, ahorrándote tener que revisar una carpeta de imágenes que no necesitas.</p>
+<p>Selecciona solo las páginas necesarias cuando el destino requiera una portada, un gráfico o una vista previa. Para un documento completo, la exportación por lotes puede generar una imagen por página. Comprueba el orden, la rotación, los cuadros de recorte y los distintos tamaños antes de procesarlo todo.</p>
 
 <h2>Una verificación rápida antes de convertir</h2>
-<p>Si tu objetivo en realidad es reutilizar el texto de la página — citar un párrafo, editar una tabla, copiar una lista — convertir a imagen es la herramienta equivocada por completo, ya que ese paso descarta el texto seleccionable. Convertir a imagen solo tiene sentido cuando lo que necesitas es la apariencia visual de la página, no su contenido subyacente.</p>
+<p>Exporta como imagen cuando la apariencia visual sea el entregable. Si necesitas citar, buscar, editar o analizar texto, extráelo o aplica OCR a las páginas escaneadas. Si solo necesitas un gráfico o una fotografía incrustada, extraer ese objeto puede conservar más calidad que rasterizar toda la página.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Convertir una página de PDF en imagen mantiene el texto buscable?</strong> No — una vez rasterizada, la página es una imagen plana, y cualquier texto en ella ya no es seleccionable ni buscable a menos que le apliques OCR por separado.</p>
-<p><strong>¿La imagen se verá exactamente como la página del PDF?</strong> Visualmente sí, a una resolución suficientemente alta — lo que cambia es la estructura subyacente (píxeles en lugar de instrucciones de texto/vector), no la apariencia.</p>
-<p><strong>¿Puedo convertir todas las páginas de un PDF en imágenes a la vez?</strong> Sí, la mayoría de los conversores admiten conversión por lotes, produciendo una imagen por página si eso es lo que necesitas en lugar de elegir páginas individualmente.</p>
+<h2>Verifica la página renderizada</h2>
+<p><strong>¿La imagen conserva texto buscable?</strong> Un JPG o PNG corriente no mantiene la capa de texto del PDF. El OCR puede generar texto reconocido por separado, pero un visor de imágenes seguirá tratando la exportación como píxeles.</p>
+<p><strong>¿Se verá idéntica?</strong> No necesariamente. Fuentes ausentes, transparencias incompatibles, gestión del color, anotaciones, cuadros de recorte y diferencias entre motores pueden cambiar el resultado. Compáralo con un visor PDF de confianza.</p>
+<p><strong>¿Puedo exportar todas las páginas?</strong> Muchos conversores lo permiten, pero pueden existir límites de cantidad, memoria, cifrado o tamaños de página. Prueba primero algunas páginas representativas.</p>
 
 <div class="cta-box">
   <h3>Convierte una página PDF en una imagen</h3>
-  <p>El convertidor de PDF a JPG de Orisod transforma cada página en una imagen y permite ajustar la calidad antes de descargarla. Todo se procesa en tu navegador y el documento permanece en tu dispositivo.</p>
+  <p>El convertidor de PDF a JPG de Orisod renderiza las páginas seleccionadas en tu navegador. Elige una escala adecuada y revisa texto pequeño, gráficos, rotación y color antes de usar la imagen.</p>
   <a class="cta-button" href="/es/pdf-to-jpg/">Convertir PDF a JPG →</a>
 </div>
 
-<p>Una página de PDF se convierte en una imagen usable en el momento en que se renderiza a una resolución suficientemente alta — después de eso, encaja en una diapositiva, una página web o una publicación de foro exactamente como cualquier otra imagen.</p>
+<p>Exporta para el lugar donde aparecerá la imagen, no buscando una resolución máxima abstracta. El mejor resultado tiene suficientes píxeles para ser legible, un formato apropiado para el contenido y solo el peso que necesita el destino.</p>
 
 </div>
 

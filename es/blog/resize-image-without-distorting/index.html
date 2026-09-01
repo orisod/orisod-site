@@ -149,45 +149,45 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guías</span>
 <h1>Cómo redimensionar una imagen sin deformarla</h1>
-<p class="intro">Lo has visto pasar: una foto se redimensiona y de repente todos en ella se ven ligeramente estirados, o el círculo perfecto de un logotipo se convierte en un óvalo. Aquí te explicamos exactamente por qué pasa eso, y cómo redimensionar sin que ocurra.</p>
+<p class="intro">Una cara se ve estirada y un logotipo circular se convierte en óvalo cuando el ancho y el alto cambian sin conservar su proporción original. Mantén fija la relación de aspecto o recorta la imagen si el formato requerido utiliza otra proporción.</p>
 
 <div class="article-body">
 
-<h2>Qué está pasando cuando una imagen "se distorsiona"</h2>
-<p>Toda imagen tiene una relación de aspecto — la relación proporcional entre su ancho y alto, como 4:3 o 16:9. Cuando redimensionas una imagen fijando un nuevo ancho y un nuevo alto de forma independiente, sin mantener esa relación consistente, le estás diciendo al software que apriete o estire la imagen para ajustarla a dimensiones para las que no estaba proporcionada. Los píxeles se empujan y se jalan de forma no uniforme para llenar la nueva forma, que es exactamente lo que hace que una cara se vea sutilmente estirada o que un círculo se convierta en un óvalo.</p>
+<h2>Por qué se deforma una imagen</h2>
+<p>Toda imagen tiene una relación de aspecto, es decir, una proporción entre el ancho y el alto, como 4:3 o 16:9. Si introduces dos dimensiones con una relación diferente, el contenido debe adaptarse a otra forma. La escala horizontal y la vertical dejan de coincidir, por lo que las caras, los círculos y otras figuras conocidas aparecen estiradas o comprimidas.</p>
 
 <figure class="theme-figure">
   <img src="/assets/blog/resize-image-without-distorting/aspect-ratio-locked-vs-unlocked.webp" alt="El mismo logotipo circular correctamente redimensionado frente a estirado en forma de óvalo al ignorar la relación de aspecto" width="700" height="396" loading="lazy">
   <figcaption>Un círculo que se convierte en óvalo es la señal clásica de distorsión.</figcaption>
 </figure>
 
-<h2>La solución: fija la relación de aspecto</h2>
-<p>La mayoría de los redimensionamientos correctos se hacen fijando la relación de aspecto, lo que significa que solo necesitas especificar una dimensión — digamos, un ancho objetivo — y el alto se calcula automáticamente para mantener intactas las proporciones originales. Nada se estira ni se aprieta, porque la forma de la imagen nunca cambia realmente, solo su tamaño general.</p>
+<h2>Mantén fija la relación de aspecto</h2>
+<p>Introduce el ancho o el alto deseado y deja que la herramienta calcule la otra dimensión. Ambas medidas cambiarán en la misma proporción y la forma original se conservará.</p>
 
-<h2>¿Qué pasa si de verdad necesitas un ancho Y alto específicos?</h2>
-<p>A veces la relación que necesitas realmente no coincide con la original — por ejemplo, un requisito de foto de perfil cuadrada aplicado a una foto panorámica ancha. En ese caso, la distorsión tampoco es realmente la alternativa correcta; las opciones reales son:</p>
+<h2>Cuando ambas dimensiones son obligatorias</h2>
+<p>Si una plataforma exige una imagen cuadrada y el original es horizontal, el redimensionado proporcional no puede cumplir por sí solo las dos medidas. Las opciones prácticas son:</p>
 <ul>
   <li><strong>Recortar</strong> — cortar parte de la imagen para cambiar sus proporciones sin estirar lo que queda.</li>
   <li><strong>Añadir bandas o relleno</strong> — mantener la imagen completa en sus proporciones correctas y agregar espacio de fondo (a menudo en blanco o difuminado) para llenar la forma objetivo.</li>
 </ul>
-<p>Ambas preservan las proporciones reales de la imagen; solo cambia el encuadre. La distorsión es la única opción que realmente daña la imagen en sí, por lo que vale la pena evitarla incluso cuando se requiere un conjunto obstinado de dimensiones exactas.</p>
+<p>El recorte elimina parte del encuadre y el relleno añade espacio alrededor. Ambos conservan las proporciones del contenido. El estiramiento debería reservarse para efectos deliberados, no utilizarse como atajo para alcanzar unas medidas.</p>
 
 <h2>Cómo entender las matemáticas de la relación de aspecto</h2>
-<p>La relación de aspecto es simplemente el ancho dividido entre el alto. Una foto de 4000 × 3000 tiene una relación de 4:3. Para redimensionarla a un nuevo ancho manteniendo esa misma relación, multiplicas el nuevo ancho por la proporción alto-ancho del original — redimensionar a 1200px de ancho significa que el nuevo alto debería ser 900px (1200 × 3/4). La mayoría de las herramientas de redimensionado calculan esto automáticamente una vez que fijas la relación, así que rara vez necesitas hacer el cálculo a mano, pero entenderlo hace obvio por qué un par arbitrario de ancho y alto rompe las cosas.</p>
+<p>Una foto de 4000 × 3000 tiene una relación 4:3. Si el nuevo ancho es de 1200 píxeles, el alto proporcional será de 900: 1200 × 3 ÷ 4. Las herramientas realizan el cálculo al bloquear la relación, pero la fórmula permite comprobar las medidas.</p>
 
-<h2>Una forma rápida de detectar si una imagen se ve distorsionada</h2>
-<p>Si hay un círculo, una cara, o cualquier forma reconociblemente redonda o simétrica en la imagen, la distorsión es fácil de detectar — los círculos convirtiéndose en óvalos es la señal clásica. Para fotos sin un punto de referencia redondo obvio, la distorsión puede ser más sutil pero aun así se nota como una sensación de "estirado" o "aplastado" para cualquiera que la mire, incluso si no puede decir de inmediato por qué algo se ve mal.</p>
+<h2>Cómo detectar una deformación</h2>
+<p>Observa los círculos, los rostros, el texto y los objetos simétricos. Un círculo convertido en óvalo es la señal más evidente. Si no hay una referencia clara, compara la imagen con el original o revisa las relaciones numéricas en lugar de confiar únicamente en la apariencia.</p>
 
-<h2>Un ejemplo real de las matemáticas en acción</h2>
-<p>Digamos que tienes una foto panorámica de 3000 × 2000 (una relación 3:2) y una plantilla de sitio web que quiere imágenes de exactamente 1200px de ancho. Fijar la relación de aspecto e ingresar 1200 como ancho te da automáticamente un alto de 800px (1200 × 2/3), y la foto se ve exactamente como el original, solo más pequeña. Ingresa 1200 × 1200 en cambio — forzándola a ser cuadrada sin ajustar nada más — y la foto se comprime verticalmente, haciendo que todo en ella se vea notablemente aplastado.</p>
+<h2>Ejemplo: redimensionar una fotografía 3:2</h2>
+<p>Una fotografía de 3000 × 2000 tiene una relación 3:2. Al establecer un ancho de 1200 píxeles, el alto proporcional es de 800. Si se fuerza a 1200 × 1200 sin recortar ni añadir relleno, la relación cambia a 1:1 y el contenido queda comprimido horizontalmente.</p>
 
 <h2>Redimensionar una imagen correctamente</h2>
-<p>El enfoque más seguro es una herramienta de redimensionado que fije la relación de aspecto por defecto, así que ingresar una dimensión calcula automáticamente la otra — eliminando la posibilidad de distorsionar accidentalmente la imagen desde el principio.</p>
+<p>Mantén fija la relación, introduce una dimensión y revisa el valor calculado antes de exportar. Si ambas medidas son obligatorias, recorta la imagen o añade relleno en lugar de desbloquear la proporción.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Alguna vez hay una buena razón para distorsionar intencionalmente una imagen?</strong> Rara vez — existen algunos casos artísticos o técnicos particulares, pero para casi todos los propósitos prácticos, la distorsión es un error en lugar de una elección.</p>
-<p><strong>¿Por qué mi imagen se veía bien en el editor pero distorsionada al subirla?</strong> Algunas plataformas redimensionan las imágenes automáticamente para ajustarlas a una forma requerida, y si ese redimensionado automático no preserva la relación de aspecto, puede aparecer distorsión después de subir aunque tu archivo original estuviera bien.</p>
-<p><strong>¿Cuál es la diferencia entre redimensionar y recortar?</strong> Redimensionar cambia el tamaño general manteniendo (idealmente) las mismas proporciones; recortar corta parte de la imagen para cambiar sus proporciones. Resuelven problemas distintos y a menudo se usan juntos.</p>
+<h2>Preguntas sobre el redimensionado proporcional</h2>
+<p><strong>¿Puede ser intencional la distorsión?</strong> Sí, como efecto visual deliberado o para una salida técnica poco habitual. Normalmente no conviene en fotografías, logotipos ni documentos.</p>
+<p><strong>¿Por qué aparece deformada después de subirla?</strong> La plataforma puede redimensionar, recortar o mostrar la imagen dentro de un contenedor fijo. Compara el archivo descargado con la versión mostrada para identificar dónde ocurrió el cambio.</p>
+<p><strong>¿En qué se diferencia de recortar?</strong> Redimensionar cambia las dimensiones en píxeles. Recortar elimina parte del encuadre y puede modificar la relación de aspecto. Las dos acciones suelen combinarse cuando se necesitan medidas exactas.</p>
 
 <div class="cta-box">
   <h3>Redimensiona una imagen sin deformarla</h3>
@@ -195,7 +195,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <a class="cta-button" href="/es/resize-image/">Redimensionar una Imagen →</a>
 </div>
 
-<p>La distorsión no es un fallo misterioso — es solo matemáticas, aplicadas de forma desigual a píxeles que nunca estuvieron destinados a ser empujados en direcciones distintas. Fija la relación de aspecto y el problema desaparece por completo.</p>
+<p>Comprueba la relación de aspecto original y la de destino antes de exportar. Si coinciden, la forma se conserva; si son diferentes, tendrás que elegir entre recortar, añadir relleno o deformar deliberadamente.</p>
 
 </div>
 

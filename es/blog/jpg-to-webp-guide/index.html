@@ -150,27 +150,27 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guías</span>
 <h1>Por qué las imágenes WebP cargan más rápido que las JPG (y cómo convertirlas)</h1>
-<p class="intro">La velocidad de página sigue apareciendo como razón para cambiar imágenes de JPG a WebP, y no es marketing — archivos de imagen más pequeños realmente hacen que las páginas carguen más rápido. Aquí te explicamos por qué gana WebP, y cómo convertir.</p>
+<p class="intro">Reducir la transferencia de imágenes puede mejorar la carga, y WebP podría ocupar menos que un recurso JPEG. El beneficio no es automático: mide imágenes representativas, compara su aspecto y confirma que el sistema de publicación entregue correctamente los nuevos archivos.</p>
 
 <div class="article-body">
 
 <h2>El vínculo directo entre el tamaño de imagen y la velocidad de página</h2>
-<p>Cada imagen en una página web tiene que descargarse antes de poder mostrarse, y las imágenes suelen ser el fragmento de datos más grande que carga una página típica. Reduce las imágenes y reduces la descarga total — lo que significa que la página se vuelve visible y utilizable antes, especialmente en una conexión móvil más lenta. Este no es un efecto marginal; las imágenes habitualmente representan más de la mitad del peso total de una página, a veces mucho más en páginas con muchas imágenes como galerías o catálogos de productos.</p>
+<p>Las imágenes aportan bytes transferidos y pueden retrasar el contenido visible, sobre todo en conexiones lentas. Su impacto depende de las dimensiones, la compresión, la caché, la carga diferida, las fuentes adaptables, la red y la ubicación de cada imagen. Empieza por los recursos que las mediciones identifiquen como importantes, no por una conversión indiscriminada.</p>
 
-<h2>Por qué los archivos WebP son más pequeños que JPG con la misma calidad</h2>
-<p>WebP usa un algoritmo de compresión más moderno que JPG, que fue diseñado a principios de los años 90. Con una calidad visual equivalente, WebP típicamente produce archivos entre un 25 y 35 % más pequeños que JPG. Eso no es un ajuste marginal — significa que una página con, digamos, veinte fotos de producto podría reducir una porción considerable de su peso total de descarga solo cambiando de formato, sin ninguna diferencia visible para un visitante que la recorre.</p>
+<h2>Por qué WebP puede ser más pequeño que JPEG</h2>
+<p>WebP utiliza un sistema de compresión distinto de JPEG y puede producir un archivo menor con un resultado visual comparable. No existe un porcentaje universal, y los valores de calidad de dos codificadores no son equivalentes de forma directa. El contenido, el codificador, los ajustes, los metadatos y el tratamiento del color influyen en la comparación.</p>
 
-<h2>La velocidad de página no es solo un extra</h2>
-<p>Los buscadores toman en cuenta la velocidad de página para el posicionamiento, y las páginas de carga lenta pierden visitantes de forma medible incluso antes de que el contenido termine de aparecer. Nada de esto requiere entender las métricas técnicas de rendimiento en detalle — la conclusión práctica es simple: imágenes más pequeñas cargan más rápido, y las páginas más rápidas retienen más visitantes.</p>
+<h2>El tamaño de las imágenes es solo una parte del rendimiento</h2>
+<p>El rendimiento afecta la experiencia y constituye una señal entre muchas para los buscadores. Reducir bytes innecesarios puede ayudar, pero convertir el formato no sustituye las dimensiones correctas, imágenes adaptables, caché, decisiones de precarga ni las mediciones de la página real.</p>
 
-<h2>Por qué tantos sitios ya cambiaron</h2>
-<p>Una vez que los navegadores principales agregaron soporte nativo para WebP, el formato pasó de "interesante pero arriesgado" a "básicamente rendimiento gratis". Los sitios web modernos, plataformas de blogs y tiendas en línea sirven cada vez más WebP por defecto ahora, a menudo automáticamente, sin que los dueños del sitio hagan nada especial — la conversión de formato ocurre detrás de escena como parte de cómo se construye o aloja el sitio. Para un sitio que no está en una de esas plataformas automatizadas, convertir manualmente los archivos JPG existentes logra el mismo beneficio.</p>
+<h2>Cómo adoptan los sitios formatos de imagen más recientes</h2>
+<p>Los navegadores admiten WebP ampliamente y muchos gestores de contenido o servicios de imágenes pueden generarlo automáticamente. Una implementación cuidadosa conserva las fuentes, crea varios tamaños y formatos y deja que el navegador elija el recurso adecuado. Sustituir manualmente todas las direcciones no siempre es la mejor estrategia.</p>
 
-<h2>La desventaja de compatibilidad, en pocas palabras</h2>
-<p>La única desventaja real de WebP es que algunos programas antiguos, ciertas herramientas de edición y algunos formularios de carga todavía no lo reconocen. En un sitio web rara vez importa, porque los navegadores modernos manejan WebP sin problemas. Solo se vuelve relevante cuando necesitas utilizar el archivo fuera del navegador; en ese caso, puedes volver a convertirlo a JPG.</p>
+<h2>Comprueba todo el flujo de publicación</h2>
+<p>El navegador es solo una parte del flujo. Confirma que el CMS, el optimizador, las vistas previas sociales, el correo, las herramientas de edición y cualquier consumidor de imágenes admitan el formato. Conserva el JPEG fuente en lugar de depender de una conversión posterior desde WebP.</p>
 
-<h2>Un ejemplo concreto</h2>
-<p>Piensa en una foto de producto JPG de 200 KB y buena calidad. Al convertirla a WebP con una calidad visual equivalente, podría quedar entre 130 y 150 KB: una reducción del 25–35 % sin cambios visibles. En una página con quince o veinte imágenes parecidas, el peso total disminuye de forma notable y el contenido aparece antes, sobre todo con datos móviles.</p>
+<h2>Ejemplo medido: una fotografía de producto</h2>
+<p>La comparación siguiente registra una imagen de producto de 1400 × 1050, el codificador y ambos ajustes de calidad. Demuestra lo ocurrido en esa prueba, no lo que ahorrará cualquier catálogo. Ensaya varios recursos reales y utiliza sus bytes medidos para estimar el efecto sobre la página.</p>
 <figure class="theme-figure">
 <svg viewBox="0 0 500 320" width="500" height="320" role="img" aria-label="Gráfico de barras que compara la misma foto de producto guardada como JPG (215 KB) y WebP (143 KB)" xmlns="http://www.w3.org/2000/svg">
 <title>Gráfico de barras que compara la misma foto de producto guardada como JPG (215 KB) y WebP (143 KB)</title>
@@ -190,16 +190,16 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <tr><td>WebP (calidad 80)</td><td>143 KB</td></tr>
 </table>
 
-<h2>Qué mide la velocidad de una página</h2>
-<p>Los buscadores y las herramientas de rendimiento miden, entre otras cosas, cuánto tarda en mostrarse y estar disponible el contenido principal de una página; estas métricas suelen agruparse bajo nombres como Core Web Vitals. No necesitas memorizarlas para aprovechar la idea central: cuantos menos datos haya que descargar, mejor será la experiencia, y las imágenes suelen ser la mayor oportunidad de ahorro.</p>
+<h2>Mide la página, no solo los archivos</h2>
+<p>Las herramientas de rendimiento informan distintas etapas de carga e interacción; Core Web Vitals no premia de la misma manera cada byte eliminado. Prueba la página publicada y localiza qué recurso afecta sus métricas. Una imagen al final de la página puede necesitar una estrategia distinta de la imagen principal.</p>
 
 <h2>Cómo convertir JPG a WebP</h2>
-<p>Si preparas imágenes para un sitio web, un blog o cualquier proyecto donde importe la velocidad, convertir tus fotos JPG a WebP es sencillo: selecciona los archivos y obtén versiones más pequeñas con una calidad visual equivalente. No necesitas programas de diseño ni configuración técnica.</p>
+<p>Crea copias WebP de una muestra representativa, compara tamaño y aspecto e integra las elegidas mediante el flujo habitual del sitio. Antes de convertir toda la biblioteca, verifica dimensiones, orientación, color, metadatos necesarios, caché y estrategia de formatos alternativos.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Convertir a WebP hará que mis fotos se vean peor?</strong> Con un nivel de calidad comparable, no. La diferencia visual frente a JPG suele ser imperceptible, mientras que el archivo puede reducirse considerablemente.</p>
+<h2>Preguntas antes de sustituir JPEG por WebP</h2>
+<p><strong>¿WebP puede verse peor?</strong> Sí. Ambos formatos pueden mostrar defectos y una segunda codificación con pérdida puede acumular daño. Evalúa la salida a los tamaños relevantes en lugar de comparar solo los números de calidad.</p>
 <p><strong>¿Necesito instalar algo especial en mi sitio web para mostrar WebP?</strong> No. Todos los navegadores modernos principales muestran WebP de forma nativa, igual que JPG o PNG.</p>
-<p><strong>¿Realmente compensa la diferencia de tamaño?</strong> Sí, especialmente en páginas con varias imágenes. El ahorro acumulado reduce de forma perceptible el tiempo de carga.</p>
+<p><strong>¿Compensa la conversión?</strong> Solo las mediciones de tamaño y las pruebas de página pueden responderlo. Una reducción importante en imágenes críticas puede ayudar; un ahorro mínimo quizá no justifique la complejidad.</p>
 
 <div class="cta-box">
   <h3>Convierte JPG a WebP ahora</h3>
@@ -207,7 +207,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <a class="cta-button" href="/es/jpg-to-webp/">Convertir JPG a WebP →</a>
 </div>
 
-<p>Las páginas rápidas retienen a más visitantes. Convertir JPG a WebP es una de las mejoras más sencillas para conseguirlo: no exige rediseñar nada, solo utilizar archivos más pequeños para cumplir la misma función.</p>
+<p>Trata WebP como una opción de optimización, no como un interruptor de rendimiento garantizado. Conserva los JPEG fuente, publica las variantes elegidas y confirma la mejora en la página real.</p>
 
 </div>
 

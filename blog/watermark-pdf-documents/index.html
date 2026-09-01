@@ -146,45 +146,45 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guides</span>
 <h1>How to Watermark a PDF (Confidential, Draft, or Your Name)</h1>
-<p class="intro">You're about to send out a document that isn't final yet, or one that shouldn't circulate freely once it leaves your hands. A watermark stamped across every page — "DRAFT," "CONFIDENTIAL," or your own name — makes that status impossible to miss, without changing anything about the document's actual content.</p>
+<p class="intro">A text watermark can label a PDF as DRAFT, CONFIDENTIAL, SAMPLE, or identify its source. Applying it to every page keeps that context visible when individual pages are printed, captured, or forwarded separately.</p>
 
 <div class="article-body">
 
-<h2>What a PDF watermark is actually for</h2>
-<p>Unlike a watermark on a photo, which mainly exists to discourage theft of the image itself, a PDF watermark is usually about communicating status — this is a draft, this is confidential, this came from a specific source. It's a label stamped into the document itself rather than a cover email that might get separated from the file as it's forwarded around.</p>
+<h2>What a PDF watermark communicates</h2>
+<p>A PDF watermark usually communicates status or attribution. It stays with the marked copy instead of depending on an email subject or accompanying message that may disappear when the file is forwarded.</p>
 
-<h2>Choosing text that actually says something</h2>
-<p>"CONFIDENTIAL," "DRAFT," "SAMPLE," and a company or personal name cover most real use cases. The right choice depends on what you're trying to prevent: "DRAFT" tells a reader not to treat the content as final, "CONFIDENTIAL" signals it shouldn't be shared further, and a name or company mark attributes the document to its source. Pick the one that matches your actual concern rather than defaulting to whichever sounds most official.</p>
+<h2>Choose text that matches the purpose</h2>
+<p>Use DRAFT for unfinished work, SAMPLE for demonstration material, and a name or company for attribution. CONFIDENTIAL communicates an expectation, but the label alone does not enforce access restrictions. Choose wording that readers can interpret without additional explanation.</p>
 
 <h2>Position, rotation and opacity all matter</h2>
-<p>A watermark that's too bold makes the document hard to read; one that's too subtle might as well not be there. A diagonal placement across the center of the page (the classic look) is hard to miss and hard to crop out selectively, while a corner placement is less intrusive if the document needs to stay comfortably readable. Lower opacity keeps the underlying text legible through the watermark; higher opacity makes the label unmistakable at the cost of some readability — there's no single right answer, it depends on how important legibility is versus visibility for your specific document.</p>
+<p>A centered diagonal mark is prominent and harder to remove with a simple crop. A corner mark interferes less with reading but is easier to overlook. Adjust opacity, size, color, and rotation while checking pages with dense text, tables, and images; one setting may not work equally well across the document.</p>
 
 <figure class="theme-figure">
   <img class="theme-img" data-dark="/assets/blog/watermark-pdf-documents/watermark-pdf-documents-dark-en.webp" data-light="/assets/blog/watermark-pdf-documents/watermark-pdf-documents-light-en.webp" src="/assets/blog/watermark-pdf-documents/watermark-pdf-documents-dark-en.webp" alt="Orisod's Watermark PDF tool showing a diagonal ‘DRAFT’ watermark applied across a document page with opacity controls visible" width="800" height="1138" loading="lazy">
   <figcaption>Diagonal and moderate opacity keeps the label unmistakable without hiding the content.</figcaption>
 </figure>
 
-<h2>What a watermark does and doesn't protect against</h2>
-<p>A watermark makes a document's status obvious at a glance and discourages passing it off as something it isn't — but it's not encryption, and it doesn't prevent someone from opening, reading, or even copying the text underneath it. If you need to actually restrict who can open a document, that's a different problem (password protection) than labeling its status, and the two are often confused.</p>
+<h2>A watermark is a label, not access control</h2>
+<p>The mark can discourage casual redistribution or misrepresentation, but it does not encrypt the PDF, prevent screenshots, or guarantee that text cannot be copied. Opening restrictions and PDF permissions are separate controls, and they also have limitations. Do not treat a visible label as protection for highly sensitive information.</p>
 
-<h2>Applying it to every page vs. just one</h2>
-<p>For most use cases, stamping every page matters more than stamping just the first — a reader forwarding page 12 out of context should still see the "CONFIDENTIAL" label, not just whoever opens the file from page one. A tool that applies the watermark uniformly across the whole document, rather than only the cover page, avoids that gap.</p>
+<h2>Apply the label wherever context may be lost</h2>
+<p>Mark every page when pages may be separated from the original file. A cover-only watermark may be enough for a controlled presentation, but it will not accompany a later page that is printed or forwarded by itself.</p>
 
-<h2>A concrete example</h2>
-<p>You've finished the first full draft of a proposal and need feedback before it's final, but you're worried a reviewer might forward it further as if it were the finished version. Watermarking every page with "DRAFT" at a moderate opacity keeps the content fully readable while making it clear, at a glance, on every single page, that this isn't what should be circulated as final.</p>
+<h2>Example: circulating a proposal for review</h2>
+<p>A proposal sent for feedback can carry DRAFT across each page at moderate opacity. Reviewers can still read the content, while screenshots and separated pages retain a visible indication that the document is unfinished.</p>
 
-<h2>Quick answers</h2>
-<p><strong>Does the watermark apply to every page automatically?</strong> With a proper PDF watermarking tool, yes — the same stamp is applied uniformly across the whole document in one pass.</p>
-<p><strong>Can I remove a watermark after adding it?</strong> Once applied, a watermark becomes part of the page content, similar to how watermarks work in most PDF tools — keep your original unwatermarked file if you might need it again.</p>
-<p><strong>Does a watermark actually protect a document from being copied?</strong> No — it makes status obvious visually, but it doesn't restrict access or prevent copying. That requires password protection, a separate feature.</p>
+<h2>Questions before watermarking a PDF</h2>
+<p><strong>Will every page be marked?</strong> That depends on the tool and selected page range. Check the preview and inspect the downloaded PDF before distributing it.</p>
+<p><strong>Can the mark be removed later?</strong> Removal depends on how the watermark was added and which software edits the PDF. Keep the original unmarked file rather than relying on reversal.</p>
+<p><strong>Does it prevent copying?</strong> No. A watermark communicates status or source; it does not stop screenshots, extraction, or redistribution.</p>
 
 <div class="cta-box">
   <h3>Watermark Your PDF</h3>
-  <p>Orisod's Watermark PDF tool stamps text across every page with full control over position, rotation, size, color and opacity, with a live preview — entirely in your browser.</p>
+  <p>Add text to PDF pages and adjust its position, rotation, size, color, and opacity in the preview. Orisod processes the document locally in your browser.</p>
   <a class="cta-button" href="/watermark-pdf/">Watermark PDF →</a>
 </div>
 
-<p>A watermark's job is to make a document's status obvious the moment someone opens it, on any page — not to lock it down. Get the position and opacity right for your specific document, and it does that job without getting in the way of actually reading the content.</p>
+<p>Open the exported PDF and inspect several page types at normal zoom. The label should remain visible without obscuring names, totals, signatures, or other information the reader needs.</p>
 
 </div>
 

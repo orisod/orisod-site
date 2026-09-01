@@ -149,15 +149,15 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guías</span>
 <h1>Cómo comprobar las dimensiones y la resolución de una imagen en línea</h1>
-<p class="intro">Un formulario exige una foto de 600 × 600 píxeles o una imprenta solicita 300 DPI, pero no sabes si tu archivo cumple el requisito. Aquí verás qué significan esas medidas y cómo comprobarlas en segundos.</p>
+<p class="intro">Un formulario puede exigir 600 × 600 píxeles, mientras que una imprenta necesita saber si el archivo alcanza 300 píxeles por pulgada al tamaño final. Son requisitos diferentes. Revisarlos antes evita redimensionamientos innecesarios, rechazos y resultados de impresión decepcionantes.</p>
 
 <div class="article-body">
 
-<h2>Píxeles, dimensiones y resolución — cuál es la diferencia</h2>
-<p>Las <strong>dimensiones</strong> indican el ancho y el alto en píxeles: una foto de 4000 × 3000 contiene 4000 píxeles de ancho y 3000 de alto. La <strong>resolución</strong> de impresión, expresada en DPI o puntos por pulgada, relaciona esos píxeles con un tamaño físico. El mismo archivo puede verse nítido en una copia pequeña y perder definición al imprimirse como póster.</p>
+<h2>Las dimensiones y la resolución de impresión miden cosas distintas</h2>
+<p>Las dimensiones indican el ancho y el alto: un archivo de 4000 × 3000 contiene 4000 píxeles de lado a lado y 3000 de arriba abajo. La <strong>resolución</strong> de impresión relaciona esos píxeles con un tamaño físico. El mismo archivo puede mostrar mucho detalle en una copia pequeña y verse más suave al ampliarse como póster.</p>
 
 <h2>Cómo se relacionan el DPI y las dimensiones en píxeles</h2>
-<p>El valor DPI solo adquiere sentido al definir un tamaño físico. Por ejemplo, una imagen de 3000 × 2000 píxeles mide 10 × 6,67 pulgadas a 300 DPI; a 150 DPI alcanza 20 × 13,33 pulgadas, pero cada píxel ocupa más espacio y la impresión pierde definición. Cuando una imprenta exige 300 DPI, está relacionando la cantidad de píxeles con el tamaño final, no pidiendo una propiedad aislada del archivo.</p>
+<p>La cantidad de píxeles no determina por sí sola un tamaño de impresión. Al dividir 3000 × 2000 píxeles entre 300 píxeles por pulgada, obtenemos 10 × 6,67 pulgadas; a 150 píxeles por pulgada, los mismos datos cubren 20 × 13,33 pulgadas. Por eso una imprenta relaciona las dimensiones del archivo con el tamaño final. Cambiar únicamente el valor DPI incrustado no crea detalle adicional.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 380" width="700" height="380" role="img" aria-label="La misma imagen de 3000×2000 píxeles impresa a 300 DPI (pequeña y nítida) frente a 150 DPI (más grande y menos nítida)" xmlns="http://www.w3.org/2000/svg">
@@ -250,19 +250,19 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <figcaption>Mismos píxeles, distinto tamaño de impresión: el DPI es la relación entre ambos.</figcaption>
 </figure>
 
-<h2>Por qué estos números importan</h2>
+<h2>Dónde influyen estos valores</h2>
 <ul>
   <li><strong>Los formularios de subida</strong> para fotos de pasaporte, credenciales o fotos de perfil a menudo requieren dimensiones exactas en píxeles, y rechazan cualquier cosa que no coincida.</li>
   <li><strong>Las redes sociales</strong> tienen tamaños recomendados específicos para fotos de portada, publicaciones y miniaturas — si te equivocas, la plataforma recorta o estira tu imagen de forma incómoda.</li>
-  <li><strong>Las imprentas</strong> normalmente requieren un DPI mínimo (a menudo 300) al tamaño final de impresión, o el resultado sale borroso.</li>
+  <li><strong>Los servicios de impresión</strong> suelen recomendar cerca de 300 píxeles por pulgada para trabajos vistos de cerca, aunque el valor adecuado depende de la distancia, la impresora, el material y la imagen.</li>
   <li><strong>Los desarrolladores web</strong> necesitan conocer las dimensiones para evitar servir una imagen mucho más grande de lo que jamás se mostrará, lo que ralentiza la carga de la página sin ningún beneficio visual.</li>
 </ul>
 
 <h2>Las formas manuales de verificarlo, y sus límites</h2>
-<p>En Windows puedes abrir las propiedades del archivo; en macOS, seleccionarlo y pulsar Cmd+I para consultar “Obtener información”. Ambos métodos sirven, pero cambian según el dispositivo y resultan lentos cuando necesitas revisar varias imágenes.</p>
+<p>Windows muestra las dimensiones en las propiedades del archivo y macOS en el panel Obtener información. Ambos métodos sirven para un archivo local, pero la ubicación y los datos disponibles varían según el sistema, el formato y los metadatos. Una interfaz en el navegador resulta más cómoda para revisar varios archivos.</p>
 
 <h2>La forma más rápida: verifícalo en tu navegador</h2>
-<p>Un verificador en el navegador evita esos pasos. Selecciona o arrastra la imagen para consultar el ancho, el alto, el formato, la relación de aspecto y, cuando esté disponible, el DPI. Funciona igual en distintos dispositivos y agiliza la revisión de varios archivos.</p>
+<p>Un verificador en el navegador puede leer el ancho, el alto, el formato y la relación de aspecto sin instalar un editor. También puede mostrar la resolución incrustada cuando el archivo la incluye. Interpreta ese dato como metadato hasta relacionarlo con el tamaño físico de impresión.</p>
 
 <h2>Requisitos de dimensiones comunes con los que te encontrarás</h2>
 <table class="compare-table">
@@ -275,18 +275,18 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 </table>
 <p>Cada plataforma define sus propios requisitos, así que comprueba las especificaciones antes de enviar la imagen. La relación de aspecto importa tanto como el número de píxeles: un archivo puede tener dimensiones suficientes y aun así sufrir un recorte incorrecto si su proporción no coincide.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Qué resolución necesita una imagen para la web?</strong> En pantalla importan sus dimensiones en píxeles y su peso, no el valor DPI del archivo. Los DPI resultan relevantes al relacionar esos píxeles con un tamaño de impresión.</p>
-<p><strong>¿Redimensionar cambia los DPI?</strong> No necesariamente. Redimensionar modifica el ancho y el alto en píxeles; los DPI relacionan esos píxeles con un tamaño físico de impresión. Son valores vinculados, pero no equivalentes.</p>
+<h2>Qué debes comprobar antes de usar el archivo</h2>
+<p><strong>¿Qué resolución necesita una imagen web?</strong> Elige dimensiones en píxeles adecuadas para el tamaño y la densidad de pantalla, y equilibra compresión y calidad. Una etiqueta de 72 o 150 DPI no controla cuántos píxeles CSS mostrará el navegador.</p>
+<p><strong>¿Redimensionar cambia los DPI?</strong> Remuestrear modifica la cantidad de píxeles. Cambiar solo los metadatos de resolución altera el tamaño de impresión calculado sin añadir ni quitar píxeles. Algunas aplicaciones hacen ambas cosas a la vez, así que revisa las opciones de exportación.</p>
 <p><strong>¿Puedo comprobar las dimensiones sin enviar la imagen? Sí.</strong> Si el archivo está en tu dispositivo, la herramienta lo lee localmente en el navegador.</p>
 
 <div class="cta-box">
   <h3>Comprueba las dimensiones de cualquier imagen al instante</h3>
-  <p>El Verificador de dimensiones de Orisod muestra el ancho, el alto, el formato, la relación de aspecto y la resolución disponible. Funciona directamente en tu navegador y la imagen permanece en tu dispositivo.</p>
+  <p>El Verificador de dimensiones de Orisod muestra el ancho, el alto, el formato, la relación de aspecto y los metadatos de resolución disponibles directamente en el navegador. Compara esos valores con los requisitos reales de la plataforma o del trabajo de impresión.</p>
   <a class="cta-button" href="/es/image-dimension-checker/">Verificar Dimensiones de Imagen →</a>
 </div>
 
-<p>Comprobar las dimensiones lleva segundos y puede evitar que una plataforma rechace el archivo o que una impresión salga borrosa. Resulta útil tanto para cumplir un requisito exacto como para conocer mejor la imagen con la que trabajas.</p>
+<p>Para una carga exacta, revisa ancho, alto y relación de aspecto. Para imprimir, añade el tamaño físico final y los píxeles efectivos por pulgada. Esa diferencia evita confundir una cifra de metadatos con el detalle real de la imagen.</p>
 
 </div>
 

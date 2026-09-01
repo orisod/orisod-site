@@ -146,15 +146,15 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guides</span>
 <h1>How to Convert a Word Document to PDF (and What "Best Effort" Means Here)</h1>
-<p class="intro">Turning a Word document into a PDF is one of the most common file conversions there is — but doing it privately, in the browser, without Microsoft Word's own layout engine, comes with a real tradeoff worth understanding before you rely on it.</p>
+<p class="intro">Word-to-PDF results depend on the rendering engine. Orisod reconstructs a DOCX in the browser rather than using Microsoft Word, so the output is useful for straightforward documents but should not be treated as a layout-identical archival conversion.</p>
 
 <div class="article-body">
 
 <h2>How this conversion actually works</h2>
-<p>A browser has no built-in way to "print to PDF" a Word file the way Word itself can. Instead, a client-side converter reads the .docx file's content — headings, paragraphs, formatting, lists, tables, and images — renders it as a web page in your browser, and then takes a visual snapshot of that rendering to build the PDF. It's a best-effort reconstruction of the document's appearance, not Word's own layout engine running in the background.</p>
+<p>DOCX stores document structure, styles, relationships, and resources rather than a fixed page image. Orisod interprets supported content, renders a browser representation, and builds the PDF from that result. Pagination and layout therefore come from the browser-based implementation, not from Microsoft Word's formatting engine.</p>
 
 <h2>What this means for the PDF's text</h2>
-<p>Because the PDF is built from a snapshot rather than real text placement, the words in the output PDF are part of an image — you can't select, copy, or search them the way you can in a normal PDF. This is the same tradeoff Orisod's HTML to PDF tool already has, for the same underlying reason.</p>
+<p>In Orisod's current snapshot-based output, rendered pages become images, so the document text is not preserved as a selectable PDF text layer. Search, copy, accessibility, hyperlinks, and text extraction are consequently limited. This is a property of this implementation, not an unavoidable limitation of every client-side Word converter.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 330" width="700" height="330" role="img" aria-label="Comparison showing a Word document with real, selectable text on the left converting into a PDF on the right, where the same content becomes part of an image and is no longer selectable." xmlns="http://www.w3.org/2000/svg">
@@ -191,28 +191,28 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 </figure>
 
 <h2>What else can shift</h2>
-<p>Since the browser renders the document rather than Word's own layout engine, exact fonts, precise spacing, headers/footers, and very complex layouts may look slightly different from opening the same file in Word. Simple, mostly-text documents — reports, letters, contracts — convert cleanly; documents leaning heavily on precise print layout are the ones most likely to shift.</p>
+<p>Fonts can be substituted when they are unavailable, changing line breaks and pagination. Headers, footers, sections, columns, tables, floating objects, equations, fields, comments, tracked changes, page numbering, and embedded content may be simplified or omitted. Even a mostly textual contract requires visual comparison when page positions matter.</p>
 
 <h2>When this is the right tool</h2>
 <ul>
   <li>You need to share a Word document as a PDF and don't have Word installed</li>
-  <li>Your document is mostly text, with simple formatting, lists, or tables</li>
+  <li>Your document is mostly text with uncomplicated formatting, and you can review the rendered pages before relying on them</li>
   <li>The recipient doesn't need to select, copy, or search the PDF's text</li>
   <li>You'd rather keep the conversion private and client-side than upload the file to a server</li>
 </ul>
 
-<h2>Quick answers</h2>
-<p><strong>Will the PDF's text be selectable?</strong> No — the PDF is built from a rendered snapshot, so its text is part of an image, the same as our HTML to PDF tool.</p>
-<p><strong>Does this work with the older .doc format?</strong> No, only the modern .docx format. Re-save an older file as .docx in Word first.</p>
-<p><strong>Will complex formatting match exactly?</strong> Not always — this is a best-effort rendering, not Word's own layout engine, so very complex layouts may shift slightly.</p>
+<h2>Inspect the PDF before sharing</h2>
+<p><strong>Will text be selectable?</strong> Not in Orisod's current snapshot-based output. If searchable, accessible text is required, use an exporter that creates a real PDF text layer and verify it.</p>
+<p><strong>Does it accept legacy .doc files?</strong> This tool accepts DOCX, not DOC. Convert the old file with compatible office software; opening and resaving can itself change layout, macros, fields, or older features.</p>
+<p><strong>Will formatting match exactly?</strong> No guarantee should be assumed. Compare page count, line breaks, fonts, tables, headers, footers, images, equations, and links with the DOCX.</p>
 
 <div class="cta-box">
   <h3>Convert Your Word Document to PDF</h3>
-  <p>Orisod's Word to PDF tool renders your .docx and builds a PDF from it — entirely in your browser, with this exact tradeoff disclosed right in the tool.</p>
+  <p>Orisod's Word to PDF tool renders supported DOCX content in your browser and builds an image-based PDF. Preserve the DOCX and inspect every page of the download before sending it.</p>
   <a class="cta-button" href="/word-to-pdf/">Convert Word to PDF →</a>
 </div>
 
-<p>A snapshot-based Word to PDF conversion won't give you selectable text or pixel-perfect fidelity — no honest client-side tool can promise that — but for the common case of turning a straightforward document into a shareable PDF, it's a fast, private way to get there.</p>
+<p>This snapshot workflow favors convenient visual sharing over searchable text and exact Word pagination. Use it for documents that pass visual review; use a full document-layout exporter when fidelity, accessibility, links, or selectable text are requirements.</p>
 
 </div>
 

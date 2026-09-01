@@ -146,15 +146,15 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guides</span>
 <h1>How to Fill Out a PDF Form Online</h1>
-<p class="intro">A "fillable" PDF isn't just a picture of a form — it has real, interactive fields built into the file itself, the same fields Adobe Acrobat reads when it lets you click into a box and type. Understanding that distinction is the key to filling one out correctly, and to spotting the forms that only look fillable but aren't.</p>
+<p class="intro">Some PDFs contain interactive fields; others are scanned or designed pages that merely look like forms. The distinction determines whether a form tool can populate existing fields or whether a separate annotation or editing workflow is required.</p>
 
 <div class="article-body">
 
 <h2>What makes a PDF form actually "fillable"</h2>
-<p>Underneath the page you see, a real fillable PDF carries a structure called an AcroForm — a list of named fields, each with a type (text box, checkbox, radio button, dropdown), a position on a specific page, and often a current value. A PDF reader draws your page normally, then lays interactive boxes on top wherever those fields are defined. Type into one, and the reader updates that field's stored value — nothing about the underlying page image changes.</p>
+<p>Many fillable PDFs use AcroForm fields such as text boxes, checkboxes, radio buttons, lists, and buttons. Fields can have names, values, appearance streams, validation rules, and page widgets. Some documents instead use XFA forms or proprietary behavior that ordinary PDF libraries do not fully support. Filling a field changes the document data and may also require updating how that value is drawn.</p>
 
 <h2>The look-alike problem</h2>
-<p>Plenty of PDFs are designed to look like forms — a printed line for a signature, a small drawn square next to "Agree" — without any AcroForm fields behind them at all. Visually, there's no difference between a real checkbox field and a hand-drawn square that happens to look like one. The only reliable way to tell is to check whether the file actually declares any fields; a tool that just measures box shapes on the page and guesses would be fooled by both cases equally.</p>
+<p>A printed line or drawn square can resemble an input without being interactive. Check whether the PDF declares fields and whether the viewer can focus them. A document with no AcroForm fields may still be completed using permitted annotations, text placement, or a dedicated editor, so the absence of fields does not make filling impossible; it changes the method.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 300" width="700" height="300" role="img" aria-label="Diagram showing a PDF form's fields detected and rendered as editable boxes over the page, then flattened into a locked, non-editable PDF." xmlns="http://www.w3.org/2000/svg">
@@ -189,24 +189,24 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <figcaption>Real fields get detected and turned into editable boxes over the page; flattening bakes your answers into the page itself and removes the fields, so nothing can be changed afterward.</figcaption>
 </figure>
 
-<h2>Filling it in and locking it down</h2>
-<p>Once the fields are detected, filling them in works the way you'd expect — type in the text boxes, check the checkboxes, pick from the dropdowns. The last step, flattening, is what turns a still-editable form into a normal, finished document: your answers get drawn permanently into the page as real content, and the interactive fields are removed entirely. Anyone who opens the flattened file afterward sees a plain PDF with your answers on it — they can't click into a field and change what you wrote, because there's no field left to click into.</p>
+<h2>Filling, saving, and flattening are separate steps</h2>
+<p>Saving a completed form can preserve editable fields and their values. Flattening usually converts field appearances into page content and removes or disables the widgets, which improves consistency in viewers that display forms differently. It does not make the PDF tamper-proof: page content can still be edited with suitable software. Keep an editable copy until the answers have been verified.</p>
 
 <h2>What doesn't carry over</h2>
-<p>A real, non-XFA-scripted fillable PDF (the common case) fills in and flattens cleanly. Two things don't: digital signature fields, which are a cryptographic mechanism separate from ordinary form fields and need a dedicated signing flow, not a typed value; and any JavaScript the form author embedded for auto-calculating totals, validating entries, or enforcing "pick exactly one" rules across a set of checkboxes — none of that runs outside Adobe Acrobat itself, so double-checking your own entries matters more on a form that was designed to check them for you.</p>
+<p>Support varies for XFA, JavaScript calculations, validation, conditional fields, embedded files, accessibility tags, and custom appearance streams. Digital signatures require a signing workflow and can be invalidated by later modifications, including filling or flattening. JavaScript support also differs among PDF viewers; it is not limited to one product, nor should a workflow assume that scripts ran correctly.</p>
 
-<h2>Quick answers</h2>
-<p><strong>What if the tool says no fillable fields were found?</strong> That means the PDF doesn't have real AcroForm fields — it's a document that only visually resembles a form, and there's no reliable way to fill it in without those fields existing.</p>
-<p><strong>Can I still edit a field after flattening?</strong> No — that's the point of flattening. If you need to make a change, fill out the original form again from scratch.</p>
-<p><strong>Will my filled PDF still have real, selectable text?</strong> Yes — flattening draws real text into the page, not a screenshot, so what you typed stays searchable and copyable afterward.</p>
+<h2>Verify the completed form</h2>
+<p><strong>What if no fields are found?</strong> The document may be flat, scanned, XFA-based, encrypted, or use unsupported field structures. You may need an annotation or editing tool, or the form's required official viewer.</p>
+<p><strong>Can a flattened answer be changed?</strong> The interactive field is usually gone, but PDF editing software may still modify page content. To revise safely, return to the saved editable form rather than reconstructing it from scratch.</p>
+<p><strong>Will flattened text remain selectable?</strong> It depends on the implementation. Text may be drawn as characters, converted to paths, rasterized, or omitted if an appearance was not generated correctly. Test search, copy, and visual display in the downloaded file.</p>
 
 <div class="cta-box">
   <h3>Fill Out a PDF Form</h3>
-  <p>Orisod's Fill PDF Forms tool detects a form's real fields, lets you type directly into them over the rendered page, and flattens the result — entirely in your browser.</p>
+  <p>Orisod's Fill PDF Forms tool works with supported fields in your browser and can create a flattened copy. Review every answer, calculated value, checkbox, page, and signature state after downloading.</p>
   <a class="cta-button" href="/fill-pdf-forms/">Fill a PDF Form →</a>
 </div>
 
-<p>Most fillable PDFs — job applications, intake forms, government paperwork — are ordinary AcroForms under the hood, and filling one out is as simple as recognizing its fields and typing into them. The cases worth watching for are the look-alikes with no real fields, and the handful of features (signatures, embedded scripting) that no client-side tool, this one included, can fake.</p>
+<p>PDF forms range from straightforward AcroForms to XFA documents and script-heavy workflows. Use the method the issuer requires, preserve the untouched original, and confirm that the saved copy displays and validates correctly before submission.</p>
 
 </div>
 

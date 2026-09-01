@@ -146,45 +146,45 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guides</span>
 <h1>How to Convert HTML to PDF (Paste Code, Get a File)</h1>
-<p class="intro">You have an HTML snippet, an invoice template, or a styled report and need it as a fixed, shareable PDF instead of raw code. Converting HTML directly to a PDF, without installing anything or standing up a server, turns styled markup into a document in a few seconds.</p>
+<p class="intro">An HTML invoice, report, or snippet can be rendered into a shareable PDF, but the result depends on the converter's CSS support, resources, fonts, page settings, and pagination method. Preview the exact input and treat the PDF as a rendered export rather than a copy of the source code's behavior.</p>
 
 <div class="article-body">
 
 <h2>How HTML-to-PDF conversion actually works</h2>
-<p>The HTML you provide gets rendered exactly like a browser would render it — layout, colors, fonts, everything defined in inline styles or &lt;style&gt; blocks — and that rendered result is then captured and placed into a PDF. It's effectively taking a high-resolution "screenshot" of the rendered page and packaging it as a document, rather than parsing the HTML into some intermediate PDF-specific format.</p>
+<p>Orisod renders supported HTML and CSS in a browser context, captures the visual result, and places that raster output into PDF pages. It does not preserve the DOM as structured PDF content. The exported words may therefore be pixels rather than selectable text, and accessibility, links, forms, scripts, and semantic headings do not automatically survive.</p>
 
 <figure class="theme-figure">
   <img class="theme-img" data-dark="/assets/blog/html-to-pdf-guide/html-to-pdf-guide-dark-en.webp" data-light="/assets/blog/html-to-pdf-guide/html-to-pdf-guide-light-en.webp" src="/assets/blog/html-to-pdf-guide/html-to-pdf-guide-dark-en.webp" alt="Orisod's HTML to PDF tool showing pasted HTML code alongside its live rendered preview" width="860" height="1022" loading="lazy">
-  <figcaption>See exactly how it'll look before converting.</figcaption>
+  <figcaption>Use the preview to catch visible differences before conversion, then verify the PDF separately.</figcaption>
 </figure>
 
 <h2>What it can and can't do with a live website</h2>
-<p>A common assumption is that you can hand a tool a URL and get back a PDF of that page — but a browser-based converter with no server behind it can't fetch another website's page for you; that would require server-side infrastructure to make the request. What it can do is convert HTML code directly, which means the workaround for converting a live page is straightforward: view the page's source, copy the relevant HTML, and paste it in.</p>
+<p>This tool accepts HTML content rather than a URL. Copying only a page's source is not equivalent to loading the live site: relative URLs, stylesheets, scripts, authenticated data, shadow DOM, frames, fonts, and dynamically generated content may be absent. Use a self-contained document with authorized local or embedded resources when a reproducible result matters.</p>
 
 <h2>Why some images don't show up</h2>
-<p>An image referenced by URL from another website needs that website to explicitly allow cross-origin access for the browser to read its pixel data — without that permission, the browser can see the image but can't include its contents in a captured render. This is a browser security restriction (CORS), not a bug in the conversion process, and it mainly affects images hosted elsewhere rather than ones embedded directly as data.</p>
+<p>Remote images can fail because of CORS, content-security policy, blocked mixed content, authentication, expiring URLs, network errors, or capture timing. Relative paths copied from another site also lose their original base URL. Embed authorized assets or use data URLs when practical, and wait for resources and fonts to finish loading before export.</p>
 
 <h2>How pagination works for long content</h2>
-<p>Content taller than a single printed page needs to be split across multiple pages, and the straightforward way to do that is a direct cut at a fixed height — page 1 gets the first slice, page 2 the next, and so on, with no gap or overlap between them. This works cleanly most of the time, especially with naturally spaced content like headings and paragraphs, but it's a geometric cut rather than layout-aware pagination — a line of dense text sitting exactly on that cut point could, in principle, be split visually between two pages.</p>
+<p>Orisod's current capture method slices long rendered content at fixed page heights. The cut does not understand paragraphs, table rows, images, or CSS fragmentation rules, so any element can be split. Long pages can also hit browser canvas or memory limits. Inspect every page break and adjust spacing or input content when necessary.</p>
 
 <h2>Choosing page size and orientation</h2>
 <p>A4 and Letter cover most standard documents; Legal is common for contracts and certain forms. Orientation matters more than it might seem — a wide table or a landscape-oriented design will look cramped and awkward forced into a tall portrait page, while portrait suits regular text content. Getting these settings right before converting saves a re-download later.</p>
 
-<h2>A concrete example</h2>
-<p>You built a simple styled invoice as an HTML file — a logo, some CSS for spacing and colors, a table of line items — and need to send it as a PDF rather than an editable web page. Pasting the HTML in, confirming the preview looks right, and converting produces a fixed PDF version in seconds, with no design software or server-side rendering pipeline involved.</p>
+<h2>Prepare a self-contained invoice</h2>
+<p>For an HTML invoice, embed the authorized logo, include required CSS and fonts, set the intended paper size, and verify totals before rendering. Compare the PDF with the preview, paying attention to page breaks, clipped table rows, missing images, and text selection. Keep the HTML and underlying invoice data as the source.</p>
 
-<h2>Quick answers</h2>
-<p><strong>Can I convert a live website by giving its URL?</strong> Not directly — a browser-based tool with no server can't fetch another site's page. Copy that page's HTML source and paste it in instead.</p>
-<p><strong>Why are some of my images missing from the PDF?</strong> They're likely loaded from a site that blocks cross-origin access, which prevents the browser from reading their pixel data.</p>
-<p><strong>Will a line of text ever get cut in half across a page break?</strong> It's possible with dense content, since page breaks are a fixed-height cut rather than reflow-aware pagination — content with natural spacing (headings, list items, paragraph gaps) almost always avoids this.</p>
+<h2>Verify more than the preview</h2>
+<p><strong>Can I convert a live site by URL?</strong> Not with this tool. Copying source alone may produce an incomplete result because a live page depends on external and dynamic resources.</p>
+<p><strong>Why are images missing?</strong> CORS is one possibility; also check relative paths, authentication, CSP, mixed content, loading failures, and capture timing.</p>
+<p><strong>Can content be cut at a page break?</strong> Yes. Fixed-height slicing can split text, images, and rows regardless of natural spacing. Review every generated page.</p>
 
 <div class="cta-box">
   <h3>Convert Your HTML to a PDF</h3>
-  <p>Orisod's HTML to PDF tool renders your pasted or uploaded HTML with a live preview, then converts it to a paginated PDF — entirely in your browser.</p>
+  <p>Orisod's HTML to PDF tool previews supported HTML and creates a rasterized, paginated PDF in your browser. Check resources, fonts, page breaks, links, text selection, and accessibility against your requirements.</p>
   <a class="cta-button" href="/html-to-pdf/">HTML to PDF →</a>
 </div>
 
-<p>For a styled snippet, template, or report you already have as HTML, converting straight to PDF is faster than exporting from whatever tool generated it in the first place — paste the code, confirm the preview, and you have a shareable file.</p>
+<p>This workflow suits self-contained HTML whose rasterized appearance has been reviewed. When searchable text, tagged accessibility, active links, CSS print rules, or layout-aware pagination matter, use an HTML-to-PDF engine designed to preserve those features.</p>
 
 </div>
 

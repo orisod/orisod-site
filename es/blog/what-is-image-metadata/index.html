@@ -149,12 +149,12 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guías</span>
 <h1>Qué son los metadatos de una imagen y cómo consultarlos</h1>
-<p class="intro">Un archivo de imagen no es solo la foto que ves — puede llevar una capa de información junto a los píxeles, describiendo de dónde viene, quién la posee, y cómo se hizo. Aquí te explicamos qué incluyen realmente esos metadatos, y cómo mirar dentro de una foto específica para ver qué está llevando.</p>
+<p class="intro">Un archivo de imagen puede guardar información que no aparece en la fotografía. Según el formato y el programa utilizado, puede incluir ajustes de cámara, fechas, ubicación, descripciones, autoría y datos de edición.</p>
 
 <div class="article-body">
 
-<h2>Los metadatos son más amplios que solo EXIF</h2>
-<p>La mayoría de la gente que ha oído hablar de los metadatos de imagen los conoce a través de EXIF — los ajustes de cámara, la marca de tiempo, y a veces los datos GPS que los teléfonos y cámaras incrustan automáticamente. Pero EXIF es solo uno de varios estándares de metadatos que puede llevar un archivo de imagen. Los metadatos IPTC (desarrollados para la industria de noticias y publicaciones) normalmente contienen descripciones, palabras clave, créditos y derechos de uso. XMP, un estándar más nuevo de Adobe, puede contener información descriptiva similar y está diseñado para ser extensible a distintos tipos de contenido. Un solo archivo de imagen puede llevar datos de más de uno de estos estándares a la vez, cada uno cubriendo un tipo distinto de información.</p>
+<h2>Los metadatos de imagen van más allá de EXIF</h2>
+<p>EXIF es el estándar más conocido porque los teléfonos y las cámaras lo utilizan para guardar ajustes, fechas y, en algunos casos, coordenadas GPS. IPTC surgió para los flujos de trabajo periodísticos y editoriales; suele contener descripciones, palabras clave, créditos y derechos de uso. XMP puede almacenar información descriptiva similar y campos extensibles utilizados por programas de edición y gestión de recursos. Una misma imagen puede contener datos de varios estándares.</p>
 
 <h2>Qué contiene típicamente cada tipo de metadatos</h2>
 <table class="compare-table">
@@ -190,7 +190,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 </svg>
 <figcaption>EXIF, IPTC y XMP se superponen, pero cada uno da prioridad a distintos tipos de metadatos.</figcaption>
 </figure>
-<p>Vigente a partir de agosto de 2026, seg&#250;n las especificaciones CIPA Exif 3.0 (2023), IPTC Photo Metadata Standard e ISO 16684-1:2019 (XMP) &#8212; consulta la documentaci&#243;n de cada est&#225;ndar para la lista completa de campos.</p>
+<p>Este resumen se basa en CIPA Exif 3.0 (2023), IPTC Photo Metadata Standard e ISO 16684-1:2019 para XMP, consultados en agosto de 2026. Cada especificación incluye más campos de los que aparecen en estos ejemplos.</p>
 
 <ul>
   <li><strong>EXIF</strong> — marca y modelo de cámara, ajustes de exposición, fecha y hora de captura, y a menudo coordenadas GPS en fotos de teléfono.</li>
@@ -199,7 +199,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 </ul>
 
 <h2>Por qué existen estos metadatos</h2>
-<p>Nada de esto es accidental — cada estándar se construyó para resolver un problema real de flujo de trabajo. Un fotógrafo que entrega imágenes a una publicación depende de las leyendas y créditos IPTC para que la imagen llegue con su contexto intacto en lugar de como un archivo anónimo. Una aplicación de gestión de fotos depende de las marcas de tiempo y datos de cámara EXIF para organizar automáticamente una biblioteca. Los metadatos están haciendo trabajo real para la gente y los sistemas que saben dónde buscarlos — simplemente son invisibles para quien mira la imagen casualmente.</p>
+<p>Los metadatos mantienen el contexto unido al archivo. Una publicación puede leer las descripciones y los créditos IPTC incluidos por el fotógrafo. Una aplicación puede ordenar una biblioteca mediante las fechas y los datos de cámara de EXIF. Los programas de edición también pueden guardar información de trabajo en XMP. Estos datos no se ven al abrir la foto, pero otras aplicaciones pueden utilizarlos.</p>
 
 <h2>Dónde resulta útil revisar los metadatos</h2>
 <ul>
@@ -209,19 +209,19 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <li><strong>Revisión de privacidad antes de compartir</strong> — comprobar si hay GPS u otros datos identificables incrustados antes de publicar una foto públicamente.</li>
 </ul>
 
-<h2>Ver vs. eliminar</h2>
-<p>Ver los metadatos y eliminarlos son dos necesidades distintas y complementarias. Ver se trata de entender qué está ya incrustado en un archivo específico — útil para verificación, organización, o una revisión de privacidad antes de decidir qué hacer después. Eliminar (un proceso separado) es lo que harías después si decides que una foto no debería llevar esa información a donde sea que la vayas a compartir. Revisar primero es lo que te dice si eliminar es siquiera necesario para una foto en particular.</p>
+<h2>Consultar y eliminar son acciones diferentes</h2>
+<p>Un visor consulta los campos sin modificar el archivo. La eliminación crea una copia en la que se quitan determinados metadatos. Conviene revisar primero qué contiene la imagen y decidir después si deben conservarse los créditos y las descripciones o eliminarse datos privados como la ubicación.</p>
 
-<h2>Un ejemplo concreto</h2>
-<p>Recibes una foto de alguien que afirma que se tomó la semana pasada en un lugar específico, pero algo no cuadra. Revisar los metadatos podría mostrar una fecha de captura de meses atrás y un modelo de cámara que no coincide con lo que describieron — no es prueba de nada por sí sola, pero es un dato concreto que respalda o contradice la afirmación, y que estuvo dentro del archivo todo el tiempo.</p>
+<h2>Comprobar la fecha y los datos de la cámara</h2>
+<p>Si una foto se describe como reciente pero sus metadatos muestran una fecha anterior, existe una diferencia que conviene investigar. No constituye una prueba por sí sola: el reloj del dispositivo puede estar mal configurado y los campos pueden modificarse o eliminarse. Los metadatos aportan contexto, no una garantía de autenticidad.</p>
 
-<h2>Cómo ver qué hay dentro de una imagen específica</h2>
+<h2>Cómo consultar los datos de una imagen</h2>
 <p>Un visor de metadatos lee los campos EXIF, IPTC y XMP del archivo y los presenta de forma legible, sin programas especializados ni línea de comandos. Selecciona o arrastra la imagen para consultar datos de cámara, descripciones, fechas y ubicación, si existe, sin modificar el archivo.</p>
 
-<h2>Respuestas rápidas</h2>
+<h2>Preguntas sobre los metadatos de imagen</h2>
 <p><strong>¿Todas las imágenes tienen metadatos?</strong> No. Una captura de pantalla o un gráfico exportado puede contener pocos datos EXIF o ninguno, mientras que una foto tomada con una cámara o un teléfono suele incluir varios campos.</p>
-<p><strong>¿Ver los metadatos cambia el archivo?</strong> No — ver es una operación de solo lectura; la imagen y sus datos incrustados se mantienen exactamente como estaban.</p>
-<p><strong>¿Los metadatos pueden ser incorrectos?</strong> Sí. Una fecha puede verse afectada por un reloj mal configurado, y los programas de edición pueden modificar o eliminar campos. Son informativos, pero no garantizan por sí solos que los datos estén completos o sean exactos.</p>
+<p><strong>¿Consultar los metadatos cambia el archivo?</strong> No. El visor lee los campos sin alterar la imagen.</p>
+<p><strong>¿Los metadatos pueden ser incorrectos?</strong> Sí. La configuración del dispositivo, los programas de edición, las exportaciones y las plataformas de mensajería pueden modificar o eliminar campos. Deben interpretarse teniendo en cuenta esas limitaciones.</p>
 
 <div class="cta-box">
   <h3>Consulta los metadatos de tu imagen</h3>
@@ -229,7 +229,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <a class="cta-button" href="/es/image-metadata-viewer/">Ver Metadatos de Imagen →</a>
 </div>
 
-<p>Un archivo de imagen rara vez es solo sus píxeles — comprobar qué más está llevando toma unos segundos, y es el primer paso antes de decidir si esa información debería viajar junto con la foto o no.</p>
+<p>Revisa los metadatos antes de utilizarlos como referencia o compartir el archivo. Algunos campos aportan contexto útil; otros pueden revelar información que no tenías intención de publicar.</p>
 
 </div>
 

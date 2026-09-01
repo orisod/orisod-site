@@ -149,12 +149,12 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guides</span>
 <h1>What Is Image Metadata and How to View It</h1>
-<p class="intro">An image file isn't just the picture you see — it can carry a layer of information alongside the pixels, describing where it came from, who owns it, and how it was made. Here's what that metadata actually includes, and how to look inside a specific photo to see what it's carrying.</p>
+<p class="intro">An image file can store information that never appears in the picture itself. Depending on the format and software involved, it may include camera settings, dates, location, captions, ownership details, and editing data.</p>
 
 <div class="article-body">
 
-<h2>Metadata is broader than just EXIF</h2>
-<p>Most people who've heard of image metadata know it through EXIF — the camera settings, timestamp, and sometimes GPS data that phones and cameras embed automatically. But EXIF is only one of several metadata standards an image file can carry. IPTC metadata (developed for the news and publishing industry) typically holds captions, keywords, credit lines, and usage rights. XMP, a newer standard from Adobe, can hold similar descriptive information and is designed to be extensible across different types of content. A single image file can carry data from more than one of these standards at once, each covering a different kind of information.</p>
+<h2>Image metadata goes beyond EXIF</h2>
+<p>EXIF is the best-known standard because phones and cameras use it for settings, timestamps, and sometimes GPS coordinates. IPTC was developed for news and publishing workflows and commonly stores captions, keywords, credits, and rights information. XMP can hold similar descriptive data along with extensible fields used by editing and asset-management software. One image may contain information from several of these standards at the same time.</p>
 
 <h2>What each type of metadata typically contains</h2>
 <table class="compare-table">
@@ -190,7 +190,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 </svg>
 <figcaption>EXIF, IPTC, and XMP overlap, but each emphasizes different kinds of metadata.</figcaption>
 </figure>
-<p>Current as of August 2026, per the CIPA Exif 3.0 (2023), IPTC Photo Metadata Standard, and ISO 16684-1:2019 (XMP) specifications &#8212; check each standard's own documentation for the complete field list.</p>
+<p>This overview reflects CIPA Exif 3.0 (2023), the IPTC Photo Metadata Standard, and ISO 16684-1:2019 for XMP as checked in August 2026. Each specification contains additional fields beyond the examples shown here.</p>
 
 <ul>
   <li><strong>EXIF</strong> — camera make and model, exposure settings, date and time captured, and often GPS coordinates on phone photos.</li>
@@ -198,8 +198,8 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <li><strong>XMP</strong> — similar descriptive fields to IPTC, plus editing history in some software, and custom fields specific to certain applications.</li>
 </ul>
 
-<h2>Why this metadata exists at all</h2>
-<p>None of it is accidental — each standard was built to solve a real workflow problem. A photographer delivering images to a publication relies on IPTC captions and credit lines so the image arrives with its context intact instead of as an anonymous file. A photo management app relies on EXIF timestamps and camera data to sort and organize a library automatically. The metadata is doing real work for the people and systems that know to look for it — it's just invisible to anyone casually viewing the image.</p>
+<h2>Why image files store metadata</h2>
+<p>Metadata keeps context attached to the file. A publication can read IPTC captions and credits when a photographer delivers an image. A photo manager can use EXIF dates and camera details to organize a library. Editing software may store workflow information in XMP. The data remains invisible during ordinary viewing, but other applications can read and use it.</p>
 
 <h2>Where metadata becomes useful to check</h2>
 <ul>
@@ -209,27 +209,27 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <li><strong>Privacy review before sharing</strong> — checking whether GPS or other identifying data is embedded before posting a photo publicly.</li>
 </ul>
 
-<h2>Viewing vs. removing</h2>
-<p>Viewing metadata and removing it are two different, complementary needs. Viewing is about understanding what's already embedded in a specific file — useful for verification, organization, or a privacy check before you decide what to do next. Removing (a separate process) is what you'd do afterward if you decide a photo shouldn't carry that information into wherever you're about to share it. Checking first is what tells you whether removing is even necessary for a given photo.</p>
+<h2>Viewing and removing are separate actions</h2>
+<p>A viewer reads the fields without changing the file. Removal creates a copy with selected metadata stripped out. Check the contents first, then decide whether useful credits or descriptions should remain and whether private fields such as location should be removed before sharing.</p>
 
-<h2>How to see what's inside a specific image</h2>
-<p>A metadata viewer reads a file's embedded EXIF, IPTC, and XMP fields and displays them in a readable format, rather than requiring specialized software or command-line tools. You upload or drag in the image, and it shows you exactly what's embedded — camera details, descriptive fields, timestamps, and location data if present — all without altering the file itself.</p>
+<h2>How to inspect an image</h2>
+<p>Open the file in a metadata viewer to list the EXIF, IPTC, and XMP fields it contains. The results may include camera details, dates, descriptions, and coordinates. Viewing is read-only, so the image and its embedded information remain unchanged.</p>
 
-<h2>A concrete example</h2>
-<p>You receive a photo from someone claiming it was taken last week at a specific location, but something about it seems off. Checking the metadata might show a capture date from months earlier and a camera model that doesn't match what they described — not proof of anything on its own, but a concrete data point that either supports or contradicts the claim, sitting right inside the file the whole time.</p>
+<h2>Checking the date and camera details</h2>
+<p>Suppose a photo is described as recent, but its metadata reports an older capture date. That difference is worth investigating, although it is not proof by itself. Device clocks can be wrong, software can rewrite fields, and metadata can be edited or removed. Treat it as supporting information rather than a guarantee of authenticity.</p>
 
-<h2>Quick answers</h2>
-<p><strong>Does every image have metadata?</strong> Not necessarily — a screenshot or a graphic exported from design software often has little or no EXIF data, while a photo straight from a camera or phone usually has quite a bit.</p>
-<p><strong>Does viewing metadata change the file?</strong> No — viewing is a read-only operation; the image and its embedded data stay exactly as they were.</p>
-<p><strong>Can metadata be wrong or misleading?</strong> Yes — timestamps can be affected by an incorrectly set device clock, and metadata can sometimes be edited or stripped by software the image passed through, so it's informative but not guaranteed to be complete or accurate.</p>
+<h2>Questions about image metadata</h2>
+<p><strong>Does every image contain metadata?</strong> No. Screenshots and exported graphics may contain little or none, while an original camera or phone photo often includes several fields.</p>
+<p><strong>Does viewing change the file?</strong> No. A metadata viewer reads the fields without altering the image.</p>
+<p><strong>Can metadata be inaccurate?</strong> Yes. Device settings, editing software, exports, and messaging platforms can change or remove fields. Use metadata as evidence with limitations, not as unquestionable proof.</p>
 
 <div class="cta-box">
   <h3>View Your Image's Metadata</h3>
-  <p>Orisod's metadata viewer reads a photo's embedded EXIF, camera, and location data and shows it to you clearly — entirely in your browser, with nothing uploaded to a server.</p>
+  <p>View the EXIF, camera, date, and location fields present in an image. Orisod reads the file locally in your browser without uploading it.</p>
   <a class="cta-button" href="/image-metadata-viewer/">View Image Metadata →</a>
 </div>
 
-<p>An image file is rarely just its pixels — checking what else it's carrying takes a few seconds, and it's the first step before deciding whether that information should travel with the photo or not.</p>
+<p>Inspect metadata before relying on it or sharing the file. Some fields add useful context; others may reveal information you did not intend to publish.</p>
 
 </div>
 

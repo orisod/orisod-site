@@ -146,34 +146,34 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guías</span>
 <h1>Cómo recortar los márgenes de un PDF sin volver a imprimirlo</h1>
-<p class="intro">Una página escaneada sale con cinco centímetros de espacio en blanco muerto alrededor de los bordes, o un PDF exportado desde otra herramienta tiene márgenes que no coinciden con lo que realmente necesitas. Rehacer el origen — volver a escanear, volver a exportar, reformatear — es la forma lenta de arreglarlo. Recortar directamente los márgenes del archivo existente es la rápida.</p>
+<p class="intro">Un escaneo o PDF exportado puede contener más espacio en blanco del necesario. Ajustar el límite de la página permite obtener un área de lectura o impresión más limpia sin repetir la captura, siempre que el contenido útil ya esté completo y legible.</p>
 
 <div class="article-body">
 
-<h2>Por qué los PDF terminan con márgenes anchos o irregulares</h2>
-<p>Los márgenes quedan incorporados en un PDF por todo tipo de razones que no tienen nada que ver con lo que realmente quieres: un escáner captura por defecto todo el vidrio en lugar de solo la página, un documento se diseñó para un tamaño de papel distinto al que se usa ahora, o una configuración de exportación agregó relleno que nadie pidió. Ninguno de estos son problemas de contenido — la página en sí está bien — el límite visible alrededor de ella simplemente es más grande de lo necesario.</p>
+<h2>Cómo aparecen los márgenes anchos o irregulares</h2>
+<p>Un escáner plano puede capturar toda la superficie de vidrio, una configuración de exportación puede añadir espacio o el original puede haberse diseñado para otro tamaño de papel. Antes de recortar, confirma que la zona vacía no esté reservada para encuadernación, notas, sellos, sangrado de impresión o anotaciones de accesibilidad.</p>
 
-<h2>Qué cambia al recortar un PDF</h2>
-<p>Recortar mueve el límite visible de una página hacia adentro según la cantidad que indiques en cada lado, normalmente medida en milímetros. No toca, redibuja ni recomprime nada dentro de ese límite — el texto sigue siendo seleccionable, las imágenes conservan su resolución original. Piénsalo menos como "editar" la página y más como cambiar qué parte de ella se muestra e imprime.</p>
+<h2>El recorte suele modificar el cuadro visible de la página</h2>
+<p>Un recorte estructural mueve hacia dentro uno de los cuadros de página sin rasterizar el contenido. El texto y las imágenes dentro del nuevo límite pueden conservar sus datos originales. Sin embargo, el material situado fuera puede permanecer en el PDF y otros programas podrían volver a mostrarlo; recortar no es un método seguro para eliminar información confidencial.</p>
 
 <figure class="theme-figure">
   <img src="/assets/blog/trim-pdf-margins/pdf-margin-trim-before-after.webp" alt="Una página escaneada con márgenes blancos amplios, y la misma página después de recortar los márgenes al contenido" width="606" height="436" loading="lazy">
-  <figcaption>El contenido de la página no cambia; solo cambia el límite visible de la página.</figcaption>
+  <figcaption>El recorte cambia el límite visible; el contenido oculto puede seguir dentro del PDF.</figcaption>
 </figure>
 
-<h2>Elegir los márgenes correctos para tu caso</h2>
-<p>Los márgenes irregulares en los cuatro lados son comunes en documentos escaneados, así que arriba, abajo, izquierda y derecha normalmente necesitan valores distintos en lugar de un número uniforme. Una forma rápida de averiguar qué necesitas: abre el PDF, mira cuánto espacio vacío hay en cada borde, y estima en milímetros — la mayoría de las herramientas de recorte te permiten previsualizar o reajustar antes de guardar, así que no hace falta acertar exactamente a la primera.</p>
+<h2>Elige los márgenes revisando todo el documento</h2>
+<p>Arriba, abajo, izquierda y derecha pueden necesitar valores distintos. Comienza con medidas prudentes, consulta la vista previa y revisa páginas con encabezados, pies, firmas, sellos o notas manuscritas. Aunque el escaneo parezca uniforme, alguna página puede extenderse más que las demás.</p>
 
-<h2>Qué se mantiene sin cambios</h2>
-<p>Recortar es un cambio de límite, no una edición de contenido — el texto, las imágenes y el diseño subyacentes dentro del nuevo límite son exactamente los mismos de antes. Si tu PDF tiene varias páginas de distinto tamaño, la mayoría de las herramientas aplican las mismas medidas de margen a todas las páginas en lugar de personalizarlas por página, así que ten cuidado con un error si una página resulta demasiado pequeña para los márgenes que fijaste.</p>
+<h2>Qué debes comprobar después del recorte</h2>
+<p>Si la herramienta aplica las mismas medidas a todo el documento, presta especial atención a páginas con tamaños u orientaciones diferentes. Abre la copia descargada y revísalas una por una. También conviene comprobar marcadores, anotaciones, enlaces, formularios, cuadros de página y firmas digitales después de reescribir el PDF.</p>
 
-<h2>Un ejemplo concreto</h2>
+<h2>Ejemplo: eliminar espacio sobrante del escáner</h2>
 <p>Escaneas un recibo o un formulario de una sola página en un escáner plano configurado para capturar un área A4 completa, pero el contenido real solo llena el tercio superior de la página. En lugar de volver a escanear con un recorte más ajustado, recortarías unos 150mm de la parte inferior y una cantidad menor de los lados — una sola pasada, y el resultado es una página del tamaño del contenido en vez del tamaño del vidrio del escáner.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Recortar elimina contenido de forma permanente?</strong> No — mueve el límite visible de la página hacia adentro. El contenido subyacente no se redibuja ni se rasteriza, así que nada se pierde ni se degrada.</p>
+<h2>Preguntas antes de recortar márgenes PDF</h2>
+<p><strong>¿El recorte elimina definitivamente el contenido oculto?</strong> No necesariamente. Cambiar el cuadro de página puede ocultar objetos sin borrarlos. Para información sensible, utiliza un proceso adecuado de redacción o saneamiento.</p>
 <p><strong>¿Puedo recortar diferentes cantidades en cada lado?</strong> Sí — arriba, abajo, izquierda y derecha son independientes, así que corregir márgenes irregulares es fácil sin recortar de más un lado que ya estaba bien.</p>
-<p><strong>¿Esto funciona en un PDF de varias páginas?</strong> Sí, las mismas medidas de margen se aplican a todas las páginas en una sola pasada — útil para un documento escaneado donde todas las páginas comparten el mismo problema de margen del escáner.</p>
+<p><strong>¿Puedo recortar un PDF de varias páginas?</strong> Sí, pero las medidas uniformes son más seguras cuando todas comparten tamaño, orientación y patrón de márgenes. Revisa cada página antes de sustituir el original.</p>
 
 <div class="cta-box">
   <h3>Recorta los márgenes de tu PDF</h3>
@@ -181,7 +181,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <a class="cta-button" href="/es/crop-pdf-pages/">Recortar Páginas de PDF →</a>
 </div>
 
-<p>Los márgenes anchos o irregulares casi siempre son un residuo de cómo se escaneó o exportó una página, no algo mal con el contenido en sí — y corregirlos es un ajuste de una sola pasada, no un motivo para rehacer el documento original desde cero.</p>
+<p>El recorte es apropiado cuando el exceso de espacio es el único problema. Conserva el archivo fuente, revisa la copia y vuelve a escanear o exportar si la página está incompleta, borrosa o presenta otro defecto.</p>
 
 </div>
 

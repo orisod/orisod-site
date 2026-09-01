@@ -149,12 +149,12 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guías</span>
 <h1>Cómo corregir una foto girada o invertida</h1>
-<p class="intro">Tomas una foto sosteniendo tu teléfono de lado, se ve perfectamente derecha en la pantalla de tu teléfono — y luego la subes a algún lugar y aparece girada 90 grados. Esto no es aleatorio, y no es que falle la cámara de tu teléfono. Aquí te explicamos qué está pasando realmente y cómo arreglarlo de forma definitiva.</p>
+<p class="intro">Una foto puede verse derecha en la galería del teléfono y aparecer girada después de subirla. El archivo quizá dependa de una etiqueta de orientación EXIF que una aplicación interpreta y otra ignora. Normalizar la orientación de los píxeles hace que el resultado sea más consistente.</p>
 
 <div class="article-body">
 
-<h2>No siempre son los píxeles los que están girados</h2>
-<p>Aquí está la parte que confunde a la gente: un archivo de foto puede estar técnicamente almacenado de lado mientras se muestra derecho, gracias a un pequeño dato de metadatos llamado la bandera de orientación EXIF. En lugar de rotar físicamente cada píxel cuando inclinas tu teléfono para tomar una foto, muchas cámaras guardan los datos de la imagen exactamente como los capturó el sensor y simplemente añaden una etiqueta que dice "muestra esto girado 90 grados". Las aplicaciones que leen esa etiqueta muestran la foto correctamente. Las aplicaciones que la ignoran muestran los datos de píxeles crudos, sin rotar — por eso el mismo archivo puede verse perfectamente bien en una aplicación y de lado en otra.</p>
+<h2>El archivo puede depender de una etiqueta de orientación</h2>
+<p>Muchas cámaras guardan los píxeles según la orientación del sensor y añaden una etiqueta EXIF que indica cómo deben mostrarse. Las aplicaciones que respetan esa etiqueta presentan la imagen correctamente. Las que la ignoran o la eliminan pueden mostrar la disposición almacenada de los píxeles, por lo que un mismo archivo se ve diferente.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 380" width="700" height="380" role="img" aria-label="Diagrama de una foto almacenada de lado con una etiqueta EXIF de orientación que indica mostrarla rotada 90 grados" xmlns="http://www.w3.org/2000/svg">
@@ -189,29 +189,29 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <figcaption>Algunas aplicaciones leen la etiqueta de orientación; otras muestran los píxeles tal como están almacenados.</figcaption>
 </figure>
 
-<h2>Por qué esto causa tanta confusión</h2>
-<p>Distintos programas tienen un soporte muy inconsistente para leer la bandera de orientación. Las galerías de teléfonos modernos y la mayoría de los navegadores actuales la leen correctamente. Pero algunos visores de imágenes antiguos, ciertos formularios de subida, algunos clientes de correo, y varios sistemas de backend que procesan imágenes (redimensionándolas, convirtiendo formatos, eliminando metadatos) o bien ignoran la bandera por completo o la eliminan en el proceso — momento en el cual la foto vuelve a mostrarse como estén orientados realmente los datos de píxeles crudos. No hiciste nada mal; el software simplemente no se puso de acuerdo sobre cuál orientación confiar.</p>
+<h2>Por qué las aplicaciones no coinciden</h2>
+<p>La compatibilidad con la orientación EXIF varía. Las galerías y los navegadores actuales suelen interpretarla, mientras que algunos visores, formularios, correos o sistemas de procesamiento pueden ignorarla o eliminarla al redimensionar y convertir. Sin esa etiqueta, la disposición almacenada de los píxeles determina cómo aparece la foto.</p>
 
-<h2>Los dos tipos de arreglo para "de lado"</h2>
+<h2>Cambiar los metadatos no es lo mismo que rotar la imagen</h2>
 <ul>
   <li><strong>Rotación solo de metadatos.</strong> Algunas herramientas solo cambian la bandera EXIF sin tocar los datos de píxeles reales. Esto es rápido, pero solo funciona de forma confiable en software que respeta la bandera — en cualquier lugar que la ignore, la foto vuelve a verse de lado.</li>
   <li><strong>Rotación real de píxeles.</strong> Una herramienta de rotación adecuada vuelve a renderizar físicamente los datos de la imagen en la nueva orientación y la guarda así. La foto ahora se ve correcta en absolutamente todo, sin importar si el software que la muestra lee datos EXIF o no, porque no hay ninguna bandera que ignorar — los píxeles mismos están orientados correctamente.</li>
 </ul>
-<p>Si alguna vez arreglaste la rotación de una foto en una aplicación solo para que volviera a aparecer de lado en otro lugar, probablemente te topaste con un arreglo solo de metadatos. Una rotación real de píxeles resuelve el problema de forma permanente.</p>
+<p>Cambiar únicamente la etiqueta todavía depende de que las aplicaciones posteriores la interpreten. Rotar el contenido y exportarlo en la orientación deseada elimina esa dependencia en el archivo nuevo.</p>
 
 <h2>Las fotos boca abajo funcionan igual</h2>
-<p>Una foto completamente boca abajo (180 grados) sigue la misma lógica idéntica — es o una bandera de orientación desajustada o datos de píxeles genuinamente almacenados invertidos. El arreglo es el mismo: rotar el contenido real de la imagen en lugar de depender de una etiqueta de metadatos que no todo el software va a respetar.</p>
+<p>La misma explicación se aplica a una imagen invertida 180 grados. Normaliza el contenido y exporta una copia corregida en lugar de depender únicamente de una instrucción de visualización.</p>
 
-<h2>Cómo saber con qué tipo de arreglo estás lidiando</h2>
-<p>Si una foto se muestra correctamente en una aplicación pero de lado en otra, es una señal fuerte de que el archivo depende de la bandera de orientación EXIF en lugar de tener datos de píxeles genuinamente rotados. Si aparece de lado absolutamente en todas partes, incluida la aplicación o el dispositivo donde se tomó originalmente, es probable que los propios datos de píxeles estén almacenados en esa orientación y no haya ninguna bandera involucrada. De cualquier forma, el arreglo es el mismo — rotar el contenido real de la imagen — pero saber en qué situación estás explica por qué un "arreglo" a veces no se mantiene.</p>
+<h2>Cómo reconocer un problema con la etiqueta EXIF</h2>
+<p>Si la foto aparece derecha en una aplicación y girada en otra, es probable que cada una maneje la etiqueta EXIF de manera diferente. Si todas muestran la misma orientación incorrecta, quizá el contenido ya esté almacenado así. Exportar una copia normalizada corrige ambos casos.</p>
 
 <h2>Cómo arreglarlo de forma permanente</h2>
-<p>Rota la foto usando una herramienta que vuelva a renderizar los píxeles en lugar de una que solo edite metadatos. Seleccionas la dirección (90 grados a la izquierda, 90 grados a la derecha, o un giro completo de 180), la herramienta redibuja la imagen en la orientación corregida, y obtienes de vuelta un archivo correctamente orientado a nivel de píxel — sin necesidad de ninguna bandera, sin riesgo de que vuelva a verse de lado la próxima vez que pase por otro software.</p>
+<p>Elige 90 grados a la izquierda, 90 grados a la derecha o 180 grados, revisa la vista previa y exporta una copia corregida. El archivo nuevo debe guardar el contenido en la orientación deseada sin depender de la etiqueta EXIF original.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Por qué la misma foto se ve diferente en distintos dispositivos?</strong> Porque los dispositivos y aplicaciones varían en si respetan la bandera de orientación EXIF — un dispositivo muestra la vista "corregida", otro muestra los datos de píxeles crudos, y pueden no coincidir aunque sea exactamente el mismo archivo.</p>
-<p><strong>¿Rotar una foto reduce su calidad?</strong> Una rotación de 90 o 180 grados no requiere ningún remuestreo ni interpolación — cada píxel simplemente se mueve a una nueva posición — así que no hay pérdida de calidad por la rotación en sí.</p>
-<p><strong>¿Arreglar la rotación una vez lo arreglará en todos los lugares donde ya compartí la foto?</strong> No — si ya subiste o enviaste la versión de lado a algún lugar, necesitarás volver a subir el archivo corregido. El arreglo aplica al archivo que rotas, no a las copias que ya están en otros servicios.</p>
+<h2>Preguntas sobre la rotación de fotos</h2>
+<p><strong>¿Por qué el mismo archivo se ve diferente?</strong> Las aplicaciones pueden interpretar o eliminar de manera distinta la etiqueta de orientación EXIF.</p>
+<p><strong>¿Rotar reduce la calidad?</strong> La rotación geométrica de 90 o 180 grados no necesita interpolación, pero al exportar un JPG puede producirse una nueva compresión con una pequeña pérdida. El resultado depende de la herramienta y del formato de salida.</p>
+<p><strong>¿Se actualizarán las copias ya compartidas?</strong> No. La corrección se aplica al archivo nuevo; reemplaza las versiones enviadas o publicadas cuando sea posible.</p>
 
 <div class="cta-box">
   <h3>Corrige una foto girada de forma permanente</h3>
@@ -219,7 +219,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <a class="cta-button" href="/es/rotate-image/">Rotar una Imagen →</a>
 </div>
 
-<p>Una foto de lado no es señal de que algo esté roto — son solo dos programas en desacuerdo sobre una bandera de metadatos. Rotar los píxeles reales resuelve el desacuerdo de forma definitiva.</p>
+<p>Guarda la copia corregida y pruébala en la aplicación donde apareció el problema. Así confirmas que la orientación quedó almacenada como esperabas y no solo se muestra bien en un visor.</p>
 
 </div>
 

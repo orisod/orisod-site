@@ -150,15 +150,15 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-comparison">Comparativas</span>
 <h1>PNG a WebP: ¿cuánto se reduce el tamaño de tus imágenes?</h1>
-<p class="intro">Si alguna vez te preguntaste cuánto espacio realmente ahorrarías convirtiendo un PNG a WebP, la respuesta honesta es “depende” — pero con números reales detrás, no una estimación vaga.</p>
+<p class="intro">Convertir PNG a WebP puede reducir el tamaño, pero no existe un porcentaje fiable para todas las imágenes. El resultado depende del contenido, el codificador, los ajustes, los metadatos y de si eliges una salida con o sin pérdida.</p>
 
 <div class="article-body">
 
-<h2>Qué es WebP, rápidamente</h2>
-<p>WebP es un formato de imagen moderno creado por Google que puede hacer todo lo que hace PNG — incluyendo compresión sin pérdida y soporte completo de transparencia — pero generalmente comprime los mismos píxeles en un archivo más pequeño. También puede hacer compresión con pérdida, similar a JPG, para ahorros aún mayores cuando no necesitas cada píxel preservado exactamente.</p>
+<h2>Qué ofrece WebP</h2>
+<p>WebP admite compresión con y sin pérdida, además de transparencia. El modo sin pérdida puede conservar los valores de los píxeles decodificados de un PNG; el modo con pérdida descarta información a cambio de un archivo potencialmente menor. Las funciones y el manejo de metadatos no son idénticos entre formatos, así que comprueba cualquier requisito adicional a la imagen visible.</p>
 
-<h2>¿Cuánto más pequeño se vuelve un PNG como WebP?</h2>
-<p>Convertido sin pérdida — es decir, cada píxel permanece idéntico, no se descarta nada — un PNG normalmente se reduce entre un 20 y 30 % como WebP. Una captura de pantalla PNG de 500 KB podría quedar en unos 350–400 KB, sin diferencia visible ni medible. Convierte ese mismo archivo a WebP con pérdida en cambio, y el ahorro se dispara: ese mismo PNG de 500 KB a menudo puede bajar de 100 KB con un ajuste de calidad donde la diferencia sigue sin ser perceptible a simple vista. La brecha es todavía mayor para PNG de fotografías, ya que la compresión sin pérdida de PNG nunca fue especialmente adecuada para el detalle fotográfico.</p>
+<h2>Mide el resultado en lugar de depender de un promedio</h2>
+<p>La imagen de prueba incluida quedó más pequeña con ambos modos WebP, pero las cifras corresponden solo a ese archivo y codificador. Los gráficos planos, las capturas, las fotografías y los PNG ya optimizados se comprimen de maneras distintas. Compara el tamaño descargado con el original y revisa la salida con pérdida al tamaño de visualización previsto.</p>
 <figure class="theme-figure">
 <svg viewBox="0 0 700 340" width="700" height="340" role="img" aria-label="Gráfico de barras que compara la misma imagen tipo captura de pantalla en PNG (480 KB), WebP sin pérdida (423 KB) y WebP con pérdida (85 KB)" xmlns="http://www.w3.org/2000/svg">
 <title>Gráfico de barras que compara la misma imagen tipo captura de pantalla en PNG (480 KB), WebP sin pérdida (423 KB) y WebP con pérdida (85 KB)</title>
@@ -182,28 +182,28 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <tr><td>WebP (con pérdida, calidad 80)</td><td>85 KB</td></tr>
 </table>
 
-<h2>¿WebP mantiene la transparencia?</h2>
-<p>Sí — esta es una de las mayores ventajas de WebP sobre JPG. WebP admite un canal alfa completo, igual que PNG, así que un logotipo o gráfico PNG transparente se convierte a WebP con su transparencia totalmente intacta. JPG no puede hacer esto en absoluto, por lo que WebP (no JPG) es la verdadera alternativa moderna a PNG para cualquier cosa que necesite un fondo transparente.</p>
+<h2>WebP puede conservar la transparencia</h2>
+<p>WebP admite canal alfa, a diferencia del JPEG estándar, por lo que las zonas transparentes pueden seguir siéndolo después de la conversión. Revisa los bordes semitransparentes y las sombras, especialmente al utilizar ajustes con pérdida o un codificador distinto.</p>
 
-<h2>Cuándo PNG sigue ganando a pesar del costo de tamaño</h2>
+<h2>Cuándo conservar PNG es la opción más segura</h2>
 <ul>
-  <li><strong>Compatibilidad universal garantizada.</strong> PNG es compatible absolutamente en todas partes, incluyendo programas antiguos y ciertos flujos de trabajo de impresión o diseño que pueden no aceptar WebP.</li>
+  <li><strong>Compatibilidad con un flujo de trabajo establecido.</strong> PNG tiene una aceptación muy amplia, mientras que algunas aplicaciones antiguas y ciertos sistemas de impresión o diseño pueden no admitir WebP.</li>
   <li><strong>Un flujo de trabajo construido en torno a PNG.</strong> Si herramientas posteriores, un CMS, o un proceso de impresión esperan específicamente archivos PNG, convertir añade un paso en lugar de ahorrarlo.</li>
-  <li><strong>Necesitas un formato que nadie cuestionará nunca.</strong> WebP tiene un soporte excelente ahora, pero PNG no tiene ningún riesgo de compatibilidad en ningún lugar, en nada, nunca.</li>
+  <li><strong>Intercambio con destinatarios desconocidos.</strong> PNG puede resultar más predecible cuando no puedes confirmar qué programa abrirá o procesará el archivo.</li>
 </ul>
 
 <h2>Cuándo vale la pena convertir</h2>
 <p>El caso más claro es el rendimiento de sitios web — archivos de imagen más pequeños significan páginas que cargan más rápido, y eso se acumula rápidamente en un sitio con docenas de imágenes. También vale la pena cuando gestionas una gran biblioteca de recursos y el espacio de almacenamiento importa, o cuando necesitas compartir un gran lote de gráficos PNG en algún lugar con límite de tamaño. Para un único PNG que usarás una sola vez, el ahorro normalmente no vale el paso extra — es cuando la misma elección se repite cientos o miles de veces que la diferencia de tamaño realmente se nota.</p>
 
-<h2>Un ejemplo concreto</h2>
-<p>Digamos que tienes un sitio con 40 fotos de producto guardadas como PNG porque los archivos originales tenían fondos transparentes, con un promedio de 600 KB cada una — eso es aproximadamente 24 MB de datos de imagen para una sola página. Convertido a WebP sin pérdida, ese mismo conjunto baja a unos 17–19 MB, con cada píxel idéntico. Permite WebP con pérdida en cambio, y esos mismos 24 MB podrían reducirse realistamente a 6–8 MB, una diferencia que un visitante con conexión lenta realmente notará. Multiplica eso por cada página de un sitio de catálogo y el ahorro total de ancho de banda se vuelve considerable.</p>
+<h2>Ejemplo medido: una imagen de interfaz</h2>
+<p>La comparación ilustrada utiliza una imagen sintética de interfaz de 1600 × 1000 e indica el codificador y el ajuste empleados. Sirve para entender el contraste, no para pronosticar un sitio completo. En producción, prueba una muestra representativa y calcula el total con esos resultados medidos.</p>
 
 <h2>Convertir PNG a WebP</h2>
-<p>Convertir es una operación rápida y de un solo sentido — sube o arrastra tus archivos PNG, y obtén versiones WebP a una fracción del tamaño, con la transparencia preservada. Si más tarde necesitas ir en la dirección contraria (digamos, una herramienta de diseño que solo acepta PNG), esa conversión es igual de rápida, aunque ten en cuenta que estás recodificando en lugar de reconstruir perfectamente cualquier detalle que un paso con pérdida haya descartado.</p>
+<p>Selecciona los PNG y crea copias WebP; después comprueba dimensiones, transparencia, aspecto y tamaño. Convertir un WebP sin pérdida de nuevo a PNG puede reproducir sus píxeles decodificados, pero no necesariamente recupera metadatos descartados en la primera conversión. Los detalles eliminados mediante compresión con pérdida no pueden restaurarse.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Convertir PNG a WebP siempre reducirá el archivo?</strong> Casi siempre sí — incluso la compresión WebP sin pérdida suele superar a la de PNG, aunque la reducción de tamaño es mucho mayor si permites compresión con pérdida.</p>
-<p><strong>¿Se ve notablemente peor el WebP con pérdida comparado con PNG?</strong> Con un ajuste de calidad razonable, no — la diferencia generalmente es invisible a tamaños de visualización normales, de forma similar a cómo funciona la compresión JPG en fotos.</p>
+<h2>Preguntas antes de convertir PNG a WebP</h2>
+<p><strong>¿WebP siempre será más pequeño?</strong> No. Un PNG optimizado o una imagen concreta pueden producir un WebP de tamaño parecido o incluso mayor. Compara las salidas reales.</p>
+<p><strong>¿WebP con pérdida se verá diferente?</strong> Puede ocurrir. La visibilidad depende de la imagen, el ajuste de calidad, la escala y la persona que la observa. Comprueba bordes, texto, degradados y transparencias a los tamaños relevantes.</p>
 <p><strong>¿Debería convertir todos los PNG de mi sitio web a WebP?</strong> Para imágenes usadas repetidamente o en gran número, normalmente vale la pena. Para un puñado de iconos pequeños, el ahorro es real pero marginal.</p>
 
 <div class="cta-box">
@@ -212,7 +212,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <a class="cta-button" href="/es/png-to-webp/">Convertir PNG a WebP →</a>
 </div>
 
-<p>El ahorro de tamaño al convertir PNG a WebP es real y fácil de verificar por ti mismo — la única decisión real es si tu caso de uso necesita la compatibilidad universal de PNG más de lo que necesita el archivo más pequeño. Para la mayoría de usos web, gana el archivo más pequeño.</p>
+<p>Elige WebP cuando la reducción medida sea útil y todos los destinos lo admitan. Conserva PNG cuando la compatibilidad o el flujo de trabajo pesen más, y guarda siempre el archivo fuente sin importar el formato de entrega.</p>
 
 </div>
 

@@ -146,7 +146,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guías</span>
 <h1>Cómo cambiar el tamaño de página de un PDF (A4, carta, legal o personalizado)</h1>
-<p class="intro">Recibiste un PDF con tamaño para papel carta de EE. UU., pero estás imprimiendo en A4 — o al revés. El contenido está bien, el archivo simplemente no tiene el tamaño del papel que realmente tienes. Redimensionar un PDF existente toma una sola pasada; no hace falta rediseñar el documento a otro tamaño de página desde cero.</p>
+<p class="intro">Un PDF carta impreso en A4, o un documento A4 impreso en carta, puede producir márgenes inesperados o recortes. Antes de modificarlo, distingue entre cambiar los cuadros de página, escalar el contenido proporcionalmente y preparar una copia para imprimir. Son operaciones relacionadas, pero no equivalentes.</p>
 
 <div class="article-body">
 
@@ -168,29 +168,29 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 </figure>
 
 <h2>Qué hace el redimensionado</h2>
-<p>Redimensionar cambia las dimensiones físicas de página de un PDF y escala proporcionalmente el contenido de cada página para ajustarse al nuevo tamaño — nada se recorta ni se corta, se estira o se reduce para coincidir. Si el nuevo tamaño tiene una proporción distinta a la original (que es el caso entre A4 y carta, ligeramente), el contenido se estira un poco para llenarlo en lugar de dejar franjas en blanco — el mismo compromiso que hace cualquier enfoque de "ajustar al tamaño".</p>
+<p>Una herramienta puede colocar el contenido escalado proporcionalmente dentro del nuevo tamaño, estirarlo para llenar, recortarlo o cambiar únicamente los cuadros de página. Cada opción produce resultados distintos cuando las proporciones no coinciden. El ajuste proporcional evita deformación, pero puede dejar márgenes; llenar la página podría recortar o distorsionar. Comprueba el comportamiento antes de procesar el documento.</p>
 
 <h2>Tamaños estándar vs. dimensiones personalizadas</h2>
-<p>A4, carta y Legal cubren la mayoría de los casos, pero a veces hace falta un ancho y alto personalizados — una imprenta con requisitos de tamaño específicos, un formato de folleto no estándar, o un tamaño de página que no está entre los ajustes habituales. De cualquier forma, la operación subyacente es la misma: definir un ancho y alto objetivo, y cada página del documento se escala para coincidir.</p>
+<p>A4, carta y legal cubren necesidades frecuentes; una imprenta o un folleto puede exigir dimensiones personalizadas. Comprueba la unidad de medida y la orientación. Si el PDF mezcla tamaños, quizá sea necesario tratar cada página por separado en vez de imponer una sola escala.</p>
 
-<h2>Qué no cambia</h2>
-<p>Se conservan el número de páginas, el orden y el contenido. Solo cambian las dimensiones físicas y la escala de cada página. El peso del archivo suele mantenerse cerca del original porque el contenido se reescala, no se vuelve a comprimir.</p>
+<h2>Qué más puede cambiar</h2>
+<p>El número y el orden pueden conservarse, pero el PDF queda modificado. Según la implementación, podrían verse afectados los cuadros de página, anotaciones, enlaces, formularios, marcadores, estructura de accesibilidad y firmas digitales. El peso también puede cambiar si el contenido se reescribe, rasteriza o comprime nuevamente.</p>
 
-<h2>Un ejemplo concreto</h2>
-<p>Un cliente de EE. UU. te envía un contrato en tamaño carta para firmar y devolver, pero tu impresora tiene cargado A4 y sigue produciendo una página ligeramente recortada o con márgenes raros. En lugar de pelear con la configuración de la impresora, redimensionar el PDF a A4 antes de imprimir te da una página que coincide con el papel de la bandeja, con todo escalado correctamente.</p>
+<h2>De carta a A4 sin adivinar</h2>
+<p>Si necesitas imprimir en A4 un contrato carta, prueba primero la opción Ajustar a página del cuadro de impresión. Puede producir la copia necesaria sin alterar el PDF. Crea una versión A4 solo cuando el destinatario, el archivo o el sistema posterior exijan páginas A4; después revisa márgenes, firmas, campos y orientación.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Redimensionar distorsiona mi contenido?</strong> Ligeramente, si el tamaño objetivo tiene una proporción distinta a la original — el mismo compromiso de "estirar para ajustar" que hace cualquier herramienta de redimensionado. Entre A4 y carta, la diferencia es lo bastante pequeña como para casi no notarse.</p>
-<p><strong>¿Cambia mucho el peso del archivo?</strong> Normalmente no. El contenido no se vuelve a comprimir; solo cambian las dimensiones de página y su escala.</p>
+<h2>Comprobaciones antes de guardar la copia</h2>
+<p><strong>¿Se distorsiona el contenido?</strong> El escalado proporcional no debería deformarlo, pero puede añadir márgenes. Estirar para llenar sí lo distorsiona; llenar y recortar puede eliminar bordes. La diferencia entre A4 y carta importa en formularios y diseños precisos.</p>
+<p><strong>¿Cambia el peso?</strong> Depende de cómo se reescriba el PDF. Escalar objetos vectoriales podría tener poco efecto; rasterizar o recomprimir imágenes puede cambiarlo considerablemente.</p>
 <p><strong>¿Puedo usar un tamaño que no sea A4, carta o Legal?</strong> Sí, la mayoría de las herramientas de redimensionado admiten un ancho y alto personalizados además de los ajustes estándar.</p>
 
 <div class="cta-box">
   <h3>Cambia el tamaño de las páginas de tu PDF</h3>
-  <p>La herramienta Redimensionar páginas de PDF de Orisod permite convertir el documento a A4, carta, legal o un tamaño personalizado. Cada página se adapta directamente en tu navegador y el archivo permanece en tu dispositivo.</p>
+  <p>La herramienta Redimensionar páginas de PDF de Orisod aplica dimensiones A4, carta, legal o personalizadas en tu navegador. Revisa el modo de ajuste y la copia descargada, especialmente si contiene formularios, firmas, anotaciones o tamaños mixtos.</p>
   <a class="cta-button" href="/es/resize-pdf-pages/">Redimensionar Páginas de PDF →</a>
 </div>
 
-<p>Un tamaño de página incorrecto es un problema de impresión frecuente y fácil de evitar. Adapta el PDF al papel disponible sin rediseñar ni recrear el documento.</p>
+<p>Para una impresión puntual, el escalado de la impresora puede bastar. Si el PDF debe adoptar otro tamaño, conserva el original y verifica todas las páginas de la copia antes de distribuirla.</p>
 
 </div>
 

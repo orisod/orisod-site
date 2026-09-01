@@ -146,15 +146,15 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guides</span>
 <h1>How to Convert a PDF to Word (and What Actually Happens to Tables)</h1>
-<p class="intro">You need to edit a PDF's wording, but PDFs aren't built for editing — so the practical fix is converting it into a Word document first. A client-side, text-based conversion does this in seconds, but it's worth knowing exactly what it does and doesn't carry over before you rely on it, especially if your document has tables.</p>
+<p class="intro">Orisod's PDF-to-Word conversion extracts selectable text and rebuilds it in DOCX. That can accelerate editing a simple text document, but it does not reconstruct the page as Word originally created it. Tables, reading order, images, and layout require particular scrutiny.</p>
 
 <div class="article-body">
 
 <h2>What "PDF to Word" actually does</h2>
-<p>A text-based PDF to Word converter reads the selectable text on every page of a PDF — the same text you could highlight in a PDF viewer — and rebuilds it as editable paragraphs in a real .docx file you can open in Microsoft Word, Google Docs, or any word processor. It's a text extraction and rebuild, not a scan of the page's appearance, which is what makes the output genuinely editable rather than just a picture of text.</p>
+<p>The tool reads the PDF's available text layer and writes recognized strings into a DOCX. PDF text may be stored in drawing order, split into fragments, use custom character maps, or lack semantic paragraphs. The output is editable, but its sequence and characters must be compared with the source.</p>
 
 <h2>What happens to tables</h2>
-<p>This is the part worth understanding before you convert anything with a table in it. A PDF's table isn't stored as a "table object" the way Word understands one — it's just text positioned at specific coordinates on the page, with no structural information about rows, columns, or cell boundaries. A text-based converter reads those positions and rebuilds each table row as a single line, with its columns separated by spaces roughly matching their original horizontal gaps — not as an actual, editable Word table grid.</p>
+<p>Most PDFs do not provide Word-style table structure. What looks like a table may consist of positioned text, lines, filled rectangles, tags, or an image. Orisod's text-based workflow can flatten recognized rows into space-separated text rather than building a true DOCX table. Columns, merged cells, repeated headers, and reading order may be misidentified.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 330" width="700" height="330" role="img" aria-label="Comparison showing a PDF with a real table grid on the left converting into a Word document on the right, where the table becomes plain text lines instead of an editable table." xmlns="http://www.w3.org/2000/svg">
@@ -198,31 +198,31 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <figcaption>A real PDF table (left) has structured rows and columns. After a text-only conversion (right), each table row becomes one flattened line of text with space-separated columns — not an editable Word table grid.</figcaption>
 </figure>
 
-<p>In practice, this means the data survives — you can still read and edit every number and label — but you'll need to manually recreate a real table grid in Word if you want to reformat, resize columns, or sort it as a table again. For a short table this is a minute of work; for a document that's mostly tables, it may be faster to keep working in the PDF or a spreadsheet instead.</p>
+<p>Do not assume every table value survives correctly. Spacing can collapse, columns can interleave, and symbols or decimals can be decoded incorrectly. For a short table, verify each cell and rebuild the grid manually. For table-heavy data, seek the original spreadsheet or use a dedicated table-extraction workflow.</p>
 
 <h2>What else gets left behind</h2>
-<p>Beyond tables, a text-only conversion doesn't recreate images, exact fonts, precise spacing, or multi-column layouts — none of that exists in the extracted text to begin with. This isn't unique to Orisod; it's how every text-extraction-based PDF to Word tool behaves, including well-known competitors in this space. A conversion that claims to preserve complex layout perfectly is usually running a much heavier, often server-side, layout-analysis engine — a different (and less private) category of tool.</p>
+<p>This workflow does not recreate images, exact fonts, page geometry, headers, footers, links, annotations, forms, columns, or accessibility structure. More sophisticated reconstruction can also run locally; layout fidelity and privacy depend on the specific implementation, not simply on whether processing occurs in a browser or on a server.</p>
 
 <h2>When this is the right tool</h2>
 <ul>
-  <li>Your PDF is mostly text — a letter, report, or contract — and you need to edit the wording</li>
+  <li>Your PDF is mostly straightforward selectable text, and you can proofread the entire DOCX against the source</li>
   <li>You want to reuse a PDF's content in a new document instead of retyping it</li>
   <li>Any tables in the source are short, or you're fine rebuilding them manually afterward</li>
   <li>You'd rather keep the conversion private and client-side than upload a document to a third-party server</li>
 </ul>
 
-<h2>Quick answers</h2>
-<p><strong>Will my tables turn into real Word tables?</strong> No — each table row becomes one line of text with its columns separated by spaces, not an editable table grid. You'd need to rebuild the table structure in Word manually.</p>
-<p><strong>Will images and exact formatting carry over?</strong> No. Only the selectable text is extracted; images, precise fonts, and layout are not recreated.</p>
-<p><strong>Why is my output empty?</strong> The source PDF is likely a scanned image with no real text layer — there's nothing for a text-based converter to extract. That needs OCR first, which is a separate process.</p>
+<h2>Proofread before editing</h2>
+<p><strong>Will tables become Word tables?</strong> Not in Orisod's current text-based workflow. Expect flattened text and verify every row before rebuilding the structure.</p>
+<p><strong>Will images and formatting carry over?</strong> This workflow focuses on selectable text. Images and precise layout are not recreated, and even paragraphs, lists, symbols, and reading order can change.</p>
+<p><strong>Why is the output empty?</strong> The PDF may be image-only, encrypted, damaged, use unsupported character mappings, or contain text converted to outlines. OCR can help with image pages, but its output also requires verification.</p>
 
 <div class="cta-box">
   <h3>Convert Your PDF to Word</h3>
-  <p>Orisod's PDF to Word tool extracts a PDF's text and rebuilds it as an editable .docx file — entirely in your browser, with the table behavior described above disclosed right in the tool.</p>
+  <p>Orisod's PDF to Word tool extracts available text and creates a DOCX in your browser. Compare names, numbers, paragraph order, columns, and tables with the PDF before editing or distributing it.</p>
   <a class="cta-button" href="/pdf-to-word/">Convert PDF to Word →</a>
 </div>
 
-<p>A text-based PDF to Word conversion won't perfectly recreate a complex, table-heavy layout — no honest client-side tool will — but for the far more common case of editing a mostly-text document, it turns a few minutes of retyping into a few seconds of waiting.</p>
+<p>Treat the DOCX as an editable draft derived from the PDF, not as a faithful reconstruction. Keep the source and use a layout-aware exporter or original document when exact appearance and structure matter.</p>
 
 </div>
 

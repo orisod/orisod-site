@@ -146,15 +146,15 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guides</span>
 <h1>How to Convert a PowerPoint to PDF as a Text Outline</h1>
-<p class="intro">Sometimes you don't need a visual copy of a slide deck — you need the words: the titles, the bullet points, the argument the deck is making. A text-outline export gets you that in seconds, without opening PowerPoint or uploading the file anywhere.</p>
+<p class="intro">When the goal is to review a presentation's words rather than reproduce its slides, a text-outline PDF can be useful. It extracts supported slide text into a simpler document; it is not a conventional PowerPoint-to-PDF export and should not be described as a visual copy of the deck.</p>
 
 <div class="article-body">
 
 <h2>How this conversion actually works</h2>
-<p>A .pptx file is a zip archive of XML — each slide is its own XML file describing every shape and text box on it. This tool opens that archive, reads the text out of each slide's XML in the order it appears, and lays it out as a simple outline in a PDF: one page per slide with text, title first, then the body content below it.</p>
+<p>PPTX is an Open XML package containing slide parts, relationships, themes, layouts, notes, media, and other resources. Orisod reads supported text from the slide XML and creates a PDF outline. The order of XML elements is not always the intended visual or accessibility reading order, so complex slides may require comparison with the original.</p>
 
-<h2>What this is — and isn't</h2>
-<p>This is a text-and-reading-order export, not a visual rendering of your deck. No slide design, background colors, images, charts, transitions, or exact positioning survive the conversion — only the words, organized the way they read on the slide.</p>
+<h2>What the outline preserves</h2>
+<p>The output focuses on recognized slide text. It does not reproduce themes, backgrounds, geometry, images, charts, SmartArt, equations, video, audio, transitions, animations, or exact positioning. Text inside charts, diagrams, embedded objects, images, or unsupported shapes may also be missing, and extracted order may differ from the way the slide is presented.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 330" width="700" height="330" role="img" aria-label="Comparison showing a designed slide with a colored background and an image on the left converting into a PDF on the right, where only the title and bullet text remain as a plain outline." xmlns="http://www.w3.org/2000/svg">
@@ -188,24 +188,24 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <h2>When this is the right tool</h2>
 <ul>
-  <li>You need a quick, readable outline of a deck's content without opening PowerPoint</li>
+  <li>You need a draft outline of supported slide text and can compare it with the original presentation</li>
   <li>You want to skim or search a presentation's text</li>
   <li>You're fine with a text-only export rather than a visual copy of the slides</li>
   <li>You'd rather keep the conversion private and client-side than upload the file to a server</li>
 </ul>
 
-<h2>Quick answers</h2>
-<p><strong>Will the PDF look like my actual slides?</strong> No — this is a text-only outline. Design, images, backgrounds, and layout are not recreated.</p>
-<p><strong>Are speaker notes included?</strong> No, only the text visible on each slide is included.</p>
-<p><strong>Does this work with the older .ppt format?</strong> No, only the modern .pptx format. Re-save an older file as .pptx in PowerPoint first.</p>
+<h2>Check the extracted outline</h2>
+<p><strong>Will the PDF resemble the slides?</strong> No. It is an outline, not a visual export. Use PowerPoint or another compatible presentation renderer when slide appearance matters.</p>
+<p><strong>Are speaker notes included?</strong> Not in this tool's current scope. Also verify whether text from hidden slides, grouped shapes, charts, and masters appears as expected.</p>
+<p><strong>Does it accept legacy PPT files?</strong> No, it accepts PPTX. Convert legacy files with compatible presentation software; opening and resaving can alter unsupported fonts, macros, animations, and embedded objects.</p>
 
 <div class="cta-box">
   <h3>Convert Your PowerPoint to a Text Outline</h3>
-  <p>Orisod's PowerPoint to PDF tool pulls every slide's text into a simple PDF outline — entirely in your browser, with this exact scope disclosed right in the tool.</p>
+  <p>Orisod's PowerPoint to PDF tool extracts supported slide text into a PDF outline in your browser. Compare titles, bullet order, symbols, hidden content, and missing objects with the PPTX before relying on it.</p>
   <a class="cta-button" href="/powerpoint-to-pdf/">Convert PowerPoint to PDF →</a>
 </div>
 
-<p>A text-outline export won't replace opening the deck itself when the visuals matter — but for quickly reading, searching, or archiving what a presentation actually says, it's a fast, private way to get just the words.</p>
+<p>Use the outline for quick reading and search, not as an authoritative archive of what the presentation communicates. Meaning may depend on charts, images, sequence, animation, notes, and spatial relationships that the text-only PDF does not contain.</p>
 
 </div>
 
