@@ -43,7 +43,7 @@
   --dropzone-border:#374151;
   --icon-alpha:.30;
   --grid-alpha:.05;
-  --gear-alpha:.16;
+  --gear-alpha:.32;
   --card-shadow:0 8px 24px rgba(0,0,0,.35);
 }
 :root[data-theme="light"]{
@@ -56,7 +56,7 @@
   --dropzone-border:#cbd5e1;
   --icon-alpha:.24;
   --grid-alpha:.10;
-  --gear-alpha:.11;
+  --gear-alpha:.28;
   --card-shadow:0 8px 24px rgba(15,23,42,.08);
 }
 *{box-sizing:border-box;}
@@ -135,11 +135,17 @@ main{padding:60px 20px 0 20px;}
    never interactive, never the thing screen readers or keyboard focus land on. */
 .hero-pin-wrapper{
   position:relative;
-  padding-bottom:22vh; /* extra scroll room the pinned hero holds before releasing */
 }
 .hero-pin-inner{
   position:sticky;
   top:0;
+}
+/* Real block-level spacer, not padding-bottom on the wrapper: Chromium does not
+   count a containing block's own padding-bottom toward how long a top:0 sticky
+   child can stay stuck, so padding here silently cut the pin to ~50px instead
+   of the intended ~22vh — confirmed by swapping this in and remeasuring. */
+.hero-pin-spacer{
+  height:22vh;
 }
 .hero-gear-bg{
   position:absolute;
@@ -171,7 +177,7 @@ main{padding:60px 20px 0 20px;}
 @media (max-width:700px){
   /* keep the ambient rotation, drop the pin/extra-scroll — a sticky hero plus
      added scroll length reads as janky on small screens with real content below */
-  .hero-pin-wrapper{ padding-bottom:0; }
+  .hero-pin-spacer{ height:0; }
   .hero-pin-inner{ position:static; }
   .hero-gear-stage{ width:min(60vw, 320px); height:min(60vw, 320px); }
 }
@@ -431,6 +437,7 @@ h1{
       </div>
     </div>
   </div>
+  <div class="hero-pin-spacer" aria-hidden="true"></div>
 </div>
 
 <section class="tool-category">
