@@ -149,12 +149,12 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guides</span>
 <h1>How to Make a PDF File Smaller Without Losing Quality</h1>
-<p class="intro">A PDF that should be a few hundred KB somehow weighs in at 40MB and won't attach to an email. Here's what's actually taking up all that space, and how to bring it down without turning the document blurry.</p>
+<p class="intro">A large PDF may contain oversized images, embedded fonts, attachments, duplicate resources, forms, multimedia, or other objects. Compression can reduce some of them, but no method can promise a much smaller file with zero visual or structural change in every document.</p>
 
 <div class="article-body">
 
 <h2>Text almost never makes a PDF big</h2>
-<p>It's a common assumption that a long document is a big file, but text is remarkably efficient to store — a hundred-page PDF of pure typed text is often smaller than a single high-resolution photo. When a PDF balloons to tens of megabytes, the actual cause is almost always embedded images: scanned pages, photos, or high-resolution graphics sitting inside the document at a much higher resolution than the PDF actually needs to display them at. This is worth knowing before you start deleting pages or reducing content in an attempt to shrink a file — the fix usually has nothing to do with how much is in the document.</p>
+<p>Plain text can be compact, and scanned pages or photographs are frequent causes of large PDFs. They are not the only causes. Embedded fonts, attachments, forms, layers, object streams, duplicated resources, portfolios, and multimedia can also contribute. Inspect the document instead of assuming images are always responsible. This is worth knowing before you start deleting pages or reducing content in an attempt to shrink a file — the fix usually has nothing to do with how much is in the document.</p>
 
 <h2>Where those oversized images come from</h2>
 <ul>
@@ -164,37 +164,37 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 </ul>
 
 <h2>What compression actually does inside a PDF</h2>
-<p>This tool offers two different ways to shrink a PDF, and they work in fundamentally different ways. <strong>Quick clean</strong> re-saves the PDF with a more efficient internal structure — the actual text, fonts, and vector content are left completely untouched, so nothing gets rasterized and text stays exactly as selectable and searchable as it was before. It's the better default for anything typed: reports, contracts, forms, anything exported straight from a word processor. <strong>Strong compression</strong> works completely differently: it renders each page as a compressed image and rebuilds the document from those images, the same underlying idea as compressing a standalone photo. That shrinks scanned or photo-heavy PDFs dramatically, but the resulting file is image-based, so any text that used to be selectable no longer is. Which mode actually helps depends on what's inside the file — a scanned page has no selectable text to protect in the first place, so Strong compression's much bigger size reduction costs nothing real; a typed document has real text worth keeping intact, which is exactly what Quick clean is built to preserve.</p>
+<p>Orisod offers two modes with different tradeoffs. <strong>Quick clean</strong> rewrites the PDF without intentionally rasterizing pages. It may preserve selectable text and vector content, but rewriting is still a modification and should not be described as leaving every object completely untouched. Forms, annotations, signatures, links, tags, attachments, encryption, and uncommon PDF features require verification. <strong>Strong compression</strong> rasterizes pages and encodes them as images. This can reduce scanned or photographic PDFs, but it discards selectable text layers, vectors, links, forms, annotations, tags, and digital signatures. File size can also increase for simple text or already optimized pages. A scan may still contain an OCR layer, annotations, links, signatures, or metadata worth preserving. Strong compression therefore has a real cost even when the visible page began as an image. Use it only when a rasterized derivative satisfies the document's purpose, and keep the original.</p>
 
 <figure class="theme-figure">
   <img class="theme-img" data-dark="/assets/blog/compress-pdf-without-losing-quality/compress-pdf-two-modes-dark-en.webp" data-light="/assets/blog/compress-pdf-without-losing-quality/compress-pdf-two-modes-light-en.webp" src="/assets/blog/compress-pdf-without-losing-quality/compress-pdf-two-modes-dark-en.webp" alt="Orisod's Compress PDF tool comparing Quick clean on a typed document against Strong compression on a scanned document, with real file-size results for each" width="1672" height="661" loading="lazy">
   <figcaption>Quick clean barely changes a typed file's size but keeps every character selectable; Strong compression shrinks a scan dramatically by converting it to images.</figcaption>
 </figure>
 
-<h2>Why "without losing quality" is realistic here</h2>
-<p>Quick clean doesn't touch a single pixel of content — it only strips redundant overhead from how the PDF stores its internal structure, so there's no visual trade-off to weigh at all. Strong compression works differently: because PDF file size is dominated by image resolution rather than genuine visual detail, there's usually a lot of room to compress before quality loss becomes visible. A page scanned at 300 DPI but only ever viewed on a screen or printed at a normal size is carrying more resolution than anyone will actually perceive — reducing it removes redundant data, not visible sharpness.</p>
+<h2>What “without losing quality” can and cannot mean</h2>
+<p>Quick clean may avoid deliberate image recompression, but a successful visual comparison is still necessary after the PDF is rewritten. Strong compression is lossy by design. Whether its changes are noticeable depends on page content, output resolution, encoder, display, print size, zoom, and later processing. A 300-DPI scan may contain more pixels than one screen workflow needs, but small type, line art, handwriting, barcodes, stamps, and future printing can benefit from that detail. Downsampling removes information permanently, even when the first preview looks acceptable.</p>
 
 <h2>What compression won't fix</h2>
-<p>Neither mode removes pages, deletes unnecessary content, or restructures a genuinely enormous document — Strong compression reduces image data, but that's the extent of what compression touches. If a PDF is huge because it contains 300 pages of full-resolution scans that are all actually needed, compression helps but won't work miracles — in that case, pairing compression with removing any truly unnecessary pages gets a better result than compression alone.</p>
+<p>Compression is not redaction or document cleanup. Removing pages changes scope, while hidden objects, metadata, attachments, and sensitive layers may remain unless handled deliberately. Never delete material from a record merely to meet a file-size limit without confirming retention requirements.</p>
 
 <h2>A practical target</h2>
 <p>How much a file actually shrinks depends on what's inside it and which mode you pick. Strong compression on a scanned or photo-heavy PDF can produce a dramatic reduction — see the real, measured example below. Quick clean's savings on a typed document are more modest in raw percentage terms, since a well-formed text-based PDF has less redundant structure to strip in the first place — but it's the only mode that keeps every character selectable, which Strong compression can't do at any setting.</p>
 
 <h2>A concrete example</h2>
-<p>In a real test, a 12-page scanned contract — each page a 300 DPI photo of the printed page, 7.9MB total — compressed with Strong compression to 370KB, a 95% reduction, with every page looking identical at normal viewing size. Running that same file through Quick clean barely changed its size at all, since Quick clean doesn't touch image data — which is exactly why the mode you pick matters. A 20-page typed report, already a lean 18.3KB since typed text is inherently compact, dropped to 13.7KB with Quick clean — a real but modest 25% reduction — while every word stayed selectable. Running that typed report through Strong compression instead actually made the file larger, since converting simple text into an image is less efficient than the text itself; the tool detects this and keeps the original rather than handing back something bigger.</p>
+<p>In one Orisod test, a 7.9 MB scanned contract became 370 KB with Strong compression. That 95% result is a benchmark for that file and setting, not a general expectation. “Looked similar in one normal-size review” is more accurate than “identical”; inspect small text, signatures, stamps, gradients, and print output. In another test, one 18.3 KB typed report became 13.7 KB with Quick clean. Treat the percentage as file-specific. If the tool retains the original when an attempted output is larger, state that behavior precisely and still verify the downloaded file rather than assuming all structures and features survived.</p>
 
-<h2>Quick answers</h2>
-<p><strong>Will compressing a PDF affect the text?</strong> It depends on the mode. Quick clean never rasterizes anything, so text stays exactly as selectable and searchable as it was in the original. Strong compression rebuilds each page as an image, so the resulting file's text is no longer selectable or searchable, even though it can look identical — a PDF made up only of images has no selectable text to lose, but if a scanned PDF includes a text layer added by OCR, that layer is lost too.</p>
-<p><strong>Can I compress a PDF that's already been compressed once?</strong> Yes, but repeated compression on the same file can start to show visible quality loss, similar to re-saving a JPG multiple times — compress from the original source when possible.</p>
-<p><strong>Does a smaller PDF mean fewer pages?</strong> No — compression doesn't remove pages or content, only the resolution of the images already inside them.</p>
+<h2>Verify the compressed copy</h2>
+<p><strong>Will text be affected?</strong> Strong compression removes the PDF text layer by rasterizing pages. Quick clean is designed to avoid rasterization, but search, copy, fonts, encoding, tags, and forms should be tested in the rewritten file.</p>
+<p><strong>Can an already compressed PDF be compressed again?</strong> Yes, but lossy rasterization can accumulate damage and may not reduce size. Work from the best source and keep it.</p>
+<p><strong>Does compression remove pages?</strong> These modes should not, but Strong compression changes far more than image resolution: it replaces each page's interactive and structural content with a raster image. Confirm page count and functionality.</p>
 
 <div class="cta-box">
   <h3>Compress Your PDF Now</h3>
-  <p>Orisod's PDF compressor offers two modes: Quick clean for typed documents that need to stay selectable and searchable, and Strong compression for scanned or photo-heavy PDFs that need a much bigger size reduction. Entirely in your browser, with nothing uploaded to a server.</p>
+  <p>Orisod's PDF compressor provides Quick clean for a non-rasterizing rewrite and Strong compression for an image-based derivative. Preserve the original and compare page count, text, forms, links, signatures, accessibility, and visual detail after download.</p>
   <a class="cta-button" href="/compress-pdf/">Compress a PDF →</a>
 </div>
 
-<p>A PDF's file size almost always comes down to what's inside it, not the document itself — pick the mode that matches what that file actually is, and a document that wouldn't attach to an email fits with room to spare, without giving up what actually matters for it.</p>
+<p>Choose the mode according to the PDF's contents and the features that must survive. The smallest acceptable file is not necessarily the smallest possible one; it is the version that meets the size limit without sacrificing required legibility, structure, validity, or accessibility.</p>
 
 </div>
 

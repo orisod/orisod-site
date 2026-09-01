@@ -146,15 +146,15 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guías</span>
 <h1>Cómo convertir una hoja de cálculo Excel a PDF (con texto real seleccionable)</h1>
-<p class="intro">Compartir una hoja de cálculo como PDF suele ser una forma de fijar los datos sin entregar un archivo editable — y a diferencia de una conversión basada en instantáneas, un enfoque centrado en los datos puede mantener los números y el texto realmente seleccionables y buscables en el resultado.</p>
+<p class="intro">Una exportación centrada en los datos puede crear texto PDF seleccionable sin distribuir el libro. No es una réplica visual de Excel, y convertir a PDF no protege por sí solo información confidencial ni impide editarla. Úsala cuando importen más las tablas legibles que el diseño y las funciones de la hoja.</p>
 
 <div class="article-body">
 
 <h2>Cómo funciona realmente esta conversión</h2>
-<p>En lugar de renderizar una imagen de la hoja de cálculo, esta conversión lee los datos subyacentes de cada hoja y los dibuja directamente como una tabla real en el PDF — de la misma forma en que se compone un documento, no como una captura de pantalla. Como el texto se dibuja como texto real del PDF en lugar de píxeles, después puedes seleccionarlo, copiarlo y buscarlo, y el tamaño del archivo se mantiene pequeño.</p>
+<p>Orisod lee los valores compatibles del libro y los escribe como texto de tabla PDF en lugar de fotografiar la interfaz. Así puede conservar selección, copia y búsqueda para caracteres admitidos. El peso todavía depende de datos, fuentes, imágenes y generación; que el texto sea seleccionable no garantiza un archivo pequeño.</p>
 
 <h2>Qué se conserva y qué no</h2>
-<p>El texto y los números de cada hoja hacen el viaje, formateados como se mostrarían en la hoja de cálculo, y cada hoja se convierte en su propia página del PDF. Lo que no se conserva: los gráficos, los colores de fondo de celda, el formato condicional y las celdas combinadas no se mantienen, y las fórmulas se reemplazan por su último valor calculado en lugar de la fórmula viva.</p>
+<p>El convertidor lleva valores compatibles a tablas simplificadas; no reproduce el motor completo de Excel. Gráficos, dibujos, fondos, formato condicional, celdas combinadas, áreas de impresión, encabezados repetidos, filas u hojas ocultas, comentarios, enlaces, macros y formatos numéricos complejos pueden omitirse o simplificarse. Las fórmulas usan resultados almacenados en el libro, que podrían estar desactualizados o faltar si no se recalculó y guardó con software compatible.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 330" width="700" height="330" role="img" aria-label="Comparación que muestra una hoja de cálculo con una cuadrícula de datos y un gráfico a la izquierda convirtiéndose en un PDF a la derecha, donde los datos se convierten en una tabla real y seleccionable pero el gráfico se descarta." xmlns="http://www.w3.org/2000/svg">
@@ -192,32 +192,32 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <text x="545" y="240" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14.5" font-weight="bold" fill="var(--text)">El PDF</text>
 <text x="545" y="259" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12.5" fill="var(--muted-text)">tabla real, gráfico descartado</text>
 </svg>
-<figcaption>La cuadrícula de datos se convierte en una tabla real y seleccionable en el PDF — pero el gráfico no se recrea. Los colores de celda, el formato condicional y las celdas combinadas se descartan de la misma forma.</figcaption>
+<figcaption>Los valores compatibles se convierten en texto de tabla seleccionable; los gráficos y muchas funciones de presentación no se recrean.</figcaption>
 </figure>
 
 <h2>Por qué mantenerlo centrado en los datos en lugar de una instantánea</h2>
-<p>Una conversión basada en captura de pantalla técnicamente conservaría la apariencia de un gráfico, pero también convertiría cada número y etiqueta en una imagen, perdiendo la posibilidad de seleccionar, copiar o buscar nada. Para la mayoría de los usos reales de "exportar mi hoja de cálculo como PDF" — compartir cifras, archivar un informe, enviar una tabla que alguien necesita consultar — mantener los datos reales y seleccionables es la contrapartida más útil.</p>
+<p>Una exportación rasterizada puede conservar mejor la apariencia, pero pierde el texto seleccionable salvo que añada OCR u otra capa. Una exportación nativa de oficina puede conservar texto y más diseño. Elige según la prioridad: fidelidad visual, valores buscables, accesibilidad, impresión o privacidad.</p>
 
 <h2>Cuándo usar esta herramienta</h2>
 <ul>
   <li>Necesitas compartir datos tabulares como PDF sin entregar el archivo editable</li>
-  <li>Tu libro es mayormente tablas de datos, sin depender demasiado de gráficos o formato</li>
+  <li>Tu libro contiene principalmente tablas sencillas y puedes verificar cada valor y página después de convertir</li>
   <li>Quieres que los números y el texto del PDF sigan siendo seleccionables y buscables</li>
   <li>Prefieres que la conversión sea privada y ocurra en tu navegador en vez de subir el archivo a un servidor</li>
 </ul>
 
-<h2>Respuestas rápidas</h2>
+<h2>Verifica valores y paginación</h2>
 <p><strong>¿Aparecerán los gráficos en el PDF?</strong> No — solo se convierten los datos subyacentes; los gráficos no se recrean.</p>
-<p><strong>¿Qué pasa con las fórmulas?</strong> Se usa el último valor calculado de cada fórmula, ya que un PDF no tiene concepto de cálculo en vivo.</p>
-<p><strong>¿Cómo se manejan varias hojas?</strong> Cada hoja se convierte en su propia página del PDF, con el nombre de la hoja como etiqueta.</p>
+<p><strong>¿Qué pasa con las fórmulas?</strong> El PDF recibe un valor estático mostrado o almacenado, no una fórmula activa. Recalcula y guarda el libro en un programa de confianza y compara después totales y fechas.</p>
+<p><strong>¿Cómo se manejan varias hojas?</strong> Orisod las renderiza como secciones o páginas separadas según su implementación. Una hoja grande puede ocupar varias páginas; comprueba hojas ocultas, orden y saltos.</p>
 
 <div class="cta-box">
   <h3>Convierte tu hoja de cálculo a PDF</h3>
-  <p>La herramienta Excel a PDF de Orisod reconstruye cada hoja como una tabla real y seleccionable — completamente en tu navegador, con esta contrapartida explicada directamente en la herramienta.</p>
+  <p>La herramienta Excel a PDF de Orisod reconstruye datos compatibles como tablas seleccionables en tu navegador. Revisa fórmulas, formatos, contenido oculto, orden, anchos y saltos antes de compartir.</p>
   <a class="cta-button" href="/es/excel-to-pdf/">Convertir Excel a PDF →</a>
 </div>
 
-<p>Una conversión de hoja de cálculo a PDF centrada en los datos cambia los gráficos y el estilo de celda por algo más útil en la mayoría de los casos: un PDF cuyos números todavía puedes seleccionar, copiar y buscar.</p>
+<p>Un PDF simplificado resulta útil cuando el destinatario necesita valores legibles y buscables. Conserva el libro como fuente autoritativa y usa un exportador completo si importan gráficos, impresión, accesibilidad o estructura visual exacta.</p>
 
 </div>
 

@@ -150,12 +150,12 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-comparison">Comparativas</span>
 <h1>PNG vs. JPG: qué formato usar y cómo convertirlos</h1>
-<p class="intro">PNG y JPG son los dos formatos de imagen más comunes en la web, y es fácil usarlos indistintamente sin saber por qué uno podría ser la elección equivocada. Aquí está la diferencia real, cuándo gana cada uno, y cómo convertir entre ellos.</p>
+<p class="intro">PNG y JPG pueden mostrar la misma imagen, pero la conservan y comprimen de maneras distintas. La elección influye en la transparencia, los bordes definidos, la edición y el tamaño del archivo. Parte del contenido y su destino en lugar de asumir que un formato siempre será menor o mejor.</p>
 
 <div class="article-body">
 
 <h2>La diferencia principal: cómo comprime cada formato</h2>
-<p>JPG usa compresión con pérdida — descarta parte de los datos de la imagen, eligiendo detalles que estima que el ojo humano no notará, a cambio de un archivo mucho más pequeño. PNG usa compresión sin pérdida en su lugar: cada píxel se conserva exactamente como estaba, sin pérdida de calidad, pero la contrapartida es un archivo más grande, especialmente en fotos. PNG también admite transparencia (un canal alfa), algo que JPG no soporta en absoluto.</p>
+<p>JPG aplica compresión con pérdida: aproxima datos de la imagen para reducir el archivo. PNG comprime sin pérdida, por lo que permite recuperar exactamente los valores de píxel decodificados de ese PNG. También admite transparencia alfa, mientras que el JPG corriente no. El tamaño depende del contenido y los ajustes: PNG puede ser compacto para gráficos planos, pero una fotografía PNG suele pesar mucho más que una copia JPG.</p>
 
 <h2>Cuándo PNG es la mejor opción</h2>
 <ul>
@@ -167,8 +167,8 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <h2>Cuándo JPG es la mejor opción</h2>
 <ul>
-  <li><strong>Fotos</strong> — las fotos de cámara y teléfono tienen gradientes complejos y detalle de color que se comprimen extremadamente bien con JPG, con una pérdida de calidad apenas perceptible.</li>
-  <li><strong>Imágenes para sitios web</strong>, donde archivos más pequeños significan páginas que cargan más rápido.</li>
+  <li><strong>Fotografías</strong>, cuando aceptas una copia con pérdida y has revisado la calidad al tamaño de visualización previsto.</li>
+  <li><strong>Fotografías para sitios web que necesitan amplia compatibilidad</strong>, aunque WebP o AVIF pueden ofrecer archivos menores en flujos compatibles.</li>
   <li><strong>Adjuntos de correo o formularios de subida</strong> con límites de tamaño de archivo.</li>
   <li><strong>Compartir grandes lotes de fotos</strong>, donde el tamaño de los archivos PNG se acumularía rápidamente.</li>
 </ul>
@@ -179,7 +179,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <tr><td>Foto de cámara de 12MP</td><td>~20–30 MB</td><td>~2–4 MB</td></tr>
   <tr><td>Captura de pantalla con texto</td><td>Nítida, sin artefactos</td><td>Bordes ligeramente difuminados</td></tr>
 </table>
-<p>Para una foto, esa diferencia de tamaño es enorme y la pérdida de calidad visible es mínima — la mayoría de la gente no puede distinguir ambas a un tamaño de visualización normal. Para una captura de pantalla llena de texto, en cambio, la compresión sin pérdida de PNG mantiene cada letra nítida, mientras que JPG puede introducir un aspecto suave y ligeramente borroso alrededor de los bordes definidos.</p>
+<p>Un JPG fotográfico puede ocupar mucho menos que un PNG, pero la diferencia visual depende de la calidad, las recodificaciones, el contenido, el tamaño de presentación y el nivel de inspección. En capturas con texto, PNG suele conservar limpios los bordes. JPG puede introducir halos, bloques o suavidad, especialmente con ajustes bajos.</p>
 <figure class="theme-figure">
   <img src="/assets/blog/png-vs-jpg/png-vs-jpg-text-crop-comparison.webp" alt="Recorte ampliado del mismo gráfico de texto que muestra bordes nítidos en PNG junto a una versión JPG con difuminado visible y artefactos de bloque alrededor de las letras" width="1330" height="319" loading="lazy">
   <figcaption>Un recorte ampliado del mismo gráfico de texto — PNG a la izquierda, JPG guardado con una calidad baja a la derecha. PNG mantiene cada borde nítido; la versión JPG muestra difuminado visible y artefactos de bloque alrededor de las letras — exactamente el efecto "ligeramente borroso" que describe la tabla anterior.</figcaption>
@@ -202,26 +202,26 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 </figure>
 
 <h2>¿Por qué mi computadora usa PNG por defecto para las capturas de pantalla?</h2>
-<p>Tanto Windows como macOS guardan las capturas de pantalla como PNG por defecto, y no es casualidad — una captura de pantalla es exactamente el tipo de imagen para el que PNG fue diseñado. Está llena de colores planos, líneas rectas y texto, justo lo que la compresión con pérdida de JPG maneja peor. Si tu sistema operativo guardara las capturas como JPG, terminarías con texto ligeramente borroso y artefactos de compresión visibles alrededor de cada borde de ventana e icono. La contrapartida es que una carpeta de capturas de pantalla puede ocupar mucho más espacio del esperado en comparación con la misma cantidad de fotos.</p>
+<p>PNG es un formato habitual para capturas porque las interfaces contienen colores planos, texto y límites definidos que la compresión sin pérdida maneja bien. El formato predeterminado puede variar según el sistema, la versión, la herramienta y los ajustes del usuario. Una captura PNG tampoco es automáticamente mayor que cualquier alternativa: depende del contenido y el codificador.</p>
 
 <h2>¿Qué pasa con formatos más nuevos como WebP?</h2>
-<p>Puede que hayas notado que algunos sitios web ahora sirven imágenes en WebP en lugar de PNG o JPG. WebP es genuinamente más eficiente que ambos — puede hacer compresión con pérdida como JPG o sin pérdida como PNG, a menudo con un tamaño de archivo menor de cualquier forma. No es un reemplazo de esta comparación sino más bien una tercera opción: PNG y JPG siguen siendo los dos formatos con los que te toparás constantemente, porque son compatibles en todas partes sin excepción, mientras que WebP todavía a veces da problemas en software o aplicaciones más antiguos que esperan uno de los dos formatos clásicos.</p>
+<p>WebP admite compresión con y sin pérdida y transparencia; AVIF añade otra alternativa moderna. Cualquiera puede superar a PNG o JPG en una prueba concreta, pero no existe una ventaja universal para todas las imágenes y configuraciones. PNG y JPG mantienen una compatibilidad muy amplia; WebP y AVIF deben comprobarse frente a las aplicaciones y dispositivos más antiguos del flujo.</p>
 
 <h2>Convertir entre PNG y JPG</h2>
-<p>Una situación común: tienes una carpeta de capturas de pantalla o gráficos en PNG que son mucho más grandes de lo necesario para correo o para un sitio web, y quieres tenerlos en JPG sin perder calidad notable. Esto importa en la práctica — Gmail limita los adjuntos a 25 MB, y muchos formularios de subida tienen sus propios límites, así que un puñado de PNG grandes puede hacerte superar el límite rápidamente. Convertir es rápido — no necesitas programas de diseño, solo una herramienta que pueda leer el PNG y volver a codificarlo como JPG.</p>
+<p>Convierte PNG a JPG cuando los archivos sean fotografías, no necesites transparencia y una copia con pérdida más pequeña sea adecuada para el destino. Para capturas, logotipos y gráficos con texto, prueba primero a optimizar PNG o usar un formato moderno sin pérdida. JPG aplana la transparencia sobre un color de fondo y puede descartar metadatos o información de color; revisa el resultado antes de borrar el original.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Convertir PNG a JPG dañará la calidad?</strong> Para fotos, no — la diferencia es prácticamente invisible con un ajuste de calidad razonable. Para gráficos con texto nítido o líneas finas, puede aparecer algo de suavizado, que es exactamente por qué PNG sigue siendo la mejor opción para ese tipo de imagen.</p>
-<p><strong>¿Puedo convertir JPG de vuelta a PNG?</strong> Sí, pero no deshará ninguna calidad ya perdida cuando el archivo se guardó por primera vez como JPG — obtendrás un PNG idéntico sin pérdida a ese JPG, no a la imagen original sin comprimir.</p>
-<p><strong>¿Qué formato debería usar si no estoy seguro?</strong> Si la imagen es una foto, usa JPG. Si tiene texto, bordes nítidos, o necesita un fondo transparente, usa PNG. Esa única regla cubre la gran mayoría de los casos.</p>
+<h2>Elige según la imagen</h2>
+<p><strong>¿Convertir PNG a JPG reduce la calidad?</strong> Sí. La codificación JPG tiene pérdida. El cambio puede ser difícil de notar en algunas fotografías con un ajuste adecuado, pero resultar evidente alrededor de texto, degradados y bordes definidos.</p>
+<p><strong>¿Puedo volver de JPG a PNG?</strong> Sí, pero PNG solo conservará los píxeles decodificados del JPG. No recuperará detalles descartados por la compresión anterior y el nuevo archivo podría ser mayor.</p>
+<p><strong>¿Qué formato sirve como punto de partida?</strong> Prueba JPG para fotografías corrientes cuando aceptes compresión con pérdida. Usa PNG para transparencia, capturas, ilustraciones lineales o gráficos que necesiten píxeles sin pérdida. Después compara exportaciones reales.</p>
 
 <div class="cta-box">
   <h3>Convierte PNG a JPG al instante</h3>
-  <p>El convertidor de PNG a JPG de Orisod procesa varios archivos directamente en tu navegador. Selecciona las imágenes y obtén versiones JPG más ligeras, sin crear una cuenta y con los originales siempre en tu dispositivo.</p>
+  <p>El convertidor de PNG a JPG de Orisod procesa los archivos en tu navegador. Elige un fondo adecuado para la transparencia, revisa la calidad del JPG y compara su tamaño con el PNG original.</p>
   <a class="cta-button" href="/es/png-to-jpg/">Convertir PNG a JPG →</a>
 </div>
 
-<p>Ningún formato es “mejor” en todas las situaciones — PNG y JPG se crearon para trabajos diferentes. Una vez que sepas cuál encaja con lo que estás haciendo, elegir el formato correcto (y convertir cuando elegiste mal) toma segundos.</p>
+<p>Ningún formato gana todas las comparaciones. Conserva el original cuando sea posible, exporta para el destino y evalúa transparencia, bordes, compatibilidad y tamaño medido.</p>
 
 </div>
 

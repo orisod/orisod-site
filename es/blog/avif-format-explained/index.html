@@ -150,15 +150,15 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guías</span>
 <h1>Formato AVIF: cómo abrir y convertir estos archivos</h1>
-<p class="intro">Si WebP ya te parecía poco familiar, AVIF es un formato aún más reciente y eficiente, aunque todavía menos compatible con algunas aplicaciones. Aquí verás qué es y qué puedes hacer cuando un archivo .avif no se abre.</p>
+<p class="intro">AVIF puede ofrecer imágenes compactas y de buena calidad, pero su compatibilidad todavía varía entre dispositivos antiguos y programas de escritorio. Si un archivo .avif no abre, primero conviene distinguir entre un archivo dañado y una aplicación que carece del decodificador necesario.</p>
 
 <div class="article-body">
 
 <h2>¿Qué es AVIF?</h2>
-<p>AVIF (AV1 Image File Format) es un formato de imagen basado en la tecnología de compresión del códec de video AV1, un estándar abierto y libre de regalías desarrollado por una alianza en la que participan Google, Netflix y Mozilla, entre otras organizaciones. Su objetivo es ofrecer archivos muy pequeños para un nivel de calidad determinado y, en muchas pruebas, supera la eficiencia de WebP y JPG.</p>
+<p>AVIF (AV1 Image File Format) almacena imágenes fijas mediante compresión derivada del códec de video AV1. Admite compresión con y sin pérdida, transparencia, HDR, gamas de color amplias y mayor profundidad de bits. Puede comprimir fotografías con mucha eficiencia, aunque el resultado depende de la imagen, el codificador, la calidad elegida y las características que deban conservarse.</p>
 
-<h2>¿Qué tan pequeño es AVIF?</h2>
-<p>El ahorro depende de la imagen y de los ajustes utilizados. En muchos casos, AVIF puede ocupar entre un 20 % y un 50 % menos que un WebP equivalente y reducir aún más el tamaño frente a JPG con una calidad visual parecida. En sitios con muchas imágenes, esa diferencia puede disminuir de forma notable el consumo de datos.</p>
+<h2>El tamaño depende de la prueba</h2>
+<p>AVIF puede resultar más pequeño que WebP o JPG con una calidad visual similar, pero ningún porcentaje sirve para todas las imágenes. Las fotografías, ilustraciones, textos, transparencias, versiones del codificador y ajustes de calidad producen resultados distintos. Antes de elegir un formato, compara archivos representativos con la calidad que realmente necesita tu sitio.</p>
 
 <h2>Por qué la compatibilidad de AVIF es menor que la de WebP</h2>
 <p>La compatibilidad de un formato nuevo tarda en extenderse por navegadores, sistemas operativos, visores y programas de edición. Los navegadores modernos principales ya muestran AVIF, pero algunos programas de escritorio y dispositivos antiguos todavía no lo admiten. WebP pasó por una transición parecida; AVIF se encuentra en una etapa más reciente.</p>
@@ -170,11 +170,11 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <li><strong>En plataformas de diseño y bancos de imágenes.</strong> Algunos servicios ofrecen descargas en AVIF para reducir el consumo de datos.</li>
 </ul>
 
-<h2>Por qué un archivo AVIF podría no abrirse para ti</h2>
-<p>Ocurre lo mismo que con cualquier formato nuevo: el programa con el que intentas abrirlo —un visor antiguo o una herramienta de edición sin actualizar— quizá todavía no incluya un decodificador AVIF. Eso no significa necesariamente que el archivo esté dañado; suele ser un problema de compatibilidad. Antes de descartarlo, prueba con un navegador actualizado o conviértelo a un formato más extendido.</p>
+<h2>Cuando un archivo AVIF no abre</h2>
+<p>Un visor o editor antiguo quizá no incluya un decodificador AVIF. Prueba el archivo en un navegador actualizado u otra aplicación compatible antes de asumir que está dañado. Si varias herramientas actuales lo rechazan, la descarga podría estar incompleta o el archivo podría usar una característica que ese decodificador no admite.</p>
 
-<h2>¿Deberías preocuparte de que AVIF se convierta en el nuevo problema de HEIC?</h2>
-<p>AVIF y HEIC son formatos eficientes que pueden aparecer sin previo aviso y no abrirse en programas antiguos. HEIC se extendió rápidamente porque Apple lo adoptó en el iPhone; AVIF avanza de manera más gradual a medida que los sitios optimizan sus imágenes. En ambos casos, convertir el archivo a un formato más compatible resuelve la necesidad inmediata.</p>
+<h2>AVIF y HEIC plantean un problema de compatibilidad parecido</h2>
+<p>Ambos formatos pueden llegar a un flujo de trabajo que espera JPG o PNG. HEIC se hizo común mediante los dispositivos de Apple, mientras que AVIF aparece con frecuencia en la entrega y optimización de imágenes web. Convertir resuelve la necesidad inmediata, pero el formato de destino debe corresponder al contenido: JPG para fotografías corrientes y PNG cuando importan la transparencia o una salida sin pérdida.</p>
 
 <h2>AVIF vs WebP vs. JPG de un vistazo</h2>
 <table class="compare-table">
@@ -200,21 +200,21 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <figcaption>Medido en una foto de prueba de 3000×2250, codificada con Pillow 12.3.0 (libwebp / pillow-avif-plugin), calidad JPG 80, calidad WebP 80, calidad AVIF 50 — cerca del ajuste típico de "buena calidad" de cada formato. Trátalo como este ejemplo concreto, no como una garantía universal; el ahorro real varía según la imagen.</figcaption>
 </figure>
 
-<h2>Convertir AVIF a algo universal</h2>
-<p>En vez de actualizar cada programa por separado, puedes convertir el AVIF a JPG o PNG. Obtendrás un archivo compatible con muchas más aplicaciones, aunque normalmente ocupará algo más que el original.</p>
+<h2>Elige un formato de destino compatible</h2>
+<p>Convertir a JPG o PNG amplía la compatibilidad, aunque ninguno funciona literalmente en todos los sistemas. JPG suele ser práctico para fotografías, pero no conserva transparencia. PNG puede mantener la transparencia y los píxeles sin pérdida, aunque a veces genera archivos mucho mayores. Una conversión estándar también puede descartar HDR, profundidad de bits, animación, información de color o metadatos.</p>
 
-<h2>Respuestas rápidas</h2>
+<h2>Preguntas antes de convertir AVIF</h2>
 <p><strong>¿AVIF es mejor que WebP?</strong> Suele comprimir con mayor eficiencia, pero WebP todavía ofrece una compatibilidad más amplia. La mejor opción depende de si priorizas el menor tamaño o la facilidad para abrir el archivo.</p>
 <p><strong>¿AVIF sustituirá a JPG?</strong> Su uso crecerá a medida que aumente la compatibilidad, pero JPG seguirá siendo habitual durante mucho tiempo por su aceptación casi universal.</p>
-<p><strong>¿Convertir AVIF a JPG reduce la calidad?</strong> La recodificación puede introducir una pequeña pérdida, pero con un ajuste razonable suele ser imperceptible a simple vista.</p>
+<p><strong>¿Convertir AVIF a JPG reduce la calidad?</strong> Puede hacerlo. JPG exige una codificación con pérdida y no conserva todas las características de AVIF. Revisa los degradados, las texturas finas, la transparencia y el contenido HDR después de convertir.</p>
 
 <div class="cta-box">
   <h3>Convierte tu archivo AVIF ahora</h3>
-  <p>El convertidor AVIF de Orisod funciona directamente en tu navegador. Selecciona el archivo y obtén un JPG o PNG compatible con muchas más aplicaciones, sin esperar actualizaciones de otros programas.</p>
+  <p>El convertidor AVIF de Orisod funciona directamente en tu navegador. Elige JPG o PNG según la imagen y comprueba el resultado en la aplicación donde piensas utilizarlo.</p>
   <a class="cta-button" href="/es/avif-to-jpg-png/">Convertir AVIF a JPG/PNG →</a>
 </div>
 
-<p>AVIF mejora la eficiencia de compresión y su compatibilidad seguirá creciendo, como ocurrió con WebP. Mientras tanto, convertirlo es la forma más rápida de utilizar un archivo que tu aplicación no puede abrir.</p>
+<p>Conserva el AVIF original cuando sea posible. La copia convertida resuelve la compatibilidad inmediata, mientras que el archivo fuente mantiene todos sus datos y características para usos futuros.</p>
 
 </div>
 

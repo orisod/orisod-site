@@ -146,15 +146,15 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guides</span>
 <h1>How to Convert an Excel Spreadsheet to PDF (With Real Selectable Text)</h1>
-<p class="intro">Sharing a spreadsheet as a PDF is usually about locking down the data without handing over an editable file — and unlike a snapshot-based conversion, a data-first approach can keep the numbers and text genuinely selectable and searchable in the output.</p>
+<p class="intro">A data-first spreadsheet export can create selectable PDF text without distributing the workbook itself. It is not a visual replica of Excel, and PDF does not make sensitive data secure or impossible to edit. Use this workflow when readable tables matter more than spreadsheet layout and features.</p>
 
 <div class="article-body">
 
 <h2>How this conversion actually works</h2>
-<p>Rather than rendering a picture of the spreadsheet, this conversion reads each sheet's underlying data and draws it directly as a real table in the PDF — the same way a document is typeset, not screenshotted. Because the text is drawn as actual PDF text rather than pixels, you can select, copy, and search it afterward, and the file size stays small.</p>
+<p>Orisod reads supported workbook values and writes them as PDF table text rather than photographing the spreadsheet interface. That can preserve selection, copy, and search for supported characters. File size still depends on the amount of data, fonts, images, and PDF generation; selectable text does not guarantee a small file.</p>
 
 <h2>What carries over, and what doesn't</h2>
-<p>Every sheet's text and numbers make the trip, formatted the way they'd display in the spreadsheet, with each sheet becoming its own page in the PDF. What doesn't carry over: charts, cell background colors, conditional formatting, and merged cells aren't preserved, and formulas are replaced by their last calculated value rather than the live formula.</p>
+<p>The converter carries supported displayed values into simplified tables. It does not reproduce Excel's full layout engine. Charts, drawings, backgrounds, conditional formatting, merged cells, print areas, repeating headers, hidden rows or sheets, comments, links, macros, and complex number formats may be omitted or simplified. Formula cells use cached results stored in the workbook; those results may be stale or missing if the file was not recalculated and saved by compatible spreadsheet software.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 330" width="700" height="330" role="img" aria-label="Comparison showing a spreadsheet with a data grid and a chart on the left converting into a PDF on the right, where the data becomes a real selectable table but the chart is dropped." xmlns="http://www.w3.org/2000/svg">
@@ -192,32 +192,32 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <text x="545" y="240" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14.5" font-weight="bold" fill="var(--text)">The PDF</text>
 <text x="545" y="259" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12.5" fill="var(--muted-text)">real table, chart dropped</text>
 </svg>
-<figcaption>The data grid becomes a real, selectable PDF table — but the chart isn't recreated. Cell colors, conditional formatting, and merged cells are dropped the same way.</figcaption>
+<figcaption>Supported values become selectable table text; charts and many workbook presentation features are not recreated.</figcaption>
 </figure>
 
 <h2>Why keep it data-only instead of a snapshot</h2>
-<p>A screenshot-based conversion would technically preserve a chart's appearance, but it would also turn every number and label into an image, losing the ability to select, copy, or search anything. For most real-world uses of "export my spreadsheet as a PDF" — sharing figures, archiving a report, sending a table someone needs to reference — keeping the data real and selectable is the more useful tradeoff.</p>
+<p>A rasterized export can preserve more of the visible appearance but loses selectable text unless OCR or a separate text layer is added. A native office export can preserve selectable text and more layout than either simplified approach. Choose according to whether the priority is visual fidelity, searchable values, accessibility, print layout, or privacy.</p>
 
 <h2>When this is the right tool</h2>
 <ul>
   <li>You need to share tabular data as a PDF without handing over the editable file</li>
-  <li>Your workbook is mostly data tables, without heavy reliance on charts or formatting</li>
+  <li>Your workbook is mostly straightforward data tables, and you can verify every displayed value and page after conversion</li>
   <li>You want the PDF's numbers and text to stay selectable and searchable</li>
   <li>You'd rather keep the conversion private and client-side than upload the file to a server</li>
 </ul>
 
-<h2>Quick answers</h2>
+<h2>Verify values and pagination</h2>
 <p><strong>Will charts show up in the PDF?</strong> No — only the underlying data is converted; charts aren't recreated.</p>
-<p><strong>What happens to formulas?</strong> Each formula's last calculated value is used, since a PDF has no concept of live calculation.</p>
-<p><strong>How are multiple sheets handled?</strong> Each sheet becomes its own page in the PDF, labeled with the sheet's name.</p>
+<p><strong>What happens to formulas?</strong> The PDF receives a static displayed or cached value, not a working formula. Recalculate and save the workbook in trusted spreadsheet software first, then compare totals and dates with the source.</p>
+<p><strong>How are multiple sheets handled?</strong> Orisod renders sheets as separate table sections or pages according to its implementation. Large sheets may require multiple PDF pages, while hidden-sheet behavior and page breaks should be checked explicitly.</p>
 
 <div class="cta-box">
   <h3>Convert Your Spreadsheet to PDF</h3>
-  <p>Orisod's Excel to PDF tool rebuilds every sheet as a real, selectable table — entirely in your browser, with this exact tradeoff disclosed right in the tool.</p>
+  <p>Orisod's Excel to PDF tool rebuilds supported workbook data as selectable tables in your browser. Review formulas, number formats, hidden content, sheet order, column widths, and page breaks before sharing the PDF.</p>
   <a class="cta-button" href="/excel-to-pdf/">Convert Excel to PDF →</a>
 </div>
 
-<p>A data-first spreadsheet-to-PDF conversion trades chart visuals and cell styling for something more useful in most cases: a PDF whose numbers you can still select, copy, and search.</p>
+<p>A simplified data-first PDF is useful when recipients need readable, searchable values. Keep the workbook as the authoritative source and use a full spreadsheet exporter when charts, print settings, accessibility, or exact visual structure matter.</p>
 
 </div>
 

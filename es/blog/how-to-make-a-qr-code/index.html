@@ -149,12 +149,12 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guías</span>
 <h1>Cómo crear un código QR gratis (sin instalar una aplicación)</h1>
-<p class="intro">Los códigos QR están en todas partes ahora — en menús, carteles, tarjetas de presentación, empaques — y hacer uno tú mismo es mucho más simple de lo que las aplicaciones de pago y los servicios de suscripción por ahí te harían creer. Aquí te explicamos qué ocurre realmente dentro de un código QR, y cómo generar uno gratis en menos de un minuto.</p>
+<p class="intro">Un código QR puede contener una dirección web, datos de contacto, la configuración de una red Wi-Fi o texto plano. Crear un código estático es gratuito; lo importante es decidir qué información guardar, a qué tamaño imprimirlo y si el destino tendrá que cambiar más adelante.</p>
 
 <div class="article-body">
 
 <h2>Qué almacena un código QR</h2>
-<p>Un código QR es simplemente una forma visual de codificar texto — esa es toda la idea. Lo más común es que ese texto sea una URL, pero igual de fácil puede ser un bloque de texto plano, un número de teléfono, un correo electrónico, o una cadena con formato que le indica a un teléfono que se conecte automáticamente a una red WiFi. Cuando la cámara de un teléfono escanea el patrón de cuadrados blancos y negros, simplemente está decodificando ese texto de vuelta, de la misma forma que un lector de códigos de barras lee un código de barras.</p>
+<p>El patrón de cuadros codifica texto. Puede ser una URL, un número de teléfono, una dirección de correo, un mensaje breve o la configuración de una red Wi-Fi. Un lector compatible interpreta el patrón y reconstruye el contenido guardado.</p>
 
 <h2>Usos comunes hoy en día</h2>
 <ul>
@@ -165,10 +165,10 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 </ul>
 
 <h2>¿Necesitas un generador de códigos QR de pago?</h2>
-<p>Aquí es donde surge mucha confusión (y gasto innecesario). Algunos servicios de pago promueven la idea de que los códigos QR gratuitos "caducan" o dejan de funcionar después de un período de prueba — pero un código QR estándar es solo una imagen estática que codifica texto fijo; no hay ningún componente en un servidor y nada que caduque, nunca. Lo que realmente "caduca" en esos servicios es una capa de redirección dinámica que ellos controlan, donde el código QR apunta a su servidor, que luego te reenvía a otro lugar — y si dejas de pagar, esa redirección deja de funcionar, no el código QR en sí. Para la gran mayoría de los usos cotidianos — un enlace, una contraseña WiFi, un poco de texto — un código QR estático y gratuito funciona exactamente igual el primer día que el día mil.</p>
+<p>Un código QR estático no necesita suscripción porque el patrón contiene directamente el destino o el texto. Los servicios de pago suelen ofrecer códigos dinámicos que apuntan primero a una redirección controlada por ellos. Esa capa permite cambiar el destino y recopilar estadísticas, pero puede dejar de funcionar si termina el servicio o la suscripción.</p>
 
-<h2>Códigos QR estáticos vs "dinámicos"</h2>
-<p>La distinción de la que dependen los servicios de pago es entre códigos estáticos y dinámicos. Un código estático tiene tu contenido real — el enlace, el texto, las credenciales WiFi — incorporado directamente en el patrón, de forma permanente. Un código dinámico en cambio apunta a una URL de redirección corta controlada por el servidor de una empresa, que luego reenvía el escaneo a tu destino real; esto permite que la empresa ofrezca estadísticas de escaneo y te deje cambiar el destino más tarde sin reimprimir el código, pero también significa que el código deja de funcionar en el momento en que ese servicio de redirección desaparece o tu suscripción caduca. Para un menú, una red WiFi, o un enlace a una página que no cambiará, un código estático no tiene esa dependencia.</p>
+<h2>Códigos QR estáticos y dinámicos</h2>
+<p>El código estático guarda el contenido final en el patrón; para cambiarlo hay que generar e imprimir otro. El dinámico contiene una URL de redirección, lo que permite al proveedor cambiar el destino o registrar estadísticas. Esa flexibilidad introduce una dependencia externa. Elige un código estático para información estable y uno dinámico únicamente cuando necesites modificar el destino o medir los escaneos.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 380" width="700" height="380" role="img" aria-label="Diagrama que compara un código QR estático que codifica el contenido directamente frente a uno dinámico que apunta a un servidor de redirección" xmlns="http://www.w3.org/2000/svg">
@@ -222,16 +222,16 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <figcaption>Un QR estático almacena el destino directamente. Un QR dinámico depende de un servicio de redirección.</figcaption>
 </figure>
 
-<h2>Un par de consejos prácticos</h2>
-<p>Los códigos QR tienen corrección de errores incorporada, lo que significa que siguen escaneando correctamente incluso si parte del patrón está dañado, oculto, o cubierto por un pequeño logotipo — por eso a veces verás el logotipo de una empresa en el centro de uno. Si vas a imprimir un código QR físicamente, el tamaño importa más de lo que la gente espera: un código que escanea bien en la pantalla de un teléfono puede ser demasiado pequeño para escanear de forma confiable una vez impreso en un cartel o tarjeta de presentación, así que vale la pena probar una versión impresa a tamaño real antes de imprimir en masa.</p>
+<h2>Prueba el código antes de imprimir</h2>
+<p>La corrección de errores aporta cierta tolerancia, pero no garantiza que cualquier diseño dañado o cubierto por un logotipo pueda leerse. Conserva el margen blanco, utiliza buen contraste y evita tapar más área de la permitida por el nivel de corrección elegido. Imprime una muestra al tamaño final y pruébala con varios teléfonos desde la distancia prevista.</p>
 
-<h2>Hacer uno en menos de un minuto</h2>
-<p>Generar un código QR es realmente simple: escribe o pega el texto o enlace que quieres codificar, y la herramienta renderiza al instante el patrón QR como una imagen que puedes descargar y usar — imprimirla, agregarla a una presentación, incrustarla en un sitio web, lo que necesites. No hay cuenta que crear ni aplicación que instalar, ya que todo el proceso es simplemente convertir texto en un patrón de cuadrados.</p>
+<h2>Crea y descarga el código</h2>
+<p>Introduce el enlace o el texto, genera el patrón y descarga la imagen. Escanea el archivo descargado antes de colocarlo en un cartel, una presentación, un empaque o un sitio web. Si contiene una URL, comprueba el destino completo y no solo el título que muestra el teléfono.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Mi código QR dejará de funcionar después de un tiempo?</strong> No — un código QR estándar y estático codifica el texto de forma permanente dentro de la propia imagen. Mientras el enlace o texto subyacente siga siendo válido (una URL que todavía exista, por ejemplo), el código seguirá funcionando indefinidamente.</p>
-<p><strong>¿Puedo poner una red WiFi protegida con contraseña en un código QR?</strong> Sí — los códigos QR admiten un formato específico de WiFi que incluye el nombre de red y la contraseña, permitiendo que la aplicación de cámara de un teléfono se conecte automáticamente sin escribir nada.</p>
-<p><strong>¿Necesito software especial para escanear uno?</strong> No — cualquier cámara de teléfono inteligente moderna puede escanear un código QR de forma nativa, sin una aplicación separada.</p>
+<h2>Preguntas antes de utilizar un código QR</h2>
+<p><strong>¿Puede caducar un código estático?</strong> El patrón no tiene fecha de vencimiento. Sin embargo, una URL puede dejar de funcionar si la página cambia, el dominio caduca o el acceso se restringe.</p>
+<p><strong>¿Puede contener las credenciales de una red Wi-Fi?</strong> Sí. El formato puede incluir el nombre, el tipo de seguridad y la contraseña. Compártelo únicamente donde sea apropiado revelar esos datos.</p>
+<p><strong>¿Todas las cámaras de teléfono pueden leerlo?</strong> La mayoría de las aplicaciones de cámara actuales sí, pero el comportamiento depende del dispositivo, el sistema operativo y la configuración. Los equipos antiguos pueden necesitar un lector independiente.</p>
 
 <div class="cta-box">
   <h3>Genera un código QR al instante</h3>
@@ -239,7 +239,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <a class="cta-button" href="/es/qr-code-generator/">Hacer un Código QR →</a>
 </div>
 
-<p>Un código QR es una de las herramientas más simples de la web para generar, y no necesita costar nada ni venir con condiciones. Escribe tu texto, descarga la imagen, y listo.</p>
+<p>Antes de publicarlo, escanea la versión final descargada o impresa. El código solo resulta útil si puede leerse con facilidad y el destino almacenado sigue disponible.</p>
 
 </div>
 

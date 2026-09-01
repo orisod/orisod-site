@@ -146,15 +146,15 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guías</span>
 <h1>Cómo convertir un PDF a Word (y qué pasa realmente con las tablas)</h1>
-<p class="intro">Necesitas editar el texto de un PDF, pero los PDF no están hechos para editarse — así que la solución práctica es convertirlo antes a un documento Word. Una conversión de solo texto, en el propio navegador, hace esto en segundos, pero vale la pena saber exactamente qué se conserva y qué no antes de confiar en ella, sobre todo si tu documento tiene tablas.</p>
+<p class="intro">La conversión PDF a Word de Orisod extrae texto seleccionable y lo reconstruye en DOCX. Puede acelerar la edición de un documento sencillo, pero no reproduce la página como la creó Word. Tablas, orden de lectura, imágenes y diseño requieren atención especial.</p>
 
 <div class="article-body">
 
 <h2>Qué hace realmente "PDF a Word"</h2>
-<p>Un convertidor de PDF a Word basado en texto lee el texto seleccionable de cada página del PDF — el mismo texto que podrías resaltar en un visor de PDF — y lo reconstruye como párrafos editables en un archivo .docx real que puedes abrir en Microsoft Word, Google Docs o cualquier procesador de texto. Es una extracción y reconstrucción de texto, no un escaneo del aspecto de la página, y eso es justo lo que hace que el resultado sea realmente editable en lugar de una simple imagen del texto.</p>
+<p>La herramienta lee la capa de texto disponible y escribe cadenas reconocidas en un DOCX. En un PDF, el texto puede estar en orden de dibujo, dividido en fragmentos, usar mapas personalizados o carecer de párrafos semánticos. El resultado es editable, pero debes comparar secuencia y caracteres con la fuente.</p>
 
 <h2>Qué pasa con las tablas</h2>
-<p>Esta es la parte que vale la pena entender antes de convertir cualquier documento con una tabla. Una tabla en un PDF no se guarda como un "objeto de tabla" tal como lo entiende Word — es solo texto colocado en coordenadas específicas de la página, sin información estructural sobre filas, columnas o límites de celda. Un convertidor basado en texto lee esas posiciones y reconstruye cada fila de la tabla como una sola línea, con sus columnas separadas por espacios que corresponden aproximadamente a los espacios horizontales originales — no como una tabla de Word real y editable.</p>
+<p>La mayoría de los PDF no proporciona estructura de tabla al estilo Word. Lo que parece una tabla puede consistir en texto posicionado, líneas, rectángulos, etiquetas o una imagen. El proceso de Orisod puede aplanar las filas como texto separado por espacios en vez de crear una tabla DOCX. Columnas, celdas combinadas, encabezados y orden pueden interpretarse mal.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 330" width="700" height="330" role="img" aria-label="Comparación que muestra un PDF con una tabla real a la izquierda convirtiéndose en un documento Word a la derecha, donde la tabla se convierte en líneas de texto plano en lugar de una tabla editable." xmlns="http://www.w3.org/2000/svg">
@@ -198,31 +198,31 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <figcaption>Una tabla real de PDF (izquierda) tiene filas y columnas estructuradas. Tras una conversión de solo texto (derecha), cada fila de la tabla se convierte en una línea de texto plano con columnas separadas por espacios — no en una tabla de Word editable.</figcaption>
 </figure>
 
-<p>En la práctica, esto significa que los datos se conservan — puedes seguir leyendo y editando cada número y etiqueta — pero necesitarás recrear manualmente una tabla real en Word si quieres reformatearla, cambiar el ancho de las columnas u ordenarla de nuevo como tabla. Para una tabla corta esto es cosa de un minuto; para un documento que es sobre todo tablas, puede ser más rápido seguir trabajando en el PDF o en una hoja de cálculo.</p>
+<p>No asumas que todos los datos sobreviven correctamente. Los espacios pueden colapsar, las columnas mezclarse y los símbolos o decimales decodificarse mal. En una tabla corta, verifica cada celda y reconstruye la cuadrícula. Para documentos tabulares, busca la hoja original o usa extracción especializada.</p>
 
 <h2>Qué más se queda por el camino</h2>
-<p>Más allá de las tablas, una conversión de solo texto no recrea imágenes, fuentes exactas, espaciado preciso ni diseños en varias columnas — nada de eso existe en el texto extraído para empezar. Esto no es exclusivo de Orisod; así es como se comporta cualquier herramienta de PDF a Word basada en extracción de texto, incluidos competidores conocidos en este espacio. Una conversión que afirme preservar diseños complejos a la perfección normalmente ejecuta un motor de análisis de diseño mucho más pesado, a menudo en un servidor — una categoría de herramienta distinta (y menos privada).</p>
+<p>Este proceso no recrea imágenes, fuentes, geometría, encabezados, pies, enlaces, anotaciones, formularios, columnas ni estructura de accesibilidad. Una reconstrucción avanzada también puede ejecutarse localmente; fidelidad y privacidad dependen de la implementación concreta, no solo de si ocurre en el navegador o en un servidor.</p>
 
 <h2>Cuándo usar esta herramienta</h2>
 <ul>
-  <li>Tu PDF es mayormente texto — una carta, un informe o un contrato — y necesitas editar la redacción</li>
+  <li>Tu PDF contiene principalmente texto seleccionable sencillo y puedes revisar todo el DOCX contra la fuente</li>
   <li>Quieres reutilizar el contenido de un PDF en un documento nuevo en lugar de volver a escribirlo</li>
   <li>Las tablas del documento original son cortas, o no te importa reconstruirlas manualmente después</li>
   <li>Prefieres que la conversión sea privada y ocurra en tu propio navegador en vez de subir el documento a un servidor externo</li>
 </ul>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Mis tablas se convertirán en tablas reales de Word?</strong> No — cada fila de la tabla se convierte en una línea de texto con sus columnas separadas por espacios, no en una tabla editable. Tendrías que reconstruir la estructura de la tabla en Word manualmente.</p>
-<p><strong>¿Se conservarán las imágenes y el formato exacto?</strong> No. Solo se extrae el texto seleccionable; las imágenes, las fuentes precisas y el diseño no se recrean.</p>
-<p><strong>¿Por qué mi resultado está vacío?</strong> Es probable que el PDF de origen sea una imagen escaneada sin una capa de texto real — no hay nada que un convertidor basado en texto pueda extraer. Eso necesita OCR primero, que es un proceso aparte.</p>
+<h2>Revisa antes de editar</h2>
+<p><strong>¿Las tablas serán tablas de Word?</strong> No en el proceso actual de Orisod. Espera texto aplanado y verifica cada fila antes de reconstruir la estructura.</p>
+<p><strong>¿Se conservan imágenes y formato?</strong> El proceso se centra en texto seleccionable. No recrea imágenes ni diseño preciso; incluso párrafos, listas, símbolos y orden pueden cambiar.</p>
+<p><strong>¿Por qué está vacío?</strong> El PDF puede ser una imagen, estar cifrado o dañado, usar mapas incompatibles o tener texto convertido en contornos. El OCR ayuda con imágenes, pero también requiere verificación.</p>
 
 <div class="cta-box">
   <h3>Convierte tu PDF a Word</h3>
-  <p>La herramienta PDF a Word de Orisod extrae el texto de un PDF y lo reconstruye como un archivo .docx editable — completamente en tu navegador, con el comportamiento de las tablas descrito arriba explicado directamente en la herramienta.</p>
+  <p>La herramienta PDF a Word de Orisod extrae texto disponible y crea un DOCX en tu navegador. Compara nombres, números, orden, columnas y tablas con el PDF antes de editar o distribuir.</p>
   <a class="cta-button" href="/es/pdf-to-word/">Convertir PDF a Word →</a>
 </div>
 
-<p>Una conversión de PDF a Word basada en texto no recreará perfectamente un diseño complejo y lleno de tablas — ninguna herramienta honesta que funcione en el navegador lo hace — pero para el caso mucho más común de editar un documento mayormente de texto, convierte varios minutos de volver a escribir en unos segundos de espera.</p>
+<p>Trata el DOCX como un borrador editable derivado del PDF, no como una reconstrucción fiel. Conserva la fuente y usa un exportador de diseño o el documento original cuando importen apariencia y estructura exactas.</p>
 
 </div>
 

@@ -150,22 +150,22 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guías</span>
 <h1>Cómo crear un favicon para tu sitio web (gratis y sin conocimientos de diseño)</h1>
-<p class="intro">Ese pequeño ícono en la pestaña del navegador junto al título de tu página se llama favicon, y si no lo has configurado, tu sitio está mostrando un ícono genérico donde podría haber un poco de tu marca. Aquí te explicamos qué necesita realmente un favicon adecuado, y cómo generar uno sin tocar programas de diseño.</p>
+<p class="intro">Un favicon es el pequeño ícono del sitio que aparece en las pestañas y los marcadores del navegador. Empieza con una imagen cuadrada sencilla y genera los formatos necesarios para los navegadores y dispositivos que quieras admitir.</p>
 
 <div class="article-body">
 
 <h2>Qué es un favicon, y por qué importa</h2>
-<p>Un favicon (abreviatura de "favorite icon") es la pequeña imagen cuadrada que aparece en una pestaña del navegador, en las listas de marcadores, y en la pantalla de inicio de un teléfono si alguien guarda tu sitio ahí. Es un detalle pequeño, pero su ausencia se nota — un ícono genérico o un cuadro de imagen roto junto al título de tu página se ve inacabado, especialmente cuando está junto a una fila de pestañas de sitios que sí lo resolvieron bien. Con una docena de pestañas abiertas, un favicon reconocible suele ser la única forma en que los visitantes encuentran el camino de regreso a tu sitio sin leer cada título de pestaña.</p>
+<p>El ícono ayuda a reconocer el sitio entre varias pestañas y marcadores. Los accesos añadidos a la pantalla de inicio utilizan metadatos relacionados y suelen necesitar un recurso de mayor tamaño. La ausencia del favicon no impide que la página funcione, pero una marca clara facilita la navegación y mejora la presentación.</p>
 
-<h2>Lo que necesita un paquete de favicon adecuado</h2>
-<p>Aquí está la parte que sorprende a la gente: un "favicon" no es solo un archivo. Distintos navegadores, sistemas operativos y dispositivos esperan cada uno su propia versión:</p>
+<h2>Qué archivos de favicon pueden ser útiles</h2>
+<p>No existe un único paquete obligatorio para todos los proyectos. Las opciones habituales incluyen ICO para compatibilidad con sistemas antiguos, PNG o SVG para navegadores actuales y un ícono táctil de Apple cuando se quiere controlar la imagen de la pantalla de inicio:</p>
 <ul>
   <li><strong>favicon.ico</strong> — el formato clásico, todavía esperado por muchos navegadores como respaldo.</li>
   <li><strong>Varios tamaños PNG</strong> (típicamente 16 × 16, 32 × 32, 192 × 192, 512 × 512) — para distintos contextos de visualización, desde pestañas del navegador hasta pantallas de inicio de Android.</li>
   <li><strong>apple-touch-icon</strong> — un tamaño específico que usan los dispositivos Apple cuando un sitio se guarda en la pantalla de inicio de un iPhone o iPad.</li>
   <li><strong>Una referencia en el manifest</strong> — para aplicaciones web progresivas, uniendo el conjunto de íconos.</li>
 </ul>
-<p>Hacer todo esto correctamente a mano significa exportar tu logotipo en media docena de tamaños distintos y nombrar cada archivo exactamente como se espera — tedioso incluso para alguien cómodo con software de edición de imágenes, y una verdadera barrera si no lo estás.</p>
+<p>Un generador puede crear los tamaños, nombres y referencias HTML elegidos a partir de una sola imagen. Revisa el resultado en lugar de asumir que tu sitio necesita todos los archivos producidos.</p>
 <figure class="theme-figure">
 <svg viewBox="0 0 432 378" width="432" height="378" role="img" aria-label="Cuadrícula de referencia con los seis archivos que incluye un paquete de favicon completo, cada uno con sus dimensiones exactas en píxeles y su uso" xmlns="http://www.w3.org/2000/svg">
 <title>Cuadrícula de referencia con los seis archivos que incluye un paquete de favicon completo, cada uno con sus dimensiones exactas en píxeles y su uso</title>
@@ -213,14 +213,14 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <tr><td>android-chrome-512x512.png</td><td>512×512px</td><td>Splash de Android / PWA</td></tr>
 </table>
 
-<h2>Por dónde empezar: tu logotipo o una imagen sencilla</h2>
-<p>No necesitas un diseño profesional — de hecho, una imagen limpia y sencilla funciona mejor, ya que un favicon se muestra a un tamaño diminuto donde el detalle fino desaparece. Un símbolo de logotipo, una o dos iniciales, o un ícono simple que represente tu sitio funcionan bien. Evita cualquier cosa con mucho texto pequeño o detalle intrincado; a 16 × 16 píxeles, simplemente se verá como una mancha borrosa.</p>
+<h2>Elige una imagen que funcione a 16 píxeles</h2>
+<p>Utiliza un símbolo cuadrado, una o dos iniciales o un ícono sencillo con buen contraste. Comprueba cómo se ve a 16 × 16 píxeles. Las líneas finas y los textos pequeños pueden desaparecer aunque se distingan en la imagen original.</p>
 
 <h2>Generar el conjunto completo de archivos</h2>
-<p>Una herramienta generadora de favicon toma una sola imagen de origen y produce automáticamente cada tamaño y formato que necesita un sitio moderno — el archivo .ico, los distintos PNG, y el ícono táctil de Apple — empaquetados juntos para que no tengas que exportar y renombrar manualmente seis archivos separados. Subes una imagen una vez y descargas el conjunto completo.</p>
+<p>Un generador puede convertir una imagen en variantes ICO y PNG y crear un ícono táctil de Apple. Descarga el conjunto que corresponda a tus objetivos de compatibilidad y conserva la imagen original para poder regenerarlo.</p>
 
 <h2>Instalarlo en tu sitio</h2>
-<p>Una vez que tienes los archivos, necesitan referenciarse en el <code>&lt;head&gt;</code> HTML de tu sitio, típicamente con un puñado de etiquetas <code>&lt;link&gt;</code> que apuntan a cada archivo. La mayoría de los generadores de favicon incluyen estas etiquetas exactas junto con la descarga, así que es cuestión de copiarlas en lugar de escribirlas desde cero.</p>
+<p>Guarda los archivos en direcciones estables y añade las etiquetas <code>&lt;link&gt;</code> correspondientes dentro del <code>&lt;head&gt;</code> de la página. Utiliza solo las referencias de los archivos que conservaste, comprueba cada ruta y vuelve a cargar sin caché si continúa apareciendo el ícono anterior.</p>
 
 <h2>Errores comunes con el favicon</h2>
 <ul>
@@ -230,18 +230,18 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <li><strong>Colocar los archivos en la carpeta equivocada.</strong> Las etiquetas <code>&lt;link&gt;</code> necesitan apuntar a donde realmente viven los archivos en tu servidor — un desajuste aquí es la razón más común por la que un favicon "generado correctamente" sigue sin aparecer.</li>
 </ul>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿De verdad necesito todos esos tamaños distintos?</strong> Para compatibilidad completa en navegadores y dispositivos, sí — omitir algunos simplemente significa que el ícono no se mostrará correctamente en ciertos contextos, como cuando alguien guarda tu sitio en la pantalla de inicio de su teléfono.</p>
-<p><strong>¿Puedo usar una foto como favicon?</strong> Técnicamente sí, pero las fotos rara vez funcionan bien a un tamaño tan pequeño — un gráfico simple o un símbolo de logotipo se lee mucho más claramente.</p>
-<p><strong>¿Esto tendrá algún costo?</strong> Generar los archivos es gratis con la herramienta adecuada — no estás pagando por trabajo de diseño, solo automatizando un proceso de exportación.</p>
+<h2>Preguntas sobre la configuración del favicon</h2>
+<p><strong>¿Necesito todos los tamaños generados?</strong> No siempre. El conjunto adecuado depende de los navegadores que quieras admitir, la compatibilidad con sistemas antiguos y si deseas un ícono específico para la pantalla de inicio.</p>
+<p><strong>¿Puedo utilizar una fotografía?</strong> Sí, pero suele perder detalle al reducirse. Un sujeto muy recortado o un gráfico sencillo normalmente se reconoce mejor.</p>
+<p><strong>¿Necesito un programa de pago?</strong> No. Un generador en el navegador puede crear los archivos; diseñar un ícono original es una tarea diferente.</p>
 
 <div class="cta-box">
   <h3>Genera tu paquete de favicon ahora</h3>
-  <p>El Generador de favicon de Orisod crea un archivo .ico, varios tamaños PNG y el icono para dispositivos Apple a partir de una sola imagen. Descarga el paquete completo con las etiquetas HTML necesarias; todo se genera en tu navegador.</p>
+  <p>Genera variantes ICO y PNG y un ícono táctil de Apple a partir de una sola imagen. Orisod procesa el archivo localmente en tu navegador e incluye las referencias HTML correspondientes.</p>
   <a class="cta-button" href="/es/favicon-generator/">Generar un Favicon →</a>
 </div>
 
-<p>Es un detalle pequeño, pero un favicon faltante o roto es una de las señales más notorias de que un sitio está inacabado. Solucionarlo toma unos minutos y no requiere un diseñador.</p>
+<p>Después de instalarlo, prueba el favicon en una pestaña nueva, un marcador y los contextos móviles que quieras admitir. El archivo puede ser correcto aunque una ruta HTML o la caché del navegador todavía apunten a otro ícono.</p>
 
 </div>
 

@@ -146,7 +146,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guides</span>
 <h1>How to Change a PDF's Page Size (A4, Letter, Legal or Custom)</h1>
-<p class="intro">You received a PDF sized for US Letter paper, but you're printing on A4 — or the other way around. The content is fine, the file just isn't sized for the paper you actually have. Resizing an existing PDF's pages takes one pass; redesigning the document to a different page size from scratch doesn't need to happen.</p>
+<p class="intro">A Letter PDF printed on A4 paper, or an A4 document printed on Letter, can produce unexpected margins or clipping. Before changing the file, decide whether the goal is to change the page boxes, scale the content proportionally, or prepare a print copy. Those operations are related but not identical.</p>
 
 <div class="article-body">
 
@@ -168,29 +168,29 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 </figure>
 
 <h2>What resizing actually does</h2>
-<p>Resizing changes a PDF's physical page dimensions and scales the content on each page proportionally to fit the new size — nothing is cropped or cut off, it's stretched or shrunk to match. If the new page has a different aspect ratio than the original (which A4 and Letter do, slightly), the content stretches a little to fill it rather than leaving blank strips — the same trade-off any "resize to fit" approach makes.</p>
+<p>A resizing tool may place proportionally scaled content inside a new page size, stretch it to fill, crop it, or change only the page boxes. These choices produce different results when the source and target have different aspect ratios. Proportional fitting avoids distortion but can leave margins; filling the page may crop or distort content. Confirm the tool's behavior before processing the document.</p>
 
 <h2>Standard sizes vs. custom dimensions</h2>
-<p>A4, Letter and Legal cover most cases, but a custom width and height is sometimes necessary — a printer with specific size requirements, a non-standard booklet format, or a page size that isn't part of the usual presets. Either way, the underlying operation is the same: define a target width and height, and every page in the document gets scaled to match it.</p>
+<p>A4, Letter, and Legal cover common office needs, while printers and booklet workflows may specify custom dimensions. Check the measurement unit and page orientation. A mixed-size PDF may also require different treatment per page rather than forcing every page through one scale and orientation.</p>
 
-<h2>What doesn't change</h2>
-<p>The number of pages, their order, and their content all stay exactly as they were — only the physical dimensions and the scale of what's on each page change. File size typically stays close to the original too, since images and embedded content aren't recompressed, just redrawn at a new scale.</p>
+<h2>What else can change</h2>
+<p>Page count and order can remain the same, but the PDF itself is modified. Depending on the implementation, page boxes, annotations, links, forms, bookmarks, accessibility structure, and digital signatures may be affected. File size can increase or decrease if content is rewritten, rasterized, or recompressed; it is not guaranteed to stay close to the original.</p>
 
-<h2>A concrete example</h2>
-<p>A US-based client sends you a Letter-sized contract to sign and return, but your printer is loaded with A4 and keeps producing a slightly cropped or oddly-margined page. Rather than fighting printer settings, resizing the PDF to A4 before printing gets you a page that matches the paper in the tray, with everything scaled to fit properly.</p>
+<h2>Letter to A4 without guessing</h2>
+<p>Suppose a Letter contract must be printed on A4. First try the print dialog's fit-to-page option, which can produce the needed paper copy without altering the PDF. Create a resized PDF only when the recipient, archive, or downstream system specifically requires A4 pages. Then inspect margins, signatures, form fields, and page orientation.</p>
 
-<h2>Quick answers</h2>
-<p><strong>Will resizing distort my content?</strong> Slightly, if the target size has a different aspect ratio than the original — the same stretch-to-fit trade-off any resize tool makes. Between A4 and Letter, the difference is small enough to rarely be noticeable.</p>
-<p><strong>Does this affect file size much?</strong> Not usually — the underlying content isn't recompressed, only the page dimensions and content scale change.</p>
+<h2>Checks before saving the resized copy</h2>
+<p><strong>Will resizing distort content?</strong> Proportional scaling should not distort it, but may add margins. Stretch-to-fill can distort it, and fill-and-crop can remove edges. The A4-to-Letter difference is still large enough to matter for forms, borders, and precise layouts.</p>
+<p><strong>Will file size change?</strong> It depends on how the tool rewrites the PDF. Scaling vector objects may have little effect; rasterization or image recompression can change the size substantially.</p>
 <p><strong>Can I use a size that isn't A4, Letter or Legal?</strong> Yes, most resizing tools support a custom width and height alongside the standard presets.</p>
 
 <div class="cta-box">
   <h3>Resize Your PDF's Pages</h3>
-  <p>Orisod's Resize PDF Pages tool switches between A4, Letter, Legal or a custom size, scaling every page to match — entirely in your browser.</p>
+  <p>Orisod's Resize PDF Pages tool applies A4, Letter, Legal, or custom dimensions in your browser. Review its fit behavior and inspect a downloaded copy, especially when the PDF contains forms, signatures, annotations, or mixed page sizes.</p>
   <a class="cta-button" href="/resize-pdf-pages/">Resize PDF Pages →</a>
 </div>
 
-<p>A mismatched page size is one of the most common (and most avoidable) printing headaches — resizing the file to match your paper takes one pass, and there's no need to redesign or recreate the document to fix it.</p>
+<p>For a one-time print, printer scaling may be enough. When the PDF itself must use a new page size, preserve the original and verify every page of the resized copy before distributing it.</p>
 
 </div>
 

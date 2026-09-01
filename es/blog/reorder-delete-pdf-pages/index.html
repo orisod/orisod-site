@@ -149,15 +149,15 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guías</span>
 <h1>Cómo reordenar o eliminar páginas de un PDF</h1>
-<p class="intro">Un paquete escaneado sale desordenado, o una página en blanco se coló a mitad de un escaneo. Volver a escanear desde cero parece excesivo para un problema tan pequeño — y normalmente lo es, ya que reordenar o eliminar páginas en un PDF existente toma una fracción del tiempo.</p>
+<p class="intro">Si un escaneo contiene una hoja en blanco, un duplicado o páginas fuera de secuencia, normalmente puedes corregir el PDF sin volver a escanear el original. Un organizador modifica la estructura del documento y permite revisar las páginas que conservarás.</p>
 
 <div class="article-body">
 
-<h2>Por qué esto pasa tan seguido con documentos escaneados</h2>
-<p>El escaneo de varias páginas y las pilas de páginas fotografiadas son propensos a pequeños errores: una página se alimenta a través del cargador automático de un escáner fuera de secuencia, una página separadora en blanco de una impresora se escanea por accidente, o una cámara de teléfono captura la misma página dos veces mientras fotografía un documento una página a la vez. Ninguno de estos son problemas de contenido — las páginas en sí están bien — están simplemente organizadas de forma incorrecta dentro del archivo, y corregir esa organización no requiere tocar el material original en absoluto.</p>
+<h2>Cómo se desordenan los documentos escaneados</h2>
+<p>Un alimentador automático puede tomar hojas fuera de secuencia o incluir una página separadora. Al fotografiar cada página por separado, también es posible duplicar u omitir alguna. Revisa todas las miniaturas antes de editar: reordenar corrige páginas desplazadas, pero no recupera una página que nunca se capturó.</p>
 
 <h2>Reordenar páginas</h2>
-<p>Reordenar significa cambiar la secuencia en que aparecen las páginas sin agregar ni quitar nada — la página 5 necesita ir antes que la página 3, por ejemplo. Una herramienta de organización de páginas normalmente muestra una cuadrícula visual o vista de miniaturas de cada página, permitiéndote arrastrar las páginas al orden correcto en lugar de adivinar solo por los números de página. Este enfoque visual importa porque es fácil contar mal cuando trabajas a partir de una lista de números de página en un documento que no puedes ver de un vistazo.</p>
+<p>Reordenar cambia la secuencia sin añadir ni quitar páginas de forma intencional. Arrastra cada miniatura a su posición y comprueba el orden completo al terminar. La vista visual resulta especialmente útil cuando los números impresos no coinciden con la posición actual dentro del PDF.</p>
 
 <figure class="theme-figure">
   <img class="theme-img" data-dark="/assets/blog/reorder-delete-pdf-pages/reorder-delete-pdf-pages-dark-es.webp" data-light="/assets/blog/reorder-delete-pdf-pages/reorder-delete-pdf-pages-light-es.webp" src="/assets/blog/reorder-delete-pdf-pages/reorder-delete-pdf-pages-dark-es.webp" alt="Organizador de páginas PDF de Orisod mostrando una cuadrícula de miniaturas con una página arrastrada a una nueva posición" width="860" height="474" loading="lazy">
@@ -165,25 +165,25 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 </figure>
 
 <h2>Eliminar páginas</h2>
-<p>Eliminar quita páginas por completo en lugar de moverlas — una página en blanco que un escáner recogió por accidente, una página duplicada, o una hoja de portada que no necesita ser parte del documento final. Las páginas eliminadas desaparecen del archivo resultante, y cada página después de ellas se recorre hacia arriba para llenar el hueco, así que la numeración de página (si el PDF tiene alguna) se mantiene continua.</p>
+<p>Eliminar excluye las páginas seleccionadas del archivo nuevo. Las siguientes avanzan dentro de la secuencia del PDF, pero los números impresos en su contenido no cambian. Conserva el original hasta confirmar que no quitaste ninguna página necesaria.</p>
 
 <h2>¿Prefieres escribir números de página en vez de hacer clic en miniaturas?</h2>
 <p>El organizador visual resulta útil cuando necesitas reconocer cada página. En documentos largos donde ya conoces los números que quieres quitar —por ejemplo, las páginas 40 a 52 de un informe de 200—, marcar decenas de miniaturas es innecesario. En ese caso, <a href="/es/delete-pdf-pages/" style="color:var(--accent);">Eliminar páginas de PDF</a> permite escribir números o rangos, como “2, 4, 7-9”, y muestra cuántas páginas desaparecerán antes de confirmar. El resultado es el mismo, pero el proceso es más rápido cuando partes de una lista.</p>
 
-<h2>Hacer ambas cosas a la vez</h2>
+<h2>Reordena y elimina durante una misma revisión</h2>
 <p>Estas dos operaciones a menudo necesitan ocurrir juntas en el mismo documento — un escaneo puede tener tanto una página en blanco suelta que eliminar como un par de páginas fuera de secuencia que corregir. Un buen organizador de páginas maneja esto en una sola pasada: puedes eliminar lo que no pertenece y arrastrar el resto al orden correcto en la misma vista visual, en lugar de tratarlos como dos pasos completamente separados que requieren volver a subir el archivo cada vez.</p>
 
-<h2>Qué se mantiene sin cambios</h2>
-<p>Reordenar y eliminar solo afectan la secuencia y cantidad de páginas — el contenido real de cada página restante (su texto, imágenes y formato) no se toca. Esta es una operación estructural sobre el documento, no una edición de contenido, así que no hay pérdida de calidad involucrada en ninguno de los dos procesos. Cualquier número de página impreso como parte del contenido escaneado original, sin embargo, no se actualizará automáticamente — eso ya era parte de la imagen de la página antes de empezar, no algo que la herramienta esté rastreando.</p>
+<h2>Qué cambia y qué requiere comprobación</h2>
+<p>El cambio previsto es estructural: el orden y la cantidad de páginas. Una herramienta puede conservar el contenido existente sin volver a renderizarlo, aunque el contenedor PDF se reescribe al guardar el resultado. Los números impresos, referencias internas, marcadores, enlaces, formularios y firmas digitales pueden no adaptarse automáticamente al nuevo orden; revísalos cuando estén presentes.</p>
 
-<h2>Por qué esto importa más de lo que parece</h2>
-<p>Un documento con páginas en el orden equivocado no es solo visualmente incómodo — para cualquier cosa oficial, como un contrato, una solicitud o un trámite legal, el orden de las páginas puede afectar si el documento se lee correctamente o incluso si se acepta. Un revisor que trabaja con un escaneo desordenado puede razonablemente asumir que falta algo o que algo está mal, incluso cuando cada página está realmente presente. Corregir la secuencia antes de enviarlo evita eso por completo.</p>
+<h2>Comprueba la secuencia antes de compartir el archivo</h2>
+<p>Un orden incorrecto puede alterar la interpretación de instrucciones, firmas, anexos o documentos de respaldo. En contratos, solicitudes y trámites, compara el PDF terminado con la lista de requisitos o con el original. La organización de las páginas es solo una de las condiciones de aceptación.</p>
 
-<h2>Un ejemplo concreto</h2>
+<h2>Ejemplo: corregir una solicitud escaneada</h2>
 <p>Escaneas una solicitud de alquiler de 12 páginas, y el alimentador del escáner falló dos veces: una hoja separadora en blanco terminó como página 6, y las páginas 9 y 10 llegaron intercambiadas. En lugar de volver a escanear las 12 páginas desde cero, eliminarías la página 6 en blanco y arrastrarías la página 10 antes de la 9 — dos correcciones rápidas a un escaneo por lo demás completo, en lugar de rehacer todo el proceso por un problema que solo afectó a tres páginas.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Reordenar páginas afecta su calidad?</strong> No — las páginas se reorganizan, no se recrean ni recomprimen, así que nada sobre su contenido o resolución cambia.</p>
+<h2>Preguntas antes de reorganizar un PDF</h2>
+<p><strong>¿Reordenar reduce la calidad de las imágenes?</strong> Un organizador estructural puede mover páginas existentes sin rasterizarlas ni recomprimirlas. Confirma el funcionamiento de la herramienta y revisa el archivo descargado.</p>
 <p><strong>¿Puedo eliminar varias páginas a la vez?</strong> Sí, la mayoría de los organizadores de páginas te permiten seleccionar y quitar varias páginas en una sola acción en lugar de una por una.</p>
 <p><strong>¿Necesito conocer los números exactos de página de antemano?</strong> No — una vista de miniaturas visual te permite ver y reorganizar páginas directamente, así que no necesitas planear números con anticipación.</p>
 
@@ -193,7 +193,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <a class="cta-button" href="/es/pdf-page-organizer/">Organizar Páginas de PDF →</a>
 </div>
 
-<p>Una página fuera de orden o una hoja en blanco suelta no significa empezar de nuevo — un organizador de páginas visual corrige ambas en aproximadamente el mismo tiempo que toma notar el problema, sin tocar el contenido de una sola página ni requerir que busques el documento original de nuevo.</p>
+<p>Después de reordenar o eliminar páginas, abre el PDF descargado y comprueba la cantidad, la secuencia, la orientación, los marcadores, los enlaces y cualquier firma o campo de formulario relevante. Conserva el archivo de origen hasta terminar esa revisión.</p>
 
 </div>
 

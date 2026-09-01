@@ -146,15 +146,15 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guías</span>
 <h1>Cómo convertir un documento Word a PDF (y qué significa aquí "mejor esfuerzo")</h1>
-<p class="intro">Convertir un documento Word a PDF es una de las conversiones de archivo más comunes que existen — pero hacerlo en privado, en el navegador, sin el motor de diseño propio de Microsoft Word, tiene una contrapartida real que vale la pena entender antes de confiar en ella.</p>
+<p class="intro">El resultado de convertir Word a PDF depende del motor utilizado. Orisod reconstruye el DOCX en el navegador en lugar de usar Microsoft Word; funciona para documentos sencillos, pero no debe considerarse una conversión archivística con diseño idéntico.</p>
 
 <div class="article-body">
 
 <h2>Cómo funciona realmente esta conversión</h2>
-<p>Un navegador no tiene una forma integrada de "imprimir a PDF" un archivo Word como lo hace Word mismo. En su lugar, un convertidor en el navegador lee el contenido del archivo .docx — encabezados, párrafos, formato, listas, tablas e imágenes — lo renderiza como una página web en tu navegador, y luego toma una instantánea visual de esa representación para construir el PDF. Es una reconstrucción de mejor esfuerzo de la apariencia del documento, no el motor de diseño propio de Word ejecutándose por detrás.</p>
+<p>DOCX almacena estructura, estilos, relaciones y recursos, no una imagen fija de cada página. Orisod interpreta el contenido compatible, crea una representación en el navegador y construye el PDF desde ese resultado. La paginación y el diseño proceden de esa implementación, no del motor de Microsoft Word.</p>
 
 <h2>Qué significa esto para el texto del PDF</h2>
-<p>Como el PDF se construye a partir de una instantánea en lugar de una colocación real de texto, las palabras del PDF resultante forman parte de una imagen — no puedes seleccionarlas, copiarlas ni buscarlas como en un PDF normal. Esta es la misma contrapartida que ya tiene la herramienta HTML a PDF de Orisod, por el mismo motivo.</p>
+<p>En la salida actual de Orisod, basada en instantáneas, las páginas renderizadas se convierten en imágenes; el texto no queda como capa seleccionable. Por ello se limitan la búsqueda, copia, accesibilidad, enlaces y extracción. Es una característica de esta implementación, no una limitación inevitable de todos los convertidores en el navegador.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 330" width="700" height="330" role="img" aria-label="Comparación que muestra un documento Word con texto real y seleccionable a la izquierda convirtiéndose en un PDF a la derecha, donde el mismo contenido pasa a formar parte de una imagen y ya no es seleccionable." xmlns="http://www.w3.org/2000/svg">
@@ -191,28 +191,28 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 </figure>
 
 <h2>Qué más puede cambiar</h2>
-<p>Como el navegador renderiza el documento en lugar del motor de diseño propio de Word, las fuentes exactas, el espaciado preciso, los encabezados/pies de página y los diseños muy complejos pueden verse un poco distintos a abrir el mismo archivo en Word. Los documentos sencillos y mayormente de texto — informes, cartas, contratos — se convierten limpiamente; los documentos que dependen mucho de un diseño de impresión preciso son los que más probablemente cambien.</p>
+<p>Si una fuente no está disponible, puede sustituirse y cambiar saltos de línea y páginas. Encabezados, pies, secciones, columnas, tablas, objetos flotantes, ecuaciones, campos, comentarios, control de cambios, numeración y contenido incrustado pueden simplificarse u omitirse. Incluso un contrato principalmente textual necesita comparación cuando importa la posición.</p>
 
 <h2>Cuándo usar esta herramienta</h2>
 <ul>
   <li>Necesitas compartir un documento Word como PDF y no tienes Word instalado</li>
-  <li>Tu documento es mayormente texto, con formato, listas o tablas sencillas</li>
+  <li>Tu documento es mayormente texto con formato sencillo y puedes revisar las páginas renderizadas antes de confiar en ellas</li>
   <li>Quien lo reciba no necesita seleccionar, copiar ni buscar el texto del PDF</li>
   <li>Prefieres que la conversión sea privada y ocurra en tu navegador en vez de subir el archivo a un servidor</li>
 </ul>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿El texto del PDF será seleccionable?</strong> No — el PDF se construye a partir de una instantánea renderizada, así que su texto forma parte de una imagen, igual que nuestra herramienta HTML a PDF.</p>
-<p><strong>¿Funciona con el formato .doc anterior?</strong> No, solo el formato moderno .docx. Vuelve a guardar un archivo antiguo como .docx en Word primero.</p>
-<p><strong>¿El formato complejo coincidirá exactamente?</strong> No siempre — es una representación de mejor esfuerzo, no el motor de diseño propio de Word, así que los diseños muy complejos pueden cambiar ligeramente.</p>
+<h2>Revisa el PDF antes de compartir</h2>
+<p><strong>¿El texto será seleccionable?</strong> No en la salida actual de Orisod basada en imágenes. Si necesitas búsqueda o accesibilidad, usa un exportador que cree una capa de texto PDF real y compruébala.</p>
+<p><strong>¿Acepta archivos .doc antiguos?</strong> Esta herramienta admite DOCX, no DOC. Convierte el archivo con un programa compatible; abrirlo y guardarlo de nuevo también puede cambiar diseño, macros, campos o funciones antiguas.</p>
+<p><strong>¿El formato coincidirá exactamente?</strong> No debe asumirse. Compara cantidad de páginas, saltos, fuentes, tablas, encabezados, pies, imágenes, ecuaciones y enlaces con el DOCX.</p>
 
 <div class="cta-box">
   <h3>Convierte tu documento Word a PDF</h3>
-  <p>La herramienta Word a PDF de Orisod renderiza tu .docx y construye un PDF a partir de él — completamente en tu navegador, con esta contrapartida explicada directamente en la herramienta.</p>
+  <p>La herramienta Word a PDF de Orisod renderiza contenido DOCX compatible en el navegador y genera un PDF basado en imágenes. Conserva el DOCX y revisa todas las páginas de la descarga antes de enviarla.</p>
   <a class="cta-button" href="/es/word-to-pdf/">Convertir Word a PDF →</a>
 </div>
 
-<p>Una conversión de Word a PDF basada en instantáneas no te dará texto seleccionable ni una fidelidad perfecta píxel a píxel — ninguna herramienta honesta en el navegador puede prometer eso — pero para el caso común de convertir un documento sencillo en un PDF compartible, es una forma rápida y privada de lograrlo.</p>
+<p>Este proceso favorece la comodidad visual sobre el texto buscable y la paginación exacta de Word. Úsalo cuando el resultado supere la revisión; elige un exportador de diseño completo si necesitas fidelidad, accesibilidad, enlaces o texto seleccionable.</p>
 
 </div>
 

@@ -149,21 +149,21 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guides</span>
 <h1>What Is EXIF Data and Why You Should Remove It Before Sharing Photos</h1>
-<p class="intro">Every photo taken on a phone or camera carries more information than what's visible in the image itself. That hidden data is called EXIF, and depending on your settings, it can include your exact GPS coordinates — information you probably don't mean to hand over every time you post a photo.</p>
+<p class="intro">A photo can contain more than pixels. Depending on the device and its settings, the file may also record when and where it was captured, which camera created it, and how the shot was taken. That information is useful in a private photo library, but it deserves a check before the original file is shared publicly.</p>
 
 <div class="article-body">
 
-<h2>What is EXIF data, exactly?</h2>
-<p>EXIF (Exchangeable Image File Format) is a standard for embedding metadata directly inside an image file, invisible unless you specifically go looking for it. It was designed to be useful — photographers use it to check camera settings after the fact, and software uses it to auto-rotate images correctly. But the same mechanism that stores your camera's aperture setting can also store exactly where and when the photo was taken.</p>
+<h2>What EXIF data stores</h2>
+<p>EXIF (Exchangeable Image File Format) is a common way to store descriptive and technical information inside an image file. Photographers use it to review exposure settings, and software may use its orientation field to display a photo correctly. When location services and camera settings allow it, the metadata can also include the capture time and GPS coordinates.</p>
 
 <h2>What EXIF can reveal about you</h2>
 <ul>
-  <li><strong>GPS coordinates</strong> — many phones embed the precise location a photo was taken, accurate enough to identify a specific building or address.</li>
-  <li><strong>Date and time</strong> — the exact moment the photo was captured, down to the second.</li>
-  <li><strong>Device information</strong> — the exact phone or camera model, and sometimes the software version.</li>
-  <li><strong>Camera settings</strong> — aperture, shutter speed, focal length, and similar technical details.</li>
+  <li><strong>GPS coordinates</strong>: a phone may record where a photo was taken. The precision varies, but it can sometimes narrow the location to a building or address.</li>
+  <li><strong>Date and time</strong>: the file may contain a capture timestamp, often recorded to the second. Its accuracy depends on the device clock and time-zone handling.</li>
+  <li><strong>Device information</strong>: the camera or phone make and model, and sometimes the software used to create or edit the file.</li>
+  <li><strong>Camera settings</strong>: details such as aperture, shutter speed, ISO, and focal length.</li>
 </ul>
-<p>Individually, some of this seems harmless. Combined — an exact location, tied to an exact timestamp, tied to a device you own — it adds up to more than most people realize they're sharing.</p>
+<p>One field may seem harmless. Location, time, and device details viewed together can reveal considerably more context than the visible photograph alone.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 380" width="700" height="380" role="img" aria-label="Illustration of a photo carrying hidden location, time, and camera information." xmlns="http://www.w3.org/2000/svg">
@@ -205,29 +205,29 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 </figure>
 
 <h2>Where this becomes a real risk</h2>
-<p>The clearest example: posting a photo taken at home, with GPS data intact, on a public marketplace listing or a dating profile. Anyone who downloads the original file and checks its metadata can pull your home address directly from a photo you never meant to share your location through. The same risk applies to photos of children posted publicly, photos taken at a workplace, or any image where you'd rather not confirm exactly where you were standing when you took it.</p>
+<p>Consider a marketplace listing made with a photo taken at home. If the service preserves the original file and it contains sufficiently precise GPS coordinates, someone who obtains that file may be able to infer the address. The same concern applies to photographs of children, workplaces, shelters, or any situation in which confirming a location creates a privacy or safety risk.</p>
 
 <h2>Who this matters most for</h2>
-<p>Anyone selling items on an online marketplace should be cautious about location data embedded in listing photos — it can reveal where you live to a stranger before you've ever met them. The same goes for real estate or rental listings, freelancers photographing a client's property, and parents who post photos of their kids publicly. It matters even more for anyone who has reason to keep their location private from a specific person, where an old habit of posting photos without thinking about metadata can undo efforts made elsewhere to stay untraceable.</p>
+<p>Location metadata deserves particular attention in marketplace, real-estate, and rental listings; photographs made at a client's property; and images of children shared publicly. It is especially important when a person needs to keep an address or routine private. Metadata removal is one useful precaution, although visible landmarks, signs, reflections, and filenames can still disclose information.</p>
 
 <h2>Do platforms strip this automatically?</h2>
-<p>Some do, some don't, and it's not something you can safely assume either way. Many major social media platforms strip most EXIF data on upload — but not all of them do it consistently, not all types of metadata get removed, and plenty of other channels people share photos through (email, messaging apps, direct file transfers, marketplace listings) don't touch the metadata at all. If a photo is downloaded before a platform processes it, or shared through a channel that doesn't strip anything, the original data travels right along with it. Relying on "the platform probably handles it" isn't a safe assumption.</p>
+<p>Behavior varies by platform, upload method, and file type. Some services remove much of the metadata or create a processed copy, while email, cloud links, messaging options, and direct transfers may preserve the original. Policies and implementations can change, so inspect the file you intend to send instead of relying on a general assumption about the service.</p>
 
 <h2>How to remove EXIF data before sharing</h2>
-<p>The reliable approach is to strip the metadata yourself before you share a photo anywhere, rather than trusting whatever platform you're using to do it for you. A dedicated EXIF remover reads the image, strips the embedded metadata, and gives you back a visually identical photo with none of the hidden data attached — so what you're sharing is exactly what's visible, and nothing more.</p>
+<p>Create a cleaned copy before sharing when the metadata is unnecessary. An EXIF remover can delete common EXIF fields, including GPS information when present. Keep the original separately if you value capture dates or camera settings, and verify the exported copy because an image may also contain XMP, IPTC, color profiles, comments, filenames, or other information outside the EXIF block.</p>
 
-<h2>Quick answers</h2>
-<p><strong>Does removing EXIF data affect photo quality?</strong> No — EXIF data is separate from the actual pixel data that makes up the image, so stripping it doesn't change how the photo looks at all.</p>
-<p><strong>Should I remove EXIF from every photo I share?</strong> It's a reasonable default for anything shared publicly or with people you don't know well. For private photos shared directly with family, the location and timestamp data is often harmless or even useful.</p>
-<p><strong>Can I check what EXIF data a photo has before deciding?</strong> Yes — a metadata viewer tool shows you exactly what's embedded in a specific photo, so you can see the GPS coordinates, timestamp, and device details before deciding whether to strip them.</p>
+<h2>A practical privacy check</h2>
+<p><strong>Does removing EXIF affect image quality?</strong> Removing metadata alone does not alter pixel values. However, a tool that decodes and re-encodes a lossy image may introduce a small quality change, so use a metadata-only workflow when that distinction matters.</p>
+<p><strong>Should I remove EXIF from every shared photo?</strong> Not necessarily. It is a sensible precaution for public files or unfamiliar recipients. Dates and camera details may remain useful in a trusted family archive, while location fields can be removed separately when the tool supports selective cleaning.</p>
+<p><strong>Can I inspect the file first?</strong> Yes. A metadata viewer can display recognized fields such as GPS coordinates, timestamps, and device details. Remember that a viewer may not expose every metadata standard or embedded payload.</p>
 
 <div class="cta-box">
   <h3>Strip Hidden Metadata From Your Photos</h3>
-  <p>Orisod's EXIF remover strips GPS location, timestamps, and device data from your photos entirely in your browser — the image itself stays untouched, and nothing is ever uploaded to a server.</p>
+  <p>Orisod's EXIF remover processes the photo in your browser and removes common EXIF fields such as GPS, capture time, and device information when they are present. Inspect the downloaded copy before sharing it in a sensitive situation.</p>
   <a class="cta-button" href="/exif-remover/">Remove EXIF Data →</a>
 </div>
 
-<p>Most people never think about EXIF data until it becomes a problem. Stripping it before you share a photo publicly takes seconds and closes a privacy gap you probably didn't know was open.</p>
+<p>Metadata is only one part of photo privacy, but it is easy to overlook. Before sharing an original file publicly, check both its embedded information and the clues visible inside the image.</p>
 
 </div>
 

@@ -149,15 +149,15 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guides</span>
 <h1>How to Check an Image's Dimensions and Resolution Online</h1>
-<p class="intro">A form asks for a photo of exactly 600×600 pixels, or a print shop wants 300 DPI, and suddenly you need numbers you don't have. Here's what those terms actually mean and how to check them on any image in seconds.</p>
+<p class="intro">An upload form may require 600×600 pixels, while a print shop may ask whether a file can produce 300 pixels per inch at the final size. Those requirements describe different things. Checking the file first prevents unnecessary resizing, rejected uploads, and disappointing prints.</p>
 
 <div class="article-body">
 
-<h2>Pixels, dimensions, and resolution — what's the difference</h2>
-<p>An image's <strong>dimensions</strong> are simply its width and height in pixels — a photo that's 4000×3000 has 4000 pixels across and 3000 down. <strong>Resolution</strong>, usually expressed as DPI (dots per inch), describes how densely those pixels are packed when the image is printed at a physical size. The same 4000×3000 image can look razor-sharp printed small and noticeably soft printed as a poster, because the same pixel count is being stretched across more physical inches.</p>
+<h2>Dimensions and print resolution are different measurements</h2>
+<p>Pixel dimensions are the image's width and height: a 4000×3000 file contains 4000 pixels across and 3000 down. <strong>Print resolution</strong> describes how those pixels are distributed over a physical size. The same file can look detailed in a small print and softer as a large poster because its fixed pixel count must cover more inches.</p>
 
 <h2>How DPI and pixel dimensions relate</h2>
-<p>DPI only means something once you attach a physical size to an image — a pixel count on its own has no inherent print size. For example, a 3000×2000 pixel image printed at 300 DPI comes out at 10×6.67 inches; print that same file at 150 DPI instead and it stretches to 20×13.3 inches, with each pixel now covering more physical space and looking noticeably softer. This is why a print shop asking for "300 DPI" is really asking about the relationship between your pixel count and the size you intend to print at, not a fixed property of the file itself.</p>
+<p>A pixel count has no inherent print size. Dividing 3000×2000 pixels by 300 pixels per inch gives a 10×6.67-inch print; at 150 pixels per inch, the same data covers 20×13.33 inches. A print shop's 300-PPI request therefore concerns the file's pixel dimensions at the intended output size. The embedded DPI value alone does not create detail that the pixels do not contain.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 380" width="700" height="380" role="img" aria-label="The same 3000×2000 pixel image printed at 300 DPI (small, sharp) versus 150 DPI (larger, softer)" xmlns="http://www.w3.org/2000/svg">
@@ -250,19 +250,19 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <figcaption>Same pixels, different print size — DPI is the relationship between the two.</figcaption>
 </figure>
 
-<h2>Why these numbers actually matter</h2>
+<h2>Where the numbers affect the result</h2>
 <ul>
   <li><strong>Upload forms</strong> for passport photos, ID badges, or profile pictures often require exact pixel dimensions, and reject anything that doesn't match.</li>
   <li><strong>Social media platforms</strong> have specific recommended sizes for cover photos, posts, and thumbnails — get it wrong and the platform crops or stretches your image awkwardly.</li>
-  <li><strong>Print shops</strong> typically require a minimum DPI (often 300) at the final print size, or the output comes out blurry.</li>
+  <li><strong>Print services</strong> often recommend about 300 pixels per inch for close-viewed work, but the appropriate value depends on viewing distance, printer, material, and subject.</li>
   <li><strong>Web developers</strong> need to know dimensions to avoid serving an image far larger than it will ever be displayed, which slows down page loads for no visual benefit.</li>
 </ul>
 
 <h2>The manual ways to check, and their limits</h2>
-<p>On a Windows PC, right-clicking a file and opening its Properties will eventually get you the dimensions, buried a couple of tabs in. On a Mac, selecting a file and pressing Cmd+I shows similar information in the Finder's "Get Info" panel. Both work, but only if you're on that specific device with the file already saved locally — neither helps if you're on a phone, checking an image someone just sent you, or trying to verify a photo before you've even downloaded it.</p>
+<p>Windows exposes dimensions through file Properties, and macOS shows them in Finder's Get Info panel. These methods are adequate for a single local file, but the location and fields vary by operating system, format, and metadata support. A consistent browser interface is more convenient when checking several files or switching devices.</p>
 
 <h2>The fastest way: check it in your browser</h2>
-<p>A browser-based dimension checker skips all device-specific steps. Drop in the image, and it reads the width, height, file format, and often the DPI and aspect ratio directly — no matter what device you're on, and without installing anything. This is particularly useful when you're checking several images in a row against the same requirement, since there's no per-file right-click routine to repeat.</p>
+<p>A browser-based checker can read the file's width, height, format, and aspect ratio without installing an editor. It may also display an embedded resolution value when the format provides one. Treat that value as metadata until it is evaluated together with the intended print dimensions.</p>
 
 <h2>Common dimension requirements you'll run into</h2>
 <table class="compare-table">
@@ -275,18 +275,18 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 </table>
 <p>These aren't universal rules — every platform sets its own numbers — but they illustrate why checking first saves a wasted upload attempt. Aspect ratio (the proportional relationship between width and height) matters just as much as raw pixel count: an image with the right total pixels but the wrong ratio still gets awkwardly cropped by most platforms.</p>
 
-<h2>Quick answers</h2>
-<p><strong>What's a good resolution for web use?</strong> Web images typically don't need more than 72–150 DPI, since screens display in pixels, not physical inches — DPI only really matters once you're printing.</p>
-<p><strong>Does resizing an image change its DPI?</strong> Not directly — resizing changes pixel dimensions, while DPI is about how those pixels map to a printed size. The two are related but not the same adjustment.</p>
+<h2>What to verify before using the file</h2>
+<p><strong>What resolution is suitable for the web?</strong> Choose pixel dimensions that match the displayed size and density, then balance compression against visual quality. A 72- or 150-DPI metadata label does not control how many CSS pixels a browser displays.</p>
+<p><strong>Does resizing change DPI?</strong> Resampling changes the number of pixels. Editing only the resolution metadata changes the calculated print size without adding or removing pixels. Some applications can perform both operations together, so inspect the export settings.</p>
 <p><strong>Can I check dimensions without downloading the file first?</strong> If you already have the image open or saved on your device, a browser-based checker reads it locally without needing to upload it anywhere.</p>
 
 <div class="cta-box">
   <h3>Check Any Image's Dimensions Instantly</h3>
-  <p>Orisod's dimension checker reads an image's width, height, format, and resolution directly in your browser — no upload, no install, works on any device.</p>
+  <p>Orisod's dimension checker reads the image's width, height, format, aspect ratio, and available resolution metadata directly in your browser. Compare those values with the actual requirements of the upload or print job.</p>
   <a class="cta-button" href="/image-dimension-checker/">Check Image Dimensions →</a>
 </div>
 
-<p>Whether you're meeting a strict upload requirement, prepping a file for print, or just curious what you're working with, checking an image's real dimensions takes seconds once you skip the file-properties hunt — and it can save you a rejected upload or a blurry printout before it happens.</p>
+<p>For an exact upload, verify width, height, and aspect ratio. For print, add the final physical size and effective pixels per inch. That small distinction prevents a metadata number from being mistaken for real image detail.</p>
 
 </div>
 

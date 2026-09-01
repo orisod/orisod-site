@@ -146,34 +146,34 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guides</span>
 <h1>How to Trim the Margins on a PDF (Without Reprinting It)</h1>
-<p class="intro">A scanned page comes out with two inches of dead white space around the edges, or a PDF exported from some other tool has margins that don't match what you actually need. Redoing the source — rescanning, re-exporting, reformatting — is the slow way to fix it. Trimming the existing file's margins directly is the fast one.</p>
+<p class="intro">A scan or exported PDF may contain more blank space than you need. Adjusting the page boundary can produce a cleaner viewing or printing area without repeating the capture, provided the useful content is already complete and legible.</p>
 
 <div class="article-body">
 
-<h2>Why PDFs end up with wide or uneven margins</h2>
-<p>Margins get baked into a PDF for all kinds of reasons that have nothing to do with what you actually want: a scanner defaults to capturing the full glass bed instead of just the page, a document was designed for a different paper size than it's now being used for, or an export setting added padding nobody asked for. None of these are content problems — the page itself is fine — the visible boundary around it is just larger than it needs to be.</p>
+<h2>How wide or uneven margins appear</h2>
+<p>A flatbed scanner may capture the full glass area, an export preset may add padding, or the source may have been designed for another paper size. Before cropping, confirm that the blank region is genuinely unwanted and not reserved for binding, notes, stamps, print bleed, or accessibility annotations.</p>
 
-<h2>What cropping a PDF actually changes</h2>
-<p>Cropping moves a page's visible boundary inward by the amount you specify on each side, typically measured in millimeters. It doesn't touch, redraw, or recompress anything inside that boundary — text stays selectable, images stay at their original resolution. Think of it less as "editing" the page and more as changing which part of it gets shown and printed.</p>
+<h2>PDF cropping usually changes the visible page box</h2>
+<p>A structural crop moves a page box inward rather than rasterizing the page. Content inside the new boundary can retain its text and image data. Material outside that boundary may remain in the PDF and could be revealed by other software, so cropping is not a secure way to remove confidential information.</p>
 
 <figure class="theme-figure">
   <img src="/assets/blog/trim-pdf-margins/pdf-margin-trim-before-after.webp" alt="A scanned page shown with wide white margins, and the same page after trimming the margins to fit the content" width="606" height="436" loading="lazy">
-  <figcaption>The page content stays the same; only the visible page boundary changes.</figcaption>
+  <figcaption>A crop changes the visible boundary; hidden content may still remain in the PDF.</figcaption>
 </figure>
 
-<h2>Choosing the right margins for your case</h2>
-<p>Uneven margins on all four sides is common with scanned documents, so top, bottom, left and right usually need different values rather than one uniform number. A quick way to figure out what you need: open the PDF, look at how much empty space sits along each edge, and estimate in millimeters — most crop tools let you preview or re-adjust before saving, so getting it exactly right on the first try isn't necessary.</p>
+<h2>Choose margins with the whole document in view</h2>
+<p>Top, bottom, left, and right may require different values. Start conservatively, preview the result, and inspect pages with headers, footers, signatures, stamps, and handwritten notes. One page can extend farther than the others even when the scan appears uniform.</p>
 
-<h2>What stays unchanged</h2>
-<p>Cropping is a boundary change, not a content edit — the underlying text, images and layout inside the new boundary are exactly what they were before. If your PDF has multiple pages of different sizes, most tools apply the same margin measurements to every page rather than customizing per page, so watch for an error if a page turns out too small for the margins you set.</p>
+<h2>What to verify after cropping</h2>
+<p>When the tool applies one set of measurements to every page, mixed page sizes and orientations need particular care. Open the downloaded copy and check every page. Bookmarks, annotations, links, form fields, page boxes, and digital signatures may also require verification after the PDF is rewritten.</p>
 
-<h2>A concrete example</h2>
+<h2>Example: removing unused scanner-bed space</h2>
 <p>You scan a receipt or a single-page form on a flatbed scanner set to capture a full A4 area, but the actual content only fills the top third of the page. Instead of rescanning at a tighter crop setting, you'd trim roughly 150mm off the bottom and a smaller amount off the sides — one pass, and the result is a page sized to the content instead of the scanner bed.</p>
 
-<h2>Quick answers</h2>
-<p><strong>Does cropping delete any content permanently?</strong> No — it moves the page's visible boundary inward. The content underneath isn't redrawn or rasterized, so nothing is lost or degraded.</p>
+<h2>Questions before cropping PDF margins</h2>
+<p><strong>Does cropping permanently delete hidden content?</strong> Not necessarily. A page-box crop can hide content without removing its underlying objects. Use a proper redaction or sanitization workflow for sensitive material.</p>
 <p><strong>Can I crop different amounts from each side?</strong> Yes — top, bottom, left and right are independent, so uneven margins are easy to fix without over-trimming a side that was already fine.</p>
-<p><strong>Will this work on a multi-page PDF?</strong> Yes, the same margin measurements apply to every page in one pass — useful for a scanned document where every page shares the same scanner-bed margin problem.</p>
+<p><strong>Can I crop a multi-page PDF?</strong> Yes, but uniform measurements are safest when the pages share the same size, orientation, and margin pattern. Review each page before replacing the original.</p>
 
 <div class="cta-box">
   <h3>Trim Your PDF's Margins</h3>
@@ -181,7 +181,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <a class="cta-button" href="/crop-pdf-pages/">Crop PDF Pages →</a>
 </div>
 
-<p>Wide or uneven margins are almost always a leftover from how a page was scanned or exported, not something wrong with the content itself — and fixing them is a one-pass adjustment, not a reason to redo the original document from scratch.</p>
+<p>Cropping is appropriate when excess space is the only problem. Keep the source file, inspect the cropped copy, and rescan or re-export if the page is incomplete, blurred, or otherwise defective.</p>
 
 </div>
 

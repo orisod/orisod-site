@@ -149,39 +149,39 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guides</span>
 <h1>How to Crop a Photo to the Exact Size You Need</h1>
-<p class="intro">A passport photo service, a print lab, or an ID badge system asks for a photo at an exact size — not "about the right shape," an exact number of pixels or inches. Here's why that distinction matters and how to hit it precisely.</p>
+<p class="intro">A passport application, print lab, or ID system may require a specific number of pixels or a precise physical size. Matching the general shape is not enough. You need the right proportions, dimensions, and, for print, resolution.</p>
 
 <div class="article-body">
 
-<h2>Aspect ratio vs exact dimensions — not the same thing</h2>
-<p>Cropping to an aspect ratio means keeping a proportion, like 1:1 for a square or 4:3 for a standard photo — the crop can come out at any actual size as long as the ratio holds. Cropping to an exact size means the output has to be a specific pixel count or physical dimension, like exactly 600×600 pixels or exactly 2×2 inches at 300 DPI. A crop can be perfectly square and still be the wrong exact size if you needed 600×600 and ended up with 800×800. Most casual cropping only cares about the ratio; the situations where exact size actually matters are more specific than people expect.</p>
+<h2>Aspect ratio and dimensions solve different problems</h2>
+<p>Aspect ratio describes shape: 1:1 is square, whether the image is 600×600 or 800×800 pixels. Dimensions describe size. If a service requests 600×600 pixels, an 800×800 image has the correct ratio but the wrong dimensions. A physical requirement such as 2×2 inches also needs a resolution target before it can be translated into pixels.</p>
 
-<h2>Where exact size is non-negotiable</h2>
+<h2>When exact dimensions matter</h2>
 <ul>
-  <li><strong>Passport and visa photos</strong> — governments specify an exact size (commonly 2×2 inches for US passports) with strict tolerances, and photos outside that range get rejected outright.</li>
+  <li><strong>Passport and visa photos</strong>: requirements vary by country and application. Follow the current official specification, including image size, head position, background, and any stated tolerances.</li>
   <li><strong>ID badges and access cards</strong> — the printing system usually expects one fixed pixel size and will stretch or crop unpredictably if you feed it anything else.</li>
   <li><strong>Print lab templates</strong> — ordering a 4×6 print means the file needs to match that ratio and resolution, or the lab crops it for you in a way you didn't choose.</li>
   <li><strong>Website and app assets</strong> — a hero image slot or a profile picture upload area often expects one fixed size, and anything else gets awkwardly stretched or cropped by the platform.</li>
 </ul>
 
-<h2>Why "close enough" causes problems</h2>
-<p>When you upload a photo that's the right shape but the wrong exact size, one of two things usually happens: the receiving system stretches it to fit (distorting faces and straight lines) or crops it further on its own terms, often cutting off exactly the part you cared about keeping. Neither is what you wanted. Getting the exact size right yourself, before uploading, means you control what stays in frame — not an automated system guessing on your behalf.</p>
+<h2>What happens when the dimensions are wrong</h2>
+<p>A receiving system may reject an incorrectly sized image, resize it, or crop it again. Automatic cropping can remove an important part of the frame, while stretching changes proportions. Preparing the required dimensions beforehand gives you control over the composition, although acceptance may still depend on other rules.</p>
 
 <h2>How to crop to an exact size</h2>
-<p>The reliable way is a crop tool that shows you the live pixel dimensions of your selection as you drag, rather than a plain selection box you're just eyeballing. You drag the crop area over the part of the photo you want to keep, watch the width and height readout update in real time, and adjust the selection until it reads the exact numbers you need before exporting — no guessing, no manual measuring against a ruler on your screen.</p>
+<p>Enter the required width and height, then position the crop area over the part of the photo you want to keep. Check the output dimensions before downloading. If the tool displays the selection size while you drag, use that readout instead of estimating by eye.</p>
 
 <figure class="theme-figure">
   <img class="theme-img" data-dark="/assets/blog/crop-photo-exact-size/crop-photo-exact-size-dark-en.webp" data-light="/assets/blog/crop-photo-exact-size/crop-photo-exact-size-light-en.webp" src="/assets/blog/crop-photo-exact-size/crop-photo-exact-size-dark-en.webp" alt="Orisod's Crop Image tool mid-drag, showing the selection box on the source image and its live pixel-dimension readout" width="800" height="632" loading="lazy">
   <figcaption>Drag to select, and watch the pixel dimensions update live until they match exactly what you need.</figcaption>
 </figure>
 
-<h2>A quick note on resolution</h2>
-<p>Exact pixel size and exact print size aren't interchangeable without knowing the resolution. A 600×600 pixel crop is a fixed number of pixels regardless of context, but if a print lab asks for "2×2 inches," that only becomes a real pixel target once you know the DPI they expect — at 300 DPI, 2×2 inches works out to exactly 600×600 pixels. When a spec gives you both a physical size and a DPI, do the multiplication first so you're cropping to the right pixel count, not just something that looks roughly 2 inches on your own screen.</p>
+<h2>Convert print size to pixels before cropping</h2>
+<p>Pixels and inches are not interchangeable without a resolution value. Multiply each dimension in inches by the requested pixels per inch: 2 inches at 300 pixels per inch equals 600 pixels. That makes a 2×2-inch target at that resolution 600×600 pixels. The size at which an image appears on your screen does not determine its print dimensions.</p>
 
 <h2>What to do when the source photo isn't the same shape as the target</h2>
 <p>Often the photo you have doesn't naturally match the ratio you need — a wide landscape shot when you need a square, or a portrait shot when you need a wide banner. In that case, cropping necessarily means losing some of the original frame; there's no way around it without distorting the image. The only real decision is what to keep. Position the crop box over the part of the photo that actually matters — a face, a product, the focal point — rather than defaulting to a center crop, which can just as easily cut off exactly what you wanted kept.</p>
 
-<h2>Quick answers</h2>
+<h2>Questions about exact-size cropping</h2>
 <p><strong>What if my photo is smaller than the exact size I need?</strong> Cropping only removes pixels, it can't add detail that isn't there — if your source photo is too small for the target size, you'd need to upscale it first, which comes with its own quality trade-offs, or start from a higher-resolution original.</p>
 <p><strong>Does cropping to an exact size distort the photo?</strong> Not if you crop rather than resize-to-fit. Cropping removes parts of the image while keeping everything else at its original proportions; only stretching an image to fill a shape it doesn't naturally match causes distortion.</p>
 <p><strong>Can I crop to an exact size and keep it centered on a specific part of the photo?</strong> Yes — a good crop tool lets you position the crop box freely before locking the dimensions, so you choose exactly what stays in frame rather than always cropping from the center.</p>
@@ -192,7 +192,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <a class="cta-button" href="/crop-image/">Crop an Image →</a>
 </div>
 
-<p>Whatever the exact numbers you were handed — a passport spec, a print lab template, an upload requirement — hitting them precisely takes the guesswork out of whether your photo will actually be accepted.</p>
+<p>Matching the requested dimensions prevents avoidable resizing or cropping. For regulated photos and platform uploads, check the remaining requirements as well; dimensions alone do not guarantee acceptance.</p>
 
 </div>
 

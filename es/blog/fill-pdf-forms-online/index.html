@@ -146,15 +146,15 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guías</span>
 <h1>Cómo rellenar un formulario PDF en línea</h1>
-<p class="intro">Un PDF "rellenable" no es solo la imagen de un formulario — tiene campos reales e interactivos incrustados en el propio archivo, los mismos que lee Adobe Acrobat cuando te deja hacer clic en un recuadro y escribir. Entender esa diferencia es la clave para rellenarlo correctamente, y para detectar los formularios que solo lo parecen sin serlo.</p>
+<p class="intro">Algunos PDF contienen campos interactivos; otros son páginas escaneadas o diseñadas que solo parecen formularios. La diferencia determina si una herramienta puede completar campos existentes o si necesitas anotaciones o edición de página.</p>
 
 <div class="article-body">
 
 <h2>Qué hace que un PDF sea realmente "rellenable"</h2>
-<p>Debajo de la página que ves, un formulario PDF real lleva una estructura llamada AcroForm — una lista de campos con nombre, cada uno con un tipo (cuadro de texto, casilla, botón de opción, lista desplegable), una posición en una página concreta y, a menudo, un valor actual. Un lector de PDF dibuja la página con normalidad y luego coloca recuadros interactivos encima allí donde se definen esos campos. Escribes en uno y el lector actualiza el valor guardado de ese campo — nada cambia en la imagen de la página subyacente.</p>
+<p>Muchos formularios utilizan campos AcroForm: cuadros de texto, casillas, botones de opción, listas y botones. Pueden incluir nombres, valores, apariencias, validaciones y controles ubicados en páginas. Otros documentos usan XFA o funciones propietarias que las bibliotecas PDF corrientes no admiten por completo. Rellenar cambia los datos y a veces exige actualizar cómo se dibuja el valor.</p>
 
 <h2>El problema de los que solo lo parecen</h2>
-<p>Muchos PDF están diseñados para parecer formularios — una línea impresa para una firma, un pequeño cuadrado dibujado junto a "Acepto" — sin ningún campo AcroForm real detrás. Visualmente no hay diferencia entre una casilla real y un cuadrado dibujado a mano que se le parece. La única forma fiable de saberlo es comprobar si el archivo declara campos de verdad; una herramienta que solo midiera formas de recuadros en la página y adivinara caería en el mismo error en ambos casos.</p>
+<p>Una línea impresa o un cuadrado dibujado puede parecer una entrada sin ser interactivo. Comprueba si el PDF declara campos y si el visor permite enfocarlos. Un documento sin AcroForm todavía puede completarse mediante anotaciones autorizadas, colocación de texto o un editor; la ausencia de campos cambia el método, no lo hace imposible.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 300" width="700" height="300" role="img" aria-label="Diagrama que muestra los campos de un formulario PDF detectados y convertidos en recuadros editables sobre la página, y luego aplanados en un PDF bloqueado y no editable." xmlns="http://www.w3.org/2000/svg">
@@ -189,24 +189,24 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <figcaption>Los campos reales se detectan y se convierten en recuadros editables sobre la página; al aplanar, tus respuestas quedan fijadas en la propia página y los campos desaparecen, así que nada puede modificarse después.</figcaption>
 </figure>
 
-<h2>Rellenarlo y bloquearlo</h2>
-<p>Una vez detectados los campos, rellenarlos funciona como cabría esperar — escribes en los cuadros de texto, marcas las casillas, eliges en las listas desplegables. El último paso, aplanar, es lo que convierte un formulario todavía editable en un documento normal y terminado: tus respuestas se dibujan de forma permanente en la página como contenido real, y los campos interactivos se eliminan por completo. Quien abra el archivo aplanado después verá un PDF normal con tus respuestas — no podrá hacer clic en un campo y cambiar lo que escribiste, porque ya no queda ningún campo en el que hacer clic.</p>
+<h2>Rellenar, guardar y aplanar son pasos distintos</h2>
+<p>Guardar un formulario puede conservar campos y valores editables. Aplanar suele convertir sus apariencias en contenido de página y eliminar o desactivar los controles, lo que mejora la uniformidad entre visores. No vuelve el PDF inviolable: un editor adecuado todavía puede modificar la página. Conserva una copia editable hasta verificar las respuestas.</p>
 
 <h2>Lo que no se conserva</h2>
-<p>Un PDF rellenable real y sin scripts XFA complejos (el caso más habitual) se rellena y se aplana sin problemas. Dos cosas no se conservan: los campos de firma digital, que son un mecanismo criptográfico distinto de los campos de formulario normales y necesitan un flujo de firma dedicado, no un valor escrito; y cualquier JavaScript que el autor del formulario haya incrustado para calcular totales automáticamente, validar entradas o exigir "elige solo una" entre un grupo de casillas — nada de eso se ejecuta fuera de Adobe Acrobat, así que revisar tus propias respuestas importa más en un formulario diseñado para revisarlas por ti.</p>
+<p>La compatibilidad varía para XFA, cálculos JavaScript, validaciones, campos condicionales, archivos adjuntos, etiquetas de accesibilidad y apariencias personalizadas. Las firmas digitales necesitan un proceso específico y pueden invalidarse con modificaciones posteriores, incluso al rellenar o aplanar. JavaScript también funciona de manera distinta entre visores; no debes asumir que sus reglas se ejecutaron.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Y si la herramienta dice que no se encontraron campos rellenables?</strong> Significa que el PDF no tiene campos AcroForm reales — es un documento que solo se parece visualmente a un formulario, y no hay forma fiable de rellenarlo sin que esos campos existan.</p>
-<p><strong>¿Puedo seguir editando un campo después de aplanar?</strong> No — para eso sirve aplanar. Si necesitas hacer un cambio, rellena de nuevo el formulario original desde cero.</p>
-<p><strong>¿Mi PDF rellenado seguirá teniendo texto real y seleccionable?</strong> Sí — aplanar dibuja texto real en la página, no una captura de pantalla, así que lo que escribiste sigue siendo buscable y copiable después.</p>
+<h2>Verifica el formulario terminado</h2>
+<p><strong>¿Y si no encuentra campos?</strong> El documento puede ser plano, escaneado, XFA, cifrado o usar estructuras incompatibles. Quizá necesites anotaciones, un editor o el visor oficial exigido por el emisor.</p>
+<p><strong>¿Puede cambiarse una respuesta aplanada?</strong> El campo interactivo suele desaparecer, pero un programa de edición aún puede modificar el contenido. Para corregirla con seguridad, vuelve a la copia editable guardada.</p>
+<p><strong>¿El texto aplanado será seleccionable?</strong> Depende de la implementación. Puede dibujarse como caracteres, convertirse en trazados, rasterizarse o incluso faltar si la apariencia no se generó bien. Prueba búsqueda, copia y visualización en el archivo descargado.</p>
 
 <div class="cta-box">
   <h3>Rellena un formulario PDF</h3>
-  <p>La herramienta Rellenar formularios PDF de Orisod detecta los campos reales de un formulario, te deja escribir directamente en ellos sobre la página renderizada y aplana el resultado — todo en tu navegador.</p>
+  <p>La herramienta Rellenar formularios PDF de Orisod trabaja con campos compatibles en tu navegador y puede crear una copia aplanada. Revisa respuestas, cálculos, casillas, páginas y estado de firmas después de descargar.</p>
   <a class="cta-button" href="/es/fill-pdf-forms/">Rellenar un formulario PDF →</a>
 </div>
 
-<p>La mayoría de los PDF rellenables — solicitudes de empleo, formularios de admisión, trámites gubernamentales — son AcroForms normales por dentro, y rellenar uno es tan simple como reconocer sus campos y escribir en ellos. Los casos a vigilar son los que solo lo parecen sin tener campos reales, y el puñado de funciones (firmas, scripts incrustados) que ninguna herramienta del lado del cliente, esta incluida, puede simular.</p>
+<p>Los formularios PDF van desde AcroForms sencillos hasta documentos XFA y procesos con scripts. Usa el método exigido por el emisor, conserva el original intacto y confirma que la copia guardada se muestra y valida correctamente antes de enviarla.</p>
 
 </div>
 

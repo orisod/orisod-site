@@ -149,18 +149,18 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guías</span>
 <h1>Los archivos BMP ocupan demasiado: cómo reducir su tamaño</h1>
-<p class="intro">Si alguna vez abriste una carpeta y encontraste un archivo BMP ocupando diez veces el espacio de un JPG similar, no son imaginaciones tuyas. Aquí te explicamos exactamente por qué los archivos BMP son tan grandes, y la forma más rápida de reducir uno.</p>
+<p class="intro">Un BMP puede ocupar mucho más que un JPG o PNG que muestra la misma imagen. La causa suele ser sencilla: muchos archivos BMP almacenan los píxeles con poca o ninguna compresión. Convertirlo puede reducir su tamaño, pero el formato de destino depende de si contiene una fotografía, transparencia o gráficos que deben conservarse sin pérdida.</p>
 
 <div class="article-body">
 
 <h2>Por qué los archivos BMP son tan grandes</h2>
-<p>BMP (Bitmap) es, por diseño, un formato de imagen esencialmente sin comprimir. Mientras que tanto JPG como PNG usan algoritmos de compresión para reducir los datos necesarios para almacenar una imagen, un archivo BMP estándar guarda el valor de color de cada píxel individual directamente, con poca o ninguna compresión aplicada. El resultado es completamente predecible: un BMP de una imagen determinada es habitualmente entre 5 y 10 veces más grande que la misma imagen guardada como un JPG bien comprimido, y a menudo varias veces más grande que la misma imagen como PNG.</p>
+<p>BMP es una familia de estructuras de mapa de bits, no una garantía de datos totalmente descomprimidos. Muchos BMP guardan las filas de píxeles directamente, a veces con relleno, mientras que algunas variantes admiten codificación por longitud de repetición o campos de bits. JPG aplica compresión con pérdida y PNG utiliza compresión sin pérdida. La diferencia de tamaño no es un múltiplo fijo: depende de las dimensiones, la profundidad de color, el contenido y los ajustes del codificador.</p>
 
-<h2>Un ejemplo concreto</h2>
-<p>Una foto simple de 1920 × 1080 guardada como BMP sin comprimir puede fácilmente ocupar 6 MB o más. Esa misma imagen exacta guardada como JPG con buena calidad podría quedar por debajo de 500 KB — una reducción de más del 90 % sin diferencia visible significativa para una fotografía. Incluso PNG, que también es sin pérdida, típicamente supera considerablemente el tamaño de archivo de BMP, ya que PNG al menos aplica compresión real a los datos de píxeles en lugar de guardarlos esencialmente en bruto.</p>
+<h2>Un ejemplo medido</h2>
+<p>Un BMP de 24 bits sin comprimir y 1920 × 1080 necesita aproximadamente 5,9 MiB para las filas de píxeles antes de contar sus encabezados. El tamaño de las versiones JPG y PNG depende mucho de la imagen y los ajustes. Un JPG fotográfico puede ser mucho menor, pero no conserva los píxeles exactamente. PNG no tiene pérdida y suele comprimir bien capturas o gráficos planos; una fotografía compleja puede seguir generando un PNG grande.</p>
 
 <h2>Entonces, ¿por qué existe BMP?</h2>
-<p>BMP se remonta a los primeros tiempos de Windows, donde la simplicidad y la velocidad de lectura/escritura del archivo importaban más que la eficiencia de almacenamiento — el almacenamiento era caro, pero también lo era el poder de procesamiento, y un formato sin sobrecarga de compresión era rápido y simple de manejar para el software de esa época. Quedó profundamente incorporado en herramientas y flujos de trabajo antiguos de Windows, y ese legado es en gran parte por qué todavía aparece hoy, décadas después de que los formatos comprimidos lo volvieran obsoleto para casi cualquier propósito práctico.</p>
+<p>BMP surgió en los primeros flujos gráficos de Windows y OS/2. Su representación relativamente directa facilitaba la lectura y escritura, y terminó integrada en las API de Windows y muchas aplicaciones antiguas. Esa historia de compatibilidad explica por qué todavía aparece en exportaciones heredadas y sistemas especializados, incluso cuando un formato comprimido sería más cómodo.</p>
 
 <h2>Dónde todavía te encontrarás con BMP hoy</h2>
 <ul>
@@ -171,10 +171,10 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 </ul>
 
 <h2>¿Qué pasa con las fotos tomadas con cámaras digitales antiguas?</h2>
-<p>Un puñado de cámaras digitales y dispositivos de escaneo muy antiguos usaban BMP por defecto, particularmente los de la era anterior a que JPG se convirtiera en el estándar universal de las cámaras. Si estás revisando un archivo antiguo de fotos y notas archivos inusualmente grandes con extensión .bmp, es casi seguro que esa es la razón — y convertirlos a JPG para almacenamiento o para compartir es una forma sencilla de recuperar una gran cantidad de espacio en disco sin costo visible de calidad.</p>
+<p>Los BMP de un archivo fotográfico antiguo pueden proceder de escáneres, programas de cámara, editores o exportaciones posteriores, no necesariamente de la cámara original. La extensión por sí sola no permite determinar su procedencia. Antes de convertir un archivo histórico, conserva una copia y compara resultados representativos, sobre todo si importan las fechas, los perfiles de color, el canal alfa u otros metadatos.</p>
 
 <h2>Cuándo tiene sentido conservar BMP</h2>
-<p>Si estás haciendo procesamiento o análisis de imagen a nivel de píxel donde específicamente no quieres que ningún artefacto de compresión influya en los datos — algunos flujos de trabajo científicos o técnicos caen en esta categoría — la falta de compresión de BMP es una característica, no un defecto. Para compartir, almacenar, uso web, o básicamente cualquier cosa fuera de ese caso técnico específico, no hay ninguna razón real para conservar un archivo BMP de ese tamaño.</p>
+<p>Conserva BMP cuando una aplicación, un dispositivo o un proceso técnico lo exijan. Evitar artefactos con pérdida puede ser importante, aunque PNG o TIFF también ofrecen almacenamiento sin pérdida y más funciones. Para compartir o publicar en la web, JPG, PNG o WebP suelen ser más prácticos; guarda el archivo fuente cuando importe la fidelidad del archivo o una conversión futura.</p>
 
 <h2>Comparación de tamaño de archivo</h2>
 <p>La misma comparación, medida en una imagen de prueba de 1920×1080:</p>
@@ -203,20 +203,20 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <p>La diferencia entre BMP y JPG específicamente es la que más nota la gente, ya que es la diferencia entre un archivo incómodo de enviar por correo y uno que no lo es.</p>
 
 <h2>Reducir un archivo BMP</h2>
-<p>Convertir es la solución más rápida — convierte el BMP en JPG (para fotos, donde la compresión con pérdida da la mayor reducción de tamaño) o PNG (si necesitas preservar cada píxel exactamente, o necesitas transparencia), y el tamaño de archivo baja dramáticamente sin desventaja real para el uso típico.</p>
+<p>Elige JPG para fotografías corrientes cuando aceptes una copia con pérdida más pequeña. Usa PNG para gráficos sin pérdida o cuando sea necesario conservar transparencia compatible. La conversión puede cambiar metadatos, interpretación del color, profundidad de bits o comportamiento del canal alfa; revisa la exportación en lugar de asumir que solo cambió el tamaño.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Convertir un BMP a JPG o PNG perderá calidad?</strong> Convertir a PNG preserva cada píxel exactamente, sin ninguna pérdida. Convertir a JPG implica una pequeña cantidad de compresión con pérdida, pero con un ajuste de calidad razonable no es visible a simple vista — y el ahorro de tamaño es dramáticamente mayor.</p>
+<h2>Antes de eliminar el BMP original</h2>
+<p><strong>¿La conversión pierde calidad?</strong> JPG tiene pérdida y puede introducir artefactos en bordes o texturas finas. PNG conserva sin pérdida los píxeles decodificados, pero la conversión todavía puede modificar características BMP no compatibles, metadatos, profundidad de bits o gestión del color. Compara el resultado con el archivo fuente.</p>
 <p><strong>¿Por qué un BMP ocupa mucho más que otra captura de pantalla?</strong> La mayoría de los sistemas operativos y herramientas de captura guardan en PNG o JPG. Si obtienes archivos BMP, probablemente se deba a un programa antiguo o a una configuración heredada del flujo de trabajo.</p>
-<p><strong>¿Hay alguna razón para conservar el BMP original después de convertir?</strong> Solo si tienes una necesidad técnica específica de datos de píxeles sin comprimir — de lo contrario, el archivo convertido cumple el mismo propósito visual a una fracción del tamaño.</p>
+<p><strong>¿Debo conservar el original?</strong> Guárdalo hasta verificar y respaldar la copia convertida. Consérvalo permanentemente si es la fuente de archivo o una entrada necesaria para equipos o programas antiguos.</p>
 
 <div class="cta-box">
   <h3>Reduce tus archivos BMP ahora</h3>
-  <p>El convertidor de BMP de Orisod transforma archivos BMP en JPG o PNG directamente en tu navegador. Obtén imágenes mucho más ligeras sin instalar programas.</p>
+  <p>El convertidor de BMP de Orisod funciona en tu navegador y exporta JPG o PNG. Elige el formato según la imagen y compara calidad, transparencia, dimensiones y tamaño antes de sustituir el archivo fuente.</p>
   <a class="cta-button" href="/es/bmp-to-jpg-png/">Convertir Archivos BMP →</a>
 </div>
 
-<p>Un archivo BMP no está corrupto ni es inusualmente detallado cuando es enorme — simplemente está sin comprimir por diseño. Convertirlo es una solución de un solo paso que resuelve el problema de tamaño por completo.</p>
+<p>Un BMP grande no está necesariamente dañado ni contiene más detalle. Su método de almacenamiento puede usar muy poca compresión. Una copia convertida resuelve el problema de distribución o espacio, mientras que el original permanece disponible cuando importan la compatibilidad o la fidelidad del archivo.</p>
 
 </div>
 

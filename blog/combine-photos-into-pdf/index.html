@@ -149,12 +149,12 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guides</span>
 <h1>How to Combine Multiple Photos Into One PDF</h1>
-<p class="intro">A single converted photo is easy. The more common real-world need is several photos — pages of a document, a set of portfolio images, a photographed packet of forms — that all need to land in one PDF, in the right order. Here's how that works.</p>
+<p class="intro">Several photographs can represent one document: photographed forms, receipts, portfolio pages, or an application packet. Combining them into a PDF creates one ordered file, but the result still needs checks for page sequence, rotation, crop, legibility, and output size.</p>
 
 <div class="article-body">
 
 <h2>How this differs from converting one image</h2>
-<p>Turning a single JPG into a PDF is a one-to-one job: one image in, one PDF page out. Combining photos into a PDF is a different task entirely — several separate image files go in, and a single multi-page PDF comes out, with each photo becoming its own page in a specific order. The distinction matters because the tools and the workflow are built around that ordering step, which a single-image conversion doesn't need at all.</p>
+<p>A one-image conversion normally creates one PDF page. A combined document maps several source images to pages in a chosen sequence. Before export, remove duplicates, confirm that no page is missing, and decide whether each image should fill a standard page or define its own page dimensions.</p>
 
 <h2>Where this comes up in real life</h2>
 <ul>
@@ -165,7 +165,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 </ul>
 
 <h2>Why order matters more here than it seems</h2>
-<p>Because each photo becomes a page, the order you add the images in determines the order the pages appear in the final PDF. This is easy to get wrong with photos specifically, since phone camera filenames (like IMG_2841.jpg) don't always reflect the order you actually took them in, especially if you deleted and retook a shot partway through. It's worth a quick visual check of the photo order before combining, rather than assuming filename order matches page order.</p>
+<p>Selection order often becomes page order, but filenames and capture times are not reliable after retakes, edits, downloads, or transfers. Use thumbnails to verify the sequence visually. For photographed documents, also check that page numbers and front/back sides follow correctly.</p>
 
 <figure class="theme-figure">
   <img class="theme-img" data-dark="/assets/blog/combine-photos-into-pdf/combine-photos-into-pdf-dark-en.webp" data-light="/assets/blog/combine-photos-into-pdf/combine-photos-into-pdf-light-en.webp" src="/assets/blog/combine-photos-into-pdf/combine-photos-into-pdf-dark-en.webp" alt="Orisod's Image to PDF tool showing several photos selected, listed in the order they'll become PDF pages, each removable before converting" width="800" height="426" loading="lazy">
@@ -173,27 +173,27 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 </figure>
 
 <h2>What happens to image quality and orientation</h2>
-<p>Each photo is placed onto its own PDF page at essentially its original quality — combining doesn't recompress or degrade the images beyond whatever the tool's page-fitting does. Orientation is inherited from each individual photo, so a mix of upright and sideways photos will produce a PDF with mixed page orientations unless you rotate the sideways ones first.</p>
+<p>Quality depends on the converter. It may embed the original image stream, decode and re-encode it, downsample it, or place it on a page at a selected scale. Orientation metadata may also be interpreted differently during conversion. Review sharpness and rotate each image correctly before export, especially when small text must remain readable.</p>
 
 <h2>Sizing: one consistent page size, or match each photo?</h2>
-<p>Photos taken at different distances or on different devices often have different pixel dimensions and aspect ratios. A combining tool typically either fits every photo onto a uniform page size (so the document looks consistent when printed or scrolled through) or sizes each page to match its photo exactly (so nothing gets cropped or padded). Which one matters depends on whether you're optimizing for print consistency or for preserving each image exactly as it was.</p>
+<p>Images from different devices may have different dimensions and proportions. Uniform pages are easier to print and browse, but fitting can add margins or crop edges. Matching each page to its image preserves the full frame but creates mixed page sizes. Choose deliberately and preview photographs taken near the edge of the frame.</p>
 
-<h2>A concrete example</h2>
-<p>Say you photograph a five-page rental agreement with your phone because the only copy is on paper and you need to submit it digitally today. Photographed one page at a time, that's five separate JPG files sitting in your camera roll — not something most portals will accept as five individual attachments for one document. Combined in the correct page order into a single PDF, it becomes exactly the kind of file a submission form expects: one document, five pages, in sequence.</p>
+<h2>From five camera photos to one submission</h2>
+<p>A five-page rental agreement photographed with a phone produces five image files. Before combining them, crop unnecessary surroundings, rotate each page, verify legibility, and place them in order. The resulting PDF may satisfy a one-file portal, but its acceptance still depends on that portal's size, page, security, and document-quality requirements.</p>
 
-<h2>Quick answers</h2>
-<p><strong>Is there a limit to how many photos I can combine?</strong> Practical limits usually come from your device's memory rather than the tool itself — combining a handful of photos, or even a few dozen, is well within normal use.</p>
+<h2>Review before submitting</h2>
+<p><strong>How many photos can be combined?</strong> Limits depend on the tool, browser, available memory, pixel dimensions, and output settings. A few high-resolution phone photos can consume more memory than many small images.</p>
 <p><strong>Can I reorder photos after I've added them, before combining?</strong> A good browser-based tool lets you rearrange the order before you commit, so you're not stuck starting over if the initial order was wrong.</p>
-<p><strong>Do the photos need to be the same format?</strong> No — you can typically mix JPG, PNG, and other common image formats in the same combined PDF.</p>
-<p><strong>Is this the same as scanning?</strong> Not technically — a real scanner captures a page directly, while this process starts from photos you already took. The end result looks and behaves the same to whoever receives it, but the source is a photo rather than a scan.</p>
+<p><strong>Can formats be mixed?</strong> Only formats accepted by the converter can be combined. Mixed JPG and PNG files may also handle transparency, color profiles, and metadata differently.</p>
+<p><strong>Is a photographed PDF equivalent to a scan?</strong> Not necessarily. Perspective, lighting, shadows, focus, lens distortion, and background clutter can make a phone photograph less suitable for OCR, printing, or official submission. A document-scanning mode can help correct some of these issues.</p>
 
 <div class="cta-box">
   <h3>Combine Your Photos Into One PDF</h3>
-  <p>Orisod's image-to-PDF tool combines multiple photos into a single, properly ordered PDF — entirely in your browser, with nothing uploaded to a server.</p>
+  <p>Orisod's image-to-PDF tool combines selected images in the order you choose within your browser. Preview the sequence, orientation, page fit, and readability before downloading the PDF.</p>
   <a class="cta-button" href="/image-to-pdf/">Combine Photos Into a PDF →</a>
 </div>
 
-<p>Whether it's a scanned packet, a portfolio, or a stack of receipts, turning several photos into one well-ordered PDF takes a minute once you've got them in the right sequence — and it turns a scattered folder of images into the single document most processes actually expect.</p>
+<p>A combined PDF is useful only when its pages are complete, readable, and correctly ordered. Keep the source photographs until the downloaded document has been opened and checked from beginning to end.</p>
 
 </div>
 

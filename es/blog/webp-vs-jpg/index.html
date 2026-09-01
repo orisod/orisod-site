@@ -150,20 +150,20 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-comparison">Comparativas</span>
 <h1>WebP vs. JPG: por qué algunas imágenes no se abren y cómo solucionarlo</h1>
-<p class="intro">Guardas una imagen de un sitio web y, en vez del conocido .jpg, obtienes un archivo .webp que algunos programas no pueden abrir. Aquí verás qué es WebP, por qué tantas webs lo utilizan y cómo convertirlo rápidamente a JPG.</p>
+<p class="intro">Un sitio puede entregarte una imagen WebP cuando esperabas un JPG. Los navegadores modernos lo admiten bien, pero un editor, formulario o servicio de impresión concreto podría rechazarlo. Convertir una copia a JPG resuelve ese problema de compatibilidad, aunque conviene revisar algunas contrapartidas.</p>
 
 <div class="article-body">
 
 <h2>¿Qué es WebP?</h2>
-<p>WebP es un formato de imagen desarrollado por Google específicamente para la web. Puede hacer todo lo que hace JPG — compresión con pérdida para fotos — pero de forma más eficiente, produciendo normalmente archivos entre un 25 y 35 % más pequeños que un JPG de calidad equivalente. También puede hacer compresión sin pérdida como PNG, y admite transparencia, algo que JPG nunca ha tenido. En resumen, es un formato genuinamente más capaz, diseñado específicamente para cómo se usan realmente las imágenes en línea. Una foto JPG de 1,1 MB, por ejemplo, podría quedar en unos 770 KB como WebP con la misma calidad visual — un ahorro considerable si lo multiplicas por cada imagen de una página.</p>
+<p>Google desarrolló WebP como formato de imagen para la web. Admite compresión con y sin pérdida, transparencia y animación; el JPEG estándar se concentra en imágenes fijas con pérdida. WebP puede resultar más pequeño con un aspecto comparable, pero la diferencia varía según la imagen y el codificador. Los valores de calidad de codificadores distintos no representan una equivalencia universal: compara los resultados reales.</p>
 
-<h2>Por qué tantos sitios web usan WebP ahora</h2>
-<p>Archivos de imagen más pequeños significan páginas que cargan más rápido, y la velocidad de carga afecta desde la experiencia del usuario hasta el posicionamiento en buscadores. Una vez que los navegadores principales agregaron soporte nativo para WebP, los sitios web tuvieron un incentivo claro para cambiar sus imágenes — misma calidad visual, considerablemente menos datos para descargar. La mayoría de los sitios web modernos, sistemas de gestión de contenido, e incluso plataformas sociales ahora sirven imágenes como WebP por defecto, a menudo sin que el visitante promedio note el cambio de formato. Desde la perspectiva del sitio web, básicamente no hay desventaja — los visitantes obtienen una página más rápida, y el cambio de formato ocurre automáticamente detrás de escena.</p>
+<h2>Por qué los sitios entregan imágenes WebP</h2>
+<p>Cuando WebP consigue una reducción útil, disminuye la transferencia de imágenes y puede mejorar el tiempo de carga. Un sitio puede almacenarlo directamente o generarlo mediante un servicio que negocia el formato con el navegador. El equipo todavía debe considerar la calidad, el costo de codificación, la caché, los formatos alternativos y las herramientas que utilizarán esos archivos después.</p>
 
 <h2>Dónde falla la compatibilidad de WebP</h2>
 <p>La compatibilidad de la web no garantiza que todos los programas de tu computadora puedan abrir el formato. Algunos editores, servicios de impresión y formularios todavía rechazan archivos .webp, sobre todo si no se han actualizado. Un mensaje de “formato no compatible” no significa que el archivo esté dañado: la aplicación simplemente no sabe decodificar WebP.</p>
 
-<h2>WebP vs. JPG de un vistazo</h2>
+<h2>Una comparación medida entre WebP y JPG</h2>
 <table class="compare-table">
   <tr><th></th><th>WebP</th><th>JPG</th></tr>
   <tr><td>Tamaño de archivo típico</td><td>Menor</td><td>Mayor para la misma calidad</td></tr>
@@ -185,27 +185,27 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <figcaption>Medido en una foto de prueba de 3000×2250, Pillow 12.3.0 (libwebp), JPG y WebP ambos en calidad 85 — una reducción del 31 %. Trátalo como este ejemplo concreto, no como una garantía universal.</figcaption>
 </figure>
 
-<h2>Por qué a menudo no puedes evitar descargar WebP</h2>
-<p>Normalmente no eliges el formato. Al guardar una imagen, el navegador descarga la versión que ofrece el sitio, y cada vez con más frecuencia es WebP, aunque el original se haya creado en otro formato. Si la aplicación donde necesitas usarla no lo admite, convertir el archivo suele ser la solución más práctica.</p>
+<h2>Por qué el formato guardado puede ser distinto del esperado</h2>
+<p>Al guardar una imagen, normalmente conservas el recurso que el sitio entregó al navegador; puede ser WebP aunque exista otro formato de origen. Si el destino lo rechaza, puedes convertir una copia, usar un programa compatible u obtener otra versión del proveedor cuando esté disponible.</p>
 
 <h2>¿Convertir WebP a JPG pierde calidad?</h2>
-<p>Hay un pequeño paso de recodificación involucrado, igual que al convertir entre dos formatos comprimidos cualesquiera, pero con un ajuste de calidad razonable no es algo que notarás a simple vista. El cambio más notable suele ser un ligero aumento en el tamaño del archivo, ya que la compresión de JPG es menos eficiente que la de WebP — un intercambio justo por un archivo que realmente se abrirá en lo que sea que lo necesites.</p>
+<p>La conversión decodifica WebP y vuelve a codificar los píxeles mediante la compresión con pérdida de JPEG. Puede introducir defectos visibles según la fuente, los ajustes y las recodificaciones anteriores. JPEG tampoco admite canal alfa, por lo que las zonas transparentes deben combinarse con un color de fondo. Compara el resultado antes de descartar el WebP.</p>
 
 <h2>Convertir WebP a JPG</h2>
-<p>Si un programa o formulario solo acepta JPG, convertir WebP tarda unos segundos: la herramienta decodifica la imagen y crea un JPG estándar compatible con muchas más aplicaciones. Es habitual con imágenes descargadas de la web, donde el formato se eligió por rendimiento, no por el programa que utilizarás después.</p>
+<p>Si el destino exige JPEG, crea una copia JPG y comprueba sus dimensiones, fondo, aspecto y tamaño. JPEG tiene una aceptación amplia, pero ningún formato funciona en todas las aplicaciones. Conserva el WebP por si necesitas su transparencia o quieres realizar otra conversión.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Es WebP un formato "peor" que JPG?</strong> No — es técnicamente mejor en casi todos los aspectos. La única desventaja real es el soporte inconsistente fuera de los navegadores web.</p>
-<p><strong>¿Convertir WebP a JPG hará el archivo más grande?</strong> Normalmente sí, ya que JPG es el menos eficiente de los dos formatos. Es una contrapartida esperada a cambio de ganar compatibilidad universal.</p>
-<p><strong>¿Puedo evitar este problema usando JPG en todas partes?</strong> Para tus propios archivos, claro — pero no puedes controlar qué formato elige servir un sitio web, así que seguirás encontrándote con imágenes WebP que no elegiste.</p>
+<h2>Preguntas antes de convertir WebP a JPG</h2>
+<p><strong>¿WebP es mejor que JPG?</strong> Ningún formato gana en todos los flujos de trabajo. WebP ofrece más modos y funciones; JPEG puede intercambiarse con mayor facilidad en programas y servicios establecidos.</p>
+<p><strong>¿El JPG será más grande?</strong> Puede ser mayor o menor según el contenido y los ajustes de ambos codificadores. El tamaño por sí solo no demuestra que la calidad sea equivalente.</p>
+<p><strong>¿Conviene usar JPG en todas partes?</strong> Elige el formato según el destino. JPEG no conserva transparencia y no es ideal para todos los gráficos; además, un sitio puede seguir entregando WebP al guardar sus imágenes.</p>
 
 <div class="cta-box">
   <h3>Convierte WebP a JPG al instante</h3>
-  <p>El convertidor de WebP a JPG de Orisod funciona directamente en tu navegador. Selecciona los archivos y obtén imágenes JPG ampliamente compatibles, sin instalar programas y con los originales siempre en tu dispositivo.</p>
+  <p>El convertidor de WebP a JPG de Orisod funciona directamente en tu navegador. Selecciona los archivos y crea copias JPG de amplia compatibilidad sin enviar los originales a un servidor.</p>
   <a class="cta-button" href="/es/webp-to-jpg/">Convertir WebP a JPG →</a>
 </div>
 
-<p>WebP seguirá apareciendo a medida que más sitios optimicen sus imágenes. Saber convertirlo a JPG cuando una aplicación no lo admite convierte esa incompatibilidad en un problema de pocos segundos.</p>
+<p>WebP ya es un formato habitual en la web. Si otra aplicación lo rechaza, convertir una copia a JPG es práctico; revisa la transparencia, los defectos de compresión y el tamaño antes de utilizar el resultado.</p>
 
 </div>
 

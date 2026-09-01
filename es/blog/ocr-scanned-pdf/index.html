@@ -146,15 +146,15 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guías</span>
 <h1>Cómo hacer que un PDF escaneado sea buscable con OCR</h1>
-<p class="intro">Un PDF escaneado es solo una imagen de una página — no hay forma de buscar en él, seleccionar una frase o copiar un fragmento, por más veces que presiones Ctrl+F. El OCR soluciona esto leyendo la imagen y añadiendo texto real y buscable encima, sin cambiar cómo se ve la página.</p>
+<p class="intro">Muchos PDF escaneados contienen imágenes de página sin una capa de texto utilizable; por eso buscar y copiar no devuelve nada. El OCR puede reconocer caracteres y crear texto buscable, pero el resultado es una interpretación del escaneo, no una transcripción garantizada.</p>
 
 <div class="article-body">
 
 <h2>Por qué un PDF escaneado no es buscable desde el principio</h2>
-<p>Cuando se escanea (o fotografía) una página, lo que se guarda son píxeles — una imagen que a un ojo humano le parece texto. El buscador de un visor de PDF busca caracteres de texto reales dentro del archivo, y una página escaneada no tiene ninguno, así que la búsqueda no encuentra nada por más legible que se vea la página. La propia herramienta <a href="/es/extract-pdf-text/" style="color:var(--accent);">Extraer texto de PDF</a> de Orisod te dirá exactamente esto si la pruebas con un escaneo: "no se encontró texto seleccionable".</p>
+<p>Muchos PDF escaneados contienen imágenes de página sin una capa de texto utilizable; por eso buscar y copiar no devuelve nada. Puedes comprobarlo con la herramienta <a href="/es/extract-pdf-text/" style="color:var(--accent);">Extraer texto de PDF</a> de Orisod antes de ejecutar el OCR. El OCR puede reconocer caracteres y crear texto buscable, pero el resultado es una interpretación del escaneo, no una transcripción garantizada.</p>
 
 <h2>Qué añade realmente el OCR</h2>
-<p>El OCR (reconocimiento óptico de caracteres) lee la imagen, reconoce cada palabra y dónde se ubica en la página, y esta herramienta coloca ese texto reconocido de vuelta sobre la página — posicionado exactamente donde ya están las palabras visibles, pero renderizado de forma invisible. La imagen que puedes ver no cambia en absoluto; lo que cambia es que ahora existe una capa de texto real, seleccionable y buscable debajo de ella.</p>
+<p>El OCR analiza regiones de la imagen, predice caracteres y palabras y calcula sus posiciones. Un PDF buscable suele conservar visible el escaneo mientras añade detrás una capa de texto invisible. La alineación, el orden de lectura, la puntuación, las columnas y la codificación pueden tener errores incluso cuando una búsqueda sencilla funciona.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 330" width="700" height="330" role="img" aria-label="Comparación que muestra una página escaneada sin texto buscable a la izquierda, y la misma página después del OCR a la derecha, visualmente igual pero con una capa de texto buscable e invisible añadida." xmlns="http://www.w3.org/2000/svg">
@@ -183,29 +183,29 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <figcaption>La página visible no cambia — las líneas discontinuas representan la capa de texto invisible y seleccionable añadida debajo de la misma imagen, aproximadamente donde el OCR encontró cada palabra.</figcaption>
 </figure>
 
-<h2>Qué tan preciso es esto en realidad</h2>
-<p>El OCR nunca es 100% preciso, y qué tan cerca llega depende casi por completo de la calidad del escaneo. Un escaneo limpio, de alta resolución y bien iluminado de texto impreso en una fuente común normalmente se reconoce muy bien. Una foto borrosa tomada con el móvil, un escaneo de baja resolución, una fuente poco común o decorativa, o escritura a mano producirán más errores — a veces bastantes más. Trata el texto reconocido por OCR como un buen punto de partida para buscar y hojear, no como una transcripción garantizadamente precisa, y revisa cualquier parte donde una palabra o número equivocado realmente importe.</p>
+<h2>La precisión depende de algo más que la resolución</h2>
+<p>La calidad del escaneo importa, pero también el idioma, la escritura, la fuente, el diseño, la inclinación, el contraste, la compresión, las tablas, la letra manuscrita y el modelo de OCR. Revisa especialmente nombres, fechas, decimales y caracteres parecidos. Usa el resultado para buscar o preparar un borrador; compáralo con la página cuando un error tenga consecuencias legales, financieras, médicas, académicas u operativas.</p>
 
 <h2>Cuándo usar esta herramienta</h2>
 <ul>
   <li>Necesitas buscar en un documento escaneado una palabra o frase específica</li>
-  <li>Quieres seleccionar y copiar un pasaje en lugar de volver a escribirlo a mano</li>
+  <li>Quieres obtener un borrador de un pasaje para copiarlo y conservar la página original para comprobarlo</li>
   <li>Extraer texto de PDF te dijo que no se encontró texto — justo para ese caso de PDF escaneado sirve el OCR</li>
   <li>Quieres el texto reconocido como un archivo .txt sencillo, no solo incrustado en el PDF</li>
 </ul>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿El PDF se verá diferente después del OCR?</strong> No — la capa de texto es invisible, así que la página se ve exactamente igual que el escaneo original.</p>
-<p><strong>¿Cuánto tarda el OCR?</strong> Entre medio segundo y unos pocos segundos por página, según tu dispositivo y la complejidad del escaneo — no hay límite de páginas, pero los documentos más largos tardan proporcionalmente más.</p>
-<p><strong>¿Puedo obtener solo el texto plano en vez de un PDF?</strong> Sí — el mismo proceso de OCR también genera un archivo .txt descargable junto con el PDF buscable.</p>
+<h2>Comprueba el resultado del OCR</h2>
+<p><strong>¿La página se verá idéntica?</strong> A menudo el escaneo visible permanece igual, pero la reescritura, corrección de inclinación, compresión, rotación, sustitución de fuentes o posición del OCR pueden alterar su apariencia o comportamiento. Compara la salida con la fuente.</p>
+<p><strong>¿Cuánto tarda?</strong> Depende de dimensiones, páginas, idiomas, diseño, modelo, navegador y recursos del dispositivo. Puede haber límites de páginas, memoria o peso, y el tiempo no siempre crece de manera lineal.</p>
+<p><strong>¿Qué pierde una exportación TXT?</strong> Puede contener las palabras reconocidas, pero no conserva de forma fiable el diseño visual, las tablas, imágenes, columnas ni tipografía. Revisa el orden de lectura antes de reutilizarla.</p>
 
 <div class="cta-box">
   <h3>Haz que tu PDF escaneado sea buscable</h3>
-  <p>La herramienta OCR de PDF de Orisod reconoce el texto de cada página y lo añade de vuelta de forma invisible — completamente en tu navegador, con las contrapartidas de precisión explicadas directamente en la herramienta.</p>
+  <p>La herramienta OCR de PDF de Orisod analiza las páginas en tu navegador y puede crear texto buscable. Elige el idioma correcto cuando esté disponible y comprueba nombres, números, tablas y orden de lectura.</p>
   <a class="cta-button" href="/es/ocr-pdf/">Aplicar OCR a un PDF →</a>
 </div>
 
-<p>El OCR no convertirá un escaneo borroso en una transcripción perfecta — ninguna herramienta, en el navegador o no, puede prometer eso — pero para el caso común de hacer que un escaneo por lo demás no buscable sea localizable y seleccionable, cierra una brecha real que un PDF escaneado tiene por sí solo.</p>
+<p>El OCR puede facilitar la búsqueda y reutilización de un documento compuesto por imágenes, pero que sea buscable no demuestra que sea correcto. Conserva el escaneo original y trata la capa reconocida como datos derivados que necesitan revisión.</p>
 
 </div>
 

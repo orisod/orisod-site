@@ -149,29 +149,29 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guides</span>
 <h1>How to Find the Exact Color Code From Any Image</h1>
-<p class="intro">Whether you're matching a brand color, rebuilding a design, or just trying to recreate a shade you liked in a photo, guessing the color code never quite works. Here's how to pull the exact value straight from the image itself.</p>
+<p class="intro">When you need a color from a logo, screenshot, or photograph, sampling the image gives you the stored pixel value instead of an estimate made by eye. That value is useful, but it should not be confused with a guaranteed visual match on every screen or printer.</p>
 
 <div class="article-body">
 
-<h2>Why "close enough" doesn't work for color</h2>
-<p>Colors are deceptive to the eye. Two shades of blue can look nearly identical side by side and still be measurably different HEX codes — and that difference is exactly the kind of thing that shows up as an obvious mismatch once you use it in a design, a website, or a printed piece next to the original. If you need a color to match, you need the actual code, not your best guess at it.</p>
+<h2>Why sampling beats guessing</h2>
+<p>Lighting, surrounding colors, and display settings affect how a shade appears. Two blues that look alike may contain different RGB values, while the same RGB value can look different on two displays. Reading the pixel removes guesswork from the file itself; color management still matters when the result moves between devices or into print.</p>
 
-<h2>What HEX, RGB, and HSL codes actually mean</h2>
-<p>A HEX code like <code>#2563eb</code> is just a compact way of writing a color's red, green, and blue values in one string — the same information as an RGB code like <code>rgb(37, 99, 235)</code>, just formatted differently. HSL describes the same color a different way, using hue, saturation, and lightness instead. All three are just different notations for the identical color; which one you need usually just depends on what the software or codebase you're working in expects.</p>
+<h2>How HEX, RGB, and HSL describe a color</h2>
+<p>HEX and RGB can express the same red, green, and blue channel values in different notation: <code>#2563eb</code> corresponds to <code>rgb(37, 99, 235)</code>. HSL represents that RGB color through hue, saturation, and lightness. Converted HSL values are often rounded, so converting back may differ by a channel value. Choose the format required by your design tool or codebase.</p>
 
-<h2>The old, painful way</h2>
+<h2>You do not need a full image editor</h2>
 <p>Before browser-based tools existed, getting a color code out of an image meant opening it in a full image editor, using an eyedropper tool buried in a toolbar, and reading the value off a color picker dialog — assuming you had that kind of software installed at all. It works, but it's a lot of steps for something that should take five seconds, and it's simply not an option if you're on a phone or a computer without design software.</p>
 
-<h2>The simple way: click the pixel, get the code</h2>
-<p>A browser-based color picker skips all of that. You upload or drag in the image, click directly on the pixel whose color you want, and the tool reads that exact pixel's value and shows it back to you as HEX, RGB, and usually a few other formats at once. There's no eyedropper to hunt for and no software to install — the image never even needs to leave your device, since the color is read directly in the browser.</p>
+<h2>Select a pixel and read its value</h2>
+<p>Open the image in a browser-based picker and select the point you want to inspect. The tool reads the decoded pixel and reports its HEX, RGB, and HSL representations. With local browser processing, the image can remain on your device.</p>
 
 <figure class="theme-figure">
   <img class="theme-img" data-dark="/assets/blog/find-color-code-from-image/color-picker-tool-dark-en.webp" data-light="/assets/blog/find-color-code-from-image/color-picker-tool-light-en.webp" src="/assets/blog/find-color-code-from-image/color-picker-tool-dark-en.webp" alt="Orisod's color picker showing a clicked pixel on a photo and its exact HEX and RGB values" width="700" height="728" loading="lazy">
-  <figcaption>Click the pixel, get the exact code — no eyedropper hunting.</figcaption>
+  <figcaption>Select a point in the image to inspect its pixel value.</figcaption>
 </figure>
 
 <h2>What to do with the code once you have it</h2>
-<p>Once you've got the exact value, it drops straight into whatever you're building. Paste the HEX code into a CSS file, a design tool's color field, or a brand style guide, and you've got a pixel-perfect match instead of an approximation. This matters most when consistency counts — matching a logo color across a website, a slide deck, and printed materials, or recreating a specific shade from a reference photo in a new design.</p>
+<p>Copy the value into CSS, a design tool, or a working palette. For an established brand, verify it against the official style guide when one exists: a screenshot or compressed logo may not preserve the original brand value. Printed output also depends on color profiles, inks, paper, and the RGB-to-CMYK conversion.</p>
 
 <h2>Common situations where you'll need this</h2>
 <ul>
@@ -180,12 +180,12 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <li>You're recreating a color scheme from a photo — a product shot, a piece of art, a room you're decorating — and want the palette to be precise rather than approximate.</li>
   <li>You're debugging a CSS issue and need to confirm whether two elements that look the same color actually share the exact same value.</li>
 </ul>
-<p>In each case, the alternative to picking the color directly is trial and error — adjusting a color slider by eye until it looks "close enough," which rarely survives being placed next to the original.</p>
+<p>Sampling provides a reproducible starting value. If the source contains antialiasing, texture, shadows, or gradients, inspect several nearby pixels before deciding which value represents the color you need.</p>
 
-<h2>A word of caution with compressed images</h2>
-<p>One thing worth knowing: if your source image is a heavily compressed JPG, the color you pick might be very slightly off from the "true" original color. Lossy compression can shift pixel values a little around sharp edges and in areas with subtle gradients, especially at lower quality settings. It's rarely a visible difference, but if you're chasing an exact brand color, pick from the least-compressed version of the image you can find — a PNG or the original source file, rather than a screenshot of a screenshot.</p>
+<h2>Compression, edges, and color profiles affect the sample</h2>
+<p>JPEG compression can alter pixel values, particularly around sharp edges and gradients. Antialiasing can also blend a solid color with its background. Sample a flat area away from edges and use the least-compressed source available. An embedded color profile may further affect how software interprets and displays the values.</p>
 
-<h2>Quick answers</h2>
+<h2>Questions about sampling image colors</h2>
 <p><strong>Does this work with screenshots?</strong> Yes — any image format your browser can display, including PNG, JPG, and WEBP screenshots, works the same way.</p>
 <p><strong>Can I get more than one color from the same image?</strong> Yes, you can click as many different pixels as you need, one at a time, without re-uploading anything.</p>
 <p><strong>Do I need design software installed?</strong> No — the whole process happens in the browser tool itself, so there's nothing to install.</p>
@@ -196,7 +196,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <a class="cta-button" href="/color-picker-from-image/">Pick a Color From an Image →</a>
 </div>
 
-<p>Next time you need to match a color instead of guess at it, skip the eyedropper hunt and just click on the pixel that has the answer.</p>
+<p>A sampled pixel gives you a defensible value from the source file. Check neighboring pixels and the intended output medium before treating it as the final production color.</p>
 
 </div>
 

@@ -149,12 +149,12 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guías</span>
 <h1>SVG a PNG: cuándo necesitas una imagen de tamaño fijo</h1>
-<p class="intro">Si SVG es el mejor formato — infinitamente escalable, tamaño de archivo diminuto, nítido a cualquier nivel de zoom — ¿por qué convertirlo alguna vez a PNG? La respuesta está en una diferencia fundamental de cómo cada formato almacena una imagen.</p>
+<p class="intro">SVG es ideal para muchos logotipos, iconos y diagramas, pero algunos destinos exigen una cuadrícula fija de píxeles. Convertir a PNG cambia escalabilidad y capacidad de edición vectorial por dimensiones de mapa de bits previsibles y mayor compatibilidad en sistemas que no aceptan SVG.</p>
 
 <div class="article-body">
 
 <h2>Vectorial vs. mapa de bits: la diferencia principal</h2>
-<p>Un PNG (como un JPG o cualquier formato de foto típico) es una imagen de mapa de bits — almacena una cuadrícula fija de píxeles individuales, cada uno con su propio color. Acércate lo suficiente y eventualmente verás los cuadrados individuales, porque hay un límite fijo a la cantidad de detalle almacenado. Un SVG es una imagen vectorial en cambio — almacena instrucciones matemáticas para dibujar formas, líneas y curvas, lo que significa que puede renderizarse a cualquier tamaño, desde un icono diminuto hasta un cartel del tamaño de un edificio, y redibujarse con nitidez cada vez sin pixelación, nunca.</p>
+<p>PNG almacena una cuadrícula fija de píxeles. Ampliarlo más allá de sus dimensiones previstas exige interpolación y puede revelar suavidad o pixelación. SVG describe formas, trazados, texto, pintura y otras instrucciones que el programa interpreta al tamaño solicitado. Los elementos vectoriales escalan con limpieza, aunque imágenes incrustadas, filtros, fuentes y diferencias entre motores pueden afectar el resultado.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 380" width="700" height="380" role="img" aria-label="Una forma curva que se mantiene lisa al hacer zoom como SVG, frente a mostrar píxeles visibles al hacer zoom como PNG" xmlns="http://www.w3.org/2000/svg">
@@ -279,42 +279,42 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <figcaption>El vector se mantiene nítido a cualquier zoom. La imagen de mapa de bits termina mostrando sus píxeles.</figcaption>
 </figure>
 
-<h2>Por qué SVG suena estrictamente mejor — y por qué no siempre es utilizable</h2>
-<p>Para logotipos, iconos y gráficos sencillos, SVG suele ofrecer archivos pequeños, escalabilidad sin pérdida y elementos que siguen siendo editables. El problema es que muchas aplicaciones y plataformas no admiten SVG o exigen una imagen de píxeles con tamaño fijo. En esos casos conviene convertir a PNG, no porque sea superior, sino porque el destino requiere un formato de mapa de bits.</p>
+<h2>Por qué una fuente vectorial no siempre sirve como entrega</h2>
+<p>SVG suele funcionar bien para logotipos, iconos y diagramas, pero no siempre es menor ni editable en cualquier programa. Algunos archivos incluyen fuentes, efectos, recursos externos o trazados complejos que se muestran de manera distinta entre aplicaciones. Otros sistemas rechazan el contenido activo de SVG o solo aceptan imágenes de píxeles. PNG resuelve esos destinos de tamaño fijo.</p>
 
 <h2>Situaciones comunes que te obligan a rasterizar</h2>
 <ul>
-  <li><strong>Formularios de subida y plataformas que rechazan SVG</strong> por completo, a menudo por razones de seguridad — los archivos SVG técnicamente pueden contener código incrustado, así que algunas plataformas simplemente no permiten el formato en absoluto.</li>
+  <li><strong>Sistemas de carga que rechazan SVG</strong> porque puede contener scripts, enlaces, recursos externos y otros elementos activos si no se desinfecta correctamente.</li>
   <li><strong>Software o sistemas antiguos</strong> que nunca se construyeron para renderizar gráficos vectoriales y solo entienden imágenes basadas en píxeles.</li>
   <li><strong>Clientes de correo electrónico</strong>, muchos de los cuales no renderizan SVG de forma confiable o en absoluto, haciendo que una versión PNG de un logotipo sea la opción más segura para una firma de correo.</li>
   <li><strong>Componer sobre una foto o video</strong>, donde el software de edición trabaja en píxeles y necesita que el gráfico se suministre como una capa de mapa de bits.</li>
   <li><strong>Plataformas de redes sociales</strong>, que casi universalmente esperan subidas de imágenes de mapa de bits, no archivos vectoriales.</li>
 </ul>
 
-<h2>La contrapartida que aceptas</h2>
-<p>Una vez que un SVG se convierte a PNG, deja de ser infinitamente escalable — lo has fijado a un tamaño de píxeles específico, y agrandar ese PNG más tarde mostrará el mismo suavizado o pixelación que agrandar cualquier otra imagen de mapa de bits. Este es el único costo real de rasterizar: estás cambiando la ventaja principal de SVG por compatibilidad. La solución práctica es exportar a un tamaño mayor del que necesitas actualmente, dándote algo de margen antes de que la pérdida de calidad se vuelva visible.</p>
+<h2>Qué cambia al rasterizar</h2>
+<p>El PNG contiene el resultado renderizado a un tamaño concreto. Ya no conserva trazados editables, texto semántico, enlaces, animación ni comportamiento adaptable del SVG. Ampliarlo después no recupera esa información. Conserva el SVG como fuente y genera un PNG separado para cada tamaño necesario.</p>
 
 <h2>Elegir el tamaño de salida correcto</h2>
-<p>Ya que el PNG queda ahora fijo a las dimensiones que exportaste, piensa con anticipación en el tamaño más grande que realmente vas a necesitar — un logotipo destinado a un cartel impreso grande necesita una exportación PNG mucho más grande que uno destinado a un pequeño favicon de sitio web. En caso de duda, exportar más grande de lo necesario cuesta casi nada y deja margen para reducir después sin ninguna pérdida de calidad, mientras que agrandar un PNG pequeño mostrará suavizado visible.</p>
+<p>Elige las dimensiones indicadas por el destino y considera pantallas de alta densidad cuando corresponda. Para imprimir, relaciona el tamaño físico con los píxeles por pulgada exigidos. Exportar mucho más grande aumenta memoria y peso; reducir una imagen también puede introducir cambios de remuestreo. Si existen varios destinos, genera versiones específicas desde el SVG.</p>
 
 <h2>Un ejemplo real rápido</h2>
-<p>Digamos que diseñaste un logotipo como SVG, perfecto para tu sitio web ya que se mantiene nítido en cualquier tamaño de pantalla y resolución. Ahora necesitas ese mismo logotipo para una firma de correo, una plantilla de tarjeta de presentación impresa construida en software que no lee SVG, y una subida de foto de perfil de red social que solo acepta JPG o PNG. Ninguno de esos tres destinos puede usar el SVG original directamente — cada uno necesita su propia exportación PNG del tamaño apropiado, lo cual es normal y esperado, no una señal de que hiciste algo mal al diseñarlo como SVG en primer lugar.</p>
+<p>Un logotipo puede permanecer en SVG en el sitio, usar un PNG pequeño en una firma de correo y necesitar otra exportación para un perfil social. Una plantilla de impresión quizá acepte SVG, PDF u otro formato vectorial, así que revisa sus requisitos antes de rasterizar. El SVG continúa siendo el archivo maestro del que salen las entregas compatibles.</p>
 
 <h2>Convertir SVG a PNG</h2>
-<p>La conversión es rápida: selecciona el SVG y obtén un PNG con el tamaño que elijas y la transparencia del original conservada.</p>
+<p>Define ancho, alto, fondo y escala antes de renderizar. PNG admite transparencia alfa, pero el convertidor debe resolver correctamente opacidad, máscaras, filtros, fuentes y recursos externos del SVG. Revisa la salida en lugar de asumir que todas las características se conservaron.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Convertir SVG a PNG pierde calidad?</strong> No al tamaño que exportas — el PNG será nítido a ese tamaño específico. La pérdida solo se vuelve visible si más tarde intentas agrandar ese PNG más allá de sus dimensiones de exportación originales.</p>
-<p><strong>¿Puedo recuperar el SVG a partir de un PNG convertido?</strong> No — rasterizar es un viaje de un solo sentido. Guarda el archivo SVG original a salvo por si necesitas volver a exportarlo a otro tamaño después.</p>
+<h2>Revisa el PNG renderizado</h2>
+<p><strong>¿La conversión reduce la calidad?</strong> Rasterizar fija el resultado a una cuadrícula. Puede verse nítido al tamaño previsto, pero textos pequeños, trazos, filtros y fuentes incompatibles pueden cambiar incluso antes de ampliarlo. Revisa el PNG a su tamaño real.</p>
+<p><strong>¿Puedo recuperar SVG desde PNG?</strong> Un trazado automático puede crear vectores nuevos, pero no recupera la estructura, el texto, los estilos, los enlaces ni la geometría exacta del original. Conserva el SVG fuente.</p>
 <p><strong>¿Por qué algunas plataformas bloquean específicamente las subidas de SVG?</strong> Los archivos SVG pueden contener scripts incrustados, lo que crea un riesgo de seguridad en plataformas que muestran archivos subidos por usuarios a otros — muchas simplemente no permiten el formato para evitar ese riesgo por completo, sin importar si un archivo en particular es realmente dañino.</p>
 
 <div class="cta-box">
   <h3>Convierte SVG a PNG ahora</h3>
-  <p>El convertidor de SVG a PNG de Orisod funciona directamente en tu navegador. Selecciona el SVG, elige el tamaño y obtén un PNG nítido que conserva la transparencia.</p>
+  <p>El convertidor de SVG a PNG de Orisod renderiza el archivo en tu navegador a las dimensiones elegidas. Comprueba transparencia, fuentes, efectos y bordes en el PNG antes de utilizarlo.</p>
   <a class="cta-button" href="/es/svg-to-png/">Convertir SVG a PNG →</a>
 </div>
 
-<p>SVG no está siendo reemplazado por PNG — resuelven problemas distintos. Convertir es simplemente lo que haces cuando la situación frente a ti específicamente pide píxeles en lugar de matemáticas.</p>
+<p>Trata SVG como fuente escalable y PNG como exportación para un destino concreto. Así podrás crear nuevos tamaños y revisiones sin pedirle a una copia rasterizada que recupere información que ya no contiene.</p>
 
 </div>
 

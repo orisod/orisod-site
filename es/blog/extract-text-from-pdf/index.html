@@ -146,15 +146,15 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guías</span>
 <h1>Cómo extraer texto de un PDF (copiar o guardar como .txt)</h1>
-<p class="intro">Necesitas las palabras dentro de un PDF — para buscarlas, pegarlas en un correo, o procesarlas con algo que solo acepta texto plano — pero volver a escribir a mano un documento de varias páginas no es una opción real. Extraer el texto que ya está ahí toma segundos, cuando el PDF realmente tiene texto seleccionable para extraer.</p>
+<p class="intro">Cuando un PDF contiene objetos de texto utilizables, puedes exportarlos a un archivo de texto plano sin volver a escribir el documento. El resultado sirve para buscar y reutilizar contenido, pero su orden e integridad dependen de cómo se creó el PDF.</p>
 
 <div class="article-body">
 
-<h2>Qué hace la extracción de texto</h2>
-<p>Cada página de un PDF basado en texto guarda su contenido como caracteres reales, posicionados en la página — el mismo texto que puedes resaltar y copiar en un visor de PDF. La extracción lee todas las páginas y saca ese texto como texto plano, quitando las fuentes, columnas y diseño y dejando solo las palabras, en orden de lectura.</p>
+<h2>Qué lee un extractor de texto</h2>
+<p>Un PDF basado en texto guarda instrucciones para dibujar glifos y colocarlos en la página, normalmente acompañadas de mapas que permiten recuperar los caracteres. El extractor interpreta esos objetos y crea una secuencia lineal. Como PDF describe la apariencia y no garantiza un orden de lectura, las columnas, cajas de texto, cabeceras y fuentes inusuales pueden producir texto desordenado o incompleto.</p>
 
-<h2>Por qué algunos PDF no dan nada</h2>
-<p>Un documento escaneado — una página fotografiada, o un documento pasado por un escáner — normalmente se guarda como una imagen de una página, no como caracteres. Por lo general no hay texto que extraer, porque la página son solo píxeles que a un ojo humano le parecen letras, sin texto real detrás. Esta es la razón más común por la que la extracción sale vacía, y no es un error de la herramienta de extracción — es una limitación de lo que contiene una imagen escaneada sin más. Para que el texto de un documento escaneado sea extraíble hace falta OCR (reconocimiento óptico de caracteres), un proceso aparte que reconoce esas formas como letras y las incorpora como una capa de texto real — si un escaneo ya pasó por OCR, esta herramienta puede extraer ese texto directamente.</p>
+<h2>Por qué la extracción puede salir vacía o incompleta</h2>
+<p>Un escaneo compuesto solo por imágenes contiene píxeles, no objetos de texto, así que una extracción convencional encuentra poco o nada. El OCR puede reconocer la imagen y producir texto; algunos procesos añaden una capa buscable al PDF y otros entregan el texto por separado. También pueden existir problemas de fuentes, texto convertido en contornos, permisos, daños o páginas que mezclan texto e imágenes.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 380" width="700" height="380" role="img" aria-label="Comparación entre un PDF con capa de texto seleccionable, un escaneo compuesto solo por imágenes y un escaneo con una capa de texto OCR." xmlns="http://www.w3.org/2000/svg">
@@ -188,18 +188,18 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <figcaption>El texto puede extraerse cuando el PDF contiene una capa de texto. Los escaneos compuestos solo por imágenes necesitan OCR.</figcaption>
 </figure>
 
-<h2>Qué registra una buena extracción</h2>
-<p>Los límites de página importan incluso en texto plano — saber dónde termina una página y empieza la siguiente ayuda a encontrar algo después, especialmente en un documento largo. Una buena extracción marca esos límites claramente en el resultado en lugar de juntar el texto de todas las páginas en un solo bloque indiferenciado.</p>
+<h2>Los marcadores de página aportan contexto</h2>
+<p>Los marcadores permiten rastrear un fragmento hasta la página de origen y evitan que todo el documento quede unido en un bloque. No reconstruyen títulos, párrafos, columnas, notas al pie ni la estructura semántica.</p>
 
-<h2>Qué se pierde en el proceso</h2>
-<p>La extracción de texto plano es exactamente eso — plana. Las fuentes, el estilo negrita e itálica, el diseño en columnas y la estructura de tablas no se conservan, ya que nada de eso existe en el texto plano para empezar. Si necesitas mantener el diseño visual intacto, la extracción no es la herramienta correcta; querrías seguir trabajando con el PDF en sí, o convertirlo a un formato como Word que sí puede conservar el formato.</p>
+<h2>Qué no puede conservar el texto plano</h2>
+<p>El texto plano no conserva fuentes, énfasis, posiciones, tablas, imágenes, enlaces ni controles de formulario. Incluso una conversión a un documento editable puede aproximar el diseño de forma imperfecta. Conserva el PDF cuando importen la estructura visual, las citas o el contexto exacto de página.</p>
 
-<h2>Un ejemplo concreto</h2>
-<p>Tienes un informe de 40 páginas y necesitas buscar cada mención de una cláusula específica — algo con lo que la búsqueda de un visor de PDF a veces tiene dificultades en un documento largo con muchas imágenes. Extraer todo el texto a un solo archivo te permite buscarlo o procesarlo con una herramienta de texto plano, o pegar pasajes específicos en un correo sin volver a escribirlos.</p>
+<h2>Ejemplo: revisar un informe extenso</h2>
+<p>Supongamos que necesitas revisar cada aparición de una cláusula en un informe de 40 páginas. La exportación permite buscar o procesar el contenido con otras herramientas, y los marcadores ayudan a regresar al original. Verifica los fragmentos importantes contra el PDF, porque la extracción puede alterar el orden, los espacios y algunos caracteres.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Por qué mi texto extraído está vacío o es muy corto?</strong> El PDF probablemente es una imagen escaneada sin una capa de texto real — no hay texto seleccionable que sacar, solo píxeles. El OCR es un proceso aparte para hacer buscables los documentos escaneados.</p>
-<p><strong>¿La extracción conserva el formato original?</strong> No — es una extracción de texto plano, no una conversión que preserve el diseño. Las fuentes, columnas y tablas no se conservan.</p>
+<h2>Preguntas antes de extraer texto de un PDF</h2>
+<p><strong>¿Por qué el resultado está vacío o es muy corto?</strong> El PDF puede contener solo imágenes, usar contornos o mapas de caracteres inusuales, restringir el acceso, estar dañado o mezclar texto extraíble con páginas escaneadas. El OCR resuelve el texto en imágenes, pero no todas las demás causas.</p>
+<p><strong>¿La extracción conserva el formato?</strong> No. El texto plano descarta el formato visual y no representa de manera fiable tablas, columnas, imágenes ni campos de formulario.</p>
 <p><strong>¿Puedo saber de qué página vino un fragmento de texto?</strong> Sí, si la extracción marca los límites de página en el resultado — busca marcadores de página en vez de un solo bloque continuo de texto.</p>
 
 <div class="cta-box">
@@ -208,7 +208,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <a class="cta-button" href="/es/extract-pdf-text/">Extraer Texto de PDF →</a>
 </div>
 
-<p>Si un PDF tiene texto real y seleccionable, sacarlo como texto plano toma segundos — el único obstáculo real es un documento escaneado sin capa de texto alguna, que es una limitación del archivo de origen, no de la extracción en sí.</p>
+<p>Después de extraer, busca páginas ausentes, columnas mezcladas, caracteres de sustitución y palabras partidas. Utiliza OCR para páginas compuestas por imágenes y vuelve al PDF original cuando la precisión o el contexto sean importantes.</p>
 
 </div>
 

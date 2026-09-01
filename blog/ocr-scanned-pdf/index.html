@@ -146,15 +146,15 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guides</span>
 <h1>How to Make a Scanned PDF Searchable With OCR</h1>
-<p class="intro">A scanned PDF is just a picture of a page — there's no way to search it, select a sentence, or copy a phrase, no matter how many times you press Ctrl+F. OCR fixes that by reading the picture and adding real, searchable text back on top of it, without changing how the page looks.</p>
+<p class="intro">Many scanned PDFs contain page images without a usable text layer, so search and copy return nothing. OCR can recognize characters and create searchable text, but the result is an interpretation of the scan rather than a guaranteed transcript.</p>
 
 <div class="article-body">
 
 <h2>Why a scanned PDF isn't searchable in the first place</h2>
-<p>When a page is scanned (or photographed), what gets saved is pixels — a picture that happens to look like text to a human eye. A PDF viewer's search box looks for actual text characters in the file, and a scanned page has none, so search comes up empty no matter how legible the page looks. Orisod's own <a href="/extract-pdf-text/" style="color:var(--accent);">Extract PDF Text</a> tool will tell you exactly this if you try it on a scan: "no selectable text was found."</p>
+<p>Many scanned PDFs contain page images without a usable text layer, so search and copy return nothing. You can confirm this with Orisod's <a href="/extract-pdf-text/" style="color:var(--accent);">Extract PDF Text</a> tool before running OCR. OCR can recognize characters and create searchable text, but the result is an interpretation of the scan rather than a guaranteed transcript.</p>
 
 <h2>What OCR actually adds</h2>
-<p>OCR (optical character recognition) reads the picture, recognizes each word and where it sits on the page, and this tool then places that recognized text back onto the page — positioned exactly where the visible words already are, but rendered invisibly. The image you can see doesn't change at all; what changes is that a real, selectable, searchable text layer now exists underneath it.</p>
+<p>OCR analyzes image regions, predicts characters and words, and estimates their positions. A searchable PDF often keeps the page image visible while adding an invisible text layer aligned behind it. Alignment, reading order, punctuation, columns, and character encoding can be imperfect even when a simple search succeeds.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 330" width="700" height="330" role="img" aria-label="Comparison showing a scanned page with no searchable text on the left, and the same page after OCR on the right, visually unchanged but with an invisible searchable text layer added." xmlns="http://www.w3.org/2000/svg">
@@ -183,29 +183,29 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <figcaption>The visible page doesn't change — the dashed lines above represent the invisible, selectable text layer added underneath the exact same image, roughly where OCR found each word.</figcaption>
 </figure>
 
-<h2>How accurate this actually is</h2>
-<p>OCR is never 100% accurate, and how close it gets depends almost entirely on scan quality. A clean, high-resolution, well-lit scan of printed text in a common font typically recognizes very well. A blurry phone photo, a low-resolution scan, an unusual or decorative font, or handwriting will produce more mistakes — sometimes a lot more. Treat OCR'd text as a strong starting point for searching and skimming, not as a guaranteed-accurate transcript, and proofread anything where a wrong word or number would actually matter.</p>
+<h2>Accuracy depends on more than resolution</h2>
+<p>Scan quality matters, but so do language selection, script, font, page layout, skew, contrast, compression, tables, handwriting, and the OCR model. Names, dates, decimal points, and similar-looking characters deserve particular attention. Use recognized text for discovery and drafting; proofread it against the page whenever accuracy has legal, financial, medical, academic, or operational consequences.</p>
 
 <h2>When this is the right tool</h2>
 <ul>
   <li>You need to search a scanned document for a specific word or phrase</li>
-  <li>You want to select and copy a passage instead of retyping it by hand</li>
+  <li>You want a draft of a passage to copy, with the original page available for verification</li>
   <li>Extract PDF Text told you no text was found — that's exactly the scanned-PDF case OCR is for</li>
   <li>You want the recognized text as a plain .txt file, not just embedded in the PDF</li>
 </ul>
 
-<h2>Quick answers</h2>
-<p><strong>Will the PDF look different after OCR?</strong> No — the text layer is invisible, so the page looks exactly like the original scan.</p>
-<p><strong>How long does OCR take?</strong> Roughly half a second to a few seconds per page, depending on your device and the scan's complexity — there's no page limit, but longer documents take proportionally longer.</p>
-<p><strong>Can I get just the plain text instead of a PDF?</strong> Yes — the same OCR pass also produces a downloadable .txt file alongside the searchable PDF.</p>
+<h2>Check the OCR result</h2>
+<p><strong>Will the page look identical?</strong> Often the visible scan remains unchanged, but file rewriting, deskewing, compression, rotation, font substitution, or OCR placement can affect appearance or behavior. Compare the output with the source.</p>
+<p><strong>How long does OCR take?</strong> It depends on page dimensions, count, languages, layout, model, browser, and device resources. Tools may impose page, memory, or file-size limits, and processing time is not always linear.</p>
+<p><strong>What changes in a plain-text export?</strong> A TXT file may contain the recognized words but cannot preserve the page's visual layout, tables, images, columns, or typography reliably. Review reading order before reuse.</p>
 
 <div class="cta-box">
   <h3>Make Your Scanned PDF Searchable</h3>
-  <p>Orisod's OCR PDF tool recognizes the text on every page and adds it back invisibly — entirely in your browser, with the accuracy tradeoffs disclosed right in the tool.</p>
+  <p>Orisod's OCR PDF tool analyzes pages in your browser and can create searchable text. Select the correct language when available and verify names, numbers, tables, and reading order in the result.</p>
   <a class="cta-button" href="/ocr-pdf/">Run OCR on a PDF →</a>
 </div>
 
-<p>OCR won't turn a blurry scan into a perfect transcript — no tool, client-side or otherwise, can promise that — but for the common case of making an otherwise-unsearchable scan findable and selectable, it closes a real gap that a scanned PDF has on its own.</p>
+<p>OCR can make an image-only document easier to search and quote, but searchability is not proof of correctness. Keep the original scan and treat the recognized layer as derived data that requires checking.</p>
 
 </div>
 

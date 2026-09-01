@@ -149,12 +149,12 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guides</span>
 <h1>How to Fix a Sideways or Upside-Down Photo</h1>
-<p class="intro">You take a photo holding your phone sideways, it looks perfectly upright on your phone's screen — and then you upload it somewhere and it shows up rotated 90 degrees. This isn't random, and it isn't your phone's camera failing. Here's what's actually going on and how to fix it for good.</p>
+<p class="intro">A photo can look upright in your phone gallery and appear sideways after an upload. The file may be relying on an EXIF orientation tag that one application reads and another ignores. Normalizing the pixel orientation makes the result more consistent across software.</p>
 
 <div class="article-body">
 
-<h2>The pixels aren't always what got rotated</h2>
-<p>Here's the part that trips people up: a photo file can be technically stored sideways while still displaying upright, because of a small piece of metadata called the EXIF orientation flag. Instead of physically rotating every pixel when you tilt your phone to take a photo, many cameras save the image data exactly as the sensor captured it and just add a tag saying "display this rotated 90 degrees." Apps that read that tag show the photo correctly. Apps that ignore it show the raw, unrotated pixel data — which is why the same file can look perfectly fine in one app and sideways in another.</p>
+<h2>The file may rely on an orientation tag</h2>
+<p>Many cameras store the pixels in the sensor's native orientation and add an EXIF tag that tells software how to display them. Applications that honor the tag show the expected view. Software that ignores or removes it may display the stored pixel arrangement instead, causing the same file to appear differently.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 380" width="700" height="380" role="img" aria-label="Diagram showing a sideways-stored photo with an EXIF orientation tag telling software to display it rotated 90 degrees" xmlns="http://www.w3.org/2000/svg">
@@ -189,37 +189,37 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <figcaption>Some apps read the rotation tag. Others show the raw, sideways pixels.</figcaption>
 </figure>
 
-<h2>Why this causes so much confusion</h2>
-<p>Different software has wildly inconsistent support for reading the orientation flag. Modern phone galleries and most current browsers read it correctly. But some older image viewers, certain upload forms, some email clients, and various backend systems that process images (resizing them, converting formats, stripping metadata) either ignore the flag entirely or strip it out along the way — at which point the photo reverts to displaying however the raw pixel data is actually oriented. You didn't do anything wrong; the software just disagreed about which orientation to trust.</p>
+<h2>Why applications disagree</h2>
+<p>Support for EXIF orientation varies. Galleries and current browsers generally handle it, while some viewers, upload systems, email workflows, or image processors may ignore the tag or remove it during resizing and conversion. Once the tag is gone, the stored pixel orientation determines what appears on screen.</p>
 
-<h2>The two kinds of "sideways" fix</h2>
+<h2>Metadata changes and pixel rotation are different</h2>
 <ul>
   <li><strong>Metadata-only rotation.</strong> Some tools just change the EXIF flag without touching the actual pixel data. This is fast, but it only works reliably in software that respects the flag — anywhere that ignores it, the photo is right back to looking sideways.</li>
   <li><strong>Actual pixel rotation.</strong> A proper rotate tool physically re-renders the image data in the new orientation and saves it that way. The photo now looks correct in absolutely everything, regardless of whether the viewing software reads EXIF data or not, because there's no flag to ignore — the pixels themselves are oriented correctly.</li>
 </ul>
-<p>If you've ever fixed a photo's rotation in one app only to have it show up sideways again somewhere else, you likely ran into a metadata-only fix. A real pixel rotation solves the problem permanently.</p>
+<p>Changing only the orientation tag still depends on every later application reading that metadata. Rotating the image content and exporting it in the intended orientation removes that dependency for the new file.</p>
 
 <h2>Upside-down photos work the same way</h2>
-<p>A fully upside-down photo (180 degrees) follows the identical logic — it's either a mismatched orientation flag or pixel data that's genuinely stored inverted. The fix is the same: rotate the actual image content rather than relying on a metadata tag that not every piece of software will respect.</p>
+<p>The same explanation applies to a 180-degree inversion. Normalize the image content and export a corrected copy rather than relying only on a display instruction.</p>
 
 <h2>How to fix it permanently</h2>
-<p>Rotate the photo using a tool that re-renders the pixels rather than one that only edits metadata. You select the direction (90 degrees left, 90 degrees right, or a full 180), the tool redraws the image in the corrected orientation, and you get back a file that's correctly oriented at the pixel level — no flag required, no risk of it reverting to sideways the next time it passes through different software.</p>
+<p>Choose 90 degrees left, 90 degrees right, or 180 degrees, inspect the preview, and export a corrected copy. The new file should store the image content in the intended orientation instead of depending on the original EXIF tag.</p>
 
-<h2>How to tell which kind of fix you're dealing with</h2>
-<p>If a photo displays correctly in one app but sideways in another, that's a strong sign the file relies on the EXIF orientation flag rather than having genuinely rotated pixel data. If it shows up sideways absolutely everywhere, including in the app or device where it was originally taken, the pixel data itself is likely stored in that orientation and no flag is involved at all. Either way, the fix is the same — rotate the actual image content — but knowing which situation you're in explains why a "fix" sometimes doesn't seem to stick.</p>
+<h2>How to recognize an orientation-tag problem</h2>
+<p>If the image is upright in one application and sideways in another, inconsistent handling of the orientation tag is likely. If every application shows the same incorrect orientation, the stored content may already be rotated that way. Exporting a normalized copy addresses both cases.</p>
 
-<h2>Quick answers</h2>
-<p><strong>Why does the same photo look different on different devices?</strong> Because devices and apps vary in whether they honor the EXIF orientation flag — one device shows the "corrected" view, another shows the raw pixel data, and they can disagree even though it's the exact same file.</p>
-<p><strong>Does rotating a photo reduce its quality?</strong> A 90 or 180 degree rotation doesn't require any resampling or interpolation — every pixel just moves to a new position — so there's no quality loss from the rotation itself.</p>
-<p><strong>Will fixing the rotation once fix it everywhere I've already shared the photo?</strong> No — if you already uploaded or sent the sideways version somewhere, you'll need to re-upload the corrected file. The fix applies to the file you rotate, not to copies already sitting on other services.</p>
+<h2>Questions about rotating photos</h2>
+<p><strong>Why can the same file look different?</strong> Applications may interpret or discard the EXIF orientation tag differently.</p>
+<p><strong>Does rotation reduce quality?</strong> The geometric rotation itself does not require interpolation at 90 or 180 degrees, but exporting a JPG may re-encode it and introduce a small amount of compression loss. The result depends on the tool and output format.</p>
+<p><strong>Will existing uploads update automatically?</strong> No. The correction applies to the new file; replace copies already uploaded or sent where possible.</p>
 
 <div class="cta-box">
   <h3>Fix a Sideways Photo Permanently</h3>
-  <p>Orisod's rotate tool re-renders the actual pixel data, so your photo displays correctly everywhere — not just in apps that happen to read the orientation flag. Processed locally in your browser.</p>
+  <p>Rotate the image content and export a normalized copy that does not depend on the original orientation tag. Orisod processes the photo locally in your browser.</p>
   <a class="cta-button" href="/rotate-image/">Rotate an Image →</a>
 </div>
 
-<p>A sideways photo isn't a sign anything's broken — it's just two pieces of software disagreeing about a metadata flag. Rotating the actual pixels settles the disagreement for good.</p>
+<p>Save the corrected file and test it in the application where the problem appeared. That verifies the orientation is now stored as expected rather than merely displayed correctly in one viewer.</p>
 
 </div>
 

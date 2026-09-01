@@ -150,18 +150,18 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guías</span>
 <h1>Cómo comprimir una imagen sin perder calidad</h1>
-<p class="intro">Cada vez que has intentado reducir el tamaño de archivo de una foto, probablemente te preocupó que saliera borrosa o con manchas. Ese temor es razonable — una mala compresión de verdad arruina las fotos — pero hecho correctamente, puedes reducir un archivo drásticamente con una diferencia que nadie notará.</p>
+<p class="intro">Reducir una imagen implica equilibrar dimensiones, codificación, metadatos, compatibilidad y fidelidad. Una optimización sin pérdida puede conservar los píxeles decodificados; una compresión con pérdida no garantiza calidad idéntica, aunque la diferencia sea difícil de apreciar al tamaño previsto.</p>
 
 <div class="article-body">
 
 <h2>Por qué el tamaño del archivo y la calidad visible no están tan conectados como crees</h2>
-<p>Es tentador suponer que un archivo más pequeño automáticamente significa una imagen de peor aspecto, pero eso solo es cierto a partir de cierto punto. Las fotos están llenas de detalle redundante y casi invisible — gradientes sutiles, ruido y textura fina que el ojo humano apenas registra. La compresión funciona identificando y descartando primero exactamente ese tipo de datos, por lo que una foto bien comprimida con un ajuste sensato puede perder entre un 70 y 80 % de su tamaño de archivo y verse esencialmente idéntica al original.</p>
+<p>Un archivo menor no es automáticamente inadecuado: los codificadores representan con eficiencia información repetida o menos visible. El resultado cambia según imagen, formato, codificador, ajustes, pantalla y observador. Ningún ahorro de 70–80 % ni diferencia invisible se aplica a todas las fotos. Evalúa exportaciones al tamaño y en las condiciones reales de uso.</p>
 
-<h2>Compresión con pérdida vs sin pérdida, rápidamente</h2>
-<p>Hay dos enfoques fundamentalmente distintos. La compresión sin pérdida (cómo funciona PNG) reduce un archivo sin descartar ningún dato — obtienes un archivo más pequeño, pero la reducción de tamaño es limitada, típicamente mucho menos drástica que lo posible con fotos. La compresión con pérdida (cómo funciona JPG) descarta permanentemente algunos datos a cambio de reducciones de tamaño mucho mayores. Para fotografías específicamente, la compresión con pérdida es casi siempre la mejor opción, ya que los datos descartados se eligen específicamente por ser los visualmente menos importantes.</p>
+<h2>Con y sin pérdida responden a necesidades distintas</h2>
+<p>La codificación sin pérdida permite recuperar los mismos píxeles decodificados, aunque metadatos o funciones incompatibles todavía pueden cambiar. PNG no tiene pérdida; JPG sí. Las fotografías suelen comprimirse bien con formatos con pérdida, pero archivos maestros, imágenes científicas, edición repetida, texto o evidencia pueden exigir una fuente sin pérdida.</p>
 
-<h2>El punto ideal de calidad</h2>
-<p>La mayoría de herramientas de compresión te permiten fijar un nivel de calidad, normalmente como porcentaje o control deslizante. La relación entre ese ajuste y el tamaño de archivo no es lineal — bajar de 90 % a 70 % de calidad suele reducir el archivo dramáticamente con casi ningún cambio visible, mientras que bajar más de 40 % a 10 % apenas ahorra más espacio pero introduce artefactos de bloques evidentes. En la práctica, los ajustes de calidad entre aproximadamente 65 % y 80 % dan con el punto ideal para la mayoría de las fotos: archivos considerablemente más pequeños sin pérdida de calidad visible a tamaños de visualización normales.</p>
+<h2>El número de calidad no es una escala universal</h2>
+<p>Los controles dependen del codificador: 75 en una herramienta no equivale a 75 en otro formato o biblioteca. Tamaño y artefactos cambian de forma no lineal. Empieza alto, compara al tamaño de uso y al 100 %, y reduce solo hasta cumplir el requisito. No presentes 65–80 como rango seguro universal.</p>
 <figure class="theme-figure">
 <svg viewBox="0 0 700 380" width="700" height="380" role="img" aria-label="Gráfico de línea que muestra cómo el tamaño baja con fuerza entre 90% y 70% de calidad, y luego se estabiliza entre 40% y 10%" xmlns="http://www.w3.org/2000/svg">
 <title>Gráfico de línea que muestra cómo el tamaño baja con fuerza entre 90% y 70% de calidad, y luego se estabiliza entre 40% y 10%</title>
@@ -213,31 +213,31 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 </figure>
 
 <h2>Un ejemplo concreto</h2>
-<p>Toma una foto típica de teléfono de 12 megapíxeles — en las mediciones de arriba, una foto de prueba de 2.0 MB. Comprimida al 80 % de calidad sin cambiar sus dimensiones, bajó a unos 950 KB, una reducción de tamaño del 53 % — mientras se ve idéntica a tamaños de visualización normales en pantalla. Baja la calidad al 30 % en cambio, y solo baja un poco más, a unos 459 KB, pero ahora probablemente verás bloques visibles en los bordes y en áreas suaves como cielos o tonos de piel. El grueso del ahorro útil ocurre temprano; el riesgo para la calidad se concentra en el extremo bajo.</p>
+<p>En el ejemplo medido de Orisod, una imagen de 2,0 MB quedó en unos 950 KB con calidad 80 y 459 KB con calidad 30. Esas cifras describen esa imagen y ese codificador. Compara bordes, degradados, piel, texto y textura en tu exportación; una vista normal puede ocultar artefactos visibles al recortar, imprimir o volver a editar.</p>
 
 <h2>Otras cosas que reducen un archivo además de la calidad</h2>
 <ul>
   <li><strong>Las dimensiones físicas.</strong> Una foto redimensionada de 4000px de ancho a 1600px de ancho (todavía de sobra para la mayoría de usos web y en pantalla) terminará mucho más pequeña que la misma foto simplemente recomprimida a tamaño completo.</li>
   <li><strong>El formato de archivo.</strong> Cambiar de PNG a JPG para una fotografía por sí solo suele reducir significativamente el tamaño, independientemente de cualquier control de calidad.</li>
-  <li><strong>Los metadatos eliminados.</strong> Las fotos de cámara llevan datos EXIF — modelo de cámara, ajustes, a veces ubicación GPS — que añaden una cantidad pequeña pero real de tamaño de archivo extra que las herramientas de compresión suelen eliminar automáticamente.</li>
+  <li><strong>Eliminar metadatos.</strong> EXIF, XMP, IPTC, miniaturas, perfiles y GPS añaden bytes. Quitarlos reduce tamaño y puede mejorar privacidad, pero también descarta fechas, información de color, autoría y datos de flujo. Comprueba qué conserva la herramienta.</li>
 </ul>
 <p>Combinar una reducción modesta de calidad con un tamaño en píxeles apropiadamente más pequeño suele ser más efectivo, y produce un mejor resultado, que bajar agresivamente el control de calidad en una imagen enorme.</p>
 
 <h2>Cómo comprimir correctamente</h2>
-<p>El enfoque práctico: usa una herramienta donde controles directamente el ajuste de calidad y puedas ver o comparar los tamaños de archivo antes/después, en lugar de una que aplique un nivel de compresión fijo y desconocido. Empieza alrededor del 75-80 % de calidad, verifica que el resultado se vea bien al tamaño en el que realmente lo mostrarás o imprimirás, y solo baja más si específicamente necesitas un archivo más pequeño y puedes tolerar algo más de suavizado visible.</p>
+<p>Trabaja desde el original, define dimensiones, formato, máximo de bytes, transparencia y metadatos, y genera pruebas. Compara al tamaño final de pantalla o impresión y revisa detalles críticos a resolución completa. Conserva la fuente y registra ajustes si necesitas repetir el resultado.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Comprimir una imagen varias veces sigue degradándola?</strong> Sí — cada ronda de compresión con pérdida descarta un poco más de datos, así que volver a guardar un JPG repetidamente reducirá gradualmente la calidad. Comprime siempre desde el archivo original, no desde una copia ya comprimida.</p>
-<p><strong>¿Cuál es la diferencia entre comprimir y redimensionar?</strong> Comprimir reduce el tamaño del archivo manteniendo las mismas dimensiones en píxeles; redimensionar cambia el ancho y alto reales. Resuelven problemas distintos y combinan bien juntos.</p>
-<p><strong>¿Hay un ajuste de calidad "correcto" para cada foto?</strong> No exactamente — una foto con detalle fino y textura muestra artefactos de compresión antes que una imagen más simple y suave, así que el rango seguro (aproximadamente 65-80 %) es un punto de partida para verificar visualmente, no una regla fija.</p>
+<h2>Preguntas antes de sustituir la fuente</h2>
+<p><strong>¿La recompresión causa degradación?</strong> Volver a codificar con pérdida puede acumular artefactos, según ajustes y contenido. Genera derivados desde la mejor fuente disponible y evita recomprimir un derivado.</p>
+<p><strong>¿Cómo difieren compresión y redimensionado?</strong> Codificar puede reducir bytes sin cambiar dimensiones; redimensionar altera la cuadrícula y exige remuestreo y normalmente recodificación. Ambos pueden cambiar la calidad.</p>
+<p><strong>¿Existe un ajuste correcto?</strong> No. Contenido, formato, codificador, destino, edición posterior y riesgo aceptable lo determinan. Usa resultados medidos, no un porcentaje universal.</p>
 
 <div class="cta-box">
   <h3>Comprime una imagen con el nivel de calidad adecuado</h3>
-  <p>El Compresor de imágenes de Orisod permite ajustar la calidad y comparar el peso antes y después de comprimir. Todo se procesa localmente en tu navegador y los archivos permanecen en tu dispositivo.</p>
+  <p>El Compresor de imágenes de Orisod permite ajustar la calidad de su codificador y comparar pesos en tu navegador. Trata el número como control de esta implementación y revisa la descarga antes de sustituir nada.</p>
   <a class="cta-button" href="/es/compress-image/">Comprimir una Imagen →</a>
 </div>
 
-<p>Una buena compresión no se trata de reducir un archivo lo máximo posible — se trata de encontrar el punto donde el tamaño baja significativamente y la calidad no. Ese punto existe para casi cualquier foto; solo necesitas una herramienta que te permita encontrarlo.</p>
+<p>La meta es el archivo más pequeño que cumpla los requisitos visuales, técnicos y de conservación. Un derivado puede servir para compartir mientras el original sigue siendo necesario para editar, imprimir o archivar.</p>
 
 </div>
 

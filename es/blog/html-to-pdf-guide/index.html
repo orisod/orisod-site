@@ -146,45 +146,45 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guías</span>
 <h1>Cómo convertir HTML a PDF (pega el código y obtén el archivo)</h1>
-<p class="intro">Tienes un fragmento HTML, una plantilla de factura o un informe con estilo y lo necesitas como un PDF fijo y compartible en lugar de código sin procesar. Convertir HTML directamente a PDF, sin instalar nada ni levantar un servidor, convierte el marcado con estilo en un documento en unos segundos.</p>
+<p class="intro">Una factura, informe o fragmento HTML puede renderizarse como PDF, pero el resultado depende del CSS compatible, recursos, fuentes, página y método de paginación. Revisa la entrada exacta y trata el PDF como una exportación visual, no como una copia del comportamiento del código.</p>
 
 <div class="article-body">
 
 <h2>Cómo funciona la conversión de HTML a PDF</h2>
-<p>El HTML que proporcionas se renderiza exactamente como lo haría un navegador — diseño, colores, fuentes, todo lo definido en estilos en línea o bloques &lt;style&gt; — y ese resultado renderizado luego se captura y se coloca en un PDF. Es efectivamente tomar una "captura de pantalla" de alta resolución de la página renderizada y empaquetarla como documento, en lugar de analizar el HTML en algún formato intermedio específico de PDF.</p>
+<p>Orisod renderiza HTML y CSS compatibles en un contexto de navegador, captura el resultado y coloca esa salida rasterizada en páginas PDF. No conserva el DOM como contenido PDF estructurado. Las palabras pueden quedar como píxeles; accesibilidad, enlaces, formularios, scripts y encabezados semánticos no sobreviven automáticamente.</p>
 
 <figure class="theme-figure">
   <img class="theme-img" data-dark="/assets/blog/html-to-pdf-guide/html-to-pdf-guide-dark-es.webp" data-light="/assets/blog/html-to-pdf-guide/html-to-pdf-guide-light-es.webp" src="/assets/blog/html-to-pdf-guide/html-to-pdf-guide-dark-es.webp" alt="Herramienta HTML a PDF de Orisod mostrando código HTML pegado junto a su vista previa renderizada" width="860" height="1022" loading="lazy">
-  <figcaption>Mira exactamente cómo quedará antes de convertir.</figcaption>
+  <figcaption>Usa la vista previa para detectar diferencias visibles y comprueba después el PDF por separado.</figcaption>
 </figure>
 
 <h2>Qué puede y qué no puede hacer con un sitio web en vivo</h2>
-<p>Una suposición común es que puedes darle a una herramienta una URL y obtener de vuelta un PDF de esa página — pero un convertidor que funciona en el navegador sin servidor detrás no puede obtener la página de otro sitio web por ti; eso requeriría infraestructura del lado del servidor para hacer la solicitud. Lo que sí puede hacer es convertir código HTML directamente, lo que significa que la solución para convertir una página en vivo es sencilla: ver el código fuente de la página, copiar el HTML relevante, y pegarlo.</p>
+<p>Esta herramienta acepta contenido HTML, no una URL. Copiar solo el código fuente no equivale a cargar el sitio: pueden faltar rutas relativas, estilos, scripts, datos autenticados, shadow DOM, marcos, fuentes y contenido dinámico. Usa un documento autocontenido con recursos locales o incrustados y autorizados cuando necesites reproducibilidad.</p>
 
 <h2>Por qué algunas imágenes no aparecen</h2>
-<p>Una imagen referenciada por URL desde otro sitio web necesita que ese sitio permita explícitamente el acceso de origen cruzado para que el navegador pueda leer sus datos de píxeles — sin ese permiso, el navegador puede ver la imagen pero no puede incluir su contenido en una captura renderizada. Esta es una restricción de seguridad del navegador (CORS), no un error en el proceso de conversión, y afecta principalmente a las imágenes alojadas en otro lugar en vez de las incrustadas directamente como datos.</p>
+<p>Las imágenes remotas pueden fallar por CORS, políticas de seguridad, contenido mixto, autenticación, URL vencidas, errores de red o tiempo de captura. Las rutas relativas copiadas también pierden su URL base. Incrusta recursos autorizados cuando sea práctico y espera a que imágenes y fuentes terminen de cargar.</p>
 
 <h2>Cómo funciona la paginación para contenido largo</h2>
-<p>El contenido más alto que una sola página impresa necesita dividirse en varias páginas, y la forma directa de hacerlo es un corte recto a una altura fija — la página 1 recibe el primer tramo, la página 2 el siguiente, y así sucesivamente, sin hueco ni superposición entre ellas. Esto funciona bien la mayoría de las veces, especialmente con contenido espaciado de forma natural como títulos y párrafos, pero es un corte geométrico y no una paginación consciente del diseño — una línea de texto denso que caiga justo en ese punto de corte podría, en principio, quedar dividida visualmente entre dos páginas.</p>
+<p>El método actual de Orisod corta el contenido renderizado a alturas fijas. No comprende párrafos, filas, imágenes ni reglas CSS de fragmentación, así que cualquier elemento puede dividirse. Las páginas largas también pueden superar límites de memoria o lienzo del navegador. Revisa cada salto y ajusta la entrada cuando sea necesario.</p>
 
 <h2>Elegir el tamaño de página y la orientación</h2>
 <p>A4 y carta cubren la mayoría de los documentos estándar; Legal es común para contratos y ciertos formularios. La orientación importa más de lo que parece — una tabla ancha o un diseño en orientación horizontal se verá apretado y forzado en una página vertical alta, mientras que la vertical le sienta bien al contenido de texto normal. Acertar con estos ajustes antes de convertir ahorra tener que volver a descargar después.</p>
 
-<h2>Un ejemplo concreto</h2>
-<p>Creaste una factura simple con estilo como archivo HTML — un logo, algo de CSS para espaciado y colores, una tabla de conceptos — y necesitas enviarla como PDF en lugar de como una página web editable. Pegar el HTML, confirmar que la vista previa se ve bien, y convertir produce una versión en PDF fija en segundos, sin necesitar programas de diseño ni una canalización de renderizado del lado del servidor.</p>
+<h2>Prepara una factura autocontenida</h2>
+<p>Para una factura HTML, incrusta el logotipo autorizado, incluye CSS y fuentes, define el papel y verifica los totales. Compara PDF y vista previa, atendiendo a saltos, filas cortadas, imágenes ausentes y selección de texto. Conserva el HTML y los datos como fuente.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Puedo convertir un sitio web en vivo dando su URL?</strong> No directamente — una herramienta que funciona en el navegador sin servidor no puede obtener la página de otro sitio. En su lugar, copia el código fuente HTML de esa página y pégalo.</p>
-<p><strong>¿Por qué faltan algunas de mis imágenes en el PDF?</strong> Probablemente se cargan desde un sitio que bloquea el acceso de origen cruzado, lo que impide que el navegador lea sus datos de píxeles.</p>
-<p><strong>¿Una línea de texto puede quedar cortada a la mitad entre páginas?</strong> Es posible con contenido denso, ya que los saltos de página son un corte a altura fija y no una paginación consciente del reflujo — el contenido con espaciado natural (títulos, elementos de lista, saltos de párrafo) casi siempre evita esto.</p>
+<h2>Verifica algo más que la vista previa</h2>
+<p><strong>¿Puedo convertir un sitio por URL?</strong> No con esta herramienta. Copiar el código puede resultar incompleto porque la página depende de recursos externos y dinámicos.</p>
+<p><strong>¿Por qué faltan imágenes?</strong> CORS es una posibilidad; revisa también rutas relativas, autenticación, CSP, contenido mixto, errores de carga y tiempo de captura.</p>
+<p><strong>¿Puede cortarse contenido?</strong> Sí. El corte fijo puede dividir texto, imágenes y filas sin importar el espaciado. Revisa todas las páginas.</p>
 
 <div class="cta-box">
   <h3>Convierte tu HTML a PDF</h3>
-  <p>La herramienta HTML a PDF de Orisod muestra una vista previa en tiempo real del código pegado o del archivo seleccionado y lo convierte en un documento paginado. Todo se procesa directamente en tu navegador.</p>
+  <p>La herramienta HTML a PDF de Orisod previsualiza HTML compatible y crea un PDF rasterizado y paginado en tu navegador. Comprueba recursos, fuentes, saltos, enlaces, selección y accesibilidad.</p>
   <a class="cta-button" href="/es/html-to-pdf/">HTML a PDF →</a>
 </div>
 
-<p>Para un fragmento con estilo, una plantilla o un informe que ya tienes como HTML, convertir directamente a PDF es más rápido que exportar desde la herramienta que lo generó en primer lugar — pega el código, confirma la vista previa, y tienes un archivo listo para compartir.</p>
+<p>Este proceso sirve para HTML autocontenido cuya apariencia rasterizada ya revisaste. Si necesitas texto buscable, accesibilidad etiquetada, enlaces activos, CSS de impresión o paginación consciente del diseño, usa un motor que preserve esas funciones.</p>
 
 </div>
 

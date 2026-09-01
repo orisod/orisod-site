@@ -149,40 +149,40 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guides</span>
 <h1>How to Rotate Pages in a PDF (Free, No Software)</h1>
-<p class="intro">You open a PDF and one page — or all of them — is sideways, forcing you to tilt your head or rotate your whole screen just to read it. Here's why scanned and photographed PDFs end up this way, and how to fix the rotation properly.</p>
+<p class="intro">A scanned PDF may contain one sideways page or an entire document in the wrong orientation. Rotate only the affected pages, review the result, and keep the source until you know the corrected file still behaves as expected.</p>
 
 <div class="article-body">
 
-<h2>Why PDFs end up sideways in the first place</h2>
-<p>The two most common causes are both about how the page got into the PDF in the first place, not anything wrong with the PDF itself. A document scanner or automatic feeder can pull a page through in the wrong orientation, especially with mixed batches of portrait and landscape pages. Or a page was photographed with a phone held sideways, and the photo's orientation carried straight through into the PDF without correction. Either way, the content itself is fine — it's just facing the wrong direction, and nothing about the underlying scan or photo needs to be redone.</p>
+<h2>How pages acquire the wrong orientation</h2>
+<p>A scanner may capture a sheet in the wrong direction, particularly in a mixed portrait-and-landscape batch. A phone image can also enter the PDF with an unexpected orientation. If the page is complete and legible, changing its PDF rotation is usually enough; rescan when the capture itself is cropped, blurred, or incomplete.</p>
 
-<h2>Per-page rotation vs. whole-document rotation</h2>
-<p>These are two different problems that look similar. Sometimes an entire document is rotated consistently — every page needs the same 90 or 180-degree turn, which is a quick, uniform fix. Other times, only certain pages are affected — a scanner fed most of a stack correctly but flipped two pages in the middle, so page 4 and page 11 need rotating while everything else stays as it is. A useful rotation tool handles both cases: rotating everything at once, or targeting specific pages individually.</p>
+<h2>Rotate selected pages or the whole document</h2>
+<p>When every page faces the same wrong direction, apply one rotation to the document. In a mixed scan, select only the pages that need correction. Review thumbnails before saving because different pages may require different turns.</p>
 
 <figure class="theme-figure">
   <img class="theme-img" data-dark="/assets/blog/rotate-pdf-pages/rotate-pdf-pages-dark-en.webp" data-light="/assets/blog/rotate-pdf-pages/rotate-pdf-pages-light-en.webp" src="/assets/blog/rotate-pdf-pages/rotate-pdf-pages-dark-en.webp" alt="Orisod's PDF rotator showing an Original vs. rotated Preview comparison of page 1, the rotation-angle buttons, and a text field for targeting specific pages" width="800" height="818" loading="lazy">
   <figcaption>Rotate the whole document, or just the pages that need it.</figcaption>
 </figure>
 
-<h2>Does rotating change anything else about the page?</h2>
-<p>No — rotation only changes the page's orientation metadata and how it's displayed and printed. The actual content, text, and image quality inside the page are completely unaffected; nothing is being redrawn, recompressed, or altered beyond which way the page faces. It's a purely cosmetic, non-destructive fix.</p>
+<h2>What PDF rotation changes</h2>
+<p>Many PDF tools change the page's rotation entry rather than rasterizing its content, so text and images can retain their existing resolution. The saved PDF is still a modified file. Check annotations, form fields, links, page boxes, and digital signatures when they matter, because editing or rewriting the document can affect those features.</p>
 
 <h2>How to tell if a page needs 90°, 180°, or 270° rotation</h2>
 <p>A page rotated 90 degrees needs a quarter turn to read normally — text runs vertically instead of horizontally. A page rotated 180 degrees is fully upside-down. A 270-degree rotation looks similar to a 90-degree one at a glance but turns the wrong way if you guess instead of checking, so it's worth previewing the result before finalizing rather than assuming which direction fixes it. It's also worth checking each affected page individually rather than assuming the whole document needs the same rotation amount, since a scanner jam or a mixed photo batch can rotate different pages in different directions.</p>
 
-<h2>A common real-world case</h2>
+<h2>Example: one landscape page in a portrait scan</h2>
 <p>You scan a stack of receipts or forms using a multi-page scanner, and midway through, one page gets fed in landscape while the rest are portrait. The scan finishes as one PDF, mostly readable, except that one page requires everyone who opens the file to rotate their device or squint sideways. Rotating just that one page, rather than reprocessing the entire scan, fixes it in seconds.</p>
 
-<h2>Rotating before you share or print</h2>
-<p>A sideways page is a minor annoyance on screen but becomes a real problem when printed — a printed page facing the wrong way looks unmistakably like a mistake in a document meant to look professional, whether it's a contract, a report, or an application. Rotating pages before sharing or printing takes the same few seconds either way, but catching it beforehand avoids sending out a document that looks obviously unfinished.</p>
+<h2>Review on screen and in the print preview</h2>
+<p>After rotating, scroll through every page and open the print preview. Confirm orientation, paper size, margins, and scaling. A corrected screen view does not by itself guarantee that a particular printer setting will produce the intended layout.</p>
 
-<h2>Rotation vs. re-scanning</h2>
-<p>It's tempting to just re-scan or re-photograph a sideways page from scratch, but that means finding the original document again, redoing the scan setup, and hoping the second attempt doesn't introduce a new problem. Rotating the existing page takes a fraction of the time and works from the file you already have — there's rarely a good reason to redo the capture step just to fix an orientation issue.</p>
+<h2>When rotation is enough and when to rescan</h2>
+<p>Use rotation when the page is complete, readable, and merely facing the wrong direction. Rescan or re-photograph it when text is cut off, focus is poor, glare hides content, or the resolution is insufficient. Rotation cannot repair those capture problems.</p>
 
-<h2>Quick answers</h2>
-<p><strong>Does rotating a PDF page reduce its quality?</strong> No — rotation doesn't touch the actual page content or resolution, only its display orientation.</p>
+<h2>Questions before rotating PDF pages</h2>
+<p><strong>Does rotation reduce quality?</strong> A metadata-based page rotation can preserve the existing content streams and resolution. Confirm the result, since implementations may differ.</p>
 <p><strong>Can I rotate just one page in a multi-page document?</strong> Yes, a good rotation tool lets you target individual pages rather than forcing the same rotation on the entire file.</p>
-<p><strong>Will rotating affect the file size?</strong> No meaningfully — rotation changes orientation metadata, not the underlying image or text data, so file size stays essentially the same.</p>
+<p><strong>Will the file size change?</strong> It may change slightly when the PDF is rewritten, even if the page content is not recompressed. Compare the files if size is important.</p>
 
 <div class="cta-box">
   <h3>Rotate Your PDF Pages Now</h3>
@@ -190,7 +190,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <a class="cta-button" href="/rotate-pdf/">Rotate PDF Pages →</a>
 </div>
 
-<p>A sideways page is one of the most common small annoyances in a scanned document, and also one of the fastest to fix — a couple of clicks, and the whole file reads the right way up, without touching anything else about the document.</p>
+<p>Save the rotated result as a separate copy and verify every affected page. For signed, interactive, or otherwise complex PDFs, confirm that the document's other features still work before replacing the source.</p>
 
 </div>
 

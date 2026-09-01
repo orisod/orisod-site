@@ -261,10 +261,10 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <h2>Cómo generar una cadena Base64 a partir de una imagen</h2>
 <p>Convertir una imagen a Base64 consiste en leer sus datos binarios y representarlos como texto, algo que rara vez necesitas hacer a mano. Una herramienta en el navegador se encarga del proceso: seleccionas la imagen y obtienes la cadena codificada, con o sin el prefijo completo del URI de datos, lista para utilizar en CSS, HTML o JSON.</p>
 
-<h2>Un ejemplo concreto</h2>
+<h2>Icono pequeño frente a foto de producto</h2>
 <p>Un icono de 2 KB utilizado en toda la navegación puede ser un buen candidato: codificado ocupa unos 2,7 KB dentro del CSS y evita una solicitud adicional. Una foto de producto de 500 KB no lo es; en Base64 rondaría los 665 KB, aumentaría el tamaño del HTML o JSON y no podría guardarse en caché como un archivo independiente.</p>
 
-<h2>Respuestas rápidas</h2>
+<h2>Preguntas frecuentes sobre Base64</h2>
 <p><strong>¿Base64 comprime la imagen?</strong> No. Solo representa los mismos datos de otra forma y, de hecho, la cadena resultante ocupa más que el archivo binario original.</p>
 <p><strong>¿Puedo recuperar una imagen a partir de Base64?</strong> Sí. Al decodificar la cadena se reconstruyen los datos binarios originales del archivo.</p>
 <p><strong>¿Base64 protege la imagen? No. Es una codificación</strong>, no un método de cifrado. Cualquiera puede decodificar la cadena y recuperar la imagen sin utilizar una clave ni una contraseña.</p>
