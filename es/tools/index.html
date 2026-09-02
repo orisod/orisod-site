@@ -43,6 +43,7 @@
   --dropzone-border:#374151;
   --icon-alpha:.30;
   --grid-alpha:.05;
+  --tools-gear-alpha:.18;
   --card-shadow:0 8px 24px rgba(0,0,0,.35);
 }
 :root[data-theme="light"]{
@@ -55,6 +56,7 @@
   --dropzone-border:#cbd5e1;
   --icon-alpha:.24;
   --grid-alpha:.10;
+  --tools-gear-alpha:.14;
   --card-shadow:0 8px 24px rgba(15,23,42,.08);
 }
 *{box-sizing:border-box;}
@@ -84,6 +86,59 @@ body{
 .theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
 .theme-toggle:hover{border-color:var(--accent);}
 main{padding:40px 20px 70px 20px;}
+
+/* Continuous sticky gear background for the WHOLE /tools page — separate,
+   independent mechanism from the homepage hero gear (PR #74). That one pins
+   through a short spacer then detaches before its grid; this one has no
+   detach point at all, by design: it uses the standard "sticky background +
+   negative margin" technique instead of a spacer. .tools-pin-inner claims one
+   viewport of height, then pulls .tools-page-content back up by the same
+   amount via margin-bottom, so real content overlaps it immediately — that
+   leaves the sticky layer with the *entire* page's height as its stick range,
+   so it rides along behind the hero, search bar, filter pills, and the full
+   card grid (opaque card backgrounds naturally occlude it there — it only
+   shows through the gaps/margins and the plain-background hero/footer text),
+   releasing only in the final viewport as the page runs out. */
+.tools-pin-wrapper{
+  position:relative;
+}
+.tools-pin-inner{
+  position:sticky;
+  top:0;
+  height:100vh;
+  height:100dvh; /* dynamic viewport height — avoids the gap plain 100vh leaves when a mobile browser's address bar shows/hides mid-scroll */
+  margin-bottom:-100vh;
+  margin-bottom:-100dvh;
+  z-index:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  pointer-events:none;
+}
+.tools-gear-bg{
+  opacity:var(--tools-gear-alpha);
+}
+.tools-gear-stage{
+  position:relative;
+  width:min(40vw, 420px);
+  height:min(40vw, 420px);
+}
+.tools-gear-pos{ position:absolute; transform:translate(-50%,-50%); }
+.tools-gear-pos-big{ left:42%; top:44%; width:60%; }
+.tools-gear-pos-small{ left:67%; top:65%; width:39%; }
+.tools-gear-img{ display:block; width:100%; height:auto; }
+.tools-gear-big{ animation:toolsGearSpinCW 20s linear infinite; }
+.tools-gear-small{ animation:toolsGearSpinCCW 14s linear infinite; } /* 20s * (7/10) teeth ratio, opposite direction */
+@keyframes toolsGearSpinCW{ to{ transform:rotate(360deg); } }
+@keyframes toolsGearSpinCCW{ to{ transform:rotate(-360deg); } }
+@media (prefers-reduced-motion: reduce){
+  .tools-gear-big, .tools-gear-small{ animation:none; }
+}
+.tools-page-content{
+  position:relative;
+  z-index:1;
+}
 h1{font-size:44px;margin-bottom:10px;}
 .subtitle{color:var(--muted-text);font-size:18px;margin-bottom:30px;}
 .filter-pills{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:50px;}
@@ -241,6 +296,16 @@ h1{font-size:44px;margin-bottom:10px;}
 </header>
 
 <main>
+<div class="tools-pin-wrapper">
+  <div class="tools-pin-inner" aria-hidden="true">
+    <div class="tools-gear-bg">
+      <div class="tools-gear-stage">
+        <div class="tools-gear-pos tools-gear-pos-big"><img class="tools-gear-img tools-gear-big" src="/assets/gear-base.png" width="1254" height="1254" alt="" loading="eager" decoding="async"></div>
+        <div class="tools-gear-pos tools-gear-pos-small"><img class="tools-gear-img tools-gear-small" src="/assets/gear-base.png" width="1254" height="1254" alt="" loading="eager" decoding="async"></div>
+      </div>
+    </div>
+  </div>
+  <div class="tools-page-content">
 <h1>Todas las herramientas</h1>
 <p class="subtitle">Herramientas gratuitas para convertir, comprimir, recortar y editar imágenes y PDF directamente en tu navegador.</p>
 
@@ -737,6 +802,8 @@ h1{font-size:44px;margin-bottom:10px;}
     </div>
   </div>
 </footer>
+  </div>
+</div>
 </main>
 
 <script>
