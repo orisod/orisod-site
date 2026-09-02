@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calendar Generator – Free Printable PDF Calendar | Orisod</title>
+<meta name="description" content="Create a free, printable 12-month PDF calendar with automatic public holidays for 50+ countries, religious dates, your own photos, and custom events. Everything runs in your browser.">
+<link rel="canonical" href="https://orisod.com/calendar-generator/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/calendar-generator/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/calendar-generator/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/calendar-generator/">
+<link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#2563eb">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+  --icon-alpha:.30;
+  --grid-alpha:.05;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+  --icon-alpha:.24;
+  --grid-alpha:.10;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background-color:var(--bg);background-image:linear-gradient(rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px),linear-gradient(90deg, rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px);background-size:42px 42px;color:var(--text);text-align:center;transition:background-color 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);display:inline-flex;align-items:center;gap:8px;}
+.site-nav-logo img{height:26px;width:auto;display:block;}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:5px 14px;margin:-5px 0;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:40px 20px 60px 20px;}
+.tool-hero{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:4px;}
+.tool-hero .icon-box{width:52px;height:52px;}
+.tool-hero .icon-box svg{width:28px;height:28px;}
+.tool-hero h1{margin:0;font-size:32px;}
+@media (max-width:600px){.tool-hero{flex-direction:column;gap:8px;}}
+.tool-sub{font-size:16px;max-width:640px;margin:0 auto 24px auto;opacity:.85;line-height:1.6;}
+.container{max-width:1100px;margin:0 auto;text-align:left;}
+h1{font-size:44px;margin-bottom:10px;}
+
+.workspace{display:grid;grid-template-columns:1fr 360px;gap:20px;align-items:start;}
+@media (max-width:900px){.workspace{grid-template-columns:1fr;}}
+.panel{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:18px 20px;}
+.panel + .panel{margin-top:14px;}
+.panel h3{margin:0 0 12px 0;font-size:14px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted-text);}
+.field-row{margin-bottom:14px;}
+.field-row:last-child{margin-bottom:0;}
+.field-row label{display:block;font-size:13px;color:var(--muted-text);margin-bottom:6px;}
+select, input[type="text"], input[type="date"], input[type="number"]{
+  width:100%;padding:10px 11px;border-radius:8px;border:1px solid var(--dropzone-border);background:var(--bg);color:var(--text);font-size:14px;font-family:inherit;
+}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);}
+.toggle-row:last-child{border-bottom:none;}
+.toggle-row .label{font-size:14px;}
+.toggle-row .label small{display:block;color:var(--muted-text);font-size:12px;margin-top:2px;}
+.switch{position:relative;display:inline-block;width:42px;height:24px;flex:none;}
+.switch input{opacity:0;width:0;height:0;}
+.switch .slider{position:absolute;cursor:pointer;inset:0;background:var(--dropzone-border);border-radius:999px;transition:0.2s;}
+.switch .slider:before{content:"";position:absolute;height:18px;width:18px;left:3px;top:3px;background:white;border-radius:50%;transition:0.2s;}
+.switch input:checked + .slider{background:var(--accent);}
+.switch input:checked + .slider:before{transform:translateX(18px);}
+
+.disclaimer-box{display:flex;gap:8px;align-items:flex-start;background:rgba(245,158,11,.12);border:1px solid #f59e0b;border-radius:8px;padding:10px 12px;margin-top:10px;font-size:12.5px;line-height:1.5;color:var(--text);}
+.info-box{display:flex;gap:8px;align-items:flex-start;background:rgba(37,99,235,.10);border:1px solid var(--accent);border-radius:8px;padding:10px 12px;margin-top:10px;font-size:12.5px;line-height:1.5;color:var(--text);}
+.hebrew-hint{margin-top:10px;font-size:13px;}
+.hebrew-hint a{color:var(--accent);text-decoration:none;font-weight:bold;cursor:pointer;}
+.hebrew-hint a:hover{text-decoration:underline;}
+
+.manual-list{display:flex;flex-direction:column;gap:6px;margin-top:10px;}
+.manual-item{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:13px;}
+.manual-item button{padding:3px 8px;font-size:12px;background:none;border:1px solid var(--dropzone-border);color:var(--muted-text);border-radius:5px;cursor:pointer;}
+.add-row{display:flex;gap:8px;margin-top:10px;}
+.add-row input{flex:1;}
+.add-row button{flex:none;}
+
+.photo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.photo-slot{aspect-ratio:1;border:2px dashed var(--dropzone-border);border-radius:8px;position:relative;cursor:pointer;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted-text);text-align:center;}
+.photo-slot:hover{border-color:var(--accent);}
+.photo-slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.photo-slot .month-label{position:absolute;top:2px;left:4px;font-size:9px;font-weight:bold;background:rgba(0,0,0,.55);color:#fff;padding:1px 4px;border-radius:3px;z-index:2;}
+.photo-slot .remove-x{position:absolute;top:2px;right:2px;width:16px;height:16px;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;font-size:10px;line-height:16px;text-align:center;z-index:2;}
+.layout-pick{display:flex;gap:8px;margin-top:10px;}
+.layout-pick button{flex:1;padding:9px 6px;font-size:12.5px;background:var(--bg);border:1px solid var(--dropzone-border);color:var(--text);border-radius:6px;cursor:pointer;}
+.layout-pick button.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+
+.preview-wrap{display:flex;justify-content:center;}
+.month-preview{width:100%;max-width:480px;background:#ffffff;color:#111827;border-radius:8px;padding:16px;border:1px solid var(--border);}
+.month-preview .mp-header{text-align:center;font-weight:bold;font-size:16px;margin-bottom:10px;}
+.month-preview .mp-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+.month-preview .mp-dow{font-size:10px;font-weight:bold;text-align:center;color:#6b7280;padding-bottom:4px;}
+.month-preview .mp-cell{min-height:52px;border:1px solid #e5e7eb;border-radius:4px;padding:3px;font-size:9px;text-align:left;overflow:hidden;}
+.month-preview .mp-cell .num{font-weight:bold;font-size:11px;}
+.month-preview .mp-cell .evt{display:block;color:#2563eb;line-height:1.2;margin-top:1px;}
+.month-preview .mp-cell.empty{background:#f9fafb;border-color:transparent;}
+.preview-nav{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:10px;font-size:13px;}
+.preview-nav button{background:var(--card-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px 10px;cursor:pointer;}
+
+button, .back{display:inline-block;padding:12px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:15px;cursor:pointer;}
+button.secondary{background:var(--card-bg);border:1px solid var(--border);color:var(--text);}
+button:disabled{opacity:0.4;cursor:not-allowed;}
+button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.trust-strip{font-size:12px;color:var(--muted-text);margin-top:14px;line-height:1.5;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+.progress{font-size:14px;opacity:0.7;margin-top:10px;}
+
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:60px auto 0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related-grid{display:grid;grid-template-columns:repeat(2, 1fr);gap:12px;max-width:700px;margin:0 auto;}
+@media (max-width:600px){.related-grid{grid-template-columns:1fr;}}
+.related-card{display:flex;align-items:center;gap:14px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.icon-box{flex:none;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;border:2px solid transparent;}
+.icon-box.cat-image{background:rgba(37,99,235,var(--icon-alpha));border-color:#2563eb;color:#2563eb;}
+.icon-box.cat-pdf{background:rgba(245,158,11,var(--icon-alpha));border-color:#f59e0b;color:#f59e0b;}
+.icon-box.cat-utility{background:rgba(139,92,246,var(--icon-alpha));border-color:#8b5cf6;color:#8b5cf6;}
+.icon-box svg{width:22px;height:22px;display:block;}
+.related-card .body{flex:1 1 auto;min-width:0;}
+.related-card .title{font-size:14px;font-weight:bold;margin-bottom:2px;}
+.related-card .desc{font-size:12px;color:var(--muted-text);line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.related-card .arrow{flex:none;font-size:16px;color:var(--muted-text);transition:0.2s;}
+.related-card:hover .arrow{color:var(--accent);transform:translateX(2px);}
+.site-footer{margin-top:40px;padding:40px 24px 30px 24px;border-top:1px solid var(--border);text-align:left;}
+.footer-inner{max-width:1000px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;gap:40px;}
+.footer-brand{max-width:280px;}
+.footer-brand-logo{font-size:16px;font-weight:bold;letter-spacing:0.5px;margin-bottom:10px;}
+.footer-brand-desc{font-size:13px;color:var(--muted-text);line-height:1.5;margin-bottom:14px;}
+.footer-copy{font-size:12px;color:var(--muted-text);opacity:0.7;}
+.footer-col h3{font-size:13px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-text);margin:0 0 14px 0;}
+.footer-col a{display:block;font-size:14px;color:var(--text);text-decoration:none;opacity:0.8;margin-bottom:10px;}
+.footer-col a:hover{opacity:1;color:var(--accent);}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:100;padding:20px;}
+.modal-overlay.active{display:flex;}
+.modal-box{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:24px;max-width:420px;text-align:left;}
+.modal-box h3{margin:0 0 10px 0;font-size:17px;}
+.modal-box p{font-size:14px;color:var(--muted-text);line-height:1.6;margin:0 0 18px 0;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/tools/#image">Image Tools</a>
+    <a href="/tools/#pdf">PDF Tools</a>
+    <span class="active-category">Utility Tools</span>
+    <a href="/blog/">Blog</a>
+  </nav>
+  <div class="site-nav-right">
+    <span class="lang-flag active">EN</span>
+    <a class="lang-flag" href="/es/calendar-generator/">ES</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+  <div class="tool-hero">
+    <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 9h18"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 17h.01M12 17h.01"/></svg></div>
+    <h1>Calendar Generator</h1>
+  </div>
+  <p class="tool-sub" style="text-align:center;">Build a printable 12-month PDF calendar — automatic public holidays for 50+ countries, religious dates, your own photos, and custom events. Everything happens locally in your browser.</p>
+
+  <div class="workspace">
+    <div class="left-col">
+      <div class="panel">
+        <h3>Year &amp; country</h3>
+        <div class="two-col">
+          <div class="field-row" style="margin-bottom:0;">
+            <label for="yearSelect">Calendar year</label>
+            <select id="yearSelect"></select>
+          </div>
+          <div class="field-row" style="margin-bottom:0;">
+            <label for="countrySelect">Public holidays</label>
+            <select id="countrySelect"><option value="">None</option></select>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Religious dates</h3>
+        <div class="toggle-row">
+          <div class="label">Christianity<small>Christmas, Easter, Good Friday, Ash Wednesday, Pentecost</small></div>
+          <label class="switch"><input type="checkbox" id="tglChristian"><span class="slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="label">Judaism<small>Rosh Hashanah, Yom Kippur, Hanukkah, Passover, Sukkot — basic dates</small></div>
+          <label class="switch"><input type="checkbox" id="tglJewish"><span class="slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="label">Islam<small>Ramadan, Eid al-Fitr, Eid al-Adha, Islamic New Year</small></div>
+          <label class="switch"><input type="checkbox" id="tglIslamic"><span class="slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="label">Hinduism<small>Diwali, Holi, Navratri</small></div>
+          <label class="switch"><input type="checkbox" id="tglHindu"><span class="slider"></span></label>
+        </div>
+        <div class="disclaimer-box" id="islamDisclaimer" style="display:none;">
+          ⚠️ Islamic dates shown are astronomically-calculated approximations — the Hijri calendar traditionally follows local moon sighting, so actual observed dates may vary by ±1 day depending on region and community.
+        </div>
+        <div class="hebrew-hint" id="hebrewHint" style="display:none;">
+          📅 Want candle-lighting times and the full sunset-to-sunset breakdown (Erev days, multi-day festivals)? Use the <a id="hebrewLinkTrigger">dedicated Hebrew Calendar Generator</a>.
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Custom events</h3>
+        <div class="add-row">
+          <input type="date" id="manualDate" style="flex:none;width:150px;">
+          <input type="text" id="manualName" placeholder="Event name">
+          <button type="button" id="manualAddBtn" class="secondary">Add</button>
+        </div>
+        <div class="manual-list" id="manualList"></div>
+      </div>
+
+      <div class="panel">
+        <h3>Photos per month <span style="font-weight:normal;color:var(--muted-text);">(optional)</span></h3>
+        <div class="photo-grid" id="photoGrid"></div>
+        <input type="file" id="photoInput" accept=".jpg,.jpeg,.png,.webp" style="display:none;">
+        <div class="layout-pick">
+          <button type="button" class="active" data-layout="top">Photo on top</button>
+          <button type="button" data-layout="background">Photo as background</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-col">
+      <div class="panel">
+        <h3>Preview</h3>
+        <div class="preview-wrap"><div class="month-preview" id="monthPreview"></div></div>
+        <div class="preview-nav">
+          <button type="button" id="prevMonthBtn">← Prev</button>
+          <span id="previewMonthLabel"></span>
+          <button type="button" id="nextMonthBtn">Next →</button>
+        </div>
+      </div>
+      <div class="panel" style="text-align:center;">
+        <button id="downloadBtn" style="width:100%;">⬇ Download 12-Month PDF Calendar</button>
+        <div class="error" id="genError"></div>
+        <div class="progress" id="genProgress"></div>
+        <div class="trust-strip">🔒 Processed on your device · No upload · No account · No watermark</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="seo-content">
+    <h2>What does this tool do?</h2>
+    <p>Calendar Generator builds a printable, 12-month PDF calendar for any year — one month per page. Pick a country to automatically fill in its public holidays, toggle on religious dates from Christianity, Judaism, Islam, or Hinduism, add your own one-off events, and optionally drop in a photo for each month. Download the finished calendar as a single PDF, ready to print.</p>
+
+    <h2>When should you use this tool?</h2>
+    <ul>
+      <li>You want a printable wall calendar with your own family photos</li>
+      <li>You need a work or school calendar with the right country's public holidays already filled in</li>
+      <li>You want religious observances marked automatically instead of looking each one up</li>
+      <li>You want a quick, free calendar without opening a design app</li>
+    </ul>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq-item">
+      <div class="q">Why do Islamic dates have a disclaimer but Jewish and Hindu dates don't?</div>
+      <div>The Islamic (Hijri) calendar traditionally depends on local moon sighting, so different countries and communities can announce the same date up to a day apart — any calculated date is a well-informed approximation. The modern Hebrew calendar, by contrast, has been a fixed mathematical calculation since the 4th century CE, the same way the Christian Easter date is computed — there's nothing to approximate.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Can I generate more than one year in a single PDF?</div>
+      <div>Not in this version — each download covers one calendar year, one month per page.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">What if my country isn't in the list?</div>
+      <div>You can still build a calendar without automatic public holidays, and add any dates you need manually using the custom events section.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">I need candle-lighting times for Jewish holidays — where's that?</div>
+      <div>That lives on the dedicated Hebrew Calendar Generator, linked from the Judaism toggle above — it covers the full sunset-to-sunset day boundary, Erev (eve) labeling, and location-based candle-lighting and tzeit hakochavim times.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">Are my photos or custom events uploaded anywhere?</div>
+      <div>No. Everything — holiday data lookup, photos, custom events, and PDF generation — happens locally in your browser. Nothing is sent to a server.</div>
+    </div>
+  </div>
+
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/calendar-generator-explained/" style="color:var(--accent);text-decoration:none;">How This Browser-Based Calendar Generator Actually Works</a></p>
+
+  <h2>Related tools</h2>
+  <div class="related-grid" id="relatedGrid">
+  <a class="related-card" href="/text-to-pdf/">
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M8 12h6M8 15h7"/><path d="M2 14h4m-4 0l2-2m-2 2l2 2"/></svg></div>
+    <div class="body">
+      <div class="title">Text to PDF</div>
+      <div class="desc">Turn plain text into a PDF.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+  <a class="related-card" href="/add-page-numbers/">
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><circle cx="17" cy="17" r="3"/><path d="M17 15.5v3"/></svg></div>
+    <div class="body">
+      <div class="title">Add Page Numbers</div>
+      <div class="desc">Stamp page numbers on a PDF.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+  <a class="related-card" href="/collage-maker/">
+    <div class="icon-box cat-image"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="2.5" width="8" height="8" rx="1.5"/><rect x="13.5" y="2.5" width="8" height="8" rx="1.5"/><rect x="2.5" y="13.5" width="8" height="8" rx="1.5"/><rect x="13.5" y="13.5" width="8" height="8" rx="1.5"/></svg></div>
+    <div class="body">
+      <div class="title">Collage Maker</div>
+      <div class="desc">Combine 2–9 photos into one collage.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+  <a class="related-card" href="/handwriting-worksheets/">
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+    <div class="body">
+      <div class="title">Handwriting Worksheets</div>
+      <div class="desc">Printable traceable-letter practice sheets.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+</div>
+
+  <footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-brand-logo">ORISOD</div>
+      <div class="footer-brand-desc">Free, browser-based image and PDF tools. 100% local processing — your files are never uploaded anywhere.</div>
+      <div class="footer-copy">© Orisod Labs</div>
+    </div>
+    <div class="footer-col">
+      <h3>Tools</h3>
+      <a href="/tools/#image">Image Tools</a>
+      <a href="/tools/#pdf">PDF Tools</a>
+      <a href="/tools/#utility">Utility Tools</a>
+    </div>
+    <div class="footer-col">
+      <h3>Company</h3>
+      <a href="/about/">About</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/blog/">Blog</a>
+    </div>
+  </div>
+</footer>
+</div>
+</main>
+
+<div class="modal-overlay" id="hebrewModal">
+  <div class="modal-box">
+    <h3>Hebrew calendar has its own dedicated set of options</h3>
+    <p>Candle-lighting times, Erev (eve) day labeling, and full sunset-to-sunset details live on a separate, dedicated Hebrew Calendar Generator page. Continue there?</p>
+    <div class="modal-actions">
+      <button type="button" class="secondary" id="hebrewModalCancel">Stay here</button>
+      <button type="button" id="hebrewModalContinue">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+<script>
+(function(){
+'use strict';
+
+var YEAR_MIN = 2020, YEAR_MAX = 2036;
+var MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+var DOW_NAMES = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+var state = {
+  year: new Date().getFullYear(),
+  country: '',
+  religion: { christian:false, jewish:false, islamic:false, hindu:false },
+  manual: [],
+  photos: new Array(12).fill(null), // {dataUrl,img}
+  photoLayout: 'top',
+  previewMonth: 0
+};
+if (state.year < YEAR_MIN || state.year > YEAR_MAX) state.year = 2026;
+
+var civilData = null, religiousData = null;
+var dataReady = fetch('/assets/data/calendar/civil-holidays.json').then(function(r){ return r.json(); }).then(function(d){ civilData = d; })
+  .catch(function(){ civilData = {}; });
+var dataReady2 = fetch('/assets/data/calendar/religious-dates.json').then(function(r){ return r.json(); }).then(function(d){ religiousData = d; })
+  .catch(function(){ religiousData = { christian:{}, islamic:{}, hindu:{}, jewish:{} }; });
+
+/* ===================== DOM refs ===================== */
+var yearSelect = document.getElementById('yearSelect');
+var countrySelect = document.getElementById('countrySelect');
+var tglChristian = document.getElementById('tglChristian');
+var tglJewish = document.getElementById('tglJewish');
+var tglIslamic = document.getElementById('tglIslamic');
+var tglHindu = document.getElementById('tglHindu');
+var islamDisclaimer = document.getElementById('islamDisclaimer');
+var hebrewHint = document.getElementById('hebrewHint');
+var hebrewLinkTrigger = document.getElementById('hebrewLinkTrigger');
+var hebrewModal = document.getElementById('hebrewModal');
+var hebrewModalCancel = document.getElementById('hebrewModalCancel');
+var hebrewModalContinue = document.getElementById('hebrewModalContinue');
+var manualDate = document.getElementById('manualDate');
+var manualName = document.getElementById('manualName');
+var manualAddBtn = document.getElementById('manualAddBtn');
+var manualList = document.getElementById('manualList');
+var photoGrid = document.getElementById('photoGrid');
+var photoInput = document.getElementById('photoInput');
+var monthPreview = document.getElementById('monthPreview');
+var previewMonthLabel = document.getElementById('previewMonthLabel');
+var prevMonthBtn = document.getElementById('prevMonthBtn');
+var nextMonthBtn = document.getElementById('nextMonthBtn');
+var downloadBtn = document.getElementById('downloadBtn');
+var genError = document.getElementById('genError');
+var genProgress = document.getElementById('genProgress');
+
+/* ===================== YEAR / COUNTRY SELECTS ===================== */
+for (var y = YEAR_MIN; y <= YEAR_MAX; y++) {
+  var opt = document.createElement('option');
+  opt.value = y; opt.textContent = y;
+  if (y === state.year) opt.selected = true;
+  yearSelect.appendChild(opt);
+}
+yearSelect.addEventListener('change', function(){ state.year = parseInt(yearSelect.value, 10); renderPreview(); });
+
+dataReady.then(function(){
+  var codes = Object.keys(civilData).sort(function(a,b){ return civilData[a].name.localeCompare(civilData[b].name); });
+  codes.forEach(function(code){
+    var opt = document.createElement('option');
+    opt.value = code; opt.textContent = civilData[code].name;
+    countrySelect.appendChild(opt);
+  });
+  renderPreview();
+});
+countrySelect.addEventListener('change', function(){ state.country = countrySelect.value; renderPreview(); });
+
+/* ===================== RELIGION TOGGLES ===================== */
+function updateDisclaimers(){
+  islamDisclaimer.style.display = state.religion.islamic ? 'flex' : 'none';
+  hebrewHint.style.display = state.religion.jewish ? 'block' : 'none';
+}
+tglChristian.addEventListener('change', function(){ state.religion.christian = tglChristian.checked; renderPreview(); });
+tglJewish.addEventListener('change', function(){ state.religion.jewish = tglJewish.checked; updateDisclaimers(); renderPreview(); });
+tglIslamic.addEventListener('change', function(){ state.religion.islamic = tglIslamic.checked; updateDisclaimers(); renderPreview(); });
+tglHindu.addEventListener('change', function(){ state.religion.hindu = tglHindu.checked; renderPreview(); });
+
+hebrewLinkTrigger.addEventListener('click', function(e){
+  e.preventDefault();
+  hebrewModal.classList.add('active');
+});
+hebrewModalCancel.addEventListener('click', function(){ hebrewModal.classList.remove('active'); });
+hebrewModalContinue.addEventListener('click', function(){ window.location.href = '/hebrew-calendar-generator/'; });
+
+/* ===================== MANUAL HOLIDAYS ===================== */
+function renderManualList(){
+  manualList.innerHTML = '';
+  state.manual.forEach(function(m, i){
+    var row = document.createElement('div');
+    row.className = 'manual-item';
+    var span = document.createElement('span');
+    span.textContent = m.date + ' — ' + m.name;
+    var rm = document.createElement('button');
+    rm.type = 'button'; rm.textContent = 'Remove';
+    rm.addEventListener('click', function(){ state.manual.splice(i,1); renderManualList(); renderPreview(); });
+    row.appendChild(span); row.appendChild(rm);
+    manualList.appendChild(row);
+  });
+}
+manualAddBtn.addEventListener('click', function(){
+  if (!manualDate.value || !manualName.value.trim()) return;
+  state.manual.push({ date: manualDate.value, name: manualName.value.trim() });
+  manualDate.value = ''; manualName.value = '';
+  renderManualList();
+  renderPreview();
+});
+
+/* ===================== PHOTOS ===================== */
+var MONTH_ABBR = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+var pendingPhotoSlot = null;
+
+function renderPhotoGrid(){
+  photoGrid.innerHTML = '';
+  for (var i = 0; i < 12; i++) {
+    (function(i){
+      var slot = document.createElement('div');
+      slot.className = 'photo-slot';
+      var label = document.createElement('div');
+      label.className = 'month-label';
+      label.textContent = MONTH_ABBR[i];
+      slot.appendChild(label);
+      if (state.photos[i]) {
+        var img = document.createElement('img');
+        img.src = state.photos[i].dataUrl;
+        slot.appendChild(img);
+        var rmX = document.createElement('div');
+        rmX.className = 'remove-x'; rmX.textContent = '✕';
+        rmX.addEventListener('click', function(e){ e.stopPropagation(); state.photos[i] = null; renderPhotoGrid(); renderPreview(); });
+        slot.appendChild(rmX);
+      } else {
+        slot.appendChild(document.createTextNode('+ Photo'));
+      }
+      slot.addEventListener('click', function(){ pendingPhotoSlot = i; photoInput.click(); });
+      photoGrid.appendChild(slot);
+    })(i);
+  }
+}
+photoInput.addEventListener('change', function(){
+  if (pendingPhotoSlot === null || !photoInput.files.length) return;
+  var slot = pendingPhotoSlot; pendingPhotoSlot = null;
+  var file = photoInput.files[0];
+  var reader = new FileReader();
+  reader.onload = function(e){
+    var img = new Image();
+    img.onload = function(){
+      state.photos[slot] = { dataUrl: e.target.result, img: img };
+      renderPhotoGrid();
+      renderPreview();
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+  photoInput.value = '';
+});
+document.querySelectorAll('.layout-pick button').forEach(function(b){
+  b.addEventListener('click', function(){
+    document.querySelectorAll('.layout-pick button').forEach(function(x){ x.classList.remove('active'); });
+    b.classList.add('active');
+    state.photoLayout = b.dataset.layout;
+    renderPreview();
+  });
+});
+
+/* ===================== HOLIDAY LOOKUP FOR A GIVEN YEAR ===================== */
+function eventsForYear(year){
+  var events = {}; // 'YYYY-MM-DD' -> [{name, source}]
+  function add(date, name, source){
+    if (!events[date]) events[date] = [];
+    events[date].push({ name: name, source: source });
+  }
+  if (state.country && civilData && civilData[state.country] && civilData[state.country].years[year]) {
+    civilData[state.country].years[year].forEach(function(h){ add(h.date, h.name, 'civil'); });
+  }
+  if (religiousData) {
+    var y = String(year);
+    if (state.religion.christian && religiousData.christian[y]) religiousData.christian[y].forEach(function(h){ add(h.date, h.name, 'christian'); });
+    if (state.religion.jewish && religiousData.jewish[y]) {
+      // "basic dates only" on this page: show just the primary day (skip Erev / (Day N) breakdown)
+      religiousData.jewish[y].forEach(function(h){
+        if (h.name.indexOf('Erev') === 0 || h.name.indexOf('(Day') !== -1) return;
+        add(h.date, h.name, 'jewish');
+      });
+    }
+    if (state.religion.islamic && religiousData.islamic[y]) religiousData.islamic[y].forEach(function(h){ add(h.date, h.name, 'islamic'); });
+    if (state.religion.hindu && religiousData.hindu[y]) religiousData.hindu[y].forEach(function(h){ add(h.date, h.name, 'hindu'); });
+  }
+  state.manual.forEach(function(m){ add(m.date, m.name, 'manual'); });
+  return events;
+}
+
+/* ===================== PREVIEW ===================== */
+function pad2(n){ return n < 10 ? '0'+n : ''+n; }
+
+function renderPreview(){
+  if (!civilData || !religiousData) return;
+  var year = state.year, month = state.previewMonth;
+  previewMonthLabel.textContent = MONTH_NAMES[month] + ' ' + year;
+  var events = eventsForYear(year);
+
+  monthPreview.innerHTML = '';
+  var header = document.createElement('div');
+  header.className = 'mp-header';
+  header.textContent = MONTH_NAMES[month] + ' ' + year;
+  monthPreview.appendChild(header);
+
+  var grid = document.createElement('div');
+  grid.className = 'mp-grid';
+  DOW_NAMES.forEach(function(d){
+    var el = document.createElement('div'); el.className = 'mp-dow'; el.textContent = d;
+    grid.appendChild(el);
+  });
+
+  var firstDow = new Date(year, month, 1).getDay();
+  var daysInMonth = new Date(year, month + 1, 0).getDate();
+  for (var i = 0; i < firstDow; i++) {
+    var empty = document.createElement('div'); empty.className = 'mp-cell empty';
+    grid.appendChild(empty);
+  }
+  for (var d = 1; d <= daysInMonth; d++) {
+    var cell = document.createElement('div'); cell.className = 'mp-cell';
+    var num = document.createElement('div'); num.className = 'num'; num.textContent = d;
+    cell.appendChild(num);
+    var dateKey = year + '-' + pad2(month+1) + '-' + pad2(d);
+    (events[dateKey] || []).forEach(function(ev){
+      var e = document.createElement('span'); e.className = 'evt'; e.textContent = ev.name;
+      cell.appendChild(e);
+    });
+    grid.appendChild(cell);
+  }
+  monthPreview.appendChild(grid);
+}
+prevMonthBtn.addEventListener('click', function(){ state.previewMonth = (state.previewMonth + 11) % 12; renderPreview(); });
+nextMonthBtn.addEventListener('click', function(){ state.previewMonth = (state.previewMonth + 1) % 12; renderPreview(); });
+
+/* ===================== PDF GENERATION ===================== */
+function darkenPhotoDataUrl(img){
+  var canvas = document.createElement('canvas');
+  canvas.width = img.naturalWidth; canvas.height = img.naturalHeight;
+  var ctx = canvas.getContext('2d');
+  ctx.drawImage(img, 0, 0);
+  ctx.fillStyle = 'rgba(0,0,0,0.45)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  return canvas.toDataURL('image/jpeg', 0.88);
+}
+
+function dataUrlToBytes(dataUrl){
+  var base64 = dataUrl.split(',')[1];
+  var bin = atob(base64);
+  var bytes = new Uint8Array(bin.length);
+  for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return bytes;
+}
+
+async function generatePdf(){
+  var { PDFDocument, rgb, StandardFonts } = PDFLib;
+  var pdfDoc = await PDFDocument.create();
+  var fontRegular = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  var fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+
+  var PAGE_W = 612, PAGE_H = 792; // Letter
+  var MARGIN = 36;
+  var events = eventsForYear(state.year);
+  var isBackground = state.photoLayout === 'background';
+
+  for (var month = 0; month < 12; month++) {
+    genProgress.textContent = 'Building ' + MONTH_NAMES[month] + '...';
+    var page = pdfDoc.addPage([PAGE_W, PAGE_H]);
+    var photo = state.photos[month];
+    var gridTop = PAGE_H - 110;
+    var gridBottom = MARGIN + 20;
+
+    var textColor = rgb(0.1, 0.1, 0.12);
+    var lineColor = rgb(0.75, 0.75, 0.78);
+    var accentColor = rgb(0.145, 0.388, 0.922);
+
+    if (photo && isBackground) {
+      var darkened = darkenPhotoDataUrl(photo.img);
+      var bytes = dataUrlToBytes(darkened);
+      var embedded = darkened.indexOf('image/png') !== -1 ? await pdfDoc.embedPng(bytes) : await pdfDoc.embedJpg(bytes);
+      var scale = Math.max(PAGE_W / embedded.width, PAGE_H / embedded.height);
+      var iw = embedded.width * scale, ih = embedded.height * scale;
+      page.drawImage(embedded, { x: (PAGE_W-iw)/2, y: (PAGE_H-ih)/2, width: iw, height: ih });
+      textColor = rgb(1, 1, 1);
+      lineColor = rgb(1, 1, 1);
+      gridTop = PAGE_H - 110;
+    } else if (photo) {
+      var bytes2 = dataUrlToBytes(photo.dataUrl);
+      var embedded2 = photo.dataUrl.indexOf('image/png') !== -1 ? await pdfDoc.embedPng(bytes2) : await pdfDoc.embedJpg(bytes2);
+      var photoAreaW = PAGE_W - MARGIN*2, photoAreaH = 200;
+      var s = Math.min(photoAreaW/embedded2.width, photoAreaH/embedded2.height);
+      var pw = embedded2.width*s, ph = embedded2.height*s;
+      page.drawImage(embedded2, { x: (PAGE_W-pw)/2, y: PAGE_H - 90 - ph, width: pw, height: ph });
+      gridTop = PAGE_H - 90 - ph - 30;
+    }
+
+    page.drawText(MONTH_NAMES[month] + ' ' + state.year, {
+      x: MARGIN, y: PAGE_H - 50, size: 24, font: fontBold, color: textColor
+    });
+
+    var cols = 7, rows = 6;
+    var cellW = (PAGE_W - MARGIN*2) / cols;
+    var cellH = (gridTop - gridBottom) / rows;
+
+    DOW_NAMES.forEach(function(dow, i){
+      page.drawText(dow, { x: MARGIN + i*cellW + 6, y: gridTop + 6, size: 9, font: fontBold, color: textColor });
+    });
+    page.drawLine({ start:{x:MARGIN,y:gridTop}, end:{x:PAGE_W-MARGIN,y:gridTop}, thickness:1, color:lineColor });
+
+    var firstDow = new Date(state.year, month, 1).getDay();
+    var daysInMonth = new Date(state.year, month+1, 0).getDate();
+    var col = firstDow, row = 0;
+    var pageHasIslamic = false;
+    for (var d = 1; d <= daysInMonth; d++) {
+      var x = MARGIN + col*cellW, y = gridTop - (row+1)*cellH;
+      page.drawRectangle({ x:x, y:y, width:cellW, height:cellH, borderColor:lineColor, borderWidth:0.5 });
+      page.drawText(String(d), { x:x+5, y:y+cellH-14, size:10, font:fontBold, color:textColor });
+      var dateKey = state.year + '-' + pad2(month+1) + '-' + pad2(d);
+      var evts = events[dateKey] || [];
+      var ty = y + cellH - 26;
+      evts.slice(0,3).forEach(function(ev){
+        var label = ev.name;
+        if (ev.source === 'islamic') { label += ' *'; pageHasIslamic = true; }
+        var col2 = ev.source === 'manual' ? accentColor : textColor;
+        page.drawText(label.length > 20 ? label.slice(0,19)+'…' : label, { x:x+5, y:ty, size:6, font:fontRegular, color: isBackground ? rgb(1,1,1) : col2 });
+        ty -= 8;
+      });
+      col++;
+      if (col === 7) { col = 0; row++; }
+    }
+
+    if (pageHasIslamic) {
+      page.drawText('* approximate date, may vary ±1 day depending on regional moon sighting', {
+        x: MARGIN, y: gridBottom - 14, size: 7, font: fontRegular, color: isBackground ? rgb(1,1,1) : rgb(0.55,0.4,0.05)
+      });
+    }
+  }
+
+  return await pdfDoc.save();
+}
+
+downloadBtn.addEventListener('click', async function(){
+  genError.textContent = ''; genProgress.textContent = '';
+  downloadBtn.disabled = true;
+  try {
+    await Promise.all([dataReady, dataReady2]);
+    var bytes = await generatePdf();
+    var blob = new Blob([bytes], { type: 'application/pdf' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'calendar-' + state.year + '.pdf';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
+    genProgress.textContent = 'Done — ready to download.';
+  } catch(err) {
+    genError.textContent = err.message || 'Could not generate the calendar.';
+    genProgress.textContent = '';
+  }
+  downloadBtn.disabled = false;
+});
+
+/* ===================== INIT ===================== */
+renderManualList();
+renderPhotoGrid();
+Promise.all([dataReady, dataReady2]).then(renderPreview);
+})();
+
+</script>
+</body>
+</html>

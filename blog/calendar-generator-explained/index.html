@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How Text-to-PDF Word Wrap and Pagination Actually Work | Orisod Blog</title>
-<meta name="description" content="Why PDF has no built-in word wrap, how a generator measures text width to decide where to break lines, and the real font-metric math behind it.">
-<link rel="canonical" href="https://orisod.com/blog/text-to-pdf-word-wrap-explained/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/blog/text-to-pdf-word-wrap-explained/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/text-to-pdf-word-wrap-explained/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/text-to-pdf-word-wrap-explained/">
+<title>How This Browser-Based Calendar Generator Actually Works | Orisod Blog</title>
+<meta name="description" content="Why public holidays for 50+ countries are baked into a static file instead of looked up live, why Islamic dates carry a disclaimer and Jewish dates don't, and how eve-day labeling generalizes across every Jewish holiday.">
+<link rel="canonical" href="https://orisod.com/blog/calendar-generator-explained/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/calendar-generator-explained/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/calendar-generator-explained/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/calendar-generator-explained/">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
 <link rel="icon" href="/favicon.ico">
@@ -82,20 +82,8 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 .cta-button:hover{filter:brightness(1.08);}
 .back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
 .back-link:hover{text-decoration:underline;}
-.site-footer{
-  margin-top:40px;
-  padding:40px 24px 30px 24px;
-  border-top:1px solid var(--border);
-  text-align:left;
-}
-.footer-inner{
-  max-width:1000px;
-  margin:0 auto;
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:space-between;
-  gap:40px;
-}
+.site-footer{margin-top:40px;padding:40px 24px 30px 24px;border-top:1px solid var(--border);text-align:left;}
+.footer-inner{max-width:1000px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;gap:40px;}
 .footer-brand{max-width:280px;}
 .footer-brand-logo{font-size:16px;font-weight:bold;letter-spacing:0.5px;margin-bottom:10px;}
 .footer-brand-desc{font-size:13px;color:var(--muted-text);line-height:1.5;margin-bottom:14px;}
@@ -118,9 +106,6 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 :root[data-theme="light"] .blog-cat.cat-guide{background:#eff6ff;color:#1e40af;}
 :root[data-theme="light"] .blog-cat.cat-tip{background:#fffbeb;color:#92400e;}
 :root[data-theme="light"] .blog-cat.cat-comparison{background:#f5f3ff;color:#5b21b6;}
-.theme-figure{margin:10px 0 26px 0;}
-.theme-figure svg{display:block;width:100%;height:auto;}
-.theme-figure figcaption{font-size:13.5px;color:var(--muted-text);margin-top:10px;line-height:1.5;}
 code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;}
 </style>
 </head>
@@ -137,7 +122,7 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
   </nav>
   <div class="site-nav-right">
     <span class="lang-flag active">EN</span>
-    <a class="lang-flag" href="/es/blog/text-to-pdf-word-wrap-explained/">ES</a>
+    <a class="lang-flag" href="/es/blog/calendar-generator-explained/">ES</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
   </div>
 </header>
@@ -146,73 +131,58 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guides</span>
-<h1>How Text-to-PDF Word Wrap and Pagination Actually Work</h1>
-<p class="intro">A word processor wraps text for you automatically, so it's easy to assume PDF generation works the same way. It doesn't — the PDF format itself has no concept of word wrap at all. Every "paste text, get a PDF" tool has to measure and break lines itself, word by word.</p>
+<h1>How This Browser-Based Calendar Generator Actually Works</h1>
+<p class="intro">A calendar that fills in public holidays for 50+ countries and four religious calendars can't do that lookup live in the browser — the library that knows those rules needs a real server-side runtime. Here's how a dataset with real "moon sighting" and "fixed since the 4th century" caveats gets built once and shipped as a plain file, and why some holidays get an accuracy disclaimer and others don't.</p>
 
 <div class="article-body">
 
-<h2>Why PDF has no built-in word wrap</h2>
-<p>A PDF page's text isn't a flowing paragraph the way it is in a word processor — it's a series of explicit drawing instructions, each one placing a specific string of characters at a specific x/y coordinate on the page. There's no equivalent of HTML's automatic line-wrapping at a container's edge. If a generator wants text to wrap at the right margin, it has to figure out, line by line, exactly which words fit before that margin and issue a separate draw instruction for each resulting line.</p>
+<h2>Why the holiday data is a static file instead of a live lookup</h2>
+<p>The most accurate library for computing public holidays across 200+ countries is a Node.js package — it has no browser build, and it wouldn't matter if it did, since this site's entire premise is that nothing runs on a server. Rather than drop the feature or hand-roll a worse version of the same rules, the holiday data for every supported country and year gets computed once, offline, and saved as a plain JSON file that ships with the site like any other static asset. The browser's only job at runtime is <code>fetch()</code> and a dictionary lookup by date — no calendar math happens client-side for civil holidays at all. The tradeoff is a fixed year range (2020–2036 here) instead of "any year forever," which is a reasonable one: recomputing the file to extend it is a five-minute job, not a redesign.</p>
 
-<h2>How a generator measures where to break a line</h2>
-<p>The core operation is measuring the pixel (or point) width a string of text would take up in a specific font at a specific size — every font has metrics data for exactly this, since every character has a defined width at a given size. A generator builds a line word by word: add the next word, measure the resulting line's width, and if it's still narrower than the available page width (page width minus the left and right margins), keep it; if adding the word would overflow, that word starts a new line instead.</p>
+<h2>Why Islamic dates carry a visible disclaimer and Jewish dates don't</h2>
+<p>These two calendars look similar from the outside — both are non-Gregorian, both determine some dates other calendars can't predict by simple arithmetic — but the underlying certainty is genuinely different, and the disclaimer follows that difference rather than applying a blanket "religious dates may vary" caveat to everything. The Hijri calendar traditionally depends on local moon sighting, so the same Islamic date can, in practice, get announced a day apart in different countries — any calculated date is a well-informed astronomical estimate of when that sighting is expected, not a certainty. The Hebrew calendar, by contrast, has been a fixed mathematical calculation since the 4th century CE — no observation involved, same category of certainty as computing the date of the Christian Easter Sunday. So the disclaimer is scoped tightly: it appears only when Islamic dates are switched on, and only attached to the Islamic dates themselves, never bleeding into a combined view with Christian, Jewish, or Hindu dates also switched on.</p>
 
-<figure class="theme-figure">
-<svg viewBox="0 0 700 190" width="700" height="190" role="img" aria-label="Diagram showing that the word Helvetica, rendered in 12-point Helvetica font, measures 49.044 points wide, compared against an A4 page's available text width of 495.28 points after 50-point margins on each side, fitting roughly 10 average words per line." xmlns="http://www.w3.org/2000/svg">
-<text x="350" y="35" text-anchor="middle" font-size="16" fill="var(--text)">Measuring one word to decide if it fits</text>
-<rect x="60" y="55" width="580" height="50" rx="6" fill="none" stroke="var(--border)" stroke-width="1.5"/>
-<text x="80" y="85" text-anchor="start" font-family="Helvetica, Arial" font-size="24" fill="var(--accent)">Helvetica</text>
-<line x1="80" y1="95" x2="129" y2="95" stroke="var(--accent)" stroke-width="2"/>
-<text x="500" y="85" text-anchor="start" font-size="14" fill="var(--muted-text)">= 49.044pt wide at 12pt</text>
-<line x1="60" y1="130" x2="640" y2="130" stroke="var(--border)" stroke-width="1.5"/>
-<text x="350" y="155" text-anchor="middle" font-size="14" fill="var(--muted-text)">A4 page width (595.28pt) − 50pt margin each side = 495.28pt available for text</text>
-<text x="350" y="178" text-anchor="middle" font-size="13" fill="var(--muted-text)">≈ 10 words this length fit on one line before wrapping</text>
-</svg>
-<figcaption>Real measured values: "Helvetica" at 12pt Helvetica is exactly 49.044 points wide (computed via pdf-lib's own font metrics) — that's the unit a word-wrap algorithm actually works in.</figcaption>
-</figure>
+<h2>Why Christian holidays are computed from Easter's date, not looked up per country</h2>
+<p>Christmas is a fixed calendar date and shows up directly in most countries' public holiday data. Good Friday, Ash Wednesday, and Pentecost are a different story: most countries that observe them at all don't gazette them as public holidays, so hunting for them in any single country's civil calendar quietly returns nothing for three out of five dates. All three are actually defined the same way in Christian tradition — a fixed number of days before or after Easter Sunday — so once Easter's own date for a given year is known (itself a well-defined, already-solved calculation), the rest is just date arithmetic: Ash Wednesday is 46 days before, Good Friday 2 days before, Pentecost 49 days after. No civil-calendar lookup needed for any of the three.</p>
 
-<h2>How pagination follows the same logic vertically</h2>
-<p>Once a generator has a full list of wrapped lines, it places them one below another, moving down by one line height each time, until the next line would fall below the bottom margin — at that point, it starts a new page and continues from the top margin. It's the same greedy, one-item-at-a-time approach as word wrap, just applied to lines instead of words, and to vertical space instead of horizontal space.</p>
+<h2>Why Jewish holiday lengths come from a small hand-verified table, not a country's civil calendar</h2>
+<p>Israel's own public holiday list uses Israel's civil-calendar convention for these dates — a 7-day Passover, for instance — which is correct for Israel but not the 8-day Diaspora convention most calendars outside Israel expect. Rather than trust any one country's list for "how long does this holiday last," the tool separates two different questions: <em>when does it start</em> (a reliable, calendrically universal anchor date, like "Passover begins on 15 Nisan") and <em>how long does it run, and does it have an eve observance</em> (a short, stable table of six holidays that doesn't change from year to year and is easy to verify once by hand). That same table is what makes the eve-day and multi-day labeling — showing "Passover" on the anchor date and "Passover (Day 2)" the day after — generalize across every holiday in the list instead of being hardcoded to just one.</p>
 
-<h2>Why real PDF text beats a rasterized image of text</h2>
-<p>Because this process builds actual PDF text-drawing instructions (not an image), the resulting PDF has genuinely selectable, searchable, copyable text — opening it and dragging to select a sentence works exactly like it would in any text-based PDF. A generator that instead rendered your text onto a canvas and dropped that canvas in as an image would produce a PDF that looks identical at a glance but has no selectable text at all, and usually a noticeably larger file size.</p>
+<h2>Why the photo-as-background layout darkens every photo by the same fixed amount</h2>
+<p>A calendar photo could be anything — a bright beach shot or a dim indoor portrait — and day numbers need to stay legible printed on top of either one. Rather than trying to detect each photo's brightness and adjust the overlay dynamically (fragile, and inconsistent print-to-print), the background layout always applies the same flat semi-transparent dark overlay before the day grid is drawn on top. It's a slightly heavier treatment than a bright photo strictly needs, but it guarantees the same reliable contrast on every page regardless of what gets uploaded — consistency beat cleverness here.</p>
 
 <h2>Quick answers</h2>
-<p><strong>What happens to a single word longer than the whole line width?</strong> A well-behaved generator falls back to breaking the word itself, character by character, rather than letting it overflow the page or getting stuck in an infinite loop — this matters for things like long URLs with no spaces.</p>
-<p><strong>Do different fonts wrap text differently at the same size?</strong> Yes — each font has its own character widths (a monospace font like Courier has identical widths for every character, while Helvetica or Times have variable widths per character), so the same text at the same point size can wrap onto a different number of lines depending on the font.</p>
-<p><strong>Why do blank lines in my pasted text matter?</strong> A blank line is usually meant to signal a paragraph break — a generator that ignores them entirely would run every paragraph together, so preserving them as empty lines (with their own vertical space) keeps the original structure recognizable.</p>
+<p><strong>Why can't I generate more than one year in a single PDF?</strong> Each download builds one calendar year, one month per page, to keep both the data model and the PDF layout simple for a first version.</p>
+<p><strong>What happens if I pick a country that isn't in the list?</strong> You can still build a calendar without automatic public holidays and add everything you need through the custom events section — nothing else about the tool is gated on country selection.</p>
+<p><strong>Why does selecting Hebrew-calendar options trigger a confirmation instead of just switching pages?</strong> The dedicated Hebrew Calendar Generator has its own location-based candle-lighting and eve-day logic that doesn't belong on the general tool, so navigating there is a deliberate choice, not something that happens silently underneath a toggle.</p>
+<p><strong>Are my uploaded photos or custom events sent anywhere?</strong> No. Holiday data lookup, photos, custom events, and PDF generation all happen locally in the browser — nothing is uploaded to a server.</p>
 
 <div class="cta-box">
-  <h3>Convert text to a PDF</h3>
-  <p>Orisod's Text to PDF tool wraps and paginates plain text automatically, with a choice of page size, font, and font size — entirely in your browser.</p>
-  <a class="cta-button" href="/text-to-pdf/">Convert text to PDF →</a>
+  <h3>Build a printable calendar</h3>
+  <p>Orisod's Calendar Generator makes a 12-month PDF calendar with automatic public holidays for 50+ countries, religious dates, your own photos, and custom events — entirely in your browser.</p>
+  <a class="cta-button" href="/calendar-generator/">Build a calendar →</a>
 </div>
 
-<p>Word wrap and pagination in a PDF generator aren't magic — they're a font-metrics measurement repeated word by word and line by line until the text runs out. Once you know that's the whole algorithm, the occasional edge case (very long words, oddly-spaced text) stops being surprising.</p>
+<p>The short version: holiday accuracy is a data problem, not a runtime problem, so it gets solved once offline and shipped as a static file; every accuracy disclaimer is scoped to the specific calendar system that actually has uncertainty, not applied broadly; and Jewish and Christian date math each lean on the one small, well-defined calculation that generalizes cleanly instead of trusting any single country's own holiday list.</p>
 
 </div>
 
 <div class="related-section">
   <h2>Related articles</h2>
   <div class="related-grid">
-    <a class="blog-card" href="/blog/flatten-pdf-forms-explained/">
-      <h3>What "Flattening" a PDF Actually Does (and Why It's a One-Way Trip)</h3>
-      <p>What AcroForm fields are, what flatten() does under the hood, and why print-to-PDF is a worse substitute.</p>
+    <a class="blog-card" href="/blog/text-to-pdf-word-wrap-explained/">
+      <h3>How Text-to-PDF Word Wrap and Pagination Actually Work</h3>
+      <p>Why PDF has no built-in word wrap, and the real font-metric math behind it.</p>
     </a>
 
-    <a class="blog-card" href="/blog/edit-pdf-online/">
-      <h3>How to Edit a PDF Online (Text Boxes, Highlights, and More)</h3>
-      <p>What real PDF annotation involves, and how to add it without special software.</p>
+    <a class="blog-card" href="/blog/add-page-numbers-to-pdf/">
+      <h3>How to Add Page Numbers to a PDF</h3>
+      <p>Why page numbers matter more than they seem, and how to stamp them onto an existing PDF.</p>
     </a>
 
-    <a class="blog-card" href="/blog/fill-pdf-forms-online/">
-      <h3>How to Fill Out a PDF Form Online</h3>
-      <p>How real fillable PDF fields work, and how to fill one out and lock it down.</p>
-    </a>
-
-    <a class="blog-card" href="/blog/calendar-generator-explained/">
-      <h3>How This Browser-Based Calendar Generator Actually Works</h3>
-      <p>Why holiday data is baked into a static file, and why Islamic dates get a disclaimer but Jewish dates don't.</p>
+    <a class="blog-card" href="/blog/handwriting-worksheets-explained/">
+      <h3>How Printable Handwriting Worksheets Are Actually Built</h3>
+      <p>Why tracing letters need a dashed outline, and why the font itself is a real design decision.</p>
     </a>
   </div>
 </div>
