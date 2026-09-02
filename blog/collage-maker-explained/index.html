@@ -20,12 +20,12 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How to Turn a Photo Black and White (or Add a Color Filter) | Orisod Blog</title>
-<meta name="description" content="Black and white photography isn't just a photo with the color turned down. Here's what actually changes when you convert to B&W, and how to do it (or apply other color filters) online.">
-<link rel="canonical" href="https://orisod.com/blog/black-and-white-photo-filter/">
-<link rel="alternate" hreflang="en" href="https://orisod.com/blog/black-and-white-photo-filter/">
-<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/black-and-white-photo-filter/">
-<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/black-and-white-photo-filter/">
+<title>How This Browser-Based Collage Maker Actually Works | Orisod Blog</title>
+<meta name="description" content="Why a collage tool renders two different ways for preview vs. export, why grid layouts are computed as plain math instead of CSS auto-placement, and why 30 filters needed real design work, not a formula.">
+<link rel="canonical" href="https://orisod.com/blog/collage-maker-explained/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/collage-maker-explained/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/collage-maker-explained/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/collage-maker-explained/">
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
 <link rel="icon" href="/favicon.ico">
@@ -75,9 +75,6 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 .article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
 .article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
 .article-body li{margin-bottom:8px;}
-.compare-table{width:100%;border-collapse:collapse;margin:0 0 18px 0;font-size:15px;}
-.compare-table th, .compare-table td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
-.compare-table th{background:var(--card-bg);}
 .cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
 .cta-box h3{margin:0 0 10px 0;font-size:19px;}
 .cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
@@ -85,20 +82,8 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 .cta-button:hover{filter:brightness(1.08);}
 .back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
 .back-link:hover{text-decoration:underline;}
-.site-footer{
-  margin-top:40px;
-  padding:40px 24px 30px 24px;
-  border-top:1px solid var(--border);
-  text-align:left;
-}
-.footer-inner{
-  max-width:1000px;
-  margin:0 auto;
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:space-between;
-  gap:40px;
-}
+.site-footer{margin-top:40px;padding:40px 24px 30px 24px;border-top:1px solid var(--border);text-align:left;}
+.footer-inner{max-width:1000px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;gap:40px;}
 .footer-brand{max-width:280px;}
 .footer-brand-logo{font-size:16px;font-weight:bold;letter-spacing:0.5px;margin-bottom:10px;}
 .footer-brand-desc{font-size:13px;color:var(--muted-text);line-height:1.5;margin-bottom:14px;}
@@ -121,9 +106,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 :root[data-theme="light"] .blog-cat.cat-guide{background:#eff6ff;color:#1e40af;}
 :root[data-theme="light"] .blog-cat.cat-tip{background:#fffbeb;color:#92400e;}
 :root[data-theme="light"] .blog-cat.cat-comparison{background:#f5f3ff;color:#5b21b6;}
-.theme-figure{margin:10px 0 26px 0;}
-.theme-figure img{display:block;width:100%;height:auto;border-radius:10px;border:1px solid var(--border);}
-.theme-figure figcaption{font-size:13.5px;color:var(--muted-text);margin-top:10px;line-height:1.5;}
+code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;}
 </style>
 </head>
 <body>
@@ -139,7 +122,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   </nav>
   <div class="site-nav-right">
     <span class="lang-flag active">EN</span>
-    <a class="lang-flag" href="/es/blog/black-and-white-photo-filter/">ES</a>
+    <a class="lang-flag" href="/es/blog/collage-maker-explained/">ES</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
   </div>
 </header>
@@ -148,60 +131,51 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <div class="container">
 
 <span class="blog-cat cat-guide">Guides</span>
-<h1>How to Turn a Photo Black and White (or Add a Color Filter)</h1>
-<p class="intro">Removing color changes which parts of a photograph draw attention. It can emphasize a face, simplify a busy background, or give a print a more restrained look. A good conversion also preserves the tonal differences that keep the image from looking flat.</p>
+<h1>How This Browser-Based Collage Maker Actually Works</h1>
+<p class="intro">A collage tool that runs entirely client-side has to solve a few problems a design-app collage feature doesn't: the same layout has to render two different ways (fast enough to drag in real time, and pixel-exact for a 3000px export), and none of it can lean on a server to do the slow part. Here's what actually happens between dropping in photos and downloading a PNG.</p>
 
 <div class="article-body">
 
-<h2>What a black-and-white conversion removes</h2>
-<p>The conversion removes hue and saturation while retaining luminance, the lightness or darkness of each area. Different colors do not contribute equal brightness, so a simple desaturation can produce dull grays. A better conversion preserves separation, contrast, and detail across the tonal range.</p>
+<h2>Why the grid is computed as plain rectangles, not CSS Grid auto-placement</h2>
+<p>The obvious way to build a "2 to 9 photos in a grid" layout is CSS Grid: define columns and rows, let the browser place each cell. That works fine for what's on screen — but the moment you also need to render the exact same layout onto an export canvas at, say, 3000px wide, you're stuck re-implementing the browser's own grid-placement algorithm in JavaScript to get identical positions. Any tiny mismatch between the two shows up as a shifted seam between two photos in the downloaded file. Instead, every layout here is defined as a small list of column/row spans, and one function turns that into plain x/y/width/height rectangles given a target canvas size. The live preview positions each photo cell with those numbers; export does the exact same math at a different resolution. Same function, same output shape, no drift.</p>
 
-<figure class="theme-figure">
-  <img src="/assets/blog/black-and-white-photo-filter/color-vs-black-and-white.webp" alt="The same photo shown in color and after a proper black-and-white conversion that preserves contrast" width="666" height="533" loading="lazy">
-  <figcaption>A good conversion keeps contrast and depth — just without color.</figcaption>
-</figure>
+<h2>Why the live preview and the final export aren't the same code path</h2>
+<p>Re-drawing a full canvas — filters, rounded corners, grain, text — every time a zoom or spacing slider moves would be slow enough to feel laggy, especially with nine photos on screen at once. The live grid instead uses real CSS: each photo sits in an absolutely-positioned cell, filtered with the CSS <code>filter</code> property, clipped with <code>border-radius</code> — all of it GPU-composited and effectively free to redraw on every input event. Only when you actually download does the tool build a full-resolution canvas from scratch, using the browser's Canvas 2D <code>ctx.filter</code> property (which accepts the same filter syntax as CSS) so the exact same brightness/contrast/saturation/sepia/hue values apply identically in both places.</p>
 
-<h2>Why people still shoot or convert to black and white</h2>
-<ul>
-  <li><strong>Removing color as a distraction</strong> — a subject can get lost in a visually busy or clashing-colored background; black and white shifts attention to shape, light, and expression instead.</li>
-  <li><strong>A timeless or classic aesthetic</strong> — black and white photography has an established visual language that reads as intentional and artistic rather than casual.</li>
-  <li><strong>Emphasizing texture and contrast</strong> — architecture, portraits, and dramatic lighting often look more striking without color competing for attention.</li>
-  <li><strong>Fixing a photo with bad or inconsistent color</strong> — a photo shot under mixed or unflattering lighting sometimes looks better in black and white than trying to color-correct it.</li>
-</ul>
+<h2>Why filters are baked in per photo, not applied once to the finished collage</h2>
+<p>Applying one filter to the whole finished image would be simpler to build, but it also means every photo in the collage has to share the same look — which falls apart the moment you're combining a bright outdoor shot with a dim indoor one. Each photo instead carries its own filter choice and its own brightness/contrast/saturation offsets, stored per photo rather than per collage. Selecting a different grid cell swaps which photo's settings the filter panel and sliders are editing; nothing about the layout or the other photos changes.</p>
 
-<h2>Other useful color adjustments</h2>
-<p>Sepia replaces neutral grays with a warmer brown tone. Brightness changes the overall light level, while contrast increases or reduces the difference between light and dark areas. These controls handle many everyday corrections without the complexity of full color grading.</p>
+<h2>Why 30-plus filters took more tuning than picking 30 numbers</h2>
+<p>A CSS filter preset is just a handful of numbers — brightness, contrast, saturation, sepia, grayscale, a hue rotation, sometimes blur. It's easy to generate dozens of presets that are all technically different and still look nearly identical, especially within a themed group like "vivid" or "muted," where the whole point is a family resemblance. Getting presets that are actually easy to tell apart at a glance took pushing the values further apart than felt intuitive at first, and in one case, undoing a mistake entirely: an early pass used a large hue-rotation (past 180 degrees) for a couple of "cool" presets, which doesn't shift a photo toward blue the way you'd expect — past a certain point a hue rotation wraps around and can shift blue skies toward magenta instead, which reads as broken, not cool-toned. The fix was smaller, more conservative hue shifts for anything meant to look literally warmer or cooler, and saving the more aggressive hue rotation for presets that are supposed to look deliberately unusual, like a cross-processed film look.</p>
 
-<h2>Why two conversions can look different</h2>
-<p>Conversion methods assign different gray values to the original colors. A method that treats red and blue as equally bright will not match one modeled after traditional film response. This is why two filters can produce noticeably different results from the same photograph.</p>
+<h2>Why some presets add grain and most don't</h2>
+<p>Color grading alone — adjusting brightness, contrast, saturation — can get a photo most of the way to looking vintage, but it can't reproduce the visible texture of actual film grain, which is a property of the image's fine detail, not its overall color. Presets meant to look like scanned film or an old print layer a second effect on top of the color grading: a texture generated at render time (random per-pixel noise, not a fixed image file) and blended over the photo at low opacity. Generating it on the fly instead of shipping a texture image means there's no repeating pattern to notice and no extra file to load — it costs a few milliseconds of canvas drawing instead.</p>
 
-<h2>How to apply it</h2>
-<p>Select the photo, choose black and white or another adjustment, and compare the preview with the original. Try more than one setting before downloading; the version with the strongest contrast is not always the one that best suits the image.</p>
+<h2>Why reordering uses the browser's native drag-and-drop instead of a custom version</h2>
+<p>Dragging a photo from one grid cell to another to swap their positions is handled with the same <code>dragstart</code> / <code>dragover</code> / <code>drop</code> events used elsewhere on this site for page-reordering tools, rather than a hand-built pointer-tracking system. It's less code, and it's a browser capability instead of one more thing to maintain.</p>
 
-<h2>When to keep both versions</h2>
-<p>Keep the original color file instead of overwriting it. The converted copy no longer contains the discarded color information, and a future print, platform, or client may require the original version.</p>
-
-<h2>Before converting a photo</h2>
-<p><strong>Can I restore the color later?</strong> Not from the converted file. Keep the original if you may need the color version again.</p>
-<p><strong>Does every photo work in black and white?</strong> No. Images built around color, such as sunsets or floral patterns, may lose their main appeal. Strong shapes, texture, and directional light usually translate better.</p>
-<p><strong>Why not set saturation to zero?</strong> A dedicated conversion can preserve better separation between colors as they become gray. Plain desaturation may leave the result flat or muddy.</p>
+<h2>Quick answers</h2>
+<p><strong>Why can filters only be brightness/contrast/saturation/sepia/grayscale/hue/blur, and not more exotic effects?</strong> Those are the values the CSS/Canvas <code>filter</code> property actually supports natively, with no image-processing library involved. Effects outside that set (like real film grain) are added as a second layer on top, not folded into the filter string.</p>
+<p><strong>Why is there a separate zoom and pan per photo instead of one crop tool?</strong> Each photo's position inside its cell — how zoomed in it is, and where it's centered — is stored independently, so moving one photo around never affects any other cell's framing, even after you change the grid layout.</p>
+<p><strong>Does a higher export resolution use a different rendering path than the preview?</strong> No — it's the exact same rectangle-and-filter math, just run once at a bigger target size. There's no separate "high quality mode."</p>
+<p><strong>Why is the background limited to a solid color for now?</strong> A solid color is one CSS/canvas fill; a gradient or image background would need its own positioning and scaling rules layered under everything else, which is a reasonable feature to add later but wasn't essential for a first version.</p>
 
 <div class="cta-box">
-  <h3>Apply a Black and White or Color Filter</h3>
-  <p>Apply black and white, sepia, brightness, or contrast adjustments and inspect the preview before downloading. The photo is processed locally in your browser.</p>
-  <a class="cta-button" href="/image-color-filters/">Apply a Color Filter →</a>
+  <h3>Make a photo collage</h3>
+  <p>Orisod's Collage Maker combines 2 to 9 photos into one image with grid layouts, 30+ filters, and a text overlay — entirely in your browser.</p>
+  <a class="cta-button" href="/collage-maker/">Build a collage →</a>
 </div>
 
-<p>Judge the result by its tones rather than by the absence of color. If the subject remains clear and the important details still separate well, the conversion is doing its job.</p>
+<p>The short version: a browser-only collage tool has to compute its own layout math so preview and export can never disagree, keep the interactive parts cheap by leaning on CSS instead of canvas until the moment you actually export, and treat "30 distinct filters" as a real design problem rather than 30 slightly different numbers.</p>
 
 </div>
 
 <div class="related-section">
   <h2>Related articles</h2>
   <div class="related-grid">
-    <a class="blog-card" href="/blog/watermark-photos-guide/">
-      <h3>How to Watermark Your Photos to Protect Your Work</h3>
-      <p>How to protect shared photos with a watermark without ruining the image.</p>
+    <a class="blog-card" href="/blog/black-and-white-photo-filter/">
+      <h3>How to Turn a Photo Black and White (or Add a Color Filter)</h3>
+      <p>What actually changes when a photo goes black and white, and how to do it right.</p>
     </a>
 
     <a class="blog-card" href="/blog/add-photo-border-online/">
@@ -209,14 +183,9 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
       <p>A simple border can make a casual photo look intentional — here's how to add one.</p>
     </a>
 
-    <a class="blog-card" href="/blog/pdf-color-filters-explained/">
-      <h3>Why a PDF Color Filter Rasterizes Every Page (and What That Costs You)</h3>
-      <p>Why applying a color filter to a PDF means turning every page into an image first.</p>
-    </a>
-
-    <a class="blog-card" href="/blog/collage-maker-explained/">
-      <h3>How This Browser-Based Collage Maker Actually Works</h3>
-      <p>Why preview and export use different rendering paths, and why 30 filters needed real design work.</p>
+    <a class="blog-card" href="/blog/social-media-image-sizes-2026/">
+      <h3>The Right Image Size for Every Social Media Platform (2026)</h3>
+      <p>The current recommended image size for every major social platform, in one place.</p>
     </a>
   </div>
 </div>

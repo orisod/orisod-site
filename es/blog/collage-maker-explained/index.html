@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cómo Funciona Este Creador de Collages en el Navegador | Orisod Blog</title>
+<meta name="description" content="Por qué una herramienta de collages se renderiza de dos formas distintas para la vista previa y la exportación, por qué los diseños de cuadrícula se calculan con matemáticas simples en vez de auto-posicionamiento CSS, y por qué 30 filtros necesitaron trabajo de diseño real, no una fórmula.">
+<link rel="canonical" href="https://orisod.com/es/blog/collage-maker-explained/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/collage-maker-explained/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/collage-maker-explained/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/collage-maker-explained/">
+<link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#2563eb">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+  --grid-alpha:.05;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+  --grid-alpha:.10;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background-color:var(--bg);background-image:linear-gradient(rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px),linear-gradient(90deg, rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px);background-size:42px 42px;color:var(--text);text-align:center;transition:background-color 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);display:inline-flex;align-items:center;gap:8px;}
+.site-nav-logo img{height:26px;width:auto;display:block;}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:5px 14px;margin:-5px 0;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.site-footer{margin-top:40px;padding:40px 24px 30px 24px;border-top:1px solid var(--border);text-align:left;}
+.footer-inner{max-width:1000px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;gap:40px;}
+.footer-brand{max-width:280px;}
+.footer-brand-logo{font-size:16px;font-weight:bold;letter-spacing:0.5px;margin-bottom:10px;}
+.footer-brand-desc{font-size:13px;color:var(--muted-text);line-height:1.5;margin-bottom:14px;}
+.footer-copy{font-size:12px;color:var(--muted-text);opacity:0.7;}
+.footer-col h3{font-size:13px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-text);margin:0 0 14px 0;}
+.footer-col a{display:block;font-size:14px;color:var(--text);text-decoration:none;opacity:0.8;margin-bottom:10px;}
+.footer-col a:hover{opacity:1;color:var(--accent);}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+.blog-cat{display:inline-block;font-size:11px;font-weight:bold;text-transform:uppercase;letter-spacing:.3px;padding:3px 9px;border-radius:999px;margin-bottom:12px;cursor:default;}
+.blog-card .blog-cat{margin-bottom:0;}
+.blog-cat.cat-guide{background:#16213d;color:#60a5fa;}
+.blog-cat.cat-tip{background:#1f1a0f;color:#fbbf24;}
+.blog-cat.cat-comparison{background:#241c3d;color:#a78bfa;}
+:root[data-theme="light"] .blog-cat.cat-guide{background:#eff6ff;color:#1e40af;}
+:root[data-theme="light"] .blog-cat.cat-tip{background:#fffbeb;color:#92400e;}
+:root[data-theme="light"] .blog-cat.cat-comparison{background:#f5f3ff;color:#5b21b6;}
+code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/es/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/es/tools/">Todas las herramientas</a>
+    <a href="/es/tools/#image">Herramientas de imagen</a>
+    <a href="/es/tools/#pdf">Herramientas PDF</a>
+    <a href="/es/tools/#utility">Utilidades</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <a class="lang-flag" href="/blog/collage-maker-explained/">EN</a>
+    <span class="lang-flag active">ES</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<span class="blog-cat cat-guide">Guías</span>
+<h1>Cómo Funciona Este Creador de Collages en el Navegador</h1>
+<p class="intro">Una herramienta de collages que se ejecuta completamente en el cliente tiene que resolver problemas que una función de collage dentro de un programa de diseño no enfrenta: el mismo diseño tiene que renderizarse de dos formas distintas (lo bastante rápido para arrastrar en tiempo real, y exacto al píxel para una exportación de 3000px), y nada de eso puede apoyarse en un servidor para la parte lenta. Esto es lo que ocurre realmente entre soltar las fotos y descargar un PNG.</p>
+
+<div class="article-body">
+
+<h2>Por qué la cuadrícula se calcula como rectángulos simples, no con auto-posicionamiento de CSS Grid</h2>
+<p>La forma obvia de construir un diseño de "2 a 9 fotos en cuadrícula" es CSS Grid: definir columnas y filas, y dejar que el navegador coloque cada celda. Eso funciona bien para lo que se ve en pantalla — pero en cuanto también necesitas renderizar ese mismo diseño en un lienzo de exportación de, digamos, 3000px de ancho, terminas reimplementando en JavaScript el propio algoritmo de posicionamiento de cuadrícula del navegador para obtener posiciones idénticas. Cualquier pequeña diferencia entre ambos se nota como una costura desalineada entre dos fotos en el archivo descargado. En su lugar, cada diseño aquí se define como una pequeña lista de posiciones de columna/fila, y una función convierte eso en rectángulos simples de x/y/ancho/alto según el tamaño de lienzo deseado. La vista previa en vivo posiciona cada celda de foto con esos números; la exportación hace exactamente el mismo cálculo a otra resolución. Misma función, mismo resultado, sin desajustes.</p>
+
+<h2>Por qué la vista previa en vivo y la exportación final no usan el mismo código</h2>
+<p>Volver a dibujar un lienzo completo — filtros, esquinas redondeadas, grano, texto — cada vez que se mueve un control de zoom o espaciado sería lo bastante lento como para sentirse con retraso, sobre todo con nueve fotos en pantalla a la vez. La cuadrícula en vivo usa en cambio CSS real: cada foto se ubica en una celda posicionada de forma absoluta, filtrada con la propiedad CSS <code>filter</code>, recortada con <code>border-radius</code> — todo compuesto por la GPU y prácticamente gratis de volver a dibujar en cada evento de entrada. Solo cuando realmente descargas, la herramienta construye un lienzo a resolución completa desde cero, usando la propiedad <code>ctx.filter</code> del Canvas 2D del navegador (que acepta la misma sintaxis de filtro que CSS) para que los mismos valores de brillo/contraste/saturación/sepia/tono se apliquen de forma idéntica en ambos lugares.</p>
+
+<h2>Por qué los filtros se aplican a cada foto, no una sola vez al collage terminado</h2>
+<p>Aplicar un solo filtro a toda la imagen terminada sería más simple de construir, pero también significa que todas las fotos del collage tienen que compartir el mismo aspecto — algo que falla en cuanto combinas una foto brillante al aire libre con una oscura de interior. En cambio, cada foto lleva su propia elección de filtro y sus propios ajustes de brillo/contraste/saturación, guardados por foto y no por collage. Al seleccionar otra celda de la cuadrícula cambian los ajustes que el panel de filtros y los controles deslizantes están editando; nada del diseño ni de las demás fotos cambia.</p>
+
+<h2>Por qué más de 30 filtros exigieron más ajuste que elegir 30 números</h2>
+<p>Un preajuste de filtro CSS es solo un puñado de números — brillo, contraste, saturación, sepia, escala de grises, una rotación de tono, a veces desenfoque. Es fácil generar docenas de preajustes que son técnicamente distintos pero se ven casi idénticos, sobre todo dentro de un grupo temático como "vívido" o "apagado", donde todo el sentido es que se parezcan entre sí. Lograr preajustes que realmente se distingan de un vistazo exigió separar los valores más de lo que parecía intuitivo al principio, y en un caso, deshacer un error por completo: una versión inicial usaba una rotación de tono grande (más de 180 grados) para un par de preajustes "fríos", lo cual no desplaza una foto hacia el azul como cabría esperar — pasado cierto punto, una rotación de tono da la vuelta completa y puede desplazar un cielo azul hacia el magenta, lo que se percibe como un error, no como un tono frío. La solución fue usar desplazamientos de tono más pequeños y conservadores para todo lo que debía verse literalmente más cálido o más frío, y reservar la rotación de tono más agresiva para preajustes que sí buscan verse deliberadamente inusuales, como un efecto de procesado cruzado.</p>
+
+<h2>Por qué algunos preajustes añaden grano y la mayoría no</h2>
+<p>La corrección de color por sí sola — ajustar brillo, contraste, saturación — puede acercar bastante una foto a un aspecto vintage, pero no puede reproducir la textura visible del grano real de película, que es una propiedad del detalle fino de la imagen, no de su color general. Los preajustes pensados para parecer película escaneada o una impresión antigua superponen un segundo efecto sobre la corrección de color: una textura generada en el momento del renderizado (ruido aleatorio por píxel, no un archivo de imagen fijo) mezclada sobre la foto con poca opacidad. Generarla al vuelo en lugar de incluir una imagen de textura significa que no hay ningún patrón repetido que notar ni ningún archivo adicional que cargar — cuesta solo unos milisegundos de dibujo en el lienzo.</p>
+
+<h2>Por qué reordenar usa el arrastrar-y-soltar nativo del navegador en vez de una versión personalizada</h2>
+<p>Arrastrar una foto de una celda de la cuadrícula a otra para intercambiar sus posiciones se gestiona con los mismos eventos <code>dragstart</code> / <code>dragover</code> / <code>drop</code> que se usan en otras herramientas de este sitio para reordenar páginas, en lugar de un sistema de seguimiento de puntero hecho a medida. Es menos código, y es una capacidad del navegador en vez de algo más que mantener.</p>
+
+<h2>Respuestas rápidas</h2>
+<p><strong>¿Por qué los filtros solo pueden ser brillo/contraste/saturación/sepia/escala de grises/tono/desenfoque, y no efectos más exóticos?</strong> Esos son los valores que la propiedad <code>filter</code> de CSS/Canvas admite de forma nativa, sin ninguna librería de procesamiento de imágenes. Los efectos fuera de ese conjunto (como el grano de película real) se añaden como una segunda capa encima, no dentro de la cadena de filtro.</p>
+<p><strong>¿Por qué hay un zoom y desplazamiento independientes por foto en vez de una sola herramienta de recorte?</strong> La posición de cada foto dentro de su celda — cuánto zoom tiene y dónde está centrada — se guarda de forma independiente, así que mover una foto nunca afecta el encuadre de otra celda, incluso después de cambiar el diseño de la cuadrícula.</p>
+<p><strong>¿Una resolución de exportación más alta usa un proceso de renderizado distinto al de la vista previa?</strong> No — es exactamente el mismo cálculo de rectángulos y filtros, solo que se ejecuta una vez a un tamaño mayor. No existe un "modo de alta calidad" separado.</p>
+<p><strong>¿Por qué el fondo se limita a un color sólido por ahora?</strong> Un color sólido es un solo relleno de CSS/canvas; un fondo con degradado o imagen necesitaría sus propias reglas de posicionamiento y escalado por debajo de todo lo demás, lo cual es una función razonable para añadir más adelante pero no era esencial para una primera versión.</p>
+
+<div class="cta-box">
+  <h3>Crea un collage de fotos</h3>
+  <p>El Creador de Collages de Orisod combina de 2 a 9 fotos en una sola imagen con diseños de cuadrícula, más de 30 filtros y texto superpuesto — todo en tu navegador.</p>
+  <a class="cta-button" href="/es/collage-maker/">Crear un collage →</a>
+</div>
+
+<p>En resumen: una herramienta de collages que solo vive en el navegador tiene que calcular su propia disposición para que la vista previa y la exportación nunca puedan discrepar, mantener las partes interactivas ligeras apoyándose en CSS en vez de canvas hasta el momento de exportar, y tratar "más de 30 filtros distintos" como un problema de diseño real y no como 30 números ligeramente distintos.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Artículos relacionados</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/es/blog/black-and-white-photo-filter/">
+      <h3>Cómo convertir una foto a blanco y negro (o aplicar un filtro de color)</h3>
+      <p>Qué cambia al convertir una foto a blanco y negro, y cómo hacerlo bien.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/add-photo-border-online/">
+      <h3>Cómo añadir un marco o borde a tus fotos en línea</h3>
+      <p>Un simple borde puede hacer que una foto casual se vea intencional — así se añade uno.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/social-media-image-sizes-2026/">
+      <h3>Tamaños de imagen recomendados para cada red social (2026)</h3>
+      <p>El tamaño de imagen recomendado actual para cada red social importante, en un solo lugar.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/es/blog/">← Volver al Blog</a>
+
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-brand-logo">ORISOD</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Procesamiento 100% local: tus archivos nunca se suben a ningún sitio.</div>
+      <div class="footer-copy">© Orisod Labs</div>
+    </div>
+    <div class="footer-col">
+      <h3>Herramientas</h3>
+      <a href="/es/tools/#image">Herramientas de imagen</a>
+      <a href="/es/tools/#pdf">Herramientas PDF</a>
+      <a href="/es/tools/#utility">Utilidades</a>
+    </div>
+    <div class="footer-col">
+      <h3>Empresa</h3>
+      <a href="/es/about/">Acerca de</a>
+      <a href="/es/privacy/">Privacidad</a>
+      <a href="/es/blog/">Blog</a>
+    </div>
+  </div>
+</footer>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>
