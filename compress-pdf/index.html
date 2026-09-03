@@ -335,7 +335,7 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Free, browser-based image and PDF tools. 100% local processing — your files are never uploaded anywhere.</div>
+      <div class="footer-brand-desc">Free, browser-based image and PDF tools. 100% local processing: your files are never uploaded anywhere.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">
@@ -510,7 +510,7 @@ compressBtn.addEventListener('click', async () => {
       `;
     } else {
       const savedPct = Math.max(0, Math.round((1 - newSize / originalSize) * 100));
-      progressMsg.textContent = 'Done — ready to download.';
+      progressMsg.textContent = 'Done. Ready to download.';
       card.innerHTML = `
         <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M9 13l3 2 3-2M9 17l3-2 3 2"/></svg></div>
         <div class="result-body">
