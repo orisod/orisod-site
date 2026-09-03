@@ -210,6 +210,8 @@ h2{margin-top:50px;font-size:22px;}
   </div>
   <p class="tool-sub" style="text-align:center;">Build a printable 12-month PDF calendar — automatic public holidays for 50+ countries, religious dates, your own photos, and custom events. Everything happens locally in your browser.</p>
 
+  <div class="error" id="dataLoadError" style="display:none;max-width:600px;margin:0 auto 20px auto;text-align:center;">⚠️ Holiday data failed to load, so public holidays and religious dates won't appear below. This page needs to be loaded from a web server (not opened directly as a local file) — try reloading, and if the problem continues, reload from the site's normal URL.</div>
+
   <div class="workspace">
     <div class="left-col">
       <div class="panel">
@@ -229,7 +231,7 @@ h2{margin-top:50px;font-size:22px;}
       <div class="panel">
         <h3>Religious dates</h3>
         <div class="toggle-row">
-          <div class="label">Christianity<small>Christmas, Easter, Good Friday, Ash Wednesday, Pentecost</small></div>
+          <div class="label">Christianity<small>Epiphany, Ash Wednesday, Palm Sunday, Good Friday, Easter, Pentecost, All Saints' Day, Christmas</small></div>
           <label class="switch"><input type="checkbox" id="tglChristian"><span class="slider"></span></label>
         </div>
         <div class="toggle-row">
@@ -441,10 +443,12 @@ var state = {
 if (state.year < YEAR_MIN || state.year > YEAR_MAX) state.year = 2026;
 
 var civilData = null, religiousData = null;
-var dataReady = fetch('/assets/data/calendar/civil-holidays.json').then(function(r){ return r.json(); }).then(function(d){ civilData = d; })
-  .catch(function(){ civilData = {}; });
-var dataReady2 = fetch('/assets/data/calendar/religious-dates.json').then(function(r){ return r.json(); }).then(function(d){ religiousData = d; })
-  .catch(function(){ religiousData = { christian:{}, islamic:{}, hindu:{}, jewish:{} }; });
+var dataLoadError = document.getElementById('dataLoadError');
+function showDataLoadError(){ dataLoadError.style.display = 'block'; }
+var dataReady = fetch('/assets/data/calendar/civil-holidays.json').then(function(r){ if(!r.ok) throw new Error('bad status'); return r.json(); }).then(function(d){ civilData = d; })
+  .catch(function(){ civilData = {}; showDataLoadError(); });
+var dataReady2 = fetch('/assets/data/calendar/religious-dates.json').then(function(r){ if(!r.ok) throw new Error('bad status'); return r.json(); }).then(function(d){ religiousData = d; })
+  .catch(function(){ religiousData = { christian:{}, islamic:{}, hindu:{}, jewish:{} }; showDataLoadError(); });
 
 /* ===================== DOM refs ===================== */
 var yearSelect = document.getElementById('yearSelect');

@@ -210,6 +210,8 @@ h2{margin-top:50px;font-size:22px;}
   </div>
   <p class="tool-sub" style="text-align:center;">Crea un calendario PDF imprimible de 12 meses — días festivos automáticos de más de 50 países, fechas religiosas, tus propias fotos y eventos personalizados. Todo ocurre localmente en tu navegador.</p>
 
+  <div class="error" id="dataLoadError" style="display:none;max-width:600px;margin:0 auto 20px auto;text-align:center;">⚠️ No se pudieron cargar los datos festivos, así que los días festivos y las fechas religiosas no aparecerán abajo. Esta página necesita cargarse desde un servidor web (no abrirse directamente como archivo local) — intenta recargar, y si el problema continúa, vuelve a cargar desde la URL normal del sitio.</div>
+
   <div class="workspace">
     <div class="left-col">
       <div class="panel">
@@ -229,7 +231,7 @@ h2{margin-top:50px;font-size:22px;}
       <div class="panel">
         <h3>Fechas religiosas</h3>
         <div class="toggle-row">
-          <div class="label">Cristianismo<small>Navidad, Pascua, Viernes Santo, Miércoles de Ceniza, Pentecostés</small></div>
+          <div class="label">Cristianismo<small>Día de Reyes, Miércoles de Ceniza, Domingo de Ramos, Viernes Santo, Pascua, Pentecostés, Día de Todos los Santos, Navidad</small></div>
           <label class="switch"><input type="checkbox" id="tglChristian"><span class="slider"></span></label>
         </div>
         <div class="toggle-row">
@@ -441,10 +443,12 @@ var state = {
 if (state.year < YEAR_MIN || state.year > YEAR_MAX) state.year = 2026;
 
 var civilData = null, religiousData = null;
-var dataReady = fetch('/assets/data/calendar/civil-holidays.es.json').then(function(r){ return r.json(); }).then(function(d){ civilData = d; })
-  .catch(function(){ civilData = {}; });
-var dataReady2 = fetch('/assets/data/calendar/religious-dates.es.json').then(function(r){ return r.json(); }).then(function(d){ religiousData = d; })
-  .catch(function(){ religiousData = { christian:{}, islamic:{}, hindu:{}, jewish:{} }; });
+var dataLoadError = document.getElementById('dataLoadError');
+function showDataLoadError(){ dataLoadError.style.display = 'block'; }
+var dataReady = fetch('/assets/data/calendar/civil-holidays.es.json').then(function(r){ if(!r.ok) throw new Error('bad status'); return r.json(); }).then(function(d){ civilData = d; })
+  .catch(function(){ civilData = {}; showDataLoadError(); });
+var dataReady2 = fetch('/assets/data/calendar/religious-dates.es.json').then(function(r){ if(!r.ok) throw new Error('bad status'); return r.json(); }).then(function(d){ religiousData = d; })
+  .catch(function(){ religiousData = { christian:{}, islamic:{}, hindu:{}, jewish:{} }; showDataLoadError(); });
 
 /* ===================== DOM refs ===================== */
 var yearSelect = document.getElementById('yearSelect');
