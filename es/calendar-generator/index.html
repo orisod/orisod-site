@@ -129,13 +129,25 @@ select, input[type="text"], input[type="date"], input[type="number"]{
 
 .preview-wrap{display:flex;justify-content:center;}
 .month-preview{width:100%;max-width:480px;background:#ffffff;color:#111827;border-radius:8px;padding:16px;border:1px solid var(--border);}
-.month-preview .mp-header{text-align:center;font-weight:bold;font-size:16px;margin-bottom:10px;}
+.month-preview .mp-header{text-align:center;font-weight:bold;font-size:16px;margin-bottom:2px;}
+.month-preview .mp-header-hebrew{text-align:center;font-size:11.5px;color:#6b7280;margin-bottom:10px;}
 .month-preview .mp-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
 .month-preview .mp-dow{font-size:10px;font-weight:bold;text-align:center;color:#6b7280;padding-bottom:4px;}
 .month-preview .mp-cell{min-height:52px;border:1px solid #e5e7eb;border-radius:4px;padding:3px;font-size:9px;text-align:left;overflow:hidden;}
+.month-preview .mp-cell.jewish-mode{min-height:70px;}
 .month-preview .mp-cell .num{font-weight:bold;font-size:11px;}
+.month-preview .mp-cell .heb-date{display:block;font-size:7.5px;color:#9ca3af;line-height:1.1;margin-top:-1px;}
 .month-preview .mp-cell .evt{display:block;color:#2563eb;line-height:1.2;margin-top:1px;}
 .month-preview .mp-cell.empty{background:#f9fafb;border-color:transparent;}
+/* Sombreado del calendario judío: solo valores de tema claro; la superficie
+   imprimible siempre tiene fondo blanco/claro sin importar el tema del sitio,
+   así que los valores de tema oscuro de la especificación no están conectados
+   a nada todavía (no existe un modo de calendario en tema oscuro). */
+.month-preview .mp-cell.shade-a{background:rgba(217,119,6,.12);}
+.month-preview .mp-cell.shade-b{background:rgba(107,114,128,.12);}
+.month-preview .mp-cell.shade-c{background:rgba(37,99,235,.14);}
+.month-preview .mp-cell.shade-d{background:rgba(0,0,0,.10);}
+.month-preview .mp-cell.shade-e{background:rgba(236,72,153,.12);}
 .preview-nav{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:10px;font-size:13px;}
 .preview-nav button{background:var(--card-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px 10px;cursor:pointer;}
 
@@ -208,9 +220,9 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 9h18"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 17h.01M12 17h.01"/></svg></div>
     <h1>Generador de Calendarios</h1>
   </div>
-  <p class="tool-sub" style="text-align:center;">Crea un calendario PDF imprimible de 12 meses — días festivos automáticos de más de 50 países, fechas religiosas, tus propias fotos y eventos personalizados. Todo ocurre localmente en tu navegador.</p>
+  <p class="tool-sub" style="text-align:center;">Crea un calendario PDF imprimible de 12 meses: días festivos automáticos de más de 50 países, fechas religiosas, tus propias fotos y eventos personalizados. Todo ocurre localmente en tu navegador.</p>
 
-  <div class="error" id="dataLoadError" style="display:none;max-width:600px;margin:0 auto 20px auto;text-align:center;">⚠️ No se pudieron cargar los datos festivos, así que los días festivos y las fechas religiosas no aparecerán abajo. Esta página necesita cargarse desde un servidor web (no abrirse directamente como archivo local) — intenta recargar, y si el problema continúa, vuelve a cargar desde la URL normal del sitio.</div>
+  <div class="error" id="dataLoadError" style="display:none;max-width:600px;margin:0 auto 20px auto;text-align:center;">⚠️ No se pudieron cargar los datos festivos, así que los días festivos y las fechas religiosas no aparecerán abajo. Esta página necesita cargarse desde un servidor web, no abrirse directamente como archivo local. Intenta recargar, y si el problema continúa, vuelve a cargar desde la URL normal del sitio.</div>
 
   <div class="workspace">
     <div class="left-col">
@@ -235,7 +247,7 @@ h2{margin-top:50px;font-size:22px;}
           <label class="switch"><input type="checkbox" id="tglChristian"><span class="slider"></span></label>
         </div>
         <div class="toggle-row">
-          <div class="label">Judaísmo<small>Rosh Hashaná, Yom Kipur, Janucá, Pésaj, Sucot — fechas básicas</small></div>
+          <div class="label">Judaísmo<small>Rosh Hashaná, Yom Kipur, Sucot, Pésaj, Shavuot, Janucá, Purim, ayunos menores, cuenta del Omer, y más</small></div>
           <label class="switch"><input type="checkbox" id="tglJewish"><span class="slider"></span></label>
         </div>
         <div class="toggle-row">
@@ -247,10 +259,10 @@ h2{margin-top:50px;font-size:22px;}
           <label class="switch"><input type="checkbox" id="tglHindu"><span class="slider"></span></label>
         </div>
         <div class="disclaimer-box" id="islamDisclaimer" style="display:none;">
-          ⚠️ Las fechas islámicas mostradas son aproximaciones calculadas astronómicamente — el calendario hijri tradicionalmente sigue el avistamiento local de la luna, por lo que las fechas observadas pueden variar ±1 día según la región y la comunidad.
+          ⚠️ Las fechas islámicas mostradas son aproximaciones calculadas astronómicamente. El calendario hijri tradicionalmente sigue el avistamiento local de la luna, por lo que las fechas observadas pueden variar ±1 día según la región y la comunidad.
         </div>
         <div class="hebrew-hint" id="hebrewHint" style="display:none;">
-          📅 ¿Quieres los horarios de encendido de velas y el desglose completo de puesta de sol a puesta de sol (días de véspera, festividades de varios días)? Usa el <a id="hebrewLinkTrigger">Generador de Calendario Hebreo dedicado</a>.
+          📅 ¿Quieres los horarios de encendido de velas y tzeit hakojavim según tu ubicación, o la porción semanal de la Torá? Usa el <a id="hebrewLinkTrigger">Generador de Calendario Hebreo dedicado</a>.
         </div>
       </div>
 
@@ -296,7 +308,7 @@ h2{margin-top:50px;font-size:22px;}
 
   <div class="seo-content">
     <h2>¿Qué hace esta herramienta?</h2>
-    <p>El Generador de Calendarios crea un calendario PDF imprimible de 12 meses para cualquier año — un mes por página. Elige un país para rellenar automáticamente sus días festivos, activa fechas religiosas del Cristianismo, el Judaísmo, el Islam o el Hinduismo, añade tus propios eventos puntuales y, si quieres, incluye una foto para cada mes. Descarga el calendario terminado como un único PDF, listo para imprimir.</p>
+    <p>El Generador de Calendarios crea un calendario PDF imprimible de 12 meses para cualquier año, un mes por página. Elige un país para rellenar automáticamente sus días festivos, activa fechas religiosas del Cristianismo, el Judaísmo, el Islam o el Hinduismo, añade tus propios eventos puntuales y, si quieres, incluye una foto para cada mes. Descarga el calendario terminado como un único PDF, listo para imprimir.</p>
 
     <h2>¿Cuándo deberías usar esta herramienta?</h2>
     <ul>
@@ -309,23 +321,23 @@ h2{margin-top:50px;font-size:22px;}
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿Por qué las fechas islámicas tienen un aviso pero las judías e hindúes no?</div>
-      <div>El calendario islámico (hijri) depende tradicionalmente del avistamiento local de la luna, por lo que distintos países y comunidades pueden anunciar la misma fecha con hasta un día de diferencia — cualquier fecha calculada es una aproximación bien fundamentada. El calendario hebreo moderno, en cambio, es un cálculo matemático fijo desde el siglo IV d.C., igual que se calcula la fecha de la Pascua cristiana — no hay nada que aproximar.</div>
+      <div>El calendario islámico (hijri) depende tradicionalmente del avistamiento local de la luna, por lo que distintos países y comunidades pueden anunciar la misma fecha con hasta un día de diferencia, y cualquier fecha calculada es una aproximación bien fundamentada. El calendario hebreo moderno, en cambio, es un cálculo matemático fijo desde el siglo IV d.C., igual que se calcula la fecha de la Pascua cristiana. No hay nada que aproximar.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Puedo generar más de un año en un mismo PDF?</div>
-      <div>No en esta versión — cada descarga cubre un año de calendario, un mes por página.</div>
+      <div>No en esta versión. Cada descarga cubre un año de calendario, un mes por página.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Y si mi país no está en la lista?</div>
       <div>Aun así puedes crear un calendario sin días festivos automáticos, y añadir manualmente cualquier fecha que necesites en la sección de eventos personalizados.</div>
     </div>
     <div class="faq-item">
-      <div class="q">Necesito los horarios de encendido de velas para las festividades judías — ¿dónde están?</div>
-      <div>Eso está en el Generador de Calendario Hebreo dedicado, enlazado desde el interruptor de Judaísmo más arriba — cubre el límite completo del día de puesta de sol a puesta de sol, el etiquetado de véspera (Erev) y los horarios de encendido de velas y tzeit hakojavim según tu ubicación.</div>
+      <div class="q">¿Dónde consigo los horarios de encendido de velas para las festividades judías?</div>
+      <div>Eso está en el Generador de Calendario Hebreo dedicado, enlazado desde el interruptor de Judaísmo más arriba. Añade horarios de encendido de velas y tzeit hakojavim según tu ubicación, y la porción semanal de la Torá, sobre todo lo que ya se muestra aquí.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Mis fotos o eventos personalizados se suben a algún sitio?</div>
-      <div>No. Todo — la consulta de datos festivos, las fotos, los eventos personalizados y la generación del PDF — ocurre localmente en tu navegador. No se envía nada a un servidor.</div>
+      <div>No. Todo, incluida la consulta de datos festivos, las fotos, los eventos personalizados y la generación del PDF, ocurre localmente en tu navegador. No se envía nada a un servidor.</div>
     </div>
   </div>
 
@@ -393,8 +405,8 @@ h2{margin-top:50px;font-size:22px;}
 
 <div class="modal-overlay" id="hebrewModal">
   <div class="modal-box">
-    <h3>El calendario hebreo tiene su propio conjunto de opciones</h3>
-    <p>Los horarios de encendido de velas, el etiquetado de días de véspera y los detalles completos de puesta de sol a puesta de sol viven en una página dedicada y separada: el Generador de Calendario Hebreo. ¿Continuar allí?</p>
+    <h3>El Generador de Calendario Hebreo añade horarios según tu ubicación</h3>
+    <p>Los horarios de encendido de velas, tzeit hakojavim y la porción semanal de la Torá viven en una página dedicada y separada, ya que necesitan tu ubicación. ¿Continuar allí?</p>
     <div class="modal-actions">
       <button type="button" class="secondary" id="hebrewModalCancel">Quedarme aquí</button>
       <button type="button" id="hebrewModalContinue">Continuar →</button>
@@ -442,13 +454,18 @@ var state = {
 };
 if (state.year < YEAR_MIN || state.year > YEAR_MAX) state.year = 2026;
 
-var civilData = null, religiousData = null;
+var civilData = null, religiousData = null, hebrewPerDay = null, jewishFull = null;
 var dataLoadError = document.getElementById('dataLoadError');
 function showDataLoadError(){ dataLoadError.style.display = 'block'; }
 var dataReady = fetch('/assets/data/calendar/civil-holidays.es.json').then(function(r){ if(!r.ok) throw new Error('bad status'); return r.json(); }).then(function(d){ civilData = d; })
   .catch(function(){ civilData = {}; showDataLoadError(); });
 var dataReady2 = fetch('/assets/data/calendar/religious-dates.es.json').then(function(r){ if(!r.ok) throw new Error('bad status'); return r.json(); }).then(function(d){ religiousData = d; })
   .catch(function(){ religiousData = { christian:{}, islamic:{}, hindu:{}, jewish:{} }; showDataLoadError(); });
+var dataReady3 = fetch('/assets/data/calendar/hebrew-per-day.es.json').then(function(r){ if(!r.ok) throw new Error('bad status'); return r.json(); }).then(function(d){ hebrewPerDay = d; })
+  .catch(function(){ hebrewPerDay = {}; showDataLoadError(); });
+var dataReady4 = fetch('/assets/data/calendar/jewish-full.es.json').then(function(r){ if(!r.ok) throw new Error('bad status'); return r.json(); }).then(function(d){ jewishFull = d; })
+  .catch(function(){ jewishFull = {}; showDataLoadError(); });
+var ALL_DATA_READY = Promise.all([dataReady, dataReady2, dataReady3, dataReady4]);
 
 /* ===================== DOM refs ===================== */
 var yearSelect = document.getElementById('yearSelect');
@@ -521,7 +538,7 @@ function renderManualList(){
     var row = document.createElement('div');
     row.className = 'manual-item';
     var span = document.createElement('span');
-    span.textContent = m.date + ' — ' + m.name;
+    span.textContent = m.date + ': ' + m.name;
     var rm = document.createElement('button');
     rm.type = 'button'; rm.textContent = 'Remove';
     rm.addEventListener('click', function(){ state.manual.splice(i,1); renderManualList(); renderPreview(); });
@@ -606,18 +623,52 @@ function eventsForYear(year){
   if (religiousData) {
     var y = String(year);
     if (state.religion.christian && religiousData.christian[y]) religiousData.christian[y].forEach(function(h){ add(h.date, h.name, 'christian'); });
-    if (state.religion.jewish && religiousData.jewish[y]) {
-      // "basic dates only" on this page: show just the primary day (skip Erev / (Day N) breakdown)
-      religiousData.jewish[y].forEach(function(h){
-        if (h.name.indexOf('Víspera de') === 0 || h.name.indexOf('(Día') !== -1) return;
-        add(h.date, h.name, 'jewish');
-      });
-    }
     if (state.religion.islamic && religiousData.islamic[y]) religiousData.islamic[y].forEach(function(h){ add(h.date, h.name, 'islamic'); });
     if (state.religion.hindu && religiousData.hindu[y]) religiousData.hindu[y].forEach(function(h){ add(h.date, h.name, 'hindu'); });
   }
+  if (state.religion.jewish && jewishFull && jewishFull[year]) {
+    jewishFull[year].forEach(function(h){ add(h.date, h.name, 'jewish'); });
+  }
   state.manual.forEach(function(m){ add(m.date, m.name, 'manual'); });
   return events;
+}
+
+/* ===================== SOMBREADO DEL CALENDARIO JUDÍO + FECHAS HEBREAS =====================
+   Lógica compartida (calendario general Parte 1 y, cuando exista, el
+   Generador de Calendario Hebreo Parte 2 llamarán a estas mismas funciones).
+   Prioridad de sombreado: el color propio de una festividad (de
+   jewish-full.es.json) gana; si no, todo viernes/sábado cae en la
+   categoría A (Shabat); si no, sin sombreado. */
+function shabbatCategoryFor(dateKey){
+  var dow = new Date(dateKey + 'T00:00:00').getDay();
+  return (dow === 5 || dow === 6) ? 'A' : null;
+}
+function shadeForYear(year){
+  var shade = {};
+  if (jewishFull && jewishFull[year]) {
+    jewishFull[year].forEach(function(h){
+      if (h.shade) shade[h.date] = h.shade;
+    });
+  }
+  return shade;
+}
+function shadeForDate(dateKey, yearShadeMap){
+  return (yearShadeMap && yearShadeMap[dateKey]) || shabbatCategoryFor(dateKey);
+}
+function hebrewDateLabel(dateKey){
+  if (!hebrewPerDay || !hebrewPerDay[dateKey]) return '';
+  var hd = hebrewPerDay[dateKey];
+  return hd.d + ' ' + hd.m;
+}
+function hebrewMonthRangeLabel(year, month){
+  if (!hebrewPerDay) return '';
+  var daysInMonth = new Date(year, month + 1, 0).getDate();
+  var firstKey = year + '-' + pad2(month + 1) + '-01';
+  var lastKey = year + '-' + pad2(month + 1) + '-' + pad2(daysInMonth);
+  var first = hebrewPerDay[firstKey], last = hebrewPerDay[lastKey];
+  if (!first || !last) return '';
+  if (first.m === last.m && first.y === last.y) return first.m + ' ' + first.y;
+  return first.m + ' ' + first.y + ' - ' + last.m + ' ' + last.y;
 }
 
 /* ===================== PREVIEW ===================== */
@@ -628,12 +679,21 @@ function renderPreview(){
   var year = state.year, month = state.previewMonth;
   previewMonthLabel.textContent = MONTH_NAMES[month] + ' ' + year;
   var events = eventsForYear(year);
+  var jewishOn = state.religion.jewish;
+  var yearShade = jewishOn ? shadeForYear(year) : {};
 
   monthPreview.innerHTML = '';
   var header = document.createElement('div');
   header.className = 'mp-header';
   header.textContent = MONTH_NAMES[month] + ' ' + year;
   monthPreview.appendChild(header);
+
+  if (jewishOn) {
+    var hebHeader = document.createElement('div');
+    hebHeader.className = 'mp-header-hebrew';
+    hebHeader.textContent = hebrewMonthRangeLabel(year, month);
+    monthPreview.appendChild(hebHeader);
+  }
 
   var grid = document.createElement('div');
   grid.className = 'mp-grid';
@@ -650,9 +710,19 @@ function renderPreview(){
   }
   for (var d = 1; d <= daysInMonth; d++) {
     var cell = document.createElement('div'); cell.className = 'mp-cell';
+    var dateKey = year + '-' + pad2(month+1) + '-' + pad2(d);
+    if (jewishOn) {
+      cell.classList.add('jewish-mode');
+      var cat = shadeForDate(dateKey, yearShade);
+      if (cat) cell.classList.add('shade-' + cat.toLowerCase());
+    }
     var num = document.createElement('div'); num.className = 'num'; num.textContent = d;
     cell.appendChild(num);
-    var dateKey = year + '-' + pad2(month+1) + '-' + pad2(d);
+    if (jewishOn) {
+      var heb = document.createElement('div'); heb.className = 'heb-date';
+      heb.textContent = hebrewDateLabel(dateKey);
+      cell.appendChild(heb);
+    }
     (events[dateKey] || []).forEach(function(ev){
       var e = document.createElement('span'); e.className = 'evt'; e.textContent = ev.name;
       cell.appendChild(e);
@@ -683,6 +753,14 @@ function dataUrlToBytes(dataUrl){
   return bytes;
 }
 
+var SHADE_COLORS_PDF = {
+  A: { r: 217/255, g: 119/255, b: 6/255, o: .12 },
+  B: { r: 107/255, g: 114/255, b: 128/255, o: .12 },
+  C: { r: 37/255, g: 99/255, b: 235/255, o: .14 },
+  D: { r: 0, g: 0, b: 0, o: .10 },
+  E: { r: 236/255, g: 72/255, b: 153/255, o: .12 },
+};
+
 async function generatePdf(){
   var { PDFDocument, rgb, StandardFonts } = PDFLib;
   var pdfDoc = await PDFDocument.create();
@@ -693,6 +771,8 @@ async function generatePdf(){
   var MARGIN = 36;
   var events = eventsForYear(state.year);
   var isBackground = state.photoLayout === 'background';
+  var jewishOn = state.religion.jewish;
+  var yearShade = jewishOn ? shadeForYear(state.year) : {};
 
   for (var month = 0; month < 12; month++) {
     genProgress.textContent = 'Generando ' + MONTH_NAMES[month] + '...';
@@ -704,6 +784,7 @@ async function generatePdf(){
     var textColor = rgb(0.1, 0.1, 0.12);
     var lineColor = rgb(0.75, 0.75, 0.78);
     var accentColor = rgb(0.145, 0.388, 0.922);
+    var hebrewHeaderColor = rgb(0.42, 0.45, 0.5);
 
     if (photo && isBackground) {
       var darkened = darkenPhotoDataUrl(photo.img);
@@ -714,6 +795,7 @@ async function generatePdf(){
       page.drawImage(embedded, { x: (PAGE_W-iw)/2, y: (PAGE_H-ih)/2, width: iw, height: ih });
       textColor = rgb(1, 1, 1);
       lineColor = rgb(1, 1, 1);
+      hebrewHeaderColor = rgb(1, 1, 1);
       gridTop = PAGE_H - 110;
     } else if (photo) {
       var bytes2 = dataUrlToBytes(photo.dataUrl);
@@ -728,6 +810,12 @@ async function generatePdf(){
     page.drawText(MONTH_NAMES[month] + ' ' + state.year, {
       x: MARGIN, y: PAGE_H - 50, size: 24, font: fontBold, color: textColor
     });
+    if (jewishOn) {
+      var hebRange = hebrewMonthRangeLabel(state.year, month);
+      if (hebRange) {
+        page.drawText(hebRange, { x: MARGIN, y: PAGE_H - 64, size: 10, font: fontRegular, color: hebrewHeaderColor });
+      }
+    }
 
     var cols = 7, rows = 6;
     var cellW = (PAGE_W - MARGIN*2) / cols;
@@ -744,11 +832,26 @@ async function generatePdf(){
     var pageHasIslamic = false;
     for (var d = 1; d <= daysInMonth; d++) {
       var x = MARGIN + col*cellW, y = gridTop - (row+1)*cellH;
+      var dateKey = state.year + '-' + pad2(month+1) + '-' + pad2(d);
+      if (jewishOn && !isBackground) {
+        var cat = shadeForDate(dateKey, yearShade);
+        if (cat && SHADE_COLORS_PDF[cat]) {
+          var sc = SHADE_COLORS_PDF[cat];
+          page.drawRectangle({ x:x, y:y, width:cellW, height:cellH, color: rgb(sc.r, sc.g, sc.b), opacity: sc.o });
+        }
+      }
       page.drawRectangle({ x:x, y:y, width:cellW, height:cellH, borderColor:lineColor, borderWidth:0.5 });
       page.drawText(String(d), { x:x+5, y:y+cellH-14, size:10, font:fontBold, color:textColor });
-      var dateKey = state.year + '-' + pad2(month+1) + '-' + pad2(d);
+      var textStartY = y + cellH - 26;
+      if (jewishOn) {
+        var hebLabel = hebrewDateLabel(dateKey);
+        if (hebLabel) {
+          page.drawText(hebLabel, { x:x+5, y:textStartY, size:5.5, font:fontRegular, color: isBackground ? rgb(1,1,1) : hebrewHeaderColor });
+          textStartY -= 9;
+        }
+      }
       var evts = events[dateKey] || [];
-      var ty = y + cellH - 26;
+      var ty = textStartY;
       evts.slice(0,3).forEach(function(ev){
         var label = ev.name;
         if (ev.source === 'islamic') { label += ' *'; pageHasIslamic = true; }
@@ -774,7 +877,7 @@ downloadBtn.addEventListener('click', async function(){
   genError.textContent = ''; genProgress.textContent = '';
   downloadBtn.disabled = true;
   try {
-    await Promise.all([dataReady, dataReady2]);
+    await ALL_DATA_READY;
     var bytes = await generatePdf();
     var blob = new Blob([bytes], { type: 'application/pdf' });
     var url = URL.createObjectURL(blob);
@@ -782,7 +885,7 @@ downloadBtn.addEventListener('click', async function(){
     a.href = url; a.download = 'calendario-' + state.year + '.pdf';
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
-    genProgress.textContent = 'Listo — puedes descargarlo.';
+    genProgress.textContent = 'Listo. Puedes descargarlo.';
   } catch(err) {
     genError.textContent = err.message || 'No se pudo generar el calendario.';
     genProgress.textContent = '';
@@ -793,7 +896,7 @@ downloadBtn.addEventListener('click', async function(){
 /* ===================== INIT ===================== */
 renderManualList();
 renderPhotoGrid();
-Promise.all([dataReady, dataReady2]).then(renderPreview);
+ALL_DATA_READY.then(renderPreview);
 })();
 
 </script>
