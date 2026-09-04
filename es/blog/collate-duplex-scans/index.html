@@ -146,16 +146,16 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guías</span>
-<h1>Cómo recombinar escaneos dúplex de anverso y reverso en un solo PDF</h1>
-<p class="intro">Un escáner que no puede escanear ambos lados de una página automáticamente obliga a una solución alternativa más antigua que el propio escáner: escanear todos los anversos en una pasada, voltear toda la pila, escanear todos los reversos en una segunda pasada, y acabar con dos archivos separados que hay que convertir en un solo documento con el orden correcto.</p>
+<h1>Cómo unir escaneos de anversos y reversos en un PDF</h1>
+<p class="intro">Un escáner de una sola cara también puede digitalizar documentos a doble cara. Escanea todos los anversos, voltea la pila y captura los reversos. Obtendrás dos PDF, y el segundo puede quedar invertido según el alimentador y la forma de voltear el papel. Después solo falta intercalarlos en orden de lectura.</p>
 
 <div class="article-body">
 
-<h2>Por qué esto produce dos archivos en vez de uno</h2>
-<p>Un escáner con capacidad dúplex voltea cada página internamente mientras la alimenta, así que una sola pasada captura anverso y reverso y los intercala automáticamente. Un escáner o alimentador solo simplex (una cara) no tiene forma de hacer eso — la única manera de capturar ambas caras de una pila es con dos pasadas separadas, y cada pasada produce naturalmente su propio archivo. En este punto no hay nada mal con el contenido; los dos archivos simplemente todavía no se han entrelazado.</p>
+<h2>Dos pasadas producen dos archivos</h2>
+<p>Un escáner dúplex captura ambas caras mientras la hoja recorre el alimentador. Uno simplex solo ve la cara expuesta, por lo que necesita una pasada para cada lado. Cada pasada genera su propio archivo y el documento no queda completo hasta combinarlos.</p>
 
-<h2>Por qué el segundo archivo sale tan a menudo al revés</h2>
-<p>Aquí está la parte que confunde a la gente: después de escanear todos los anversos, la pila sale del alimentador en orden inverso respecto a como empezó (la página 1 termina en el fondo de la pila de salida, ya que cada hoja sale encima de la anterior). Para escanear los reversos sin reordenar manualmente toda la pila, lo natural es voltear la pila entera como un solo bloque y volver a introducirla directamente — pero voltear una pila entera invierte cuál página queda primero ahora. El escaneo de reversos termina capturando primero el reverso de la última página y por último el reverso de la primera página: exactamente el inverso del orden del archivo de anversos.</p>
+<h2>Por qué los reversos pueden quedar invertidos</h2>
+<p>Las bandejas y recorridos del papel no apilan las hojas siempre del mismo modo. Al terminar los anversos, voltear todo el conjunto puede hacer que entre primero el reverso de la última hoja. El segundo PDF quedará entonces en orden inverso. No lo des por hecho: revisa las primeras miniaturas y sigue el orden real de tu escáner.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 260" width="700" height="260" role="img" aria-label="Diagrama que muestra una pila de páginas numeradas del 1 al 4 escaneadas con el anverso hacia arriba en el orden 1, 2, 3, 4, luego la misma pila volteada como un solo bloque y escaneada de nuevo, produciendo los reversos en el orden 4, 3, 2, 1 — el inverso del orden de los anversos." xmlns="http://www.w3.org/2000/svg">
@@ -174,27 +174,27 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <polygon points="480,172 469,166 469,178" fill="var(--muted-text)"/>
 <text x="390" y="230" text-anchor="middle" font-size="13" fill="var(--muted-text)">Es la misma pila física — el volteo es lo que invierte el orden de escaneo</text>
 </svg>
-<figcaption>Nada sale mal durante el escaneo — voltear la pila como un solo bloque es exactamente lo que coloca los reversos en orden inverso respecto a los anversos.</figcaption>
+<figcaption>Voltear la pila puede invertir los reversos, según el recorrido del papel y la bandeja de salida.</figcaption>
 </figure>
 
-<h2>Intercalar: volver a unir los dos archivos</h2>
-<p>Una vez que existen ambos archivos, recombinarlos consiste en alternar páginas de cada uno: anverso 1, reverso 1, anverso 2, reverso 2, y así sucesivamente, para que el documento final se lea como lo hacía la pila física original. Si el archivo de reversos está en orden inverso (el caso habitual descrito arriba), hay que leerlo desde su última página hacia atrás durante ese intercalado — emparejando el reverso 1 (que en realidad está almacenado al final del archivo) con el anverso 1, y así sucesivamente — en vez de emparejar páginas por su posición cruda en cada archivo.</p>
+<h2>Intercala las páginas en orden de lectura</h2>
+<p>El PDF final debe alternar anverso 1, reverso 1, anverso 2, reverso 2 y así sucesivamente. Si el archivo B comienza con el último reverso, inviértelo antes de intercalar. La vista de miniaturas permite detectar una inversión incorrecta o una pila introducida con otra orientación.</p>
 
-<h2>Por qué esto sigue siendo vectorial en vez de convertirse en imagen</h2>
-<p>Intercalar no necesita inspeccionar ni modificar lo que está dibujado en una página — solo necesita copiar páginas enteras y colocarlas en un nuevo orden. Una librería de PDF puede copiar el contenido de una página directamente, exactamente como ya hace Unir PDF al combinar archivos completos, sin renderizarla nunca a píxeles. Eso es distinto de operaciones como un filtro de color, que no tiene más remedio que rasterizar porque necesita tocar valores de píxel individuales — intercalar nunca necesita eso, así que no hay razón para pagar ese costo.</p>
+<h2>Reordenar no exige rasterizar</h2>
+<p>Intercalar copia páginas PDF completas en otra secuencia; no necesita examinar sus píxeles. El texto, los vectores y las imágenes pueden conservar su forma. Aun así, revisa enlaces, formularios, anotaciones y firmas digitales, porque reestructurar el documento puede afectar funciones interactivas o invalidar firmas.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Qué pasa si los archivos de anversos y reversos tienen distinto número de páginas?</strong> Normalmente significa que se saltó o se alimentó dos veces una hoja durante una de las dos pasadas — vale la pena comprobarlo contra el documento original, pero una herramienta de intercalado bien diseñada debería manejarlo emparejando lo que pueda y añadiendo el resto, en vez de fallar directamente.</p>
-<p><strong>¿Los reversos quedarán en la orientación correcta?</strong> Intercalar solo reordena páginas — si un escaneo de reversos salió rotado 180° (algo común con ciertos mecanismos de volteo de hojas), eso es un paso de rotación aparte, no algo que reordenar páginas arregle por sí solo.</p>
-<p><strong>¿El archivo de anversos también necesita invertirse alguna vez?</strong> No en el flujo de trabajo estándar descrito aquí — solo la pasada que implicó voltear físicamente la pila termina invertida; la primera pasada conserva el orden natural de la pila.</p>
+<h2>Qué revisar antes de descargar</h2>
+<p>Un número distinto de páginas suele indicar una hoja omitida o una doble alimentación. Compara ambos archivos con el original en papel en vez de confiar en que añadir las páginas sobrantes resolverá el problema.</p>
+<p>Intercalar cambia el orden, no la orientación. Si los reversos están cabeza abajo, rótalos en un paso separado.</p>
+<p>Cualquiera de los dos archivos puede necesitar inversión, pues el diseño del escáner y la forma de voltear la pila varían. Confía en las miniaturas, no en una regla universal.</p>
 
 <div class="cta-box">
   <h3>Recombina tus escaneos dúplex</h3>
-  <p>La herramienta Alternar y Mezclar Páginas de Orisod intercala dos PDF página por página, con una inversión opcional para el Archivo B y una vista previa en vivo del orden antes de descargar — todo en tu navegador.</p>
+  <p>Alternar y Mezclar Páginas de Orisod intercala dos PDF y puede invertir el archivo B antes de combinarlos. Comprueba la secuencia en la vista previa desde tu navegador.</p>
   <a class="cta-button" href="/es/alternate-mix-pages/">Intercalar dos PDF →</a>
 </div>
 
-<p>La solución de dos archivos y voltear la pila no es un fallo en tu proceso de escaneo — es la forma estándar de obtener resultados a doble cara con un escáner de una sola cara. La inversión que introduce es predecible una vez que ves por qué ocurre, lo que convierte volver a ordenar las páginas en un arreglo mecánico en vez de un juego de adivinanzas.</p>
+<p>Escanear en dos pasadas permite digitalizar ambas caras con un equipo simplex. Cuando conozcas el orden que produce tu escáner, recombinar las siguientes pilas será un proceso predecible.</p>
 
 </div>
 

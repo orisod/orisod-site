@@ -144,34 +144,34 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 
 <span class="blog-cat cat-guide">Guías</span>
 <h1>Cómo Añadir un Encabezado o Pie de Página a Cada Página de un PDF</h1>
-<p class="intro">Un encabezado o pie de página es simplemente texto dibujado en el margen de cada página — pero pasar de "quiero el título de mi documento en la parte superior de cada página" a un PDF real significa entender algunas cosas que un procesador de texto normalmente te oculta por completo.</p>
+<p class="intro">A diferencia de un procesador de textos, un PDF existente no tiene una zona compartida de encabezado lista para editar. Añadir encabezados o pies significa dibujar texto nuevo en posiciones calculadas para cada página. El tamaño, la rotación, los márgenes y el contenido existente influyen.</p>
 
 <div class="article-body">
 
-<h2>Una página de PDF no tiene un "área de encabezado" incorporada</h2>
-<p>Los procesadores de texto tienen un modo de edición dedicado a encabezados/pies de página porque su formato de archivo rastrea ese concepto explícitamente — un encabezado es su propio objeto, repetido automáticamente en todas las páginas. Un PDF no funciona así. Una vez que un documento se exporta a PDF, cada página es simplemente una colección plana de texto y gráficos posicionados; no hay ninguna marca especial de "esto es el encabezado" en nada. Añadir un encabezado o pie de página a un PDF existente significa colocar texto nuevo en una coordenada específica cerca de la parte superior o inferior de cada página — visualmente un encabezado, pero estructuralmente idéntico a cualquier otro texto de la página.</p>
+<h2>Las páginas PDF no tienen una zona de encabezado incorporada</h2>
+<p>Un archivo de texto puede guardar un encabezado reutilizable. En un PDF, el contenido se coloca en posiciones explícitas. El texto añadido arriba puede parecer un encabezado, pero estructuralmente es otro objeto de la página. Lo mismo ocurre con el pie.</p>
 
-<h2>Por qué la misma línea debe recalcularse en cada página</h2>
-<p>Como no existe un objeto de encabezado compartido, añadir una línea de texto de encabezado a un documento de 50 páginas significa dibujar literalmente ese mismo texto 50 veces por separado, una por página — y si el texto debe estar centrado, su posición horizontal también debe recalcularse por página, ya que centrarlo depende del ancho en píxeles del texto renderizado (que varía según el contenido) y del ancho de esa página en particular (que técnicamente puede diferir de una página a otra, incluso dentro de un mismo PDF). Nada de esto es visible para alguien que simplemente escribe "Confidencial" en un campo de encabezado — se maneja automáticamente — pero es exactamente lo que una herramienta tiene que hacer por debajo.</p>
+<h2>La posición se calcula en cada página</h2>
+<p>Como no existe un objeto de encabezado compartido, añadir una línea de texto de encabezado a un documento de 50 páginas significa dibujar literalmente ese mismo texto 50 veces por separado, una por página; y si el texto debe estar centrado, su posición horizontal también debe recalcularse por página, ya que centrarlo depende del ancho en píxeles del texto renderizado (que varía según el contenido) y del ancho de esa página en particular (que técnicamente puede diferir de una página a otra, incluso dentro de un mismo PDF). Nada de esto es visible para alguien que simplemente escribe "Confidencial" en un campo de encabezado; se maneja automáticamente; pero es exactamente lo que una herramienta tiene que hacer por debajo.</p>
 
-<h2>Qué hace realmente un token como {page}</h2>
-<p>Escribir un número de página literal en un encabezado significaría volver a escribir un número distinto para cada página, lo cual anula el propósito. En su lugar, el texto de encabezado/pie de página se trata como una pequeña plantilla: un marcador de posición como <code>{page}</code> permanece en el texto tal como se escribió, y solo en el momento en que cada página se renderiza realmente la herramienta sustituye el número real de esa página — <code>{page}</code> se convierte en 1 en la primera página, en 2 en la segunda, y así sucesivamente, mientras que <code>{pages}</code> se sustituye por el mismo total de páginas en todas partes. Una línea como <code>Página {page} de {pages}</code> en realidad son solo tres piezas pegadas: texto estático, una sustitución por página y una constante de todo el documento.</p>
+<h2>Los tokens generan texto específico para cada página</h2>
+<p>Una plantilla sustituye {page} por el número actual y {pages} por el total del documento. En Página {page} de {pages}, las palabras permanecen fijas y los valores se actualizan en cada página. Los tokens de fecha usan el formato implementado por la herramienta.</p>
 
-<h2>Por qué esto es una herramienta separada de Añadir Números de Página</h2>
-<p>Una herramienta que solo estampa un número simple en una esquina es deliberadamente más sencilla que una que dibuja texto arbitrario de encabezado/pie de página — no necesita un campo de texto, opciones de alineación ni un sistema de plantillas, porque hay exactamente una cosa que configurar: qué esquina. Meter el texto completo de encabezado/pie de página en esa misma herramienta significaría o complicar demasiado el caso simple, o dejar corto el caso flexible. Mantenerlos separados significa que quien solo quiere un número de página obtiene una herramienta de dos clics, y quien quiere "Borrador Confidencial — {date}" en la parte superior de cada página obtiene la flexibilidad que eso realmente requiere.</p>
+<h2>Los encabezados ofrecen más control que la numeración simple</h2>
+<p>Una herramienta de numeración puede ofrecer algunas posiciones predefinidas. Los encabezados y pies necesitan texto libre, alineación y sustitución de tokens. Separar ambas interfaces mantiene sencilla la numeración sin limitar el contenido repetido personalizado.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Pueden el encabezado y el pie de página tener alineación o texto diferentes?</strong> Sí — son independientes por diseño, ya que un título en la parte superior y un conteo de páginas en la parte inferior son dos piezas de información no relacionadas que simplemente comparten el mismo mecanismo de "repetirse en cada página".</p>
-<p><strong>¿Por qué el formato de fecha es fijo en lugar de coincidir con mi región?</strong> Una fecha escrita como 03/04/25 significa un día completamente distinto según si el lector espera el orden mes-primero o día-primero. Un formato fijo e inequívoco evita esa confusión por completo, a costa de no coincidir con la preferencia personal de todos.</p>
-<p><strong>¿Añadir un encabezado/pie de página aplana o convierte el PDF en imagen?</strong> No — el texto nuevo se dibuja como texto vectorial real usando el mismo mecanismo que el resto de la página, así que sigue siendo seleccionable y el contenido existente no se toca.</p>
+<h2>Antes de exportar</h2>
+<p>El encabezado y el pie pueden llevar texto y alineación diferentes. Comprueba que no cubran contenido, sobre todo si el PDF mezcla tamaños u orientaciones.</p>
+<p>Un formato de fecha inequívoco evita confundir día y mes, aunque no coincida con la preferencia regional de todos los lectores.</p>
+<p>Añadir texto vectorial no exige rasterizar, pero sí modifica el PDF. Puede superponerse al contenido, alterar el orden de lectura etiquetado e invalidar firmas digitales. La incrustación de fuentes y la extracción dependen de la implementación.</p>
 
 <div class="cta-box">
   <h3>Añade un encabezado o pie de página a un PDF</h3>
-  <p>La herramienta de Encabezado y Pie de Página de Orisod añade texto personalizado a la parte superior y/o inferior de cada página, con tokens de número de página y fecha integrados — completamente en tu navegador.</p>
+  <p>Encabezado y Pie de Página de Orisod añade texto personalizado con tokens de fecha y numeración en tu navegador. Revisa las páginas con tamaños o rotaciones diferentes antes de descargar.</p>
   <a class="cta-button" href="/es/pdf-header-footer/">Añadir encabezado y pie de página →</a>
 </div>
 
-<p>La versión corta: un encabezado o pie de página de PDF no es una función incorporada del formato, es texto colocado en el lugar correcto en cada página, recalculado por página para que la alineación se mantenga correcta, con un pequeño sistema de plantillas para todo lo que necesite cambiar de una página a otra. Una vez que eso queda claro, una línea como "Página {page} de {pages}" deja de parecer magia y empieza a verse como exactamente lo que es — tres piezas simples unidas en el momento del renderizado.</p>
+<p>Un encabezado o pie de PDF es contenido repetido en coordenadas calculadas. Los tokens aportan valores variables y una vista de varias páginas ayuda a detectar superposiciones y problemas de alineación.</p>
 
 </div>
 

@@ -146,16 +146,16 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guides</span>
-<h1>Why a PDF Color Filter Rasterizes Every Page (and What That Costs You)</h1>
-<p class="intro">A color filter on a photo just changes pixels that were already there. A color filter on a PDF is a different job entirely — most PDF pages don't have "pixels" to recolor in the first place, so the tool has to manufacture some before it can do anything.</p>
+<h1>Why PDF Color Filters Rasterize Every Page</h1>
+<p class="intro">Applying a color filter to a photograph means changing pixels that already exist. Many PDF pages contain text and vector shapes instead, so there may be no fixed pixel grid to recolor. The page must first be rendered as an image, and that conversion changes more than its appearance.</p>
 
 <div class="article-body">
 
 <h2>Why a PDF page usually isn't made of pixels</h2>
-<p>Text and shapes in a typical PDF are stored as vector instructions — draw this letterform at this size at this position, stroke this line, fill this shape — resolution-independent descriptions that a PDF viewer turns into pixels only at the moment it displays or prints the page. There's no fixed grid of colored dots to loop over and recolor, the way there is in a JPEG or PNG. A color filter, by definition, needs to touch individual pixels — grayscale needs a pixel's red/green/blue values to compute one gray value, sepia needs those same values to compute a tinted replacement — so it needs pixels to exist first.</p>
+<p>Text and shapes in a typical PDF are stored as vector instructions; draw this letterform at this size at this position, stroke this line, fill this shape; resolution-independent descriptions that a PDF viewer turns into pixels only at the moment it displays or prints the page. There's no fixed grid of colored dots to loop over and recolor, the way there is in a JPEG or PNG. A color filter, by definition, needs to touch individual pixels; grayscale needs a pixel's red/green/blue values to compute one gray value, sepia needs those same values to compute a tinted replacement; so it needs pixels to exist first.</p>
 
-<h2>What rasterizing actually means here</h2>
-<p>The fix is to render each page the same way a PDF viewer would to display it on screen, except capturing the result as a bitmap instead of showing it — effectively taking a very precise screenshot of each page. That screenshot is genuinely made of pixels, so the filter's per-pixel math can run on it normally. The filtered bitmap then gets placed into a brand-new PDF, one image per page, sized to match the original page dimensions.</p>
+<h2>Rasterization turns the page into an image</h2>
+<p>The tool renders each page much as a PDF viewer does, then captures that rendering as a bitmap. Pixel-based grayscale, sepia or inversion can now be applied. Finally, the filtered bitmap is placed on a new PDF page with the original page dimensions.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 260" width="700" height="260" role="img" aria-label="Diagram showing an original PDF page made of vector text and shapes on the left, an arrow labeled rasterize plus filter, and the resulting new PDF made of one filtered pixel image per page on the right, with a magnified corner showing individual colored pixel squares." xmlns="http://www.w3.org/2000/svg">
@@ -191,27 +191,27 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <rect x="634" y="134" width="20" height="20" fill="#f59e0b" opacity="0.5"/>
 <text x="625" y="185" text-anchor="middle" font-size="11" fill="var(--muted-text)">zoomed in: individual pixels</text>
 </svg>
-<figcaption>Filtering requires pixels, so a formerly vector page becomes a single flattened pixel image, colored one square at a time.</figcaption>
+<figcaption>A vector page is rendered into one flat pixel image before the filter is applied.</figcaption>
 </figure>
 
-<h2>The real cost: text stops being text</h2>
-<p>Once a page is a pixel image, whatever text was on it is now just colored dots that happen to look like letters — the same situation a scanned document is already in. Selecting a sentence, searching for a word, or copying a paragraph all stop working, because there's no longer any actual text there to select, search, or copy — only its picture. This isn't a bug or a missing feature; it's an unavoidable consequence of doing pixel-level color work on content that didn't start out as pixels. The fix, if searchable text matters afterward, is the same one that fixes any scanned document: running the result through OCR to add a text layer back.</p>
+<h2>Selectable text becomes part of the image</h2>
+<p>After rasterization, letters are pixels rather than text objects. Search, selection and copy operations no longer work on that page unless OCR adds a separate text layer. This is an expected consequence of applying a pixel-level effect, not an error in the exported file.</p>
 
-<h2>Choosing a resolution: the quality tradeoff</h2>
-<p>Because the output is now an image, its sharpness depends entirely on how many pixels it was rendered at — this is where a genuine tradeoff shows up. Render too small and text edges look chunky or blurry when the page is viewed at full size or printed; render very large and the resulting PDF balloons in file size for very little visible benefit past a certain point. Rendering at roughly twice the page's normal display resolution before filtering is a practical middle ground: sharp enough that filtered text stays legible at normal reading and printing sizes, without inflating the file the way an even higher resolution would.</p>
+<h2>Resolution controls sharpness and file size</h2>
+<p>The rendered resolution determines how sharp the new page looks. Too few pixels can make small type blurry, especially in print; an unnecessarily large bitmap increases file size with little visible benefit. A moderate high-resolution render is usually the sensible compromise, but the best choice depends on page size, typography and how the PDF will be used.</p>
 
-<h2>Quick answers</h2>
-<p><strong>Does this change the PDF's page size or layout?</strong> No — each new page is sized to match the original page's dimensions; only the content becomes a single image instead of live vector elements.</p>
-<p><strong>Why JPEG instead of PNG for the filtered pages?</strong> JPEG's lossy compression keeps file size far smaller for photographic-style content at a quality level where the difference is not visually obvious, which matters more here since every single page is now a full-page image instead of light text instructions.</p>
-<p><strong>Is there any way to filter a PDF without losing selectable text?</strong> Not for a true pixel-level color effect — anything that only needs to recolor specific known elements (like a solid background color) could theoretically be done without rasterizing, but a general filter that inspects and changes arbitrary pixel colors fundamentally needs pixels to work with.</p>
+<h2>What to expect from the result</h2>
+<p>The output PDF can retain the original page dimensions and layout, but each page now contains one flat image instead of separate text and vector elements.</p>
+<p>JPEG can keep full-page photographic images smaller than lossless PNG, although it may introduce compression artifacts around text and sharp edges. The right format and quality setting depend on the page content.</p>
+<p>A general pixel-level filter cannot operate on arbitrary PDF content without first rendering it. Targeted edits to known vector elements may avoid rasterization, but they are a different operation.</p>
 
 <div class="cta-box">
   <h3>Apply a color filter to a PDF</h3>
-  <p>Orisod's PDF Color Filters tool applies black & white, sepia, or inverted filters to every page, with a live preview and the rasterization tradeoff disclosed right in the tool — entirely in your browser.</p>
+  <p>Orisod’s PDF Color Filters tool applies black and white, sepia or inverted effects to every page in your browser. Preview the result and remember that the exported pages are rasterized.</p>
   <a class="cta-button" href="/pdf-color-filters/">Apply a PDF color filter →</a>
 </div>
 
-<p>A PDF color filter isn't secretly simple — it's a full render-recolor-rebuild pipeline standing in for what would be one line of code on an image file. Knowing that explains both why the result looks the way it does and why the text inside it behaves differently afterward.</p>
+<p>A PDF color filter is therefore a render, recolor and rebuild process. That explains both the visual result and the loss of native text behavior. If searchability matters, plan to run OCR afterward and inspect its accuracy.</p>
 
 </div>
 

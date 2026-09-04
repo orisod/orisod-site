@@ -147,15 +147,15 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 
 <span class="blog-cat cat-guide">Guías</span>
 <h1>Cómo se Extraen las Imágenes de un PDF (y Por Qué Salen como PNG)</h1>
-<p class="intro">Un PDF no guarda una carpeta con archivos de imagen separados y ordenados como lo haría un archivo ZIP. Recuperar una imagen significa recorrer las instrucciones de dibujo reales de la página, decodificar cualquier dato de imagen al que apunten esas instrucciones, y reconstruirlo como un archivo independiente — precisamente por eso el resultado sale como PNG, sin importar qué formato entró.</p>
+<p class="intro">Un PDF no guarda una carpeta con archivos de imagen separados y ordenados como lo haría un archivo ZIP. Recuperar una imagen significa recorrer las instrucciones de dibujo reales de la página, decodificar cualquier dato de imagen al que apunten esas instrucciones, y reconstruirlo como un archivo independiente; precisamente por eso el resultado sale como PNG, sin importar qué formato entró.</p>
 
 <div class="article-body">
 
 <h2>Una página de PDF es una lista de instrucciones de dibujo, no un archivo de diseño</h2>
-<p>Debajo de la página que ves, una página de PDF es una secuencia de operadores de dibujo de bajo nivel: dibuja esta línea, rellena esta forma, define esta fuente y dibuja este texto, y — de forma crucial — pinta esta imagen en esta posición y tamaño. Una imagen incrustada en un PDF se almacena como un objeto separado en algún lugar del archivo, y la página simplemente la referencia con una instrucción de "pinta este objeto aquí". Extraer imágenes significa recorrer esa lista de instrucciones, encontrar cada operador de "pintar una imagen", y seguir la referencia hasta los datos reales de la imagen.</p>
+<p>El flujo de contenido de un PDF contiene operadores para dibujar texto, trazados y recursos de imagen. El extractor sigue esas referencias y decodifica el objeto asociado. También puede haber imágenes dentro de formularios, máscaras u otras estructuras anidadas; la cobertura depende de cómo recorra el archivo la herramienta.</p>
 
-<h2>Por qué el formato de archivo original no sobrevive el viaje</h2>
-<p>Un PDF puede incrustar imágenes en varios formatos internos distintos — JPEG normal, JPEG2000, compresión de fax CCITT (común en documentos escaneados en blanco y negro), datos de mapa de bits sin procesar, color indexado con una paleta pequeña, y más. Leer una página de PDF — para mostrarla en pantalla, imprimirla o extraer una imagen de ella — requiere decodificar todos esos formatos en una representación común: una simple cuadrícula de valores de píxel. Ese paso de decodificación es inevitable, y también es donde el archivo comprimido original se queda efectivamente atrás. Lo que sale al otro lado son píxeles decodificados, no una copia de los bytes originalmente incrustados.</p>
+<h2>No siempre se puede recuperar el archivo original</h2>
+<p>PDF admite varias codificaciones, como JPEG, JPEG 2000, CCITT, color indexado y muestras sin comprimir. Algunos flujos JPEG pueden copiarse directamente, pero otros deben convertirse primero en píxeles y a un espacio de color. En esos casos se genera un archivo nuevo, no una copia exacta de los bytes originales.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 200" width="700" height="200" role="img" aria-label="Diagrama que muestra las instrucciones de una página de PDF ramificándose hacia una instrucción de pintar imagen que lleva, a través de la decodificación de imagen, a datos de píxeles simples, y una instrucción separada de dibujar forma que lleva a trazos vectoriales en su lugar — ilustrando que solo la rama de imagen produce datos ráster extraíbles." xmlns="http://www.w3.org/2000/svg">
@@ -176,27 +176,27 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <text x="560" y="152" text-anchor="middle" font-size="13" fill="var(--muted-text)">Trazo vectorial</text>
 <text x="560" y="168" text-anchor="middle" font-size="11" fill="var(--muted-text)">→ no es una imagen ráster</text>
 </svg>
-<figcaption>Solo la rama de "pintar imagen" produce datos de píxeles ráster que se pueden guardar como un archivo de imagen — las instrucciones de forma y trazo describen geometría, no una foto, así que no hay nada que extraer de ellas.</figcaption>
+<figcaption>Los objetos ráster pueden extraerse; los trazados vectoriales siguen siendo instrucciones salvo que se renderice la página.</figcaption>
 </figure>
 
 <h2>Por qué específicamente PNG y no siempre JPEG</h2>
-<p>Una vez que una imagen se decodifica en píxeles simples, volver a guardarla necesita un formato capaz de contener exactamente esos datos sin una segunda ronda de compresión con pérdida encima de la que ya pudo haber ocurrido durante la codificación original del propio PDF. PNG no tiene pérdida por diseño — almacena los píxeles tal cual, sean los que sean, sin volver a adivinar ni descartar detalle. Volver a exportar como JPEG en ese punto significaría comprimir datos ya decodificados por segunda vez, añadiendo artefactos nuevos que no estaban en la fuente. Que PNG sea más grande en tamaño de archivo es la contrapartida de no hacer eso.</p>
+<p>Una vez que una imagen se decodifica en píxeles simples, volver a guardarla necesita un formato capaz de contener exactamente esos datos sin una segunda ronda de compresión con pérdida encima de la que ya pudo haber ocurrido durante la codificación original del propio PDF. PNG no tiene pérdida por diseño; almacena los píxeles tal cual, sean los que sean, sin volver a adivinar ni descartar detalle. Volver a exportar como JPEG en ese punto significaría comprimir datos ya decodificados por segunda vez, añadiendo artefactos nuevos que no estaban en la fuente. Que PNG sea más grande en tamaño de archivo es la contrapartida de no hacer eso.</p>
 
-<h2>Por qué la misma imagen no aparece una vez por página</h2>
-<p>Los generadores de PDF suelen reutilizar una sola imagen incrustada en muchas páginas — un logotipo de encabezado repetido o un gráfico de membrete son ejemplos comunes — específicamente para que el archivo no tenga que incrustar docenas de copias idénticas de la misma imagen. Una herramienta que extrae imágenes puede aprovechar esa misma estructura: cuando la misma imagen subyacente se referencia desde varias páginas, solo necesita decodificarse y ofrecerse para descarga una vez, con una nota de en qué páginas aparece, en lugar de una vez por aparición.</p>
+<h2>Un objeto puede reutilizarse en varias páginas</h2>
+<p>Los generadores de PDF suelen reutilizar una sola imagen incrustada en muchas páginas; un logotipo de encabezado repetido o un gráfico de membrete son ejemplos comunes; específicamente para que el archivo no tenga que incrustar docenas de copias idénticas de la misma imagen. Una herramienta que extrae imágenes puede aprovechar esa misma estructura: cuando la misma imagen subyacente se referencia desde varias páginas, solo necesita decodificarse y ofrecerse para descarga una vez, con una nota de en qué páginas aparece, en lugar de una vez por aparición.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Por qué no salió ninguna imagen de mi PDF?</strong> Si el PDF se creó completamente con texto y gráficos vectoriales — formas, líneas y degradados descritos como trazos en lugar de fotos — no hay ningún dato de imagen ráster en ninguna parte que extraer, aunque la página parezca visualmente contener gráficos.</p>
-<p><strong>¿Puede la extracción recuperar una versión de mayor resolución que la que se muestra en la página?</strong> No — solo puede recuperar la resolución que realmente se incrustó en el PDF. Si la imagen de origen ya estaba reducida o muy comprimida antes de colocarse en el PDF, ese es el límite de lo que puede salir.</p>
-<p><strong>¿Funciona con documentos escaneados?</strong> Una página escaneada suele ser en sí misma una gran imagen incrustada por página, así que sí — se puede extraer como una imagen, aunque sería toda la página escaneada como una sola imagen, no fotos separadas dentro de ella (a menos que el propio escaneo contenga fotos incrustadas propias).</p>
+<h2>Límites que conviene conocer</h2>
+<p><strong>¿Por qué no salió ninguna imagen de mi PDF?</strong> Si el PDF se creó completamente con texto y gráficos vectoriales; formas, líneas y degradados descritos como trazos en lugar de fotos; no hay ningún dato de imagen ráster en ninguna parte que extraer, aunque la página parezca visualmente contener gráficos.</p>
+<p><strong>¿Puede la extracción recuperar una versión de mayor resolución que la que se muestra en la página?</strong> No; solo puede recuperar la resolución que realmente se incrustó en el PDF. Si la imagen de origen ya estaba reducida o muy comprimida antes de colocarse en el PDF, ese es el límite de lo que puede salir.</p>
+<p>Un escaneo suele ser una imagen grande por página. El resultado puede ser la página completa, no cada fotografía que se vea dentro de ella.</p>
 
 <div class="cta-box">
   <h3>Extrae las imágenes de un PDF</h3>
-  <p>Extraer Imágenes de un PDF de Orisod encuentra cada imagen incrustada en un PDF y te permite descargarla como PNG, una por una o todas juntas en un ZIP — completamente en tu navegador.</p>
+  <p>Extraer Imágenes de un PDF de Orisod encuentra imágenes incrustadas compatibles y las exporta como PNG, por separado o en un ZIP, sin subir el documento.</p>
   <a class="cta-button" href="/es/extract-images-from-pdf/">Extraer imágenes →</a>
 </div>
 
-<p>La versión corta: un PDF no contiene una carpeta de archivos de imagen esperando ser copiados — contiene instrucciones para pintar píxeles, y extraer una imagen significa realmente ejecutar suficientes de esas instrucciones para obtener datos de píxeles reales, y luego guardar esos datos en un formato diseñado para contenerlos sin pérdida. PNG no es una limitación de ninguna herramienta en particular; es el resultado natural de ese proceso.</p>
+<p>La versión corta: un PDF no contiene una carpeta de archivos de imagen esperando ser copiados; contiene instrucciones para pintar píxeles, y extraer una imagen significa realmente ejecutar suficientes de esas instrucciones para obtener datos de píxeles reales, y luego guardar esos datos en un formato diseñado para contenerlos sin pérdida. PNG no es una limitación de ninguna herramienta en particular; es el resultado natural de ese proceso.</p>
 
 </div>
 

@@ -146,19 +146,19 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guides</span>
-<h1>How to Compare Two PDFs (and What "Compare" Actually Means)</h1>
-<p class="intro">"Compare these two PDFs" sounds like one request, but it hides a real question: compare them as what — as pictures, or as words? Almost every practical PDF-comparison tool, including this one, answers "as words," and understanding why changes what you should expect from the result.</p>
+<h1>What a Text-Based PDF Comparison Can Find</h1>
+<p class="intro">“Compare these PDFs” can mean comparing their words, their visual appearance or their internal objects. Orisod performs a line-based comparison of extracted text. That is useful for wording changes and deliberately ignores many visual differences, so knowing the boundary matters as much as reading the result.</p>
 
 <div class="article-body">
 
-<h2>Two very different ideas of "compare"</h2>
-<p>A pixel-level comparison would render both PDFs to images and diff the images themselves — technically possible, but brittle in practice: a document re-exported at a slightly different resolution, with antialiasing turned on or off, or with a font substituted for a missing one, would show up as "different" everywhere even if the words are identical. A text-level comparison instead pulls out each PDF's underlying selectable text and compares that — immune to rendering noise, but blind to anything that isn't text: a moved image, a recolored heading, a swapped font are all invisible to it. Neither approach is "the" correct one; they answer different questions, and a text diff is the one that matches what most people actually mean when they ask "what changed in this document."</p>
+<h2>Text and pixel comparisons answer different questions</h2>
+<p>A pixel comparison renders both PDF files and detects visual differences, including harmless shifts caused by fonts, antialiasing or resolution. A text comparison avoids that rendering noise by examining extracted characters, but it cannot see a moved image, changed color, altered font or other nontextual edit. Neither approach is universally correct; choose according to the change you need to find.</p>
 
-<h2>How the extracted text becomes lines</h2>
-<p>A PDF's text isn't stored as lines — it's stored as a sequence of positioned text runs, the same fact that makes <a href="/blog/text-to-pdf-word-wrap-explained/">word wrap something a PDF generator has to build itself</a>. Reconstructing lines for a comparison means walking through those runs in order and watching for the flag a PDF-reading library reports whenever a run is meant to be followed by a line break, grouping every run up to that point into one line of text. It's an approximation — a PDF that encodes its line breaks unusually can produce coarser lines than expected — but it's a reasonable one for the vast majority of ordinary documents.</p>
+<h2>Positioned text must be reconstructed into lines</h2>
+<p>PDF text is usually stored as positioned runs rather than semantic lines. Reconstructing lines means following the order and break information exposed by the reading library, then grouping runs into comparable strings. As the related <a href="/blog/text-to-pdf-word-wrap-explained/">word-wrap guide</a> explains, PDF positioning is not a flowing paragraph model. Unusual encodings, columns or reading order can therefore produce surprising line boundaries.</p>
 
-<h2>What a line-by-line diff is actually computing</h2>
-<p>Once both PDFs are broken into a list of lines, the comparison problem becomes: find the longest sequence of lines that appears, in the same order, in both lists. Every line in File A that isn't part of that shared sequence is something removed; every line in File B that isn't part of it is something added. This is the same core idea — the "longest common subsequence" — that powers `git diff` and every other line-based diff tool; a PDF comparison tool doesn't need to invent a new algorithm, just a way to turn PDF pages into line lists that algorithm can consume.</p>
+<h2>A line diff looks for shared ordered sequences</h2>
+<p>Once both PDFs are broken into a list of lines, the comparison problem becomes: find the longest sequence of lines that appears, in the same order, in both lists. Every line in File A that isn't part of that shared sequence is something removed; every line in File B that isn't part of it is something added. This is the same core idea, the "longest common subsequence", that powers `git diff` and every other line-based diff tool; a PDF comparison tool doesn't need to invent a new algorithm, just a way to turn PDF pages into line lists that algorithm can consume.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 210" width="700" height="210" role="img" aria-label="Diagram showing File A's four lines and File B's four lines side by side, with two lines matched as shared between them, one line only in File A marked as removed, and one line only in File B marked as added." xmlns="http://www.w3.org/2000/svg">
@@ -184,24 +184,24 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <line x1="290" y1="155" x2="410" y2="155" stroke="var(--muted-text)" stroke-width="1.5" stroke-dasharray="3,3"/>
 <text x="350" y="190" text-anchor="middle" font-size="13" fill="var(--muted-text)">Shared lines stay unmatched-and-still; only the two unmatched lines are flagged</text>
 </svg>
-<figcaption>A one-line change ("Draft" removed, "Now billed annually" added) leaves the two lines around it untouched — the diff only flags what genuinely isn't shared.</figcaption>
+<figcaption>A one-line change ("Draft" removed, "Now billed annually" added) leaves the two lines around it untouched, the diff only flags what genuinely isn't shared.</figcaption>
 </figure>
 
-<h2>Why the result can still surprise you</h2>
-<p>Because the comparison is purely textual, a handful of situations produce results that are technically correct but easy to misread. A paragraph reflowed differently — same words, different line breaks — can show as several removed and added lines even though no wording actually changed, since the diff compares whole reconstructed lines, not the underlying sentences. A scanned page with no real text layer contributes nothing to compare at all, silently, unless the tool explicitly flags it. And a change to color, font, or image placement never appears, because none of that is text in the first place.</p>
+<h2>Reflow, scans and formatting can mislead the result</h2>
+<p>The same wording with different line breaks may appear as removed and added lines because the algorithm compares reconstructed lines. A scan without a usable text layer contributes little or nothing, while changes to images, color, fonts or placement remain invisible. Treat the output as a wording aid, not a complete document audit.</p>
 
-<h2>Quick answers</h2>
-<p><strong>Will formatting-only changes (bold, color, font) show up?</strong> No — a text-based comparison only sees the characters, never how they're styled or laid out.</p>
+<h2>Reading the result responsibly</h2>
+<p><strong>Will formatting-only changes (bold, color, font) show up?</strong> No, a text-based comparison only sees the characters, never how they're styled or laid out.</p>
 <p><strong>Why does "ignore whitespace" matter for PDFs specifically?</strong> PDF text extraction sometimes inserts slightly different spacing between runs depending on how the original document encoded them, so two functionally identical lines can differ by a stray space unless whitespace differences are deliberately ignored.</p>
-<p><strong>Is this the same thing Word's "Compare Documents" feature does?</strong> Conceptually yes — both reduce a document to text and diff it — but a PDF has already lost the paragraph/style metadata a word processor's native format keeps, so a PDF-to-PDF comparison works purely off reconstructed lines instead.</p>
+<p><strong>Is this the same thing Word's "Compare Documents" feature does?</strong> Conceptually yes, both reduce a document to text and diff it, but a PDF has already lost the paragraph/style metadata a word processor's native format keeps, so a PDF-to-PDF comparison works purely off reconstructed lines instead.</p>
 
 <div class="cta-box">
   <h3>Compare two PDFs</h3>
-  <p>Orisod's Compare PDFs tool extracts and diffs the text of two PDFs line by line, with an added/removed count and an optional ignore-whitespace toggle — entirely in your browser.</p>
+  <p>Orisod’s Compare PDFs tool extracts and compares text line by line, reports additions and removals and can ignore whitespace differences in your browser.</p>
   <a class="cta-button" href="/compare-pdfs/">Compare two PDFs →</a>
 </div>
 
-<p>A PDF comparison tool isn't reading the document the way a person does — it's reducing it to a list of lines and asking a well-known question about two lists. Knowing that turns a surprising diff into an expected one: it only ever tells you what changed in the words, never in the way they were dressed up.</p>
+<p>A line-based PDF comparison reduces both files to extracted strings and reports their differences. It can answer “which words changed?” but not “are these documents visually or structurally identical?” Important reviews may need text, visual, metadata and signature checks together.</p>
 
 </div>
 

@@ -146,16 +146,16 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guías</span>
-<h1>Cómo el HTML se convierte realmente en Markdown</h1>
-<p class="intro">Copia un párrafo con formato de una página web, pégalo en algo que solo entienda Markdown, y simplemente funciona — los encabezados siguen siendo encabezados, la negrita sigue siendo negrita, los enlaces siguen siendo enlaces. Esa conversión parece instantánea, pero en realidad es un proceso de traducción pequeño y estructurado que se ejecuta por debajo, un elemento HTML a la vez.</p>
+<h1>Cómo se convierte HTML a Markdown</h1>
+<p class="intro">Un conversor lee la estructura HTML y aplica reglas a encabezados, énfasis, enlaces, listas, código y otros elementos compatibles. Como Markdown tiene varios dialectos y menos funciones, el resultado es una simplificación controlada, no una traducción perfectamente reversible.</p>
 
 <div class="article-body">
 
 <h2>Un recorrido de árbol, no una transformación de texto</h2>
-<p>El navegador no le entrega a un conversor texto HTML crudo para buscar patrones — le entrega el DOM, la estructura de árbol ya interpretada que el navegador construyó para renderizar la página: este párrafo contiene este span en negrita, que contiene este nodo de texto, y así sucesivamente. Un conversor recorre ese árbol de arriba hacia abajo, y para cada nodo que encuentra, hace una pregunta: ¿qué sintaxis de Markdown representa este elemento específico? Un `&lt;strong&gt;` se convierte en texto envuelto en `**`, un `&lt;h2&gt;` se convierte en una línea que empieza con `##`, un `&lt;a&gt;` se convierte en `[texto](url)`. El resultado se construye convirtiendo recursivamente primero los hijos de cada nodo, y luego envolviendo el resultado con la sintaxis que exige la etiqueta de ese nodo.</p>
+<p>El navegador no le entrega a un conversor texto HTML crudo para buscar patrones; le entrega el DOM, la estructura de árbol ya interpretada que el navegador construyó para renderizar la página: este párrafo contiene este span en negrita, que contiene este nodo de texto, y así sucesivamente. Un conversor recorre ese árbol de arriba hacia abajo, y para cada nodo que encuentra, hace una pregunta: ¿qué sintaxis de Markdown representa este elemento específico? Un `&lt;strong&gt;` se convierte en texto envuelto en `**`, un `&lt;h2&gt;` se convierte en una línea que empieza con `##`, un `&lt;a&gt;` se convierte en `[texto](url)`. El resultado se construye convirtiendo recursivamente primero los hijos de cada nodo, y luego envolviendo el resultado con la sintaxis que exige la etiqueta de ese nodo.</p>
 
 <h2>Por qué esto es un mapeo, no una traducción</h2>
-<p>Cada elemento HTML necesita una regla explícita que diga en qué Markdown se convierte — no existe una forma automática o de propósito general de derivar uno del otro, porque Markdown no fue diseñado para representar todo lo que HTML puede. Un `&lt;div&gt;` con una clase CSS personalizada no tiene ningún equivalente en Markdown; un conversor simplemente lo trata como un envoltorio invisible y conserva su contenido. Por eso un conversor maduro incluye decenas de reglas integradas (una por cada etiqueta común) y permite registrar más para cualquier cosa inusual que encuentre.</p>
+<p>Cada elemento HTML necesita una regla explícita que diga en qué Markdown se convierte; no existe una forma automática o de propósito general de derivar uno del otro, porque Markdown no fue diseñado para representar todo lo que HTML puede. Un `&lt;div&gt;` con una clase CSS personalizada no tiene ningún equivalente en Markdown; un conversor simplemente lo trata como un envoltorio invisible y conserva su contenido. Por eso un conversor maduro incluye decenas de reglas integradas (una por cada etiqueta común) y permite registrar más para cualquier cosa inusual que encuentre.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 260" width="700" height="260" role="img" aria-label="Diagrama que muestra un árbol DOM de HTML a la izquierda con un elemento h2 que contiene texto en negrita y texto normal, una flecha etiquetada recorrer el árbol y aplicar una regla por elemento, y el texto Markdown resultante a la derecha que dice dos signos de almohadilla, luego la palabra Really, luego dos asteriscos alrededor de important, y más texto." xmlns="http://www.w3.org/2000/svg">
@@ -176,27 +176,27 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <text x="530" y="95" text-anchor="middle" font-family="Courier New, monospace" font-size="15" fill="var(--text)">## Really <tspan fill="#f59e0b">**important**</tspan></text>
 <text x="530" y="125" text-anchor="middle" font-size="11.5" fill="var(--muted-text)">regla de encabezado + regla de negrita, combinadas</text>
 </svg>
-<figcaption>La regla del h2 envuelve su contenido en "## "; la regla de strong encontrada dentro envuelve su propio contenido en "**" — cada regla solo conoce su propio elemento, y los resultados se anidan de forma natural.</figcaption>
+<figcaption>La regla del h2 envuelve su contenido en "## "; la regla de strong encontrada dentro envuelve su propio contenido en "**"; cada regla solo conoce su propio elemento, y los resultados se anidan de forma natural.</figcaption>
 </figure>
 
 <h2>Por qué una tabla necesita una fila de encabezado para convertirse siquiera</h2>
-<p>La sintaxis de tablas de Markdown tiene un requisito estricto que las tablas HTML no tienen: una línea separadora de guiones justo debajo de la fila de encabezado, que es lo que le indica a un renderizador de Markdown dónde termina el encabezado y empieza el cuerpo. Una tabla HTML sin celdas `&lt;th&gt;` de encabezado no tiene una fuente natural para esa línea, así que un conversor genuinamente no puede producir una tabla Markdown válida a partir de ella — las opciones honestas son omitir la conversión y dejar la tabla original como HTML crudo incrustado en el resultado, o tratar la primera fila como encabezado por suposición. Esto no es una limitación del conversor; es un requisito estructural del propio formato de tabla de Markdown.</p>
+<p>Las tablas con barras pertenecen a extensiones populares de Markdown, no a la especificación básica original. Un conversor puede tomar la primera fila como cabecera, conservar HTML crudo o usar otra representación. La ausencia de <th> no vuelve universalmente imposible la conversión.</p>
 
 <h2>Qué nunca sobrevive al viaje</h2>
-<p>Markdown se mantuvo deliberadamente pequeño: estandariza encabezados, énfasis, enlaces, listas, citas, código y (en dialectos extendidos) tablas — y nada más. Las fuentes personalizadas, los colores, el espaciado preciso, los diseños de varias columnas y los scripts o estilos incrustados no tienen representación en Markdown, así que un conversor los descarta en vez de inventar sintaxis no estándar para aproximarlos. Esto es una característica, no una carencia: todo el valor de Markdown está en ser legible como texto plano y portable entre herramientas, algo que solo se sostiene si todos usan el mismo vocabulario reducido.</p>
+<p>Colores, fuentes, scripts, diseños complejos y muchos atributos no tienen equivalentes portátiles. La herramienta puede descartarlos, conservar HTML crudo o usar extensiones. La sanitización es otro asunto de seguridad, especialmente con HTML no confiable.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Por qué el contenido pegado a veces trae formato inesperado?</strong> El pegado de texto enriquecido desde apps como Word o Google Docs suele envolver el contenido en elementos de estilo extra que la app añadió para su propio renderizado — un conversor sigue extrayendo la estructura subyacente correctamente, pero un formato de origen muy inusual puede producir ocasionalmente un resultado más ruidoso que un HTML limpio.</p>
-<p><strong>¿Un enlace sin texto visible se convierte correctamente?</strong> Sí — el propio contenido de texto del enlace se convierte en la etiqueta entre corchetes y su href se convierte en la URL, igual que con cualquier otro enlace, sin importar cómo se haya estilizado ese texto.</p>
-<p><strong>¿La conversión de HTML a Markdown es reversible?</strong> No perfectamente — convertir Markdown de vuelta a HTML recupera la estructura, pero cualquier cosa que Markdown no pudiera representar desde el principio (estilo personalizado, diseño) ya se perdió y no puede reconstruirse solo a partir del Markdown.</p>
+<h2>Qué revisar después de convertir</h2>
+<p><strong>¿Por qué el contenido pegado a veces trae formato inesperado?</strong> El pegado de texto enriquecido desde apps como Word o Google Docs suele envolver el contenido en elementos de estilo extra que la app añadió para su propio renderizado; un conversor sigue extrayendo la estructura subyacente correctamente, pero un formato de origen muy inusual puede producir ocasionalmente un resultado más ruidoso que un HTML limpio.</p>
+<p>Un enlace sin etiqueta carece de ancla visible útil. La herramienta puede crear un enlace vacío, usar la URL como texto o descartarlo según sus reglas.</p>
+<p><strong>¿La conversión de HTML a Markdown es reversible?</strong> No perfectamente; convertir Markdown de vuelta a HTML recupera la estructura, pero cualquier cosa que Markdown no pudiera representar desde el principio (estilo personalizado, diseño) ya se perdió y no puede reconstruirse solo a partir del Markdown.</p>
 
 <div class="cta-box">
   <h3>Convierte HTML o texto enriquecido a Markdown</h3>
-  <p>La herramienta Convertir a Markdown de Orisod maneja tanto un pegado normal de texto enriquecido como código HTML crudo, incluidas tablas — todo en tu navegador.</p>
+  <p>Convertir a Markdown de Orisod acepta texto enriquecido o HTML crudo y produce Markdown en tu navegador. Revisa estilos no compatibles, tablas complejas y enlaces vacíos.</p>
   <a class="cta-button" href="/es/convert-to-markdown/">Convertir a Markdown →</a>
 </div>
 
-<p>Convertir HTML a Markdown no es un único truco ingenioso — son decenas de reglas pequeñas e independientes, una por tipo de elemento, aplicadas de forma consistente mientras se recorre un árbol de arriba hacia abajo. Una vez que eso se hace visible, tanto lo que sobrevive a la conversión como lo que calladamente no lo hace dejan de ser un misterio.</p>
+<p>Una buena conversión documenta sus decisiones: dialecto de destino, HTML conservado y detalles descartados. Revisa tablas, listas anidadas, código, imágenes y enlaces antes de publicar.</p>
 
 </div>
 

@@ -146,19 +146,19 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guides</span>
-<h1>How to Stamp a PDF (APPROVED, DRAFT, CONFIDENTIAL, and Custom)</h1>
-<p class="intro">A "stamp" is the single most common piece of paper-office ritual that's been dragged into PDFs almost unchanged: a rubber-stamp-style mark, usually rotated a few degrees like it was pressed on by hand, sitting in one spot on one page. It looks simple, but placing it in exactly the right spot depends on a coordinate-system quirk that trips up a lot of "quick" implementations.</p>
+<h1>How a PDF Stamp Is Drawn and Positioned</h1>
+<p class="intro">A stamp is a visible label placed at one location on one PDF page. Its familiar border, color and slight rotation make the purpose easy to recognize, but accurate placement depends on translating coordinates between a browser preview and the PDF page. The mark communicates status; it does not prove identity, approval or authorization.</p>
 
 <div class="article-body">
 
-<h2>A stamp is not a watermark</h2>
-<p>The two get confused constantly because both put text on top of a PDF page, but they solve different problems. A watermark is meant to be applied uniformly and repeatedly — the same text, tiled across every page of a document, usually in a light, unobtrusive style, so it survives no matter which page someone is looking at. A stamp is the opposite: one specific mark, in one specific spot, on one specific page — a cover page marked APPROVED, or a single sensitive exhibit marked CONFIDENTIAL — deliberately not applied to the rest of the document.</p>
+<h2>A stamp and a watermark solve different problems</h2>
+<p>Both add visible material over a PDF, but their scope differs. A watermark typically repeats across pages as a broad ownership or status notice. A stamp marks a chosen point on a chosen page, such as APPROVED on a cover or CONFIDENTIAL beside one section. Neither method encrypts the document or prevents editing with specialized software.</p>
 
-<h2>How a stamp graphic actually gets built</h2>
-<p>Visually, a rubber stamp isn't just text — it's text inside a bordered box, tilted a consistent amount, in a color that reads as "official" (approval green, draft gray, warning red). The most direct way to produce that is to draw it once as a small offscreen image: render a box and rotated, centered text onto a canvas, then export that canvas as a PNG. From there it's just an image, which makes it trivial to preview at any size and embed into a PDF page with a PDF library — no per-glyph rotation math needed inside the PDF itself.</p>
+<h2>The stamp begins as a small rendered graphic</h2>
+<p>Visually, a rubber stamp isn't just text, it's text inside a bordered box, tilted a consistent amount, in a color that reads as "official" (approval green, draft gray, warning red). The most direct way to produce that is to draw it once as a small offscreen image: render a box and rotated, centered text onto a canvas, then export that canvas as a PNG. From there it's just an image, which makes it trivial to preview at any size and embed into a PDF page with a PDF library, no per-glyph rotation math needed inside the PDF itself.</p>
 
-<h2>The coordinate-system detail that actually matters</h2>
-<p>This is the part that's easy to get backwards. A browser canvas — and the click position a user reports by clicking on a preview — is measured from the <strong>top-left</strong> corner, with y increasing downward. A PDF page, by contrast, places content measured from the <strong>bottom-left</strong> corner, with y increasing upward. If you take a click's y-coordinate from a canvas and hand it straight to a PDF library's drawing call, the stamp lands mirrored vertically — a click near the top of the preview ends up stamping near the bottom of the real page.</p>
+<h2>Preview clicks and PDF coordinates start from opposite corners</h2>
+<p>Browser pointer coordinates usually begin at the upper-left corner and increase downward. Standard PDF page coordinates begin at the lower-left and increase upward. Placement code must scale the preview position to the real page and invert the vertical axis while accounting for stamp dimensions and page rotation. Skipping any part of that conversion can move the result far from the selected point.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 220" width="700" height="220" role="img" aria-label="Diagram comparing two coordinate systems: a browser canvas with its origin at the top-left corner and y increasing downward, versus a PDF page with its origin at the bottom-left corner and y increasing upward, showing the flip formula pdfY equals pageHeight minus canvasY minus stampHeight." xmlns="http://www.w3.org/2000/svg">
@@ -180,24 +180,24 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <text x="470" y="152" text-anchor="middle" font-size="11" fill="var(--text)">stamp</text>
 <text x="350" y="210" text-anchor="middle" font-size="13.5" fill="var(--muted-text)">pdfY = pageHeight − canvasY − stampHeight</text>
 </svg>
-<figcaption>The same click position means two different things depending on which origin you measure it from — a stamping tool has to convert between them explicitly, once, right before drawing.</figcaption>
+<figcaption>The same click position means two different things depending on which origin you measure it from, a stamping tool has to convert between them explicitly, once, right before drawing.</figcaption>
 </figure>
 
-<h2>Why rotation and color are part of the "stamp" language</h2>
-<p>None of this is decorative flourish for its own sake — the rotated, hand-pressed look and the color-coded meaning (green for approval, red for a warning, neutral gray for a draft) are exactly what makes a stamp instantly legible at a glance, the same way it would be on paper. A perfectly straight, plain-black rectangle with the word "APPROVED" in it reads as a text box, not a stamp; the tilt is doing real communicative work.</p>
+<h2>Rotation and color help readers recognize the label</h2>
+<p>None of this is decorative flourish for its own sake, the rotated, hand-pressed look and the color-coded meaning (green for approval, red for a warning, neutral gray for a draft) are exactly what makes a stamp instantly legible at a glance, the same way it would be on paper. A perfectly straight, plain-black rectangle with the word "APPROVED" in it reads as a text box, not a stamp; the tilt is doing real communicative work.</p>
 
-<h2>Quick answers</h2>
-<p><strong>Is a PDF stamp a legal signature?</strong> No — a text stamp like APPROVED or CONFIDENTIAL is a visual marker, not a cryptographic signature and not proof of identity or consent. For something that needs to hold up as a signature, use an actual signing tool.</p>
-<p><strong>Can one stamp cover multiple pages at once?</strong> Not directly — a stamp is inherently a single-page, single-spot mark. Covering several pages means repeating the placement step once per page, which is different from a watermark's "every page automatically" behavior.</p>
+<h2>What a stamp does not establish</h2>
+<p><strong>Is a PDF stamp a legal signature?</strong> No, a text stamp like APPROVED or CONFIDENTIAL is a visual marker, not a cryptographic signature and not proof of identity or consent. For something that needs to hold up as a signature, use an actual signing tool.</p>
+<p><strong>Can one stamp cover multiple pages at once?</strong> Not directly, a stamp is inherently a single-page, single-spot mark. Covering several pages means repeating the placement step once per page, which is different from a watermark's "every page automatically" behavior.</p>
 <p><strong>Why does long custom stamp text sometimes look smaller than a preset?</strong> A stamp box has a fixed size, so a tool that lets you type your own text has to shrink the font until the text fits inside that box, the same way a business card printer shrinks a long name to keep it on one line.</p>
 
 <div class="cta-box">
   <h3>Stamp a PDF</h3>
-  <p>Orisod's Add Stamps tool gives you APPROVED, DRAFT, and CONFIDENTIAL presets plus custom text, with a live click-to-place preview — entirely in your browser.</p>
+  <p>Orisod’s Add Stamps tool offers APPROVED, DRAFT and CONFIDENTIAL presets plus custom text with click-to-place preview in your browser.</p>
   <a class="cta-button" href="/add-stamps/">Stamp a PDF →</a>
 </div>
 
-<p>A stamp only looks like a small, obvious feature. Underneath it's a rendered graphic, a rotation, a color convention borrowed from decades of paper offices, and one coordinate-system conversion that has to be right or the mark ends up nowhere near where you clicked.</p>
+<p>Behind the small visual mark are a rendered graphic, page scaling and a coordinate conversion. Getting those pieces right produces predictable placement, but the stamp remains ordinary page content rather than a signature, audit record or security control.</p>
 
 </div>
 

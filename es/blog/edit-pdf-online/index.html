@@ -146,14 +146,14 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guías</span>
 <h1>Cómo editar un PDF en línea (cuadros de texto, resaltados y marcas)</h1>
-<p class="intro">Marcar un PDF — resaltar una frase clave, tachar una cifra antigua, añadir una nota — no necesita un editor de escritorio completo. En el navegador, el mismo texto real que te permite copiar y pegar desde un PDF es exactamente lo que hace que un resaltado caiga con precisión sobre las palabras correctas, y entender esa distinción explica tanto lo que este tipo de herramienta puede hacer como dónde realmente no puede.</p>
+<p class="intro">Marcar un PDF; resaltar una frase clave, tachar una cifra antigua, añadir una nota; no necesita un editor de escritorio completo. En el navegador, el mismo texto real que te permite copiar y pegar desde un PDF es exactamente lo que hace que un resaltado caiga con precisión sobre las palabras correctas, y entender esa distinción explica tanto lo que este tipo de herramienta puede hacer como dónde realmente no puede.</p>
 
 <div class="article-body">
 
-<h2>Resaltar funciona usando texto que ya puedes seleccionar</h2>
-<p>Debajo de una página PDF renderizada, las palabras reales existen como texto real y posicionado — el mismo texto que agarrarías con un "seleccionar todo, copiar" en cualquier visor de PDF. Una herramienta de marcado en el navegador dibuja la página como una imagen para que la veas, y superpone silenciosamente ese mismo texto real, de forma invisible, exactamente en los lugares correctos, para que puedas arrastrar el ratón sobre él y seleccionarlo de la forma habitual. Una vez que has seleccionado una palabra o una frase, el navegador ya sabe con precisión dónde está cada carácter — esa posición es lo que se convierte en un resaltado, un subrayado o un tachado.</p>
+<h2>Los resaltados necesitan una capa de texto utilizable</h2>
+<p>Debajo de una página PDF renderizada, las palabras reales existen como texto real y posicionado; el mismo texto que agarrarías con un "seleccionar todo, copiar" en cualquier visor de PDF. Una herramienta de marcado en el navegador dibuja la página como una imagen para que la veas, y superpone silenciosamente ese mismo texto real, de forma invisible, exactamente en los lugares correctos, para que puedas arrastrar el ratón sobre él y seleccionarlo de la forma habitual. Una vez que has seleccionado una palabra o una frase, el navegador ya sabe con precisión dónde está cada carácter; esa posición es lo que se convierte en un resaltado, un subrayado o un tachado.</p>
 
-<h2>Los cuadros de texto funcionan de otra manera — y siempre funcionan</h2>
+<h2>Los cuadros de texto usan coordenadas de página</h2>
 <p>Un cuadro de texto no depende de nada de eso. Haz clic en cualquier parte de la página, escribe, y esa nota se coloca exactamente en el píxel donde hiciste clic, sin importar si la página de debajo tiene texto real o no. Por eso un cuadro de texto es el único tipo de marca que funciona en cualquier PDF, incluido uno escaneado, mientras que resaltar un fragmento de texto exige que ese fragmento exista realmente como texto en el archivo.</p>
 
 <figure class="theme-figure">
@@ -170,27 +170,27 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <rect x="200" y="200" width="220" height="46" rx="4" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-dasharray="4 3"/>
 <text x="310" y="228" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="var(--accent)">"Revisado — se ve bien"</text>
 </svg>
-<figcaption>El resaltado y el subrayado se ajustan a texto real y seleccionado; el tachado funciona igual; un cuadro de texto simplemente se coloca en el punto donde hiciste clic, sin depender de nada más en la página.</figcaption>
+<figcaption>Los resaltados siguen el texto seleccionado; los cuadros de texto se colocan en una posición elegida.</figcaption>
 </figure>
 
 <h2>Lo que necesita primero un PDF escaneado</h2>
-<p>Un escaneo o una página fotografiada es, para el navegador, solo una imagen — no hay texto real debajo que seleccionar, así que resaltar, subrayar y tachar no tienen a qué engancharse. Una herramienta de marcado basada en la selección de texto real debería decirlo con claridad en lugar de simular un resaltado en un lugar aproximado. La solución es la misma que hace buscable un escaneo: pasarlo primero por OCR añade una capa de texto real, invisible y seleccionable debajo de la imagen, después de lo cual resaltar funciona exactamente igual que en un PDF nativo.</p>
+<p>Un escaneo o una página fotografiada es, para el navegador, solo una imagen; no hay texto real debajo que seleccionar, así que resaltar, subrayar y tachar no tienen a qué engancharse. Una herramienta de marcado basada en la selección de texto real debería decirlo con claridad en lugar de simular un resaltado en un lugar aproximado. La solución es la misma que hace buscable un escaneo: pasarlo primero por OCR añade una capa de texto real, invisible y seleccionable debajo de la imagen, después de lo cual resaltar funciona exactamente igual que en un PDF nativo.</p>
 
-<h2>Deshacer un error</h2>
-<p>Nada debería ser permanente hasta que realmente termines. Una herramienta de marcado que dibuja los cambios directamente en el archivo en el momento en que los haces castiga cada pequeño error; lo mejor es una lista de todo lo que has añadido, cada elemento eliminable por separado, sin que nada quede fijado en el PDF real hasta que guardes explícitamente.</p>
+<h2>Mantén los cambios reversibles hasta exportar</h2>
+<p>Mientras editas, cada marca debería poder eliminarse. La exportación crea la copia final y conviene conservar el original aparte. Según la implementación, las marcas pueden convertirse en contenido de página o anotaciones PDF; esa diferencia influye en la edición posterior y en los visores.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Puedo resaltar una frase que ocupa dos líneas?</strong> Sí — arrastrar a través de un salto de línea selecciona ambas líneas, y cada línea recibe su propio resaltado o subrayado correctamente colocado.</p>
-<p><strong>¿Seguirán ahí mis resaltados y cuadros de texto si abro el archivo en otro visor de PDF?</strong> Sí — una vez guardados, se dibujan directamente en la página como contenido permanente, no como una capa aparte que dependa de esta herramienta para mostrarse.</p>
-<p><strong>¿Añadir un resaltado cambia el texto real del PDF?</strong> No — un resaltado o subrayado se dibuja encima de la página; el texto original de debajo se mantiene exactamente igual, y sigue siendo seleccionable y buscable.</p>
+<h2>Qué comprobar en el PDF exportado</h2>
+<p>Una frase que ocupa dos líneas puede recibir un rectángulo separado por cada línea. Revisa columnas, páginas rotadas y texto con poco espacio.</p>
+<p><strong>¿Seguirán ahí mis resaltados y cuadros de texto si abro el archivo en otro visor de PDF?</strong> Sí; una vez guardados, se dibujan directamente en la página como contenido permanente, no como una capa aparte que dependa de esta herramienta para mostrarse.</p>
+<p>Un resaltado visual suele dejar disponible el texto inferior, pero la exportación modifica el PDF y puede invalidar firmas digitales. Resaltar no equivale a redactar: el texto cubierto puede seguir siendo buscable, copiable o recuperable.</p>
 
 <div class="cta-box">
   <h3>Edita un PDF en línea</h3>
-  <p>El Editor de PDF de Orisod te deja añadir cuadros de texto, resaltar, subrayar o tachar texto real directamente sobre la página — todo en tu navegador.</p>
+  <p>El Editor de PDF de Orisod añade cuadros de texto y permite resaltar, subrayar o tachar texto seleccionable en tu navegador. Revisa la copia exportada, especialmente si proviene de un escaneo o contiene firmas.</p>
   <a class="cta-button" href="/es/pdf-editor/">Editar un PDF →</a>
 </div>
 
-<p>La mayoría del marcado cotidiano de PDF — señalar una línea, añadir una nota breve, tachar una cifra desactualizada — no requiere un editor completo, solo una forma de seleccionar texto real con precisión y colocar una nota donde hagas clic. El único límite honesto es un documento sin texto real que seleccionar, y eso tiene solución en un solo paso, no es un callejón sin salida.</p>
+<p>La mayoría del marcado cotidiano de PDF; señalar una línea, añadir una nota breve, tachar una cifra desactualizada; no requiere un editor completo, solo una forma de seleccionar texto real con precisión y colocar una nota donde hagas clic. El único límite honesto es un documento sin texto real que seleccionar, y eso tiene solución en un solo paso, no es un callejón sin salida.</p>
 
 </div>
 

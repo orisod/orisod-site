@@ -146,16 +146,16 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guides</span>
-<h1>How Browser Text-to-Speech Actually Works (and What It Can't Do)</h1>
-<p class="intro">Any page that reads text aloud is leaning on a browser feature called the Web Speech API — not a service the site itself provides. That distinction explains almost everything about how these tools behave: why voices look different on every device, why there's no "download as MP3" button, and why very long text sometimes cuts off partway through.</p>
+<h1>How Browser Text-to-Speech Works and Its Limits</h1>
+<p class="intro">Browser text-to-speech commonly uses the Web Speech API and the voices exposed by the browser or operating system. That is why voice quality, language support and playback controls differ across devices. It also explains why live reading is easier to provide than a downloadable audio file.</p>
 
 <div class="article-body">
 
-<h2>The browser calls your operating system, not a server</h2>
-<p>When a page asks to speak some text, it hands that text to <code>speechSynthesis</code>, a browser interface defined by the Web Speech API. The browser doesn't generate the audio itself — it passes the text down to whichever text-to-speech engine your operating system already has installed, gets audio back, and plays it through your speakers. Nothing about that round trip involves a network request. The text never has to leave your device for the speech to happen, which is exactly why a tool like this can make an honest "nothing uploaded" claim.</p>
+<h2>The browser coordinates speech playback</h2>
+<p>When a page asks to speak some text, it hands that text to <code>speechSynthesis</code>, a browser interface defined by the Web Speech API. The browser doesn't generate the audio itself; it passes the text down to whichever text-to-speech engine your operating system already has installed, gets audio back, and plays it through your speakers. Nothing about that round trip involves a network request. The text never has to leave your device for the speech to happen, which is exactly why a tool like this can make an honest "nothing uploaded" claim.</p>
 
-<h2>Why the voice list looks completely different from device to device</h2>
-<p>Because the actual speech engine is supplied by the operating system, not the website, the list of available voices is really a list of whatever your OS and browser combination happens to ship with. macOS and iOS tend to include a broad set of natural-sounding voices out of the box; some Windows, Linux, and older Android setups expose far fewer, more mechanical-sounding options. A page has no way to add voices to that list or make a thin one sound better — it can only offer whatever <code>speechSynthesis.getVoices()</code> reports back.</p>
+<h2>Available voices depend on the environment</h2>
+<p>speechSynthesis.getVoices() exposes the voices available to that browser session. The list can load asynchronously and varies by installed language packs, operating system, browser and user settings. A webpage can select from reported voices, but it cannot guarantee that the same name or quality exists elsewhere.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 220" width="700" height="220" role="img" aria-label="Diagram showing text flowing into the browser's speech synthesis engine, which uses operating-system-provided voices, and out to live speaker playback only — with a separate, crossed-out box showing that audio file export is not a possible output of this pipeline." xmlns="http://www.w3.org/2000/svg">
@@ -172,27 +172,27 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <rect x="230" y="180" width="170" height="34" rx="8" fill="none" stroke="#f87171" stroke-width="1.5" stroke-dasharray="4 3"/>
 <text x="315" y="202" text-anchor="middle" font-size="12.5" fill="#f87171">❌ Audio file export</text>
 </svg>
-<figcaption>There's no stage in this pipeline that produces a saved file — the API was designed for live playback only, so an audio export is architecturally not something a webpage can add on top of it.</figcaption>
+<figcaption>The Web Speech API requests live playback but does not expose a standard encoded audio file to the page.</figcaption>
 </figure>
 
-<h2>Why there's no "download as MP3" option</h2>
-<p>This isn't a missing feature Orisod chose to leave out — the Web Speech API simply never defined a way to capture its output as a file. It has one job: turn text into sound and play it, live, through the device's audio output. There's no encoding step, no buffer handed back to the page, nothing a script could redirect into a downloadable <code>.mp3</code> or <code>.wav</code>. Any tool that tells you otherwise is either running actual server-side speech synthesis (which usually means your text left your device) or using browser-specific recording workarounds that don't work reliably across devices. Being upfront about that limitation up front is more useful than quietly overpromising and letting people find out the hard way.</p>
+<h2>Why standard playback does not produce an MP3</h2>
+<p>This isn't a missing feature Orisod chose to leave out; the Web Speech API simply never defined a way to capture its output as a file. It has one job: turn text into sound and play it, live, through the device's audio output. There's no encoding step, no buffer handed back to the page, nothing a script could redirect into a downloadable <code>.mp3</code> or <code>.wav</code>. Any tool that tells you otherwise is either running actual server-side speech synthesis (which usually means your text left your device) or using browser-specific recording workarounds that don't work reliably across devices. Being upfront about that limitation up front is more useful than quietly overpromising and letting people find out the hard way.</p>
 
-<h2>Why long text sometimes stops partway through</h2>
-<p>Several major browsers have long-standing, well-documented bugs where speaking one very long block of text in a single request stops partway through, with no error and no explanation. It's a real quirk of the underlying browser implementations, not something specific to any one website. The practical workaround is to split long text into sentence-sized pieces and speak them as a queue, one utterance at a time — which also has the side benefit of making it possible to track and highlight exactly which sentence is currently playing.</p>
+<h2>Long passages need careful queueing</h2>
+<p>Long utterances can stop, stall or behave inconsistently in some browser and platform combinations. Splitting text into manageable segments and queueing them improves resilience and enables sentence highlighting. Sentence segmentation is itself language-dependent, so abbreviations and unusual punctuation still need care.</p>
 
-<h2>Quick answers</h2>
-<p><strong>Does closing the tab stop the speech?</strong> Yes — speech synthesis is tied to the page that started it, so navigating away or closing the tab stops playback immediately.</p>
-<p><strong>Can I get a more natural-sounding voice than what my device offers?</strong> Only by installing additional voices at the operating system level, if your OS supports that (some do, through system accessibility settings) — a webpage has no ability to supply better voices on its own.</p>
-<p><strong>Why does pause/resume sometimes behave oddly?</strong> Pausing and resuming mid-utterance is handled by the same OS-level speech engine, and its behavior isn't perfectly consistent across every browser and platform — this is a known rough edge of the underlying technology, not something a website's code controls.</p>
+<h2>Playback behavior to expect</h2>
+<p>Closing or navigating away from the initiating page commonly stops playback, but lifecycle behavior can differ across browsers and background states.</p>
+<p>Additional system voices may improve the options when the operating system supports installation. A webpage cannot add a native voice through the Web Speech API alone.</p>
+<p>Pause, resume, boundary events and highlighting vary across engines. These platform differences can limit synchronization even when the page code is correct.</p>
 
 <div class="cta-box">
   <h3>Try text-to-speech in your browser</h3>
-  <p>Orisod's Read Aloud tool reads pasted text using your browser's own voices, with speed, pitch, and live sentence highlighting — entirely local, no upload, no audio file.</p>
+  <p>Orisod’s Read Aloud tool uses voices reported by your browser and offers speed, pitch and sentence highlighting. Voice availability, networking and playback behavior depend on your browser, operating system and selected voice.</p>
   <a class="cta-button" href="/read-aloud/">Read text aloud →</a>
 </div>
 
-<p>The honest summary is simple: browser text-to-speech is a live playback feature built on top of whatever your operating system already provides, not a speech-generation service a website controls. Once that's clear, everything else about how these tools behave — the varying voices, the missing download button, the occasional cutoff on long text — stops looking like a bug and starts looking like exactly what the underlying technology was built to do.</p>
+<p>Browser speech synthesis is best understood as a request for live playback through the current platform. Test the selected voice and controls on the device that will actually be used, and verify privacy assumptions for that voice rather than relying on a universal “local” claim.</p>
 
 </div>
 

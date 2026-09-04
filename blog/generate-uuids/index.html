@@ -146,13 +146,13 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guides</span>
-<h1>What Is a UUID, and When Do You Actually Need One?</h1>
-<p class="intro">A UUID looks like 32 random-looking hex digits split into five groups, and for the most common version, that's almost exactly what it is — with a couple of fixed bits hidden inside that tell you which version and variant you're looking at.</p>
+<h1>What a UUID Is and When to Use One</h1>
+<p class="intro">A UUID is a 128-bit identifier commonly written as five groups of hexadecimal characters. In version 4, most bits come from a random source, while a small fixed portion identifies the version and variant. That design lets separate systems create identifiers without coordinating a shared counter.</p>
 
 <div class="article-body">
 
 <h2>What the digits actually encode</h2>
-<p>A UUID is a 128-bit number, written as 32 hexadecimal digits in the pattern <code>8-4-4-4-12</code>. For version 4 (by far the most common kind, and what "UUID" means in casual use), all but 6 of those 128 bits are genuinely random. The other 6 are fixed markers: 4 bits that always read "0100" in binary — which is why the first digit of the third group is always the literal character <code>4</code> — identifying this as version 4, and 2 more bits at the start of the fourth group that always start with <code>10</code> in binary, which is why that group's first hex digit is always <code>8</code>, <code>9</code>, <code>a</code>, or <code>b</code>. Every other digit is drawn from a secure random source.</p>
+<p>A UUID uses 32 hexadecimal digits in an 8-4-4-4-12 pattern. In a standards-compliant version 4 UUID, 122 bits are random and 6 encode the version and variant. The third group begins with 4; the fourth begins with 8, 9, a or b. Security and collision properties depend on a sound random generator, not on the visual format alone.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 190" width="700" height="190" role="img" aria-label="Diagram of a UUID v4 broken into its five hyphen-separated groups, with the version marker '4' in the third group and the variant digit in the fourth group highlighted as fixed, non-random positions; every other digit is randomly generated." xmlns="http://www.w3.org/2000/svg">
@@ -165,31 +165,31 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <text x="350" y="145" text-anchor="middle" font-size="14" fill="var(--muted-text)">122 of the 128 bits are randomly generated — only these 2 marker digits are fixed by the format.</text>
 <text x="350" y="168" text-anchor="middle" font-size="13" fill="var(--muted-text)">2^122 possible values ≈ 5.3 × 10³⁶</text>
 </svg>
-<figcaption>A real UUID v4, with its two fixed marker digits highlighted. Everything else is random — that's what makes collisions vanishingly unlikely (see the math below).</figcaption>
+<figcaption>A UUID v4 contains fixed version and variant bits; the remaining 122 bits should come from a secure random source.</figcaption>
 </figure>
 
 <h2>How unlikely a real collision is</h2>
-<p>With 122 random bits, the space of possible UUIDs is 2¹²² — about 5.3 × 10³⁶ values. Using the standard birthday-paradox approximation for when a collision becomes likely in a growing set, you'd need to generate roughly 2.7 × 10¹⁸ UUIDs (2.7 quintillion) before there's even a 50% chance that any two of them match. That number is large enough that "will two of my UUIDs collide" is not a realistic concern for essentially any application, including ones generating millions of records a day.</p>
+<p>There are 2¹²² possible random portions, about 5.3 × 10³⁶. The birthday approximation puts a 50% collision probability near 2.7 × 10¹⁸ generated values when draws are independent and uniform. That makes accidental collisions extraordinarily unlikely in ordinary systems, but it is not a mathematical guarantee of uniqueness and does not protect against a faulty generator.</p>
 
 <h2>When a UUID is the wrong tool</h2>
 <ul>
-  <li><strong>When you need sortability.</strong> A version 4 UUID is fully random, so a list of them sorts in no meaningful order — if you need IDs that sort roughly by creation time (useful for database index performance), a time-ordered scheme like UUID version 7 or a ULID is the better fit, not version 4.</li>
-  <li><strong>When a short, human-typeable ID will do.</strong> A UUID is long and meant to be copy-pasted, not read aloud or typed from memory — a short code (like a 6-character reference number) is friendlier for anything a person needs to communicate verbally.</li>
-  <li><strong>When you just need a counter.</strong> A simple auto-incrementing integer is smaller, sorts naturally, and is easier to debug — UUIDs solve the specific problem of generating unique IDs without coordination between multiple systems, which a single database's auto-increment already handles fine on its own.</li>
+  <li>When insertion order matters. Random UUID v4 values scatter writes across an index. UUID v7 or another time-ordered identifier may suit databases that benefit from roughly chronological keys.</li>
+  <li>When people must read or type the identifier. A long UUID is better for copying than dictation; a shorter reference code may improve support workflows, provided its collision and guessing risks are handled.</li>
+  <li>When one database already owns the sequence. An auto-incrementing integer is compact and naturally ordered, although it can expose record counts and requires coordination across writers.</li>
 </ul>
 
-<h2>Quick answers</h2>
-<p><strong>Are UUIDs case-sensitive?</strong> By convention they're written in lowercase, but most systems treat them case-insensitively — uppercase and lowercase versions represent the same value.</p>
-<p><strong>Can I use a UUID as a primary key?</strong> Yes, commonly done — the main tradeoff versus an auto-incrementing integer is index performance on very large tables, since random UUIDs don't insert in sorted order (version 7 exists specifically to fix this).</p>
-<p><strong>Is a UUID the same as a GUID?</strong> Functionally yes — GUID (Globally Unique Identifier) is Microsoft's historical name for the same concept, and the two terms are used interchangeably today.</p>
+<h2>Common implementation questions</h2>
+<p>Hexadecimal UUID text is case-insensitive by specification, although lowercase is the usual canonical presentation.</p>
+<p>UUIDs are widely used as primary keys. Random versions can affect index locality and storage size, so the right choice depends on database workload and schema rather than table size alone.</p>
+<p><strong>Is a UUID the same as a GUID?</strong> Functionally yes; GUID (Globally Unique Identifier) is Microsoft's historical name for the same concept, and the two terms are used interchangeably today.</p>
 
 <div class="cta-box">
   <h3>Generate a UUID</h3>
-  <p>Orisod's UUID Generator creates version 4 UUIDs using your browser's secure random number generator, one at a time or in bulk — entirely in your browser.</p>
+  <p>Orisod’s UUID Generator creates one or many version 4 UUIDs from the browser’s secure random source. Treat them as identifiers, not passwords or proof of authenticity.</p>
   <a class="cta-button" href="/uuid-generator/">Generate a UUID →</a>
 </div>
 
-<p>For the overwhelming majority of "I need a unique ID" situations, a version 4 UUID is the right, boring, well-understood answer — the exceptions are specific enough (sortability, human-readability, single-database counters) that you'll usually know when you've hit one.</p>
+<p>UUID v4 is a dependable default for decentralized identifier generation when its randomness comes from a suitable source. Choose another scheme when ordering, compactness, secrecy or human usability is the stronger requirement.</p>
 
 </div>
 

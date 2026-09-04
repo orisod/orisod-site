@@ -146,19 +146,19 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guides</span>
-<h1>How Word Count and Reading Time Estimates Actually Work</h1>
-<p class="intro">A "word count" feels like it should be an unambiguous number, and a "5 min read" label feels like a measurement — neither one really is. Both are simple, useful approximations built on rules that are worth knowing before you trust them for something that matters.</p>
+<h1>How Word Counts and Reading-Time Estimates Work</h1>
+<p class="intro">Word count and “minutes to read” look precise, but both depend on chosen rules. Hyphens, punctuation, URLs, blank lines and assumed reading speed can all change the result. The numbers are useful when you know what the counter is measuring.</p>
 
 <div class="article-body">
 
 <h2>How word counting actually works</h2>
-<p>The standard method — used by virtually every word counter, including word processors — is to split text on whitespace and count the resulting chunks. That means a hyphenated compound like "well-known" counts as one word, an em-dash-joined pair like "state—of—the—art" (no surrounding spaces) also counts as one, and a URL with no spaces in it counts as a single word no matter how long it is. This is why word counts can feel slightly "off" for text with unusual punctuation — the counter isn't wrong, it's just applying a consistent, simple rule rather than making judgment calls about what a "real" word is.</p>
+<p>There is no single word-count rule used by every application. A lightweight counter may split on whitespace, while other tools use language-aware segmentation and treat compounds or punctuation differently. URLs, contractions, emoji and writing systems without spaces expose those differences quickly.</p>
 
 <h2>Why sentence counting is a heuristic, not an exact science</h2>
-<p>Sentence counting works by looking for <code>.</code>, <code>!</code>, and <code>?</code> as sentence-ending punctuation. That's a reasonable approximation, but it breaks in a predictable way: abbreviations. "Dr. Smith arrived at 3 p.m. and left an hour later" contains two periods that aren't sentence endings at all — a simple punctuation-based counter will still count them as one, overcounting the true sentence count by a small amount. Full natural-language sentence detection (the kind that knows "Dr." isn't a sentence boundary) requires a dictionary of known abbreviations and real linguistic parsing — well beyond what a lightweight, client-side counter needs for its actual job: giving you a close, useful estimate, not a publication-grade linguistic analysis.</p>
+<p>Counting periods, question marks and exclamation points is only a heuristic. Abbreviations, decimals, initials and ellipses can create false boundaries; headings and dialogue can omit expected punctuation. Reliable sentence segmentation depends on language and context, so a browser counter should present an estimate rather than linguistic certainty.</p>
 
 <h2>The math behind a reading-time estimate</h2>
-<p>A "reading time" label is just word count divided by an assumed reading speed, rounded to a whole number of minutes. The most commonly cited average adult silent-reading speed is around 200–250 words per minute; 200 is the more conservative, widely used baseline.</p>
+<p>Reading time divides the detected word count by an assumed words-per-minute rate, then rounds according to the tool’s policy. A value such as 200 words per minute is a convenient baseline, not a universal adult average that predicts every reader or language.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 170" width="700" height="170" role="img" aria-label="Diagram showing the reading time formula: word count divided by 200 words per minute equals estimated minutes, illustrated with a worked example of 1200 words divided by 200 equals 6 minutes." xmlns="http://www.w3.org/2000/svg">
@@ -169,23 +169,23 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 </svg>
 </figure>
 
-<p>That's the entire calculation — there's no adjustment for sentence complexity, vocabulary difficulty, or the reader's own speed, because a general-purpose counter has no way to know any of that. Treat the number as a rough, order-of-magnitude estimate ("a couple of minutes" vs. "about a quarter hour"), not a precise prediction.</p>
+<p>The calculation cannot account fully for technical vocabulary, diagrams, comprehension, accessibility needs or whether someone is skimming. Treat it as a planning label that distinguishes a short note from a long article, not a stopwatch prediction.</p>
 
 <h2>Why word/character limits differ by platform</h2>
-<p>Different platforms impose limits for different reasons, which is why there's no single "correct" limit to design around: a search engine meta description gets truncated at a pixel width that varies by device (commonly approximated as ~155–160 characters), an SMS message is capped at 160 characters for historical protocol reasons, and a social post's limit is simply a product decision by that platform. If you're writing against a specific limit, check that platform's current, official number rather than a rule of thumb — these limits change over time.</p>
+<p>Different platforms impose limits for different reasons, which is why there's no single "correct" limit to design around: a search engine meta description gets truncated at a pixel width that varies by device (commonly approximated as ~155–160 characters), an SMS message is capped at 160 characters for historical protocol reasons, and a social post's limit is simply a product decision by that platform. If you're writing against a specific limit, check that platform's current, official number rather than a rule of thumb; these limits change over time.</p>
 
-<h2>Quick answers</h2>
-<p><strong>Why does my word count differ slightly from another tool's?</strong> Different tools sometimes make different calls on edge cases — how they treat multiple consecutive spaces, line breaks, or punctuation-only "words." Small differences (a handful of words on a long document) are usually just different tie-breaking rules, not a bug in either tool.</p>
-<p><strong>Does paragraph count include single line breaks?</strong> No, in the common convention (and the one this site's counter uses) a paragraph is a block of text separated by at least one fully blank line — several lines of text with no blank line between them count as one paragraph.</p>
-<p><strong>Is 200 words per minute accurate for me personally?</strong> Probably not exactly — reading speed varies widely by individual, language, familiarity with the topic, and format (skimming vs. careful reading). 200 wpm is a population-level average used as a reasonable default, not a personalized measurement.</p>
+<h2>Why counters disagree</h2>
+<p>Small differences usually come from segmentation rules: punctuation-only tokens, repeated whitespace, apostrophes, hyphens and non-Latin scripts may be handled differently. Compare definitions before calling either result wrong.</p>
+<p>This counter treats text separated by blank lines as separate paragraphs. Other editors may use explicit paragraph elements or count every line break, so results can differ.</p>
+<p>A 200-word-per-minute setting is not personalized. Reading speed varies with language, purpose, subject, device and reader.</p>
 
 <div class="cta-box">
   <h3>Count your text</h3>
-  <p>Orisod's Word & Character Counter tracks words, characters, sentences, paragraphs, and estimated reading time live as you type — entirely in your browser.</p>
+  <p>Orisod’s Word & Character Counter reports words, characters, sentences, paragraphs and estimated reading time as you type in your browser. Treat language-dependent counts as estimates.</p>
   <a class="cta-button" href="/word-character-counter/">Count words and characters →</a>
 </div>
 
-<p>Both word counts and reading-time estimates are useful precisely because they're simple and consistent — not because they're perfectly precise. Knowing the rule behind the number is usually enough to know when to trust it and when it's just a rough guide.</p>
+<p>Counts and time estimates are most valuable as consistent reference points. For contractual, academic or platform limits, use the exact definition required by the relevant authority.</p>
 
 </div>
 

@@ -146,16 +146,16 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guías</span>
-<h1>Qué le hace realmente la impresión N-Up a un PDF</h1>
-<p class="intro">Casi todos los diálogos de impresión tienen una pequeña opción discreta llamada "páginas por hoja" — 2, 4, a veces más. Es fácil usarla sin preguntarse nunca qué le está haciendo realmente al documento, pero el mecanismo detrás de ella es lo bastante simple como para merecer la pena conocerlo, sobre todo si quieres el mismo resultado como un archivo independiente en vez de como un trabajo de impresión de una sola vez.</p>
+<h1>Cómo coloca N-up varias páginas PDF en una hoja</h1>
+<p class="intro">La opción «páginas por hoja» de los cuadros de impresión se conoce como N-up. Reduce varias páginas y las distribuye en una cuadrícula. Si guardas ese diseño como un nuevo PDF, podrás reutilizarlo sin depender de un trabajo de impresión concreto.</p>
 
 <div class="article-body">
 
-<h2>"N-up" es solo un nombre para una cuadrícula</h2>
-<p>La impresión N-up significa colocar N páginas de un documento en una sola hoja física, organizadas en una cuadrícula — 2-up es una cuadrícula de 1×2, 4-up es 2×2, 6-up es 2×3, 9-up es 3×3. Cada página original se reduce para caber dentro de una celda de la cuadrícula, y las hojas siguen apareciendo hasta que cada página original tiene un lugar en alguna parte. Es una operación de diseño, no de contenido — nada de las páginas en sí cambia, solo dónde y con qué tamaño se dibujan.</p>
+<h2>N-up es una distribución en cuadrícula</h2>
+<p>En una impresión N-up, varias páginas originales comparten una hoja. Dos páginas suelen ocupar una cuadrícula de 1×2; cuatro, una de 2×2; seis, una de 2×3; y nueve, una de 3×3. Cada página se ajusta a una celda y las celdas sobrantes de la última hoja quedan vacías.</p>
 
-<h2>Por qué esto solo funciona limpiamente con páginas vectoriales</h2>
-<p>Como N-up consiste fundamentalmente en "tomar una página existente y dibujarla más pequeña en una nueva posición", encaja de forma natural con un PDF cuyas páginas se almacenan como instrucciones vectoriales — las instrucciones exactas que dibujan la página a tamaño completo pueden reproducirse a una escala menor y en una posición desplazada, sin pérdida de calidad, ya que el contenido vectorial no tiene una cuadrícula fija de píxeles que se pueda difuminar. Una herramienta que en cambio rasterizara cada página para reducirla (la técnica a la que recurren otras herramientas de PDF con filtros, porque filtrar sí necesita píxeles) sacrificaría precisamente lo que N-up debería conservar gratis: texto nítido y seleccionable al nuevo tamaño más pequeño.</p>
+<h2>Las páginas vectoriales se reducen sin rasterizar</h2>
+<p>El contenido PDF normalmente puede copiarse, escalarse y colocarse de forma directa. Así, el texto y los gráficos vectoriales conservan nitidez y el texto puede seguir siendo seleccionable. Rasterizar primero convertiría las páginas en imágenes e introduciría un costo de calidad y tamaño innecesario para esta operación.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 300" width="700" height="300" role="img" aria-label="Diagrama que muestra cuatro páginas de PDF originales a la izquierda, y una sola hoja a la derecha dividida en una cuadrícula de dos por dos, con cada una de las cuatro páginas originales dibujada más pequeña dentro de una celda de la cuadrícula, etiquetada con coordenadas de celda basadas en la posición de columna y fila." xmlns="http://www.w3.org/2000/svg">
@@ -181,30 +181,30 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <text x="540" y="200" text-anchor="middle" font-size="16" font-weight="bold" fill="#f59e0b">4</text>
 <text x="490" y="270" text-anchor="middle" font-size="12" fill="var(--muted-text)">celdaX = col × anchoCelda, celdaY = altoHoja − (fila+1) × altoCelda</text>
 </svg>
-<figcaption>La posición de cada celda sale de una aritmética simple de columna/fila sobre las dimensiones de la hoja — la misma matemática con 4 celdas o con 9.</figcaption>
+<figcaption>Las filas y columnas dividen la hoja en celdas; cada página original se ajusta dentro de una de ellas.</figcaption>
 </figure>
 
 <h2>Encajar una página en su celda sin distorsionarla</h2>
-<p>Una celda de la cuadrícula rara vez tiene exactamente la misma proporción que la página original, así que no se puede simplemente estirar para llenarla — eso aplastaría o estiraría visiblemente el contenido. La solución habitual es reducir la página de forma uniforme (mismo factor en ancho y alto) hasta que quepa por completo dentro de la celda en la dimensión más restrictiva, y luego centrarla en el espacio restante. Es la misma lógica de "encajar dentro de una caja sin distorsión" que se usa en cualquier lugar donde una imagen deba caber en un marco de forma distinta.</p>
+<p>Una celda de la cuadrícula rara vez tiene exactamente la misma proporción que la página original, así que no se puede simplemente estirar para llenarla; eso aplastaría o estiraría visiblemente el contenido. La solución habitual es reducir la página de forma uniforme (mismo factor en ancho y alto) hasta que quepa por completo dentro de la celda en la dimensión más restrictiva, y luego centrarla en el espacio restante. Es la misma lógica de "encajar dentro de una caja sin distorsión" que se usa en cualquier lugar donde una imagen deba caber en un marco de forma distinta.</p>
 
-<h2>Elegir la orientación de la hoja según la cuadrícula</h2>
-<p>Una cuadrícula de 1×2 (2-up) es más ancha que alta, así que encaja más cómodamente en una hoja apaisada; una cuadrícula de 2×2, 2×3 o 3×3 se acerca más a cuadrada o más alta que ancha, así que una hoja vertical desperdicia menos espacio. No es una regla estricta — cualquier orientación funciona técnicamente para cualquier cuadrícula —, pero hacer coincidir la forma de la hoja con la forma de la cuadrícula mantiene cada celda, y por tanto cada página reducida, tan grande y legible como sea posible.</p>
+<h2>Adapta la orientación a la cuadrícula y al documento</h2>
+<p>El formato horizontal suele favorecer dos páginas lado a lado, mientras que el vertical puede aprovechar mejor cuadrículas más altas. Es un punto de partida, no una regla fija. Las proporciones, los márgenes y la dirección de lectura también influyen.</p>
 
-<h2>El compromiso que nadie se salta: la legibilidad</h2>
-<p>Reducir N páginas a una sola hoja es un compromiso real, no algo gratis — una hoja de 9-up contiene nueve veces el contenido de una sola página pero a aproximadamente un tercio del tamaño lineal cada una, lo que puede hacer que un texto denso sea genuinamente difícil de leer sin ampliación. Por eso 2-up y 4-up son mucho más comunes en la práctica que 6-up o 9-up: ahorran papel real manteniendo el texto de la mayoría de los documentos en un tamaño que una persona todavía puede leer cómodamente.</p>
+<h2>Más páginas implican texto más pequeño</h2>
+<p>El ahorro de papel tiene un costo: la escala. Nueve páginas por hoja se leen peor que dos, sobre todo si el original utiliza letra pequeña o diagramas detallados. Revisa el documento real; para material de lectura, dos o cuatro páginas por hoja suelen ser opciones más prácticas.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Qué pasa con un número de páginas que no divide exactamente en la cuadrícula?</strong> La última hoja simplemente tiene celdas vacías para el espacio sobrante — nada se duplica ni se estira para llenar el hueco.</p>
-<p><strong>¿N-up cambia el orden en que aparecen las páginas?</strong> No — las páginas se colocan en las celdas de izquierda a derecha y de arriba a abajo, en su orden original, así que el documento se lee igual, solo que en menos hojas.</p>
-<p><strong>¿Esto es distinto de simplemente imprimir en un tamaño de papel más pequeño?</strong> Sí — imprimir en un tamaño más pequeño escala una página en una hoja más pequeña; N-up coloca varias páginas en una hoja del tamaño original, que es lo que realmente reduce el número de hojas.</p>
+<h2>Detalles que influyen en el resultado</h2>
+<p>Si el número de páginas no completa la última cuadrícula, las celdas restantes quedan vacías. No hace falta duplicar ni estirar contenido.</p>
+<p>El orden habitual va de izquierda a derecha y de arriba abajo, aunque algunas configuraciones de impresora o diseños de lectura pueden variar. Comprueba la vista previa.</p>
+<p>Imprimir una página en papel más pequeño sigue produciendo una página por hoja. N-up reduce el número de hojas porque agrupa varias páginas originales.</p>
 
 <div class="cta-box">
   <h3>Coloca varias páginas en una sola hoja</h3>
-  <p>La herramienta PDF Varias Páginas por Hoja de Orisod combina 2, 4, 6 o 9 páginas por hoja, con una vista previa del diseño en vivo, todo en tu navegador — y como reposiciona páginas vectoriales en vez de rasterizarlas, el texto sigue siendo seleccionable.</p>
+  <p>PDF Varias Páginas por Hoja de Orisod coloca 2, 4, 6 o 9 páginas en cada hoja con vista previa. Todo se procesa en tu navegador y el contenido vectorial no se rasteriza deliberadamente.</p>
   <a class="cta-button" href="/es/n-up-pdf/">Combinar páginas de PDF →</a>
 </div>
 
-<p>La impresión N-up no es magia — es una cuadrícula, algo de división para encontrar las posiciones de celda, y una reducción uniforme de cada página para que encaje. Una vez que eso se hace visible, es evidente por qué hacerlo con páginas vectoriales en vez de imágenes rasterizadas es la versión que merece conservarse como un archivo real y no como un trabajo de impresión de una sola vez.</p>
+<p>El proceso usa una cuadrícula, un cálculo de escala y una posición para cada página. Conservar los objetos del PDF produce un archivo más útil que una colección de capturas.</p>
 
 </div>
 

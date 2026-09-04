@@ -144,34 +144,34 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 
 <span class="blog-cat cat-guide">Guides</span>
 <h1>How to Add a Header or Footer to Every Page of a PDF</h1>
-<p class="intro">A header or footer is just text drawn in the margin of every page — but getting from "I want my document title at the top of each page" to an actual PDF means understanding a few things a word processor normally hides from you entirely.</p>
+<p class="intro">Unlike a word processor, an existing PDF has no shared header region waiting to be edited. Adding a header or footer means drawing new text at calculated positions on each page. Page size, rotation, margins and existing content all matter.</p>
 
 <div class="article-body">
 
-<h2>A PDF page doesn't have a "header area" built in</h2>
-<p>Word processors have a dedicated header/footer editing mode because their file format tracks that concept explicitly — a header is its own object, repeated automatically across pages. A PDF doesn't work that way. Once a document is exported to PDF, every page is just a flat collection of positioned text and graphics; there's no special "this is the header" flag on anything. Adding a header or footer to an existing PDF means placing new text at a specific coordinate near the top or bottom of every page — visually a header, but structurally identical to any other text on the page.</p>
+<h2>PDF pages do not contain a built-in header region</h2>
+<p>A word-processing file can store a reusable header object. In a PDF, page content is positioned explicitly. Text added near the top may look like a header, but structurally it is simply another page object. The same applies to a footer.</p>
 
-<h2>Why the same line has to be recalculated on every page</h2>
-<p>Because there's no shared header object, adding one line of header text to a 50-page document means literally drawing that same text 50 separate times, once per page — and if the text should be centered, its horizontal position has to be recalculated per page too, since centering depends on the pixel width of the rendered text (which varies by content) and the width of that particular page (which can technically differ page to page, even within one PDF). None of this is visible to someone just typing "Confidential" into a header field — it's handled automatically — but it's exactly what a tool has to do under the hood.</p>
+<h2>Placement must be calculated for every page</h2>
+<p>Because there's no shared header object, adding one line of header text to a 50-page document means literally drawing that same text 50 separate times, once per page; and if the text should be centered, its horizontal position has to be recalculated per page too, since centering depends on the pixel width of the rendered text (which varies by content) and the width of that particular page (which can technically differ page to page, even within one PDF). None of this is visible to someone just typing "Confidential" into a header field; it's handled automatically; but it's exactly what a tool has to do under the hood.</p>
 
-<h2>What a token like {page} actually does</h2>
-<p>Typing a literal page number into a header would mean re-typing a different number for every single page, which defeats the point. Instead, header/footer text is treated as a small template: a placeholder like <code>{page}</code> stays in the text as typed, and only at the moment each page is actually rendered does the tool substitute in that page's real number — <code>{page}</code> becomes 1 on the first page, 2 on the second, and so on, while <code>{pages}</code> is substituted with the same total page count everywhere. A line like <code>Page {page} of {pages}</code> is really just three pieces glued together: static text, a per-page substitution, and a document-wide constant.</p>
+<h2>Tokens create page-specific text</h2>
+<p>A template replaces {page} with the current page number and {pages} with the document total. In Page {page} of {pages}, the surrounding words remain fixed while the values are substituted for each page. Date tokens follow the format implemented by the tool.</p>
 
-<h2>Why this is a separate tool from Add Page Numbers</h2>
-<p>A tool that only stamps a bare number in a corner is deliberately simpler than one that draws arbitrary header/footer text — it doesn't need a text field, alignment options, or a template system, because there's exactly one thing to configure: which corner. Folding full header/footer text into that same tool would mean either overcomplicating the simple case or under-serving the flexible one. Keeping them separate means someone who just wants a page number gets a two-click tool, and someone who wants "Confidential Draft — {date}" across the top of every page gets the flexibility that actually requires.</p>
+<h2>Headers offer more control than bare page numbers</h2>
+<p>A page-number tool can expose a few preset positions. Headers and footers need arbitrary text, alignment and token replacement, which makes them a broader operation. Keeping the interfaces separate lets a simple numbering task stay simple without limiting custom repeated text.</p>
 
-<h2>Quick answers</h2>
-<p><strong>Can a header and footer have different alignment or text?</strong> Yes — they're independent by design, since a title at the top and a page count at the bottom are two unrelated pieces of information that happen to share the same "repeated on every page" mechanism.</p>
-<p><strong>Why is the date format fixed instead of matching my region?</strong> A date written as 03/04/25 means a completely different day depending on whether the reader expects month-first or day-first order. A fixed, unambiguous format avoids that confusion entirely, at the cost of not matching everyone's personal preference.</p>
-<p><strong>Does adding a header/footer flatten or rasterize the PDF?</strong> No — the new text is drawn as real vector text using the same mechanism as the rest of the page, so it stays selectable and the existing content is untouched.</p>
+<h2>Before you export</h2>
+<p>Headers and footers can use different text and alignment. Check that neither overlaps page content, especially when pages have mixed sizes or orientations.</p>
+<p>An unambiguous date format avoids month/day confusion, although it may not match every reader’s regional preference.</p>
+<p>Adding vector text does not require rasterizing the page, but it still modifies the PDF. It can overlap content, affect tagged reading order and invalidate digital signatures. Font embedding and extraction behavior depend on the implementation.</p>
 
 <div class="cta-box">
   <h3>Add a header or footer to a PDF</h3>
-  <p>Orisod's PDF Header & Footer tool adds custom text to the top and/or bottom of every page, with page-number and date tokens built in — entirely in your browser.</p>
+  <p>Orisod’s PDF Header & Footer tool adds custom text with page-number and date tokens in your browser. Inspect pages with different sizes or rotations before downloading.</p>
   <a class="cta-button" href="/pdf-header-footer/">Add header & footer →</a>
 </div>
 
-<p>The short version: a PDF header or footer isn't a built-in feature of the format, it's text placed at the right spot on every page, recalculated per page so alignment stays correct, with a small templating system standing in for anything that needs to change from page to page. Once that's clear, a line like "Page {page} of {pages}" stops looking like magic and starts looking like exactly what it is — three simple pieces stitched together at render time.</p>
+<p>A PDF header or footer is repeated page content placed at calculated coordinates. Tokens supply changing values, while a multi-page preview helps catch collisions and alignment problems before download.</p>
 
 </div>
 

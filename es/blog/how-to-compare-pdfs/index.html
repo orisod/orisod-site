@@ -146,19 +146,19 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guías</span>
-<h1>Cómo comparar dos PDF (y qué significa realmente "comparar")</h1>
-<p class="intro">"Compara estos dos PDF" parece una sola petición, pero esconde una pregunta real: ¿compararlos como qué — como imágenes, o como palabras? Casi cualquier herramienta práctica de comparación de PDF, incluida esta, responde "como palabras", y entender por qué cambia lo que deberías esperar del resultado.</p>
+<h1>Qué puede detectar una comparación textual de PDF</h1>
+<p class="intro">“Comparar estos PDF” puede significar revisar palabras, apariencia visual u objetos internos. Orisod realiza una comparación por líneas del texto extraído. Resulta útil para cambios de redacción e ignora deliberadamente muchas diferencias visuales; conocer ese límite importa tanto como leer el resultado.</p>
 
 <div class="article-body">
 
-<h2>Dos ideas muy distintas de "comparar"</h2>
-<p>Una comparación a nivel de píxel renderizaría ambos PDF como imágenes y compararía las imágenes en sí — técnicamente posible, pero frágil en la práctica: un documento vuelto a exportar con una resolución ligeramente distinta, con el suavizado activado o desactivado, o con una fuente sustituida por otra que faltaba, aparecería como "diferente" en todas partes aunque las palabras sean idénticas. Una comparación a nivel de texto, en cambio, extrae el texto seleccionable subyacente de cada PDF y compara eso — inmune al ruido de renderizado, pero ciega a todo lo que no sea texto: una imagen movida, un encabezado recoloreado, una fuente cambiada son invisibles para ella. Ninguno de los dos enfoques es "el" correcto; responden preguntas distintas, y una comparación de texto es la que coincide con lo que la mayoría de la gente quiere decir realmente al preguntar "qué cambió en este documento".</p>
+<h2>Las comparaciones de texto y píxeles responden preguntas distintas</h2>
+<p>Una comparación de píxeles renderiza ambos PDF y detecta diferencias visuales, incluidos cambios inocuos de fuentes, suavizado o resolución. Una comparación textual evita ese ruido y examina caracteres extraídos, pero no ve una imagen movida, otro color, una fuente distinta ni ediciones no textuales. Ningún método es universalmente correcto; elige según lo que necesites encontrar.</p>
 
-<h2>Cómo el texto extraído se convierte en líneas</h2>
-<p>El texto de un PDF no se almacena como líneas — se almacena como una secuencia de fragmentos de texto posicionados, el mismo hecho que hace que <a href="/es/blog/text-to-pdf-word-wrap-explained/">el ajuste de línea sea algo que un generador de PDF tiene que construir él mismo</a>. Reconstruir líneas para una comparación significa recorrer esos fragmentos en orden y vigilar la marca que una librería de lectura de PDF reporta cada vez que un fragmento debe ir seguido de un salto de línea, agrupando cada fragmento hasta ese punto en una sola línea de texto. Es una aproximación — un PDF que codifica sus saltos de línea de forma inusual puede producir líneas más gruesas de lo esperado — pero es razonable para la gran mayoría de los documentos comunes.</p>
+<h2>El texto posicionado debe reconstruirse como líneas</h2>
+<p>El texto PDF suele guardarse como fragmentos posicionados y no como líneas semánticas. Reconstruirlas exige seguir el orden y los saltos expuestos por la biblioteca y agrupar fragmentos en cadenas comparables. Como explica la guía relacionada sobre <a href="/es/blog/text-to-pdf-word-wrap-explained/">ajuste de línea</a>, el posicionamiento PDF no es un modelo de párrafo fluido. Las codificaciones, columnas u órdenes de lectura poco comunes pueden producir límites inesperados.</p>
 
-<h2>Qué calcula realmente una comparación línea por línea</h2>
-<p>Una vez que ambos PDF se dividen en una lista de líneas, el problema de comparación se convierte en: encontrar la secuencia más larga de líneas que aparece, en el mismo orden, en ambas listas. Cada línea del Archivo A que no forma parte de esa secuencia compartida es algo eliminado; cada línea del Archivo B que no forma parte de ella es algo añadido. Esta es la misma idea central — la "subsecuencia común más larga"— que impulsa `git diff` y cualquier otra herramienta de comparación basada en líneas; una herramienta de comparación de PDF no necesita inventar un algoritmo nuevo, solo una forma de convertir páginas de PDF en listas de líneas que ese algoritmo pueda consumir.</p>
+<h2>La comparación busca secuencias ordenadas compartidas</h2>
+<p>Una vez que ambos PDF se dividen en una lista de líneas, el problema de comparación se convierte en: encontrar la secuencia más larga de líneas que aparece, en el mismo orden, en ambas listas. Cada línea del Archivo A que no forma parte de esa secuencia compartida es algo eliminado; cada línea del Archivo B que no forma parte de ella es algo añadido. Esta es la misma idea central, la "subsecuencia común más larga"- que impulsa `git diff` y cualquier otra herramienta de comparación basada en líneas; una herramienta de comparación de PDF no necesita inventar un algoritmo nuevo, solo una forma de convertir páginas de PDF en listas de líneas que ese algoritmo pueda consumir.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 210" width="700" height="210" role="img" aria-label="Diagrama que muestra las cuatro líneas del Archivo A y las cuatro líneas del Archivo B lado a lado, con dos líneas emparejadas como compartidas entre ambos, una línea que solo está en el Archivo A marcada como eliminada, y una línea que solo está en el Archivo B marcada como añadida." xmlns="http://www.w3.org/2000/svg">
@@ -184,24 +184,24 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <line x1="290" y1="155" x2="410" y2="155" stroke="var(--muted-text)" stroke-width="1.5" stroke-dasharray="3,3"/>
 <text x="350" y="190" text-anchor="middle" font-size="13" fill="var(--muted-text)">Las líneas compartidas quedan intactas; solo se marcan las dos líneas sin pareja</text>
 </svg>
-<figcaption>Un cambio de una sola línea ("Borrador" eliminado, "Ahora facturado anualmente" añadido) deja intactas las líneas de alrededor — la comparación solo marca lo que genuinamente no se comparte.</figcaption>
+<figcaption>Un cambio de una sola línea ("Borrador" eliminado, "Ahora facturado anualmente" añadido) deja intactas las líneas de alrededor, la comparación solo marca lo que genuinamente no se comparte.</figcaption>
 </figure>
 
-<h2>Por qué el resultado aún puede sorprenderte</h2>
-<p>Como la comparación es puramente textual, unas cuantas situaciones producen resultados técnicamente correctos pero fáciles de malinterpretar. Un párrafo reordenado de otra forma — las mismas palabras, saltos de línea distintos — puede mostrarse como varias líneas eliminadas y añadidas aunque ninguna palabra haya cambiado realmente, ya que la comparación evalúa líneas reconstruidas completas, no las frases subyacentes. Una página escaneada sin una capa de texto real no aporta nada que comparar, en silencio, a menos que la herramienta lo señale explícitamente. Y un cambio de color, fuente o posición de imagen nunca aparece, porque nada de eso es texto para empezar.</p>
+<h2>Los saltos, escaneos y formatos pueden confundir</h2>
+<p>La misma redacción con saltos distintos puede aparecer como líneas eliminadas y añadidas. Un escaneo sin capa textual aporta poco o nada, mientras los cambios de imágenes, color, fuentes o posición permanecen invisibles. Trata la salida como ayuda para revisar palabras, no como auditoría completa.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Se mostrarán los cambios solo de formato (negrita, color, fuente)?</strong> No — una comparación basada en texto solo ve los caracteres, nunca cómo están estilizados o maquetados.</p>
+<h2>Cómo interpretar el resultado</h2>
+<p><strong>¿Se mostrarán los cambios solo de formato (negrita, color, fuente)?</strong> No, una comparación basada en texto solo ve los caracteres, nunca cómo están estilizados o maquetados.</p>
 <p><strong>¿Por qué importa "ignorar espacios en blanco" específicamente en PDF?</strong> La extracción de texto de PDF a veces inserta un espaciado ligeramente distinto entre fragmentos según cómo el documento original los codificó, así que dos líneas funcionalmente idénticas pueden diferir por un espacio suelto a menos que se ignoren deliberadamente las diferencias de espacios.</p>
-<p><strong>¿Es lo mismo que hace la función "Comparar documentos" de Word?</strong> Conceptualmente sí — ambas reducen un documento a texto y lo comparan —, pero un PDF ya ha perdido los metadatos de párrafo/estilo que conserva el formato nativo de un procesador de textos, así que una comparación PDF a PDF trabaja únicamente con líneas reconstruidas.</p>
+<p><strong>¿Es lo mismo que hace la función "Comparar documentos" de Word?</strong> Conceptualmente sí, ambas reducen un documento a texto y lo comparan -, pero un PDF ya ha perdido los metadatos de párrafo/estilo que conserva el formato nativo de un procesador de textos, así que una comparación PDF a PDF trabaja únicamente con líneas reconstruidas.</p>
 
 <div class="cta-box">
   <h3>Compara dos PDF</h3>
-  <p>La herramienta Comparar PDF de Orisod extrae y compara el texto de dos PDF línea por línea, con un contador de líneas añadidas/eliminadas y un interruptor opcional para ignorar espacios en blanco — todo en tu navegador.</p>
+  <p>Comparar PDF de Orisod extrae y contrasta texto línea por línea, informa adiciones y eliminaciones y puede ignorar espacios, dentro de tu navegador.</p>
   <a class="cta-button" href="/es/compare-pdfs/">Comparar dos PDF →</a>
 </div>
 
-<p>Una herramienta de comparación de PDF no lee el documento como lo haría una persona — lo reduce a una lista de líneas y responde una pregunta bien conocida sobre dos listas. Saber esto convierte una comparación sorprendente en una esperada: solo te dice qué cambió en las palabras, nunca en cómo se vistieron.</p>
+<p>Una comparación textual reduce ambos PDF a cadenas extraídas y muestra diferencias. Responde “¿qué palabras cambiaron?”, pero no “¿son estos documentos visual y estructuralmente idénticos?”. Las revisiones importantes pueden exigir controles de texto, apariencia, metadatos y firmas.</p>
 
 </div>
 

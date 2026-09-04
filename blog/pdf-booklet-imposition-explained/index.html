@@ -147,20 +147,20 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 
 <span class="blog-cat cat-guide">Guides</span>
 <h1>How Booklet Imposition Reorders Pages for Folding</h1>
-<p class="intro">Open any staple-bound booklet to its middle sheet and something looks wrong at first glance: the two facing pages aren't next to each other in the page numbering — they're near the middle of the document. That's not a mistake. It's the whole point of booklet imposition, and the logic behind it is simpler than it looks once you see why a folded, nested stack of paper doesn't read like a normal stack.</p>
+<p class="intro">A booklet cannot be printed in ordinary reading order and then folded into place. Its outer sheet must carry the first and last pages, while the inner sheets move progressively toward the center. Booklet imposition calculates that arrangement before anything reaches the printer.</p>
 
 <div class="article-body">
 
 <h2>Why page order and sheet order aren't the same thing</h2>
-<p>A normal PDF's page order matches reading order: page 1, then 2, then 3. A saddle-stitch booklet is physically built from sheets that get folded in half and nested inside one another before stapling — and once you fold and nest sheets, the sheet that ends up on the very outside (wrapping around everything else) has to carry the first and last pages of the whole document, because those are the ones a reader sees first and last. The sheet that ends up buried in the middle carries the two pages that are numerically closest to the center. Imposition is the process of figuring out, for every sheet, exactly which two page numbers belong on which side.</p>
+<p>A PDF normally runs from page 1 to page 2 and onward. A saddle-stitched booklet is assembled from folded sheets nested inside one another. The outer sheet wraps around the entire document, so it must contain both covers. The innermost sheet carries the center spread. Imposition assigns four document pages to the two sides of every physical sheet.</p>
 
-<h2>The pairing formula</h2>
+<h2>How the page pairs are calculated</h2>
 <p>For a document padded to a multiple of 4 pages (call the total <code>N</code>), sheet index <code>i</code> (starting at 0 for the outermost sheet) carries these four page numbers:</p>
 <ul>
 <li>Front side: page <code>N − 2i</code> on the left, page <code>2i + 1</code> on the right</li>
 <li>Back side: page <code>2i + 2</code> on the left, page <code>N − 2i − 1</code> on the right</li>
 </ul>
-<p>Plug in <code>i = 0</code> for an 8-page document and the outermost sheet's front holds pages 8 and 1 — exactly the cover pair a reader sees first and last. Plug in <code>i = 1</code> and the next sheet in holds pages 6, 3, 4, and 5 — the two middle pages end up on the same sheet's back side, which becomes the true center spread once everything is nested and folded.</p>
+<p>For an 8-page document, i = 0 places pages 8 and 1 on the front of the outer sheet. At i = 1, the inner sheet receives pages 6, 3, 4 and 5. Once folded and nested, those apparently unusual pairs fall into normal reading order.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 260" width="700" height="260" role="img" aria-label="Diagram showing two sheets of an eight page booklet nested inside each other: the outer sheet's front holds pages 8 and 1, and the inner sheet's back holds pages 4 and 5, illustrating that the outermost sheet carries the first and last pages while the innermost sheet carries the two middle pages." xmlns="http://www.w3.org/2000/svg">
@@ -179,27 +179,27 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <line x1="520" y1="100" x2="520" y2="160" stroke="var(--border)" stroke-width="1.5" stroke-dasharray="3 3"/>
 <text x="520" y="180" text-anchor="middle" font-size="12" fill="var(--muted-text)">the true center spread</text>
 </svg>
-<figcaption>Nesting sheets inside each other is exactly why page 1 pairs with the last page, not page 2 — the outer sheet has to reach both ends of the document.</figcaption>
+<figcaption>The outer sheet reaches both ends of the booklet, which is why page 1 shares it with the final page.</figcaption>
 </figure>
 
-<h2>Why blank padding pages land where they do</h2>
-<p>Because every sheet needs exactly 4 pages and imposition works from both ends inward, a document not divisible by 4 gets padding added at the end before the formula runs. Since the highest page numbers land on the outermost sheet's front, the blanks (now the highest-numbered "pages") end up as blank space right around the back cover — a side effect of the math, not something a booklet tool has to special-case.</p>
+<h2>Blank pages complete the final sheet</h2>
+<p>Every physical sheet represents four booklet pages. If the document total is not divisible by four, blank pages are added before imposition. Their exact positions depend on the padding strategy and page-order algorithm, so inspect the preview if a blank must appear in a particular place.</p>
 
-<h2>Why the duplex setting isn't optional</h2>
-<p>Each output sheet is landscape, holding two portrait pages side by side; folding it in half along its short axis is what turns it into two facing portrait pages. Duplex printers offer two flip options — flip on the long edge or the short edge — and only one of them keeps the front and back content aligned correctly for a fold along the short axis. Pick the wrong one and the back side of every sheet prints upside down relative to the front, which is invisible until you've already printed the whole thing and folded it.</p>
+<h2>Verify the duplex flip before printing the full job</h2>
+<p>Booklet sheets are usually laid out in landscape and folded through the middle. The correct long-edge or short-edge duplex choice depends on the imposed orientation, printer driver and paper path. A wrong setting can turn every back side upside down. Print and fold one test sheet before committing the whole document.</p>
 
-<h2>Quick answers</h2>
-<p><strong>Do I need special software to print this?</strong> No — once the PDF is already in imposed order, any PDF viewer's normal double-sided print option works; the imposition tool has already done the reordering.</p>
-<p><strong>What if I only have a single-sided printer?</strong> Print all the front sides first, then manually flip the whole stack over as a block and feed it back in for the back sides — the same physical-flip workaround used for duplex scanning, with the same "which way to flip" consideration.</p>
-<p><strong>Can this handle a document that isn't a multiple of 4 pages?</strong> Yes — padding blank pages to the next multiple of 4 before running the formula is standard and expected, not an error condition.</p>
+<h2>Practical printing checks</h2>
+<p>Once the PDF has been imposed, it can usually be printed from an ordinary PDF viewer. Disable any second booklet or multiple-pages-per-sheet setting in the print dialog, or the driver may rearrange the already imposed pages again.</p>
+<p>With a single-sided printer, print one side, reinsert the stack and print the other. Feed direction varies by printer, so mark a test sheet to learn which face and edge must enter first.</p>
+<p>A source document does not need to contain a multiple of four pages. The imposition process can add enough blanks to complete the final sheet.</p>
 
 <div class="cta-box">
   <h3>Turn a PDF into a booklet</h3>
-  <p>Orisod's PDF Booklet Maker imposes your pages automatically, previews the outermost sheet before you commit, and spells out the exact duplex setting to use — entirely in your browser.</p>
+  <p>Orisod’s PDF Booklet Maker arranges pages for folding, adds required blanks and previews the outer sheet in your browser. Confirm the recommended duplex setting with a one-sheet test on your printer.</p>
   <a class="cta-button" href="/pdf-booklet-maker/">Make a PDF booklet →</a>
 </div>
 
-<p>Booklet imposition isn't reordering pages arbitrarily — it's solving a real physical constraint, working outward from the center and inward from the covers at the same time, so that a stack of folded, nested paper reads in order once it's assembled. Once that constraint is visible, the "page 8 next to page 1" pairing stops looking like a bug and starts looking like the only pairing that could possibly work.</p>
+<p>The unexpected order is dictated by the physical booklet, not chosen arbitrarily. A preview and one folded proof are the safest checks for page sequence, orientation, margins and printer behavior.</p>
 
 </div>
 

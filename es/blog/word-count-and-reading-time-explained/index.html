@@ -146,19 +146,19 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guías</span>
-<h1>Cómo funcionan realmente el conteo de palabras y las estimaciones de tiempo de lectura</h1>
-<p class="intro">Un "conteo de palabras" parece que debería ser un número inequívoco, y una etiqueta de "5 min de lectura" parece una medición — ninguna de las dos cosas lo es realmente. Ambas son aproximaciones simples y útiles, construidas sobre reglas que vale la pena conocer antes de confiar en ellas para algo importante.</p>
+<h1>Cómo funcionan el conteo de palabras y el tiempo de lectura</h1>
+<p class="intro">El conteo de palabras y los «minutos de lectura» parecen cifras exactas, pero dependen de reglas elegidas. Guiones, puntuación, URL, líneas vacías y velocidad asumida pueden modificar el resultado. Son útiles cuando sabes qué está midiendo la herramienta.</p>
 
 <div class="article-body">
 
 <h2>Cómo funciona realmente el conteo de palabras</h2>
-<p>El método estándar — usado prácticamente por todos los contadores de palabras, incluidos los procesadores de texto — consiste en dividir el texto por los espacios en blanco y contar los fragmentos resultantes. Eso significa que una palabra compuesta con guion como "bien conocido" cuenta como dos palabras (porque hay un espacio), mientras que "well-known" en inglés cuenta como una sola (sin espacio en medio), y una URL sin espacios cuenta como una sola palabra sin importar su longitud. Por eso el conteo de palabras a veces se siente "raro" con texto de puntuación inusual — el contador no se equivoca, simplemente aplica una regla simple y consistente en lugar de juzgar caso por caso qué es una "palabra real".</p>
+<p>No existe una única regla compartida por todas las aplicaciones. Un contador sencillo puede separar por espacios; otros usan segmentación lingüística y tratan de otra manera compuestos o puntuación. Las URL, contracciones, emojis y lenguas sin espacios muestran pronto esas diferencias.</p>
 
 <h2>Por qué el conteo de oraciones es una heurística, no una ciencia exacta</h2>
-<p>El conteo de oraciones busca <code>.</code>, <code>!</code> y <code>?</code> como puntuación de fin de oración. Es una aproximación razonable, pero falla de forma predecible: las abreviaturas. "El Dr. García llegó a las 3 p. m. y se fue una hora después" contiene puntos que no son fin de oración en absoluto — un contador basado solo en puntuación seguirá contándolos como tales, sobrestimando ligeramente el número real de oraciones. La detección real de oraciones en lenguaje natural (la que sabe que "Dr." no es un fin de oración) requiere un diccionario de abreviaturas conocidas y análisis lingüístico real — mucho más de lo que necesita un contador ligero del lado del cliente para cumplir su función real: dar una estimación cercana y útil, no un análisis lingüístico de nivel editorial.</p>
+<p>Contar puntos, interrogaciones y exclamaciones es una heurística. Abreviaturas, decimales, iniciales y puntos suspensivos crean límites falsos; algunos títulos o diálogos omiten la puntuación esperada. La segmentación fiable depende del idioma y del contexto.</p>
 
 <h2>La matemática detrás de una estimación de tiempo de lectura</h2>
-<p>Una etiqueta de "tiempo de lectura" es simplemente el número de palabras dividido entre una velocidad de lectura asumida, redondeado a un número entero de minutos. La velocidad promedio de lectura silenciosa de un adulto que más se cita ronda las 200–250 palabras por minuto; 200 es la referencia más conservadora y ampliamente usada.</p>
+<p>El tiempo estimado divide las palabras detectadas entre una velocidad asumida y redondea según la política de la herramienta. Un valor como 200 palabras por minuto es una referencia práctica, no un promedio universal que prediga a cada lector o idioma.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 170" width="700" height="170" role="img" aria-label="Diagrama que muestra la fórmula del tiempo de lectura: número de palabras dividido entre 200 palabras por minuto es igual a los minutos estimados, ilustrado con un ejemplo de 1200 palabras divididas entre 200 igual a 6 minutos." xmlns="http://www.w3.org/2000/svg">
@@ -169,23 +169,23 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 </svg>
 </figure>
 
-<p>Ese es todo el cálculo — no hay ajuste por la complejidad de las oraciones, la dificultad del vocabulario ni la velocidad propia del lector, porque un contador de propósito general no tiene forma de saber nada de eso. Trata el número como una estimación aproximada, de orden de magnitud ("un par de minutos" frente a "como un cuarto de hora"), no como una predicción precisa.</p>
+<p>El cálculo no incorpora por completo vocabulario técnico, diagramas, comprensión, necesidades de accesibilidad ni lectura rápida. Úsalo para distinguir un texto breve de uno largo, no como predicción de cronómetro.</p>
 
 <h2>Por qué los límites de palabras o caracteres varían según la plataforma</h2>
-<p>Distintas plataformas imponen límites por razones distintas, por eso no existe un límite "correcto" único sobre el cual diseñar: una meta descripción de un buscador se corta en un ancho de píxeles que varía según el dispositivo (comúnmente aproximado en ~155–160 caracteres), un mensaje SMS está limitado a 160 caracteres por razones históricas del protocolo, y el límite de una publicación en redes sociales es simplemente una decisión de producto de esa plataforma. Si estás escribiendo con un límite específico en mente, consulta el número oficial actual de esa plataforma en lugar de una regla general — estos límites cambian con el tiempo.</p>
+<p>Distintas plataformas imponen límites por razones distintas, por eso no existe un límite "correcto" único sobre el cual diseñar: una meta descripción de un buscador se corta en un ancho de píxeles que varía según el dispositivo (comúnmente aproximado en ~155–160 caracteres), un mensaje SMS está limitado a 160 caracteres por razones históricas del protocolo, y el límite de una publicación en redes sociales es simplemente una decisión de producto de esa plataforma. Si estás escribiendo con un límite específico en mente, consulta el número oficial actual de esa plataforma en lugar de una regla general; estos límites cambian con el tiempo.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Por qué mi conteo de palabras difiere ligeramente del de otra herramienta?</strong> Distintas herramientas a veces toman decisiones diferentes en casos límite — cómo tratan varios espacios consecutivos, saltos de línea, o "palabras" formadas solo por puntuación. Las diferencias pequeñas (unas pocas palabras en un documento largo) suelen ser solo reglas de desempate distintas, no un error en ninguna de las dos herramientas.</p>
-<p><strong>¿El conteo de párrafos incluye los saltos de línea simples?</strong> No, según la convención habitual (y la que usa el contador de este sitio) un párrafo es un bloque de texto separado por al menos una línea completamente en blanco — varias líneas de texto sin ninguna línea en blanco entre ellas cuentan como un solo párrafo.</p>
-<p><strong>¿200 palabras por minuto es preciso para mí en particular?</strong> Probablemente no exactamente — la velocidad de lectura varía mucho según la persona, el idioma, la familiaridad con el tema y el formato (lectura rápida frente a lectura cuidadosa). 200 ppm es un promedio poblacional usado como valor por defecto razonable, no una medición personalizada.</p>
+<h2>Por qué los contadores discrepan</h2>
+<p>Las diferencias suelen venir de reglas de segmentación: puntuación aislada, espacios repetidos, apóstrofos, guiones y escrituras no latinas pueden tratarse de forma distinta. Compara definiciones antes de considerar erróneo un resultado.</p>
+<p>Este contador separa párrafos mediante líneas vacías. Otros editores usan elementos explícitos o cuentan cada salto de línea.</p>
+<p>La referencia de 200 palabras por minuto no está personalizada. La velocidad cambia según idioma, propósito, tema, dispositivo y lector.</p>
 
 <div class="cta-box">
   <h3>Cuenta tu texto</h3>
-  <p>El Contador de Palabras y Caracteres de Orisod rastrea palabras, caracteres, oraciones, párrafos y el tiempo de lectura estimado en vivo mientras escribes — todo en tu navegador.</p>
+  <p>El Contador de Palabras y Caracteres de Orisod muestra palabras, caracteres, oraciones, párrafos y tiempo estimado mientras escribes. Considera aproximados los conteos dependientes del idioma.</p>
   <a class="cta-button" href="/es/word-character-counter/">Contar palabras y caracteres →</a>
 </div>
 
-<p>Tanto el conteo de palabras como las estimaciones de tiempo de lectura son útiles precisamente porque son simples y consistentes, no porque sean perfectamente precisos. Conocer la regla detrás del número suele ser suficiente para saber cuándo confiar en él y cuándo tomarlo solo como una guía aproximada.</p>
+<p>Los conteos y tiempos funcionan mejor como referencias consistentes. Para límites contractuales, académicos o de plataforma, usa la definición exigida por la autoridad correspondiente.</p>
 
 </div>
 

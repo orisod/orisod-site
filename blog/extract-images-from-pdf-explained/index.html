@@ -147,15 +147,15 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 
 <span class="blog-cat cat-guide">Guides</span>
 <h1>How Images Get Pulled Out of a PDF (and Why They Come Back as PNG)</h1>
-<p class="intro">A PDF doesn't store a folder of neat, separate image files the way a ZIP archive does. Getting a picture back out means walking the page's actual drawing instructions, decoding whatever image data those instructions point to, and rebuilding it as a standalone file — which is exactly why the result comes back as PNG, regardless of what format went in.</p>
+<p class="intro">A PDF doesn't store a folder of neat, separate image files the way a ZIP archive does. Getting a picture back out means walking the page's actual drawing instructions, decoding whatever image data those instructions point to, and rebuilding it as a standalone file; which is exactly why the result comes back as PNG, regardless of what format went in.</p>
 
 <div class="article-body">
 
 <h2>A PDF page is a list of drawing instructions, not a layout file</h2>
-<p>Underneath the page you see, a PDF page is a sequence of low-level drawing operators: draw this line, fill this shape, set this font and draw this text, and — critically — paint this image at this position and size. An image embedded in a PDF is stored as a separate object somewhere in the file, and the page simply references it with a "paint this object here" instruction. Extracting images means walking through that instruction list, finding every "paint an image" operator, and following the reference back to the actual image data.</p>
+<p>A PDF content stream contains operators for drawing text, paths and image resources. An extractor follows the image references and decodes the associated object. Images may also appear inside forms, masks or other nested structures, so coverage depends on how thoroughly the tool walks the document.</p>
 
-<h2>Why the original file format doesn't survive the trip</h2>
-<p>PDF can embed images in a handful of different internal formats — plain JPEG, JPEG2000, CCITT fax compression (common for scanned black-and-white documents), raw bitmap data, indexed color with a small palette, and more. Reading a PDF page — for rendering it on screen, printing it, or extracting an image from it — requires decoding all of those formats into one common representation: a plain grid of pixel values. That decoding step is unavoidable, and it's also where the original compressed file is effectively left behind. What comes out the other side is decoded pixels, not a copy of whatever bytes were originally embedded.</p>
+<h2>The original upload is not always recoverable</h2>
+<p>PDF supports several image encodings, including JPEG, JPEG 2000, CCITT, indexed color and raw sample data. Some embedded JPEG streams can be copied without decoding, but other cases must be interpreted into pixels and color space first. Once that happens, the extractor is producing a new image file rather than restoring the exact original bytes.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 200" width="700" height="200" role="img" aria-label="Diagram showing a PDF page's drawing instructions branching into a paint-image instruction that leads through image decoding to plain pixel data, and a separate draw-shape instruction that leads to vector paths instead — illustrating that only the image branch produces extractable raster data." xmlns="http://www.w3.org/2000/svg">
@@ -176,27 +176,27 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <text x="560" y="152" text-anchor="middle" font-size="13" fill="var(--muted-text)">Vector path</text>
 <text x="560" y="168" text-anchor="middle" font-size="11" fill="var(--muted-text)">→ not a raster image</text>
 </svg>
-<figcaption>Only the "paint image" branch produces raster pixel data that can be saved as a picture file — shape and path instructions describe geometry, not a photo, so there's nothing to extract from them.</figcaption>
+<figcaption>Raster image objects can be extracted; vector paths remain drawing instructions unless the page is rendered.</figcaption>
 </figure>
 
 <h2>Why PNG specifically, and not always JPEG</h2>
-<p>Once an image is decoded into plain pixels, re-saving it needs a format that can hold exactly that data without a second round of lossy compression on top of whatever loss already happened during the PDF's own original encoding. PNG is lossless by design — it stores pixels as-is, however many of them there are, without re-guessing or discarding detail. Re-exporting as JPEG at that point would mean compressing already-decoded data a second time, adding new artifacts that weren't in the source. PNG being larger in file size is the trade-off for not doing that.</p>
+<p>Once an image is decoded into plain pixels, re-saving it needs a format that can hold exactly that data without a second round of lossy compression on top of whatever loss already happened during the PDF's own original encoding. PNG is lossless by design; it stores pixels as-is, however many of them there are, without re-guessing or discarding detail. Re-exporting as JPEG at that point would mean compressing already-decoded data a second time, adding new artifacts that weren't in the source. PNG being larger in file size is the trade-off for not doing that.</p>
 
-<h2>Why the same image doesn't show up once per page</h2>
-<p>PDF generators frequently reuse a single embedded image across many pages — a repeated header logo or a letterhead graphic is a common example — specifically so the file doesn't have to embed dozens of identical copies of the same picture. A tool extracting images can take advantage of that same structure: when the same underlying image is referenced from multiple pages, it only needs to be decoded and offered for download once, with a note of every page it appears on, instead of once per occurrence.</p>
+<h2>One object may be reused across several pages</h2>
+<p>A logo can be embedded once and referenced repeatedly, reducing the PDF size. An extractor may list that object once and report every page where it appears. Other tools may export each occurrence, so duplicate behavior is an implementation choice rather than a property readers can assume.</p>
 
-<h2>Quick answers</h2>
-<p><strong>Why didn't any images come out of my PDF?</strong> If the PDF was built entirely from text and vector graphics — shapes, lines, and gradients described as paths rather than pictures — there's no raster image data anywhere in it to extract, even if the page visually looks like it contains graphics.</p>
-<p><strong>Can extraction recover a higher-resolution version of the image than what's shown on the page?</strong> No — it can only recover the resolution that was actually embedded in the PDF. If the source image was already downscaled or heavily compressed before being placed into the PDF, that's the ceiling on what comes back out.</p>
-<p><strong>Does this work on scanned documents?</strong> A scanned page is usually itself one large embedded image per page, so yes — it can be extracted as a picture, though it's the whole scanned page as one image, not separate photos within it (unless the scan itself contains embedded photos of its own).</p>
+<h2>Limits worth knowing</h2>
+<p><strong>Why didn't any images come out of my PDF?</strong> If the PDF was built entirely from text and vector graphics; shapes, lines, and gradients described as paths rather than pictures; there's no raster image data anywhere in it to extract, even if the page visually looks like it contains graphics.</p>
+<p><strong>Can extraction recover a higher-resolution version of the image than what's shown on the page?</strong> No; it can only recover the resolution that was actually embedded in the PDF. If the source image was already downscaled or heavily compressed before being placed into the PDF, that's the ceiling on what comes back out.</p>
+<p>A scan is often one large image per page, so extraction may return the complete scanned page rather than individual photographs visible inside it.</p>
 
 <div class="cta-box">
   <h3>Pull the images out of a PDF</h3>
-  <p>Orisod's Extract Images from PDF finds every embedded picture in a PDF and lets you download it as a PNG, one at a time or all together as a ZIP — entirely in your browser.</p>
+  <p>Orisod’s Extract Images from PDF finds supported embedded pictures and exports them as PNG files, individually or in a ZIP, without uploading the document.</p>
   <a class="cta-button" href="/extract-images-from-pdf/">Extract images →</a>
 </div>
 
-<p>The short version: a PDF doesn't contain a folder of image files waiting to be copied out — it contains instructions for painting pixels, and extracting an image means actually running enough of those instructions to get real pixel data back, then saving that data in a format built to hold it without loss. PNG isn't a limitation of any particular tool; it's the natural output of that process.</p>
+<p>The short version: a PDF doesn't contain a folder of image files waiting to be copied out; it contains instructions for painting pixels, and extracting an image means actually running enough of those instructions to get real pixel data back, then saving that data in a format built to hold it without loss. PNG isn't a limitation of any particular tool; it's the natural output of that process.</p>
 
 </div>
 

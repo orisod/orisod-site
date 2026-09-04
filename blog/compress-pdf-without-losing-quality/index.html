@@ -153,12 +153,12 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <div class="article-body">
 
-<h2>Text almost never makes a PDF big</h2>
-<p>Plain text can be compact, and scanned pages or photographs are frequent causes of large PDFs. They are not the only causes. Embedded fonts, attachments, forms, layers, object streams, duplicated resources, portfolios, and multimedia can also contribute. Inspect the document instead of assuming images are always responsible. This is worth knowing before you start deleting pages or reducing content in an attempt to shrink a file — the fix usually has nothing to do with how much is in the document.</p>
+<h2>Images often dominate PDF size, but they are not the only cause</h2>
+<p>Plain text is usually compact, while scans and photographs frequently make PDFs large. Embedded fonts, attachments, forms, layers, duplicated resources, portfolios and multimedia can also contribute. Inspect the document before deleting pages or reducing content; the right approach depends on which objects consume the space.</p>
 
 <h2>Where those oversized images come from</h2>
 <ul>
-  <li><strong>Scanned documents.</strong> A scanner set to a high DPI captures each page as a large, detailed image — often far more detail than needed for a document that will only ever be read on a screen or printed at normal size.</li>
+  <li>Scanned documents. A high-DPI scan records each page as a large image, sometimes with more detail than a particular screen or routine print workflow requires. Small text, handwriting and future uses may still benefit from that detail.</li>
   <li><strong>Phone-photographed pages.</strong> A modern phone camera produces multi-megapixel images, and when several of those get combined into a PDF, the file size adds up fast.</li>
   <li><strong>Uncompressed graphics.</strong> Charts, diagrams, or photos pasted into a document at full resolution rather than sized appropriately for the page.</li>
 </ul>
@@ -177,10 +177,10 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <h2>What compression won't fix</h2>
 <p>Compression is not redaction or document cleanup. Removing pages changes scope, while hidden objects, metadata, attachments, and sensitive layers may remain unless handled deliberately. Never delete material from a record merely to meet a file-size limit without confirming retention requirements.</p>
 
-<h2>A practical target</h2>
-<p>How much a file actually shrinks depends on what's inside it and which mode you pick. Strong compression on a scanned or photo-heavy PDF can produce a dramatic reduction — see the real, measured example below. Quick clean's savings on a typed document are more modest in raw percentage terms, since a well-formed text-based PDF has less redundant structure to strip in the first place — but it's the only mode that keeps every character selectable, which Strong compression can't do at any setting.</p>
+<h2>Choose a target based on the document</h2>
+<p>The reduction depends on the PDF and the selected mode. Strong compression can greatly reduce a scan or photo-heavy file by rasterizing its pages. Quick clean often saves less on a well-formed text document because there is less redundant structure to remove, but it avoids intentional page rasterization and therefore has a better chance of retaining selectable text. Neither result should be accepted without checking the features that matter.</p>
 
-<h2>A concrete example</h2>
+<h2>Two measured files, not a universal promise</h2>
 <p>In one Orisod test, a 7.9 MB scanned contract became 370 KB with Strong compression. That 95% result is a benchmark for that file and setting, not a general expectation. “Looked similar in one normal-size review” is more accurate than “identical”; inspect small text, signatures, stamps, gradients, and print output. In another test, one 18.3 KB typed report became 13.7 KB with Quick clean. Treat the percentage as file-specific. If the tool retains the original when an attempted output is larger, state that behavior precisely and still verify the downloaded file rather than assuming all structures and features survived.</p>
 
 <h2>Verify the compressed copy</h2>

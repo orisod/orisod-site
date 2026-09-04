@@ -146,16 +146,16 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guías</span>
-<h1>Por qué los "detectores de IA" no pueden detectar realmente escritura de IA</h1>
-<p class="intro">Una herramienta que afirma poder decirte, con un porcentaje confiado, si un texto fue escrito por IA suena exactamente como el tipo de cosa que debería ser posible. No lo es — no porque la ingeniería sea inmadura, sino por lo que los modelos de lenguaje grandes están realmente entrenados para hacer en primer lugar.</p>
+<h1>Qué pueden y qué no pueden decir los detectores de IA</h1>
+<p class="intro">Una puntuación de escritura con IA puede parecer un resultado de laboratorio, pero es una inferencia sobre autoría. Los detectores comparan rasgos del texto con patrones observados en ciertas muestras humanas y automáticas. Como ambas poblaciones se superponen y cambian, el resultado no debe tratarse como prueba.</p>
 
 <div class="article-body">
 
-<h2>Para qué está optimizado un modelo de lenguaje</h2>
-<p>Un modelo de lenguaje se entrena para predecir la palabra siguiente más plausible dado todo lo escrito hasta el momento, usando patrones aprendidos de enormes cantidades de texto escrito por humanos. Todo su objetivo es producir un resultado que sea estadísticamente coherente con cómo escriben los humanos — no dejar atrás alguna huella distintiva que lo marque como generado por máquina. No hay ningún equivalente a una marca de agua incorporada en la propia escritura a menos que un sistema añada una deliberadamente (algunos lo hacen, como una función opcional y separada) — por defecto, todo el trabajo de un modelo es mezclarse con la distribución de texto de la que aprendió.</p>
+<h2>Los modelos aprenden patrones del lenguaje humano</h2>
+<p>Los modelos aprenden relaciones estadísticas de grandes colecciones y generan continuaciones plausibles. Su salida puede parecerse a muchas clases de prosa humana. Algunos sistemas añaden señales de procedencia o marcas de agua, pero el texto corriente no contiene una etiqueta universal y fiable que identifique a su autor.</p>
 
-<h2>Por qué los detectores terminan adivinando el estilo, no la certeza</h2>
-<p>Sin una firma incorporada que buscar, un detector termina infiriendo la autoría a partir de estadísticas superficiales: qué tan predecible es cada elección de palabra dado lo anterior, cuánto varía la estructura de las oraciones, con qué frecuencia aparecen ciertas frases. Esto está genuinamente correlacionado con el texto generado por IA en conjunto — pero son tendencias estadísticas, no reglas fijas, y la escritura humana abarca el mismo rango. Un escritor humano cuidadoso y metódico puede producir prosa muy predecible y de baja variación; un modelo de lenguaje con instrucciones inusuales puede producir prosa errática y de alta variación. Las dos distribuciones se superponen sustancialmente, y un detector tiene que trazar una línea dura en algún punto dentro de esa superposición.</p>
+<h2>Las puntuaciones son clasificaciones estadísticas</h2>
+<p>Un detector puede examinar predictibilidad, variación de frases, vocabulario y otros rasgos. Esas señales pueden correlacionarse con ciertos modelos en una prueba, pero los humanos también las comparten y la edición las modifica. El desempeño depende del idioma, género, modelo, longitud y datos de evaluación. Todo umbral produce falsos positivos y negativos.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 220" width="700" height="220" role="img" aria-label="Diagrama que muestra dos curvas de campana muy superpuestas etiquetadas texto escrito por humanos y texto escrito por IA a lo largo de un eje de previsibilidad estilística, con una línea de decisión vertical trazada en medio de la región de superposición, ilustrando que cualquier umbral de clasificación clasifica erróneamente necesariamente ejemplos reales de ambos lados." xmlns="http://www.w3.org/2000/svg">
@@ -167,27 +167,27 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <text x="430" y="195" text-anchor="middle" font-size="13" fill="#f59e0b">Texto escrito por IA</text>
 <text x="330" y="205" text-anchor="middle" font-size="12" fill="var(--muted-text)">superposición sombreada = clasificaciones erróneas inevitables</text>
 </svg>
-<figcaption>Ambas distribuciones abarcan el mismo rango estilístico — cualquier punto de corte único clasifica erróneamente texto humano real como "IA" y texto de IA real como "humano" en algún punto de esa superposición.</figcaption>
+<figcaption>Las muestras humanas y automáticas se superponen en rasgos medidos; ningún punto de corte las clasifica todas correctamente.</figcaption>
 </figure>
 
-<h2>Fallos reales y documentados</h2>
-<p>Esto no es una preocupación hipotética — se manifiesta en la práctica de formas bien documentadas. Se ha demostrado que los detectores señalan de forma desproporcionada como generada por IA la escritura de hablantes no nativos de inglés, probablemente porque esa escritura comparte propiedades estadísticas (estructura de oración más simple, elecciones de palabras más predecibles) con la salida de los modelos por razones que no tienen nada que ver con la autoría. Los detectores también fallan rutinariamente ante texto que ha sido ligeramente editado después de ser generado por IA, o ante modelos más nuevos contra los que no fueron calibrados, ya que la firma estadística subyacente cambia cada vez que cambian las arquitecturas de los modelos y los datos de entrenamiento. Una herramienta ajustada para detectar una generación de modelos puede pasar por alto por completo la siguiente.</p>
+<h2>Los fallos conocidos importan</h2>
+<p>La investigación ha documentado acusaciones falsas, incluidas tasas desproporcionadas en ciertos textos de personas no nativas en inglés. Los pasajes cortos, traducciones, contenido editado y modelos ajenos al entrenamiento también pueden dar malos resultados. Las tasas exactas cambian por producto y prueba.</p>
 
-<h2>Para qué sirve realmente un verificador heurístico de patrones de estilo</h2>
-<p>Dado todo esto, una herramienta más honesta no intenta ofrecer una probabilidad de autoría de IA en absoluto — señala patrones específicos y nombrables que aparecen a menudo en escritura genérica (frases hechas sobreutilizadas, aperturas de oración repetitivas, ritmo de oración inusualmente uniforme) y deja que una persona decida qué significan esos patrones en contexto. Esta es una afirmación más limitada y defendible: "esta frase aparece en el texto" es simplemente verdadero o falso, verificable por cualquiera que lea el fragmento señalado, a diferencia de "este texto tiene un 73% de probabilidad de ser generado por IA", que afirma una precisión que el método subyacente no puede realmente sostener.</p>
+<h2>Revisar patrones responde una pregunta más limitada</h2>
+<p>Un verificador transparente puede señalar aperturas repetidas, frases hechas o ritmo uniforme sin atribuir autoría. Cada hallazgo se puede comprobar: la frase aparece o no. Después, la persona decide si cambiarla mejora claridad, voz o utilidad.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Significa esto que los detectores de IA son inútiles?</strong> No del todo — pueden ser una señal débil entre varias en una decisión más amplia, especialmente en conjunto sobre muchas muestras. El problema es tratar una sola puntuación en un solo texto como un veredicto confiable, algo que las tasas de falsos positivos y negativos no respaldan.</p>
-<p><strong>¿Pueden los escritores evitar todos los patrones señalados para "vencer" a un verificador?</strong> Algunos de estos patrones se pueden editar deliberadamente, pero ese es el objetivo equivocado — los patrones existen porque son genuinamente comunes en la escritura débil o formulaica, humana o de IA. Eliminarlos porque están señalados, en lugar de porque la escritura realmente mejora, optimiza para lo incorrecto.</p>
-<p><strong>¿Por qué aparecen tan a menudo las frases hechas en la escritura de IA en primer lugar?</strong> Estas frases son comunes en enormes volúmenes de escritura formal y semiformal con la que se entrenan los modelos, así que son opciones estadísticamente "seguras" y de alta probabilidad para un modelo que intenta producir texto fluido y genéricamente apropiado — la misma razón por la que aparecen constantemente en la escritura corporativa humana, los textos de marketing y los ensayos escolares también.</p>
+<h2>Cómo usar las señales con responsabilidad</h2>
+<p>La salida de un detector puede apoyar una investigación más amplia, pero una puntuación aislada no es un veredicto. Las decisiones importantes necesitan evidencia adicional, un proceso documentado y revisión humana.</p>
+<p>Editar solo para bajar una puntuación pierde el objetivo. Cambia un patrón cuando la revisión vuelva el texto más preciso, natural o adecuado para sus lectores.</p>
+<p>Las frases genéricas aparecen en modelos porque son comunes y seguras para muchos contextos; también abundan en textos corporativos, académicos y publicitarios humanos. Frecuencia no significa autoría.</p>
 
 <div class="cta-box">
   <h3>Revisa tu texto en busca de patrones de escritura genérica</h3>
-  <p>El Verificador de Escritura con IA de Orisod señala frases hechas, aperturas de oración repetitivas y otros patrones de estilo — claramente etiquetado como una señal de estilo, no un detector — todo en tu navegador.</p>
+  <p>El Verificador de Escritura con IA de Orisod señala frases hechas, aperturas repetidas y otros patrones desde tu navegador. Informa señales de estilo, no pruebas de autoría con IA.</p>
   <a class="cta-button" href="/es/ai-writing-checker/">Revisa tu escritura →</a>
 </div>
 
-<p>La versión honesta de este problema no es "¿puede una herramienta decirte si un texto fue escrito por IA?" — no puede, de forma confiable, y las razones son estructurales, no una brecha de ingeniería temporal. La versión útil es "¿puede una herramienta mostrarte patrones específicos y verificables que merecen una segunda mirada?", que es una afirmación que un verificador heurístico sí puede respaldar.</p>
+<p>Ningún detector general establece con certeza quién escribió una prosa. Un verificador de patrones hace una promesa más modesta: mostrar hábitos estilísticos comprobables y dejar el juicio al lector.</p>
 
 </div>
 

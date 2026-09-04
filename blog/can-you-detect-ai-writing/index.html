@@ -146,16 +146,16 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guides</span>
-<h1>Why "AI Detectors" Can't Actually Detect AI Writing</h1>
-<p class="intro">A tool that claims to tell you, with a confident percentage, whether a piece of text was written by AI sounds like exactly the kind of thing that should be possible. It isn't — not because the engineering is immature, but because of what large language models are actually trained to do in the first place.</p>
+<h1>What AI Writing Detectors Can and Cannot Tell You</h1>
+<p class="intro">An AI-writing score can look like a laboratory result, but it is an inference about authorship. Detectors compare textual features with patterns observed in selected human and machine samples. Because those populations overlap and keep changing, the result should not be treated as proof.</p>
 
 <div class="article-body">
 
-<h2>What a language model is optimized to do</h2>
-<p>A language model is trained to predict plausible next words given everything written so far, using patterns learned from enormous amounts of human-written text. Its entire objective is to produce output that's statistically consistent with how humans write — not to leave behind some distinctive fingerprint that marks it as machine-generated. There's no equivalent of a watermark baked into the writing itself unless a system deliberately adds one on purpose (some do, as an opt-in, separate feature) — by default, a model's whole job is to blend in with the distribution of text it learned from.</p>
+<h2>Models learn patterns from human language</h2>
+<p>Language models learn statistical relationships from large text collections and generate plausible continuations. Their output can resemble many kinds of human prose. Some generation systems may add provenance signals or watermarks, but ordinary text alone does not carry a universal, reliably readable label identifying its author.</p>
 
-<h2>Why detectors end up guessing at style, not certainty</h2>
-<p>Without a built-in signature to look for, a detector is left inferring authorship from surface statistics: how predictable each word choice is given the words before it, how much sentence structure varies, how often certain phrasings show up. These are genuinely correlated with AI-generated text in aggregate — but they're statistical tendencies, not fixed rules, and human writing spans the same range. A careful, methodical human writer can produce highly predictable, low-variation prose; a language model prompted with unusual instructions can produce erratic, high-variation prose. The two distributions overlap substantially, and a detector has to draw a hard line somewhere inside that overlap.</p>
+<h2>Detection scores are statistical classifications</h2>
+<p>A detector may examine predictability, sentence variation, vocabulary and other features. Those signals can correlate with particular model outputs in a test set, yet humans can share them and prompts or editing can change them. Performance depends on language, genre, model, sample length and evaluation data. A threshold inevitably creates both false positives and false negatives.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 220" width="700" height="220" role="img" aria-label="Diagram showing two heavily overlapping bell curves labeled human-written text and AI-written text along a stylistic-predictability axis, with a vertical decision line drawn through the middle of the overlap region, illustrating that any classification threshold necessarily misclassifies real examples on both sides." xmlns="http://www.w3.org/2000/svg">
@@ -167,27 +167,27 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <text x="430" y="195" text-anchor="middle" font-size="13" fill="#f59e0b">AI-written text</text>
 <text x="330" y="205" text-anchor="middle" font-size="12" fill="var(--muted-text)">shaded overlap = unavoidable misclassifications</text>
 </svg>
-<figcaption>Both distributions span the same stylistic range — any single cutoff point necessarily misclassifies real human text as "AI" and real AI text as "human" somewhere in that overlap.</figcaption>
+<figcaption>Human and machine-written samples can overlap on measured style features, so a cutoff cannot classify every text correctly.</figcaption>
 </figure>
 
-<h2>Real, documented failure modes</h2>
-<p>This isn't a hypothetical concern — it shows up in practice in well-documented ways. Detectors have been shown to disproportionately flag writing by non-native English speakers as AI-generated, likely because that writing shares statistical properties (simpler sentence structure, more predictable word choices) with model output for reasons that have nothing to do with authorship. Detectors also routinely fail against text that's been lightly edited after AI generation, or against newer models they weren't calibrated against, since the underlying statistical signature shifts every time model architectures and training data change. A tool tuned to catch one generation of models can miss the next one entirely.</p>
+<h2>Known failure modes matter</h2>
+<p>Research has documented false accusations, including disproportionate flags for some non-native English writing. Short passages, translated text, edited model output and models outside the detector’s training distribution can also perform poorly. Exact rates vary by product and test; broad claims about every detector need current, independent evidence.</p>
 
-<h2>What a heuristic style-pattern checker is actually for</h2>
-<p>Given all that, a more honest tool doesn't try to output a probability of AI authorship at all — it flags specific, nameable patterns that show up often in generic writing (overused stock phrases, repetitive sentence openers, unusually uniform sentence rhythm) and lets a person decide what those patterns mean in context. This is a narrower, more defensible claim: "this phrase appears in the text" is simply true or false, verifiable by anyone reading the flagged span, unlike "this text is 73% likely to be AI-generated," which asserts a precision the underlying method can't actually support.</p>
+<h2>Pattern checking answers a narrower question</h2>
+<p>A transparent style checker can point to repeated openings, stock phrases or uniform rhythm without claiming to identify the author. Each finding is inspectable: the phrase either appears or it does not. The writer still decides whether changing it improves clarity, voice or usefulness.</p>
 
-<h2>Quick answers</h2>
-<p><strong>Does this mean AI detectors are useless?</strong> Not entirely — they can be one weak signal among several in a larger judgment call, especially in aggregate across many samples. The problem is treating a single score on a single piece of text as a reliable verdict, which the false-positive and false-negative rates don't support.</p>
-<p><strong>Can writers avoid every flagged pattern to "beat" a checker?</strong> Some of these patterns can be edited out deliberately, but that's the wrong goal — the patterns exist because they're genuinely common in weak or formulaic writing, human or AI. Removing them because they're flagged, rather than because the writing genuinely improves, optimizes for the wrong thing.</p>
-<p><strong>Why do stock phrases show up so often in AI writing in the first place?</strong> These phrases are common across huge volumes of formal and semi-formal writing that models are trained on, so they're statistically "safe," high-probability choices for a model trying to produce fluent, generically appropriate text — the same reason they show up constantly in human corporate writing, marketing copy, and school essays too.</p>
+<h2>How to use the signals responsibly</h2>
+<p>Detector output may support a broader investigation, but a score from one passage is not a verdict. High-stakes decisions need corroborating evidence, documented process and an opportunity for human review.</p>
+<p>Editing solely to lower a checker score misses the point. Change a flagged pattern when the revision makes the writing more precise, natural or appropriate for its audience.</p>
+<p>Generic phrases appear in model output because they are common and contextually safe; the same phrases also appear in corporate, academic and marketing writing by people. Frequency is not authorship.</p>
 
 <div class="cta-box">
   <h3>Check your text for generic writing patterns</h3>
-  <p>Orisod's AI Writing Checker flags stock phrases, repetitive sentence openers, and other stylistic patterns — clearly labeled as a style signal, not a detector — entirely in your browser.</p>
+  <p>Orisod’s AI Writing Checker flags specific stock phrases, repeated sentence openings and other style patterns in your browser. It reports writing signals, not proof of AI authorship.</p>
   <a class="cta-button" href="/ai-writing-checker/">Check your writing →</a>
 </div>
 
-<p>The honest version of this problem isn't "can a tool tell you if text is AI-written" — it can't, reliably, and the reasons are structural, not a temporary engineering gap. The useful version is "can a tool show you specific, verifiable patterns worth a second look," which is a claim a heuristic checker can actually back up.</p>
+<p>No general-purpose detector can establish authorship from prose with certainty. A pattern checker makes a more modest promise: show verifiable stylistic habits that deserve attention, then leave the judgment to the reader.</p>
 
 </div>
 

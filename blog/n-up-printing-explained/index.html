@@ -146,16 +146,16 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guides</span>
-<h1>What N-Up Printing Actually Does to a PDF</h1>
-<p class="intro">Almost every print dialog has a quiet little option called "pages per sheet" — 2, 4, sometimes more. It's easy to use without ever wondering what it's actually doing to the document, but the mechanism behind it is simple enough to be worth knowing, especially if you want the same result as a standalone file instead of a one-time print job.</p>
+<h1>How N-Up Printing Fits Several PDF Pages on One Sheet</h1>
+<p class="intro">The “pages per sheet” setting in a print dialog is called N-up printing. It scales several document pages into a grid on one sheet. Creating that arrangement as a new PDF makes the layout reusable instead of limiting it to a single print job.</p>
 
 <div class="article-body">
 
-<h2>"N-up" is just a name for a grid</h2>
-<p>N-up printing means placing N of a document's pages onto a single physical sheet, arranged in a grid — 2-up is a 1×2 grid, 4-up is 2×2, 6-up is 2×3, 9-up is 3×3. Each original page gets shrunk down to fit inside one grid cell, and the sheets keep going until every original page has a spot somewhere. It's a layout operation, not a content operation — nothing about the pages themselves changes, only where and how large they're drawn.</p>
+<h2>N-up is a grid layout</h2>
+<p>In N-up printing, N original pages share one output sheet. Two-up commonly uses a 1×2 grid, four-up a 2×2 grid, six-up a 2×3 grid and nine-up a 3×3 grid. Each page is scaled into one cell, while any unused cells on the final sheet remain empty.</p>
 
-<h2>Why this only works cleanly with vector pages</h2>
-<p>Because N-up is fundamentally "take an existing page, then draw it smaller at a new position," it's a natural fit for a PDF whose pages are stored as vector instructions — the exact instructions that draw the page at full size can be replayed at a smaller scale and a shifted position, with no quality loss, since vector content has no fixed pixel grid to blur. A tool that instead rasterized each page to shrink it (the technique other filter-style PDF tools reach for, because filtering does need pixels) would trade away the one thing N-up should preserve for free: crisp, selectable text at the new smaller size.</p>
+<h2>Vector pages can be scaled without rasterizing</h2>
+<p>PDF page content can usually be copied, scaled and positioned directly. Text and vector artwork therefore stay sharp and text can remain selectable. Rasterizing first would turn every page into an image, adding a quality and file-size tradeoff that this layout operation does not require.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 300" width="700" height="300" role="img" aria-label="Diagram showing four original PDF pages on the left, and a single sheet on the right divided into a two-by-two grid, with each of the four original pages drawn smaller into one grid cell, labeled with cell coordinates based on column and row position." xmlns="http://www.w3.org/2000/svg">
@@ -181,30 +181,30 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <text x="540" y="200" text-anchor="middle" font-size="16" font-weight="bold" fill="#f59e0b">4</text>
 <text x="490" y="270" text-anchor="middle" font-size="12" fill="var(--muted-text)">cellX = col × cellWidth, cellY = sheetHeight − (row+1) × cellHeight</text>
 </svg>
-<figcaption>Each cell's position comes from simple column/row arithmetic on the sheet's dimensions — the same math whether it's 4 cells or 9.</figcaption>
+<figcaption>Rows and columns divide the sheet into cells; each source page is fitted into one cell.</figcaption>
 </figure>
 
 <h2>Fitting a page into its cell without distorting it</h2>
-<p>A grid cell rarely has exactly the same aspect ratio as the original page, so the page can't just be stretched to fill it — that would visibly squash or stretch the content. The standard fix is to scale the page down uniformly (same factor for width and height) until it fits entirely within the cell in whichever dimension is more constraining, then center it in the remaining space. This is the identical "fit inside a box without distortion" logic used anywhere an image needs to sit inside a frame of a different shape.</p>
+<p>A grid cell rarely has exactly the same aspect ratio as the original page, so the page can't just be stretched to fill it; that would visibly squash or stretch the content. The standard fix is to scale the page down uniformly (same factor for width and height) until it fits entirely within the cell in whichever dimension is more constraining, then center it in the remaining space. This is the identical "fit inside a box without distortion" logic used anywhere an image needs to sit inside a frame of a different shape.</p>
 
-<h2>Choosing sheet orientation to match the grid</h2>
-<p>A 1×2 grid (2-up) is wider than it is tall, so it fits more comfortably on a landscape sheet; a 2×2, 2×3, or 3×3 grid is closer to square or taller-than-wide, so a portrait sheet wastes less space. This isn't a hard rule — either orientation technically works for any grid — but matching the sheet's shape to the grid's shape keeps each cell, and therefore each shrunk page, as large and legible as possible.</p>
+<h2>Match orientation to the grid and document</h2>
+<p>Landscape often suits a side-by-side two-page grid, while portrait may use space better for taller arrangements. This is a useful starting point rather than a fixed rule. Page proportions, margins and reading direction can change which orientation produces the largest legible result.</p>
 
-<h2>The tradeoff nobody skips: legibility</h2>
-<p>Shrinking N pages onto one sheet is a genuine tradeoff, not a free lunch — a 9-up sheet holds nine times the content of a single page but at roughly a third of the linear size each, which can make dense text genuinely hard to read without magnification. This is exactly why 2-up and 4-up are far more common in practice than 6-up or 9-up: they save real paper while keeping most documents' text at a size a person can still comfortably read.</p>
+<h2>More pages mean smaller type</h2>
+<p>Paper savings come at the cost of scale. Nine pages on one sheet are much harder to read than two, especially when the source contains small type or detailed diagrams. Preview the actual document before choosing a grid; two-up or four-up is often more practical for material meant to be read on paper.</p>
 
-<h2>Quick answers</h2>
-<p><strong>What happens to a page count that doesn't divide evenly into the grid?</strong> The final sheet just has empty cells for the leftover space — nothing gets duplicated or stretched to fill the gap.</p>
-<p><strong>Does N-up change the order pages appear in?</strong> No — pages are placed into cells left to right, top to bottom, in their original order, so the document reads the same way, just across fewer sheets.</p>
-<p><strong>Is this different from just printing at a smaller paper size?</strong> Yes — printing at a smaller size scales one page onto one smaller sheet; N-up puts multiple pages onto one sheet at the original sheet size, which is what actually reduces the page count.</p>
+<h2>Details that affect the finished sheets</h2>
+<p>If the page count does not fill the last grid, the remaining cells stay blank. Pages do not need to be duplicated or stretched.</p>
+<p>The usual order is left to right and then top to bottom, but printer conventions and right-to-left layouts can differ. Check the preview before printing.</p>
+<p>Printing one page on smaller paper still produces one page per sheet. N-up reduces the sheet count by placing several source pages together.</p>
 
 <div class="cta-box">
   <h3>Put multiple pages on one sheet</h3>
-  <p>Orisod's N-Up PDF tool combines 2, 4, 6, or 9 pages per sheet, with a live layout preview, entirely in your browser — and because it repositions vector pages instead of rasterizing them, the text stays selectable.</p>
+  <p>Orisod’s N-Up PDF tool places 2, 4, 6 or 9 pages on each sheet with a live preview. Processing stays in your browser, and vector content is repositioned without deliberate rasterization.</p>
   <a class="cta-button" href="/n-up-pdf/">Combine PDF pages →</a>
 </div>
 
-<p>N-up printing isn't magic — it's a grid, some division to find cell positions, and a uniform scale-to-fit for each page. Once that's visible, it's obvious why doing it with vector pages instead of rasterized images is the version worth keeping as an actual file rather than a one-time print job.</p>
+<p>The method relies on a grid, a scale-to-fit calculation and a position for every page. Preserving the original PDF objects keeps the result more useful than a collection of page screenshots.</p>
 
 </div>
 

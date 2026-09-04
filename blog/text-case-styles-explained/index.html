@@ -147,44 +147,44 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 
 <span class="blog-cat cat-guide">Guides</span>
 <h1>Text Case Styles Explained: When to Use camelCase, snake_case, and More</h1>
-<p class="intro">Every programming ecosystem has a house style for naming things, and it's rarely arbitrary — it usually comes down to what the language's own conventions expect, and what a case-insensitive filesystem or URL can and can't handle safely.</p>
+<p class="intro">Naming conventions help readers recognize the role of an identifier before tracing its use. Languages, frameworks, APIs, filesystems and URLs impose different constraints, so consistency with the surrounding system matters more than a universal favorite.</p>
 
 <div class="article-body">
 
 <h2>The naming styles, and what each one is actually for</h2>
 <p>Five styles cover almost every case you'll run into:</p>
 <ul>
-  <li><strong>camelCase</strong> — first word lowercase, every following word capitalized, no separators (<code>firstName</code>). The default for variables and function names in JavaScript, Java, and most C-family languages.</li>
-  <li><strong>PascalCase</strong> — same as camelCase but the first word is also capitalized (<code>FirstName</code>). Used for class and type names in the same languages, precisely to distinguish a type from a variable at a glance.</li>
-  <li><strong>snake_case</strong> — all lowercase, words separated by underscores (<code>first_name</code>). The standard for variables and functions in Python and Ruby, and for database column names almost everywhere.</li>
-  <li><strong>kebab-case</strong> — all lowercase, words separated by hyphens (<code>first-name</code>). Used for URL slugs and CSS class names — hyphens are the one separator that's always safe in a URL without encoding.</li>
-  <li><strong>CONSTANT_CASE</strong> (also called SCREAMING_SNAKE_CASE) — all uppercase, words separated by underscores (<code>FIRST_NAME</code>). Reserved specifically for constants, so an all-caps identifier signals "this value never changes" at a glance.</li>
+  <li>camelCase joins words without separators and capitalizes each word after the first, as in firstName. It is common for JavaScript and Java variables and methods, but project rules still take precedence.</li>
+  <li>PascalCase capitalizes every word, as in FirstName. Many ecosystems use it for classes, components or types.</li>
+  <li>snake_case joins lowercase words with underscores, as in first_name. Python commonly uses it for functions and variables; database conventions vary by team and platform.</li>
+  <li>kebab-case joins lowercase words with hyphens, as in first-name. It is common in URL slugs and CSS classes, although URL safety also depends on the complete character set and encoding.</li>
+  <li>CONSTANT_CASE uses uppercase words separated by underscores, as in FIRST_NAME. It often marks constants or environment variables, but capitalization does not enforce immutability.</li>
 </ul>
 
 <h2>Why the convention matters more than the choice</h2>
-<p>None of these styles is technically superior — a JavaScript variable named <code>first_name</code> instead of <code>firstName</code> still works exactly the same. What breaks is consistency: mixing styles within one codebase forces every reader to context-switch for no reason, and some tools genuinely can't cross styles safely (a CSS class must be kebab-case-safe, a URL slug can't contain characters that need encoding, and a case-sensitive filesystem will treat <code>MyFile</code> and <code>myfile</code> as two different files while a case-insensitive one won't). The style itself is a convention; picking one and applying it consistently is what actually matters.</p>
+<p>None of these styles is technically superior; a JavaScript variable named <code>first_name</code> instead of <code>firstName</code> still works exactly the same. What breaks is consistency: mixing styles within one codebase forces every reader to context-switch for no reason, and some tools genuinely can't cross styles safely (a CSS class must be kebab-case-safe, a URL slug can't contain characters that need encoding, and a case-sensitive filesystem will treat <code>MyFile</code> and <code>myfile</code> as two different files while a case-insensitive one won't). The style itself is a convention; picking one and applying it consistently is what actually matters.</p>
 
 <h2>Where each style tends to show up</h2>
 <ul>
-  <li><strong>Variables and functions:</strong> camelCase (JavaScript, Java) or snake_case (Python, Ruby) — pick whichever your language's own standard library and style guide already use, not a personal preference.</li>
-  <li><strong>Classes and types:</strong> PascalCase, almost universally, across the languages that distinguish them from variables at all.</li>
-  <li><strong>URLs and file slugs:</strong> kebab-case — search engines and browsers treat hyphens as word separators in a URL, which underscores and camelCase don't get for free.</li>
+  <li><strong>Variables and functions:</strong> camelCase (JavaScript, Java) or snake_case (Python, Ruby); pick whichever your language's own standard library and style guide already use, not a personal preference.</li>
+  <li>Classes and types: often PascalCase, though language and framework conventions differ.</li>
+  <li>URLs and slugs: commonly kebab-case because hyphens visibly separate words; search behavior should not be reduced to a universal ranking rule.</li>
   <li><strong>CSS classes:</strong> kebab-case is the long-standing convention (<code>.nav-link</code>), though some component-based frameworks use camelCase for CSS-in-JS.</li>
-  <li><strong>Constants and environment variables:</strong> CONSTANT_CASE — the all-caps convention originated with C preprocessor macros and is still the standard for env vars and true constants today.</li>
+  <li>Constants and environment variables: often CONSTANT_CASE by convention, without any guarantee that the value cannot change.</li>
 </ul>
 
-<h2>Quick answers</h2>
-<p><strong>Is there a "correct" case for JSON keys?</strong> No hard rule, but camelCase is the de facto convention in JavaScript-heavy APIs, while snake_case shows up often in APIs written by Python/Ruby-first teams — match whatever the rest of that API already uses.</p>
-<p><strong>What's the difference between kebab-case and "dash-case" or "spinal-case"?</strong> Nothing — they're the same style under different names, all referring to lowercase words joined by hyphens.</p>
-<p><strong>Why do some style guides avoid underscores in URLs?</strong> Older search engines didn't reliably treat an underscore as a word separator (some still read <code>first_name</code> as one word, "first_name," rather than two), while a hyphen reliably splits into separate words — kebab-case avoids the ambiguity entirely.</p>
+<h2>Questions that come up in real projects</h2>
+<p>JSON imposes no casing rule on member names. Match the API contract exactly; changing case creates a different key.</p>
+<p>kebab-case, dash-case and spinal-case usually name the same hyphen-separated style, though terminology is not formally standardized everywhere.</p>
+<p>Hyphens are a clear word separator in URLs and are widely recommended for readable slugs. The practical reason is clarity and convention, not a claim that every search engine interprets underscores identically.</p>
 
 <div class="cta-box">
   <h3>Convert between cases</h3>
-  <p>Orisod's Case Converter switches text between UPPERCASE, lowercase, Title Case, Sentence case, camelCase, PascalCase, snake_case, kebab-case, and CONSTANT_CASE — entirely in your browser.</p>
+  <p>Orisod’s Case Converter switches text among common letter and identifier styles in your browser. Review acronyms, punctuation and non-Latin text after conversion.</p>
   <a class="cta-button" href="/case-converter/">Convert text case →</a>
 </div>
 
-<p>The specific style rarely matters on its own — what matters is matching whatever convention the language, framework, or system you're working in already expects, and staying consistent once you've picked it.</p>
+<p>Use the convention expected by the language, framework or external API, then apply it consistently. Conversion tools cannot always infer acronyms, Unicode word boundaries or the intended segmentation of an existing identifier.</p>
 
 </div>
 

@@ -131,42 +131,42 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guides</span>
-<h1>How This Browser-Based Collage Maker Actually Works</h1>
-<p class="intro">A collage tool that runs entirely client-side has to solve a few problems a design-app collage feature doesn't: the same layout has to render two different ways (fast enough to drag in real time, and pixel-exact for a 3000px export), and none of it can lean on a server to do the slow part. Here's what actually happens between dropping in photos and downloading a PNG.</p>
+<h1>Inside a Browser-Based Photo Collage Maker</h1>
+<p class="intro">A responsive preview and a large exported PNG have very different performance needs. Orisod’s collage maker handles them through two rendering paths built around the same layout data: lightweight CSS during editing and a full-resolution canvas at download time. That division explains most of the choices behind its grids, filters and per-photo controls.</p>
 
 <div class="article-body">
 
-<h2>Why the grid is computed as plain rectangles, not CSS Grid auto-placement</h2>
-<p>The obvious way to build a "2 to 9 photos in a grid" layout is CSS Grid: define columns and rows, let the browser place each cell. That works fine for what's on screen — but the moment you also need to render the exact same layout onto an export canvas at, say, 3000px wide, you're stuck re-implementing the browser's own grid-placement algorithm in JavaScript to get identical positions. Any tiny mismatch between the two shows up as a shifted seam between two photos in the downloaded file. Instead, every layout here is defined as a small list of column/row spans, and one function turns that into plain x/y/width/height rectangles given a target canvas size. The live preview positions each photo cell with those numbers; export does the exact same math at a different resolution. Same function, same output shape, no drift.</p>
+<h2>One rectangle model keeps CSS and canvas aligned</h2>
+<p>CSS Grid could arrange the live editor, but reproducing its automatic placement independently on an export canvas would invite small differences. Instead, each template defines column and row spans that one function converts into x, y, width and height rectangles for any target size. CSS positions the preview cells from those numbers; canvas uses the same geometry at export resolution. Rounding and browser rendering can still affect edge pixels, but the shared model removes a major source of layout drift.</p>
 
-<h2>Why the live preview and the final export aren't the same code path</h2>
-<p>Re-drawing a full canvas — filters, rounded corners, grain, text — every time a zoom or spacing slider moves would be slow enough to feel laggy, especially with nine photos on screen at once. The live grid instead uses real CSS: each photo sits in an absolutely-positioned cell, filtered with the CSS <code>filter</code> property, clipped with <code>border-radius</code> — all of it GPU-composited and effectively free to redraw on every input event. Only when you actually download does the tool build a full-resolution canvas from scratch, using the browser's Canvas 2D <code>ctx.filter</code> property (which accepts the same filter syntax as CSS) so the exact same brightness/contrast/saturation/sepia/hue values apply identically in both places.</p>
+<h2>Editing favors CSS; downloading uses canvas</h2>
+<p>Rendering a large canvas after every movement of a spacing or zoom control would waste work, especially with nine photographs. The editor therefore uses absolutely positioned elements, CSS filters and border-radius clipping that the browser can update responsively. Downloading starts a separate Canvas 2D render at the chosen resolution. Its ctx.filter property accepts the corresponding filter syntax, although CSS and canvas output should still be visually tested across supported browsers rather than assumed pixel-identical.</p>
 
-<h2>Why filters are baked in per photo, not applied once to the finished collage</h2>
-<p>Applying one filter to the whole finished image would be simpler to build, but it also means every photo in the collage has to share the same look — which falls apart the moment you're combining a bright outdoor shot with a dim indoor one. Each photo instead carries its own filter choice and its own brightness/contrast/saturation offsets, stored per photo rather than per collage. Selecting a different grid cell swaps which photo's settings the filter panel and sliders are editing; nothing about the layout or the other photos changes.</p>
+<h2>Each photograph keeps its own visual settings</h2>
+<p>A single filter over the finished collage would force bright outdoor pictures and dim indoor shots into the same treatment. Here, every photo stores its own preset plus brightness, contrast and saturation adjustments. Selecting a cell changes which settings the panel edits while leaving the other photographs and the grid untouched.</p>
 
-<h2>Why 30-plus filters took more tuning than picking 30 numbers</h2>
-<p>A CSS filter preset is just a handful of numbers — brightness, contrast, saturation, sepia, grayscale, a hue rotation, sometimes blur. It's easy to generate dozens of presets that are all technically different and still look nearly identical, especially within a themed group like "vivid" or "muted," where the whole point is a family resemblance. Getting presets that are actually easy to tell apart at a glance took pushing the values further apart than felt intuitive at first, and in one case, undoing a mistake entirely: an early pass used a large hue-rotation (past 180 degrees) for a couple of "cool" presets, which doesn't shift a photo toward blue the way you'd expect — past a certain point a hue rotation wraps around and can shift blue skies toward magenta instead, which reads as broken, not cool-toned. The fix was smaller, more conservative hue shifts for anything meant to look literally warmer or cooler, and saving the more aggressive hue rotation for presets that are supposed to look deliberately unusual, like a cross-processed film look.</p>
+<h2>Distinct presets require more than distinct numbers</h2>
+<p>A CSS preset is a short group of brightness, contrast, saturation, sepia, grayscale, hue and sometimes blur values. Dozens of numerical combinations can still look nearly alike. The useful work was separating related looks enough to recognize them without destroying the intended family resemblance. Large hue rotations were especially misleading: they wrap around the color wheel and could push blue skies toward magenta instead of making a scene feel cooler. Conservative shifts suit natural warm and cool presets; aggressive shifts belong in deliberately stylized effects.</p>
 
-<h2>Why some presets add grain and most don't</h2>
-<p>Color grading alone — adjusting brightness, contrast, saturation — can get a photo most of the way to looking vintage, but it can't reproduce the visible texture of actual film grain, which is a property of the image's fine detail, not its overall color. Presets meant to look like scanned film or an old print layer a second effect on top of the color grading: a texture generated at render time (random per-pixel noise, not a fixed image file) and blended over the photo at low opacity. Generating it on the fly instead of shipping a texture image means there's no repeating pattern to notice and no extra file to load — it costs a few milliseconds of canvas drawing instead.</p>
+<h2>Grain needs a texture layer of its own</h2>
+<p>Brightness, contrast and saturation change tone but do not create the fine texture associated with film grain. Presets that call for that look receive a low-opacity layer of randomized pixel noise during rendering. Generating the texture at that moment avoids shipping a separate asset and reduces obvious repetition, though every export may contain a different noise pattern.</p>
 
-<h2>Why reordering uses the browser's native drag-and-drop instead of a custom version</h2>
-<p>Dragging a photo from one grid cell to another to swap their positions is handled with the same <code>dragstart</code> / <code>dragover</code> / <code>drop</code> events used elsewhere on this site for page-reordering tools, rather than a hand-built pointer-tracking system. It's less code, and it's a browser capability instead of one more thing to maintain.</p>
+<h2>Native drag and drop handles reordering</h2>
+<p>Photo swaps use the browser’s dragstart, dragover and drop events, the same family of events used by Orisod’s page-reordering tools. This keeps the interaction small and maintainable, although native drag behavior and accessibility can vary among pointer, touch and keyboard environments.</p>
 
-<h2>Quick answers</h2>
-<p><strong>Why can filters only be brightness/contrast/saturation/sepia/grayscale/hue/blur, and not more exotic effects?</strong> Those are the values the CSS/Canvas <code>filter</code> property actually supports natively, with no image-processing library involved. Effects outside that set (like real film grain) are added as a second layer on top, not folded into the filter string.</p>
-<p><strong>Why is there a separate zoom and pan per photo instead of one crop tool?</strong> Each photo's position inside its cell — how zoomed in it is, and where it's centered — is stored independently, so moving one photo around never affects any other cell's framing, even after you change the grid layout.</p>
-<p><strong>Does a higher export resolution use a different rendering path than the preview?</strong> No — it's the exact same rectangle-and-filter math, just run once at a bigger target size. There's no separate "high quality mode."</p>
-<p><strong>Why is the background limited to a solid color for now?</strong> A solid color is one CSS/canvas fill; a gradient or image background would need its own positioning and scaling rules layered under everything else, which is a reasonable feature to add later but wasn't essential for a first version.</p>
+<h2>A few implementation details</h2>
+<p>The native CSS and Canvas filter vocabulary covers brightness, contrast, saturation, sepia, grayscale, hue rotation and blur. Effects outside that set need another rendering step; grain, for example, is composited as a texture instead of inserted into the filter string.</p>
+<p>Zoom and pan belong to individual photos because each cell needs its own crop framing. The stored scale and center coordinates travel with that photo even if the grid changes, without moving the framing of other cells.</p>
+<p>A larger export uses the same rectangle and filter parameters at a bigger target size, but it is rendered through canvas rather than the preview’s DOM and CSS path. Calling the two results pixel-identical would be too strong; the goal is consistent composition at the requested resolution.</p>
+<p>The current background is a solid CSS and canvas fill. Gradients or images would need additional sizing, positioning, cropping and export rules beneath every cell, so they remain a separate feature rather than an implied capability.</p>
 
 <div class="cta-box">
   <h3>Make a photo collage</h3>
-  <p>Orisod's Collage Maker combines 2 to 9 photos into one image with grid layouts, 30+ filters, and a text overlay — entirely in your browser.</p>
+  <p>Orisod’s Collage Maker arranges 2 to 9 photos with grid templates, more than 30 filters and an optional text overlay, all from your browser.</p>
   <a class="cta-button" href="/collage-maker/">Build a collage →</a>
 </div>
 
-<p>The short version: a browser-only collage tool has to compute its own layout math so preview and export can never disagree, keep the interactive parts cheap by leaning on CSS instead of canvas until the moment you actually export, and treat "30 distinct filters" as a real design problem rather than 30 slightly different numbers.</p>
+<p>The central design choice is simple: share the layout model, not every rendering operation. CSS keeps editing responsive, canvas creates the downloadable image, and per-photo state preserves independent framing and color adjustments.</p>
 
 </div>
 

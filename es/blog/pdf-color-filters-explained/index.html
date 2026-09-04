@@ -146,16 +146,16 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guías</span>
-<h1>Por qué un filtro de color en PDF rasteriza cada página (y qué te cuesta eso)</h1>
-<p class="intro">Un filtro de color en una foto solo cambia píxeles que ya existían. Un filtro de color en un PDF es un trabajo completamente distinto — la mayoría de las páginas de un PDF no tienen "píxeles" que recolorear de entrada, así que la herramienta tiene que fabricar algunos antes de poder hacer nada.</p>
+<h1>Por qué los filtros de color rasterizan cada página PDF</h1>
+<p class="intro">Aplicar un filtro a una fotografía significa modificar píxeles que ya existen. Muchas páginas PDF contienen texto y formas vectoriales, no una cuadrícula fija de píxeles. Antes de cambiar el color hay que renderizar la página como imagen, y esa conversión afecta algo más que su apariencia.</p>
 
 <div class="article-body">
 
 <h2>Por qué una página de PDF normalmente no está hecha de píxeles</h2>
-<p>El texto y las formas en un PDF típico se almacenan como instrucciones vectoriales — dibuja esta letra a este tamaño en esta posición, traza esta línea, rellena esta forma — descripciones independientes de la resolución que un visor de PDF convierte en píxeles solo en el momento de mostrar o imprimir la página. No hay una cuadrícula fija de puntos de color sobre la que recorrer y recolorear, como sí la hay en un JPEG o PNG. Un filtro de color, por definición, necesita tocar píxeles individuales — el blanco y negro necesita los valores rojo/verde/azul de un píxel para calcular un valor de gris, el sepia necesita esos mismos valores para calcular un reemplazo con matiz — así que primero necesita que existan píxeles.</p>
+<p>El texto y las formas en un PDF típico se almacenan como instrucciones vectoriales; dibuja esta letra a este tamaño en esta posición, traza esta línea, rellena esta forma; descripciones independientes de la resolución que un visor de PDF convierte en píxeles solo en el momento de mostrar o imprimir la página. No hay una cuadrícula fija de puntos de color sobre la que recorrer y recolorear, como sí la hay en un JPEG o PNG. Un filtro de color, por definición, necesita tocar píxeles individuales; el blanco y negro necesita los valores rojo/verde/azul de un píxel para calcular un valor de gris, el sepia necesita esos mismos valores para calcular un reemplazo con matiz; así que primero necesita que existan píxeles.</p>
 
-<h2>Qué significa realmente rasterizar aquí</h2>
-<p>La solución es renderizar cada página de la misma forma en que lo haría un visor de PDF para mostrarla en pantalla, pero capturando el resultado como un mapa de bits en vez de mostrarlo — efectivamente, tomar una captura de pantalla muy precisa de cada página. Esa captura está genuinamente hecha de píxeles, así que la matemática por píxel del filtro puede ejecutarse sobre ella con normalidad. El mapa de bits filtrado se coloca luego en un PDF completamente nuevo, una imagen por página, con el tamaño ajustado a las dimensiones de la página original.</p>
+<h2>Rasterizar convierte la página en una imagen</h2>
+<p>La herramienta renderiza cada página de forma parecida a un visor PDF y captura el resultado como mapa de bits. Entonces puede aplicar blanco y negro, sepia o inversión píxel por píxel. Por último, coloca la imagen filtrada en una nueva página con las dimensiones originales.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 260" width="700" height="260" role="img" aria-label="Diagrama que muestra una página de PDF original hecha de texto y formas vectoriales a la izquierda, una flecha etiquetada rasterizar más filtro, y el nuevo PDF resultante hecho de una imagen de píxeles filtrada por página a la derecha, con una esquina ampliada que muestra cuadrados de píxeles individuales de color." xmlns="http://www.w3.org/2000/svg">
@@ -191,27 +191,27 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <rect x="634" y="134" width="20" height="20" fill="#f59e0b" opacity="0.5"/>
 <text x="625" y="185" text-anchor="middle" font-size="11" fill="var(--muted-text)">ampliado: píxeles individuales</text>
 </svg>
-<figcaption>Filtrar requiere píxeles, así que una página antes vectorial se convierte en una única imagen de píxeles aplanada, coloreada un cuadrado a la vez.</figcaption>
+<figcaption>La página vectorial se convierte en una sola imagen plana antes de aplicar el filtro.</figcaption>
 </figure>
 
-<h2>El costo real: el texto deja de ser texto</h2>
-<p>Una vez que una página es una imagen de píxeles, cualquier texto que tuviera ahora son solo puntos de color que resultan parecerse a letras — la misma situación en la que ya está un documento escaneado. Seleccionar una frase, buscar una palabra o copiar un párrafo dejan de funcionar, porque ya no hay texto real que seleccionar, buscar o copiar — solo su imagen. Esto no es un error ni una función que falte; es una consecuencia inevitable de hacer trabajo de color a nivel de píxel sobre contenido que no empezó siendo píxeles. La solución, si el texto buscable importa después, es la misma que arregla cualquier documento escaneado: pasar el resultado por OCR para volver a añadir una capa de texto.</p>
+<h2>El texto seleccionable pasa a formar parte de la imagen</h2>
+<p>Después de rasterizar, las letras son píxeles y ya no objetos de texto. Buscar, seleccionar y copiar dejan de funcionar, salvo que un proceso de OCR añada otra capa de texto. Es una consecuencia normal del efecto aplicado y no un fallo del archivo exportado.</p>
 
-<h2>Elegir una resolución: el compromiso de calidad</h2>
-<p>Como el resultado ahora es una imagen, su nitidez depende por completo de con cuántos píxeles se renderizó — aquí es donde aparece un compromiso real. Renderizar demasiado pequeño hace que los bordes del texto se vean toscos o borrosos al ver la página a tamaño completo o imprimirla; renderizar muy grande hace que el PDF resultante crezca mucho en tamaño de archivo por muy poco beneficio visible pasado cierto punto. Renderizar a aproximadamente el doble de la resolución normal de visualización de la página antes de filtrar es un punto medio práctico: suficientemente nítido para que el texto filtrado siga siendo legible en tamaños normales de lectura e impresión, sin inflar el archivo tanto como lo haría una resolución aún mayor.</p>
+<h2>La resolución controla nitidez y tamaño</h2>
+<p>La resolución de renderizado determina la nitidez del PDF. Con pocos píxeles, la letra pequeña puede verse borrosa, especialmente al imprimir; una imagen excesivamente grande aumenta el peso sin aportar una mejora visible equivalente. El punto adecuado depende del tamaño de página, la tipografía y el uso final.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Esto cambia el tamaño de página o el diseño del PDF?</strong> No — cada página nueva se ajusta a las dimensiones de la página original; solo el contenido pasa a ser una única imagen en vez de elementos vectoriales activos.</p>
-<p><strong>¿Por qué JPEG en vez de PNG para las páginas filtradas?</strong> La compresión con pérdida de JPEG mantiene el tamaño de archivo mucho más pequeño para contenido de estilo fotográfico a un nivel de calidad donde la diferencia no es visualmente obvia, algo que importa más aquí porque cada página individual ahora es una imagen de página completa en vez de instrucciones de texto ligeras.</p>
-<p><strong>¿Hay alguna forma de filtrar un PDF sin perder el texto seleccionable?</strong> No para un efecto de color real a nivel de píxel — algo que solo necesite recolorear elementos concretos conocidos (como un color de fondo sólido) podría en teoría hacerse sin rasterizar, pero un filtro general que inspecciona y cambia colores de píxeles arbitrarios necesita píxeles con los que trabajar por definición.</p>
+<h2>Qué puedes esperar del resultado</h2>
+<p>La copia PDF puede conservar las dimensiones y el diseño de las páginas, pero cada una contendrá una imagen plana en vez de texto y elementos vectoriales separados.</p>
+<p>JPEG puede reducir el peso de páginas con fotografías frente a un PNG sin pérdida, aunque también puede crear artefactos alrededor de letras y bordes. El formato y la calidad adecuados dependen del contenido.</p>
+<p>Un filtro general a nivel de píxel necesita renderizar el contenido del PDF. Las modificaciones dirigidas a elementos vectoriales conocidos podrían evitarlo, pero constituyen otra clase de operación.</p>
 
 <div class="cta-box">
   <h3>Aplica un filtro de color a un PDF</h3>
-  <p>La herramienta Filtros de Color para PDF de Orisod aplica filtros de blanco y negro, sepia o invertido a cada página, con vista previa en vivo y el compromiso de rasterización explicado directamente en la herramienta — todo en tu navegador.</p>
+  <p>Filtros de Color para PDF de Orisod aplica blanco y negro, sepia o inversión a todas las páginas desde tu navegador. Revisa la vista previa y recuerda que la copia queda rasterizada.</p>
   <a class="cta-button" href="/es/pdf-color-filters/">Aplicar un filtro de color a un PDF →</a>
 </div>
 
-<p>Un filtro de color en PDF no es en secreto algo sencillo — es un proceso completo de renderizar, recolorear y reconstruir que sustituye lo que sería una sola línea de código en un archivo de imagen. Saber esto explica tanto por qué el resultado se ve como se ve como por qué el texto dentro de él se comporta de forma distinta después.</p>
+<p>Filtrar un PDF implica renderizar, recolorear y reconstruir. Por eso cambia tanto la apariencia como el comportamiento del texto. Si necesitas búsquedas, aplica OCR después y comprueba el resultado.</p>
 
 </div>
 

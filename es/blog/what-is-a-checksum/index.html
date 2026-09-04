@@ -146,16 +146,16 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guías</span>
-<h1>Qué demuestra realmente un checksum (y qué no)</h1>
-<p class="intro">Un proveedor de software publica una línea como <code>a3f5...9c2</code> junto a un enlace de descarga, y de alguna manera eso debería tranquilizarte sobre el estado del archivo. Es razonable confiar en ello sin saber por qué — pero el "por qué" resulta ser una pieza genuinamente útil de informática, con un límite real sobre lo que puede y no puede decirte.</p>
+<h1>Qué demuestra un checksum y qué no</h1>
+<p class="intro">Un hash publicado permite comparar tu descarga con los bytes usados para calcularlo. Una coincidencia aporta evidencia sólida de integridad bajo el algoritmo elegido. Por sí sola no establece quién publicó el archivo ni el checksum.</p>
 
 <div class="article-body">
 
 <h2>El único trabajo de una función hash</h2>
-<p>Una función hash toma una entrada de cualquier tamaño — una palabra, una frase, un archivo de varios gigabytes — y produce una cadena de caracteres de longitud fija, de forma determinista: la misma entrada siempre produce exactamente la misma salida, cada vez, en cualquier computadora. Dale una entrada distinta, aunque difiera en un solo bit, y la salida se ve completamente distinta a la anterior. Ese es todo el mecanismo. Un "checksum" es solo esa salida, usada específicamente para comprobar que algo coincide.</p>
+<p>Una función hash toma una entrada de cualquier tamaño; una palabra, una frase, un archivo de varios gigabytes; y produce una cadena de caracteres de longitud fija, de forma determinista: la misma entrada siempre produce exactamente la misma salida, cada vez, en cualquier computadora. Dale una entrada distinta, aunque difiera en un solo bit, y la salida se ve completamente distinta a la anterior. Ese es todo el mecanismo. Un "checksum" es solo esa salida, usada específicamente para comprobar que algo coincide.</p>
 
 <h2>Por qué invertir un bit lo cambia todo</h2>
-<p>Esta es la propiedad que hace útil a un checksum: una función hash bien diseñada está construida para que cambiar incluso un solo bit de la entrada revuelva aproximadamente la mitad de los bits de salida, de forma impredecible. No existe un hash "más o menos igual" para un archivo "más o menos igual" — una diferencia de un byte y un archivo completamente reescrito producen salidas igualmente distintas de la original. Esto se llama efecto avalancha, y es precisamente por lo que un hash coincidente es significativo: prácticamente no hay forma de que datos corruptos o alterados produzcan accidentalmente el mismo hash que el original.</p>
+<p>Esta es la propiedad que hace útil a un checksum: una función hash bien diseñada está construida para que cambiar incluso un solo bit de la entrada revuelva aproximadamente la mitad de los bits de salida, de forma impredecible. No existe un hash "más o menos igual" para un archivo "más o menos igual"; una diferencia de un byte y un archivo completamente reescrito producen salidas igualmente distintas de la original. Esto se llama efecto avalancha, y es precisamente por lo que un hash coincidente es significativo: prácticamente no hay forma de que datos corruptos o alterados produzcan accidentalmente el mismo hash que el original.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 220" width="700" height="220" role="img" aria-label="Diagrama que muestra el texto hello world con hash SHA-256 a b94d27b...2efcde9, y el texto hello world con un punto añadido con hash al valor completamente distinto 7ddb227...9faeb87, ilustrando que un cambio mínimo en la entrada produce una salida de hash totalmente diferente." xmlns="http://www.w3.org/2000/svg">
@@ -176,27 +176,27 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <text x="540" y="165" text-anchor="middle" font-family="Courier New, monospace" font-size="13" fill="#f59e0b">7ddb227...9faeb87</text>
 <text x="540" y="185" text-anchor="middle" font-size="10" fill="var(--muted-text)">SHA-256</text>
 </svg>
-<figcaption>Valores SHA-256 reales calculados de forma independiente: añadir un solo punto a la entrada produce un hash sin ningún parecido visible con el original — eso es el efecto avalancha funcionando como debe, no una coincidencia.</figcaption>
+<figcaption>Valores SHA-256 reales calculados de forma independiente: añadir un solo punto a la entrada produce un hash sin ningún parecido visible con el original; eso es el efecto avalancha funcionando como debe, no una coincidencia.</figcaption>
 </figure>
 
 <h2>Integridad no es autenticidad</h2>
-<p>Aquí está el límite que más importa: un checksum coincidente demuestra que el archivo que tienes es idéntico byte a byte al archivo a partir del cual se calculó ese checksum. No demuestra nada sobre quién calculó ese checksum ni de dónde vino realmente el archivo. Si tanto el archivo como su checksum publicado están alojados en un servidor comprometido, un atacante puede reemplazar ambos juntos, y todo seguirá "coincidiendo". Un checksum responde "¿se corrompió esto en tránsito?", no "¿puedo confiar en la fuente?" — para la segunda pregunta necesitas algo como una firma criptográfica, que depende de una clave privada que un atacante no tiene, no solo de un hash que cualquiera puede recalcular.</p>
+<p>Los valores iguales indican que ambas entradas produjeron el mismo resumen. Con un algoritmo resistente como SHA-256, es evidencia de integridad muy fuerte, pero el hash debe llegar por un canal confiable. Si un atacante sustituye archivo y checksum, la comparación pasa. Las firmas digitales abordan la procedencia.</p>
 
 <h2>Por qué siguen existiendo algoritmos "rotos"</h2>
-<p>MD5 y SHA-1 se consideran criptográficamente rotos porque los investigadores encontraron formas prácticas de construir dos entradas distintas que producen el mismo resultado hash — una "colisión" — mediante un esfuerzo deliberado y costoso. Eso importa enormemente para usos críticos de seguridad como las firmas digitales, donde un adversario podría querer sustituir un documento malicioso que produzca el mismo hash que uno legítimo. Importa mucho menos para detectar corrupción accidental — una descarga truncada, un sector de disco defectuoso, un fallo de red — porque esos fallos no son un adversario diseñando una colisión específica, son daño esencialmente aleatorio, y hasta una función hash "rota" sigue fallando la prueba de avalancha ante daño aleatorio. Esa es la razón real por la que los checksums de integridad de archivos todavía usan comúnmente MD5 o SHA-1: el modelo de amenaza es la corrupción, no un adversario.</p>
+<p>MD5 y SHA-1 tienen debilidades prácticas de colisión y no deben proteger decisiones frente a adversarios. Todavía detectan muchos errores accidentales, pero conviene usar algoritmos modernos como SHA-256 cuando estén disponibles.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>Si dos archivos tienen el mismo hash, ¿son definitivamente idénticos?</strong> Para cualquier función hash sin un método de colisión práctico conocido (SHA-256 en adelante, actualmente), sí para todos los efectos prácticos — las probabilidades de que dos archivos distintos coincidan por azar son astronómicamente pequeñas.</p>
+<h2>Cómo interpretar el resultado</h2>
+<p>Dos archivos diferentes pueden compartir teóricamente cualquier hash de longitud fija. Con SHA-256 y sin una debilidad adversarial, una coincidencia accidental es extraordinariamente improbable, no lógicamente imposible.</p>
 <p><strong>¿Por qué los checksums parecen letras y números aleatorios?</strong> Son simplemente una secuencia de bytes (la salida cruda de la función hash) mostrada en hexadecimal, ya que los bytes crudos no son fáciles de leer ni de copiar y pegar de forma fiable como texto.</p>
-<p><strong>¿Un hash más largo significa un algoritmo más seguro?</strong> Generalmente sí dentro de la misma familia de algoritmos — SHA-512 tiene más bits de salida que SHA-256, lo que dificulta los ataques de fuerza bruta y de colisión —, pero el diseño del algoritmo importa más que la longitud por sí sola, por lo que la salida de 128 bits de MD5 es más débil que la de 160 bits de SHA-1 en mayor medida de lo que sugeriría solo la diferencia de longitud.</p>
+<p><strong>¿Un hash más largo significa un algoritmo más seguro?</strong> Generalmente sí dentro de la misma familia de algoritmos; SHA-512 tiene más bits de salida que SHA-256, lo que dificulta los ataques de fuerza bruta y de colisión -, pero el diseño del algoritmo importa más que la longitud por sí sola, por lo que la salida de 128 bits de MD5 es más débil que la de 160 bits de SHA-1 en mayor medida de lo que sugeriría solo la diferencia de longitud.</p>
 
 <div class="cta-box">
   <h3>Calcula un hash o checksum</h3>
-  <p>El Generador de Hash y Checksum de Orisod calcula MD5, SHA-1, SHA-256, SHA-384 y SHA-512 de texto o un archivo, y los verifica automáticamente contra un valor esperado — todo en tu navegador.</p>
+  <p>El Generador de Hash y Checksum de Orisod calcula MD5, SHA-1, SHA-256, SHA-384 y SHA-512 localmente y compara un valor esperado. Prefiere un hash moderno y una referencia de fuente confiable.</p>
   <a class="cta-button" href="/es/hash-checksum-generator/">Generar un checksum →</a>
 </div>
 
-<p>Un checksum es una huella digital pequeña y determinista con un único trabajo honesto: decirte si dos cosas son exactamente iguales. Es notablemente bueno en ese trabajo, y vale la pena saber exactamente dónde termina ese trabajo, para que una marca verde no tenga que responder una pregunta para la que nunca fue diseñada.</p>
+<p>Un checksum responde si los datos coinciden con un resumen de referencia. La confianza en la fuente exige autenticar esa referencia por separado.</p>
 
 </div>
 

@@ -146,16 +146,16 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guides</span>
-<h1>How to Generate a Strong Password (and Why Length Matters More Than Tricks)</h1>
-<p class="intro">Swapping letters for symbols — "password" becomes "P@ssw0rd" — feels like it should make a password much harder to crack. In practice, it barely moves the needle, while making the password harder for you to remember. What actually determines how hard a password is to guess is simpler, and more mathematical, than clever substitutions.</p>
+<h1>How to Generate a Strong Password</h1>
+<p class="intro">Changing “password” to “P@ssw0rd” adds inconvenience, not much protection. Attackers already test familiar substitutions. A strong credential is unique, generated unpredictably and long enough for the account’s requirements.</p>
 
 <div class="article-body">
 
 <h2>What "strength" actually measures</h2>
-<p>A password's strength is usually measured in bits of entropy — roughly, the number of guesses a brute-force attacker working through every possibility would need, expressed as a power of two. Every character position multiplies the total number of possible passwords by however many characters could go there. A password built from a bigger pool of possible characters, or one that's simply longer, has exponentially more combinations to search through — and length affects that exponent far more directly than character variety does.</p>
+<p>Entropy estimates the uncertainty in a random generation process. The familiar length × log₂(character-pool size) formula applies only when every character is chosen independently and uniformly from that pool. Human-created passwords rarely meet that assumption, so calculated bits can greatly overstate their resistance to guessing.</p>
 
 <h2>Why substitutions don't help as much as they feel like they should</h2>
-<p>Swapping "a" for "@" or "o" for "0" barely changes the brute-force math, and it does essentially nothing against how real attacks actually work. Attackers don't try every possible string in order — they try dictionaries of real words first, then apply exactly these common substitution patterns to each one, because so many people use them. "P@ssw0rd" isn't meaningfully harder to guess than "password" against a real attacker; it's just harder for you to type correctly.</p>
+<p>Attackers prioritize leaked passwords, words, patterns and substitutions before exhaustive brute force. Replacing “a” with “@” or “o” with “0” remains predictable. Random generation and avoiding reuse matter far more.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 340" width="700" height="340" role="img" aria-label="Bar chart of password entropy in bits: 8 lowercase-only characters (38 bits), 8 characters from a full character set (52 bits), 16 characters (105 bits), and 20 characters (131 bits) — entropy grows fastest with length, not character variety alone." xmlns="http://www.w3.org/2000/svg">
@@ -178,27 +178,27 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <text x="525" y="300" text-anchor="middle" font-size="12.5" fill="var(--muted-text)">20 chars,</text>
 <text x="525" y="314" text-anchor="middle" font-size="12.5" fill="var(--muted-text)">full character set</text>
 </svg>
-<figcaption>Entropy bits for four password strategies (calculated directly: length × log₂(character pool size), not measured against any specific attack). Going from 8 to 16 characters roughly doubles the bit count — which means squaring the actual number of combinations, a far bigger jump than adding symbols to a short password ever provides.</figcaption>
+<figcaption>The chart shows theoretical entropy for uniformly random characters, not a measured cracking time or a score for human-made passwords.</figcaption>
 </figure>
 
 <h2>What length alone buys you</h2>
-<p>Going from an 8-character password to a 16-character one, keeping the same character pool, nearly doubles the entropy bit count in the chart above — and because entropy is measured on a doubling (bits) scale, that near-doubling represents squaring the actual number of possible passwords, not just doubling it. Adding a longer, still-random tail to a password does more for its real-world strength than any amount of character substitution on a short one.</p>
+<p>For passwords generated from the same uniform character pool, doubling the length doubles the entropy in bits and squares the number of possible strings. That mathematical benefit does not turn a long quotation or repeated pattern into a random password.</p>
 
 <h2>Why a password manager changes the calculation entirely</h2>
-<p>None of this matters if you have to remember and type the password yourself — a 20-character fully random string is unusable without help. A password manager removes that constraint: it generates and stores a long random password per site, and you only need to remember one master password to unlock it. That's what actually makes maximum-entropy, no-compromises passwords practical for everyday use.</p>
+<p>A password manager can generate and store a unique random credential for each account. Protect the vault with a strong master password and multifactor authentication where available, and keep recovery information current.</p>
 
-<h2>Quick answers</h2>
-<p><strong>Should I still add symbols to my password?</strong> It doesn't hurt, but if you're choosing between a longer password with fewer character types or a shorter one packed with symbols, length wins by a wide margin.</p>
-<p><strong>Is a random password actually better than a memorable passphrase?</strong> A long passphrase built from several truly random, unrelated words can reach similar entropy while staying typeable — the key word is random; a quote or common phrase is guessable regardless of length.</p>
-<p><strong>How long should a password be?</strong> 16 characters from a full character set is a reasonable default for most accounts; use your password manager's maximum where a site allows it.</p>
+<h2>Practical choices</h2>
+<p>Symbols expand the pool when chosen randomly, but they do not rescue a short predictable pattern. Follow the site’s rules and favor additional random length.</p>
+<p>A passphrase can be strong when its words are selected randomly from a sufficiently large list. A quotation, lyric or familiar phrase remains vulnerable even when it is long.</p>
+<p>There is no universal safe length for every threat and policy. Use long manager-generated passwords, respect each service’s limit and never reuse them. Current security guidance should take priority over a fixed number.</p>
 
 <div class="cta-box">
   <h3>Generate a Strong Password</h3>
-  <p>Orisod's Password Generator uses your browser's cryptographically secure random number generator to build a password with the exact length and character set you choose — entirely in your browser.</p>
+  <p>Orisod’s Password Generator uses the browser’s cryptographically secure random source to create a password from your selected length and character sets. Save it securely and do not reuse it.</p>
   <a class="cta-button" href="/password-generator/">Generate a Password →</a>
 </div>
 
-<p>A password's real strength comes almost entirely from how long and how genuinely random it is — not from how clever its substitutions look. Length is the lever that actually moves the number that matters.</p>
+<p>The goal is not visual complexity. It is an unpredictable, unique credential stored safely, with multifactor authentication providing another layer when the service supports it.</p>
 
 </div>
 

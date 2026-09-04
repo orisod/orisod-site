@@ -146,16 +146,16 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guides</span>
-<h1>What a Checksum Actually Proves (and What It Doesn't)</h1>
-<p class="intro">A software vendor publishes a line like <code>a3f5...9c2</code> next to a download link, and somehow that's supposed to reassure you the file is fine. It's a reasonable thing to trust without knowing why — but the "why" turns out to be a genuinely useful piece of computer science, with a real boundary on what it can and can't tell you.</p>
+<h1>What a Checksum Proves and What It Does Not</h1>
+<p class="intro">A published hash lets you compare your download with the bytes used to calculate that value. A match is strong evidence of integrity under the chosen algorithm. It does not, by itself, establish who published either the file or the checksum.</p>
 
 <div class="article-body">
 
 <h2>A hash function's one job</h2>
-<p>A hash function takes an input of any size — a word, a sentence, a multi-gigabyte file — and produces a fixed-length string of characters, deterministically: the same input always produces the exact same output, every time, on any computer. Feed it a different input, even one bit different, and the output looks completely unrelated to the previous one. That's the entire mechanism. A "checksum" is just that output, used specifically to check that something matches.</p>
+<p>A hash function takes an input of any size; a word, a sentence, a multi-gigabyte file; and produces a fixed-length string of characters, deterministically: the same input always produces the exact same output, every time, on any computer. Feed it a different input, even one bit different, and the output looks completely unrelated to the previous one. That's the entire mechanism. A "checksum" is just that output, used specifically to check that something matches.</p>
 
 <h2>Why one flipped bit changes everything</h2>
-<p>This is the property that makes a checksum useful at all: a well-designed hash function is built so that changing even a single bit of the input scrambles roughly half of the output bits, unpredictably. There's no "mostly the same" hash for "mostly the same" file — a one-byte difference and a completely rewritten file both produce outputs that look equally unrelated to the original. This is called the avalanche effect, and it's precisely why a matching hash is meaningful: there's essentially no way for corrupted or altered data to accidentally produce the same hash as the original.</p>
+<p>This is the property that makes a checksum useful at all: a well-designed hash function is built so that changing even a single bit of the input scrambles roughly half of the output bits, unpredictably. There's no "mostly the same" hash for "mostly the same" file; a one-byte difference and a completely rewritten file both produce outputs that look equally unrelated to the original. This is called the avalanche effect, and it's precisely why a matching hash is meaningful: there's essentially no way for corrupted or altered data to accidentally produce the same hash as the original.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 220" width="700" height="220" role="img" aria-label="Diagram showing the text hello world hashed with SHA-256 to b94d27b...2efcde9, and the text hello world with a period added hashed to the completely different value 7ddb227...9faeb87, illustrating that a tiny input change produces a totally different hash output." xmlns="http://www.w3.org/2000/svg">
@@ -176,27 +176,27 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <text x="540" y="165" text-anchor="middle" font-family="Courier New, monospace" font-size="13" fill="#f59e0b">7ddb227...9faeb87</text>
 <text x="540" y="185" text-anchor="middle" font-size="10" fill="var(--muted-text)">SHA-256</text>
 </svg>
-<figcaption>Real, independently computed SHA-256 values: adding a single period to the input produces a hash that shares no visible resemblance to the original — that's the avalanche effect working as intended, not a coincidence.</figcaption>
+<figcaption>Real, independently computed SHA-256 values: adding a single period to the input produces a hash that shares no visible resemblance to the original; that's the avalanche effect working as intended, not a coincidence.</figcaption>
 </figure>
 
 <h2>Integrity is not authenticity</h2>
-<p>Here's the boundary that matters most: a matching checksum proves the file you have is byte-for-byte identical to the file the checksum was computed from. It proves nothing about who computed that checksum or where the file actually came from. If both the file and its published checksum are hosted on a compromised server, an attacker can replace both together, and everything will still "match." A checksum answers "was this corrupted in transit?", not "can I trust the source?" — for the second question, you need something like a cryptographic signature, which relies on a private key an attacker doesn't have, not just a hash anyone can recompute.</p>
+<p>Matching values show that both inputs produced the same digest. With a collision-resistant algorithm such as SHA-256, that is extremely strong integrity evidence, but the hash must come through a trusted channel. If an attacker replaces both file and posted checksum, the comparison still passes. Digital signatures or authenticated distribution address provenance.</p>
 
 <h2>Why "broken" algorithms are still around</h2>
-<p>MD5 and SHA-1 are considered cryptographically broken because researchers found practical ways to construct two different inputs that hash to the same output — a "collision" — through deliberate, expensive effort. That matters enormously for security-critical uses like digital signatures, where an adversary might want to swap in a malicious document that hashes the same as a legitimate one. It matters far less for catching accidental corruption — a truncated download, a bad disk sector, a network glitch — because those failures aren't an adversary engineering a specific collision, they're essentially random damage, and even a "broken" hash function still fails an avalanche test against random damage. That's the real reason file-integrity checksums still commonly use MD5 or SHA-1: the threat model is corruption, not an adversary.</p>
+<p>MD5 and SHA-1 have practical collision weaknesses and should not protect adversarial security decisions. They can still detect many accidental transmission errors, but modern algorithms such as SHA-256 are preferable when available and avoid ambiguity about the threat model.</p>
 
-<h2>Quick answers</h2>
-<p><strong>If two files have the same hash, are they definitely identical?</strong> For any hash function without a known practical collision method (SHA-256 and above, currently), yes for all realistic purposes — the odds of two different files matching by chance are astronomically small.</p>
+<h2>Using checksum results responsibly</h2>
+<p>Two different files can theoretically share any fixed-length hash. With SHA-256 and no adversarial weakness, an accidental match is extraordinarily unlikely, not logically impossible.</p>
 <p><strong>Why do checksums look like random letters and numbers?</strong> They're just a byte sequence (the raw output of the hash function) displayed in hexadecimal, since raw bytes aren't easy to read or copy-paste reliably as text.</p>
-<p><strong>Does a longer hash mean a more secure algorithm?</strong> Generally yes within the same algorithm family — SHA-512 has more output bits than SHA-256, making brute-force and collision attacks harder — but algorithm design matters more than length alone, which is why MD5's 128-bit output is weaker than SHA-1's 160-bit output by more than the length difference alone would suggest.</p>
+<p><strong>Does a longer hash mean a more secure algorithm?</strong> Generally yes within the same algorithm family; SHA-512 has more output bits than SHA-256, making brute-force and collision attacks harder; but algorithm design matters more than length alone, which is why MD5's 128-bit output is weaker than SHA-1's 160-bit output by more than the length difference alone would suggest.</p>
 
 <div class="cta-box">
   <h3>Compute a hash or checksum</h3>
-  <p>Orisod's Hash & Checksum Generator computes MD5, SHA-1, SHA-256, SHA-384, and SHA-512 for text or a file, and checks them against an expected value automatically — entirely in your browser.</p>
+  <p>Orisod’s Hash & Checksum Generator computes MD5, SHA-1, SHA-256, SHA-384 and SHA-512 locally and compares an expected value. Prefer a modern hash and obtain the reference from a trusted source.</p>
   <a class="cta-button" href="/hash-checksum-generator/">Generate a checksum →</a>
 </div>
 
-<p>A checksum is a small, deterministic fingerprint with one honest job: telling you whether two things are exactly the same. It's remarkably good at that job, and it's worth knowing exactly where that job ends, so a green checkmark doesn't get asked to answer a question it was never built to answer.</p>
+<p>A checksum answers whether data matches a reference digest. Trust in the source requires that reference to be authenticated separately.</p>
 
 </div>
 
