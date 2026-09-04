@@ -172,7 +172,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><circle cx="12" cy="15" r="4"/><path d="M12 11a4 4 0 0 1 0 8z" fill="currentColor" stroke="none"/></svg></div>
     <h1>PDF Color Filters</h1>
   </div>
-  <p class="tool-sub">Apply a black & white, sepia, or inverted color filter to every page of a PDF. Everything happens locally in your browser.</p>
+  <p class="tool-sub">Preview black and white, sepia or inverted colors, then apply one treatment to every PDF page.</p>
 
   <div class="workspace">
     <div class="box">
@@ -215,33 +215,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>Pick a color filter — black & white, sepia, or inverted — and this tool renders every page of your PDF as an image, applies the filter to each pixel, and rebuilds a new PDF from the filtered pages. A live preview of page 1 shows the effect before you commit to processing the whole document.</p>
+    <h2>Color filtering rasterizes every page</h2>
+    <p>Choose black and white, sepia or inverted colors. The tool renders each PDF page as an image, changes its pixels and builds a new PDF from those images. Page one provides a preview before the full document runs. Because the process rasterizes pages, selectable text, links, forms, annotations and vector detail do not remain as native PDF elements.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>When an image-based PDF copy is acceptable</h2>
     <ul>
-      <li>Preparing a document for black & white printing to save toner/ink</li>
-      <li>Giving an old or scanned document a warm, sepia archival look</li>
-      <li>Creating a high-contrast inverted version for accessibility or dark-mode viewing</li>
-      <li>Applying a consistent color treatment across every page of a scanned booklet</li>
+      <li>Create a grayscale-looking copy for a monochrome workflow after checking print settings</li>
+      <li>Give a scanned document a warm sepia treatment</li>
+      <li>Test an inverted version for a particular viewing preference</li>
+      <li>Apply one color treatment across a scanned booklet</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Will the text in my PDF still be selectable after filtering?</div>
-      <div>No — applying a color filter requires rasterizing (converting to an image) every page, so the output PDF's text is no longer selectable or searchable. If you need searchable text afterward, run the result through OCR PDF.</div>
+      <div>No. Filtering rasterizes each page, so text is no longer a selectable or searchable PDF text layer. OCR can add a new text layer afterward, but recognition may contain errors and should be reviewed.</div>
     </div>
     <div class="faq-item">
       <div class="q">Will the output look blurry or low quality?</div>
-      <div>Pages are rendered at 2x resolution and saved as high-quality JPEG images, which keeps text and detail crisp on screen and in print, though it's no longer true vector content.</div>
+      <div>Pages are rendered at twice their base resolution and encoded as JPEG images. That setting can look clear for many documents, but sharpness and print quality depend on original page size, fine detail and output scaling. Zoom in and test critical pages before relying on the result.</div>
     </div>
     <div class="faq-item">
       <div class="q">Can I combine filters, like black & white with sepia?</div>
-      <div>No, one filter applies at a time — pick whichever gives the look you want for the whole document.</div>
+      <div>No. Select one treatment for the whole document. Black and white, sepia and inversion are separate options rather than stackable effects.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my PDF uploaded to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No. JavaScript renders, filters and rebuilds the PDF in your browser.</div>
     </div>
   </div>
 

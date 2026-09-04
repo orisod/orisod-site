@@ -190,7 +190,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l1.5 5.5L19 9l-5.5 1.5L12 16l-1.5-5.5L5 9l5.5-1.5z"/></svg></div>
     <h1>OCR PDF</h1>
   </div>
-  <p class="tool-sub">Run OCR on a scanned PDF to make it searchable and selectable. Everything happens locally in your browser.</p>
+  <p class="tool-sub">Run OCR on scanned PDF pages to add selectable text and optionally download the recognized words as a .txt file.</p>
 
   <div class="workspace">
     <div class="box">
@@ -218,33 +218,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>This tool reads a scanned PDF page by page, recognizes the text on each page using OCR (optical character recognition), and rebuilds the PDF with the recognized text placed invisibly on top of the original page image. The page looks exactly like your original scan, but a PDF viewer can now find, select, and copy its text — something a plain scanned image can never do on its own. As a byproduct of the same OCR pass, you can also download the recognized text as a plain .txt file.</p>
+    <h2>OCR adds a text layer to page images</h2>
+    <p>The tool renders each scanned PDF page, applies OCR (optical character recognition) and places the recognized text as an invisible layer aligned with the page image. This enables search, selection and copying while retaining the scan as the visible page. A plain .txt version is also available. Recognition and alignment are estimates, so proofread anything used for important work.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>When a scan needs searchable text</h2>
     <ul>
-      <li>You have a scanned document and need to search it for a specific word or phrase</li>
-      <li>You want to select and copy a passage from a scan instead of retyping it</li>
-      <li>Orisod's <a href="/extract-pdf-text/" style="color:var(--accent);">Extract PDF Text</a> tool told you "no selectable text was found" — that's exactly the case this tool is for</li>
-      <li>You want the OCR'd text as a plain .txt file, not just embedded in the PDF</li>
+      <li>Search a scanned document for a word or phrase</li>
+      <li>Copy a passage from a scan instead of typing it again</li>
+      <li>Add a text layer after Orisod’s <a href="/extract-pdf-text/" style="color:var(--accent);">Extract PDF Text</a> reports that no selectable text was found</li>
+      <li>Download recognized OCR text as a plain .txt file as well as embedding it in the PDF</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Will the PDF look any different afterward?</div>
-      <div>No. The recognized text is added invisibly, on top of the exact same page image. Visually, the output PDF looks identical to what you uploaded.</div>
+      <div>The original scan remains the visible basis of each page, so it should look broadly similar. Rebuilding the PDF can still change compression, dimensions, metadata or other document structure. Compare critical pages rather than assuming byte-for-byte or visual identity.</div>
     </div>
     <div class="faq-item">
       <div class="q">How accurate is the OCR?</div>
-      <div>It depends heavily on scan quality. Clean, high-resolution, well-lit scans of printed text recognize very well; blurry photos, low resolution, unusual fonts, or handwriting will have more errors. Always proofread anything that matters.</div>
+      <div>Accuracy varies with resolution, contrast, orientation, language, typeface and page condition. Handwriting and complex layouts are especially difficult. Treat recognized text as a draft and proofread material that matters.</div>
     </div>
     <div class="faq-item">
       <div class="q">Does this work with a large, many-page document?</div>
-      <div>Yes, there's no page limit, but OCR runs one page at a time and can take a while on longer documents — expect roughly half a second to a few seconds per page depending on your device. Keep the tab open while it runs.</div>
+      <div>The interface does not set a simple page quota, but device memory and processing time impose practical limits. OCR works page by page and long or high-resolution documents can take substantially longer than short scans. Keep the tab open and split very large files if needed.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my PDF uploaded to a server?</div>
-      <div>No, the entire process — rendering, OCR, and rebuilding the PDF — happens locally in your browser using JavaScript. Your file never leaves your device. The one exception is the first time you use this tool, when your browser downloads the OCR language data (a public, generic language model, not your file) and caches it for next time.</div>
+      <div>The document is rendered, recognized and rebuilt locally. On first use, the browser downloads generic OCR language data and may cache it; that download contains no pages from your PDF.</div>
     </div>
   </div>
 

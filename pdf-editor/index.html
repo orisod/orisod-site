@@ -198,7 +198,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M9 16l5-5 2 2-5 5H9v-2z"/><path d="M8 20h4"/></svg></div>
     <h1>PDF Editor</h1>
   </div>
-  <p class="tool-sub">Add text boxes, highlight, underline, or strike through text directly on your PDF, then download the result.</p>
+  <p class="tool-sub">Place text boxes or mark selectable text, review pending changes and download the edited PDF.</p>
 
   <div class="workspace">
     <div class="box">
@@ -238,32 +238,32 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>This tool lets you mark up a PDF the way you would a paper printout: click anywhere to drop in a text box, or drag across existing text to highlight, underline, or strike it through. Everything you add is a preview until you click "Save &amp; Download," which draws it permanently into the page as real content.</p>
+    <h2>Add visible markup without changing the source wording</h2>
+    <p>Click a page to place a text box or drag over selectable text to highlight, underline or strike it through. Changes remain in a pending list until you save. Export draws the new marks onto the PDF page. They become visible page content, but that does not make the file tamper-proof or securely redact anything underneath.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>When a PDF needs review notes</h2>
     <ul>
-      <li>You're reviewing a document and want to mark up sections without printing it</li>
-      <li>You need to add a note, correction, or comment directly onto a PDF page</li>
-      <li>You want to highlight the important parts of a contract or report before sharing it</li>
+      <li>Review and mark a document without printing it</li>
+      <li>Place a correction, note or comment on a PDF page</li>
+      <li>Call attention to sections of a contract or report before sharing</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Can I highlight text on a scanned PDF?</div>
-      <div>Only if it has a real, selectable text layer. A plain scan has none to select — if that's the case, this tool tells you so and only offers text boxes, which work on any PDF regardless of whether its text is selectable. Run it through <a href="/ocr-pdf/" style="color:var(--accent);">OCR PDF</a> first to add a searchable, selectable text layer to a scan.</div>
+      <div>Highlighting requires a selectable text layer. A plain scan has none, although text boxes can still be placed on its pages. Apply <a href="/ocr-pdf/" style="color:var(--accent);">OCR PDF</a> first if you need selectable text, then verify the recognized layer before marking it.</div>
     </div>
     <div class="faq-item">
       <div class="q">Can I undo a mistake?</div>
-      <div>Yes — everything you add appears in the "Pending changes" list with its own delete button, or use "Clear all" to start over. Nothing is written into the actual PDF until you click "Save &amp; Download."</div>
+      <div>Yes, before saving. Remove individual items from “Pending changes” or clear the list. After download, use the original PDF to start over if you need to undo content already written into the exported copy.</div>
     </div>
     <div class="faq-item">
       <div class="q">Can I change the highlight color?</div>
-      <div>Not in this version — highlights use a standard yellow, and underline/strikethrough use red, matching common markup conventions.</div>
+      <div>No. This version uses yellow for highlights and red for underline or strike-through marks.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my PDF uploaded to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No. JavaScript previews and writes the changes inside your browser.</div>
     </div>
   </div>
 

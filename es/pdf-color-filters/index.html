@@ -172,7 +172,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><circle cx="12" cy="15" r="4"/><path d="M12 11a4 4 0 0 1 0 8z" fill="currentColor" stroke="none"/></svg></div>
     <h1>Filtros de Color para PDF</h1>
   </div>
-  <p class="tool-sub">Aplica un filtro de blanco y negro, sepia o invertido a cada página de un PDF. Todo ocurre localmente en tu navegador.</p>
+  <p class="tool-sub">Previsualiza blanco y negro, sepia o colores invertidos y aplica un tratamiento a todas las páginas PDF.</p>
 
   <div class="workspace">
     <div class="box">
@@ -215,33 +215,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué hace esta herramienta?</h2>
-    <p>Elige un filtro de color — blanco y negro, sepia o invertido — y esta herramienta renderiza cada página de tu PDF como imagen, aplica el filtro a cada píxel y reconstruye un nuevo PDF a partir de las páginas filtradas. Una vista previa en vivo de la página 1 muestra el efecto antes de procesar todo el documento.</p>
+    <h2>El filtro de color rasteriza todas las páginas</h2>
+    <p>Elige blanco y negro, sepia o colores invertidos. La herramienta renderiza cada página como imagen, modifica sus píxeles y construye un PDF nuevo con esas imágenes. La primera página sirve de vista previa. Como el proceso rasteriza, el texto seleccionable, los enlaces, formularios, anotaciones y detalles vectoriales dejan de existir como elementos PDF nativos.</p>
 
-    <h2>¿Cuándo usar esta herramienta?</h2>
+    <h2>Cuándo resulta aceptable una copia basada en imágenes</h2>
     <ul>
-      <li>Preparar un documento para imprimirlo en blanco y negro y ahorrar tóner/tinta</li>
-      <li>Darle a un documento antiguo o escaneado un aspecto cálido de archivo en sepia</li>
-      <li>Crear una versión invertida de alto contraste para accesibilidad o visualización en modo oscuro</li>
-      <li>Aplicar un tratamiento de color uniforme a cada página de un folleto escaneado</li>
+      <li>Crear una copia de apariencia monocromática después de comprobar los ajustes de impresión</li>
+      <li>Dar un acabado sepia cálido a un documento escaneado</li>
+      <li>Probar una versión invertida para una preferencia concreta de visualización</li>
+      <li>Aplicar un mismo tratamiento de color a un folleto escaneado</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿El texto de mi PDF seguirá siendo seleccionable después de filtrarlo?</div>
-      <div>No — aplicar un filtro de color requiere rasterizar (convertir en imagen) cada página, así que el texto del PDF resultante ya no es seleccionable ni buscable. Si necesitas texto buscable después, pasa el resultado por OCR de PDF.</div>
+      <div>No. El filtro rasteriza cada página, por lo que el texto deja de ser una capa PDF seleccionable y buscable. Después se puede añadir otra capa mediante OCR, pero el reconocimiento puede contener errores y debe revisarse.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿El resultado se verá borroso o de baja calidad?</div>
-      <div>Las páginas se renderizan a 2x de resolución y se guardan como imágenes JPEG de alta calidad, lo que mantiene el texto y el detalle nítidos en pantalla y en impresión, aunque ya no es contenido vectorial real.</div>
+      <div>Las páginas se renderizan al doble de su resolución base y se codifican como imágenes JPEG. El resultado puede verse claro en muchos documentos, pero la nitidez y la impresión dependen del tamaño original, los detalles finos y la escala de salida. Amplía y prueba las páginas críticas.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Puedo combinar filtros, como blanco y negro con sepia?</div>
-      <div>No, se aplica un filtro a la vez — elige el que dé el aspecto que quieres para todo el documento.</div>
+      <div>No. Elige un tratamiento para todo el documento. Blanco y negro, sepia e inversión son opciones separadas, no efectos acumulables.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se sube mi PDF a un servidor?</div>
-      <div>No, todo el proceso ocurre localmente en tu navegador con JavaScript.</div>
+      <div>No. JavaScript renderiza, filtra y reconstruye el PDF dentro de tu navegador.</div>
     </div>
   </div>
 

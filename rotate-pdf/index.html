@@ -179,7 +179,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 1 3 6.7"/><path d="M3 19v-5h5"/></svg></div>
     <h1>Rotate PDF Pages</h1>
   </div>
-  <p class="tool-sub">Rotate all pages or just specific ones in a PDF. Everything happens locally in your browser — your file is never uploaded anywhere.</p>
+  <p class="tool-sub">Correct sideways or upside-down PDF pages throughout the document or only where needed.</p>
 
   <div class="workspace">
     <div class="box">
@@ -230,33 +230,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>This tool rotates pages inside a PDF by 90°, 180°, or 270°, either across the whole document or only the specific pages you choose. The underlying PDF content stays exactly as it was — text remains selectable and searchable, only the page orientation changes.</p>
+    <h2>Correct page orientation without turning pages into images</h2>
+    <p>Choose all PDF pages or enter specific page numbers, then rotate them by 90, 180 or 270 degrees. The operation updates page orientation without intentionally rasterizing the content, so ordinary text can remain selectable and searchable. The file itself is rebuilt, however, which may affect digital signatures or unusual interactive elements. Keep the original and review an important result before sharing it.</p>
 
-    <h2>When should you use it?</h2>
+    <h2>Fix only the pages facing the wrong way</h2>
     <ul>
-      <li>A scanned document has one or more pages that came out sideways or upside down</li>
-      <li>You combined pages from different sources with mismatched orientations</li>
-      <li>Only some pages in a document need rotating, not all of them</li>
-      <li>You need to fix orientation before printing or sharing a document</li>
+      <li>Correct pages scanned sideways or upside down</li>
+      <li>Standardize orientation after combining pages from several sources</li>
+      <li>Rotate a page range without changing the rest</li>
+      <li>Set a document’s orientation before printing or sharing</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Does this affect text selectability?</div>
-      <div>No, this only changes the page's rotation metadata — the actual PDF content, including selectable text, stays exactly as it was.</div>
+      <div>The tool changes page rotation rather than deliberately rasterizing the content, so ordinary selectable text should remain selectable. Because the PDF is rebuilt, verify forms, annotations and signed documents separately.</div>
     </div>
     <div class="faq-item">
       <div class="q">Can I rotate only some pages?</div>
-      <div>Yes, enter specific page numbers or ranges (like "1-2, 4"), and only those pages will be rotated — the rest stay untouched.</div>
+      <div>Yes. Enter individual pages or ranges such as "1-2, 4". Only the selected pages receive the requested rotation.</div>
     </div>
     <div class="faq-item">
       <div class="q">Can I rotate in both directions?</div>
-      <div>Yes, choose 90° right, 90° left, or a full 180° flip.</div>
+      <div>Yes. Choose 90 degrees clockwise, 90 degrees counterclockwise or 180 degrees. Applying a new rotation is relative to each page’s current orientation.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my PDF uploaded to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No. JavaScript reads and rebuilds the PDF locally in your browser.</div>
     </div>
   </div>
 
