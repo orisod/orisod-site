@@ -185,7 +185,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/></svg></div>
     <h1>Recortar páginas de PDF</h1>
   </div>
-  <p class="tool-sub">Recorta los márgenes de cada página de un PDF indicando medidas exactas — luego descarga el archivo recortado. Todo ocurre localmente en tu navegador.</p>
+  <p class="tool-sub">Indica las medidas superior, inferior, izquierda y derecha para cambiar el área visible de todas las páginas del PDF.</p>
 
   <div class="workspace">
     <div class="box">
@@ -246,33 +246,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué hace recortar un PDF?</h2>
-    <p>Recortar reduce el área visible de cada página según los márgenes que indiques en milímetros. El contenido no se elimina ni se vuelve a dibujar: solo se ajusta el cuadro de recorte de la página para ocultar lo que ya no quieres mostrar o imprimir.</p>
+    <h2>Recortar un PDF cambia lo que muestra la página</h2>
+    <p>El recorte desplaza hacia dentro el límite visible de cada página según los milímetros indicados. No redibuja ni elimina de forma segura el contenido oculto. El texto situado fuera del nuevo cuadro puede seguir recuperándose del PDF. Por eso esta herramienta sirve para presentación e impresión, pero no para quitar información confidencial.</p>
 
-    <h2>¿Cuándo usar esta herramienta?</h2>
+    <h2>Cuándo ayuda ajustar el límite visible</h2>
     <ul>
-      <li>Un documento escaneado tiene márgenes anchos e irregulares que quieres eliminar</li>
-      <li>Estás preparando un PDF para una maqueta de impresión que requiere márgenes específicos</li>
-      <li>Una página se exportó con espacio en blanco extra que quieres recortar</li>
-      <li>Quieres eliminar una franja de encabezado o pie de página dentro de un margen fijo</li>
+      <li>Ocultar bordes anchos o irregulares alrededor de páginas escaneadas</li>
+      <li>Ajustar el área visible del PDF para una maqueta de impresión</li>
+      <li>Quitar espacio blanco sobrante de la página mostrada</li>
+      <li>Ocultar una franja fija de encabezado o pie cuando no se necesita eliminación segura</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿Recortar elimina contenido de forma permanente?</div>
-      <div>No. Solo se ajusta el área visible de la página; el contenido no se redibuja ni se convierte en imagen, por lo que el texto sigue siendo seleccionable.</div>
+      <div>No. El recorte cambia el cuadro visible, pero no borra de manera segura lo que queda fuera. El material oculto puede seguir siendo recuperable y nunca debe usarse este método para redactar información. El texto existente normalmente continúa seleccionable porque la página no se rasteriza.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Puedo recortar diferentes cantidades en cada lado?</div>
-      <div>Sí, los márgenes superior, inferior, izquierdo y derecho son independientes — deja cualquiera en 0 para no tocar ese lado.</div>
+      <div>Sí. Define valores independientes para arriba, abajo, izquierda y derecha. Deja un lado en 0 si no quieres modificar ese límite.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Qué pasa si mi PDF tiene páginas de distinto tamaño?</div>
-      <div>Las mismas medidas de margen se aplican a todas las páginas. Si una página es demasiado pequeña para los márgenes indicados, verás un error pidiéndote que los reduzcas.</div>
+      <div>Las mismas medidas se aplican a todas las páginas. Si tienen dimensiones diferentes, los márgenes resultantes también pueden verse distintos. Cuando el recorte indicado es demasiado grande para alguna página, reduce los valores e inténtalo de nuevo.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se envía mi PDF a algún servidor?</div>
-      <div>No. Todo se procesa localmente en tu navegador mediante JavaScript; el archivo permanece en tu dispositivo.</div>
+      <div>No. JavaScript cambia los cuadros de página y exporta el PDF dentro de tu navegador.</div>
     </div>
   </div>
 

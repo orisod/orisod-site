@@ -182,7 +182,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3L4 7l4 4"/><path d="M4 7h16"/><path d="M16 21l4-4-4-4"/><path d="M20 17H4"/></svg></div>
     <h1>Comparar PDF</h1>
   </div>
-  <p class="tool-sub">Sube dos PDF y descubre exactamente qué líneas se añadieron o eliminaron entre ellos. Todo ocurre localmente en tu navegador.</p>
+  <p class="tool-sub">Compara línea por línea el texto extraído de dos PDF y revisa qué aparece solo en el Archivo A o en el Archivo B.</p>
 
   <div class="workspace">
     <div class="box">
@@ -229,37 +229,37 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué hace esta herramienta?</h2>
-    <p>Esta herramienta extrae el texto seleccionable de dos PDF — igual que hace Extraer texto de PDF —, lo divide en líneas y ejecuta una comparación línea por línea para mostrar exactamente qué líneas solo aparecen en el Archivo A (eliminadas) y cuáles solo aparecen en el Archivo B (añadidas). Un contador resumen aparece sobre la comparación, y unos marcadores de página mantienen visible la numeración de páginas de ambos documentos.</p>
+    <h2>Una comparación de texto, no de la apariencia del PDF</h2>
+    <p>La herramienta extrae el texto seleccionable de cada PDF, lo divide en líneas y compara las secuencias. Las líneas exclusivas del Archivo A aparecen como eliminadas y las del Archivo B como añadidas. Conserva los marcadores de página y cuenta las diferencias. El orden depende de cómo cada PDF almacena el texto, así que el resultado orienta la revisión, pero no demuestra que se hayan encontrado todos los cambios visuales o de significado.</p>
 
-    <h2>¿Cuándo usar esta herramienta?</h2>
+    <h2>Cuándo conviene revisar cambios por líneas</h2>
     <ul>
-      <li>Comprobar qué cambió realmente entre dos borradores de un contrato o informe</li>
-      <li>Confirmar que un PDF "final" coincide con la versión que aprobaste antes</li>
-      <li>Detectar ediciones accidentales tras volver a exportar o maquetar un documento</li>
-      <li>Revisar el PDF revisado de una contraparte sin leerlo entero línea por línea</li>
+      <li>Revisar cambios de redacción entre borradores de un contrato o informe</li>
+      <li>Comprobar si un PDF final contiene el mismo texto extraído que una copia aprobada</li>
+      <li>Detectar cambios de líneas introducidos al exportar o maquetar</li>
+      <li>Concentrar la revisión manual del PDF en las secciones cuyo texto extraído difiere</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿Esto compara el diseño visual de los dos PDF?</div>
-      <div>No — esta herramienta compara solo el texto extraído subyacente, no imágenes, fuentes, maquetación de página ni formato. Dos PDF que se ven idénticos pero tienen el texto en distinto orden, o que se volvieron a maquetar con el mismo texto, pueden seguir mostrando diferencias aquí.</div>
+      <div>No. Las imágenes, fuentes, colores, diseño, anotaciones y otros cambios visuales o interactivos quedan fuera. Incluso un texto idéntico puede aparecer distinto si los PDF almacenan u ordenan sus objetos de texto de otra manera.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Qué hace "Ignorar diferencias de espacios en blanco"?</div>
-      <div>Recorta los espacios extra al inicio/final de cada línea y colapsa los espacios repetidos antes de comparar, así los cambios de espaciado puramente cosméticos no aparecen como diferencias falsas.</div>
+      <div>Elimina espacios al principio y al final y reduce los espacios repetidos antes de comparar cada línea. Esto oculta diferencias simples de espaciado, pero no normaliza puntuación, mayúsculas ni redacción.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Por qué dice que uno de mis PDF no tiene texto seleccionable?</div>
-      <div>Si un PDF es una imagen escaneada sin una capa de texto real, no hay nada que extraer ni comparar — pásalo primero por OCR de PDF para darle texto buscable.</div>
+      <div>Un PDF escaneado puede contener solo imágenes y carecer de capa de texto. Aplica OCR primero si estás autorizado a procesarlo y revisa el texto reconocido, ya que el OCR puede introducir errores.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Hay un límite de tamaño?</div>
-      <div>Los documentos muy largos se comparan hasta las primeras 4.000 líneas de cada archivo para mantener la comparación rápida en tu navegador; verás un aviso si se truncó algún archivo.</div>
+      <div>Se comparan las primeras 4.000 líneas extraídas de cada documento. La herramienta muestra un aviso cuando el límite trunca un archivo, por lo que en ese caso el resultado no debe considerarse una comparación completa.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se suben mis PDF a un servidor?</div>
-      <div>No, todo el proceso ocurre localmente en tu navegador con JavaScript.</div>
+      <div>No. La extracción y la comparación ocurren localmente dentro de tu navegador.</div>
     </div>
   </div>
 

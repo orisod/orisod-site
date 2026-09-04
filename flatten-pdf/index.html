@@ -167,7 +167,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg></div>
     <h1>Flatten PDF</h1>
   </div>
-  <p class="tool-sub">Turn a fillable PDF form into a permanent, non-editable document — every field's value becomes regular page content, and the form itself stops being fillable. Everything happens locally in your browser.</p>
+  <p class="tool-sub">Merge completed PDF form values into the page and download a copy whose fields are no longer interactive.</p>
 
   <div class="workspace">
     <div class="box">
@@ -185,33 +185,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does "flatten" mean for a PDF?</h2>
-    <p>A fillable PDF form has interactive fields layered on top of the page — text boxes, checkboxes, dropdowns — each still editable by whoever opens the file. Flattening merges each field's current value directly into the page content and removes the interactive layer entirely, so what's left is a plain, static PDF that looks identical but can no longer be edited or refilled.</p>
+    <h2>Flattening removes the interactive PDF form layer</h2>
+    <p>A fillable PDF stores text boxes, checkboxes and other controls as an interactive layer. Flattening takes their current appearances and places them into static page content, then removes the live fields. This reduces accidental changes, but it is not encryption or tamper protection. Some complex field appearances may vary, so compare the output with the completed original.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>When a static form copy is useful</h2>
     <ul>
-      <li>You've filled out a form (here or in another tool) and want to lock the values in before sending it</li>
-      <li>You need to guarantee a recipient can't accidentally change a submitted form's answers</li>
-      <li>An application, program, or system requires a "flat" PDF and rejects files with live form fields</li>
-      <li>You want a form's fields to render consistently everywhere, since some PDF viewers display interactive fields differently</li>
+      <li>Create a static copy after completing a form</li>
+      <li>Reduce the chance that a recipient changes an answer accidentally</li>
+      <li>Prepare a copy for a system that rejects PDFs with live form fields</li>
+      <li>Avoid viewer-to-viewer differences in interactive PDF field display</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Does flattening change how the PDF looks?</div>
-      <div>No — visually, a flattened PDF looks identical to the filled-in form. The only difference is that the fields are no longer interactive; their values are now part of the static page content.</div>
+      <div>Usually the current PDF field values should look similar, but “identical” cannot be guaranteed for every form. Custom appearances, scripts, fonts or unsupported field types can render differently. Compare the flattened copy with the original before sending it.</div>
     </div>
     <div class="faq-item">
       <div class="q">What happens if my PDF has no fillable fields?</div>
-      <div>You'll see a message saying there's nothing to flatten, instead of a download — a PDF with no form fields is already effectively "flat."</div>
+      <div>The tool reports that no fillable fields were found and does not create an unnecessary copy. A PDF without supported interactive form fields has nothing for this process to flatten.</div>
     </div>
     <div class="faq-item">
       <div class="q">Can I un-flatten a PDF afterward?</div>
-      <div>No — flattening is a one-way conversion. Keep your original filled-in PDF if you might need to edit the field values again later.</div>
+      <div>The removed interactive fields cannot be restored from the flattened copy automatically. Keep the original fillable PDF if you may need to revise the responses.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my PDF uploaded to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No. JavaScript reads and flattens the PDF locally in your browser.</div>
     </div>
   </div>
 

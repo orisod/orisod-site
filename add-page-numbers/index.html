@@ -179,7 +179,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><circle cx="17" cy="17" r="3"/><path d="M17 15.5v3"/></svg></div>
     <h1>Add Page Numbers</h1>
   </div>
-  <p class="tool-sub">Stamp page numbers onto every page of a PDF. Choose the position and starting number — everything happens locally in your browser.</p>
+  <p class="tool-sub">Choose where numbering appears, set the first number and apply the sequence across the PDF.</p>
 
   <div class="workspace">
     <div class="box">
@@ -221,33 +221,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>This tool stamps a page number onto every page of your PDF, at the position you choose, starting from whatever number you set. The underlying PDF content stays exactly as it was — text remains selectable, only a number is added to each page.</p>
+    <h2>Add a visible sequence without rebuilding each page</h2>
+    <p>The tool draws a sequential number at the selected position on every page, beginning with the value you enter. Existing text remains selectable in ordinary documents because pages are not rasterized. The PDF itself is still modified, so a digital signature may become invalid and a number can overlap content if the page has little free margin.</p>
 
-    <h2>When should you use it?</h2>
+    <h2>Documents that benefit from page references</h2>
     <ul>
-      <li>You're preparing a document for printing and readers need to reference specific pages</li>
-      <li>You're assembling a report, contract, or manuscript that needs page references</li>
-      <li>Your document doesn't start at page 1 (for example, it continues from another document) and you need a custom starting number</li>
-      <li>You want page numbers in a specific corner instead of wherever a printer defaults to</li>
+      <li>Give printed readers a clear page reference</li>
+      <li>Number a report, contract or manuscript before distribution</li>
+      <li>Continue numbering from an earlier document with a custom starting value</li>
+      <li>Place the sequence consistently at the top or bottom of each page</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Does this affect text selectability?</div>
-      <div>No, the existing PDF content is preserved exactly — only a page number is drawn onto each page.</div>
+      <div>The tool does not rasterize the existing pages, so selectable text normally remains selectable. It does alter the PDF by drawing new content, which can invalidate digital signatures or affect workflows that require a byte-for-byte original.</div>
     </div>
     <div class="faq-item">
       <div class="q">Can I start counting from a number other than 1?</div>
-      <div>Yes, set any starting number and the count will continue upward from there across the document.</div>
+      <div>Yes. Enter the first number you want, and each following page increases the sequence by one.</div>
     </div>
     <div class="faq-item">
       <div class="q">Can I choose where the number appears?</div>
-      <div>Yes, pick from six positions — top or bottom, left, center, or right.</div>
+      <div>Yes. Choose top or bottom and align the number left, center or right. Preview pages with different sizes or rotations and check that the number does not cover existing content.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my PDF uploaded to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No. JavaScript edits and exports the PDF inside your browser.</div>
     </div>
   </div>
 

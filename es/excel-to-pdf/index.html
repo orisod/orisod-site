@@ -186,7 +186,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17V5"/><path d="M4 8l3-3 3 3"/><path d="M17 7v12"/><path d="M20 16l-3 3-3-3"/></svg></div>
     <h1>Excel a PDF</h1>
   </div>
-  <p class="tool-sub">Convierte una hoja de cálculo Excel en PDF, con texto real seleccionable — una página por hoja. Todo ocurre localmente en tu navegador.</p>
+  <p class="tool-sub">Convierte cada hoja de Excel en una tabla PDF seleccionable, con una página por hoja y sin subir el archivo.</p>
 
   <div class="workspace">
     <div class="box">
@@ -213,33 +213,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué hace esta herramienta?</h2>
-    <p>Esta herramienta lee cada hoja de un libro de Excel y reconstruye cada una como una tabla real y seleccionable en un PDF — una página por hoja, con el nombre de la hoja como encabezado. Como los datos se dibujan como texto real en lugar de una imagen renderizada, el PDF resultante se mantiene buscable y su texto se puede copiar, a diferencia de una conversión basada en capturas de pantalla.</p>
+    <h2>Convierte datos tabulares, no una réplica visual</h2>
+    <p>El conversor lee los valores guardados en cada hoja de Excel y los reconstruye como una tabla seleccionable en PDF, con el nombre de la hoja como encabezado. Crea una página por hoja. Está pensado para datos tabulares sencillos, no para reproducir el diseño original: omite gráficos, colores, formato condicional, celdas combinadas y fórmulas activas.</p>
 
-    <h2>¿Cuándo usar esta herramienta?</h2>
+    <h2>Libros adecuados para este conversor</h2>
     <ul>
-      <li>Necesitas compartir datos tabulares como PDF sin entregar la hoja de cálculo editable</li>
-      <li>Tu libro es mayormente tablas de datos, sin depender demasiado de gráficos o formato</li>
-      <li>Quieres que los números y el texto del PDF sigan siendo seleccionables y buscables</li>
-      <li>Quieres que la conversión ocurra en privado, sin subir el archivo a ningún sitio</li>
+      <li>Compartir valores tabulares como PDF sin distribuir el libro editable</li>
+      <li>Convertir un libro compuesto principalmente por tablas de datos sencillas</li>
+      <li>Conservar números y texto PDF seleccionables y buscables en la salida</li>
+      <li>Crear el PDF localmente cuando la hoja de cálculo debe permanecer en el dispositivo</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿Se incluirán los gráficos y los colores de celda?</div>
-      <div>No. Solo se convierten los datos subyacentes (texto y valores) — los gráficos, colores de celda, formato condicional y celdas combinadas no se conservan.</div>
+      <div>No. El conversor utiliza el texto y los valores guardados en las celdas. Omite gráficos, colores, formato condicional, celdas combinadas y otros elementos de diseño.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se conservan las fórmulas?</div>
-      <div>No. Se usa el último valor calculado de cada fórmula, no la fórmula en sí, ya que un PDF no tiene concepto de cálculo en vivo.</div>
+      <div>No. Un PDF no realiza cálculos de hoja de cálculo, así que se utiliza el último resultado guardado en cada celda con fórmula. Ese valor puede estar desactualizado si el libro no se recalculó y guardó antes de convertirlo.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Cómo se manejan varias hojas?</div>
-      <div>Cada hoja del libro se convierte en su propia página en el PDF resultante, con el nombre de la hoja como etiqueta.</div>
+      <div>Cada hoja se convierte en una página identificada dentro del PDF. Las hojas grandes pueden necesitar texto pequeño o encajar peor que en la hoja de cálculo, así que revisa el resultado.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se sube mi hoja de cálculo a un servidor?</div>
-      <div>No, toda la conversión ocurre localmente en tu navegador mediante JavaScript. Tu archivo nunca sale de tu dispositivo.</div>
+      <div>No. JavaScript lee el libro y crea el PDF dentro de tu navegador.</div>
     </div>
   </div>
 

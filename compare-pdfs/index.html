@@ -182,7 +182,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3L4 7l4 4"/><path d="M4 7h16"/><path d="M16 21l4-4-4-4"/><path d="M20 17H4"/></svg></div>
     <h1>Compare PDFs</h1>
   </div>
-  <p class="tool-sub">Upload two PDFs and see exactly which lines were added or removed between them. Everything happens locally in your browser.</p>
+  <p class="tool-sub">Compare the extracted text of two PDFs line by line and review what appears only in File A or File B.</p>
 
   <div class="workspace">
     <div class="box">
@@ -229,37 +229,37 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>This tool reads the selectable text out of two PDFs — the same way Extract PDF Text does — splits each into lines, and runs a line-by-line diff to show exactly which lines only appear in File A (removed) and which only appear in File B (added). A summary count sits above the diff, and page markers keep the two documents' page numbers visible throughout.</p>
+    <h2>A text comparison, not a visual PDF diff</h2>
+    <p>The tool extracts selectable text from each PDF, divides it into lines and compares the sequences. Lines found only in File A appear as removed, while lines found only in File B appear as added. Page markers remain visible and a summary counts the differences. Extraction order depends on how each PDF stores its text, so results are clues for review rather than proof that every visual or semantic change was found.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>When line-level changes need a quick review</h2>
     <ul>
-      <li>Checking what actually changed between two drafts of a contract or report</li>
-      <li>Confirming a "final" PDF matches the version you approved earlier</li>
-      <li>Spotting accidental edits after a document was re-exported or re-typeset</li>
-      <li>Reviewing a counterparty's revised PDF without reading the whole thing line by line yourself</li>
+      <li>Review wording changes between contract or report drafts</li>
+      <li>Check whether a final PDF contains the same extracted wording as an approved copy</li>
+      <li>Spot line changes introduced during export or typesetting</li>
+      <li>Focus a manual PDF review on sections where extracted text differs</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Does this compare the visual layout of the two PDFs?</div>
-      <div>No — this tool compares the underlying extracted text only, not images, fonts, page layout, or formatting. Two PDFs that look identical but have differently ordered text, or that were re-typeset with the same wording, may still show differences here.</div>
+      <div>No. Images, fonts, color, layout, annotations and other visual or interactive changes are outside this comparison. Even identical wording can appear different when the two PDFs store or order their text objects differently.</div>
     </div>
     <div class="faq-item">
       <div class="q">What does "Ignore whitespace differences" do?</div>
-      <div>It trims extra spaces at the start/end of each line and collapses repeated spaces before comparing, so purely cosmetic spacing changes don't show up as false differences.</div>
+      <div>It removes leading and trailing spaces and reduces repeated spaces before comparing each line. This hides simple spacing differences, but it does not normalize punctuation, capitalization or wording.</div>
     </div>
     <div class="faq-item">
       <div class="q">Why does it say one of my PDFs has no selectable text?</div>
-      <div>If a PDF is a scanned image without a real text layer, there's nothing to extract or compare — run it through OCR PDF first to give it searchable text.</div>
+      <div>A scanned PDF may contain only page images and no text layer. Apply OCR first if you are authorized to process the document, then verify the recognized text because OCR can introduce errors.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is there a size limit?</div>
-      <div>Very long documents are compared up to the first 4,000 lines of each file to keep the comparison fast in your browser; you'll see a note if a file was truncated.</div>
+      <div>Each document is compared through its first 4,000 extracted lines. The tool displays a notice when this limit truncates a file, so the result should not be treated as a complete comparison in that case.</div>
     </div>
     <div class="faq-item">
       <div class="q">Are my PDFs uploaded to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No. Extraction and comparison happen locally in your browser.</div>
     </div>
   </div>
 

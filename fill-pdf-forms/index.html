@@ -198,7 +198,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M8 12h1M8 16h1M11 12h6M11 16h5"/></svg></div>
     <h1>Fill PDF Forms</h1>
   </div>
-  <p class="tool-sub">Upload a fillable PDF and type directly into its real text boxes, checkboxes, radio buttons, and dropdowns — positioned right on the page — then download a flattened copy.</p>
+  <p class="tool-sub">Complete the interactive fields built into a PDF and download a flattened copy with your responses placed on the page.</p>
 
   <div class="workspace">
     <div class="box">
@@ -229,32 +229,32 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>This tool reads the real, interactive fields built into a PDF form — the same fields Adobe Acrobat or a browser's built-in PDF viewer would let you click into — and turns them into editable boxes positioned directly over the rendered page. Type your answers, check your boxes, pick your dropdown values, then click "Flatten &amp; Download" to bake everything into a normal, non-editable PDF page (real vector text, not a rasterized screenshot).</p>
+    <h2>Work with fields already built into the PDF</h2>
+    <p>The tool reads AcroForm fields embedded in the PDF and places the corresponding controls over the rendered page. Enter text, select checkboxes or radio buttons and choose dropdown values, then use “Flatten & Download” to place the responses into static page content. The output is no longer fillable through those fields, but flattening is not encryption and does not prevent determined editing with other software.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>When an interactive form needs a completed copy</h2>
     <ul>
-      <li>You received a fillable PDF form (application, intake form, government form) and need to fill it out without printing it</li>
-      <li>You want to fill in a form on your phone or a computer without Adobe Acrobat installed</li>
-      <li>You want the finished form locked down as a flat PDF before emailing it, so the recipient can't accidentally change your answers</li>
+      <li>Complete a PDF application or intake form without printing it</li>
+      <li>Fill an AcroForm from a phone or computer without Adobe Acrobat</li>
+      <li>Create a non-fillable PDF copy that reduces accidental changes to responses</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">What if my PDF has no fillable fields?</div>
-      <div>Some PDFs only look like forms — lines and boxes drawn to resemble one, with no real interactive fields underneath. This tool detects that case honestly and tells you no fillable fields were found, rather than guessing at box positions. If that happens, the file isn't a real AcroForm and can't be filled this way.</div>
+      <div>Some documents only draw lines and boxes that resemble a form. If no interactive fields are embedded, the tool reports that none were found instead of guessing where inputs belong. Such a file cannot be completed with this field-based workflow.</div>
     </div>
     <div class="faq-item">
       <div class="q">Does this support digital signature fields?</div>
-      <div>No. Digital signature fields are a different technology (cryptographic signing) and aren't supported here — they're shown grayed out on the page so you know they exist. If you just need to place a drawn or uploaded signature image, use our <a href="/sign-pdf/" style="color:var(--accent);">Sign PDF</a> tool instead.</div>
+      <div>No. Cryptographic digital-signature fields are not completed here and appear disabled in the preview. To place a handwritten or uploaded signature image instead, use the <a href="/sign-pdf/" style="color:var(--accent);">Sign PDF</a> tool.</div>
     </div>
     <div class="faq-item">
       <div class="q">Will calculated fields or form validation still work?</div>
-      <div>No. Some PDF forms use embedded JavaScript to auto-calculate totals, validate entries, or enforce "choose only one" rules across a set of checkboxes. This tool doesn't run any embedded PDF scripting, so those behaviors won't happen automatically — double-check your entries before downloading.</div>
+      <div>No. The tool does not execute embedded PDF JavaScript used for calculations, validation or relationships among fields. Verify totals, required answers and mutually exclusive choices yourself before downloading.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my PDF uploaded to a server?</div>
-      <div>No, the entire process — reading the form, filling it in, and flattening it — happens locally in your browser using JavaScript.</div>
+      <div>No. Reading, completing and flattening the PDF all happen locally in your browser.</div>
     </div>
   </div>
 

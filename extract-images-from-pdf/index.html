@@ -175,7 +175,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><rect x="7" y="11" width="7" height="6" rx="1"/><path d="M7.5 15.5l1.8-1.8 1.4 1.4 1-1 1.3 1.3"/></svg></div>
     <h1>Extract Images from PDF</h1>
   </div>
-  <p class="tool-sub">Pull every embedded photo out of a PDF and download it as a PNG — one at a time or all together as a ZIP. Everything happens locally in your browser.</p>
+  <p class="tool-sub">Find embedded raster images in a PDF and download decoded PNG copies separately or in one ZIP.</p>
 
   <div class="workspace">
     <div class="box">
@@ -211,33 +211,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>Extract Images from PDF scans every page of a PDF for embedded raster images — photos, scanned pictures, logos, screenshots — and lets you download each one as a PNG file, either individually or all together in a single ZIP. If the same image appears on more than one page (a repeated logo or letterhead, for example), it's only shown once, along with a note of which pages it's used on.</p>
+    <h2>Recover embedded pictures without rendering whole pages</h2>
+    <p>The tool examines PDF pages for embedded raster images such as photographs, scans, logos and screenshots. It decodes each result and provides a PNG copy for download. Reused image objects appear once with the pages where they were found. This is different from rendering each complete page: text, vector artwork and page composition are not extracted as pictures.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>When you need the pictures rather than the page</h2>
     <ul>
-      <li>Someone sent you a PDF containing photos you need as separate image files</li>
-      <li>You want to reuse a logo, chart, or screenshot that's embedded in a report or presentation exported to PDF</li>
-      <li>You're archiving the images from a document separately from its layout and text</li>
-      <li>You need the pictures from a PDF, not the whole document rendered as images (see PDF to JPG for that instead)</li>
+      <li>Save photographs embedded in a PDF as separate files</li>
+      <li>Recover a raster logo, chart or screenshot from a PDF report</li>
+      <li>Archive document images separately from text and layout</li>
+      <li>Extract embedded pictures instead of converting complete PDF pages to JPG</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Why does this only give me PNG files, not the original JPEGs?</div>
-      <div>The PDF format stores images in several different internal formats, and reading a page requires decoding them into raw pixel data first — this tool works with that already-decoded data rather than the original compressed bytes. PNG can hold that decoded data with zero further quality loss, which is why it's used for every image regardless of the original format.</div>
+      <div>PDF images can use several internal encodings. The tool decodes their pixels and writes PNG copies rather than recovering the original compressed JPEG byte stream. PNG avoids an additional lossy encoding step, but color handling, masks or unusual PDF image structures can still affect the result.</div>
     </div>
     <div class="faq-item">
       <div class="q">Why didn't this find any images in my PDF?</div>
-      <div>If a PDF was built entirely from text and vector graphics (shapes, lines, gradients drawn as paths rather than pictures), there are simply no embedded raster images to extract — a PDF page can look like it contains graphics without containing a single actual picture.</div>
+      <div>A page may consist entirely of text and vector paths, even when it looks highly graphical. Such a PDF has no embedded raster image object to extract. Some unusual image encodings or masks may also be unsupported.</div>
     </div>
     <div class="faq-item">
       <div class="q">Why do some pages seem to be missing their images?</div>
-      <div>If the same image is reused across multiple pages — a repeated header logo, for example — it's only shown once in the results, with a note listing every page it appears on, instead of once per page.</div>
+      <div>A logo or other image object reused across several pages is listed once, together with its page references. That avoids producing identical downloads for every occurrence.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my PDF uploaded to a server?</div>
-      <div>No. The entire process — reading the PDF and decoding its images — happens locally in your browser using JavaScript.</div>
+      <div>No. JavaScript reads the PDF and decodes its embedded images locally in your browser.</div>
     </div>
   </div>
 

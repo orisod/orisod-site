@@ -158,7 +158,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h3.5c3 0 4.5 10 7.5 10H18"/><path d="M15 4l3 3-3 3"/><path d="M3 17h3.5c3 0 4.5-10 7.5-10H18"/><path d="M15 20l3-3-3-3"/></svg></div>
     <h1>Alternar y Mezclar Páginas</h1>
   </div>
-  <p class="tool-sub">Intercala las páginas de dos PDF — página 1 del Archivo A, página 1 del Archivo B, página 2 del Archivo A, página 2 del Archivo B, y así sucesivamente. Pensado para recombinar escaneos dúplex de anverso/reverso. Todo ocurre localmente en tu navegador.</p>
+  <p class="tool-sub">Crea una secuencia A1, B1, A2, B2 a partir de dos PDF, con opción de invertir el Archivo B antes de combinarlos.</p>
 
   <div class="workspace">
     <div class="box">
@@ -203,33 +203,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué hace esta herramienta?</h2>
-    <p>Sube dos PDF y esta herramienta entrelaza sus páginas — página 1 del Archivo A, página 1 del Archivo B, página 2 del Archivo A, página 2 del Archivo B, y así sucesivamente — en un solo documento. Una vista previa en vivo del orden muestra exactamente cómo se organizará cada página antes de descargar. Como las páginas se copian con su contenido original intacto en vez de rasterizarse, el resultado sigue siendo completamente vectorial y con texto seleccionable.</p>
+    <h2>Intercala dos secuencias de páginas</h2>
+    <p>La herramienta alterna las páginas del Archivo A y el Archivo B para crear una secuencia A1, B1, A2, B2. La vista previa muestra el orden previsto y permite invertir el Archivo B cuando los reversos se escanearon desde una pila volteada. Las páginas se copian sin rasterizarlas intencionalmente, pero reconstruir un PDF puede afectar formularios, enlaces, marcadores, anotaciones o firmas digitales.</p>
 
-    <h2>¿Cuándo usar esta herramienta?</h2>
+    <h2>Una solución práctica para escaneos dúplex separados</h2>
     <ul>
-      <li>Recombinar escaneos de anverso y reverso de un escáner que no hace dúplex automáticamente</li>
-      <li>Corregir un escaneo de reversos que salió en orden invertido (algo habitual al voltear la pila para escanear)</li>
-      <li>Combinar dos versiones de un documento cuyo contenido debe alternar página por página</li>
-      <li>Reensamblar dos secuencias de páginas que necesitan intercalarse en vez de simplemente concatenarse</li>
+      <li>Recombinar escaneos separados de anversos y reversos</li>
+      <li>Corregir páginas traseras capturadas en orden inverso</li>
+      <li>Alternar páginas correspondientes de dos versiones</li>
+      <li>Intercalar dos secuencias en vez de añadir una detrás de la otra</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿Qué pasa si el Archivo A y el Archivo B tienen distinto número de páginas?</div>
-      <div>Las páginas se intercalan mientras ambos archivos tengan páginas restantes; en cuanto el más corto se agota, las páginas restantes del más largo se añaden al final en su propio orden — nada se elimina ni se duplica.</div>
+      <div>Las páginas se alternan mientras ambos archivos tengan contenido. Cuando termina el PDF más corto, las páginas restantes del más largo se añaden en su orden actual. No se duplica nada para igualar los archivos.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Cuándo debo usar "Invertir el orden de páginas del Archivo B"?</div>
-      <div>Cuando los reversos se escanearon volteando toda la pila y volviéndola a introducir — eso produce las páginas de reverso en orden invertido, así que invertirlas aquí realinea cada reverso con su anverso correcto.</div>
+      <div>Úsala cuando voltear la pila hizo que los reversos se escanearan desde la última hoja hacia la primera. Comprueba la vista previa porque la dirección de alimentación y la forma de voltear varían entre escáneres.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Las páginas saldrán al revés (boca abajo)?</div>
-      <div>Esta herramienta solo reordena páginas — no las rota. Si tus escaneos de reverso salieron rotados 180°, rótalos primero con Rotar Páginas de PDF.</div>
+      <div>La herramienta cambia el orden, no la orientación. Si los reversos están boca abajo, rota primero ese PDF y verifica después la vista combinada.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se suben mis PDF a un servidor?</div>
-      <div>No, todo el proceso ocurre localmente en tu navegador con JavaScript.</div>
+      <div>No. JavaScript lee y combina ambos PDF dentro de tu navegador.</div>
     </div>
   </div>
 

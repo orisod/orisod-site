@@ -175,7 +175,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><rect x="7" y="11" width="7" height="6" rx="1"/><path d="M7.5 15.5l1.8-1.8 1.4 1.4 1-1 1.3 1.3"/></svg></div>
     <h1>Extraer Imágenes de un PDF</h1>
   </div>
-  <p class="tool-sub">Extrae todas las fotos incrustadas en un PDF y descárgalas como PNG — una por una o todas juntas en un ZIP. Todo ocurre localmente en tu navegador.</p>
+  <p class="tool-sub">Encuentra imágenes rasterizadas dentro de un PDF y descarga copias PNG separadas o reunidas en un ZIP.</p>
 
   <div class="workspace">
     <div class="box">
@@ -211,33 +211,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué hace esta herramienta?</h2>
-    <p>Extraer Imágenes de un PDF revisa cada página de un PDF en busca de imágenes ráster incrustadas — fotos, imágenes escaneadas, logotipos, capturas de pantalla — y te permite descargar cada una como un archivo PNG, individualmente o todas juntas en un solo ZIP. Si la misma imagen aparece en más de una página (un logotipo o membrete repetido, por ejemplo), se muestra solo una vez, junto con una nota de en qué páginas se usa.</p>
+    <h2>Recupera imágenes incrustadas sin renderizar páginas completas</h2>
+    <p>La herramienta examina las páginas PDF en busca de imágenes rasterizadas incrustadas, como fotografías, escaneos, logotipos y capturas. Decodifica cada resultado y ofrece una copia PNG para descargar. Los objetos reutilizados aparecen una sola vez junto con las páginas donde se encontraron. No renderiza la página completa: el texto, los gráficos vectoriales y la composición no se extraen como imágenes.</p>
 
-    <h2>¿Cuándo deberías usar esta herramienta?</h2>
+    <h2>Cuando necesitas las imágenes y no la página</h2>
     <ul>
-      <li>Alguien te envió un PDF que contiene fotos que necesitas como archivos de imagen independientes</li>
-      <li>Quieres reutilizar un logotipo, gráfico o captura de pantalla incrustado en un informe o presentación exportada a PDF</li>
-      <li>Estás archivando las imágenes de un documento por separado de su diseño y texto</li>
-      <li>Necesitas las fotos de un PDF, no el documento completo renderizado como imágenes (para eso usa PDF a JPG)</li>
+      <li>Guardar como archivos separados fotografías incrustadas en un PDF</li>
+      <li>Recuperar un logotipo, gráfico o captura rasterizada de un informe PDF</li>
+      <li>Archivar imágenes por separado del texto y la maquetación</li>
+      <li>Extraer imágenes incrustadas en vez de convertir páginas PDF completas a JPG</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿Por qué esto solo me da archivos PNG y no los JPEG originales?</div>
-      <div>El formato PDF almacena las imágenes en varios formatos internos distintos, y leer una página requiere decodificarlas primero en datos de píxeles sin procesar — esta herramienta trabaja con esos datos ya decodificados en lugar de los bytes comprimidos originales. PNG puede contener esos datos decodificados sin ninguna pérdida adicional de calidad, por eso se usa para cada imagen sin importar el formato original.</div>
+      <div>Las imágenes PDF pueden usar distintas codificaciones internas. La herramienta decodifica sus píxeles y crea copias PNG en lugar de recuperar el flujo JPEG comprimido original. PNG evita otra codificación con pérdida, aunque el color, las máscaras o estructuras poco comunes todavía pueden afectar el resultado.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Por qué no encontró ninguna imagen en mi PDF?</div>
-      <div>Si un PDF se creó completamente con texto y gráficos vectoriales (formas, líneas, degradados dibujados como trazos en lugar de fotos), simplemente no hay imágenes ráster incrustadas que extraer — una página de PDF puede parecer que contiene gráficos sin contener ni una sola foto real.</div>
+      <div>Una página puede estar hecha por completo con texto y trazos vectoriales aunque parezca muy gráfica. Ese PDF no contiene un objeto rasterizado que se pueda extraer. Algunas codificaciones o máscaras poco comunes también podrían no ser compatibles.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Por qué parece que faltan las imágenes de algunas páginas?</div>
-      <div>Si la misma imagen se reutiliza en varias páginas — un logotipo de encabezado repetido, por ejemplo — se muestra solo una vez en los resultados, con una nota que indica en qué páginas aparece, en lugar de una vez por página.</div>
+      <div>Un logotipo u otro objeto reutilizado en varias páginas aparece una sola vez junto con sus referencias. Así se evitan descargas idénticas por cada aparición.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se sube mi PDF a un servidor?</div>
-      <div>No. Todo el proceso — leer el PDF y decodificar sus imágenes — ocurre localmente en tu navegador mediante JavaScript.</div>
+      <div>No. JavaScript lee el PDF y decodifica sus imágenes incrustadas localmente en tu navegador.</div>
     </div>
   </div>
 

@@ -179,7 +179,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><circle cx="17" cy="17" r="3"/><path d="M17 15.5v3"/></svg></div>
     <h1>Añadir números de página</h1>
   </div>
-  <p class="tool-sub">Numera todas las páginas de un PDF. Elige la posición y el número inicial — todo ocurre localmente en tu navegador.</p>
+  <p class="tool-sub">Elige dónde aparecerá la numeración, define el primer número y aplica la secuencia a todo el PDF.</p>
 
   <div class="workspace">
     <div class="box">
@@ -221,33 +221,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué hace esta herramienta?</h2>
-    <p>Esta herramienta añade un número en la posición que elijas de cada página y comienza por el valor que indiques. El contenido original del PDF no cambia: el texto sigue siendo seleccionable y solo se incorpora la numeración.</p>
+    <h2>Añade una secuencia visible sin reconstruir las páginas</h2>
+    <p>La herramienta dibuja un número consecutivo en la posición elegida de cada página, comenzando por el valor que indiques. En documentos normales, el texto existente sigue siendo seleccionable porque las páginas no se rasterizan. El PDF sí se modifica, así que una firma digital puede quedar invalidada y la numeración puede cubrir contenido si hay poco margen libre.</p>
 
-    <h2>¿Cuándo deberías usarla?</h2>
+    <h2>Documentos que necesitan referencias de página</h2>
     <ul>
-      <li>Estás preparando un documento para imprimir y los lectores necesitan referenciar páginas específicas</li>
-      <li>Estás armando un informe, contrato o manuscrito que necesita referencias de página</li>
-      <li>Tu documento no empieza en la página 1 (por ejemplo, continúa desde otro documento) y necesitas un número inicial personalizado</li>
-      <li>Quieres los números de página en una esquina específica en lugar de donde los pone una impresora por defecto</li>
+      <li>Dar a los lectores de una copia impresa una referencia clara</li>
+      <li>Numerar un informe, contrato o manuscrito antes de distribuirlo</li>
+      <li>Continuar la numeración de otro documento con un valor inicial personalizado</li>
+      <li>Colocar la secuencia de forma uniforme en la parte superior o inferior</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿Esto afecta la selección de texto?</div>
-      <div>No, el contenido existente del PDF se conserva exactamente igual — solo se dibuja un número de página en cada página.</div>
+      <div>La herramienta no rasteriza las páginas existentes, así que el texto seleccionable normalmente conserva esa propiedad. Sin embargo, dibuja contenido nuevo y modifica el PDF, lo que puede invalidar firmas digitales o afectar procesos que requieren el original exacto.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Puedo empezar a contar desde un número distinto de 1?</div>
-      <div>Sí. Indica el número inicial que prefieras y la numeración continuará a partir de él en el resto del documento.</div>
+      <div>Sí. Indica el primer número y cada página siguiente aumentará la secuencia en una unidad.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Puedo elegir dónde aparece el número?</div>
-      <div>Sí. Puedes colocarlo en la parte superior o inferior y alinearlo a la izquierda, al centro o a la derecha.</div>
+      <div>Sí. Elige la parte superior o inferior y alinea el número a la izquierda, al centro o a la derecha. Revisa páginas con tamaños o rotaciones diferentes para comprobar que no tape contenido.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se envía mi PDF a algún servidor?</div>
-      <div>No. Todo se procesa localmente en tu navegador mediante JavaScript; el archivo permanece en tu dispositivo.</div>
+      <div>No. JavaScript edita y exporta el PDF dentro de tu navegador.</div>
     </div>
   </div>
 

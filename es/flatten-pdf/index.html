@@ -167,7 +167,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg></div>
     <h1>Aplanar PDF</h1>
   </div>
-  <p class="tool-sub">Convierte un formulario PDF rellenable en un documento permanente y no editable — el valor de cada campo se convierte en contenido normal de la página, y el formulario deja de ser rellenable. Todo ocurre localmente en tu navegador.</p>
+  <p class="tool-sub">Integra los valores del formulario PDF en la página y descarga una copia cuyos campos ya no sean interactivos.</p>
 
   <div class="workspace">
     <div class="box">
@@ -185,33 +185,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué significa "aplanar" un PDF?</h2>
-    <p>Un formulario PDF rellenable tiene campos interactivos superpuestos a la página — cuadros de texto, casillas de verificación, listas desplegables — todos editables por quien abra el archivo. Aplanarlo combina el valor actual de cada campo directamente con el contenido de la página y elimina por completo la capa interactiva, dejando un PDF plano y estático que se ve idéntico pero ya no se puede editar ni rellenar de nuevo.</p>
+    <h2>Aplanar elimina la capa interactiva del formulario PDF</h2>
+    <p>Un PDF rellenable guarda cuadros de texto, casillas y otros controles en una capa interactiva. Al aplanarlo, sus apariencias actuales pasan al contenido estático de la página y se eliminan los campos activos. Esto reduce cambios accidentales, pero no cifra ni protege contra alteraciones. Algunos campos complejos pueden verse distintos, así que compara la salida con el original completado.</p>
 
-    <h2>¿Cuándo usar esta herramienta?</h2>
+    <h2>Cuándo resulta útil una copia estática</h2>
     <ul>
-      <li>Ya rellenaste un formulario (aquí o en otra herramienta) y quieres fijar los valores antes de enviarlo</li>
-      <li>Necesitas garantizar que quien lo reciba no pueda cambiar accidentalmente las respuestas de un formulario ya enviado</li>
-      <li>Una aplicación, programa o sistema exige un PDF "plano" y rechaza archivos con campos de formulario activos</li>
-      <li>Quieres que los campos de un formulario se vean igual en todas partes, ya que algunos lectores de PDF muestran los campos interactivos de forma distinta</li>
+      <li>Crear una copia estática después de completar un formulario</li>
+      <li>Reducir la posibilidad de que el destinatario cambie una respuesta por accidente</li>
+      <li>Preparar una copia para un sistema que rechaza PDF con campos activos</li>
+      <li>Evitar diferencias entre visores al mostrar campos PDF interactivos</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿Aplanar cambia el aspecto del PDF?</div>
-      <div>No — visualmente, un PDF aplanado se ve idéntico al formulario rellenado. La única diferencia es que los campos ya no son interactivos; sus valores ahora forman parte del contenido estático de la página.</div>
+      <div>Normalmente los valores actuales del PDF deben verse similares, pero no se puede garantizar un resultado idéntico para todos los formularios. Las apariencias personalizadas, scripts, fuentes o campos incompatibles pueden variar. Compara la copia aplanada con el original antes de enviarla.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Qué pasa si mi PDF no tiene campos rellenables?</div>
-      <div>Verás un mensaje indicando que no hay nada que aplanar, en lugar de una descarga — un PDF sin campos de formulario ya es, en la práctica, "plano".</div>
+      <div>La herramienta indica que no encontró campos rellenables y evita crear una copia innecesaria. Un PDF sin campos interactivos compatibles no tiene nada que este proceso pueda aplanar.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Puedo deshacer el aplanado después?</div>
-      <div>No — aplanar es una conversión de un solo sentido. Conserva tu PDF original rellenado por si necesitas volver a editar los valores de los campos más adelante.</div>
+      <div>Los campos interactivos eliminados no se pueden reconstruir automáticamente desde la copia aplanada. Conserva el PDF rellenable original por si necesitas modificar las respuestas.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Mi PDF se sube a un servidor?</div>
-      <div>No, todo el proceso ocurre localmente en tu navegador con JavaScript.</div>
+      <div>No. JavaScript lee y aplana el PDF localmente dentro de tu navegador.</div>
     </div>
   </div>
 

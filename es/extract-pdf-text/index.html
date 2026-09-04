@@ -180,7 +180,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M8 11h6M8 14h7M8 17h4"/><path d="M20 14h-3m3 0l-2-2m2 2l-2 2"/></svg></div>
     <h1>Extraer texto de PDF</h1>
   </div>
-  <p class="tool-sub">Extrae todo el texto seleccionable de un PDF y luego cópialo o descárgalo como archivo .txt. Todo ocurre localmente en tu navegador.</p>
+  <p class="tool-sub">Lee la capa de texto del PDF, conserva marcadores de página y copia el resultado o descárgalo como archivo .txt.</p>
 
   <div class="workspace">
     <div class="box">
@@ -213,33 +213,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué hace esta herramienta?</h2>
-    <p>Esta herramienta lee cada página de un PDF y extrae el texto seleccionable subyacente — el mismo texto que podrías resaltar y copiar en un visor de PDF — y lo presenta como texto plano que puedes copiar o guardar como archivo .txt. Los saltos de página quedan marcados para que sepas dónde termina una página y empieza la siguiente.</p>
+    <h2>Convierte la capa de texto del PDF en texto plano</h2>
+    <p>La herramienta lee los objetos de texto de todas las páginas y presenta su contenido como texto plano con marcadores de página. No reproduce fuentes, columnas ni tablas. El orden extraído puede diferir del visual cuando el PDF almacena el texto en fragmentos posicionados por separado. Puedes copiar el resultado o guardarlo como archivo .txt.</p>
 
-    <h2>¿Cuándo usar esta herramienta?</h2>
+    <h2>Cuando importan las palabras más que el diseño</h2>
     <ul>
-      <li>Necesitas pegar el contenido de un PDF en un correo, documento o hoja de cálculo</li>
-      <li>Quieres buscar o procesar el texto de un PDF con una herramienta que solo acepta texto plano</li>
-      <li>Estás archivando el texto de un documento por separado de su diseño</li>
-      <li>Necesitas una forma rápida de comprobar cuánto texto tiene realmente un PDF</li>
+      <li>Llevar el contenido de un PDF a un correo, documento u hoja de cálculo</li>
+      <li>Preparar contenido PDF como texto plano para búsquedas u otra herramienta</li>
+      <li>Archivar las palabras por separado del diseño original</li>
+      <li>Comprobar si un PDF contiene una capa de texto utilizable</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿Por qué el resultado está vacío o es muy corto?</div>
-      <div>Si un PDF es una imagen escaneada sin una capa de texto real, no hay texto seleccionable que extraer — las páginas son solo imágenes. Esta herramienta no puede hacer OCR a documentos escaneados.</div>
+      <div>Una página PDF escaneada puede contener solo píxeles, sin objetos de texto que extraer. Un resultado vacío también puede deberse a texto convertido en contornos, mapas de caracteres inusuales, cifrado o un archivo dañado. Esta herramienta no realiza OCR.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿El texto extraído conserva el formato original?</div>
-      <div>No, elementos como fuentes, columnas y tablas no se conservan — es una extracción de texto plano, no una conversión que preserve el diseño.</div>
+      <div>No. El resultado es texto plano. No conserva fuentes, espaciado preciso, columnas, tablas, imágenes ni diseño de página, y una maquetación compleja puede producir un orden de lectura inesperado.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Puedo extraer texto de una sola página?</div>
-      <div>La herramienta extrae todas las páginas a la vez, pero el resultado incluye marcadores de página para que puedas copiar fácilmente solo la sección que necesitas.</div>
+      <div>La herramienta procesa todas las páginas. Los marcadores incluidos facilitan localizar y copiar la sección que necesitas.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se envía mi PDF a algún servidor?</div>
-      <div>No. Todo se procesa localmente en tu navegador mediante JavaScript; el archivo permanece en tu dispositivo.</div>
+      <div>No. JavaScript extrae el texto localmente dentro de tu navegador.</div>
     </div>
   </div>
 

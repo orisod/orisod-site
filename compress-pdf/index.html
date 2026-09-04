@@ -193,7 +193,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M9 13l3 2 3-2M9 17l3-2 3 2"/></svg></div>
     <h1>Compress PDF</h1>
   </div>
-  <p class="tool-sub">Reduce the file size of a PDF. Works best for scanned documents or PDFs with lots of images. Everything happens locally in your browser.</p>
+  <p class="tool-sub">Choose structural cleanup for text documents or image-based compression for scanned PDF pages, then compare the resulting size.</p>
 
   <div class="workspace">
     <div class="box">
@@ -235,37 +235,37 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>This tool offers two ways to shrink a PDF. <strong>Quick clean</strong> re-saves the PDF with a more efficient internal structure — no rasterization — so text stays fully selectable and searchable; it's the better default for reports, contracts, forms, and anything typed rather than scanned. <strong>Strong compression</strong> renders each page as a compressed image and rebuilds the document from those images, similar to compressing a photo; it shrinks scanned or photo-heavy PDFs a lot more, but the resulting file is image-based and no longer searchable.</p>
+    <h2>Two compression modes for different PDFs</h2>
+    <p>Quick clean rewrites the PDF structure without turning pages into images. It is the safer starting point for reports, contracts and forms because page text can remain searchable and selectable, although the amount saved may be small. Strong compression renders each page as a compressed image and rebuilds the PDF. That approach can help with scans or photo-heavy files, but searchable text, links, form fields, annotations and other interactive features may not survive.</p>
 
-    <h2>When should you use it?</h2>
+    <h2>Choose the mode by document type</h2>
     <ul>
-      <li>Your PDF is mostly text (a report, contract, or form) and you want it smaller without losing searchable text — use Quick clean</li>
-      <li>You have a scanned document or photo-heavy PDF that's too large to email or upload — use Strong compression</li>
-      <li>A form or platform has a strict file size limit for PDF uploads</li>
-      <li>You want to see the before/after file size before committing to a download</li>
+      <li>Try Quick clean on a text-based PDF report, contract or form</li>
+      <li>Use Strong compression for a scan or image-heavy PDF when a rasterized copy is acceptable</li>
+      <li>Prepare a copy for a form with a strict PDF size limit</li>
+      <li>Compare the source and output sizes before downloading</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Will I lose the ability to select text?</div>
-      <div>Only with Strong compression, which converts pages to images to achieve a much bigger size reduction. Quick clean never rasterizes anything, so text stays selectable and searchable.</div>
+      <div>Strong compression rasterizes pages, so selectable or searchable text is generally lost unless OCR is applied afterward. Quick clean does not intentionally rasterize page content, but always inspect the output when searchability or accessibility is essential.</div>
     </div>
     <div class="faq-item">
       <div class="q">Which mode should I use for a text-heavy report or contract?</div>
-      <div>Quick clean. It optimizes the PDF's internal structure instead of turning pages into images, so file size drops (typically a modest amount, more if the file has editing history baked in) without losing selectable, searchable text.</div>
+      <div>Start with Quick clean. It reorganizes the PDF rather than rendering each page as an image, which helps preserve searchable text and other page content. Review forms, links and digital signatures after any modification; signatures may become invalid when the file changes.</div>
     </div>
     <div class="faq-item">
       <div class="q">How much smaller will my file be?</div>
-      <div>It varies. Quick clean usually gives a modest reduction since it isn't re-encoding any content, just cleaning up structure — PDFs that have been saved multiple times by other editors tend to shrink the most. Strong compression can shrink scanned or image-heavy documents dramatically, controlled by the quality slider.</div>
+      <div>There is no dependable percentage. Quick clean may save little when the PDF is already optimized. Strong compression can reduce image-heavy files further, but the outcome depends on page dimensions, image content and the quality setting.</div>
     </div>
     <div class="faq-item">
       <div class="q">What happens if compression wouldn't actually reduce the file size?</div>
-      <div>We detect that and keep your original file instead of giving you something bigger or lower quality for no reason — you'll see a note explaining why, with a suggestion to try the other mode if it fits your document better.</div>
+      <div>The tool keeps the original when the generated version would not be smaller and explains the result. You can try the other mode if its tradeoffs suit the document.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my PDF uploaded to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No. JavaScript performs the compression locally in your browser.</div>
     </div>
   </div>
 
