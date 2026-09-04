@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cómo Funciona Este Generador de Calendarios en el Navegador | Orisod Blog</title>
+<meta name="description" content="Por qué los días festivos de más de 50 países están integrados en un archivo estático en vez de consultarse en vivo, por qué las fechas islámicas llevan un aviso y las judías no, y por qué el calendario judío tiene su propio motor dedicado con sombreado de cinco colores.">
+<link rel="canonical" href="https://orisod.com/es/blog/calendar-generator-explained/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/calendar-generator-explained/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/calendar-generator-explained/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/calendar-generator-explained/">
+<link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#2563eb">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+  --grid-alpha:.05;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+  --grid-alpha:.10;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background-color:var(--bg);background-image:linear-gradient(rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px),linear-gradient(90deg, rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px);background-size:42px 42px;color:var(--text);text-align:center;transition:background-color 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);display:inline-flex;align-items:center;gap:8px;}
+.site-nav-logo img{height:26px;width:auto;display:block;}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:5px 14px;margin:-5px 0;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.site-footer{margin-top:40px;padding:40px 24px 30px 24px;border-top:1px solid var(--border);text-align:left;}
+.footer-inner{max-width:1000px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;gap:40px;}
+.footer-brand{max-width:280px;}
+.footer-brand-logo{font-size:16px;font-weight:bold;letter-spacing:0.5px;margin-bottom:10px;}
+.footer-brand-desc{font-size:13px;color:var(--muted-text);line-height:1.5;margin-bottom:14px;}
+.footer-copy{font-size:12px;color:var(--muted-text);opacity:0.7;}
+.footer-col h3{font-size:13px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-text);margin:0 0 14px 0;}
+.footer-col a{display:block;font-size:14px;color:var(--text);text-decoration:none;opacity:0.8;margin-bottom:10px;}
+.footer-col a:hover{opacity:1;color:var(--accent);}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+.blog-cat{display:inline-block;font-size:11px;font-weight:bold;text-transform:uppercase;letter-spacing:.3px;padding:3px 9px;border-radius:999px;margin-bottom:12px;cursor:default;}
+.blog-card .blog-cat{margin-bottom:0;}
+.blog-cat.cat-guide{background:#16213d;color:#60a5fa;}
+.blog-cat.cat-tip{background:#1f1a0f;color:#fbbf24;}
+.blog-cat.cat-comparison{background:#241c3d;color:#a78bfa;}
+:root[data-theme="light"] .blog-cat.cat-guide{background:#eff6ff;color:#1e40af;}
+:root[data-theme="light"] .blog-cat.cat-tip{background:#fffbeb;color:#92400e;}
+:root[data-theme="light"] .blog-cat.cat-comparison{background:#f5f3ff;color:#5b21b6;}
+code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/es/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/es/tools/">Todas las herramientas</a>
+    <a href="/es/tools/#image">Herramientas de imagen</a>
+    <a href="/es/tools/#pdf">Herramientas PDF</a>
+    <a href="/es/tools/#utility">Utilidades</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <a class="lang-flag" href="/blog/calendar-generator-explained/">EN</a>
+    <span class="lang-flag active">ES</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<span class="blog-cat cat-guide">Guías</span>
+<h1>Cómo Funciona Este Generador de Calendarios en el Navegador</h1>
+<p class="intro">Un calendario que rellena automáticamente los días festivos de más de 50 países y cuatro calendarios religiosos no puede hacer esa consulta en vivo dentro del navegador: la librería que conoce esas reglas necesita un entorno de ejecución real del lado del servidor. Así se construye una sola vez, fuera de línea, un conjunto de datos con avisos reales de "avistamiento de luna" y "fijo desde el siglo IV", y se entrega como un simple archivo, y por eso algunos días festivos llevan un aviso de precisión y otros no.</p>
+
+<div class="article-body">
+
+<h2>Por qué los datos de días festivos son un archivo estático y no una consulta en vivo</h2>
+<p>La librería más precisa para calcular días festivos en más de 200 países es un paquete de Node.js. No tiene una versión para navegador, y tampoco importaría si la tuviera, ya que la premisa entera de este sitio es que nada se ejecuta en un servidor. En lugar de descartar la función o construir a mano una versión peor de las mismas reglas, los datos festivos de cada país y año compatible se calculan una sola vez, fuera de línea, y se guardan como un archivo JSON plano que se entrega junto con el resto del sitio, igual que cualquier otro recurso estático. La única tarea del navegador en tiempo de ejecución es un <code>fetch()</code> y una búsqueda en un diccionario por fecha, no se hace ningún cálculo de calendario en el navegador para los días festivos civiles. La contrapartida es un rango de años fijo (2020–2036 en este caso) en vez de "cualquier año para siempre", lo cual es razonable: recalcular el archivo para extenderlo es una tarea de cinco minutos, no un rediseño.</p>
+
+<h2>Por qué las fechas islámicas llevan un aviso visible y las judías no</h2>
+<p>Estos dos calendarios se parecen desde fuera. Ambos no son gregorianos, y ambos determinan algunas fechas que otros calendarios no pueden predecir con aritmética simple, pero la certeza subyacente es genuinamente distinta, y el aviso sigue esa diferencia en vez de aplicar una advertencia genérica de "las fechas religiosas pueden variar" a todo por igual. El calendario hijri depende tradicionalmente del avistamiento local de la luna, así que la misma fecha islámica puede, en la práctica, anunciarse con un día de diferencia según el país: cualquier fecha calculada es una estimación astronómica bien fundamentada de cuándo se espera ese avistamiento, no una certeza. El calendario hebreo, en cambio, es un cálculo matemático fijo desde el siglo IV d.C., sin observación alguna involucrada, la misma categoría de certeza que calcular la fecha del Domingo de Pascua cristiano. Por eso el aviso está delimitado de forma estricta: aparece solo cuando las fechas islámicas están activadas, y solo junto a las fechas islámicas mismas, sin filtrarse a una vista combinada donde también estén activadas fechas cristianas, judías o hindúes.</p>
+
+<h2>Por qué los días festivos cristianos se calculan a partir de la fecha de Pascua, y no se buscan por país</h2>
+<p>La Navidad es una fecha fija en el calendario y aparece directamente en los datos de días festivos de la mayoría de los países. El Viernes Santo, el Miércoles de Ceniza, el Domingo de Ramos y Pentecostés son otra historia: la mayoría de los países que los observan no los declaran días festivos oficiales, así que buscarlos en el calendario civil de un solo país simplemente no devuelve nada para cuatro de las ocho fechas. Los cuatro se definen de la misma forma en la tradición cristiana, un número fijo de días antes o después del Domingo de Pascua, así que, una vez conocida la fecha de Pascua de un año determinado (un cálculo bien definido y ya resuelto), el resto es solo aritmética de fechas: el Miércoles de Ceniza es 46 días antes, el Domingo de Ramos 7 días antes, el Viernes Santo 2 días antes, Pentecostés 49 días después. El Día de Reyes (6 de enero) y el Día de Todos los Santos (1 de noviembre) completan la lista como otras dos fechas fijas del calendario, la misma categoría que la Navidad. No hace falta ninguna consulta al calendario civil para ninguna de las cinco fechas relativas a la Pascua.</p>
+
+<h2>Por qué el calendario judío usa una librería dedicada en vez del conjunto de datos festivos general</h2>
+<p>La librería general de días festivos cubre bien los calendarios civiles, pero solo conoce un puñado de fechas ancla judías y no tiene ningún concepto de un día de Jol HaMoed, una cuenta del Omer, ni de convertir una fecha gregoriana cualquiera a su equivalente hebreo. Una librería perpetua dedicada al calendario hebreo llena ese vacío: es el mismo enfoque de calcular una vez fuera de línea y guardar en JSON que los días festivos civiles, solo que apuntando a un motor construido específicamente para esto. De ahí salen dos archivos. Uno es una tabla de consulta simple que mapea cada día gregoriano de 2020 a 2036 con su día, mes y año hebreo, y es lo que alimenta la pequeña fecha secundaria que se muestra en cada celda del calendario y el rango "Elul 5786 - Tishrei 5787" bajo el encabezado del mes. El otro es una lista completa de cada fecha dentro del alcance: de Rosh Hashaná a Simjat Torá, Purim, Tu BiShvat, los 49 días completos de la cuenta del Omer, los cuatro ayunos menores, Tisha B'Av y más, cada una con su propia regla de presentación ya integrada.</p>
+
+<h2>Por qué Janucá tiene días numerados y ninguna otra festividad los tiene</h2>
+<p>Las festividades de varios días como Sucot y Pésaj repiten su nombre simple en cada día que abarcan. Janucá es la única excepción, etiquetada "Día 1" hasta "Día 8", porque así es como realmente se hace referencia a la festividad día a día (qué vela, qué noche), a diferencia de Sucot o Pésaj, donde los días no tienen nombre individual en el uso cotidiano. La cuenta del Omer tiene su propio formato por la misma razón: "Omer, día 33 (4 semanas y 5 días)" refleja la fórmula tradicional para contarlo en voz alta, y se sigue para los 49 días aunque solo Lag BaOmer (día 33) sea lo bastante importante como para interrumpir la cuenta simple con su propio nombre.</p>
+
+<h2>Por qué el sombreado de los días usa cinco colores distintos en vez de un solo resaltado genérico</h2>
+<p>Un único resaltado de "este día importa" aplanaría una distinción real: un Iom Tov, un ayuno menor y Tisha B'Av no son la misma categoría de día, y tratarlos igual enterraría esa diferencia bajo un color uniforme. Cinco categorías mantienen todo legible de un vistazo: ámbar para los días de Iom Tov, Jol HaMoed, Yom Kipur y cada Shabat; gris para los cuatro ayunos menores; azul para Purim, Janucá y Lag BaOmer; negro solo para Tisha B'Av, por ser el ayuno más severo del año; y rosa para Tu B'Av. El color propio de la festividad de un día siempre gana sobre el sombreado genérico de Shabat de viernes o sábado si ambos aplicarían de otro modo, así que una noche de Janucá que cae en viernes muestra el azul de Janucá, no el ámbar del Shabat.</p>
+
+<h2>Por qué el diseño de foto de fondo oscurece cada foto en la misma cantidad fija</h2>
+<p>Una foto de calendario puede ser cualquier cosa: una foto brillante de playa o un retrato interior tenue, y los números de los días necesitan seguir siendo legibles impresos encima de cualquiera de las dos. En lugar de intentar detectar el brillo de cada foto y ajustar la capa dinámicamente (algo frágil, e inconsistente de una impresión a otra), el diseño de fondo siempre aplica la misma capa oscura semitransparente fija antes de dibujar encima la cuadrícula de días. Es un tratamiento ligeramente más fuerte de lo que estrictamente necesita una foto brillante, pero garantiza el mismo contraste fiable en cada página sin importar qué se suba. Aquí la consistencia le ganó a la sofisticación.</p>
+
+<h2>Respuestas rápidas</h2>
+<p><strong>¿Por qué no puedo generar más de un año en un mismo PDF?</strong> Cada descarga construye un año de calendario, un mes por página, para mantener simples tanto el modelo de datos como el diseño del PDF en esta primera versión.</p>
+<p><strong>¿Qué pasa si elijo un país que no está en la lista?</strong> Aun así puedes crear un calendario sin días festivos automáticos y añadir todo lo que necesites mediante la sección de eventos personalizados. Ninguna otra parte de la herramienta depende de la selección de país.</p>
+<p><strong>¿Qué le queda entonces al Generador de Calendario Hebreo dedicado, si esta página ya muestra el calendario judío completo?</strong> Dos cosas que necesitan tu ubicación: horarios de encendido de velas y tzeit hakojavim calculados a partir de la puesta de sol real, y la porción semanal de la Torá. Elegir esas opciones activa una confirmación, no una redirección silenciosa, ya que navegar a una página que pide tu ubicación debería ser una elección deliberada.</p>
+<p><strong>¿Mis fotos o eventos personalizados se envían a algún lado?</strong> No. La consulta de datos festivos, las fotos, los eventos personalizados y la generación del PDF ocurren todos localmente en el navegador. No se sube nada a un servidor.</p>
+
+<div class="cta-box">
+  <h3>Crea un calendario imprimible</h3>
+  <p>El Generador de Calendarios de Orisod crea un calendario PDF de 12 meses con días festivos automáticos de más de 50 países, fechas religiosas, tus propias fotos y eventos personalizados, todo en tu navegador.</p>
+  <a class="cta-button" href="/es/calendar-generator/">Crear un calendario →</a>
+</div>
+
+<p>En resumen: la precisión de los días festivos es un problema de datos, no de tiempo de ejecución, así que se resuelve una sola vez fuera de línea y se entrega como un archivo estático; cada aviso de precisión está delimitado al sistema de calendario específico que realmente tiene incertidumbre, no aplicado de forma genérica; y el calendario judío tiene un motor dedicado en vez de una tabla mantenida a mano, porque un calendario matemático fijo con cuentas del Omer, días de Jol HaMoed y ayunos menores merece una implementación real, no una aproximación.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Artículos relacionados</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/es/blog/text-to-pdf-word-wrap-explained/">
+      <h3>Cómo funcionan realmente el ajuste de línea y la paginación al convertir texto a PDF</h3>
+      <p>Por qué el PDF no tiene ajuste de línea integrado, y la matemática real detrás de las métricas de fuente.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/add-page-numbers-to-pdf/">
+      <h3>Cómo añadir números de página a un PDF</h3>
+      <p>Por qué los números de página importan más de lo que parece, y cómo añadirlos a un PDF que no los tiene.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/handwriting-worksheets-explained/">
+      <h3>Cómo se Construyen Realmente las Hojas de Caligrafía Imprimibles</h3>
+      <p>Por qué las letras para calcar necesitan un contorno punteado, y por qué la fuente en sí es una decisión de diseño real.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/es/blog/">← Volver al Blog</a>
+
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-brand-logo">ORISOD</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Procesamiento 100% local: tus archivos nunca se suben a ningún sitio.</div>
+      <div class="footer-copy">© Orisod Labs</div>
+    </div>
+    <div class="footer-col">
+      <h3>Herramientas</h3>
+      <a href="/es/tools/#image">Herramientas de imagen</a>
+      <a href="/es/tools/#pdf">Herramientas PDF</a>
+      <a href="/es/tools/#utility">Utilidades</a>
+    </div>
+    <div class="footer-col">
+      <h3>Empresa</h3>
+      <a href="/es/about/">Acerca de</a>
+      <a href="/es/privacy/">Privacidad</a>
+      <a href="/es/blog/">Blog</a>
+    </div>
+  </div>
+</footer>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>
