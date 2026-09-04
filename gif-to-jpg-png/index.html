@@ -170,7 +170,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-image"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="14" height="13" rx="1.5"/><rect x="4" y="6" width="4" height="4" rx="1" fill="currentColor" stroke="none"/><path d="M4 15l3-3 3 2.5 4-4.5 2 2.5"/><path d="M19 15.5l3.5 6.5h-7z" fill="currentColor" stroke="none"/></svg></div>
     <h1>GIF to JPG/PNG Converter</h1>
   </div>
-  <p class="tool-sub">Extract the first frame of a GIF as a still JPG or PNG image. Everything happens locally in your browser — your file is never uploaded anywhere.</p>
+  <p class="tool-sub">Turn the first frame of a GIF into a still JPG or PNG image without uploading the file.</p>
 
   <div class="workspace">
     <div class="box">
@@ -195,33 +195,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>This tool takes the first frame of an animated (or static) GIF and saves it as a regular JPG or PNG still image. It's useful when you only need a single representative image from a GIF, not the full animation.</p>
+    <h2>Turn the first GIF frame into a still image</h2>
+    <p>The converter decodes a GIF and saves its first frame as a non-animated JPG or PNG. This works well when the opening frame contains the preview you need. Because an animation can change after that frame, check the result rather than assuming it represents the whole GIF.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>When the first frame is enough</h2>
     <ul>
-      <li>You need a static thumbnail or preview image from an animated GIF</li>
-      <li>A platform doesn't accept GIF uploads, only JPG or PNG</li>
-      <li>You want to use just one frame of a GIF in a document or design</li>
-      <li>You need a smaller file size than the original animated GIF</li>
+      <li>Create a thumbnail from the opening frame of an animated GIF</li>
+      <li>Prepare a still image for a platform that accepts JPG or PNG but not GIF</li>
+      <li>Place the first GIF frame in a document or design</li>
+      <li>Replace a GIF animation with a static preview when motion is unnecessary</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Can I extract a frame other than the first one?</div>
-      <div>Not currently — this tool extracts only the first frame of the GIF.</div>
+      <div>No. The current tool extracts only the first GIF frame. Use a frame-specific animation editor if you need a later moment.</div>
     </div>
     <div class="faq-item">
       <div class="q">Will this convert the whole animation?</div>
-      <div>No, the output is a single still image, not an animated file.</div>
+      <div>No. The download contains one still image, so the remaining frames and animation timing are not included.</div>
     </div>
     <div class="faq-item">
       <div class="q">Should I choose JPG or PNG?</div>
-      <div>Choose PNG if your GIF has transparency you want to keep, or JPG for smaller file size.</div>
+      <div>Choose PNG when the GIF frame needs transparency or lossless output. JPG can be efficient for photographic frames, but it uses lossy compression and does not support transparency. The smaller option depends on the image.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my file uploaded anywhere?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No. JavaScript decodes and exports the image locally in your browser.</div>
     </div>
   </div>
 

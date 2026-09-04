@@ -172,7 +172,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-image"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20L20 4M4 4l16 16" stroke-dasharray="1 3"/><path d="M19 15.5l3.5 6.5h-7z" fill="currentColor" stroke="none"/></svg></div>
     <h1>SVG to PNG Converter</h1>
   </div>
-  <p class="tool-sub">Convert an SVG file to a PNG image at the resolution you need. Everything happens locally in your browser — your file is never uploaded anywhere.</p>
+  <p class="tool-sub">Choose the output dimensions and render an SVG as a fixed-size PNG directly in your browser.</p>
 
   <div class="workspace">
     <div class="box">
@@ -208,33 +208,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What is the difference between SVG and PNG?</h2>
-    <p>SVG is a vector format — it describes shapes with math instead of pixels, so it scales to any size without losing quality. PNG is a pixel-based (raster) format, which is required by tools, platforms, and older software that don't support vector graphics. Converting SVG to PNG lets you use vector artwork anywhere a raster image is expected.</p>
+    <h2>SVG instructions become PNG pixels</h2>
+    <p>SVG describes vector shapes, text and other elements rather than storing a fixed grid of pixels. PNG is a raster format with specific pixel dimensions. Rendering an SVG to PNG creates a fixed-size copy for software or platforms that require raster images. Choose enough output pixels for the intended display because enlarging the PNG afterward will not retain vector scalability.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>When a raster copy is necessary</h2>
     <ul>
-      <li>A platform or tool doesn't accept SVG uploads, only PNG or JPG</li>
-      <li>You need a fixed-resolution image for a presentation, document, or social post</li>
-      <li>You're using an icon or logo from an SVG source but need a raster version</li>
-      <li>You want a specific pixel size output from a scalable vector graphic</li>
+      <li>Upload artwork to a destination that accepts PNG or JPG but rejects SVG</li>
+      <li>Create a fixed-resolution graphic for a slide, document or social post</li>
+      <li>Prepare a raster copy of an SVG icon or logo</li>
+      <li>Render a scalable graphic at an exact pixel width and height</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Will the PNG look blurry if I scale it up?</div>
-      <div>No, since SVG is vector-based, scaling up before conversion produces a crisp, high-resolution PNG rather than a blurry enlargement.</div>
+      <div>Render the SVG at the final dimensions or larger to obtain enough pixels for the intended use. The resulting PNG is no longer vector-based, so enlarging that PNG later can make edges look soft. Embedded bitmap content may also limit sharpness.</div>
     </div>
     <div class="faq-item">
       <div class="q">Does this preserve transparency?</div>
-      <div>Yes, any transparent areas in your SVG are preserved in the resulting PNG.</div>
+      <div>Transparent SVG areas can remain transparent in the PNG. Features that do not render correctly in the browser may still affect the result, so inspect the export.</div>
     </div>
     <div class="faq-item">
       <div class="q">Are my files uploaded anywhere?</div>
-      <div>No, the entire conversion happens locally in your browser using JavaScript.</div>
+      <div>No. The browser renders the SVG and creates the PNG locally.</div>
     </div>
     <div class="faq-item">
       <div class="q">Does this work with any SVG file?</div>
-      <div>It works with standard SVG files. Some SVGs referencing external resources or using unusual embedded scripts may not render exactly as intended.</div>
+      <div>Standard self-contained SVG files usually render well. External fonts or images, scripts, unsupported filters and other active or remote resources may be blocked or appear differently. Review the PNG before using it.</div>
     </div>
   </div>
 

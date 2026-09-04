@@ -178,7 +178,7 @@ h2{margin-top:50px;}
     <div class="icon-box cat-image"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="13" height="13" rx="2"/><path d="M21 21l-5-5M21 21h-4M21 21v-4"/></svg></div>
     <h1>Redimensionar imagen</h1>
   </div>
-  <p class="tool-sub">Selecciona una imagen y cambia su ancho y alto al instante. Todo se procesa localmente en tu navegador; el archivo permanece en tu dispositivo.</p>
+  <p class="tool-sub">Define un nuevo ancho y alto en píxeles, conserva las proporciones si lo necesitas y descarga la copia redimensionada.</p>
 
   <div class="workspace">
     <div class="box">
@@ -208,33 +208,33 @@ h2{margin-top:50px;}
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué significa redimensionar una imagen?</h2>
-    <p>Redimensionar cambia las dimensiones en píxeles de una imagen — su ancho y alto — ya sea reduciéndola a un tamaño más pequeño o ampliándola a uno mayor. Es diferente de recortar: redimensionar mantiene toda la imagen visible, solo a otra escala, mientras que recortar elimina partes de ella.</p>
+    <h2>Redimensionar cambia la cuadrícula de píxeles</h2>
+    <p>Redimensionar reconstruye la imagen con otro ancho y alto en píxeles, pero mantiene el encuadre completo. Recortar es distinto porque elimina una parte del cuadro. Reducir las dimensiones puede aligerar el archivo y adaptarlo mejor al espacio donde se mostrará. Ampliarlo añade píxeles mediante interpolación, pero no recupera detalles que no existían en el original.</p>
 
-    <h2>¿Cuándo deberías usar esta herramienta?</h2>
+    <h2>Cuándo unas dimensiones nuevas resuelven el problema</h2>
     <ul>
-      <li>Un sitio web, formulario o plataforma requiere un tamaño de píxeles exacto (por ejemplo, foto de perfil, banner)</li>
-      <li>Tu foto tiene un tamaño de archivo demasiado grande y quieres reducir sus dimensiones</li>
-      <li>Necesitas una versión en miniatura más pequeña de una imagen más grande</li>
-      <li>Estás preparando imágenes para imprimir en un tamaño específico</li>
+      <li>Cumplir las dimensiones exactas de una foto de perfil, un banner o un formulario</li>
+      <li>Reducir una fotografía que supera el tamaño en que será mostrada</li>
+      <li>Crear una miniatura sin eliminar ninguna parte de la composición</li>
+      <li>Preparar dimensiones para impresión después de comprobar la resolución requerida</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿Redimensionar distorsionará mi imagen?</div>
-      <div>Solo si cambias el ancho y el alto por separado. Mantén activada la opción “Mantener la relación de aspecto” para evitar que la imagen se deforme.</div>
+      <div>Puede deformarse si modificas el ancho y el alto por separado. Mantén activada la opción “Mantener la relación de aspecto” para conservar las proporciones originales. Esto evita el estiramiento, aunque una ampliación fuerte todavía puede verse suave.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Puedo agrandar una imagen sin perder calidad?</div>
-      <div>Puedes ampliar una imagen, pero como no se crea ningún detalle nuevo, los aumentos muy grandes pueden verse más suaves o borrosos que el original.</div>
+      <div>Puedes ampliarla, pero el cambio de tamaño no crea detalle auténtico. La interpolación estima los píxeles añadidos, así que un aumento grande puede verse más suave o revelar artefactos que ya estaban en el original.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se envía mi imagen a algún servidor?</div>
-      <div>No. El cambio de tamaño se realiza localmente en tu navegador mediante la API Canvas; el archivo permanece en tu dispositivo.</div>
+      <div>No. La API Canvas redimensiona la imagen dentro de tu navegador y el archivo no se sube para procesarlo.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Qué formatos admite esta herramienta?</div>
-      <div>JPG, PNG, WebP y la mayoría de los otros formatos de imagen comunes compatibles con tu navegador.</div>
+      <div>La herramienta acepta JPG, PNG, WebP y otros formatos que el navegador pueda decodificar. La compatibilidad con un formato concreto puede variar entre navegadores.</div>
     </div>
   </div>
 
