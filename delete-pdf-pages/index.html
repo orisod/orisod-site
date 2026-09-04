@@ -175,7 +175,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M9 13l6 6M15 13l-6 6"/></svg></div>
     <h1>Delete PDF Pages</h1>
   </div>
-  <p class="tool-sub">Type the page numbers or ranges you want to remove, then download the rest — no need to click through thumbnails one by one. Everything happens locally in your browser.</p>
+  <p class="tool-sub">Enter page numbers or ranges such as “2, 4, 7-9,” check the count and download a copy containing the pages you kept.</p>
 
   <div class="workspace">
     <div class="box">
@@ -204,33 +204,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>Instead of clicking through each page one at a time, this tool lets you type the exact page numbers or ranges you want removed — like "2, 4, 7-9" — and instantly see how many pages will be deleted before you download the result. It's built for PDFs where you already know which pages need to go.</p>
+    <h2>Remove known pages without sorting thumbnails</h2>
+    <p>Enter individual page numbers, ranges or both when you already know what should be removed. For example, “2, 4, 7-9” selects five pages. The tool reports the total before creating a new PDF from the pages left behind, which is faster than reviewing a long thumbnail list when the locations are known.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>When page numbers are already known</h2>
     <ul>
-      <li>You need to remove a handful of pages from a long document quickly</li>
-      <li>A scanned PDF has blank or duplicate pages at known positions</li>
-      <li>You want to strip out a range of pages, like an appendix or a chapter</li>
-      <li>You already know the page numbers and don't need a visual thumbnail picker</li>
+      <li>Remove several known pages from a long document</li>
+      <li>Drop blank or duplicate pages from a scanned PDF</li>
+      <li>Exclude a complete appendix, chapter or other page range</li>
+      <li>Edit by page number when a visual organizer is unnecessary</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">How do I specify which pages to delete?</div>
-      <div>Type page numbers separated by commas, and use a hyphen for ranges — for example "2, 4, 7-9" deletes pages 2, 4, 7, 8 and 9.</div>
+      <div>Separate individual numbers with commas and write a range with a hyphen. For example, “2, 4, 7-9” removes pages 2, 4, 7, 8 and 9. Check the displayed count before downloading.</div>
     </div>
     <div class="faq-item">
       <div class="q">Can I delete every page?</div>
-      <div>No, at least one page must remain in the document. You'll see an error if your input would remove all pages.</div>
+      <div>No. A valid PDF must retain at least one page, so the tool rejects a selection that would remove the entire document.</div>
     </div>
     <div class="faq-item">
       <div class="q">Does this preserve the quality of the remaining pages?</div>
-      <div>Yes, the remaining pages are copied over exactly as they were — nothing is rasterized or recompressed.</div>
+      <div>Pages are copied without intentionally rasterizing or recompressing their visible content. The document itself is rebuilt, however, so bookmarks, links, forms, page labels or digital signatures may change or become invalid. Review important output before replacing the original.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my PDF uploaded to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No. JavaScript reads and rebuilds the PDF inside your browser.</div>
     </div>
   </div>
 

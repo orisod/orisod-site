@@ -198,7 +198,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M8 12h1M8 16h1M11 12h6M11 16h5"/></svg></div>
     <h1>Rellenar formularios PDF</h1>
   </div>
-  <p class="tool-sub">Sube un PDF rellenable y escribe directamente en sus campos reales — cuadros de texto, casillas, botones de opción y listas desplegables — colocados sobre la página, y descarga una copia aplanada.</p>
+  <p class="tool-sub">Completa los campos interactivos incorporados en un PDF y descarga una copia aplanada con las respuestas sobre la página.</p>
 
   <div class="workspace">
     <div class="box">
@@ -229,32 +229,32 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué hace esta herramienta?</h2>
-    <p>Esta herramienta lee los campos reales e interactivos de un formulario PDF — los mismos que podrías rellenar en Adobe Acrobat o en el visor de PDF del navegador — y los convierte en cuadros editables colocados directamente sobre la página. Escribe tus respuestas, marca tus casillas, elige tus valores en las listas desplegables y pulsa "Aplanar y descargar" para fijarlo todo en una página PDF normal y no editable (texto vectorial real, no una captura rasterizada).</p>
+    <h2>Trabaja con los campos incorporados en el PDF</h2>
+    <p>La herramienta lee los campos AcroForm incluidos en el PDF y coloca los controles correspondientes sobre la página renderizada. Introduce texto, marca casillas o botones y elige valores de las listas. Después, “Aplanar y descargar” coloca las respuestas como contenido estático. Los campos dejan de ser rellenables, pero aplanar no cifra el archivo ni impide que otro programa lo edite.</p>
 
-    <h2>¿Cuándo deberías usar esta herramienta?</h2>
+    <h2>Cuando necesitas una copia completada de un formulario</h2>
     <ul>
-      <li>Recibiste un formulario PDF rellenable (solicitud, formulario de admisión, trámite gubernamental) y necesitas completarlo sin imprimirlo</li>
-      <li>Quieres rellenar un formulario desde el móvil o un ordenador sin tener Adobe Acrobat instalado</li>
-      <li>Quieres dejar el formulario terminado bloqueado como PDF plano antes de enviarlo por correo, para que quien lo reciba no pueda modificar tus respuestas por accidente</li>
+      <li>Completar una solicitud o formulario PDF sin imprimirlo</li>
+      <li>Rellenar un AcroForm desde el teléfono o la computadora sin Adobe Acrobat</li>
+      <li>Crear una copia PDF no rellenable que reduzca cambios accidentales en las respuestas</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿Y si mi PDF no tiene campos rellenables?</div>
-      <div>Algunos PDF solo parecen formularios — líneas y recuadros dibujados para parecerlo, sin campos interactivos reales debajo. Esta herramienta detecta ese caso con honestidad y te avisa de que no se encontraron campos rellenables, en lugar de adivinar posiciones. Si ocurre eso, el archivo no es un AcroForm real y no se puede rellenar de esta forma.</div>
+      <div>Algunos PDF solo dibujan líneas y cuadros que parecen un formulario. Si no existen campos interactivos incorporados, la herramienta indica que no encontró ninguno en vez de adivinar posiciones. Ese archivo no puede completarse mediante este sistema basado en campos.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Es compatible con campos de firma digital?</div>
-      <div>No. Los campos de firma digital son una tecnología distinta (firma criptográfica) y no son compatibles aquí — se muestran en gris sobre la página para que sepas que existen. Si solo necesitas colocar una imagen de firma dibujada o subida, usa nuestra herramienta <a href="/es/sign-pdf/" style="color:var(--accent);">Firmar PDF</a>.</div>
+      <div>No. Los campos de firma digital criptográfica no se completan aquí y aparecen desactivados en la vista previa. Para colocar una firma manuscrita o una imagen, utiliza la herramienta <a href="/es/sign-pdf/" style="color:var(--accent);">Firmar PDF</a>.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Seguirán funcionando los campos calculados o la validación del formulario?</div>
-      <div>No. Algunos formularios PDF usan JavaScript incrustado para calcular totales automáticamente, validar entradas o exigir "elige solo una" entre un grupo de casillas. Esta herramienta no ejecuta ningún script de PDF incrustado, así que ese comportamiento no ocurrirá automáticamente — revisa bien tus respuestas antes de descargar.</div>
+      <div>No. La herramienta no ejecuta el JavaScript incrustado en el PDF para cálculos, validaciones o relaciones entre campos. Comprueba por tu cuenta los totales, las respuestas obligatorias y las opciones mutuamente excluyentes antes de descargar.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se sube mi PDF a un servidor?</div>
-      <div>No, todo el proceso — leer el formulario, rellenarlo y aplanarlo — ocurre localmente en tu navegador con JavaScript.</div>
+      <div>No. La lectura, el llenado y el aplanado del PDF ocurren localmente dentro de tu navegador.</div>
     </div>
   </div>
 

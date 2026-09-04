@@ -158,7 +158,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h3.5c3 0 4.5 10 7.5 10H18"/><path d="M15 4l3 3-3 3"/><path d="M3 17h3.5c3 0 4.5-10 7.5-10H18"/><path d="M15 20l3-3-3-3"/></svg></div>
     <h1>Alternate & Mix Pages</h1>
   </div>
-  <p class="tool-sub">Interleave the pages of two PDFs — File A page 1, File B page 1, File A page 2, File B page 2, and so on. Built for recombining front/back duplex scans. Everything happens locally in your browser.</p>
+  <p class="tool-sub">Build an A1, B1, A2, B2 sequence from two PDFs, with an option to reverse File B before combining them.</p>
 
   <div class="workspace">
     <div class="box">
@@ -203,33 +203,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>Upload two PDFs and this tool weaves their pages together — page 1 from File A, page 1 from File B, page 2 from File A, page 2 from File B, and so on — into a single document. A live order preview lists exactly how every page will be arranged before you download. Because pages are copied with their original content intact rather than rasterized, the result stays fully vector and text-selectable.</p>
+    <h2>Interleave two page sequences</h2>
+    <p>The tool alternates pages from File A and File B to create an A1, B1, A2, B2 sequence. A preview lists the planned order, and File B can be reversed when the backs were scanned from a flipped stack. Pages are copied without intentional rasterization, but rebuilding a PDF can affect forms, links, bookmarks, annotations or digital signatures.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>A practical fix for separated duplex scans</h2>
     <ul>
-      <li>Recombining front-side and back-side scans from a scanner that can't do duplex automatically</li>
-      <li>Fixing a back-side scan that came out in reverse page order (a common quirk of flip-the-stack scanning)</li>
-      <li>Merging two versions of a document where content should alternate page by page</li>
-      <li>Reassembling any two page sequences that need to interleave rather than simply concatenate</li>
+      <li>Recombine separate front-side and back-side scans</li>
+      <li>Correct back pages captured in reverse stack order</li>
+      <li>Alternate corresponding pages from two document versions</li>
+      <li>Interleave two sequences instead of appending one after the other</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">What happens if File A and File B have different page counts?</div>
-      <div>Pages interleave for as long as both files still have pages left; once the shorter file runs out, the remaining pages from the longer file are appended at the end in their own order — nothing is dropped or duplicated.</div>
+      <div>The pages alternate while both files have content. Once the shorter PDF ends, the remaining pages from the longer one are appended in their existing order. Nothing is duplicated to balance the files.</div>
     </div>
     <div class="faq-item">
       <div class="q">When should I use "Reverse File B's page order"?</div>
-      <div>When the back sides were scanned by flipping the whole stack over and feeding it in again — that produces the back-side pages in reverse order, so reversing them here re-aligns each back side with its correct front side.</div>
+      <div>Use it when turning over a stack caused the back-side scan to run from the last sheet toward the first. Check the order preview, because scanner feed direction and flipping method vary.</div>
     </div>
     <div class="faq-item">
       <div class="q">Will pages come out upside down?</div>
-      <div>This tool only reorders pages — it doesn't rotate them. If your back-side scans came out rotated 180°, rotate them first with Rotate PDF Pages.</div>
+      <div>The tool changes order, not orientation. If the back pages are upside down, rotate that PDF first and then verify the combined preview.</div>
     </div>
     <div class="faq-item">
       <div class="q">Are my PDFs uploaded to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No. JavaScript reads and combines both PDFs inside your browser.</div>
     </div>
   </div>
 

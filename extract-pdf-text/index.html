@@ -173,7 +173,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M8 11h6M8 14h7M8 17h4"/><path d="M20 14h-3m3 0l-2-2m2 2l-2 2"/></svg></div>
     <h1>Extract PDF Text</h1>
   </div>
-  <p class="tool-sub">Pull all the selectable text out of a PDF, then copy it or download it as a plain .txt file. Everything happens locally in your browser.</p>
+  <p class="tool-sub">Read the PDF text layer, keep page markers and copy the result or download it as a plain .txt file.</p>
 
   <div class="workspace">
     <div class="box">
@@ -206,33 +206,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>This tool reads every page of a PDF and pulls out the underlying selectable text — the same text you could highlight and copy in a PDF viewer — and lays it out as plain text you can copy or save as a .txt file. Page breaks are marked so you can still tell where one page ends and the next begins.</p>
+    <h2>Turn a PDF text layer into plain text</h2>
+    <p>The tool reads text objects from every PDF page and presents their contents as plain text with page markers. It does not reproduce fonts, columns or table structure, and the extracted reading order may differ from the visual page when the PDF stores text in separate positioned fragments. You can copy the result or save it as a .txt file.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>When layout matters less than the words</h2>
     <ul>
-      <li>You need to paste a PDF's content into an email, document, or spreadsheet</li>
-      <li>You want to search or process a PDF's text with a tool that only accepts plain text</li>
-      <li>You're archiving a document's text separately from its layout</li>
-      <li>You need a quick way to check how much text a PDF actually contains</li>
+      <li>Move PDF wording into an email, document or spreadsheet</li>
+      <li>Prepare PDF content as plain text for search or another processing tool</li>
+      <li>Archive the words separately from the original page design</li>
+      <li>Check whether a PDF contains a usable text layer</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Why is the output empty or very short?</div>
-      <div>If a PDF is a scanned image without a real text layer, there's no selectable text to extract — the pages are just pictures. This tool can't OCR scanned documents.</div>
+      <div>A scanned PDF page may contain only pixels, with no text objects to extract. Empty output can also result from outlined text, unusual character maps, encryption or a damaged file. This tool does not perform OCR.</div>
     </div>
     <div class="faq-item">
       <div class="q">Will the extracted text keep the original formatting?</div>
-      <div>No, formatting like fonts, columns, and tables is not preserved — this is a plain-text extraction, not a layout-preserving conversion.</div>
+      <div>No. The result is plain text. Fonts, precise spacing, columns, tables, images and page design are not retained, and complex layouts can produce an unexpected reading order.</div>
     </div>
     <div class="faq-item">
       <div class="q">Can I extract text from just one page?</div>
-      <div>The tool extracts all pages at once, but the output includes page markers so you can easily copy just the section you need.</div>
+      <div>The tool processes every page. Page markers in the output make it easier to locate and copy the section you need.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my PDF uploaded to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No. JavaScript extracts the text locally inside your browser.</div>
     </div>
   </div>
 

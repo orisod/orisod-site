@@ -178,7 +178,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4M13 6l-2 12"/></svg></div>
     <h1>HTML to PDF</h1>
   </div>
-  <p class="tool-sub">Paste HTML code, preview how it renders, and convert it into a paginated PDF. Everything happens locally in your browser.</p>
+  <p class="tool-sub">Preview pasted HTML and supported CSS, then render the result into a multi-page PDF in your browser.</p>
 
   <div class="workspace">
     <div class="box">
@@ -228,37 +228,37 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>This tool renders the HTML you paste or upload — including inline styles and &lt;style&gt; blocks — into a live preview, then converts that rendered result into a PDF. Content taller than one page is automatically split across multiple pages.</p>
+    <h2>Convert provided markup, not a live URL</h2>
+    <p>Paste HTML or select a file to render its structure, inline declarations and supported <style> rules in a preview. The rendered result is then captured into PDF pages. This is not a full browser print engine: scripts do not run, remote resources may be blocked and page breaks use fixed-height slices rather than document-aware pagination.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>When a browser-rendered PDF is sufficient</h2>
     <ul>
-      <li>You have an HTML snippet, invoice template, or report and need a PDF version</li>
-      <li>You want to quickly preview how HTML/CSS will look before generating a document</li>
-      <li>You're generating a simple document from code and don't want to install anything</li>
-      <li>You need to archive a styled HTML page as a fixed, shareable PDF</li>
+      <li>Create a PDF from a self-contained HTML invoice or report template</li>
+      <li>Check a simple HTML/CSS layout before exporting it</li>
+      <li>Generate a basic document from markup without installing software</li>
+      <li>Save supplied HTML as a fixed PDF rendering for sharing</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Can I convert a live website by entering its URL?</div>
-      <div>No, this tool converts HTML code you paste or upload directly — it can't fetch another website's page for you, since that would require a server. Copy the page's HTML source and paste it in instead.</div>
+      <div>No. The tool receives HTML code, not a URL, and it does not fetch or reproduce an entire live website. Copying page source may still omit generated content, authenticated data, stylesheets and resources addressed with relative URLs.</div>
     </div>
     <div class="faq-item">
       <div class="q">Why don't some images show up in the PDF?</div>
-      <div>Images loaded from other websites need to allow cross-origin access. If a site blocks that, the browser can't read the image data to include it in the PDF.</div>
+      <div>A remote image must load successfully and permit the browser to use its pixels across origins. CORS restrictions, authentication, blocked mixed content, relative paths or network failure can leave it out of the PDF. Self-contained data URLs are more predictable.</div>
     </div>
     <div class="faq-item">
       <div class="q">Can a line of text get split across two pages?</div>
-      <div>Rarely, yes — page breaks are a straight cut at a fixed height, not layout-aware pagination. If a line of dense text happens to sit exactly on that cut, it can be split visually between the bottom of one page and the top of the next. Content with natural spacing (headings, list items, paragraph breaks) almost always avoids this.</div>
+      <div>Yes. Pagination cuts the rendered surface at fixed heights rather than reflowing the HTML for each page. Text, tables or images that cross a boundary can be split. Adjust the source spacing and test the complete output.</div>
     </div>
     <div class="faq-item">
       <div class="q">Do &lt;script&gt; tags in my HTML run?</div>
-      <div>No, scripts are not executed — only HTML structure and CSS styling are rendered, for safety.</div>
+      <div>No. <script> content is not executed. The tool renders the supplied HTML structure and supported CSS only.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my content uploaded to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No. The supplied markup and generated PDF are processed locally in your browser.</div>
     </div>
   </div>
 

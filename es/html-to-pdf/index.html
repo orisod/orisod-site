@@ -178,7 +178,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4M13 6l-2 12"/></svg></div>
     <h1>HTML a PDF</h1>
   </div>
-  <p class="tool-sub">Pega código HTML, comprueba la vista previa y conviértelo en un PDF paginado. Todo se procesa localmente en tu navegador.</p>
+  <p class="tool-sub">Revisa el HTML pegado y el CSS compatible y renderiza el resultado como PDF de varias páginas en tu navegador.</p>
 
   <div class="workspace">
     <div class="box">
@@ -228,37 +228,37 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué hace esta herramienta?</h2>
-    <p>La herramienta procesa el HTML que pegas o seleccionas, incluidos los estilos en línea y los bloques &lt;style&gt;, y muestra una vista previa en tiempo real antes de crear el PDF. Si el contenido ocupa más de una página, se divide automáticamente.</p>
+    <h2>Convierte el código proporcionado, no una URL activa</h2>
+    <p>Pega HTML o selecciona un archivo para representar su estructura, estilos en línea y reglas compatibles dentro de <style>. Después, el resultado renderizado se captura en páginas PDF. No es un motor completo de impresión: los scripts no se ejecutan, los recursos remotos pueden bloquearse y los saltos utilizan cortes de altura fija en vez de una paginación consciente del documento.</p>
 
-    <h2>¿Cuándo usar esta herramienta?</h2>
+    <h2>Cuándo basta con un PDF renderizado en el navegador</h2>
     <ul>
-      <li>Tienes un fragmento HTML, plantilla de factura o informe y necesitas una versión en PDF</li>
-      <li>Quieres previsualizar rápidamente cómo se verá un HTML/CSS antes de generar un documento</li>
-      <li>Estás generando un documento simple desde código y no quieres instalar nada</li>
-      <li>Necesitas archivar una página HTML con estilo como un PDF fijo y compartible</li>
+      <li>Crear un PDF desde una factura o plantilla HTML autocontenida</li>
+      <li>Comprobar un diseño HTML/CSS sencillo antes de exportarlo</li>
+      <li>Generar un documento básico desde código sin instalar programas</li>
+      <li>Guardar el HTML suministrado como una representación PDF fija</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿Puedo convertir una página web introduciendo su URL?</div>
-      <div>No. La herramienta convierte el código HTML que pegas o seleccionas, pero no puede obtener por sí sola una página alojada en otro sitio porque eso requeriría un servidor. Copia el código fuente de la página y pégalo aquí.</div>
+      <div>No. La herramienta recibe código HTML, no una URL, y no obtiene ni reproduce un sitio web completo. Copiar el código fuente puede omitir contenido generado, datos autenticados, hojas de estilo y recursos con rutas relativas.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Por qué algunas imágenes no aparecen en el PDF?</div>
-      <div>Las imágenes cargadas desde otros sitios web deben permitir acceso de origen cruzado (CORS). Si un sitio lo bloquea, el navegador no puede leer los datos de la imagen para incluirla en el PDF.</div>
+      <div>Una imagen remota debe cargar correctamente y permitir que el navegador utilice sus píxeles entre orígenes. Las restricciones CORS, la autenticación, el contenido mixto, las rutas relativas o un fallo de red pueden excluirla del PDF. Las URL de datos autocontenidas son más previsibles.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Puede una línea de texto quedar dividida entre dos páginas?</div>
-      <div>En raras ocasiones, sí — los saltos de página son un corte recto a una altura fija, no una paginación consciente del diseño. Si una línea de texto denso cae justo en ese corte, puede quedar dividida visualmente entre el final de una página y el inicio de la siguiente. El contenido con espaciado natural (títulos, elementos de lista, saltos de párrafo) casi siempre evita esto.</div>
+      <div>Sí. La paginación corta la superficie renderizada a alturas fijas en lugar de redistribuir el HTML para cada página. El texto, las tablas o imágenes que crucen un límite pueden dividirse. Ajusta el espaciado del código y revisa toda la salida.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se ejecutan las etiquetas &lt;script&gt; de mi HTML?</div>
-      <div>No. Por seguridad, los scripts no se ejecutan; solo se procesa la estructura HTML y los estilos CSS.</div>
+      <div>No. El contenido de <script> no se ejecuta. La herramienta solo representa la estructura HTML y el CSS compatible.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se envía mi contenido a algún servidor?</div>
-      <div>No. Todo se procesa localmente en tu navegador mediante JavaScript; el archivo permanece en tu dispositivo.</div>
+      <div>No. El código suministrado y el PDF generado se procesan localmente dentro de tu navegador.</div>
     </div>
   </div>
 

@@ -193,7 +193,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M9 13l3 2 3-2M9 17l3-2 3 2"/></svg></div>
     <h1>Comprimir PDF</h1>
   </div>
-  <p class="tool-sub">Reduce el tamaño de archivo de un PDF. Funciona mejor con documentos escaneados o PDF con muchas imágenes. Todo ocurre localmente en tu navegador.</p>
+  <p class="tool-sub">Elige limpieza estructural para documentos de texto o compresión por imágenes para páginas PDF escaneadas y compara el tamaño resultante.</p>
 
   <div class="workspace">
     <div class="box">
@@ -235,37 +235,37 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué hace esta herramienta?</h2>
-    <p>Esta herramienta ofrece dos formas de reducir un PDF. <strong>Limpieza rápida</strong> vuelve a guardar el PDF con una estructura interna más eficiente — sin rasterizar — así que el texto sigue siendo totalmente seleccionable y buscable; es la mejor opción por defecto para informes, contratos, formularios y cualquier documento escrito en lugar de escaneado. <strong>Compresión fuerte</strong> renderiza cada página como una imagen comprimida y reconstruye el documento a partir de esas imágenes, de forma similar a comprimir una foto; reduce mucho más el tamaño en PDF escaneados o con muchas fotos, pero el archivo resultante se basa en imágenes y ya no es buscable.</p>
+    <h2>Dos modos de compresión para PDF diferentes</h2>
+    <p>Limpieza rápida reescribe la estructura del PDF sin convertir las páginas en imágenes. Es el punto de partida más prudente para informes, contratos y formularios porque el texto puede seguir siendo seleccionable y buscable, aunque el ahorro quizá sea pequeño. Compresión fuerte renderiza cada página como una imagen comprimida y reconstruye el PDF. Puede ayudar con escaneos o archivos con muchas fotos, pero el texto buscable, los enlaces, formularios, comentarios y otras funciones interactivas podrían perderse.</p>
 
-    <h2>¿Cuándo deberías usarla?</h2>
+    <h2>Elige el modo según el documento</h2>
     <ul>
-      <li>Tu PDF es sobre todo texto (un informe, contrato o formulario) y quieres reducirlo sin perder el texto buscable — usa Limpieza rápida</li>
-      <li>Tienes un documento escaneado o PDF con muchas fotos demasiado grande para enviar por correo o subir — usa Compresión fuerte</li>
-      <li>Un formulario o plataforma tiene un límite estricto de tamaño para subir PDF</li>
-      <li>Quieres ver el tamaño antes y después antes de decidirte a descargar</li>
+      <li>Probar Limpieza rápida con un informe, contrato o formulario PDF basado en texto</li>
+      <li>Usar Compresión fuerte en un escaneo o PDF con muchas imágenes cuando aceptes una copia rasterizada</li>
+      <li>Preparar una copia para un formulario con un límite estricto de tamaño PDF</li>
+      <li>Comparar el peso del original y del resultado antes de descargar</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿Perderé la capacidad de seleccionar texto?</div>
-      <div>Solo con Compresión fuerte, que convierte las páginas en imágenes para lograr una reducción de tamaño mucho mayor. Limpieza rápida nunca rasteriza nada, así que el texto se mantiene seleccionable y buscable.</div>
+      <div>Compresión fuerte rasteriza las páginas, por lo que el texto seleccionable o buscable suele perderse salvo que después se aplique OCR. Limpieza rápida no rasteriza intencionalmente el contenido, pero revisa siempre la salida cuando la búsqueda o la accesibilidad sean esenciales.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Qué modo debería usar para un informe o contrato con mucho texto?</div>
-      <div>Limpieza rápida. Optimiza la estructura interna del PDF en lugar de convertir las páginas en imágenes, por lo que el tamaño se reduce (normalmente de forma moderada, más si el archivo tiene historial de ediciones acumulado) sin perder texto seleccionable ni buscable.</div>
+      <div>Empieza con Limpieza rápida. Reorganiza el PDF en vez de renderizar cada página como imagen, lo que ayuda a conservar el texto buscable y el contenido de la página. Revisa formularios, enlaces y firmas digitales después de cualquier modificación; las firmas pueden quedar invalidadas.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Cuánto se reducirá mi archivo?</div>
-      <div>Varía. Limpieza rápida suele dar una reducción moderada, ya que no vuelve a codificar ningún contenido, solo limpia la estructura — los PDF que se han guardado varias veces con otros editores suelen reducirse más. Compresión fuerte puede reducir drásticamente documentos escaneados o con muchas imágenes, controlado por el control deslizante de calidad.</div>
+      <div>No existe un porcentaje fiable. Limpieza rápida puede ahorrar poco si el PDF ya está optimizado. Compresión fuerte puede reducir más un archivo cargado de imágenes, pero el resultado depende de las dimensiones, el contenido y el ajuste de calidad.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Qué pasa si la compresión no fuera a reducir realmente el tamaño del archivo?</div>
-      <div>Lo detectamos y mantenemos tu archivo original en lugar de darte algo más grande o de menor calidad sin motivo — verás una nota explicando por qué, con la sugerencia de probar el otro modo si se ajusta mejor a tu documento.</div>
+      <div>La herramienta conserva el original cuando la versión generada no sería más pequeña y explica el resultado. Puedes probar el otro modo si sus concesiones encajan con el documento.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se envía mi PDF a algún servidor?</div>
-      <div>No. Todo se procesa localmente en tu navegador mediante JavaScript; el archivo permanece en tu dispositivo.</div>
+      <div>No. JavaScript realiza la compresión localmente dentro de tu navegador.</div>
     </div>
   </div>
 

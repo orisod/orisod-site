@@ -186,7 +186,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17V5"/><path d="M4 8l3-3 3 3"/><path d="M17 7v12"/><path d="M20 16l-3 3-3-3"/></svg></div>
     <h1>Excel to PDF</h1>
   </div>
-  <p class="tool-sub">Convert an Excel spreadsheet into a PDF, with real selectable text — one page per sheet. Everything happens locally in your browser.</p>
+  <p class="tool-sub">Turn each Excel sheet into a selectable PDF table, with one page per sheet and no file upload.</p>
 
   <div class="workspace">
     <div class="box">
@@ -213,33 +213,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>This tool reads every sheet in an Excel workbook and rebuilds each one as a real, selectable table in a PDF — one page per sheet, with the sheet name as a heading. Because the data is drawn as real text rather than a rendered image, the resulting PDF stays searchable and text can be copied out of it, unlike a screenshot-based conversion.</p>
+    <h2>A data-table conversion, not a visual replica</h2>
+    <p>The converter reads the stored values from each Excel sheet and rebuilds them as a selectable table in PDF, using the sheet name as a heading. It creates one PDF page per sheet. The result is intended for straightforward tabular data, not for reproducing the original workbook design: charts, colors, conditional formatting, merged cells and live formulas are not carried over.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>Workbooks that suit this converter</h2>
     <ul>
-      <li>You need to share tabular data as a PDF without giving out the editable spreadsheet</li>
-      <li>Your workbook is mostly data tables, without heavy reliance on charts or formatting</li>
-      <li>You want the PDF's numbers and text to stay selectable and searchable</li>
-      <li>You want the conversion to happen privately, without uploading the file anywhere</li>
+      <li>Share table values as PDF without distributing the editable workbook</li>
+      <li>Convert a workbook made mostly of straightforward data tables</li>
+      <li>Keep output numbers and PDF text searchable and selectable</li>
+      <li>Create the PDF locally when the spreadsheet should stay on the device</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Will charts and cell colors be included?</div>
-      <div>No. Only the underlying data (text and values) is converted — charts, cell colors, conditional formatting, and merged cells are not carried over.</div>
+      <div>No. The converter uses cell text and stored values. Charts, colors, conditional formatting, merged cells and other layout features are omitted.</div>
     </div>
     <div class="faq-item">
       <div class="q">Are formulas preserved?</div>
-      <div>No. Each formula's last calculated value is used, not the formula itself, since a PDF has no concept of live calculation.</div>
+      <div>No. PDF has no live spreadsheet calculation, so the converter uses each formula cell’s last stored result. That cached result can be outdated if the workbook was not recalculated and saved before conversion.</div>
     </div>
     <div class="faq-item">
       <div class="q">How are multiple sheets handled?</div>
-      <div>Each sheet in the workbook becomes its own page in the output PDF, labeled with the sheet's name.</div>
+      <div>Each sheet becomes one labeled page in the output PDF. Large sheets may require small text or may not fit as comfortably as they would in a spreadsheet, so inspect the result.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my spreadsheet uploaded to a server?</div>
-      <div>No, the entire conversion happens locally in your browser using JavaScript. Your file never leaves your device.</div>
+      <div>No. JavaScript reads the workbook and creates the PDF in your browser.</div>
     </div>
   </div>
 
