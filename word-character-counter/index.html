@@ -175,33 +175,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool count?</h2>
-    <p>Six live stats, updated on every keystroke: word count (whitespace-separated), total characters, characters excluding spaces, sentence count, paragraph count, and an estimated reading time. Everything runs locally as you type — nothing is sent to a server, so it's safe to use on drafts you haven't published yet.</p>
+    <h2>Six live measurements from one text</h2>
+    <p>As you type, the page reports whitespace-separated words, all characters, characters excluding spaces, estimated sentences, paragraphs and reading time. Word and sentence rules vary among editors and languages, so these figures may differ from Microsoft Word, Google Docs or a publishing platform. Use the counter that governs a formal limit when an exact match is required.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>Check length limits and estimate reading time</h2>
     <ul>
-      <li>You're writing to a strict word or character limit — an essay, a social media caption, a meta description</li>
-      <li>You want a quick estimate of how long an article will take to read</li>
-      <li>You're checking whether a paragraph structure looks right before publishing</li>
-      <li>You need an exact character count including or excluding spaces</li>
+      <li>Check a draft against a word or character limit</li>
+      <li>Estimate the reading time of an article</li>
+      <li>Review paragraph distribution before publishing</li>
+      <li>Compare character totals with and without spaces</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">How is the word count calculated?</div>
-      <div>By splitting your text on whitespace and counting the resulting chunks — the same approach most word processors use. Hyphenated words count as one word; a string of characters with no spaces counts as one word regardless of length.</div>
+      <div>It splits on whitespace and counts the nonempty chunks. Hyphenated expressions and long strings without spaces therefore count as one word. Other editors may tokenize punctuation and languages differently.</div>
     </div>
     <div class="faq-item">
       <div class="q">How accurate is sentence counting?</div>
-      <div>It's a simple heuristic based on <code style="background:var(--bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;">. ! ?</code> punctuation, not full natural-language parsing — abbreviations like "Mr." or "e.g." will be counted as sentence breaks even though they aren't. Treat it as a close estimate, not an exact linguistic count.</div>
+      <div>It is an estimate based on sentence-ending punctuation rather than full language analysis. Abbreviations, decimals, initials and unusual punctuation can create false breaks or missed sentences.</div>
     </div>
     <div class="faq-item">
       <div class="q">How is reading time estimated?</div>
-      <div>Word count divided by 200 words per minute, a commonly used average adult silent-reading speed, rounded to the nearest minute (minimum 1 minute for any non-empty text). Actual reading speed varies a lot by reader and content, so treat this as a rough estimate.</div>
+      <div>It divides the word count by 200 words per minute and rounds according to the tool’s display rule, with at least one minute for nonempty text. Actual speed varies widely with reader, language and complexity.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is anything sent to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No. JavaScript calculates the statistics locally while you type.</div>
     </div>
   </div>
 

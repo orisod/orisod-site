@@ -199,33 +199,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué es la codificación de imágenes en Base64?</h2>
-    <p>Base64 es una forma de representar datos binarios (como un archivo de imagen) como texto plano. Codificar una imagen en Base64 te permite incrustarla directamente dentro de HTML, CSS o JSON — como un "URI de datos" — en lugar de enlazar a un archivo de imagen separado. Esto es común para íconos pequeños, imágenes en línea de correos electrónicos, o para evitar solicitudes HTTP adicionales.</p>
+    <h2>Representa bytes binarios como texto</h2>
+    <p>Base64 representa bytes binarios mediante un conjunto limitado de caracteres. Un URI de datos combina ese texto con el tipo de medio para insertarlo en HTML o CSS y, en ciertos casos, dentro de JSON o solicitudes API. Puede simplificar recursos pequeños y autocontenidos, pero aumenta el tamaño, reduce el beneficio de la caché normal y dificulta mantener el código.</p>
 
-    <h2>¿Cuándo deberías usar esta herramienta?</h2>
+    <h2>Para recursos en línea, datos y comprobaciones rápidas</h2>
     <ul>
-      <li>Estás incrustando una imagen pequeña directamente en HTML o CSS sin un archivo separado</li>
-      <li>Necesitas incluir una imagen dentro de una estructura JSON o una solicitud a una API</li>
-      <li>Estás creando una plantilla de correo electrónico que requiere imágenes en línea</li>
-      <li>Tienes una cadena Base64 y necesitas ver o descargar la imagen real que representa</li>
+      <li>Incrustar una imagen pequeña directamente en HTML o CSS</li>
+      <li>Preparar datos para un campo JSON o API que admita Base64</li>
+      <li>Probar una imagen en línea en una plantilla de correo compatible</li>
+      <li>Previsualizar o descargar la imagen representada por una cadena Base64</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿La codificación Base64 aumenta el tamaño del archivo?</div>
-      <div>Sí, el texto Base64 es aproximadamente un 33 % más grande que el archivo binario original, por lo que es más adecuado para imágenes pequeñas, no para fotos grandes.</div>
+      <div>La codificación Base64 añade aproximadamente un tercio al número de bytes binarios antes del prefijo o la compresión de texto. El tamaño final depende de los formatos circundantes, por lo que suele convenir para recursos pequeños.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Puedo pegar una cadena Base64 sin el prefijo "data:image/..."?</div>
-      <div>Sí. Si pegas únicamente los caracteres Base64, sin el prefijo de datos, el decodificador intentará detectar automáticamente el tipo de imagen.</div>
+      <div>Sí. El decodificador puede intentar identificar bytes de imagen compatibles a partir de Base64 puro. Si conoces el formato, incluir el prefijo data:image/... correcto es más seguro.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se envían mi imagen o los datos Base64 a algún servidor?</div>
-      <div>No. Tanto la codificación como la decodificación se realizan localmente en tu navegador mediante JavaScript; los datos permanecen en tu dispositivo.</div>
+      <div>No. La codificación y decodificación se ejecutan localmente con JavaScript.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Qué formatos de imagen son compatibles?</div>
-      <div>JPG, PNG, WebP, GIF y la mayoría de los formatos comunes que tu navegador puede leer.</div>
+      <div>Admite JPG, PNG, WebP, GIF y otros formatos que el navegador pueda reconocer y mostrar.</div>
     </div>
   </div>
 

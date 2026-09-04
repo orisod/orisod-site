@@ -184,32 +184,32 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What is a UUID?</h2>
-    <p>A UUID (Universally Unique Identifier) is a 128-bit value, usually written as 32 hexadecimal digits in five groups (like <code style="background:var(--bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;">550e8400-e29b-41d4-a716-446655440000</code>). It's used to label records, sessions, database rows, or API objects with an identifier that's effectively guaranteed not to collide with any other UUID ever generated, anywhere, without needing a central authority to hand them out.</p>
+    <h2>UUID: a decentralized 128-bit identifier format</h2>
+    <p>A UUID is a 128-bit identifier commonly written as 32 hexadecimal digits in five groups, such as 550e8400-e29b-41d4-a716-446655440000. Version 4 fills 122 variable bits with random data while reserving the rest for version and variant markers. This gives an extremely low collision probability without a central issuer, making it useful for database and API records, though uniqueness is not mathematically guaranteed.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>Create IDs for records, fixtures and API objects</h2>
     <ul>
-      <li>You need a unique ID for a database record, test fixture, or API request during development</li>
-      <li>You're generating sample or seed data and need realistic-looking unique identifiers</li>
-      <li>You need several unique IDs at once and don't want to call a library or write a script for it</li>
+      <li>Create an ID for a database record, test fixture or API request</li>
+      <li>Populate sample data with correctly shaped random identifiers</li>
+      <li>Generate several UUID values without adding a library or script</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">What UUID version does this generate?</div>
-      <div>Version 4 — fully random, the most widely used version and the standard choice unless a specific system requires a different one (like version 1, which encodes a timestamp, or version 7, which is time-ordered). Version 4 is what most "UUID generator" requests actually mean.</div>
+      <div>It generates UUID version 4 values from random data. Use another implementation when a system specifically requires a time-based, name-based or time-ordered version such as UUID v7.</div>
     </div>
     <div class="faq-item">
       <div class="q">Can two generated UUIDs ever collide?</div>
-      <div>In theory yes, in practice effectively never — a version 4 UUID has 122 random bits, making the odds of a collision astronomically small even across billions of generated values.</div>
+      <div>Yes, a UUID collision is theoretically possible. With 122 random bits the probability is extraordinarily small, provided the randomness source works correctly. Systems with strict requirements should still enforce uniqueness.</div>
     </div>
     <div class="faq-item">
       <div class="q">Are these UUIDs stored anywhere?</div>
-      <div>No — nothing is saved on this device or any server. Once you leave or reload the page, they're gone unless you've copied and saved them yourself.</div>
+      <div>The page does not intentionally store generated UUID values. They disappear when the session is cleared unless you copy or save them elsewhere.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is anything sent to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No. JavaScript generates the UUID values locally with the browser’s secure randomness source.</div>
     </div>
   </div>
 

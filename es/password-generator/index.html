@@ -209,32 +209,32 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué hace que una contraseña sea fuerte?</h2>
-    <p>La fortaleza de una contraseña depende de cuántas combinaciones posibles tendría que probar un atacante — lo que depende tanto de su longitud como de cuántos caracteres distintos podría contener. Una contraseña larga y totalmente aleatoria que use mayúsculas, minúsculas, números y símbolos es mucho más difícil de adivinar o probar por fuerza bruta que una corta, incluso con sustituciones habituales como "P@ssw0rd".</p>
+    <h2>La longitud y la imprevisibilidad superan a las sustituciones ingeniosas</h2>
+    <p>Una contraseña resulta más difícil de adivinar cuando es larga, imprevisible y utiliza suficientes caracteres posibles. La generación aleatoria evita palabras, fechas y sustituciones que los atacantes ya prueban. Usa una distinta para cada cuenta y guárdala en un gestor confiable; incluso una clave fuerte deja de ser segura si se reutiliza o queda expuesta.</p>
 
-    <h2>¿Cuándo deberías usar esta herramienta?</h2>
+    <h2>Crea credenciales únicas para cuentas nuevas</h2>
     <ul>
-      <li>Estás creando una cuenta nueva y quieres una contraseña realmente aleatoria en lugar de una fácil de recordar pero fácil de adivinar</li>
-      <li>Estás configurando un gestor de contraseñas y necesitas contraseñas fuertes para cada sitio</li>
-      <li>Un sitio exige una contraseña con requisitos concretos de caracteres (las opciones de aquí coinciden con las reglas habituales)</li>
+      <li>Crear una contraseña imprevisible para una cuenta nueva</li>
+      <li>Generar credenciales únicas para guardarlas en un gestor</li>
+      <li>Cumplir la longitud y categorías exigidas por un sitio</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿Esta contraseña es realmente aleatoria?</div>
-      <div>Sí — se genera con <code style="background:var(--bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;">crypto.getRandomValues()</code> de la Web Crypto API, una fuente de aleatoriedad criptográficamente segura, no con <code style="background:var(--bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;">Math.random()</code>, que no está diseñada para usos sensibles a la seguridad.</div>
+      <div>Utiliza crypto.getRandomValues() de Web Crypto API, diseñado para aleatoriedad criptográfica. La fortaleza todavía depende de la longitud, el conjunto elegido y el manejo posterior.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Esta herramienta guarda o recuerda mis contraseñas?</div>
-      <div>No — nada se guarda en ningún sitio, ni en este dispositivo ni en ningún servidor. En cuanto sales o recargas la página, la contraseña desaparece a menos que la hayas copiado y guardado tú mismo.</div>
+      <div>La página no guarda intencionalmente las contraseñas ni las envía a Orisod. Las extensiones, el historial del portapapeles, la grabación de pantalla u otro software quedan fuera del control de la herramienta.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Qué hace "excluir caracteres ambiguos"?</div>
-      <div>Elimina caracteres fáciles de confundir o teclear mal, como el número 0 frente a la letra O, o 1 frente a l frente a I. Útil si necesitas escribir la contraseña a mano en lugar de copiarla y pegarla — a costa de reducir un poco el conjunto de caracteres disponibles.</div>
+      <div>Elimina caracteres parecidos como 0 y O, o 1, l e I. Ayuda al escribirlos manualmente, aunque reduce ligeramente el conjunto disponible.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se envía mi contraseña a un servidor?</div>
-      <div>No, todo el proceso ocurre localmente en tu navegador con JavaScript.</div>
+      <div>No. JavaScript la genera localmente. Cópiala directamente en un gestor confiable en vez de dejarla en el historial del portapapeles.</div>
     </div>
   </div>
 

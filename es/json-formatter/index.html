@@ -191,33 +191,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué hace un formateador de JSON?</h2>
-    <p>JSON (JavaScript Object Notation) es un formato de texto plano, pero es estricto con la sintaxis — una comilla que falta, una coma sobrante o una cadena entre comillas simples lo vuelven inválido. Esta herramienta procesa tu JSON con el analizador JSON estricto de tu propio navegador, y luego lo formatea con sangría legible o lo minifica en una sola línea compacta, señalando exactamente dónde está el error de sintaxis si el análisis falla.</p>
+    <h2>Analiza JSON antes de cambiar su presentación</h2>
+    <p>Pega JSON para validarlo con el analizador estricto del navegador y después mostrarlo con dos espacios, cuatro o tabulaciones, o minificarlo en una línea. Los errores se informan con los detalles de ubicación disponibles. Como primero se convierte en valores JavaScript, las claves duplicadas pueden colapsar y ciertos números normalizarse; usa un analizador especializado si necesitas conservar esas diferencias.</p>
 
-    <h2>¿Cuándo usar esta herramienta?</h2>
+    <h2>Examina respuestas, payloads y archivos de configuración</h2>
     <ul>
-      <li>Estás depurando una respuesta de API y necesitas leer un bloque de JSON minificado</li>
-      <li>Tienes un archivo de configuración o payload con sangría inconsistente o inexistente</li>
-      <li>Quieres comparar dos payloads JSON y necesitas que sus claves estén en el mismo orden</li>
-      <li>Necesitas reducir el tamaño del JSON antes de pegarlo en algún sitio con límite de caracteres</li>
+      <li>Facilitar la lectura de una respuesta JSON de API minificada</li>
+      <li>Aplicar sangría uniforme a un payload o archivo de configuración</li>
+      <li>Ordenar claves de objetos JSON antes de una comparación humana</li>
+      <li>Quitar espacios opcionales antes de copiar JSON en un campo limitado</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿Esta herramienta valida mi JSON?</div>
-      <div>Sí — al hacer clic en Formatear o Minificar, tu entrada pasa por un análisis JSON estricto. Si hay un error de sintaxis, verás la línea y columna exactas en lugar de un mensaje genérico de "JSON inválido".</div>
+      <div>Sí. Formatear y Minificar usan análisis JSON estricto. Los detalles de ubicación dependen del motor y del mensaje que expone, por lo que línea y columna pueden variar entre navegadores.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Qué pasa con las claves duplicadas en un objeto?</div>
-      <div>JSON.parse conserva la última aparición de una clave duplicada y descarta las anteriores — así se comporta cualquier analizador JSON, no es algo que esta herramienta cambie.</div>
+      <div>Al analizar con JSON.parse, la última aparición normalmente reemplaza las claves anteriores del mismo nombre. Esos valores ya no pueden recuperarse, así que inspecciona datos no confiables antes de formatear si importan los duplicados.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Ordenar las claves cambia mis datos?</div>
-      <div>No — solo reordena las claves dentro de cada objeto alfabéticamente. Los valores, el orden de los arrays y la estructura anidada se mantienen exactamente igual. Es útil sobre todo para comparar dos payloads JSON que deberían ser idénticos salvo por el orden de las claves.</div>
+      <div>Cambia el orden de claves JSON, pero conserva el orden de arrays y la estructura analizada. El análisis puede haber colapsado duplicados o normalizado números. No uses esa salida para firmas ni comparaciones de bytes.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Hay un límite de tamaño?</div>
-      <div>Esta herramienta no impone ningún límite — el límite práctico es la cantidad de texto que tu navegador puede mantener en memoria, que en cualquier dispositivo moderno equivale cómodamente a varios megabytes de JSON.</div>
+      <div>La interfaz no fija una cuota para JSON. La capacidad depende de memoria, estructura y costo de análisis; datos enormes o muy anidados pueden ralentizar o cerrar la pestaña.</div>
     </div>
   </div>
 

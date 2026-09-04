@@ -171,33 +171,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What is EXIF metadata?</h2>
-    <p>Most photos from phones and cameras embed hidden data inside the file — called EXIF metadata. This can include the camera or phone model, the exact date and time the photo was taken, GPS coordinates, and shooting settings like aperture, shutter speed, and ISO. None of it is visible when you look at the photo, but it's there in the file.</p>
+    <h2>EXIF records details about a photo and its capture</h2>
+    <p>A phone or camera may save EXIF fields alongside the visible image. Depending on its settings, the file can identify a device model, capture date, GPS coordinates, aperture, shutter speed or ISO. These fields are not visible in the picture itself, and they may be missing, altered or removed by editing and sharing software. Treat them as file metadata, not unquestionable proof of when or where a photograph was made.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>Review hidden fields before sharing or investigating</h2>
     <ul>
-      <li>You want to check if a photo reveals a GPS location before sharing it</li>
-      <li>You're curious what camera or settings were used to take a photo</li>
-      <li>You need to verify the exact date and time a photo was taken</li>
-      <li>You're deciding whether a photo needs its metadata removed before posting</li>
+      <li>Check whether supported GPS fields remain before sharing</li>
+      <li>Inspect the recorded camera and exposure settings</li>
+      <li>Read the stored capture date while recognizing it can be edited</li>
+      <li>Decide whether to create a copy with detected metadata removed</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Why does this photo show no metadata?</div>
-      <div>Many platforms (social media, messaging apps) strip EXIF data automatically when you upload or share a photo, so a re-downloaded copy often has none left.</div>
+      <div>Messaging, social and editing applications often strip EXIF when they create a new copy. Some cameras also omit fields, and this viewer does not claim to expose every possible metadata container.</div>
     </div>
     <div class="faq-item">
       <div class="q">Can I remove the metadata this tool shows?</div>
-      <div>Yes, use our EXIF Remover tool afterward to strip all detected metadata from the photo.</div>
+      <div>Yes. The EXIF Remover can create a copy without the supported fields it detects. Review the output because other metadata or visible identifying information may remain.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my photo uploaded to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No. JavaScript reads supported fields locally in your browser.</div>
     </div>
     <div class="faq-item">
       <div class="q">Does this work with PNG or WEBP files?</div>
-      <div>This tool is built for JPEG's standard EXIF format, which is by far the most common source of this kind of metadata. PNG and WEBP rarely carry EXIF data.</div>
+      <div>EXIF is common in JPEG, but modern PNG and WEBP files can also carry metadata. This viewer focuses on the encodings it supports, so a blank result is not a universal guarantee that the file contains none.</div>
     </div>
   </div>
 

@@ -199,33 +199,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What is Base64 image encoding?</h2>
-    <p>Base64 is a way of representing binary data (like an image file) as plain text. Encoding an image as Base64 lets you embed it directly inside HTML, CSS, or JSON — as a "data URI" — instead of linking to a separate image file. This is common for small icons, inline email images, or avoiding extra HTTP requests.</p>
+    <h2>Represent binary image bytes as text</h2>
+    <p>Base64 represents binary bytes with a restricted set of text characters. An image data URI combines that encoded text with its media type so it can be placed inline in HTML or CSS, and sometimes inside JSON or API payloads. This can simplify small self-contained assets, but it increases their size, reduces normal browser caching and can make source files harder to maintain.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>For inline assets, payloads and quick inspection</h2>
     <ul>
-      <li>You're embedding a small image directly into HTML or CSS without a separate file</li>
-      <li>You need to include an image inside a JSON payload or API request</li>
-      <li>You're building an email template that requires inline images</li>
-      <li>You have a Base64 string and need to see or download the actual image it represents</li>
+      <li>Embed a small image directly in HTML or CSS</li>
+      <li>Prepare image data for a JSON field or API that explicitly accepts Base64</li>
+      <li>Test an inline image in a compatible email template</li>
+      <li>Preview or download the image represented by a Base64 string</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Does Base64 encoding increase file size?</div>
-      <div>Yes, Base64 text is roughly 33% larger than the original binary file, which is why it's best suited for small images, not large photos.</div>
+      <div>Base64 encoding adds roughly one third to the binary byte count before the data-URI prefix or text compression. The exact stored or transmitted size depends on surrounding formats and compression, so it is usually better suited to small assets.</div>
     </div>
     <div class="faq-item">
       <div class="q">Can I paste a Base64 string without the "data:image/..." prefix?</div>
-      <div>Yes, the decoder will attempt to detect the image type automatically if you paste just the raw Base64 characters.</div>
+      <div>Yes. The decoder can attempt to identify supported image bytes from raw Base64. Supplying a correct data:image/... prefix is safer when the format is known.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my image or Base64 data uploaded anywhere?</div>
-      <div>No, both encoding and decoding happen locally in your browser using JavaScript.</div>
+      <div>No. Encoding and decoding run locally with JavaScript.</div>
     </div>
     <div class="faq-item">
       <div class="q">What image formats are supported?</div>
-      <div>JPG, PNG, WEBP, GIF, and most other common formats your browser can read.</div>
+      <div>It handles JPG, PNG, WEBP, GIF and other image formats that the browser can recognize and display.</div>
     </div>
   </div>
 

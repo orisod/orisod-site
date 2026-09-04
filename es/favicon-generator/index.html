@@ -173,33 +173,33 @@ pre{background:var(--card-bg);border:1px solid var(--border);border-radius:8px;p
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué hace esta herramienta?</h2>
-    <p>Esta herramienta toma una imagen y genera todos los tamaños de favicon que necesita un sitio web moderno: un archivo <code>favicon.ico</code> real de múltiples resoluciones, PNG independientes para pestañas del navegador, un icono Apple touch para pantallas de inicio de iOS e iconos de Android Chrome — todo empaquetado en un solo ZIP, junto con el fragmento HTML para añadirlos a tu sitio.</p>
+    <h2>Una imagen de origen, varios archivos de favicon</h2>
+    <p>Elige una imagen para crear un favicon.ico con varias resoluciones, PNG separados para navegadores, un icono Apple touch e iconos Android Chrome. La descarga reúne los archivos y un fragmento HTML en un ZIP. Cada resultado se rasteriza a un tamaño fijo, por lo que un diseño sencillo y contrastado suele conservarse mejor que un texto fino o ilustración compleja.</p>
 
-    <h2>¿Cuándo deberías usar esta herramienta?</h2>
+    <h2>Prepara iconos para navegadores y pantallas de inicio</h2>
     <ul>
-      <li>Estás lanzando un sitio web nuevo y necesitas un favicon que funcione en todos los navegadores y dispositivos</li>
-      <li>Tu favicon actual solo tiene un tamaño y se ve borroso en algunos dispositivos</li>
-      <li>Quieres que tu sitio muestre un icono correcto al guardarlo en la pantalla de inicio de iOS o Android</li>
-      <li>Rediseñaste tu logo y necesitas regenerar todos los tamaños de favicon</li>
+      <li>Añadir un paquete de favicon a un sitio nuevo</li>
+      <li>Sustituir un único icono borroso por varios tamaños adecuados</li>
+      <li>Proporcionar iconos para accesos directos en iOS y Android</li>
+      <li>Regenerar el paquete después de actualizar el logotipo</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿Qué tamaños incluye el paquete?</div>
-      <div>favicon.ico (16 × 16 + 32 × 32 combinados), favicon-16x16.png, favicon-32x32.png, apple-touch-icon.png (180 × 180), android-chrome-192x192.png y android-chrome-512x512.png.</div>
+      <div>El ZIP incluye favicon.ico con entradas de 16 × 16 y 32 × 32, favicon-16x16.png, favicon-32x32.png, apple-touch-icon.png a 180 × 180 y PNG para Android Chrome a 192 × 192 y 512 × 512.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Qué pasa si mi imagen no es cuadrada?</div>
-      <div>Se recortará automáticamente a un cuadrado centrado antes de generar los distintos tamaños, así que nada se verá estirado.</div>
+      <div>La imagen se recorta al centro en forma cuadrada antes de redimensionarla. Así no se estira, pero puede perder contenido en los bordes largos. Revisa el recorte o añade espacio al original si el motivo lo necesita.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Cómo añado esto a mi sitio web?</div>
-      <div>Carga los archivos en la carpeta raíz de tu sitio y añade el fragmento HTML incluido en el ZIP dentro de la sección &lt;head&gt; de la página.</div>
+      <div>Coloca los archivos donde se resuelvan las rutas indicadas y añade el fragmento HTML dentro del <head>. Si usas otra carpeta o framework, ajusta los href y limpia la caché al probar.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se envía mi imagen a algún servidor?</div>
-      <div>No. Todo se procesa localmente en tu navegador mediante JavaScript; el archivo permanece en tu dispositivo.</div>
+      <div>No. JavaScript recorta, redimensiona y empaqueta la imagen dentro de tu navegador.</div>
     </div>
   </div>
 
