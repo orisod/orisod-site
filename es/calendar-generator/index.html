@@ -638,7 +638,9 @@ function eventsForYear(year){
    Generador de Calendario Hebreo Parte 2 llamarán a estas mismas funciones).
    Prioridad de sombreado: el color propio de una festividad (de
    jewish-full.es.json) gana; si no, todo viernes/sábado cae en la
-   categoría A (Shabat); si no, sin sombreado. */
+   categoría A (Shabat); si no, sin sombreado. Los días de véspera son la
+   única excepción: llevan el marcador explícito 'none', que también está
+   exento del sombreado de Shabat (ver shadeForDate). */
 function shabbatCategoryFor(dateKey){
   var dow = new Date(dateKey + 'T00:00:00').getDay();
   return (dow === 5 || dow === 6) ? 'A' : null;
@@ -653,7 +655,9 @@ function shadeForYear(year){
   return shade;
 }
 function shadeForDate(dateKey, yearShadeMap){
-  return (yearShadeMap && yearShadeMap[dateKey]) || shabbatCategoryFor(dateKey);
+  var own = yearShadeMap && yearShadeMap[dateKey];
+  if (own === 'none') return null; // días de véspera: exentos de todo sombreado, incluido el de Shabat
+  return own || shabbatCategoryFor(dateKey);
 }
 function hebrewDateLabel(dateKey){
   if (!hebrewPerDay || !hebrewPerDay[dateKey]) return '';

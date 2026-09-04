@@ -637,13 +637,15 @@ function eventsForYear(year){
    Shared logic (Part 1 general calendar + Part 2 Hebrew Calendar Generator, once
    built, will both call these same functions). Shading category priority: a
    holiday's own shade (from jewish-full.json) wins; otherwise every Friday/
-   Saturday falls back to category A (Shabbat); otherwise no shading. */
+   Saturday falls back to category A (Shabbat); otherwise no shading. Erev
+   days are the one exception -- they carry the explicit 'none' sentinel,
+   which is exempt from the Shabbat fallback too (see shadeForDate). */
 function shabbatCategoryFor(dateKey){
   var dow = new Date(dateKey + 'T00:00:00').getDay();
   return (dow === 5 || dow === 6) ? 'A' : null;
 }
 function shadeForYear(year){
-  var shade = {}; // 'YYYY-MM-DD' -> 'A'|'B'|'C'|'D'|'E'|null
+  var shade = {}; // 'YYYY-MM-DD' -> 'A'|'B'|'C'|'D'|'E'|'none'|null
   if (jewishFull && jewishFull[year]) {
     jewishFull[year].forEach(function(h){
       if (h.shade) shade[h.date] = h.shade;
@@ -652,7 +654,9 @@ function shadeForYear(year){
   return shade;
 }
 function shadeForDate(dateKey, yearShadeMap){
-  return (yearShadeMap && yearShadeMap[dateKey]) || shabbatCategoryFor(dateKey);
+  var own = yearShadeMap && yearShadeMap[dateKey];
+  if (own === 'none') return null; // Erev days: exempt from all shading, including the Shabbat fallback
+  return own || shabbatCategoryFor(dateKey);
 }
 function hebrewDateLabel(dateKey){
   if (!hebrewPerDay || !hebrewPerDay[dateKey]) return '';
