@@ -172,7 +172,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-image"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20L20 4M4 4l16 16" stroke-dasharray="1 3"/><path d="M19 15.5l3.5 6.5h-7z" fill="currentColor" stroke="none"/></svg></div>
     <h1>Convertidor de SVG a PNG</h1>
   </div>
-  <p class="tool-sub">Convierte un archivo SVG a una imagen PNG con la resolución que necesites. Todo ocurre localmente en tu navegador — tu archivo permanece en tu dispositivo.</p>
+  <p class="tool-sub">Elige las dimensiones de salida y renderiza un SVG como PNG de tamaño fijo directamente en tu navegador.</p>
 
   <div class="workspace">
     <div class="box">
@@ -207,33 +207,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>¿Cuál es la diferencia entre SVG y PNG?</h2>
-    <p>SVG es un formato vectorial: describe formas matemáticamente en vez de utilizar píxeles, por lo que puede ampliarse sin perder calidad. PNG es un formato de mapa de bits que aceptan herramientas, plataformas y programas sin compatibilidad con gráficos vectoriales. Convertir SVG a PNG permite utilizar esos gráficos donde se requiere una imagen de tamaño fijo.</p>
+    <h2>Las instrucciones SVG se convierten en píxeles PNG</h2>
+    <p>SVG describe formas vectoriales, texto y otros elementos en lugar de guardar una cuadrícula fija de píxeles. PNG sí es un formato rasterizado con dimensiones concretas. Al renderizar SVG a PNG creas una copia de tamaño fijo para programas o plataformas que requieren imágenes rasterizadas. Elige suficientes píxeles para el uso previsto, porque ampliar después el PNG no conserva la escalabilidad vectorial.</p>
 
-    <h2>¿Cuándo deberías usar esta herramienta?</h2>
+    <h2>Cuándo necesitas una copia rasterizada</h2>
     <ul>
-      <li>Una plataforma o herramienta no acepta subir SVG, solo PNG o JPG</li>
-      <li>Necesitas una imagen de resolución fija para una presentación, documento o publicación en redes sociales</li>
-      <li>Estás usando un ícono o logo de una fuente SVG pero necesitas una versión rasterizada</li>
-      <li>Quieres un tamaño de píxeles específico a partir de un gráfico vectorial escalable</li>
+      <li>Subir un diseño a un destino que acepta PNG o JPG pero rechaza SVG</li>
+      <li>Crear un gráfico de resolución fija para una presentación, documento o publicación</li>
+      <li>Preparar una copia rasterizada de un ícono o logotipo SVG</li>
+      <li>Renderizar un gráfico escalable con un ancho y alto exactos en píxeles</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿El PNG se verá borroso si lo amplío?</div>
-      <div>No, como el SVG es vectorial, escalar antes de la conversión produce un PNG nítido y de alta resolución en lugar de una ampliación borrosa.</div>
+      <div>Renderiza el SVG con las dimensiones finales o superiores para obtener suficientes píxeles. El PNG resultante ya no es vectorial, así que ampliarlo después puede suavizar los bordes. Las imágenes rasterizadas incrustadas también pueden limitar la nitidez.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Esto conserva la transparencia?</div>
-      <div>Sí, cualquier área transparente en tu SVG se conserva en el PNG resultante.</div>
+      <div>Las zonas transparentes del SVG pueden conservarse en el PNG. Si el navegador no representa correctamente alguna función, el resultado puede variar, por lo que conviene revisar la exportación.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se envían mis archivos a algún servidor?</div>
-      <div>No. Toda la conversión se realiza localmente en tu navegador mediante JavaScript; tus archivos permanecen en tu dispositivo.</div>
+      <div>No. El navegador renderiza el SVG y crea el PNG localmente.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Esto funciona con cualquier archivo SVG?</div>
-      <div>Funciona con archivos SVG estándar. Los que dependen de recursos externos o incluyen scripts poco habituales podrían no mostrarse exactamente como esperas.</div>
+      <div>Los SVG estándar y autocontenidos suelen renderizarse bien. Las fuentes o imágenes externas, los scripts, los filtros incompatibles y otros recursos activos o remotos pueden bloquearse o verse distintos. Revisa el PNG antes de usarlo.</div>
     </div>
   </div>
 
