@@ -146,16 +146,16 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guides</span>
-<h1>How Printable Handwriting Worksheets Are Actually Built</h1>
-<p class="intro">A worksheet full of solid black letters isn't a tracing worksheet — it's just text. The dashed, "connect the dots" look that makes a letter traceable is a specific technique, and it turns out to be the one piece of an otherwise fully vector PDF that has to be built as a small image instead.</p>
+<h1>How Printable Handwriting Worksheets Are Built</h1>
+<p class="intro">Tracing practice needs a visible path rather than a solid letter. Orisod creates dashed outlines for the practice text, then combines them with ruled guides in a printable PDF. The details affect both legibility and how useful the exercise is for a learner.</p>
 
 <div class="article-body">
 
 <h2>Why solid text can't be a tracing exercise</h2>
-<p>Drawing real PDF text — the way most text-generating tools on this site do it — fills each letter's shape solidly with ink, exactly like a printed word. There's nothing to trace there; a pencil has nowhere to go that isn't already covered. A traceable letter needs to show only the letter's outline, broken into small dashes, so a child's pencil has a path to follow and gaps to fill in. That's a fundamentally different kind of mark than "draw this letter" — it's "draw the outline of this letter, and skip most of it."</p>
+<p>Drawing real PDF text; the way most text-generating tools on this site do it; fills each letter's shape solidly with ink, exactly like a printed word. There's nothing to trace there; a pencil has nowhere to go that isn't already covered. A traceable letter needs to show only the letter's outline, broken into small dashes, so a child's pencil has a path to follow and gaps to fill in. That's a fundamentally different kind of mark than "draw this letter"; it's "draw the outline of this letter, and skip most of it."</p>
 
-<h2>Why that specific effect needs a small raster step</h2>
-<p>A PDF's native text-drawing instruction can fill a letter shape from a font, but it has no concept of stroking just the outline with a broken, dashed line — that capability doesn't exist at the level of "draw this text" in the PDF format itself. Where it does exist natively is in a browser's 2D canvas: canvas drawing supports both filling and stroking any shape, including glyphs, and stroking can be set to draw as a dash pattern instead of a solid line. So each row of traceable letters is rendered once on a canvas — real text, but stroked with a dash instead of filled solid — then captured as a small image and placed onto the PDF page. Everything else on the page (the ruled guide lines) stays genuine vector content, drawn directly; only the dashed letters themselves are pixels.</p>
+<h2>Dashed letter outlines require a separate rendering step</h2>
+<p>PDF libraries differ in how they expose glyph outlines and dashed strokes. In this implementation, each practice row is drawn on a browser canvas and placed in the PDF as an image, while the guide lines remain vector content. This is an implementation choice rather than a limitation of the PDF specification itself.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 190" width="700" height="190" role="img" aria-label="Diagram of one practice row showing three horizontal guide lines — a solid top line, a dashed middle line, and a solid baseline — with a dashed, traceable letter A sitting on the baseline between the top line and the baseline." xmlns="http://www.w3.org/2000/svg">
@@ -167,33 +167,33 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <text x="670" y="144" font-size="12" fill="var(--muted-text)">baseline</text>
 <text x="110" y="132" font-size="110" font-family="Georgia, serif" font-weight="bold" fill="none" stroke="#9ca3af" stroke-width="2" stroke-dasharray="4 4">A</text>
 </svg>
-<figcaption>A practice row is three real vector guide lines plus one dashed letter — everything except the dashed letter itself is drawn directly as PDF line content; the letter is the one piece rendered on a canvas first, because dashing a glyph's outline isn't something PDF text drawing can do on its own.</figcaption>
+<figcaption>The dashed practice letters are rendered separately; the three ruled guides remain vector lines in the PDF.</figcaption>
 </figure>
 
 <h2>Why a "half-visible" row is just a clip, not a second technique</h2>
-<p>Between fully tracing a word and practicing it with no help at all, it's useful to have a middle step: show only part of the letter and ask for the rest from memory. That turns out not to need any new drawing capability — the same canvas that stroked the dashed letters also supports clipping, restricting where anything gets drawn to a chosen region. Rendering the identical word a second time, but with drawing clipped to everything below the letters' own vertical midpoint before stroking, produces a row where only the bottom half of each letter is dashed and the top half is left blank — not because anything was erased, but because nothing was ever drawn there. It's the same stroke call as the fully traceable row, just aimed at a smaller area.</p>
+<p>Between fully tracing a word and practicing it with no help at all, it's useful to have a middle step: show only part of the letter and ask for the rest from memory. That turns out not to need any new drawing capability; the same canvas that stroked the dashed letters also supports clipping, restricting where anything gets drawn to a chosen region. Rendering the identical word a second time, but with drawing clipped to everything below the letters' own vertical midpoint before stroking, produces a row where only the bottom half of each letter is dashed and the top half is left blank; not because anything was erased, but because nothing was ever drawn there. It's the same stroke call as the fully traceable row, just aimed at a smaller area.</p>
 
-<p>That midpoint isn't a fixed height picked in advance — it's measured from the actual glyphs being rendered, using the browser's own text-measurement API to find exactly how far the tallest ascender (the stem of an "l," say) reaches above the baseline and how far the deepest descender (the tail of a "g") reaches below it. Cutting at a generic reference height would slice a tall letter's ascender off entirely or barely touch a short letter at all; measuring the real rendered extent and cutting at its actual middle keeps the visible fraction consistent letter to letter, no matter how tall or short each one naturally is.</p>
+<p>That midpoint isn't a fixed height picked in advance; it's measured from the actual glyphs being rendered, using the browser's own text-measurement API to find exactly how far the tallest ascender (the stem of an "l," say) reaches above the baseline and how far the deepest descender (the tail of a "g") reaches below it. Cutting at a generic reference height would slice a tall letter's ascender off entirely or barely touch a short letter at all; measuring the real rendered extent and cutting at its actual middle keeps the visible fraction consistent letter to letter, no matter how tall or short each one naturally is.</p>
 
 <h2>Why the guide lines follow a three-line system</h2>
-<p>The top line, dashed midline, and solid baseline aren't arbitrary — they're the same convention used on physical primary-ruled paper: the baseline is where every letter sits, the top line marks how tall a capital or tall lowercase letter should reach, and the midline marks the shorter height most lowercase letters top out at. Reproducing that familiar three-line structure means the worksheet behaves the way a child (or a teacher) already expects ruled paper to behave, rather than inventing a new visual convention that needs its own explanation.</p>
+<p>The top line, dashed midline, and solid baseline aren't arbitrary; they're the same convention used on physical primary-ruled paper: the baseline is where every letter sits, the top line marks how tall a capital or tall lowercase letter should reach, and the midline marks the shorter height most lowercase letters top out at. Reproducing that familiar three-line structure means the worksheet behaves the way a child (or a teacher) already expects ruled paper to behave, rather than inventing a new visual convention that needs its own explanation.</p>
 
 <h2>Why the font itself is a real decision, not a cosmetic one</h2>
-<p>Most of the fonts already used across this site are fine for reading but weren't designed with beginning readers in mind — some render a lowercase "a" or "g" with a two-story shape that doesn't match how most children are taught to write it by hand, which can actively work against what a worksheet is trying to teach. Fonts designed for literacy instruction use simpler, single-story letterforms and more generous spacing specifically because early readers rely on shape consistency to recognize letters. That's a real functional requirement, not a style preference, and it's why this specific tool needed its own font rather than reusing whatever's already used for regular text elsewhere on the site.</p>
+<p>Most of the fonts already used across this site are fine for reading but weren't designed with beginning readers in mind; some render a lowercase "a" or "g" with a two-story shape that doesn't match how most children are taught to write it by hand, which can actively work against what a worksheet is trying to teach. Fonts designed for literacy instruction use simpler, single-story letterforms and more generous spacing specifically because early readers rely on shape consistency to recognize letters. That's a real functional requirement, not a style preference, and it's why this specific tool needed its own font rather than reusing whatever's already used for regular text elsewhere on the site.</p>
 
-<h2>Quick answers</h2>
-<p><strong>Why does the number of repetitions per row change with letter size?</strong> Each row's letters are repeated until they fill the available page width, measured at whatever font size is selected — bigger letters simply take up more space, so fewer copies fit per row.</p>
-<p><strong>Why is cursive not supported?</strong> Cursive letterforms connect to each other and change shape depending on their neighbors, which is a fundamentally different rendering problem than repeating one independent glyph across a row — it's a reasonable candidate for a separate tool later, not an extension of this one.</p>
-<p><strong>Does using a canvas step for the letters mean the whole PDF is a scanned-looking image?</strong> No — only the thin strip containing that row's dashed letters is an image; the guide lines, page structure, and everything else in the PDF remain real vector content.</p>
-<p><strong>Why measure the actual letters instead of just clipping at the row's printed guide lines?</strong> The guide lines mark a generic reference height for the alphabet in general, not what a specific word actually needs — a word made only of short letters barely reaches those lines, while one with an "l" or a "g" extends past them. Measuring the real rendered text keeps the cut proportional to what's actually on the page, rather than proportional to a guideline the word may not even touch.</p>
+<h2>Details that shape a useful worksheet</h2>
+<p>The tool repeats a word only as many times as fit at the selected size. Larger letters leave room for fewer repetitions.</p>
+<p>Connected cursive needs contextual letter shapes and joins, so it is not equivalent to repeating isolated glyphs. It requires a separate design and rendering approach.</p>
+<p>Only the practice-letter strips are rasterized in this implementation. The PDF page and guide lines remain vector-based.</p>
+<p>Measuring the actual word accounts for ascenders and descenders that generic guide positions do not describe precisely. That keeps partial-letter exercises visually consistent across different words.</p>
 
 <div class="cta-box">
   <h3>Build a handwriting practice worksheet</h3>
-  <p>Orisod's Handwriting Worksheets tool turns any word list into a printable PDF with dashed, traceable letters and ruled guide lines — entirely in your browser.</p>
+  <p>Orisod’s Handwriting Worksheets tool turns a word list into a printable PDF with dashed letters and ruled guides, directly in your browser.</p>
   <a class="cta-button" href="/handwriting-worksheets/">Build a worksheet →</a>
 </div>
 
-<p>The short version: tracing needs an outline, not a fill, and outlining-with-dashes is a canvas capability, not a PDF text-drawing one — so one small image per practice row is the honest cost of that specific effect, while everything else on the page stays exactly as real and lightweight as the rest of this site's PDF tools.</p>
+<p>The short version: tracing needs an outline, not a fill, and outlining-with-dashes is a canvas capability, not a PDF text-drawing one; so one small image per practice row is the honest cost of that specific effect, while everything else on the page stays exactly as real and lightweight as the rest of this site's PDF tools.</p>
 
 </div>
 

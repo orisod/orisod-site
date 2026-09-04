@@ -146,13 +146,13 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guides</span>
-<h1>What "Flattening" a PDF Actually Does (and Why It's a One-Way Trip)</h1>
-<p class="intro">A fillable PDF form isn't really one layer — it's page content with a separate, interactive layer of form fields sitting on top of it. Flattening is what happens when that second layer gets permanently merged into the first, and once it's done, there's no getting the layers back apart.</p>
+<h1>What Flattening a PDF Form Changes</h1>
+<p class="intro">A fillable PDF contains page artwork plus interactive field objects. Flattening takes the current visual appearance of supported fields, places it into the page and removes the widgets that made those values editable. That sounds simple, but the result is neither a security feature nor a promise that every PDF viewer will render both versions identically.</p>
 
 <div class="article-body">
 
-<h2>What a form field actually is inside a PDF</h2>
-<p>Under the hood, a fillable PDF form is built on what the PDF spec calls an AcroForm: a list of field objects (text fields, checkboxes, radio buttons, dropdowns) that each carry a current value and a set of coordinates telling a PDF viewer where to draw an editable widget on top of the page. The page's actual content stream — the text and graphics that were there before anyone filled anything in — is untouched by filling in a field. The value lives in the field object, not on the page itself, which is exactly why a viewer can still let you edit it after you've saved.</p>
+<h2>PDF form values live outside the ordinary page content</h2>
+<p>Under the hood, a fillable PDF form is built on what the PDF spec calls an AcroForm: a list of field objects (text fields, checkboxes, radio buttons, dropdowns) that each carry a current value and a set of coordinates telling a PDF viewer where to draw an editable widget on top of the page. The page's actual content stream, the text and graphics that were there before anyone filled anything in, is untouched by filling in a field. The value lives in the field object, not on the page itself, which is exactly why a viewer can still let you edit it after you've saved.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 190" width="700" height="190" role="img" aria-label="Comparison diagram: before flattening, a name field shows as a dashed-border interactive box labeled editable; after flattening, the same value appears as plain static text with no border, labeled not editable." xmlns="http://www.w3.org/2000/svg">
@@ -168,30 +168,30 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <text x="525" y="80" text-anchor="middle" font-family="Arial" font-size="16" fill="var(--text)">Ada Lovelace</text>
 <text x="525" y="118" text-anchor="middle" font-size="13" fill="#4ade80">not editable — page content now</text>
 </svg>
-<figcaption>The visible text doesn't change — what changes is whether it's a live field object or permanent page content.</figcaption>
+<figcaption>The visible text doesn't change, what changes is whether it's a live field object or permanent page content.</figcaption>
 </figure>
 
-<h2>What flattening actually does</h2>
-<p>Flattening takes each field's current appearance — however it currently renders, including its value — and draws it directly into the page's content stream, then deletes the field object (and its associated interactive widget annotation) entirely. The AcroForm effectively becomes empty. Nothing about the visual result changes; a flattened PDF and its pre-flattened source look pixel-identical when opened side by side. What's gone is the ability to click into that field and change it.</p>
+<h2>Flattening writes appearances onto the page</h2>
+<p>A PDF flattening library takes each supported field’s current appearance, draws that representation into the page content and removes its field widget. The exported copy should retain the visible answers while no longer offering those controls for editing. Appearance streams, fonts, unsupported field types and viewer behavior can complicate the result, so compare every completed field rather than assuming pixel-for-pixel identity.</p>
 
-<h2>Why it's irreversible</h2>
-<p>Once a field's value is merged into the page's content stream, there's no metadata left connecting that drawn text back to "this used to be an editable field called <code>email</code>." A PDF's content stream is just drawing instructions — lines, text positions, fonts — with no concept of "this text used to be interactive." Un-flattening isn't a supported operation in any PDF tool because the information needed to reverse it (which specific text corresponds to which original field, and where the field boundaries were) simply isn't preserved.</p>
+<h2>Why the original fields cannot simply be restored</h2>
+<p>Once a field's value is merged into the page's content stream, there's no metadata left connecting that drawn text back to "this used to be an editable field called <code>email</code>." A PDF's content stream is just drawing instructions, lines, text positions, fonts, with no concept of "this text used to be interactive." Un-flattening isn't a supported operation in any PDF tool because the information needed to reverse it (which specific text corresponds to which original field, and where the field boundaries were) simply isn't preserved.</p>
 
-<h2>Why "print to PDF" is a worse substitute</h2>
-<p>Printing a filled-in form to a new PDF (via a virtual printer) also removes the interactive fields, which is why some people reach for it as a flattening workaround — but it's a much blunter tool. Depending on the print driver, it can rasterize the entire page into an image, which means the text is no longer selectable, searchable, or copyable, and the file size often balloons because text became pixels. Real flattening via a PDF library keeps the underlying text as actual text — selectable and searchable — while still removing the interactive layer, which is the outcome most people actually want.</p>
+<h2>Printing to PDF creates a different kind of derivative</h2>
+<p>Printing to a virtual PDF printer also tends to remove interactive fields, but its output depends on the operating system and driver. It may preserve some text and vectors or rasterize some or all of the page. Either way, document structure, links, tags and other features can change. Purpose-built flattening targets form widgets more directly, though its result still deserves verification.</p>
 
-<h2>Quick answers</h2>
-<p><strong>Does flattening reduce file size?</strong> Usually only slightly, if at all — it removes the field/widget objects, but the underlying content (text, images) is unchanged, so most of the file size stays the same.</p>
-<p><strong>Will a flattened PDF still show checkbox marks and radio button selections correctly?</strong> Yes — whatever the field displayed at the moment of flattening (checked, unchecked, which radio option was selected) becomes the permanent visual result.</p>
-<p><strong>Does a signature field flatten the same way?</strong> Yes, in principle — a signature field's current appearance (an image or drawn signature) gets merged into the page just like any other field's value, though digital signature validation objects are a separate PDF feature from AcroForm fields and behave differently.</p>
+<h2>Before you flatten</h2>
+<p><strong>Does flattening reduce file size?</strong> Usually only slightly, if at all, it removes the field/widget objects, but the underlying content (text, images) is unchanged, so most of the file size stays the same.</p>
+<p><strong>Will a flattened PDF still show checkbox marks and radio button selections correctly?</strong> Yes, whatever the field displayed at the moment of flattening (checked, unchecked, which radio option was selected) becomes the permanent visual result.</p>
+<p><strong>Does a signature field flatten the same way?</strong> Yes, in principle, a signature field's current appearance (an image or drawn signature) gets merged into the page just like any other field's value, though digital signature validation objects are a separate PDF feature from AcroForm fields and behave differently.</p>
 
 <div class="cta-box">
   <h3>Flatten a PDF form</h3>
-  <p>Orisod's Flatten PDF tool converts a fillable form into a permanent, non-editable document — entirely in your browser.</p>
+  <p>Orisod’s Flatten PDF tool places supported form appearances into the page and removes their editable widgets in your browser. Keep the original and inspect the result.</p>
   <a class="cta-button" href="/flatten-pdf/">Flatten a PDF →</a>
 </div>
 
-<p>Flattening is a narrow, specific operation — merge the field layer into the page, then throw the field layer away — which is exactly why it's both simple to reason about and impossible to undo. Keep the original filled-in (unflattened) file if there's any chance you'll need to edit the values again.</p>
+<p>Flattening is useful when recipients need a stable-looking copy rather than editable controls. Keep the unflattened source, verify every value and remember that visible permanence is not encryption, redaction or tamper protection.</p>
 
 </div>
 

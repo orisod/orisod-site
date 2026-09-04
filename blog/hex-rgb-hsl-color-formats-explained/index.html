@@ -147,12 +147,12 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 
 <span class="blog-cat cat-guide">Guides</span>
 <h1>HEX, RGB, and HSL Explained: What Each Color Format Actually Encodes</h1>
-<p class="intro">HEX, RGB, and HSL aren't three different colors written three different ways — they're three different ways of writing the exact same color. Once you know what each one actually encodes, converting between them (or picking the right one for the job) stops being a guessing game.</p>
+<p class="intro">HEX and RGB commonly encode red, green and blue channel values; HSL derives hue, saturation and lightness from them. They can describe the same sRGB color, but rounding, alpha, color profiles and display conditions affect claims of exact equivalence.</p>
 
 <div class="article-body">
 
 <h2>They all describe the same underlying color</h2>
-<p>Every color on a screen is ultimately a mix of red, green, and blue light, each channel ranging from none to full intensity. HEX and RGB both encode exactly that — three numbers for red, green, and blue — just in different notations. HSL re-describes the same color using a different, more human-intuitive set of axes: hue (which color on the wheel), saturation (how vivid vs. gray), and lightness (how close to black or white). Converting between them is pure math, not a lossy translation — the same color comes out the other side.</p>
+<p>For ordinary CSS colors, HEX and RGB are two notations for sRGB channel values. HSL is another coordinate system over that color space. Conversion is mathematical, but rounded HSL percentages may not reproduce the original integer RGB triplet exactly, and colors outside sRGB require additional context.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 235" width="700" height="235" role="img" aria-label="Diagram showing one real color expressed in three equivalent formats: HEX 2563eb, RGB 37 99 235, and HSL 221 degrees 83 percent 53 percent, with a swatch of the actual color shown alongside each." xmlns="http://www.w3.org/2000/svg">
@@ -166,30 +166,30 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <text x="110" y="195" text-anchor="start" font-family="Courier New, monospace" font-size="20" font-weight="bold" fill="var(--text)">hsl(221, 83%, 53%)</text>
 <text x="110" y="216" text-anchor="start" font-size="13" fill="var(--muted-text)">HSL — hue, saturation, lightness</text>
 </svg>
-<figcaption>The same real color — Orisod's own accent blue — expressed as HEX, RGB, and HSL. All three describe the identical pixel color; converting between them changes only the notation.</figcaption>
+<figcaption>Orisod’s accent blue expressed in HEX, RGB and rounded HSL notation within sRGB.</figcaption>
 </figure>
 
 <h2>What the HEX digits actually mean</h2>
-<p>A 6-digit HEX code like <code>#2563eb</code> is three 2-digit hexadecimal (base-16) numbers back to back: <code>25</code> for red, <code>63</code> for green, <code>eb</code> for blue. Each pair ranges from <code>00</code> (none) to <code>ff</code> (full intensity, 255 in decimal) — <code>25</code> in hex equals 37 in decimal, <code>63</code> equals 99, and <code>eb</code> equals 235, which is exactly the RGB value for the same color. An optional 4th pair (an 8-digit HEX code) adds an alpha channel for transparency, using the same 00–ff scale.</p>
+<p>A 6-digit HEX code like <code>#2563eb</code> is three 2-digit hexadecimal (base-16) numbers back to back: <code>25</code> for red, <code>63</code> for green, <code>eb</code> for blue. Each pair ranges from <code>00</code> (none) to <code>ff</code> (full intensity, 255 in decimal); <code>25</code> in hex equals 37 in decimal, <code>63</code> equals 99, and <code>eb</code> equals 235, which is exactly the RGB value for the same color. An optional 4th pair (an 8-digit HEX code) adds an alpha channel for transparency, using the same 00–ff scale.</p>
 
 <h2>Why HSL is often easier to hand-edit</h2>
-<p>Say you want a lighter version of a blue. In RGB, "lighter" means increasing all three channels together while keeping their ratio roughly constant — not something you can do by eye without recalculating three numbers. In HSL, lightness is its own independent axis: keep the hue and saturation exactly the same and just raise the lightness percentage, and you get a lighter version of the identical color with zero risk of accidentally shifting the hue. That's why HSL shows up often in design tools and CSS custom-property systems built around programmatically generating color shades and tints from one base hue.</p>
+<p>Say you want a lighter version of a blue. In RGB, "lighter" means increasing all three channels together while keeping their ratio roughly constant; not something you can do by eye without recalculating three numbers. In HSL, lightness is its own independent axis: keep the hue and saturation exactly the same and just raise the lightness percentage, and you get a lighter version of the identical color with zero risk of accidentally shifting the hue. That's why HSL shows up often in design tools and CSS custom-property systems built around programmatically generating color shades and tints from one base hue.</p>
 
 <h2>What the alpha channel actually controls</h2>
-<p>Alpha controls transparency, not brightness — a color at 50% alpha isn't a darker version of the color, it's the same color shown at half opacity, letting whatever is behind it show through. That's why a semi-transparent white can still look "light" even at a low alpha value against a dark background, while the exact same color at the exact same alpha looks different against a light background — the alpha value alone doesn't determine the final on-screen result, what's behind it does too.</p>
+<p>Alpha controls transparency, not brightness; a color at 50% alpha isn't a darker version of the color, it's the same color shown at half opacity, letting whatever is behind it show through. That's why a semi-transparent white can still look "light" even at a low alpha value against a dark background, while the exact same color at the exact same alpha looks different against a light background; the alpha value alone doesn't determine the final on-screen result, what's behind it does too.</p>
 
-<h2>Quick answers</h2>
-<p><strong>Is 3-digit HEX (like #fff) really the same as 6-digit?</strong> Yes — each digit is simply duplicated: <code>#fff</code> expands to <code>#ffffff</code>, <code>#2a5</code> expands to <code>#22aa55</code>. It's shorthand, not a different color space.</p>
-<p><strong>Does HSL support more colors than RGB, or fewer?</strong> Neither — they describe the exact same color space (24-bit color, roughly 16.7 million colors), just parameterized differently. Converting HSL→RGB→HSL again returns the same color.</p>
-<p><strong>Why do rounding differences sometimes appear after converting back and forth?</strong> HSL's hue, saturation, and lightness are typically stored as whole-number degrees/percentages, which loses a small amount of precision compared to RGB's 0–255 integer channels — converting RGB→HSL→RGB can occasionally land one unit off from the original due to that rounding, not because the formats disagree on the color.</p>
+<h2>Conversion details</h2>
+<p><strong>Is 3-digit HEX (like #fff) really the same as 6-digit?</strong> Yes; each digit is simply duplicated: <code>#fff</code> expands to <code>#ffffff</code>, <code>#2a5</code> expands to <code>#22aa55</code>. It's shorthand, not a different color space.</p>
+<p>Within standard sRGB notation, RGB and HSL cover the same gamut. The number of distinct stored values depends on precision; HSL itself is not inherently limited to 24-bit color.</p>
+<p>Whole-number HSL values discard precision. Converting back can shift an RGB channel by one or more units, depending on rounding and implementation.</p>
 
 <div class="cta-box">
   <h3>Pick and convert a color</h3>
-  <p>Orisod's Color Picker & Converter converts live between HEX, RGB, and HSL, with alpha channel support — entirely in your browser.</p>
+  <p>Orisod’s Color Picker & Converter converts among HEX, RGB and HSL with alpha support in your browser. Expect small round-trip differences when values are rounded.</p>
   <a class="cta-button" href="/color-picker-converter/">Pick and convert a color →</a>
 </div>
 
-<p>HEX, RGB, and HSL are three windows onto the same color, not three competing standards — which one to use comes down to which axis you need to control (exact bytes, or intuitive hue/lightness), not which one is more "correct."</p>
+<p>HEX, RGB, and HSL are three windows onto the same color, not three competing standards; which one to use comes down to which axis you need to control (exact bytes, or intuitive hue/lightness), not which one is more "correct."</p>
 
 </div>
 

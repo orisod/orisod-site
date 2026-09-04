@@ -147,44 +147,44 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 
 <span class="blog-cat cat-guide">Guías</span>
 <h1>Estilos de mayúsculas y minúsculas explicados: cuándo usar camelCase, snake_case y más</h1>
-<p class="intro">Cada ecosistema de programación tiene un estilo propio para nombrar cosas, y rara vez es arbitrario — normalmente depende de lo que espera la convención del propio lenguaje, y de lo que un sistema de archivos que no distingue mayúsculas o una URL pueden manejar sin problemas.</p>
+<p class="intro">Las convenciones permiten reconocer la función de un identificador antes de seguir su uso. Lenguajes, frameworks, API, sistemas de archivos y URL tienen restricciones distintas; respetar el entorno importa más que elegir un favorito universal.</p>
 
 <div class="article-body">
 
 <h2>Los estilos de nomenclatura, y para qué sirve cada uno</h2>
 <p>Cinco estilos cubren casi todos los casos que te vas a encontrar:</p>
 <ul>
-  <li><strong>camelCase</strong> — primera palabra en minúscula, cada palabra siguiente capitalizada, sin separadores (<code>firstName</code>). El estilo por defecto para variables y nombres de funciones en JavaScript, Java y la mayoría de los lenguajes de la familia C.</li>
-  <li><strong>PascalCase</strong> — igual que camelCase pero la primera palabra también va capitalizada (<code>FirstName</code>). Se usa para nombres de clases y tipos en esos mismos lenguajes, precisamente para distinguir un tipo de una variable de un vistazo.</li>
-  <li><strong>snake_case</strong> — todo en minúsculas, palabras separadas por guiones bajos (<code>first_name</code>). El estándar para variables y funciones en Python y Ruby, y para nombres de columnas de bases de datos casi en todas partes.</li>
-  <li><strong>kebab-case</strong> — todo en minúsculas, palabras separadas por guiones (<code>first-name</code>). Se usa para slugs de URL y nombres de clases CSS — el guion es el único separador que siempre es seguro en una URL sin necesidad de codificación.</li>
-  <li><strong>CONSTANT_CASE</strong> (también llamado SCREAMING_SNAKE_CASE) — todo en mayúsculas, palabras separadas por guiones bajos (<code>FIRST_NAME</code>). Reservado específicamente para constantes, así que un identificador en mayúsculas señala de un vistazo "este valor nunca cambia".</li>
+  <li>camelCase une palabras sin separadores y usa mayúscula desde la segunda, como firstName. Es frecuente en variables y métodos de JavaScript y Java, aunque mandan las reglas del proyecto.</li>
+  <li>PascalCase comienza cada palabra con mayúscula, como FirstName. Muchos ecosistemas lo reservan para clases, componentes o tipos.</li>
+  <li>snake_case une palabras minúsculas con guiones bajos, como first_name. Python suele usarlo en funciones y variables; las bases de datos dependen del equipo y la plataforma.</li>
+  <li>kebab-case une palabras minúsculas con guiones, como first-name. Es habitual en slugs y clases CSS, aunque la seguridad de una URL depende también del resto de caracteres y su codificación.</li>
+  <li>CONSTANT_CASE separa palabras mayúsculas con guiones bajos, como FIRST_NAME. Suele identificar constantes o variables de entorno, pero la escritura no impone inmutabilidad.</li>
 </ul>
 
 <h2>Por qué importa más la convención que la elección</h2>
-<p>Ninguno de estos estilos es técnicamente superior — una variable de JavaScript llamada <code>first_name</code> en lugar de <code>firstName</code> funciona exactamente igual. Lo que se rompe es la consistencia: mezclar estilos dentro de un mismo código obliga a cada persona que lo lee a cambiar de contexto sin necesidad, y algunas herramientas realmente no pueden mezclar estilos sin problemas (una clase CSS debe ser compatible con kebab-case, un slug de URL no puede contener caracteres que necesiten codificación, y un sistema de archivos sensible a mayúsculas tratará <code>MiArchivo</code> y <code>miarchivo</code> como dos archivos distintos mientras que uno insensible no lo hará). El estilo en sí es una convención; elegir uno y aplicarlo con consistencia es lo que realmente importa.</p>
+<p>Ninguno de estos estilos es técnicamente superior; una variable de JavaScript llamada <code>first_name</code> en lugar de <code>firstName</code> funciona exactamente igual. Lo que se rompe es la consistencia: mezclar estilos dentro de un mismo código obliga a cada persona que lo lee a cambiar de contexto sin necesidad, y algunas herramientas realmente no pueden mezclar estilos sin problemas (una clase CSS debe ser compatible con kebab-case, un slug de URL no puede contener caracteres que necesiten codificación, y un sistema de archivos sensible a mayúsculas tratará <code>MiArchivo</code> y <code>miarchivo</code> como dos archivos distintos mientras que uno insensible no lo hará). El estilo en sí es una convención; elegir uno y aplicarlo con consistencia es lo que realmente importa.</p>
 
 <h2>Dónde suele aparecer cada estilo</h2>
 <ul>
-  <li><strong>Variables y funciones:</strong> camelCase (JavaScript, Java) o snake_case (Python, Ruby) — usa el que ya use la biblioteca estándar y la guía de estilo de tu lenguaje, no una preferencia personal.</li>
-  <li><strong>Clases y tipos:</strong> PascalCase, casi universalmente, en los lenguajes que los distinguen de las variables.</li>
-  <li><strong>URLs y slugs de archivos:</strong> kebab-case — los motores de búsqueda y los navegadores tratan los guiones como separadores de palabras en una URL, algo que los guiones bajos y el camelCase no obtienen de forma gratuita.</li>
+  <li><strong>Variables y funciones:</strong> camelCase (JavaScript, Java) o snake_case (Python, Ruby); usa el que ya use la biblioteca estándar y la guía de estilo de tu lenguaje, no una preferencia personal.</li>
+  <li>Clases y tipos: a menudo PascalCase, aunque depende del lenguaje y del framework.</li>
+  <li>URL y slugs: kebab-case es frecuente porque los guiones separan palabras con claridad; no debe reducirse a una regla universal de posicionamiento.</li>
   <li><strong>Clases CSS:</strong> kebab-case es la convención de siempre (<code>.nav-link</code>), aunque algunos frameworks basados en componentes usan camelCase para CSS-in-JS.</li>
-  <li><strong>Constantes y variables de entorno:</strong> CONSTANT_CASE — la convención de mayúsculas totales se originó con las macros del preprocesador de C y sigue siendo el estándar para variables de entorno y constantes reales hoy en día.</li>
+  <li>Constantes y variables de entorno: suelen usar CONSTANT_CASE por convención, sin garantizar que el valor sea inmutable.</li>
 </ul>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Hay un estilo "correcto" para las claves de un JSON?</strong> No hay una regla estricta, pero camelCase es la convención de facto en APIs con mucho JavaScript, mientras que snake_case aparece a menudo en APIs escritas por equipos que priorizan Python o Ruby — usa el que ya utilice el resto de esa API.</p>
-<p><strong>¿Cuál es la diferencia entre kebab-case y "dash-case" o "spinal-case"?</strong> Ninguna — son el mismo estilo con distintos nombres, todos se refieren a palabras en minúscula unidas por guiones.</p>
-<p><strong>¿Por qué algunas guías de estilo evitan los guiones bajos en las URLs?</strong> Los motores de búsqueda más antiguos no siempre trataban un guion bajo como separador de palabras (algunos todavía leen <code>first_name</code> como una sola palabra, "first_name", en lugar de dos), mientras que un guion siempre divide en palabras separadas — kebab-case evita esa ambigüedad por completo.</p>
+<h2>Preguntas que aparecen en proyectos reales</h2>
+<p>JSON no impone un estilo a los nombres. Respeta exactamente el contrato de la API; cambiar mayúsculas crea otra clave.</p>
+<p>kebab-case, dash-case y spinal-case suelen referirse al mismo estilo con guiones, aunque la terminología no está estandarizada en todos los entornos.</p>
+<p>Los guiones separan visualmente las palabras y son una recomendación extendida para slugs legibles. La razón práctica es claridad y convención, no que todos los buscadores interpreten siempre igual los guiones bajos.</p>
 
 <div class="cta-box">
   <h3>Convierte entre estilos</h3>
-  <p>El Conversor de Mayúsculas y Minúsculas de Orisod cambia texto entre MAYÚSCULAS, minúsculas, Tipo Título, Tipo oración, camelCase, PascalCase, snake_case, kebab-case y CONSTANT_CASE — todo en tu navegador.</p>
+  <p>El Conversor de Mayúsculas y Minúsculas de Orisod cambia texto entre estilos comunes en tu navegador. Revisa siglas, puntuación y texto no latino después de convertir.</p>
   <a class="cta-button" href="/es/case-converter/">Convertir texto →</a>
 </div>
 
-<p>El estilo específico rara vez importa por sí solo — lo que importa es respetar la convención que ya espera el lenguaje, el framework o el sistema en el que estás trabajando, y mantenerla una vez que la has elegido.</p>
+<p>Usa la convención del lenguaje, framework o API externa y mantenla. Un conversor no siempre puede inferir siglas, límites Unicode o la segmentación prevista de un identificador.</p>
 
 </div>
 

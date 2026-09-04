@@ -146,13 +146,13 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guías</span>
-<h1>Qué hace realmente "aplanar" un PDF (y por qué es un viaje solo de ida)</h1>
-<p class="intro">Un formulario PDF rellenable no es realmente una sola capa — es contenido de página con una capa interactiva separada de campos de formulario encima. Aplanar es lo que ocurre cuando esa segunda capa se fusiona permanentemente con la primera, y una vez hecho, no hay forma de volver a separarlas.</p>
+<h1>Qué cambia al aplanar un formulario PDF</h1>
+<p class="intro">Un PDF rellenable contiene el diseño de la página y objetos interactivos separados. Aplanar toma la apariencia actual de los campos compatibles, la coloca sobre la página y elimina los controles que permitían editarla. El proceso no es una función de seguridad ni garantiza que todos los visores reproduzcan ambas versiones de forma idéntica.</p>
 
 <div class="article-body">
 
-<h2>Qué es realmente un campo de formulario dentro de un PDF</h2>
-<p>Por dentro, un formulario PDF rellenable se construye sobre lo que la especificación PDF llama un AcroForm: una lista de objetos de campo (cuadros de texto, casillas de verificación, botones de radio, listas desplegables) que cada uno lleva un valor actual y un conjunto de coordenadas que le indican a un lector de PDF dónde dibujar un widget editable sobre la página. El flujo de contenido real de la página — el texto y los gráficos que ya estaban ahí antes de que alguien rellenara algo — no se toca al rellenar un campo. El valor vive en el objeto de campo, no en la página misma, que es exactamente por qué un lector todavía puede dejarte editarlo después de guardarlo.</p>
+<h2>Los valores de un formulario PDF viven fuera del contenido normal</h2>
+<p>Por dentro, un formulario PDF rellenable se construye sobre lo que la especificación PDF llama un AcroForm: una lista de objetos de campo (cuadros de texto, casillas de verificación, botones de radio, listas desplegables) que cada uno lleva un valor actual y un conjunto de coordenadas que le indican a un lector de PDF dónde dibujar un widget editable sobre la página. El flujo de contenido real de la página, el texto y los gráficos que ya estaban ahí antes de que alguien rellenara algo, no se toca al rellenar un campo. El valor vive en el objeto de campo, no en la página misma, que es exactamente por qué un lector todavía puede dejarte editarlo después de guardarlo.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 190" width="700" height="190" role="img" aria-label="Diagrama comparativo: antes de aplanar, un campo de nombre se muestra como un cuadro interactivo con borde discontinuo etiquetado como editable; después de aplanar, el mismo valor aparece como texto estático plano sin borde, etiquetado como no editable." xmlns="http://www.w3.org/2000/svg">
@@ -168,30 +168,30 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <text x="525" y="80" text-anchor="middle" font-family="Arial" font-size="16" fill="var(--text)">Ada Lovelace</text>
 <text x="525" y="118" text-anchor="middle" font-size="13" fill="#4ade80">no editable — ahora es contenido de página</text>
 </svg>
-<figcaption>El texto visible no cambia — lo que cambia es si es un objeto de campo activo o contenido permanente de la página.</figcaption>
+<figcaption>El texto visible no cambia, lo que cambia es si es un objeto de campo activo o contenido permanente de la página.</figcaption>
 </figure>
 
-<h2>Qué hace realmente el aplanado</h2>
-<p>Aplanar toma la apariencia actual de cada campo — como se renderiza en ese momento, incluido su valor — y la dibuja directamente en el flujo de contenido de la página, y luego elimina por completo el objeto de campo (y su anotación de widget interactivo asociada). El AcroForm queda, en la práctica, vacío. Nada del resultado visual cambia; un PDF aplanado y su origen previo al aplanado se ven idénticos píxel por píxel al abrirlos uno junto al otro. Lo que desaparece es la posibilidad de hacer clic en ese campo y cambiarlo.</p>
+<h2>Aplanar escribe las apariencias sobre la página</h2>
+<p>Una biblioteca de aplanado PDF toma la apariencia actual de cada campo compatible, dibuja esa representación en el contenido y elimina su widget. La copia debería conservar las respuestas visibles sin ofrecer esos controles para editar. Las apariencias, fuentes, campos no compatibles y visores pueden complicar el resultado; compara todos los valores en vez de asumir una igualdad píxel por píxel.</p>
 
-<h2>Por qué es irreversible</h2>
-<p>Una vez que el valor de un campo se fusiona con el flujo de contenido de la página, ya no queda ningún metadato que conecte ese texto dibujado con "esto solía ser un campo editable llamado <code>email</code>". El flujo de contenido de un PDF son solo instrucciones de dibujo — líneas, posiciones de texto, fuentes — sin ningún concepto de "este texto solía ser interactivo". Deshacer el aplanado no es una operación compatible en ninguna herramienta de PDF porque la información necesaria para revertirlo (qué texto específico corresponde a qué campo original, y dónde estaban los límites del campo) simplemente no se conserva.</p>
+<h2>Por qué los campos originales no se pueden restaurar sin más</h2>
+<p>Una vez que el valor de un campo se fusiona con el flujo de contenido de la página, ya no queda ningún metadato que conecte ese texto dibujado con "esto solía ser un campo editable llamado <code>email</code>". El flujo de contenido de un PDF son solo instrucciones de dibujo, líneas, posiciones de texto, fuentes, sin ningún concepto de "este texto solía ser interactivo". Deshacer el aplanado no es una operación compatible en ninguna herramienta de PDF porque la información necesaria para revertirlo (qué texto específico corresponde a qué campo original, y dónde estaban los límites del campo) simplemente no se conserva.</p>
 
-<h2>Por qué "imprimir a PDF" es un sustituto peor</h2>
-<p>Imprimir un formulario rellenado a un nuevo PDF (a través de una impresora virtual) también elimina los campos interactivos, por eso algunas personas lo usan como método alternativo de aplanado — pero es una herramienta mucho más tosca. Dependiendo del controlador de impresión, puede rasterizar toda la página en una imagen, lo que significa que el texto deja de ser seleccionable, buscable o copiable, y el tamaño del archivo a menudo se dispara porque el texto se convirtió en píxeles. El aplanado real mediante una biblioteca de PDF mantiene el texto subyacente como texto real — seleccionable y buscable — al mismo tiempo que elimina la capa interactiva, que es el resultado que la mayoría de la gente realmente quiere.</p>
+<h2>Imprimir a PDF crea otro tipo de archivo derivado</h2>
+<p>Imprimir mediante una impresora PDF también suele eliminar los campos, pero el resultado depende del sistema y del controlador. Puede conservar parte del texto y los vectores o rasterizar una parte o toda la página. En cualquier caso, enlaces, etiquetas y estructura pueden cambiar. El aplanado especializado se dirige a los widgets de forma más precisa, aunque también debe verificarse.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Aplanar reduce el tamaño del archivo?</strong> Normalmente solo un poco, si acaso — elimina los objetos de campo/widget, pero el contenido subyacente (texto, imágenes) no cambia, así que la mayor parte del tamaño del archivo se mantiene igual.</p>
-<p><strong>¿Un PDF aplanado seguirá mostrando correctamente las marcas de casillas y las selecciones de botones de radio?</strong> Sí — lo que el campo mostraba en el momento de aplanar (marcado, sin marcar, qué opción de radio estaba seleccionada) se convierte en el resultado visual permanente.</p>
-<p><strong>¿Un campo de firma se aplana de la misma manera?</strong> Sí, en principio — la apariencia actual de un campo de firma (una imagen o una firma dibujada) se fusiona con la página igual que el valor de cualquier otro campo, aunque los objetos de validación de firma digital son una función de PDF distinta de los campos AcroForm y se comportan de forma diferente.</p>
+<h2>Antes de aplanar</h2>
+<p><strong>¿Aplanar reduce el tamaño del archivo?</strong> Normalmente solo un poco, si acaso, elimina los objetos de campo/widget, pero el contenido subyacente (texto, imágenes) no cambia, así que la mayor parte del tamaño del archivo se mantiene igual.</p>
+<p><strong>¿Un PDF aplanado seguirá mostrando correctamente las marcas de casillas y las selecciones de botones de radio?</strong> Sí, lo que el campo mostraba en el momento de aplanar (marcado, sin marcar, qué opción de radio estaba seleccionada) se convierte en el resultado visual permanente.</p>
+<p><strong>¿Un campo de firma se aplana de la misma manera?</strong> Sí, en principio, la apariencia actual de un campo de firma (una imagen o una firma dibujada) se fusiona con la página igual que el valor de cualquier otro campo, aunque los objetos de validación de firma digital son una función de PDF distinta de los campos AcroForm y se comportan de forma diferente.</p>
 
 <div class="cta-box">
   <h3>Aplana un formulario PDF</h3>
-  <p>La herramienta Aplanar PDF de Orisod convierte un formulario rellenable en un documento permanente y no editable — todo en tu navegador.</p>
+  <p>Aplanar PDF de Orisod coloca las apariencias compatibles sobre la página y elimina sus widgets editables en tu navegador. Conserva el original y revisa el resultado.</p>
   <a class="cta-button" href="/es/flatten-pdf/">Aplanar un PDF →</a>
 </div>
 
-<p>Aplanar es una operación estrecha y específica — fusionar la capa de campos con la página, y luego descartar la capa de campos — que es exactamente por qué es tan sencilla de entender como imposible de deshacer. Conserva el archivo original rellenado (sin aplanar) por si hay alguna posibilidad de que necesites volver a editar los valores.</p>
+<p>Aplanar sirve cuando el destinatario necesita una copia de apariencia estable y no controles editables. Conserva la fuente sin aplanar, comprueba todos los valores y recuerda que la permanencia visual no es cifrado, redacción ni protección contra manipulaciones.</p>
 
 </div>
 

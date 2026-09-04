@@ -146,13 +146,13 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guías</span>
-<h1>Cómo formatear y validar JSON (y las reglas de sintaxis que realmente importan)</h1>
-<p class="intro">JSON se parece tanto a un objeto literal de JavaScript que es fácil asumir que son intercambiables — pega uno donde se espera el otro, y un analizador JSON estricto lo rechazará. Esto es exactamente lo que JSON exige y JavaScript no.</p>
+<h1>Cómo formatear y validar JSON</h1>
+<p class="intro">JSON se parece a un objeto literal de JavaScript, pero no son intercambiables. Un analizador estricto rechaza comentarios, cadenas con comillas simples, claves sin comillas y comas finales. Primero debe analizarse el valor; la sangría viene después.</p>
 
 <div class="article-body">
 
 <h2>Dónde JSON es más estricto que un objeto literal de JS</h2>
-<p>JSON fue diseñado deliberadamente como un subconjunto pequeño e inequívoco de la sintaxis de objetos literales de JavaScript — lo que hace que las diferencias sean fáciles de pasar por alto hasta que <code>JSON.parse()</code> falla con algo que parecía perfectamente razonable. Las cuatro reglas que más confunden: cada clave debe ser una cadena entre comillas dobles (no sin comillas, no con comillas simples), cada valor de tipo cadena también debe usar comillas dobles, no puede haber una coma sobrante después del último elemento de un objeto o array, y los comentarios no están permitidos en ningún lugar, aunque sean válidos en JavaScript.</p>
+<p>JSON exige comillas dobles en nombres de propiedades y cadenas. No admite comentarios, comas finales, undefined, funciones, NaN ni Infinity. JSON.parse() también rechaza caracteres adicionales antes o después del único valor principal. JavaScript permite varias de esas formas, por eso el código copiado puede fallar.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 230" width="700" height="230" role="img" aria-label="Tabla comparativa de cuatro reglas de sintaxis JSON: las claves de los objetos deben ir entre comillas dobles, las cadenas deben ir entre comillas dobles, no se permiten comas sobrantes, y los comentarios no están permitidos en absoluto — cada una mostrada con un ejemplo inválido en rojo y su equivalente válido en verde." xmlns="http://www.w3.org/2000/svg">
@@ -178,28 +178,28 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 </figure>
 
 <h2>Por qué importa la sangría (pretty-printing)</h2>
-<p>Una respuesta de API o un archivo de configuración minificado suele venir como una sola línea sin cortes — técnicamente válido, pero ilegible en el momento en que necesitas revisar un valor anidado o compararlo con otra cosa. Aplicar sangría no cambia los datos en absoluto, simplemente vuelve a serializar la misma estructura ya analizada con espacios en blanco que una persona puede leer.</p>
+<p>Una respuesta de API o un archivo de configuración minificado suele venir como una sola línea sin cortes; técnicamente válido, pero ilegible en el momento en que necesitas revisar un valor anidado o compararlo con otra cosa. Aplicar sangría no cambia los datos en absoluto, simplemente vuelve a serializar la misma estructura ya analizada con espacios en blanco que una persona puede leer.</p>
 
 <h2>Cuándo minificar en su lugar</h2>
-<p>Minificar hace lo contrario: elimina todo espacio no esencial, así que los mismos datos ocupan menos espacio. Eso importa cuando vas a pegar el JSON en algún sitio con límite de caracteres, guardarlo de forma compacta, o enviarlo por una red donde cada byte cuenta — ninguno de esos casos se beneficia de una sangría que una máquina no necesita.</p>
+<p>Minificar hace lo contrario: elimina todo espacio no esencial, así que los mismos datos ocupan menos espacio. Eso importa cuando vas a pegar el JSON en algún sitio con límite de caracteres, guardarlo de forma compacta, o enviarlo por una red donde cada byte cuenta; ninguno de esos casos se beneficia de una sangría que una máquina no necesita.</p>
 
 <h2>Errores de sintaxis JSON comunes y sus causas</h2>
 <ul>
-  <li><strong>Coma sobrante</strong> — dejar una coma después de la última propiedad o elemento de un array, un hábito heredado de JavaScript (donde es inofensivo) o de editar una lista y olvidar quitar el separador anterior.</li>
-  <li><strong>Cadenas con comillas simples</strong> — copiar directamente un objeto literal de JavaScript, donde comillas simples y dobles son intercambiables; JSON solo acepta comillas dobles.</li>
-  <li><strong>Claves sin comillas</strong> — misma causa: JavaScript permite claves como identificadores sin comillas (<code>nombre:</code>), JSON exige <code>"nombre":</code>.</li>
-  <li><strong>Corchetes o llaves que no coinciden o faltan</strong> — un <code>{</code>, <code>}</code>, <code>[</code> o <code>]</code> de más o de menos, normalmente por editar datos anidados a mano.</li>
-  <li><strong>Falta una coma entre propiedades</strong> — fácil de pasar por alto al reformatear JSON a mano en lugar de dejar que lo haga un formateador.</li>
+  <li><strong>Coma sobrante</strong>; dejar una coma después de la última propiedad o elemento de un array, un hábito heredado de JavaScript (donde es inofensivo) o de editar una lista y olvidar quitar el separador anterior.</li>
+  <li><strong>Cadenas con comillas simples</strong>; copiar directamente un objeto literal de JavaScript, donde comillas simples y dobles son intercambiables; JSON solo acepta comillas dobles.</li>
+  <li><strong>Claves sin comillas</strong>; misma causa: JavaScript permite claves como identificadores sin comillas (<code>nombre:</code>), JSON exige <code>"nombre":</code>.</li>
+  <li><strong>Corchetes o llaves que no coinciden o faltan</strong>; un <code>{</code>, <code>}</code>, <code>[</code> o <code>]</code> de más o de menos, normalmente por editar datos anidados a mano.</li>
+  <li><strong>Falta una coma entre propiedades</strong>; fácil de pasar por alto al reformatear JSON a mano en lugar de dejar que lo haga un formateador.</li>
 </ul>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Puede el JSON tener comentarios?</strong> No — ni <code>//</code> ni <code>/* */</code>. Si necesitas configuración con anotaciones, JSON no es el formato adecuado (JSON5 y JSONC son extensiones separadas y no estándar que añaden soporte de comentarios, pero un analizador JSON estricto rechaza ambas).</p>
-<p><strong>¿Importa el orden de las claves en JSON?</strong> No para los datos en sí — dos objetos con las mismas claves en distinto orden representan el mismo valor. Solo importa si estás comparando el texto sin procesar (como al comparar dos archivos), que es exactamente para lo que sirve ordenar las claves antes de comparar.</p>
-<p><strong>¿Por qué mi error de JSON.parse solo dice "position 45" en lugar de un número de línea?</strong> Así lo reporta V8 (el motor de JavaScript de Chrome) — un formateador puede convertir ese desplazamiento de caracteres en una línea y columna contando los saltos de línea hasta esa posición, que es exactamente lo que debería mostrar un mensaje de error útil.</p>
+<h2>Detalles de análisis y formato</h2>
+<p>JSON estricto no admite comentarios. JSON5 y JSONC son sintaxis diferentes que añaden comodidades y pueden ser rechazadas por un analizador estándar.</p>
+<p>El orden de miembros normalmente no debería tener significado en un objeto JSON, pero algunos consumidores, firmas, snapshots y comparaciones textuales dependen de la serialización. Ordenar claves transforma la salida y puede ser inadecuado en esos casos.</p>
+<p><strong>¿Por qué mi error de JSON.parse solo dice "position 45" en lugar de un número de línea?</strong> Así lo reporta V8 (el motor de JavaScript de Chrome); un formateador puede convertir ese desplazamiento de caracteres en una línea y columna contando los saltos de línea hasta esa posición, que es exactamente lo que debería mostrar un mensaje de error útil.</p>
 
 <div class="cta-box">
   <h3>Formatea tu JSON</h3>
-  <p>El Formateador de JSON de Orisod aplica sangría, minifica, ordena claves y señala la línea y columna exactas de cualquier error de sintaxis — todo en tu navegador.</p>
+  <p>El Formateador de JSON de Orisod valida, aplica sangría, minifica y puede ordenar claves en tu navegador. Revisa los cambios cuando importe la serialización exacta o una firma.</p>
   <a class="cta-button" href="/es/json-formatter/">Formatear JSON →</a>
 </div>
 

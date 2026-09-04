@@ -146,16 +146,16 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guides</span>
-<h1>How to Recombine Front and Back Duplex Scans Into One PDF</h1>
-<p class="intro">A scanner that can't scan both sides of a page automatically forces a workaround that's older than the scanner itself: scan every front side in one pass, flip the whole stack over, scan every back side in a second pass, and end up with two separate files that need to become one correctly ordered document.</p>
+<h1>How to Recombine Front and Back Scans Into One PDF</h1>
+<p class="intro">A single-sided scanner can still capture a double-sided document. Scan all fronts, flip the stack and scan all backs. You will have two PDFs, and the second one may be reversed depending on the feeder and how you flipped the paper. The last step is to interleave them in reading order.</p>
 
 <div class="article-body">
 
-<h2>Why this produces two files instead of one</h2>
-<p>A duplex-capable scanner flips each page internally as it feeds, so a single pass captures front and back and interleaves them automatically. A simplex-only (single-sided) scanner or feeder has no way to do that — the only way to capture both sides of a stack is two separate passes, and each pass naturally produces its own file. Nothing about the content is wrong at this point; the two files just haven't been woven together yet.</p>
+<h2>Two passes naturally produce two files</h2>
+<p>A duplex scanner captures both faces while each sheet travels through the feeder. A simplex scanner captures only the exposed face, so a stack needs a separate pass for each side. Each pass creates its own file; the document is not complete until those files are combined.</p>
 
-<h2>Why the second file is so often backwards</h2>
-<p>Here's the part that trips people up: after scanning all the front sides, the stack comes out of the feeder in reverse order relative to how it started (page 1 ends up on the bottom of the output stack, since each sheet exits on top of the last). To scan the back sides without manually re-sorting the whole stack, the natural move is to flip the entire stack over as one block and feed it straight back in — but flipping a stack over reverses which page is now first. The back-side scan ends up capturing the last page's back side first and the first page's back side last: the exact reverse of the front-side file's order.</p>
+<h2>Why the backs may appear in reverse order</h2>
+<p>Paper paths and output trays do not all stack sheets the same way. After the front pass, flipping the entire stack can make the back of the final sheet enter first. The second PDF then runs from the last back to the first. Do not assume this always happens: inspect the first few thumbnails and use the order shown by your scanner.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 260" width="700" height="260" role="img" aria-label="Diagram showing a stack of pages numbered 1 to 4 scanned front-side-up in order 1, 2, 3, 4, then the same stack flipped over as one block and scanned again, producing the back sides in order 4, 3, 2, 1 — the reverse of the front-side order." xmlns="http://www.w3.org/2000/svg">
@@ -174,27 +174,27 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <polygon points="480,172 469,166 469,178" fill="var(--muted-text)"/>
 <text x="390" y="230" text-anchor="middle" font-size="13" fill="var(--muted-text)">Same physical stack — the flip is what reverses the scan order</text>
 </svg>
-<figcaption>Nothing goes wrong during scanning — flipping the stack as a single block is exactly what puts the back sides in reverse order relative to the fronts.</figcaption>
+<figcaption>Flipping a stack can reverse the order of its backs, depending on the scanner’s paper path and output tray.</figcaption>
 </figure>
 
-<h2>Interleaving: putting the two files back together</h2>
-<p>Once both files exist, recombining them is a matter of alternating pages from each: front 1, back 1, front 2, back 2, and so on, so the final document reads the way the physical stack originally did. If the back-side file is in reverse order (the common case above), it has to be read from its last page backward during that interleave — matching back-side page 1 (which is actually stored last in the file) with front-side page 1, and so on — rather than pairing pages by their raw position in each file.</p>
+<h2>Interleave the pages in reading order</h2>
+<p>The finished PDF should alternate front 1, back 1, front 2, back 2 and so forth. If File B starts with the final back, reverse it before interleaving. Thumbnail previews are valuable here because they reveal both an incorrect reversal and a stack fed in the wrong orientation.</p>
 
-<h2>Why this stays vector instead of becoming an image</h2>
-<p>Interleaving doesn't need to inspect or modify what's drawn on a page — it only needs to copy whole pages and place them in a new order. A PDF library can copy a page's content directly, exactly as Merge PDF already does when combining whole files, without ever rendering it to pixels. That's different from operations like a color filter, which has no choice but to rasterize because it needs to touch individual pixel values — interleaving never needs that, so there's no reason to pay the cost of it.</p>
+<h2>Reordering does not require rasterization</h2>
+<p>Interleaving copies whole PDF pages into a new sequence; it does not need to inspect their pixels. Text, vectors and images can therefore remain in their existing form. Even so, exported PDFs should be checked for links, forms, annotations and digital signatures, since restructuring a document can affect interactive features or invalidate signatures.</p>
 
-<h2>Quick answers</h2>
-<p><strong>What if the front and back files have different page counts?</strong> That usually means a sheet was skipped or double-fed during one of the two passes — worth checking against the original document, but a well-behaved interleaving tool should still handle it by pairing what it can and appending the rest, rather than failing outright.</p>
-<p><strong>Will the back sides be right-side up?</strong> Interleaving only reorders pages — if a back-side scan came out rotated 180° (common with certain sheet-flip mechanics), that's a separate rotation step, not something reordering pages fixes on its own.</p>
-<p><strong>Does the front-side file ever need reversing too?</strong> Not in the standard workflow described here — only the pass that involved physically flipping the stack ends up reversed; the first pass keeps the stack's natural order.</p>
+<h2>Checks before you download</h2>
+<p>Different page counts often signal a skipped or double-fed sheet. Compare both files with the paper original rather than relying on the tool to append unmatched pages correctly.</p>
+<p>Interleaving changes order, not orientation. Rotate any upside-down backs as a separate step.</p>
+<p>Either file can require reversal because scanner designs and flipping methods vary. The thumbnail sequence is more reliable than a universal rule.</p>
 
 <div class="cta-box">
   <h3>Recombine your duplex scans</h3>
-  <p>Orisod's Alternate & Mix Pages tool interleaves two PDFs page by page, with an optional reverse for File B and a live order preview before you download — entirely in your browser.</p>
+  <p>Orisod’s Alternate & Mix Pages tool interleaves two PDFs and can reverse File B before combining. Use the live preview to verify the sequence in your browser.</p>
   <a class="cta-button" href="/alternate-mix-pages/">Interleave two PDFs →</a>
 </div>
 
-<p>The two-file, flip-the-stack workaround isn't a flaw in your scanning process — it's the standard way to get double-sided results out of a single-sided scanner. The reversal it introduces is predictable once you see why it happens, which makes putting the pages back in order a mechanical fix rather than a guessing game.</p>
+<p>Two-pass scanning is a practical way to digitize both sides with a simplex device. Once you establish the order produced by your own scanner, recombining future stacks becomes a predictable process.</p>
 
 </div>
 

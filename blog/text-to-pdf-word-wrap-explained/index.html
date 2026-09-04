@@ -146,16 +146,16 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guides</span>
-<h1>How Text-to-PDF Word Wrap and Pagination Actually Work</h1>
-<p class="intro">A word processor wraps text for you automatically, so it's easy to assume PDF generation works the same way. It doesn't — the PDF format itself has no concept of word wrap at all. Every "paste text, get a PDF" tool has to measure and break lines itself, word by word.</p>
+<h1>How Text Wraps and Flows Across PDF Pages</h1>
+<p class="intro">PDF stores positioned drawing instructions rather than a flowing document model. A text generator must therefore decide where every line ends and every new page begins. Font metrics, available width and line height turn that task into a repeatable layout calculation, with several edge cases worth understanding.</p>
 
 <div class="article-body">
 
-<h2>Why PDF has no built-in word wrap</h2>
-<p>A PDF page's text isn't a flowing paragraph the way it is in a word processor — it's a series of explicit drawing instructions, each one placing a specific string of characters at a specific x/y coordinate on the page. There's no equivalent of HTML's automatic line-wrapping at a container's edge. If a generator wants text to wrap at the right margin, it has to figure out, line by line, exactly which words fit before that margin and issue a separate draw instruction for each resulting line.</p>
+<h2>PDF places text; it does not wrap paragraphs for you</h2>
+<p>A PDF page describes strings drawn at particular coordinates. Unlike an HTML container or word processor, the format does not automatically move an overflowing word to the next line. The generator measures candidate lines against the width between the margins and emits a separate drawing instruction for each line it constructs.</p>
 
-<h2>How a generator measures where to break a line</h2>
-<p>The core operation is measuring the pixel (or point) width a string of text would take up in a specific font at a specific size — every font has metrics data for exactly this, since every character has a defined width at a given size. A generator builds a line word by word: add the next word, measure the resulting line's width, and if it's still narrower than the available page width (page width minus the left and right margins), keep it; if adding the word would overflow, that word starts a new line instead.</p>
+<h2>Font metrics determine each line break</h2>
+<p>The core operation is measuring the pixel (or point) width a string of text would take up in a specific font at a specific size, every font has metrics data for exactly this, since every character has a defined width at a given size. A generator builds a line word by word: add the next word, measure the resulting line's width, and if it's still narrower than the available page width (page width minus the left and right margins), keep it; if adding the word would overflow, that word starts a new line instead.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 190" width="700" height="190" role="img" aria-label="Diagram showing that the word Helvetica, rendered in 12-point Helvetica font, measures 49.044 points wide, compared against an A4 page's available text width of 495.28 points after 50-point margins on each side, fitting roughly 10 average words per line." xmlns="http://www.w3.org/2000/svg">
@@ -168,27 +168,27 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <text x="350" y="155" text-anchor="middle" font-size="14" fill="var(--muted-text)">A4 page width (595.28pt) − 50pt margin each side = 495.28pt available for text</text>
 <text x="350" y="178" text-anchor="middle" font-size="13" fill="var(--muted-text)">≈ 10 words this length fit on one line before wrapping</text>
 </svg>
-<figcaption>Real measured values: "Helvetica" at 12pt Helvetica is exactly 49.044 points wide (computed via pdf-lib's own font metrics) — that's the unit a word-wrap algorithm actually works in.</figcaption>
+<figcaption>Real measured values: "Helvetica" at 12pt Helvetica is exactly 49.044 points wide (computed via pdf-lib's own font metrics), that's the unit a word-wrap algorithm actually works in.</figcaption>
 </figure>
 
-<h2>How pagination follows the same logic vertically</h2>
-<p>Once a generator has a full list of wrapped lines, it places them one below another, moving down by one line height each time, until the next line would fall below the bottom margin — at that point, it starts a new page and continues from the top margin. It's the same greedy, one-item-at-a-time approach as word wrap, just applied to lines instead of words, and to vertical space instead of horizontal space.</p>
+<h2>The vertical limit creates the next page</h2>
+<p>Once a generator has a full list of wrapped lines, it places them one below another, moving down by one line height each time, until the next line would fall below the bottom margin, at that point, it starts a new page and continues from the top margin. It's the same greedy, one-item-at-a-time approach as word wrap, just applied to lines instead of words, and to vertical space instead of horizontal space.</p>
 
-<h2>Why real PDF text beats a rasterized image of text</h2>
-<p>Because this process builds actual PDF text-drawing instructions (not an image), the resulting PDF has genuinely selectable, searchable, copyable text — opening it and dragging to select a sentence works exactly like it would in any text-based PDF. A generator that instead rendered your text onto a canvas and dropped that canvas in as an image would produce a PDF that looks identical at a glance but has no selectable text at all, and usually a noticeably larger file size.</p>
+<h2>Drawing PDF text preserves capabilities a screenshot loses</h2>
+<p>Writing actual PDF text instructions normally produces selectable and searchable characters. A canvas screenshot placed on a page contains pixels instead, so it needs OCR before users can search or copy the words. Text extraction and accessibility still depend on font encoding, character maps and document structure; selectable text alone does not guarantee a perfectly tagged or accessible PDF.</p>
 
-<h2>Quick answers</h2>
-<p><strong>What happens to a single word longer than the whole line width?</strong> A well-behaved generator falls back to breaking the word itself, character by character, rather than letting it overflow the page or getting stuck in an infinite loop — this matters for things like long URLs with no spaces.</p>
-<p><strong>Do different fonts wrap text differently at the same size?</strong> Yes — each font has its own character widths (a monospace font like Courier has identical widths for every character, while Helvetica or Times have variable widths per character), so the same text at the same point size can wrap onto a different number of lines depending on the font.</p>
-<p><strong>Why do blank lines in my pasted text matter?</strong> A blank line is usually meant to signal a paragraph break — a generator that ignores them entirely would run every paragraph together, so preserving them as empty lines (with their own vertical space) keeps the original structure recognizable.</p>
+<h2>Where layout needs extra care</h2>
+<p><strong>What happens to a single word longer than the whole line width?</strong> A well-behaved generator falls back to breaking the word itself, character by character, rather than letting it overflow the page or getting stuck in an infinite loop, this matters for things like long URLs with no spaces.</p>
+<p><strong>Do different fonts wrap text differently at the same size?</strong> Yes, each font has its own character widths (a monospace font like Courier has identical widths for every character, while Helvetica or Times have variable widths per character), so the same text at the same point size can wrap onto a different number of lines depending on the font.</p>
+<p><strong>Why do blank lines in my pasted text matter?</strong> A blank line is usually meant to signal a paragraph break, a generator that ignores them entirely would run every paragraph together, so preserving them as empty lines (with their own vertical space) keeps the original structure recognizable.</p>
 
 <div class="cta-box">
   <h3>Convert text to a PDF</h3>
-  <p>Orisod's Text to PDF tool wraps and paginates plain text automatically, with a choice of page size, font, and font size — entirely in your browser.</p>
+  <p>Orisod’s Text to PDF tool wraps and paginates plain text with selectable page size, font and font size, directly in your browser.</p>
   <a class="cta-button" href="/text-to-pdf/">Convert text to PDF →</a>
 </div>
 
-<p>Word wrap and pagination in a PDF generator aren't magic — they're a font-metrics measurement repeated word by word and line by line until the text runs out. Once you know that's the whole algorithm, the occasional edge case (very long words, oddly-spaced text) stops being surprising.</p>
+<p>PDF text layout is a sequence of measurements, not magic: build a candidate line, compare its width, place accepted lines and start another page when vertical space runs out. Long unbroken strings, unusual Unicode characters and font limitations are the cases most likely to need special handling.</p>
 
 </div>
 

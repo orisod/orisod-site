@@ -146,13 +146,13 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guías</span>
-<h1>Qué es un UUID y cuándo lo necesitas realmente</h1>
-<p class="intro">Un UUID parece 32 dígitos hexadecimales con aspecto aleatorio divididos en cinco grupos, y para la versión más común, eso es casi exactamente lo que es — con un par de bits fijos escondidos dentro que indican qué versión y variante estás viendo.</p>
+<h1>Qué es un UUID y cuándo conviene usarlo</h1>
+<p class="intro">Un UUID es un identificador de 128 bits que suele escribirse en cinco grupos hexadecimales. En la versión 4, casi todos los bits proceden de una fuente aleatoria y una pequeña parte fija indica la versión y la variante. Así, varios sistemas pueden crear identificadores sin compartir un contador.</p>
 
 <div class="article-body">
 
 <h2>Qué codifican realmente los dígitos</h2>
-<p>Un UUID es un número de 128 bits, escrito como 32 dígitos hexadecimales en el patrón <code>8-4-4-4-12</code>. Para la versión 4 (con diferencia la más común, y lo que "UUID" significa en el uso habitual), todos los bits salvo 6 de esos 128 son genuinamente aleatorios. Los otros 6 son marcadores fijos: 4 bits que siempre valen "0100" en binario — por eso el primer dígito del tercer grupo es siempre el carácter literal <code>4</code> — identificando esto como versión 4, y 2 bits más al inicio del cuarto grupo que siempre empiezan por <code>10</code> en binario, por lo que el primer dígito hexadecimal de ese grupo es siempre <code>8</code>, <code>9</code>, <code>a</code> o <code>b</code>. Cualquier otro dígito procede de una fuente aleatoria segura.</p>
+<p>Un UUID contiene 32 dígitos hexadecimales con patrón 8-4-4-4-12. En una versión 4 conforme al estándar, 122 bits son aleatorios y 6 codifican versión y variante. El tercer grupo comienza por 4; el cuarto, por 8, 9, a o b. Sus propiedades dependen de un buen generador aleatorio, no solo del formato visible.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 190" width="700" height="190" role="img" aria-label="Diagrama de un UUID v4 dividido en sus cinco grupos separados por guiones, con el marcador de versión '4' en el tercer grupo y el dígito de variante en el cuarto grupo resaltados como posiciones fijas y no aleatorias; el resto de dígitos se generan aleatoriamente." xmlns="http://www.w3.org/2000/svg">
@@ -165,31 +165,31 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <text x="350" y="145" text-anchor="middle" font-size="14" fill="var(--muted-text)">122 de los 128 bits se generan aleatoriamente — solo estos dos dígitos marcadores son fijos por el formato.</text>
 <text x="350" y="168" text-anchor="middle" font-size="13" fill="var(--muted-text)">2^122 valores posibles ≈ 5.3 × 10³⁶</text>
 </svg>
-<figcaption>Un UUID v4 real, con sus dos dígitos marcadores fijos resaltados. Todo lo demás es aleatorio — eso es lo que hace que las coincidencias sean extremadamente improbables (ver las matemáticas más abajo).</figcaption>
+<figcaption>Un UUID v4 contiene bits fijos para versión y variante; los otros 122 deben proceder de una fuente aleatoria segura.</figcaption>
 </figure>
 
 <h2>Cuán improbable es una coincidencia real</h2>
-<p>Con 122 bits aleatorios, el espacio de UUID posibles es 2¹²² — unos 5.3 × 10³⁶ valores. Usando la aproximación estándar del problema del cumpleaños para cuándo una coincidencia se vuelve probable en un conjunto creciente, necesitarías generar aproximadamente 2.7 × 10¹⁸ UUID (2.7 trillones, en la escala larga) antes de que exista siquiera un 50% de probabilidad de que dos de ellos coincidan. Ese número es lo bastante grande como para que "¿coincidirán dos de mis UUID?" no sea una preocupación realista para prácticamente ninguna aplicación, incluidas las que generan millones de registros al día.</p>
+<p>Con 122 bits aleatorios, el espacio de UUID posibles es 2¹²²; unos 5.3 × 10³⁶ valores. Usando la aproximación estándar del problema del cumpleaños para cuándo una coincidencia se vuelve probable en un conjunto creciente, necesitarías generar aproximadamente 2.7 × 10¹⁸ UUID (2.7 trillones, en la escala larga) antes de que exista siquiera un 50% de probabilidad de que dos de ellos coincidan. Ese número es lo bastante grande como para que "¿coincidirán dos de mis UUID?" no sea una preocupación realista para prácticamente ninguna aplicación, incluidas las que generan millones de registros al día.</p>
 
 <h2>Cuándo un UUID no es la herramienta adecuada</h2>
 <ul>
-  <li><strong>Cuando necesitas que se puedan ordenar.</strong> Un UUID versión 4 es totalmente aleatorio, así que una lista de ellos no tiene un orden significativo — si necesitas identificadores que se ordenen aproximadamente por fecha de creación (útil para el rendimiento de los índices de base de datos), un esquema ordenado cronológicamente como UUID versión 7 o un ULID encaja mejor, no la versión 4.</li>
-  <li><strong>Cuando basta con un identificador corto y fácil de teclear.</strong> Un UUID es largo y está pensado para copiar y pegar, no para leerlo en voz alta ni teclearlo de memoria — un código corto (como un número de referencia de 6 caracteres) es más amigable para cualquier cosa que una persona necesite comunicar verbalmente.</li>
-  <li><strong>Cuando solo necesitas un contador.</strong> Un simple entero autoincremental es más pequeño, se ordena de forma natural y es más fácil de depurar — los UUID resuelven el problema concreto de generar identificadores únicos sin coordinación entre varios sistemas, algo que el autoincremento de una única base de datos ya resuelve bien por sí solo.</li>
+  <li>Cuando importa el orden de inserción. UUID v4 distribuye las escrituras aleatoriamente en el índice. UUID v7 u otro esquema temporal puede funcionar mejor con claves aproximadamente cronológicas.</li>
+  <li>Cuando una persona debe leer o teclear el identificador. Un UUID largo sirve mejor para copiar; un código corto puede facilitar la atención al cliente si se controlan colisiones y adivinación.</li>
+  <li><strong>Cuando solo necesitas un contador.</strong> Un simple entero autoincremental es más pequeño, se ordena de forma natural y es más fácil de depurar; los UUID resuelven el problema concreto de generar identificadores únicos sin coordinación entre varios sistemas, algo que el autoincremento de una única base de datos ya resuelve bien por sí solo.</li>
 </ul>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Los UUID distinguen mayúsculas de minúsculas?</strong> Por convención se escriben en minúsculas, pero la mayoría de sistemas los tratan sin distinguir mayúsculas de minúsculas — las versiones en mayúsculas y minúsculas representan el mismo valor.</p>
-<p><strong>¿Puedo usar un UUID como clave primaria?</strong> Sí, es algo habitual — la principal contrapartida frente a un entero autoincremental es el rendimiento de los índices en tablas muy grandes, ya que los UUID aleatorios no se insertan en orden — la versión 7 existe precisamente para solucionar esto.</p>
-<p><strong>¿Un UUID es lo mismo que un GUID?</strong> A efectos prácticos sí — GUID (Identificador Único Global) es el nombre histórico de Microsoft para el mismo concepto, y hoy ambos términos se usan indistintamente.</p>
+<h2>Preguntas habituales de implementación</h2>
+<p>El texto hexadecimal de un UUID no distingue mayúsculas y minúsculas según el estándar, aunque la forma canónica suele escribirse en minúsculas.</p>
+<p>Los UUID se usan con frecuencia como claves primarias. Las versiones aleatorias pueden afectar la localidad del índice y el almacenamiento; la decisión depende de la carga y del esquema, no solo del tamaño de la tabla.</p>
+<p><strong>¿Un UUID es lo mismo que un GUID?</strong> A efectos prácticos sí; GUID (Identificador Único Global) es el nombre histórico de Microsoft para el mismo concepto, y hoy ambos términos se usan indistintamente.</p>
 
 <div class="cta-box">
   <h3>Genera un UUID</h3>
-  <p>El Generador de UUID de Orisod crea UUID versión 4 usando el generador de números aleatorios seguro de tu navegador, uno a uno o en lote — todo en tu navegador.</p>
+  <p>El Generador de UUID de Orisod crea uno o varios UUID versión 4 con la fuente aleatoria segura del navegador. Son identificadores, no contraseñas ni pruebas de autenticidad.</p>
   <a class="cta-button" href="/es/uuid-generator/">Generar un UUID →</a>
 </div>
 
-<p>Para la inmensa mayoría de situaciones de "necesito un identificador único", un UUID versión 4 es la respuesta correcta, poco emocionante y bien entendida — las excepciones son lo bastante concretas (poder ordenarlos, legibilidad humana, contadores de una sola base de datos) que normalmente sabrás cuándo te has topado con una.</p>
+<p>UUID v4 es una opción fiable para generar identificadores sin coordinación si usa una fuente aleatoria adecuada. Elige otro esquema cuando pesen más el orden, la brevedad, el secreto o la facilidad de uso humano.</p>
 
 </div>
 

@@ -146,15 +146,15 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <span class="blog-cat cat-guide">Guides</span>
 <h1>How to Edit a PDF Online (Text Boxes, Highlights, and Markup)</h1>
-<p class="intro">Marking up a PDF — highlighting a key sentence, striking through an old figure, dropping in a note — doesn't need a full desktop editor. In the browser, the same real text that lets you copy-paste from a PDF is exactly what lets a highlight land precisely on the right words, and understanding that distinction explains both what this kind of tool can do and where it genuinely can't.</p>
+<p class="intro">Marking up a PDF; highlighting a key sentence, striking through an old figure, dropping in a note; doesn't need a full desktop editor. In the browser, the same real text that lets you copy-paste from a PDF is exactly what lets a highlight land precisely on the right words, and understanding that distinction explains both what this kind of tool can do and where it genuinely can't.</p>
 
 <div class="article-body">
 
-<h2>Highlighting works by using text you can already select</h2>
-<p>Underneath a rendered PDF page, the actual words exist as real, positioned text — the same text a "select all, copy" would grab in any PDF viewer. A browser-based markup tool renders the page as an image for you to look at, and quietly overlays that same real text, invisibly, in exactly the right spots so you can drag your mouse across it and select it the normal way. Once you've selected a word or a sentence, the browser already knows precisely where every character sits — that position is what gets turned into a highlight, an underline, or a strikethrough.</p>
+<h2>Highlights depend on a usable text layer</h2>
+<p>A PDF viewer renders the page for display and can overlay positioned text for selection. When you drag across a sentence, the editor uses the selected characters and their coordinates to place highlights, underlines or strikeouts. Complex layouts, unusual encodings and imperfect text positioning can affect that alignment.</p>
 
-<h2>Text boxes work differently — and always work</h2>
-<p>A text box doesn't depend on any of that. Click anywhere on the page, type, and that note gets placed at the exact pixel you clicked, regardless of whether the page underneath has real text at all. That's why a text box is the one markup type that works on literally any PDF, including a scanned one, while highlighting a passage of text requires that passage to actually exist as text in the file.</p>
+<h2>Text boxes use page coordinates instead</h2>
+<p>A text box is anchored to a chosen point rather than existing words. It can therefore be added to many scans and image-only pages. Password restrictions, damaged files, unsupported page structures or editor limits can still prevent editing, so “works on every PDF” would be too broad a promise.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 300" width="700" height="300" role="img" aria-label="Diagram showing a document with a highlighted sentence, an underlined sentence, a struck-through sentence, and an added text-box note." xmlns="http://www.w3.org/2000/svg">
@@ -170,27 +170,27 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <rect x="200" y="200" width="220" height="46" rx="4" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-dasharray="4 3"/>
 <text x="310" y="228" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="var(--accent)">"Reviewed — looks good"</text>
 </svg>
-<figcaption>Highlight and underline snap to real, selected text; strikethrough works the same way; a text box is just placed at a clicked point, independent of anything else on the page.</figcaption>
+<figcaption>Highlights follow selected text; text boxes are placed at a chosen page position.</figcaption>
 </figure>
 
 <h2>What a scanned PDF needs first</h2>
-<p>A scan or a photographed page is, to the browser, just a picture — there's no real text underneath to select, so highlighting, underlining, and striking through have nothing to attach to. A markup tool built around real text selection should say so plainly rather than faking a highlight in roughly the right place. The fix is the same one that makes a scan searchable in the first place: running it through OCR first adds a real, invisible, selectable text layer under the image, after which highlighting works exactly the same as on a native PDF.</p>
+<p>A scan or a photographed page is, to the browser, just a picture; there's no real text underneath to select, so highlighting, underlining, and striking through have nothing to attach to. A markup tool built around real text selection should say so plainly rather than faking a highlight in roughly the right place. The fix is the same one that makes a scan searchable in the first place: running it through OCR first adds a real, invisible, selectable text layer under the image, after which highlighting works exactly the same as on a native PDF.</p>
 
-<h2>Undoing a mistake</h2>
-<p>Nothing should be permanent until you actually finish. A markup tool that draws changes directly into the file the moment you make them punishes every small mistake; the better shape is a running list of everything you've added, each one removable on its own, with nothing baked into the real PDF until you explicitly save.</p>
+<h2>Keep changes reversible until export</h2>
+<p>During editing, each mark should remain removable. Exporting creates the finished copy, while the original should be kept separately. Depending on the implementation, marks may become page content or PDF annotations, and that difference affects later editing and viewer behavior.</p>
 
-<h2>Quick answers</h2>
-<p><strong>Can I highlight a sentence that spans two lines?</strong> Yes — dragging across a line break selects both lines, and each line gets its own correctly-positioned highlight or underline.</p>
-<p><strong>Will my highlights and text boxes still be there if I open the file in another PDF viewer?</strong> Yes — once saved, they're drawn directly into the page as permanent content, not a separate layer that depends on this tool to display.</p>
-<p><strong>Does adding a highlight change the PDF's actual text?</strong> No — a highlight or underline is drawn on top of the page; the original text underneath stays exactly as it was, still searchable and selectable.</p>
+<h2>What to verify in the exported PDF</h2>
+<p>A sentence spanning two lines can receive separate rectangles for each line. Check the result around columns, rotated pages and tightly spaced text.</p>
+<p><strong>Will my highlights and text boxes still be there if I open the file in another PDF viewer?</strong> Yes; once saved, they're drawn directly into the page as permanent content, not a separate layer that depends on this tool to display.</p>
+<p>A visual highlight normally leaves the underlying text available, but the export still modifies the PDF and can invalidate digital signatures. Highlighting is not redaction: covered text may remain searchable, copyable or recoverable.</p>
 
 <div class="cta-box">
   <h3>Edit a PDF Online</h3>
-  <p>Orisod's PDF Editor lets you add text boxes, highlight, underline, or strike through real text directly on the page — entirely in your browser.</p>
+  <p>Orisod’s PDF Editor adds text boxes and lets you highlight, underline or strike through selectable text in your browser. Review the exported copy, especially when working with scans or signed files.</p>
   <a class="cta-button" href="/pdf-editor/">Edit a PDF →</a>
 </div>
 
-<p>Most everyday PDF markup — flagging a line, adding a short note, striking an outdated number — doesn't call for a full editor, just a way to select real text precisely and place a note wherever you click. The one honest limit is a document with no real text to select, and that's a one-step fix, not a dead end.</p>
+<p>Most everyday PDF markup; flagging a line, adding a short note, striking an outdated number; doesn't call for a full editor, just a way to select real text precisely and place a note wherever you click. The one honest limit is a document with no real text to select, and that's a one-step fix, not a dead end.</p>
 
 </div>
 

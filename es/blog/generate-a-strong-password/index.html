@@ -146,16 +146,16 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guías</span>
-<h1>Cómo generar una contraseña fuerte (y por qué la longitud importa más que los trucos)</h1>
-<p class="intro">Cambiar letras por símbolos — "password" se convierte en "P@ssw0rd" — parece que debería hacer una contraseña mucho más difícil de descifrar. En la práctica, apenas cambia nada, mientras hace la contraseña más difícil de recordar para ti. Lo que realmente determina lo difícil que es adivinar una contraseña es más simple, y más matemático, que las sustituciones ingeniosas.</p>
+<h1>Cómo generar una contraseña segura</h1>
+<p class="intro">Cambiar “password” por “P@ssw0rd” añade incomodidad, pero poca protección. Los atacantes ya prueban sustituciones conocidas. Una credencial fuerte es única, se genera de forma impredecible y tiene longitud suficiente para los requisitos de la cuenta.</p>
 
 <div class="article-body">
 
 <h2>Qué mide realmente la "fortaleza"</h2>
-<p>La fortaleza de una contraseña se suele medir en bits de entropía — a grandes rasgos, el número de intentos que necesitaría un atacante por fuerza bruta probando cada posibilidad, expresado como una potencia de dos. Cada posición de carácter multiplica el número total de contraseñas posibles por la cantidad de caracteres que podrían ir ahí. Una contraseña construida a partir de un conjunto de caracteres más grande, o simplemente más larga, tiene exponencialmente más combinaciones que probar — y la longitud afecta a ese exponente de forma mucho más directa que la variedad de caracteres.</p>
+<p>La entropía estima la incertidumbre de un proceso aleatorio. La fórmula longitud × log₂(tamaño del conjunto) solo se aplica cuando cada carácter se elige de manera independiente y uniforme. Las contraseñas creadas por personas rara vez cumplen esa condición, así que el cálculo puede exagerar mucho su resistencia.</p>
 
 <h2>Por qué las sustituciones no ayudan tanto como parece</h2>
-<p>Cambiar "a" por "@" o "o" por "0" apenas cambia las matemáticas de la fuerza bruta, y no hace prácticamente nada contra cómo funcionan realmente los ataques reales. Los atacantes no prueban cada cadena posible en orden — prueban primero diccionarios de palabras reales, y luego aplican exactamente estos patrones de sustitución habituales a cada una, precisamente porque mucha gente los usa. "P@ssw0rd" no es significativamente más difícil de adivinar que "password" para un atacante real; solo es más difícil de teclear correctamente para ti.</p>
+<p>Los atacantes priorizan credenciales filtradas, palabras, patrones y sustituciones antes de recurrir a fuerza bruta exhaustiva. Cambiar “a” por “@” u “o” por “0” sigue siendo predecible. Generar al azar y evitar la reutilización aporta mucho más.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 340" width="700" height="340" role="img" aria-label="Gráfico de barras de entropía de contraseñas en bits: 8 caracteres solo en minúsculas (38 bits), 8 caracteres de un conjunto completo (52 bits), 16 caracteres (105 bits) y 20 caracteres (131 bits) — la entropía crece más rápido con la longitud que solo con la variedad de caracteres." xmlns="http://www.w3.org/2000/svg">
@@ -178,27 +178,27 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <text x="525" y="300" text-anchor="middle" font-size="12.5" fill="var(--muted-text)">20 car.,</text>
 <text x="525" y="314" text-anchor="middle" font-size="12.5" fill="var(--muted-text)">conjunto completo</text>
 </svg>
-<figcaption>Bits de entropía para cuatro estrategias de contraseña (calculado directamente: longitud × log₂(tamaño del conjunto de caracteres), no medido contra ningún ataque concreto). Pasar de 8 a 16 caracteres casi duplica el número de bits del gráfico — lo que significa elevar al cuadrado el número real de combinaciones posibles, un salto mucho mayor que añadir símbolos a una contraseña corta.</figcaption>
+<figcaption>El gráfico muestra entropía teórica para caracteres uniformemente aleatorios, no un tiempo de descifrado medido ni una puntuación de contraseñas humanas.</figcaption>
 </figure>
 
 <h2>Lo que aporta la longitud por sí sola</h2>
-<p>Pasar de una contraseña de 8 caracteres a una de 16, manteniendo el mismo conjunto de caracteres, casi duplica el número de bits de entropía del gráfico anterior — y como la entropía se mide en una escala de duplicación (bits), ese casi-duplicado representa elevar al cuadrado el número real de contraseñas posibles, no solo duplicarlo. Añadir una cola más larga y aleatoria a una contraseña hace más por su fortaleza real que cualquier cantidad de sustituciones de caracteres en una corta.</p>
+<p>Con el mismo conjunto uniforme, duplicar la longitud duplica los bits de entropía y eleva al cuadrado la cantidad de cadenas posibles. Ese beneficio matemático no convierte una cita larga o un patrón repetido en una contraseña aleatoria.</p>
 
 <h2>Por qué un gestor de contraseñas cambia todo el cálculo</h2>
-<p>Nada de esto importa si tienes que recordar y teclear la contraseña tú mismo — una cadena de 20 caracteres totalmente aleatoria es inutilizable sin ayuda. Un gestor de contraseñas elimina esa limitación: genera y guarda una contraseña larga y aleatoria para cada sitio, y solo necesitas recordar una contraseña maestra para desbloquearlo. Eso es lo que realmente hace prácticas, para el uso diario, las contraseñas de máxima entropía sin concesiones.</p>
+<p>Un gestor puede generar y guardar una credencial aleatoria distinta para cada cuenta. Protege la bóveda con una contraseña maestra sólida y autenticación multifactor cuando esté disponible, y mantén actualizados los métodos de recuperación.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Debería seguir añadiendo símbolos a mi contraseña?</strong> No hace daño, pero si tienes que elegir entre una contraseña más larga con menos tipos de caracteres o una más corta llena de símbolos, la longitud gana por un margen amplio.</p>
-<p><strong>¿Es realmente mejor una contraseña aleatoria que una frase de paso memorable?</strong> Una frase de paso larga formada por varias palabras verdaderamente aleatorias y sin relación entre sí puede alcanzar una entropía similar y seguir siendo fácil de teclear — la palabra clave es aleatorias; una cita o frase común es adivinable sin importar su longitud.</p>
-<p><strong>¿Cuánto debería medir una contraseña?</strong> 16 caracteres de un conjunto completo es un valor por defecto razonable para la mayoría de cuentas; usa el máximo que permita tu gestor de contraseñas cuando un sitio lo permita.</p>
+<h2>Decisiones prácticas</h2>
+<p>Los símbolos amplían el conjunto si se eligen al azar, pero no rescatan un patrón corto y predecible. Cumple las reglas del sitio y favorece una mayor longitud aleatoria.</p>
+<p>Una frase de paso puede ser fuerte si sus palabras se eligen al azar de una lista suficientemente grande. Una cita, canción o expresión conocida sigue siendo vulnerable aunque sea larga.</p>
+<p>No existe una longitud universalmente segura para toda amenaza y política. Usa contraseñas largas generadas por un gestor, respeta el límite del servicio y no las reutilices. Las recomendaciones de seguridad vigentes deben prevalecer sobre un número fijo.</p>
 
 <div class="cta-box">
   <h3>Genera una contraseña fuerte</h3>
-  <p>El Generador de Contraseñas de Orisod usa el generador de números aleatorios criptográficamente seguro de tu navegador para crear una contraseña con la longitud y el conjunto de caracteres exactos que elijas — todo en tu navegador.</p>
+  <p>El Generador de Contraseñas de Orisod usa la fuente aleatoria criptográficamente segura del navegador con la longitud y los conjuntos elegidos. Guárdala de forma segura y no la reutilices.</p>
   <a class="cta-button" href="/es/password-generator/">Generar una contraseña →</a>
 </div>
 
-<p>La fortaleza real de una contraseña viene casi por completo de lo larga y lo genuinamente aleatoria que sea — no de lo ingeniosas que parezcan sus sustituciones. La longitud es la palanca que realmente mueve el número que importa.</p>
+<p>El objetivo no es que la contraseña parezca complicada. Debe ser impredecible, única y almacenarse de forma segura; la autenticación multifactor añade otra capa cuando el servicio la admite.</p>
 
 </div>
 

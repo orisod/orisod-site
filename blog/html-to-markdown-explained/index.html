@@ -146,16 +146,16 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guides</span>
-<h1>How HTML Actually Becomes Markdown</h1>
-<p class="intro">Copy a formatted paragraph from a webpage, paste it somewhere that only understands Markdown, and it just works — headings stay headings, bold stays bold, links stay links. That conversion looks instant, but it's really a small, structured translation process running underneath, one HTML element at a time.</p>
+<h1>How HTML Is Converted to Markdown</h1>
+<p class="intro">An HTML-to-Markdown converter reads document structure and applies rules for headings, emphasis, links, lists, code and other supported elements. Because Markdown has several dialects and a smaller feature set, conversion is a controlled simplification rather than a perfectly reversible translation.</p>
 
 <div class="article-body">
 
 <h2>A tree walk, not a text transformation</h2>
-<p>The browser doesn't hand a converter raw HTML text to pattern-match against — it hands over the DOM, the parsed tree structure the browser already built to render the page: this paragraph contains this bold span, which contains this text node, and so on. A converter walks that tree from the top down, and for every node it encounters, asks one question: what Markdown syntax represents this specific element? A `&lt;strong&gt;` becomes text wrapped in `**`, an `&lt;h2&gt;` becomes a line starting with `##`, an `&lt;a&gt;` becomes `[text](url)`. The output is built by recursively converting each node's children first, then wrapping the result in whatever syntax that node's tag calls for.</p>
+<p>The browser doesn't hand a converter raw HTML text to pattern-match against; it hands over the DOM, the parsed tree structure the browser already built to render the page: this paragraph contains this bold span, which contains this text node, and so on. A converter walks that tree from the top down, and for every node it encounters, asks one question: what Markdown syntax represents this specific element? A `&lt;strong&gt;` becomes text wrapped in `**`, an `&lt;h2&gt;` becomes a line starting with `##`, an `&lt;a&gt;` becomes `[text](url)`. The output is built by recursively converting each node's children first, then wrapping the result in whatever syntax that node's tag calls for.</p>
 
 <h2>Why this is a mapping, not a translation</h2>
-<p>Every HTML element needs an explicit rule saying what Markdown it becomes — there's no automatic or general-purpose way to derive one from the other, because Markdown wasn't designed to represent everything HTML can. A `&lt;div&gt;` with a custom CSS class carries no Markdown equivalent at all; a converter simply treats it as an invisible wrapper and keeps its content. This is why a mature converter ships with dozens of built-in rules (one per common tag) and lets you register more for anything unusual it encounters.</p>
+<p>Every HTML element needs an explicit rule saying what Markdown it becomes; there's no automatic or general-purpose way to derive one from the other, because Markdown wasn't designed to represent everything HTML can. A `&lt;div&gt;` with a custom CSS class carries no Markdown equivalent at all; a converter simply treats it as an invisible wrapper and keeps its content. This is why a mature converter ships with dozens of built-in rules (one per common tag) and lets you register more for anything unusual it encounters.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 260" width="700" height="260" role="img" aria-label="Diagram showing an HTML DOM tree on the left with an h2 element containing bold and plain text, an arrow labeled walk tree and apply one rule per element, and the resulting Markdown text on the right reading two hash marks then the word Really then two asterisks around important then more text." xmlns="http://www.w3.org/2000/svg">
@@ -176,27 +176,27 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <text x="530" y="95" text-anchor="middle" font-family="Courier New, monospace" font-size="15" fill="var(--text)">## Really <tspan fill="#f59e0b">**important**</tspan></text>
 <text x="530" y="125" text-anchor="middle" font-size="11.5" fill="var(--muted-text)">heading rule + bold rule, composed</text>
 </svg>
-<figcaption>The h2 rule wraps its content in "## "; the strong rule found inside it wraps its own content in "**" — each rule only knows about its own element, and the results nest naturally.</figcaption>
+<figcaption>The h2 rule wraps its content in "## "; the strong rule found inside it wraps its own content in "**"; each rule only knows about its own element, and the results nest naturally.</figcaption>
 </figure>
 
 <h2>Why a table needs a heading row to convert at all</h2>
-<p>Markdown's table syntax has a hard requirement HTML tables don't: a separator line of dashes directly under the header row, which is what tells a Markdown renderer where the header ends and the body begins. An HTML table with no `&lt;th&gt;` header cells has no natural source for that line, so a converter genuinely cannot produce a valid Markdown table from it — the honest options are to skip the conversion and leave the original table as raw HTML embedded in the output, or to treat the first row as a header by assumption. This isn't a limitation of the converter; it's a structural requirement of the Markdown table format itself.</p>
+<p>Pipe-table syntax belongs to popular Markdown extensions, not the original core specification. A converter may infer the first row as a header, preserve a headerless table as raw HTML or use a dialect-specific representation. There is no universal requirement that makes conversion impossible without <th> cells.</p>
 
 <h2>What never survives the trip</h2>
-<p>Markdown was deliberately kept small: it standardizes headings, emphasis, links, lists, quotes, code, and (in extended dialects) tables — and nothing else. Font choices, custom colors, precise spacing, multi-column layouts, and embedded scripts or styles have no Markdown representation, so a converter drops them rather than inventing non-standard syntax to approximate them. This is a feature, not a gap: Markdown's whole value proposition is being readable as plain text and portable across tools, which only holds if everyone agrees on the same small vocabulary.</p>
+<p>Colors, fonts, scripts, complex layout and many attributes lack portable Markdown equivalents. A converter may discard them, preserve raw HTML or use extensions according to its policy. Sanitization is a separate security concern, especially when untrusted HTML is involved.</p>
 
-<h2>Quick answers</h2>
-<p><strong>Why does pasted content sometimes carry unexpected formatting?</strong> Rich-text paste from apps like Word or Google Docs often wraps content in extra styling elements the app added for its own rendering — a converter still extracts the underlying structure correctly, but very unusual source formatting can occasionally produce noisier output than clean HTML would.</p>
-<p><strong>Can a link with no visible text convert properly?</strong> Yes — the link's own text content becomes the bracketed label and its href becomes the URL, exactly as with any other link, regardless of how that text was styled.</p>
-<p><strong>Is HTML-to-Markdown conversion reversible?</strong> Not perfectly — converting Markdown back to HTML recovers the structure, but anything Markdown couldn't represent in the first place (custom styling, layout) is already gone and can't be reconstructed from the Markdown alone.</p>
+<h2>What to inspect after conversion</h2>
+<p><strong>Why does pasted content sometimes carry unexpected formatting?</strong> Rich-text paste from apps like Word or Google Docs often wraps content in extra styling elements the app added for its own rendering; a converter still extracts the underlying structure correctly, but very unusual source formatting can occasionally produce noisier output than clean HTML would.</p>
+<p>A link with an empty label has no useful visible anchor. A converter may emit an empty Markdown link, use the URL as text or drop it, depending on its rules.</p>
+<p><strong>Is HTML-to-Markdown conversion reversible?</strong> Not perfectly; converting Markdown back to HTML recovers the structure, but anything Markdown couldn't represent in the first place (custom styling, layout) is already gone and can't be reconstructed from the Markdown alone.</p>
 
 <div class="cta-box">
   <h3>Convert HTML or rich text to Markdown</h3>
-  <p>Orisod's Convert to Markdown tool handles both a normal rich-text paste and raw HTML source, including tables — entirely in your browser.</p>
+  <p>Orisod’s Convert to Markdown tool accepts rich-text paste or raw HTML and produces Markdown in your browser. Review unsupported styling, complex tables and empty links afterward.</p>
   <a class="cta-button" href="/convert-to-markdown/">Convert to Markdown →</a>
 </div>
 
-<p>Converting HTML to Markdown isn't a single clever trick — it's dozens of small, independent rules, one per element type, applied consistently as a tree gets walked from the top down. Once that's visible, both what survives the conversion and what quietly doesn't stop being a mystery.</p>
+<p>Good conversion is a documented set of choices: which dialect to target, which HTML to preserve and which unsupported details to remove. Review tables, nested lists, code, images and links before publishing.</p>
 
 </div>
 

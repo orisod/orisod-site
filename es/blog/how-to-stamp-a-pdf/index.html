@@ -146,19 +146,19 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guías</span>
-<h1>Cómo sellar un PDF (APROBADO, BORRADOR, CONFIDENCIAL y personalizado)</h1>
-<p class="intro">Un "sello" es quizás la pieza más común del ritual de oficina en papel que se trasladó a los PDF casi sin cambios: una marca al estilo de un sello de goma, normalmente girada unos grados como si se hubiera presionado a mano, colocada en un punto concreto de una página. Parece sencillo, pero colocarlo exactamente en el lugar correcto depende de una peculiaridad del sistema de coordenadas que hace tropezar a muchas implementaciones "rápidas".</p>
+<h1>Cómo se dibuja y coloca un sello en PDF</h1>
+<p class="intro">Un sello es una etiqueta visible colocada en un punto de una página PDF. El borde, el color y una ligera rotación hacen reconocible su propósito, pero ubicarlo bien exige traducir coordenadas entre la vista del navegador y la página. La marca comunica un estado; no demuestra identidad, aprobación ni autorización.</p>
 
 <div class="article-body">
 
-<h2>Un sello no es una marca de agua</h2>
-<p>Se confunden constantemente porque ambos colocan texto encima de una página PDF, pero resuelven problemas distintos. Una marca de agua está pensada para aplicarse de forma uniforme y repetida — el mismo texto, mosaico en cada página de un documento, normalmente en un estilo claro y discreto, para que sobreviva sin importar qué página esté mirando alguien. Un sello es lo contrario: una marca específica, en un lugar específico, en una página específica — una portada marcada APROBADO, o un único anexo sensible marcado CONFIDENCIAL — deliberadamente sin aplicar al resto del documento.</p>
+<h2>Un sello y una marca de agua resuelven problemas distintos</h2>
+<p>Ambos añaden material visible sobre el PDF, pero tienen distinto alcance. Una marca de agua suele repetirse como aviso de propiedad o estado. Un sello marca un punto elegido, por ejemplo APROBADO en una portada o CONFIDENCIAL junto a una sección. Ninguno cifra el documento ni impide editarlo con programas especializados.</p>
 
-<h2>Cómo se construye realmente el gráfico de un sello</h2>
-<p>Visualmente, un sello de goma no es solo texto — es texto dentro de un recuadro con borde, inclinado un ángulo constante, en un color que se lee como "oficial" (verde de aprobación, gris de borrador, rojo de advertencia). La forma más directa de producir eso es dibujarlo una sola vez como una pequeña imagen fuera de pantalla: renderizar un recuadro y texto centrado y girado en un lienzo, y luego exportar ese lienzo como PNG. A partir de ahí es solo una imagen, lo que hace trivial previsualizarla a cualquier tamaño e incrustarla en una página PDF con una librería PDF — sin necesidad de matemática de rotación por carácter dentro del propio PDF.</p>
+<h2>El sello comienza como un gráfico pequeño</h2>
+<p>Visualmente, un sello de goma no es solo texto, es texto dentro de un recuadro con borde, inclinado un ángulo constante, en un color que se lee como "oficial" (verde de aprobación, gris de borrador, rojo de advertencia). La forma más directa de producir eso es dibujarlo una sola vez como una pequeña imagen fuera de pantalla: renderizar un recuadro y texto centrado y girado en un lienzo, y luego exportar ese lienzo como PNG. A partir de ahí es solo una imagen, lo que hace trivial previsualizarla a cualquier tamaño e incrustarla en una página PDF con una librería PDF, sin necesidad de matemática de rotación por carácter dentro del propio PDF.</p>
 
-<h2>El detalle del sistema de coordenadas que realmente importa</h2>
-<p>Esta es la parte fácil de invertir por error. Un lienzo (canvas) del navegador — y la posición de un clic que reporta un usuario al hacer clic en una vista previa — se mide desde la esquina <strong>superior izquierda</strong>, con la y aumentando hacia abajo. Una página PDF, en cambio, coloca el contenido medido desde la esquina <strong>inferior izquierda</strong>, con la y aumentando hacia arriba. Si tomas la coordenada y de un clic en un lienzo y se la pasas directamente a la llamada de dibujo de una librería PDF, el sello queda reflejado verticalmente — un clic cerca de la parte superior de la vista previa termina sellando cerca de la parte inferior de la página real.</p>
+<h2>El clic y la página PDF parten de esquinas opuestas</h2>
+<p>Las coordenadas del navegador suelen comenzar arriba a la izquierda y aumentar hacia abajo. Las de una página PDF estándar comienzan abajo a la izquierda y suben. El código debe escalar la posición de la vista, invertir el eje vertical y considerar dimensiones del sello y rotación de página. Omitir una parte puede alejar el resultado del punto elegido.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 220" width="700" height="220" role="img" aria-label="Diagrama que compara dos sistemas de coordenadas: un lienzo de navegador con su origen en la esquina superior izquierda y la y aumentando hacia abajo, frente a una página PDF con su origen en la esquina inferior izquierda y la y aumentando hacia arriba, mostrando la fórmula de inversión pdfY igual a la altura de la página menos canvasY menos la altura del sello." xmlns="http://www.w3.org/2000/svg">
@@ -180,24 +180,24 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <text x="470" y="152" text-anchor="middle" font-size="11" fill="var(--text)">sello</text>
 <text x="350" y="210" text-anchor="middle" font-size="13.5" fill="var(--muted-text)">pdfY = alturaPágina − canvasY − alturaSello</text>
 </svg>
-<figcaption>La misma posición de clic significa dos cosas distintas según desde qué origen se mida — una herramienta de sellado tiene que convertir entre ambos explícitamente, una vez, justo antes de dibujar.</figcaption>
+<figcaption>La misma posición de clic significa dos cosas distintas según desde qué origen se mida, una herramienta de sellado tiene que convertir entre ambos explícitamente, una vez, justo antes de dibujar.</figcaption>
 </figure>
 
-<h2>Por qué la rotación y el color forman parte del "lenguaje" del sello</h2>
-<p>Nada de esto es un adorno decorativo por sí mismo — el aspecto inclinado y presionado a mano, y el significado codificado por color (verde para aprobación, rojo para advertencia, gris neutro para borrador) son exactamente lo que hace que un sello sea legible al instante de un vistazo, igual que lo sería en papel. Un rectángulo perfectamente recto y negro plano con la palabra "APROBADO" dentro se lee como un cuadro de texto, no como un sello — la inclinación cumple una función comunicativa real.</p>
+<h2>La rotación y el color ayudan a reconocer la etiqueta</h2>
+<p>Nada de esto es un adorno decorativo por sí mismo, el aspecto inclinado y presionado a mano, y el significado codificado por color (verde para aprobación, rojo para advertencia, gris neutro para borrador) son exactamente lo que hace que un sello sea legible al instante de un vistazo, igual que lo sería en papel. Un rectángulo perfectamente recto y negro plano con la palabra "APROBADO" dentro se lee como un cuadro de texto, no como un sello, la inclinación cumple una función comunicativa real.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Un sello de PDF es una firma legal?</strong> No — un sello de texto como APROBADO o CONFIDENCIAL es una marca visual, no una firma criptográfica ni prueba de identidad o consentimiento. Para algo que deba sostenerse como firma, usa una herramienta de firma real.</p>
-<p><strong>¿Puede un solo sello cubrir varias páginas a la vez?</strong> No directamente — un sello es por naturaleza una marca de una sola página y un solo punto. Cubrir varias páginas significa repetir el paso de colocación una vez por página, lo cual es distinto del comportamiento de una marca de agua de "cada página automáticamente".</p>
+<h2>Lo que un sello no demuestra</h2>
+<p><strong>¿Un sello de PDF es una firma legal?</strong> No, un sello de texto como APROBADO o CONFIDENCIAL es una marca visual, no una firma criptográfica ni prueba de identidad o consentimiento. Para algo que deba sostenerse como firma, usa una herramienta de firma real.</p>
+<p><strong>¿Puede un solo sello cubrir varias páginas a la vez?</strong> No directamente, un sello es por naturaleza una marca de una sola página y un solo punto. Cubrir varias páginas significa repetir el paso de colocación una vez por página, lo cual es distinto del comportamiento de una marca de agua de "cada página automáticamente".</p>
 <p><strong>¿Por qué un texto de sello personalizado largo a veces se ve más pequeño que un sello predefinido?</strong> El recuadro de un sello tiene un tamaño fijo, así que una herramienta que te permite escribir tu propio texto tiene que reducir la fuente hasta que el texto quepa dentro de ese recuadro, igual que una imprenta de tarjetas de presentación reduce un nombre largo para que quepa en una línea.</p>
 
 <div class="cta-box">
   <h3>Sella un PDF</h3>
-  <p>La herramienta Añadir Sellos de Orisod ofrece los sellos APROBADO, BORRADOR y CONFIDENCIAL, además de texto personalizado, con una vista previa en vivo de clic para colocar — todo en tu navegador.</p>
+  <p>Añadir Sellos de Orisod ofrece APROBADO, BORRADOR y CONFIDENCIAL, además de texto personalizado y vista previa, dentro de tu navegador.</p>
   <a class="cta-button" href="/es/add-stamps/">Sellar un PDF →</a>
 </div>
 
-<p>Un sello solo parece una función pequeña y obvia. Por debajo hay un gráfico renderizado, una rotación, una convención de color heredada de décadas de oficinas en papel, y una conversión de sistema de coordenadas que tiene que ser correcta o la marca termina lejos de donde hiciste clic.</p>
+<p>Detrás de la marca hay un gráfico renderizado, escala de página y conversión de coordenadas. Resolver esas piezas produce una ubicación predecible, pero el sello sigue siendo contenido ordinario y no una firma, auditoría ni control de seguridad.</p>
 
 </div>
 

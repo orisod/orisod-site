@@ -146,21 +146,21 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guías</span>
-<h1>Cómo la imposición de folletos reordena las páginas para doblarlas</h1>
-<p class="intro">Abre cualquier folleto grapado por su hoja central y algo parece extraño a primera vista: las dos páginas enfrentadas no están juntas en la numeración — están cerca del centro del documento. Eso no es un error. Es todo el sentido de la imposición de folletos, y la lógica detrás de ella es más simple de lo que parece una vez que ves por qué una pila de papel doblada y anidada no se lee como una pila normal.</p>
+<h1>Cómo reordena la imposición las páginas de un folleto</h1>
+<p class="intro">Un folleto no puede imprimirse en orden de lectura normal y luego doblarse sin más. La hoja exterior debe contener la primera y la última página; las hojas interiores avanzan hacia el centro. La imposición calcula esa distribución antes de enviar el documento a la impresora.</p>
 
 <div class="article-body">
 
 <h2>Por qué el orden de páginas y el orden de hojas no son lo mismo</h2>
-<p>El orden de páginas de un PDF normal coincide con el orden de lectura: página 1, luego 2, luego 3. Un folleto grapado por el centro se construye físicamente a partir de hojas que se doblan por la mitad y se anidan unas dentro de otras antes de grapar — y una vez que doblas y anidas hojas, la hoja que queda en el exterior (envolviendo a todas las demás) tiene que llevar la primera y la última página de todo el documento, porque son las que un lector ve primero y al final. La hoja que queda enterrada en el medio lleva las dos páginas numéricamente más cercanas al centro. La imposición es el proceso de averiguar, para cada hoja, exactamente qué dos números de página van en cada lado.</p>
+<p>Un PDF normal avanza de la página 1 a la 2 y así sucesivamente. Un folleto grapado se arma con hojas dobladas y anidadas. La hoja exterior envuelve todo el documento y contiene ambas portadas; la más interna forma el pliego central. La imposición asigna cuatro páginas del documento a las dos caras de cada hoja física.</p>
 
-<h2>La fórmula de emparejamiento</h2>
+<h2>Cómo se calculan los pares de páginas</h2>
 <p>Para un documento rellenado hasta un múltiplo de 4 páginas (llamemos <code>N</code> al total), la hoja de índice <code>i</code> (empezando en 0 para la hoja más exterior) lleva estos cuatro números de página:</p>
 <ul>
 <li>Frente: página <code>N − 2i</code> a la izquierda, página <code>2i + 1</code> a la derecha</li>
 <li>Reverso: página <code>2i + 2</code> a la izquierda, página <code>N − 2i − 1</code> a la derecha</li>
 </ul>
-<p>Sustituye <code>i = 0</code> en un documento de 8 páginas y el frente de la hoja más exterior lleva las páginas 8 y 1 — exactamente el par de portadas que un lector ve primero y al final. Sustituye <code>i = 1</code> y la siguiente hoja hacia dentro lleva las páginas 6, 3, 4 y 5 — las dos páginas centrales acaban en el reverso de esa misma hoja, que se convierte en la verdadera doble página central una vez que todo está anidado y doblado.</p>
+<p>En un documento de 8 páginas, i = 0 coloca las páginas 8 y 1 en el frente de la hoja exterior. Con i = 1, la hoja interior recibe las páginas 6, 3, 4 y 5. Al doblar y anidar las hojas, esos pares aparentemente extraños quedan en orden de lectura.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 260" width="700" height="260" role="img" aria-label="Diagrama que muestra dos hojas de un folleto de ocho páginas anidadas una dentro de otra: el frente de la hoja exterior lleva las páginas 8 y 1, y el reverso de la hoja interior lleva las páginas 4 y 5, ilustrando que la hoja más exterior lleva la primera y la última página mientras que la hoja más interior lleva las dos páginas centrales." xmlns="http://www.w3.org/2000/svg">
@@ -179,27 +179,27 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <line x1="520" y1="100" x2="520" y2="160" stroke="var(--border)" stroke-width="1.5" stroke-dasharray="3 3"/>
 <text x="520" y="180" text-anchor="middle" font-size="12" fill="var(--muted-text)">la verdadera doble página central</text>
 </svg>
-<figcaption>Anidar hojas unas dentro de otras es exactamente por qué la página 1 se empareja con la última página, no con la página 2 — la hoja exterior tiene que alcanzar ambos extremos del documento.</figcaption>
+<figcaption>La hoja exterior alcanza ambos extremos del folleto; por eso la página 1 comparte hoja con la última.</figcaption>
 </figure>
 
-<h2>Por qué las páginas en blanco de relleno acaban donde acaban</h2>
-<p>Como cada hoja necesita exactamente 4 páginas y la imposición trabaja desde ambos extremos hacia el centro, a un documento no divisible entre 4 se le añade relleno al final antes de aplicar la fórmula. Como los números de página más altos acaban en el frente de la hoja más exterior, los espacios en blanco (ahora las "páginas" con numeración más alta) terminan como espacio en blanco justo cerca de la contraportada — un efecto secundario de la matemática, no algo que una herramienta de folletos tenga que tratar como caso especial.</p>
+<h2>Las páginas en blanco completan la última hoja</h2>
+<p>Cada hoja física representa cuatro páginas del folleto. Si el total no es divisible entre cuatro, se añaden páginas en blanco antes de imponer. Su posición exacta depende del método de relleno y del algoritmo, así que revisa la vista previa si necesitas un espacio en blanco en un lugar concreto.</p>
 
-<h2>Por qué la configuración dúplex no es opcional</h2>
-<p>Cada hoja de salida es apaisada, con dos páginas verticales una junto a otra; doblarla por la mitad a lo largo de su eje corto es lo que la convierte en dos páginas verticales enfrentadas. Las impresoras dúplex ofrecen dos opciones de volteo — por el lado largo o por el lado corto — y solo una de ellas mantiene el contenido del frente y el reverso alineado correctamente para un pliegue a lo largo del eje corto. Elige la incorrecta y el reverso de cada hoja se imprime al revés respecto al frente, algo invisible hasta que ya has impreso todo y lo has doblado.</p>
+<h2>Comprueba el volteo dúplex antes de imprimir todo</h2>
+<p>Las hojas suelen prepararse en horizontal y doblarse por el centro. La opción correcta de volteo por borde largo o corto depende de la orientación impuesta, el controlador y el recorrido del papel. Un ajuste incorrecto puede dejar todos los reversos cabeza abajo. Imprime y dobla una hoja de prueba primero.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Necesito software especial para imprimir esto?</strong> No — una vez que el PDF ya está en orden de imposición, la opción normal de impresión a doble cara de cualquier visor de PDF funciona; la herramienta de imposición ya ha hecho el reordenamiento.</p>
-<p><strong>¿Y si solo tengo una impresora de una sola cara?</strong> Imprime primero todos los frentes, luego voltea manualmente toda la pila como un bloque y vuelve a introducirla para los reversos — la misma solución alternativa de volteo físico usada para el escaneo dúplex, con la misma consideración sobre "hacia qué lado voltear".</p>
-<p><strong>¿Puede esto manejar un documento que no sea múltiplo de 4 páginas?</strong> Sí — rellenar con páginas en blanco hasta el siguiente múltiplo de 4 antes de aplicar la fórmula es estándar y esperado, no una condición de error.</p>
+<h2>Comprobaciones prácticas de impresión</h2>
+<p>Cuando el PDF ya está impuesto, normalmente basta un visor común para imprimirlo. Desactiva cualquier otra opción de folleto o varias páginas por hoja, pues el controlador podría reorganizar de nuevo las páginas.</p>
+<p>Con una impresora de una sola cara, imprime un lado, vuelve a colocar la pila e imprime el otro. La dirección de alimentación varía; marca una hoja de prueba para saber qué cara y borde deben entrar primero.</p>
+<p>El documento original no necesita tener un múltiplo de cuatro páginas. La imposición puede añadir los espacios necesarios para completar la última hoja.</p>
 
 <div class="cta-box">
   <h3>Convierte un PDF en un folleto</h3>
-  <p>El Creador de Folletos PDF de Orisod impone tus páginas automáticamente, muestra una vista previa de la hoja más exterior antes de confirmar, y detalla exactamente qué configuración dúplex usar — todo en tu navegador.</p>
+  <p>Creador de Folletos PDF de Orisod ordena las páginas para doblarlas, añade los espacios necesarios y muestra la hoja exterior en tu navegador. Confirma el ajuste dúplex con una prueba en tu impresora.</p>
   <a class="cta-button" href="/es/pdf-booklet-maker/">Crear un folleto PDF →</a>
 </div>
 
-<p>La imposición de folletos no reordena páginas de forma arbitraria — resuelve una restricción física real, trabajando hacia afuera desde el centro y hacia adentro desde las portadas al mismo tiempo, para que una pila de papel doblado y anidado se lea en orden una vez ensamblada. Una vez que esa restricción es visible, el emparejamiento "página 8 junto a la página 1" deja de parecer un error y empieza a parecer el único emparejamiento que podría funcionar.</p>
+<p>El orden inesperado responde a la construcción física del folleto. Una vista previa y una prueba doblada permiten comprobar secuencia, orientación, márgenes y comportamiento de la impresora.</p>
 
 </div>
 

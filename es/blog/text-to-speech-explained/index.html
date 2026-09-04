@@ -146,16 +146,16 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guías</span>
-<h1>Cómo Funciona Realmente el Texto a Voz del Navegador (y Qué No Puede Hacer)</h1>
-<p class="intro">Cualquier página que lee texto en voz alta se apoya en una función del navegador llamada API Web Speech — no en un servicio que la propia página proporcione. Esa distinción explica casi todo sobre cómo se comportan estas herramientas: por qué las voces se ven distintas en cada dispositivo, por qué no hay un botón para "descargar como MP3", y por qué a veces un texto muy largo se corta a mitad de camino.</p>
+<h1>Cómo funciona el texto a voz del navegador y cuáles son sus límites</h1>
+<p class="intro">El texto a voz del navegador suele usar la API Web Speech y las voces expuestas por el navegador o el sistema. Por eso cambian la calidad, los idiomas y los controles entre dispositivos. También explica por qué es más sencillo reproducir en vivo que entregar un archivo de audio.</p>
 
 <div class="article-body">
 
-<h2>El navegador llama a tu sistema operativo, no a un servidor</h2>
-<p>Cuando una página pide que se lea un texto en voz alta, se lo entrega a <code>speechSynthesis</code>, una interfaz del navegador definida por la API Web Speech. El navegador no genera el audio por sí mismo — pasa el texto al motor de texto a voz que ya tiene instalado tu propio sistema operativo, recibe el audio de vuelta, y lo reproduce por tus altavoces. Nada de ese proceso implica una solicitud de red. El texto nunca tiene que salir de tu dispositivo para que ocurra la lectura, y por eso una herramienta así puede afirmar honestamente que "nada se sube".</p>
+<h2>El navegador coordina la reproducción</h2>
+<p>Cuando una página pide que se lea un texto en voz alta, se lo entrega a <code>speechSynthesis</code>, una interfaz del navegador definida por la API Web Speech. El navegador no genera el audio por sí mismo; pasa el texto al motor de texto a voz que ya tiene instalado tu propio sistema operativo, recibe el audio de vuelta, y lo reproduce por tus altavoces. Nada de ese proceso implica una solicitud de red. El texto nunca tiene que salir de tu dispositivo para que ocurra la lectura, y por eso una herramienta así puede afirmar honestamente que "nada se sube".</p>
 
-<h2>Por qué la lista de voces se ve completamente distinta según el dispositivo</h2>
-<p>Como el motor de habla real lo proporciona el sistema operativo y no el sitio web, la lista de voces disponibles es en realidad una lista de lo que tu combinación de sistema operativo y navegador trae instalado. macOS e iOS suelen incluir de fábrica un amplio conjunto de voces de sonido natural; algunas configuraciones de Windows, Linux y Android más antiguas ofrecen muchas menos opciones, y más mecánicas. Una página no tiene forma de añadir voces a esa lista ni de hacer que suene mejor una lista limitada — solo puede ofrecer lo que <code>speechSynthesis.getVoices()</code> le devuelva.</p>
+<h2>Las voces disponibles dependen del entorno</h2>
+<p>speechSynthesis.getVoices() muestra las voces disponibles en esa sesión. La lista puede cargar de forma asíncrona y cambia según paquetes de idioma, sistema, navegador y preferencias. La página puede elegir entre las voces informadas, pero no garantizar el mismo nombre o calidad en otro equipo.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 220" width="700" height="220" role="img" aria-label="Diagrama que muestra el texto fluyendo hacia el motor de síntesis de voz del navegador, el cual usa voces proporcionadas por el sistema operativo, y de ahí a reproducción en vivo por altavoces únicamente — con un recuadro separado y tachado que muestra que la exportación a archivo de audio no es una salida posible de este proceso." xmlns="http://www.w3.org/2000/svg">
@@ -172,27 +172,27 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <rect x="230" y="180" width="170" height="34" rx="8" fill="none" stroke="#f87171" stroke-width="1.5" stroke-dasharray="4 3"/>
 <text x="315" y="202" text-anchor="middle" font-size="12.5" fill="#f87171">❌ Exportar archivo</text>
 </svg>
-<figcaption>No hay ninguna etapa en este proceso que produzca un archivo guardado — la API se diseñó solo para reproducción en vivo, así que exportar audio no es algo que una página web pueda añadir por encima de ella.</figcaption>
+<figcaption>La API Web Speech solicita reproducción en vivo, pero no entrega a la página un archivo de audio codificado estándar.</figcaption>
 </figure>
 
-<h2>Por qué no existe la opción de "descargar como MP3"</h2>
-<p>Esto no es una función que Orisod haya decidido omitir — la API Web Speech simplemente nunca definió una forma de capturar su salida como un archivo. Tiene un solo trabajo: convertir texto en sonido y reproducirlo, en vivo, por la salida de audio del dispositivo. No hay ninguna etapa de codificación, ningún búfer que se le entregue a la página, nada que un script pueda redirigir hacia un <code>.mp3</code> o <code>.wav</code> descargable. Cualquier herramienta que diga lo contrario o bien está usando síntesis de voz del lado del servidor (lo que normalmente significa que tu texto salió de tu dispositivo), o bien usa trucos de grabación específicos de un navegador que no funcionan de forma fiable en todos los dispositivos. Ser claro sobre esa limitación desde el principio es más útil que prometer de más y dejar que la gente lo descubra por las malas.</p>
+<h2>Por qué la reproducción estándar no produce un MP3</h2>
+<p>Esto no es una función que Orisod haya decidido omitir; la API Web Speech simplemente nunca definió una forma de capturar su salida como un archivo. Tiene un solo trabajo: convertir texto en sonido y reproducirlo, en vivo, por la salida de audio del dispositivo. No hay ninguna etapa de codificación, ningún búfer que se le entregue a la página, nada que un script pueda redirigir hacia un <code>.mp3</code> o <code>.wav</code> descargable. Cualquier herramienta que diga lo contrario o bien está usando síntesis de voz del lado del servidor (lo que normalmente significa que tu texto salió de tu dispositivo), o bien usa trucos de grabación específicos de un navegador que no funcionan de forma fiable en todos los dispositivos. Ser claro sobre esa limitación desde el principio es más útil que prometer de más y dejar que la gente lo descubra por las malas.</p>
 
-<h2>Por qué a veces se detiene un texto largo a mitad de camino</h2>
-<p>Varios navegadores importantes tienen errores conocidos y bien documentados desde hace tiempo, donde leer un bloque de texto muy largo en una sola solicitud se detiene a mitad de camino, sin ningún error ni explicación. Es una particularidad real de las implementaciones subyacentes del navegador, no algo específico de ningún sitio web en particular. La solución práctica es dividir el texto largo en fragmentos del tamaño de una frase y leerlos como una cola, uno por uno — lo cual además tiene el beneficio adicional de permitir seguir y resaltar exactamente qué frase se está reproduciendo en cada momento.</p>
+<h2>Los textos largos necesitan una cola cuidadosa</h2>
+<p>Los enunciados largos pueden detenerse o comportarse de forma irregular en ciertas combinaciones. Dividir el texto y poner los segmentos en cola mejora la resistencia y permite resaltar frases. La segmentación depende del idioma, así que abreviaturas y puntuación inusual todavía requieren cuidado.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Cerrar la pestaña detiene la lectura?</strong> Sí — la síntesis de voz está ligada a la página que la inició, así que salir de ella o cerrar la pestaña detiene la reproducción de inmediato.</p>
-<p><strong>¿Puedo conseguir una voz más natural que la que ofrece mi dispositivo?</strong> Solo instalando voces adicionales a nivel del sistema operativo, si tu sistema lo permite (algunos lo hacen, mediante ajustes de accesibilidad) — una página web no tiene forma de proporcionar mejores voces por sí sola.</p>
-<p><strong>¿Por qué a veces pausar/reanudar se comporta de forma extraña?</strong> Pausar y reanudar a mitad de una frase depende del mismo motor de voz del sistema operativo, y su comportamiento no es perfectamente uniforme entre navegadores y plataformas — es una imperfección conocida de la tecnología subyacente, no algo que controle el código de un sitio web.</p>
+<h2>Comportamiento esperado de la reproducción</h2>
+<p>Cerrar la página o navegar fuera suele detener la lectura, pero el ciclo de vida puede variar entre navegadores y estados en segundo plano.</p>
+<p>Instalar voces del sistema puede ampliar las opciones cuando el sistema operativo lo permite. Una página no puede añadir por sí sola una voz nativa mediante Web Speech.</p>
+<p>Pausa, reanudación, eventos de límites y resaltado varían entre motores. Estas diferencias pueden afectar la sincronización aunque el código sea correcto.</p>
 
 <div class="cta-box">
   <h3>Prueba el texto a voz en tu navegador</h3>
-  <p>Leer en Voz Alta de Orisod lee el texto que pegues usando las voces propias de tu navegador, con velocidad, tono y resaltado de frases en vivo — todo local, sin subir nada, sin archivo de audio.</p>
+  <p>Leer en Voz Alta de Orisod usa las voces informadas por tu navegador y ofrece velocidad, tono y resaltado. La disponibilidad, conexión y reproducción dependen del navegador, sistema y voz elegida.</p>
   <a class="cta-button" href="/es/read-aloud/">Leer texto en voz alta →</a>
 </div>
 
-<p>El resumen honesto es simple: el texto a voz del navegador es una función de reproducción en vivo construida sobre lo que tu sistema operativo ya proporciona, no un servicio de generación de voz que controle un sitio web. Una vez que eso queda claro, todo lo demás sobre cómo se comportan estas herramientas — las voces variables, el botón de descarga ausente, el corte ocasional en textos largos — deja de parecer un error y empieza a verse como exactamente lo que la tecnología subyacente fue diseñada para hacer.</p>
+<p>La síntesis del navegador es una solicitud de reproducción en la plataforma actual. Prueba la voz y los controles en el dispositivo real, y verifica la privacidad de esa voz en vez de confiar en una promesa universal de procesamiento local.</p>
 
 </div>
 

@@ -146,16 +146,16 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="container">
 
 <span class="blog-cat cat-guide">Guías</span>
-<h1>Cómo funcionan realmente el ajuste de línea y la paginación al convertir texto a PDF</h1>
-<p class="intro">Un procesador de textos ajusta el texto automáticamente, así que es fácil suponer que generar un PDF funciona igual. No es así — el formato PDF en sí no tiene ningún concepto de ajuste de línea. Cada herramienta de "pega texto, obtén un PDF" tiene que medir y cortar las líneas por sí misma, palabra por palabra.</p>
+<h1>Cómo se ajusta el texto entre páginas PDF</h1>
+<p class="intro">PDF almacena instrucciones de dibujo posicionadas, no un documento fluido. Por eso un generador debe decidir dónde termina cada línea y comienza cada página. Las métricas de fuente, el ancho disponible y la altura de línea convierten esa tarea en un cálculo repetible con algunos casos especiales.</p>
 
 <div class="article-body">
 
-<h2>Por qué el PDF no tiene ajuste de línea integrado</h2>
-<p>El texto de una página PDF no es un párrafo fluido como en un procesador de textos — es una serie de instrucciones de dibujo explícitas, cada una colocando una cadena específica de caracteres en una coordenada x/y específica de la página. No hay ningún equivalente al ajuste automático de línea de HTML en el borde de un contenedor. Si un generador quiere que el texto se ajuste al margen derecho, tiene que averiguar, línea por línea, exactamente qué palabras caben antes de ese margen y emitir una instrucción de dibujo separada para cada línea resultante.</p>
+<h2>PDF coloca texto, pero no ajusta párrafos automáticamente</h2>
+<p>Una página PDF describe cadenas dibujadas en coordenadas concretas. A diferencia de un contenedor HTML o procesador de textos, el formato no mueve por sí solo una palabra desbordada. El generador mide líneas candidatas frente al espacio entre márgenes y emite una instrucción separada por cada línea construida.</p>
 
-<h2>Cómo mide un generador dónde cortar una línea</h2>
-<p>La operación central es medir el ancho en puntos que ocuparía una cadena de texto en una fuente y tamaño específicos — cada fuente tiene datos de métricas exactamente para esto, ya que cada carácter tiene un ancho definido a un tamaño dado. Un generador construye una línea palabra por palabra: añade la siguiente palabra, mide el ancho resultante de la línea, y si sigue siendo más estrecho que el ancho disponible de la página (el ancho de la página menos los márgenes izquierdo y derecho), la conserva; si añadir la palabra desbordaría el ancho, esa palabra inicia una nueva línea en su lugar.</p>
+<h2>Las métricas de fuente determinan cada salto</h2>
+<p>La operación central es medir el ancho en puntos que ocuparía una cadena de texto en una fuente y tamaño específicos, cada fuente tiene datos de métricas exactamente para esto, ya que cada carácter tiene un ancho definido a un tamaño dado. Un generador construye una línea palabra por palabra: añade la siguiente palabra, mide el ancho resultante de la línea, y si sigue siendo más estrecho que el ancho disponible de la página (el ancho de la página menos los márgenes izquierdo y derecho), la conserva; si añadir la palabra desbordaría el ancho, esa palabra inicia una nueva línea en su lugar.</p>
 
 <figure class="theme-figure">
 <svg viewBox="0 0 700 190" width="700" height="190" role="img" aria-label="Diagrama que muestra que la palabra Helvetica, renderizada en fuente Helvetica de 12 puntos, mide 49.044 puntos de ancho, comparado con el ancho de texto disponible de una página A4 de 495.28 puntos tras márgenes de 50 puntos en cada lado, cabiendo aproximadamente 10 palabras de esa longitud por línea." xmlns="http://www.w3.org/2000/svg">
@@ -168,27 +168,27 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <text x="350" y="155" text-anchor="middle" font-size="14" fill="var(--muted-text)">Ancho de página A4 (595.28pt) − 50pt de margen por lado = 495.28pt disponibles para texto</text>
 <text x="350" y="178" text-anchor="middle" font-size="13" fill="var(--muted-text)">≈ 10 palabras de esta longitud caben en una línea antes de ajustar</text>
 </svg>
-<figcaption>Valores reales medidos: "Helvetica" a 12pt en fuente Helvetica mide exactamente 49.044 puntos de ancho (calculado con las propias métricas de fuente de pdf-lib) — esa es la unidad con la que realmente trabaja un algoritmo de ajuste de línea.</figcaption>
+<figcaption>Valores reales medidos: "Helvetica" a 12pt en fuente Helvetica mide exactamente 49.044 puntos de ancho (calculado con las propias métricas de fuente de pdf-lib), esa es la unidad con la que realmente trabaja un algoritmo de ajuste de línea.</figcaption>
 </figure>
 
-<h2>Cómo la paginación sigue la misma lógica en vertical</h2>
-<p>Una vez que un generador tiene la lista completa de líneas ajustadas, las coloca una debajo de otra, bajando una altura de línea cada vez, hasta que la siguiente línea caería por debajo del margen inferior — en ese momento, comienza una nueva página y continúa desde el margen superior. Es el mismo enfoque codicioso, elemento por elemento, que el ajuste de línea, solo que aplicado a líneas en lugar de palabras, y a espacio vertical en lugar de horizontal.</p>
+<h2>El límite vertical abre la siguiente página</h2>
+<p>Una vez que un generador tiene la lista completa de líneas ajustadas, las coloca una debajo de otra, bajando una altura de línea cada vez, hasta que la siguiente línea caería por debajo del margen inferior, en ese momento, comienza una nueva página y continúa desde el margen superior. Es el mismo enfoque codicioso, elemento por elemento, que el ajuste de línea, solo que aplicado a líneas en lugar de palabras, y a espacio vertical en lugar de horizontal.</p>
 
-<h2>Por qué el texto PDF real es mejor que una imagen rasterizada del texto</h2>
-<p>Como este proceso construye instrucciones reales de dibujo de texto PDF (no una imagen), el PDF resultante tiene texto genuinamente seleccionable, buscable y copiable — abrirlo y arrastrar para seleccionar una frase funciona exactamente igual que en cualquier PDF basado en texto. Un generador que en cambio renderizara tu texto en un lienzo y colocara ese lienzo como imagen produciría un PDF que se ve idéntico a simple vista pero sin ningún texto seleccionable, y normalmente con un tamaño de archivo notablemente mayor.</p>
+<h2>Dibujar texto PDF conserva funciones que una captura pierde</h2>
+<p>Escribir instrucciones de texto PDF suele producir caracteres seleccionables y buscables. Una captura canvas contiene píxeles y necesita OCR para buscar o copiar palabras. La extracción y accesibilidad todavía dependen de codificación, mapas de caracteres y estructura; tener texto seleccionable no garantiza por sí solo un PDF correctamente etiquetado o accesible.</p>
 
-<h2>Respuestas rápidas</h2>
-<p><strong>¿Qué pasa con una sola palabra más larga que todo el ancho de línea?</strong> Un generador bien diseñado recurre a cortar la propia palabra, carácter por carácter, en lugar de dejar que desborde la página o quedarse atascado en un bucle infinito — esto importa para cosas como URLs largas sin espacios.</p>
-<p><strong>¿Distintas fuentes ajustan el texto de forma diferente al mismo tamaño?</strong> Sí — cada fuente tiene sus propios anchos de carácter (una fuente monoespaciada como Courier tiene anchos idénticos para cada carácter, mientras que Helvetica o Times tienen anchos variables por carácter), así que el mismo texto al mismo tamaño de punto puede ajustarse en un número distinto de líneas según la fuente.</p>
-<p><strong>¿Por qué importan las líneas en blanco de mi texto pegado?</strong> Una línea en blanco normalmente indica un salto de párrafo — un generador que las ignorara por completo uniría todos los párrafos, así que conservarlas como líneas vacías (con su propio espacio vertical) mantiene reconocible la estructura original.</p>
+<h2>Dónde necesita más cuidado el diseño</h2>
+<p><strong>¿Qué pasa con una sola palabra más larga que todo el ancho de línea?</strong> Un generador bien diseñado recurre a cortar la propia palabra, carácter por carácter, en lugar de dejar que desborde la página o quedarse atascado en un bucle infinito, esto importa para cosas como URLs largas sin espacios.</p>
+<p><strong>¿Distintas fuentes ajustan el texto de forma diferente al mismo tamaño?</strong> Sí, cada fuente tiene sus propios anchos de carácter (una fuente monoespaciada como Courier tiene anchos idénticos para cada carácter, mientras que Helvetica o Times tienen anchos variables por carácter), así que el mismo texto al mismo tamaño de punto puede ajustarse en un número distinto de líneas según la fuente.</p>
+<p><strong>¿Por qué importan las líneas en blanco de mi texto pegado?</strong> Una línea en blanco normalmente indica un salto de párrafo, un generador que las ignorara por completo uniría todos los párrafos, así que conservarlas como líneas vacías (con su propio espacio vertical) mantiene reconocible la estructura original.</p>
 
 <div class="cta-box">
   <h3>Convierte texto a PDF</h3>
-  <p>La herramienta Texto a PDF de Orisod ajusta y pagina texto plano automáticamente, con opción de tamaño de página, fuente y tamaño de fuente — todo en tu navegador.</p>
+  <p>Texto a PDF de Orisod ajusta y pagina texto plano con tamaño de página, fuente y cuerpo seleccionables, directamente en tu navegador.</p>
   <a class="cta-button" href="/es/text-to-pdf/">Convertir texto a PDF →</a>
 </div>
 
-<p>El ajuste de línea y la paginación en un generador de PDF no son magia — son una medición de métricas de fuente repetida palabra por palabra y línea por línea hasta que se acaba el texto. Una vez que sabes que ese es todo el algoritmo, el caso límite ocasional (palabras muy largas, texto con espaciado extraño) deja de sorprender.</p>
+<p>La maquetación de texto PDF es una secuencia de medidas: construir una línea candidata, comparar su ancho, colocarla y abrir otra página cuando se agota el espacio vertical. Las cadenas largas sin cortes, ciertos caracteres Unicode y las limitaciones de fuentes son los casos que más tratamiento especial necesitan.</p>
 
 </div>
 
