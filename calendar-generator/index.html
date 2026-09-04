@@ -148,6 +148,7 @@ select, input[type="text"], input[type="date"], input[type="number"]{
 .month-preview .mp-cell.shade-c{background:rgba(37,99,235,.14);}
 .month-preview .mp-cell.shade-d{background:rgba(0,0,0,.10);}
 .month-preview .mp-cell.shade-e{background:rgba(236,72,153,.12);}
+.month-preview .mp-cell.shade-f{background:rgba(22,163,74,.12);}
 .preview-nav{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:10px;font-size:13px;}
 .preview-nav button{background:var(--card-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px 10px;cursor:pointer;}
 
@@ -636,16 +637,21 @@ function eventsForYear(year){
 /* ===================== JEWISH-CALENDAR SHADING + HEBREW DATES =====================
    Shared logic (Part 1 general calendar + Part 2 Hebrew Calendar Generator, once
    built, will both call these same functions). Shading category priority: a
-   holiday's own shade (from jewish-full.json) wins; otherwise every Friday/
-   Saturday falls back to category A (Shabbat); otherwise no shading. Erev
-   days are the one exception -- they carry the explicit 'none' sentinel,
-   which is exempt from the Shabbat fallback too (see shadeForDate). */
+   holiday's own shade (from jewish-full.json) wins; otherwise every
+   Saturday falls back to category A (Shabbat) -- Friday (Erev Shabbat)
+   never gets its own fallback shading; otherwise no shading. Erev days
+   are the one exception among null-shade dates -- they carry the explicit
+   'none' sentinel, which is exempt from the Shabbat fallback too (see
+   shadeForDate). Tu BiShvat carries its own permanent category (F) and
+   is shaded every year regardless of weekday. */
 function shabbatCategoryFor(dateKey){
+  // Saturday only -- Friday is Erev Shabbat and, like every other Erev day,
+  // never gets its own shading on its own merit.
   var dow = new Date(dateKey + 'T00:00:00').getDay();
-  return (dow === 5 || dow === 6) ? 'A' : null;
+  return (dow === 6) ? 'A' : null;
 }
 function shadeForYear(year){
-  var shade = {}; // 'YYYY-MM-DD' -> 'A'|'B'|'C'|'D'|'E'|'none'|null
+  var shade = {}; // 'YYYY-MM-DD' -> 'A'|'B'|'C'|'D'|'E'|'F'|'none'|null
   if (jewishFull && jewishFull[year]) {
     jewishFull[year].forEach(function(h){
       if (h.shade) shade[h.date] = h.shade;
@@ -762,6 +768,7 @@ var SHADE_COLORS_PDF = {
   C: { r: 37/255, g: 99/255, b: 235/255, o: .14 },
   D: { r: 0, g: 0, b: 0, o: .10 },
   E: { r: 236/255, g: 72/255, b: 153/255, o: .12 },
+  F: { r: 22/255, g: 163/255, b: 74/255, o: .12 },
 };
 
 async function generatePdf(){
