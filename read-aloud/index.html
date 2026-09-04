@@ -209,33 +209,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>Read Aloud speaks any text you paste in, using your browser's own built-in text-to-speech voices. As it reads, the current sentence is highlighted so you can follow along visually while you listen. Everything — splitting the text, picking a voice, and generating the speech itself — happens locally in your browser via the Web Speech API. Nothing you type or paste is ever sent to a server.</p>
+    <h2>Live text-to-speech with sentence highlighting</h2>
+    <p>Paste text, select an available voice and adjust rate or pitch before playback. The current sentence is highlighted as the browser’s Web Speech API reads it. Voices and behavior come from the browser, operating system and installed services, so availability, quality, language support and network use can differ by device. Orisod does not intentionally upload the pasted text, but the platform’s speech provider controls how synthesis is performed.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>Listen, proofread or follow text in another way</h2>
     <ul>
-      <li>Proofreading a draft — hearing your own writing out loud makes awkward phrasing and typos much easier to catch</li>
-      <li>Listening to a long article, script, or set of notes while doing something else</li>
-      <li>Practicing pronunciation while learning a language</li>
-      <li>Making written content more accessible for anyone who prefers or needs to listen instead of read</li>
+      <li>Hear a draft to catch awkward rhythm or missed words</li>
+      <li>Listen to notes or an article while doing another task</li>
+      <li>Compare pronunciation with an available language voice</li>
+      <li>Offer an additional way to consume written material</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Can I download the speech as an audio file?</div>
-      <div>No. The Web Speech API that powers this tool only supports live, in-browser playback — it doesn't provide any way to save what it reads as an MP3, WAV, or any other audio file. That's a limitation of the underlying browser technology, not something Orisod can add.</div>
+      <div>No. The Web Speech API offers live playback but does not provide Orisod with an audio stream to export as MP3, WAV or another file.</div>
     </div>
     <div class="faq-item">
       <div class="q">Why do I only see a few voices, or why do they sound robotic?</div>
-      <div>Every voice listed comes from your own device and browser, not from Orisod — we don't ship or install any voices. macOS and iOS tend to include several natural-sounding voices out of the box; other setups may offer fewer, more robotic-sounding options. The set you see is entirely up to your operating system.</div>
+      <div>The voice list is supplied by the browser and operating system. Installed voices, defaults and quality vary, and some platforms may obtain voices or synthesis through online services. Orisod does not install them.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my text ever sent to a server?</div>
-      <div>No. Reading your text, including generating the speech itself, happens entirely on your device through your browser's built-in <code style="background:var(--bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;">speechSynthesis</code> API. Nothing is uploaded.</div>
+      <div>Orisod does not intentionally upload the text. The Web Speech API delegates synthesis to your browser, operating system or configured voice service, and some implementations may use a network service. Consult the platform’s privacy information for sensitive content.</div>
     </div>
     <div class="faq-item">
       <div class="q">Why did playback stop partway through a long text?</div>
-      <div>Text is automatically split into sentence-sized pieces before being read, which works around a known bug in some browsers where very long blocks of text cut off partway through. If playback still stops early, try pressing Play again or switching to a different installed voice.</div>
+      <div>The tool splits text into smaller utterances to reduce browser cutoffs, but Web Speech implementations can still pause or stop. Try Play again, another installed voice, a shorter selection or a different browser.</div>
     </div>
   </div>
 

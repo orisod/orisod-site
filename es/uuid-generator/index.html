@@ -184,32 +184,32 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué es un UUID?</h2>
-    <p>Un UUID (Identificador Único Universal) es un valor de 128 bits, normalmente escrito como 32 dígitos hexadecimales en cinco grupos (como <code style="background:var(--bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;">550e8400-e29b-41d4-a716-446655440000</code>). Se usa para etiquetar registros, sesiones, filas de bases de datos u objetos de API con un identificador que prácticamente tiene garantizado no coincidir con ningún otro UUID jamás generado, en ningún sitio, sin necesitar una autoridad central que los reparta.</p>
+    <h2>UUID: un formato descentralizado de identificación de 128 bits</h2>
+    <p>Un UUID es un identificador de 128 bits que suele escribirse como 32 dígitos hexadecimales en cinco grupos, por ejemplo 550e8400-e29b-41d4-a716-446655440000. La versión 4 llena 122 bits variables con datos aleatorios. Así logra una probabilidad de colisión extremadamente baja sin emisor central y sirve para registros de bases de datos y API, aunque la unicidad no es una garantía matemática.</p>
 
-    <h2>¿Cuándo deberías usar esta herramienta?</h2>
+    <h2>Crea identificadores para registros, pruebas y objetos API</h2>
     <ul>
-      <li>Necesitas un identificador único para un registro de base de datos, un dato de prueba o una petición de API durante el desarrollo</li>
-      <li>Estás generando datos de ejemplo o semilla y necesitas identificadores únicos con aspecto realista</li>
-      <li>Necesitas varios identificadores únicos a la vez y no quieres usar una librería ni escribir un script para ello</li>
+      <li>Crear un identificador para una base de datos, prueba o solicitud API</li>
+      <li>Rellenar datos de ejemplo con identificadores aleatorios bien formados</li>
+      <li>Generar varios UUID sin añadir una biblioteca ni escribir un script</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿Qué versión de UUID genera esta herramienta?</div>
-      <div>La versión 4 — totalmente aleatoria, la más usada y la opción estándar salvo que un sistema concreto exija otra distinta (como la versión 1, que codifica una marca de tiempo, o la versión 7, ordenada cronológicamente). La versión 4 es lo que la mayoría de peticiones de "generador de UUID" quieren decir en realidad.</div>
+      <div>Genera valores UUID versión 4 a partir de datos aleatorios. Usa otra implementación si el sistema exige específicamente una versión temporal, basada en nombre u ordenada por tiempo, como UUID v7.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Pueden coincidir dos UUID generados?</div>
-      <div>En teoría sí, en la práctica prácticamente nunca — un UUID versión 4 tiene 122 bits aleatorios, lo que hace que la probabilidad de una coincidencia sea astronómicamente pequeña incluso entre miles de millones de valores generados.</div>
+      <div>Sí, una colisión de UUID es teóricamente posible. Con 122 bits aleatorios, la probabilidad es extraordinariamente baja si la fuente funciona correctamente. Los sistemas con requisitos estrictos todavía deben imponer unicidad.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se guardan estos UUID en algún sitio?</div>
-      <div>No — nada se guarda en este dispositivo ni en ningún servidor. En cuanto sales o recargas la página, desaparecen a menos que los hayas copiado y guardado tú mismo.</div>
+      <div>La página no guarda intencionalmente los UUID generados. Desaparecen al limpiar la sesión salvo que los copies o almacenes aparte.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se envía algo a un servidor?</div>
-      <div>No, todo el proceso ocurre localmente en tu navegador con JavaScript.</div>
+      <div>No. JavaScript genera los UUID localmente con la fuente segura de aleatoriedad del navegador.</div>
     </div>
   </div>
 

@@ -177,33 +177,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What is EXIF metadata?</h2>
-    <p>Most photos from phones and cameras carry hidden data embedded in the file itself — called EXIF metadata. This can include the exact GPS coordinates where the photo was taken, the camera or phone model, the date and time, and sometimes the software used to edit it. None of this is visible when you look at the photo, but it travels with the file wherever you send it.</p>
+    <h2>The EXIF camera data carried inside many photo files</h2>
+    <p>Phones and cameras can store EXIF fields alongside the visible pixels. Depending on the device and its settings, those fields may identify GPS coordinates, camera model, capture date, exposure settings or editing software. The information travels with the original file unless an application removes it. Other metadata systems can also exist, so EXIF removal should not be described as a universal forensic scrub.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>Review hidden details before sharing an image</h2>
     <ul>
-      <li>You're posting a photo publicly and don't want to reveal where it was taken</li>
-      <li>You're sharing a photo with someone you don't want to have your location history</li>
-      <li>You want to clean sensitive metadata before uploading to a marketplace or forum</li>
-      <li>You're archiving photos and prefer not to keep identifying details attached</li>
+      <li>Remove available location fields before publishing a photograph</li>
+      <li>Review camera and capture details before sending the original file</li>
+      <li>Clean detected EXIF fields before a marketplace or forum upload</li>
+      <li>Create a sharing copy without the listed identifying fields</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Does this remove GPS location data?</div>
-      <div>Yes, if your photo has embedded GPS coordinates, they'll be shown in the detected metadata and fully removed from the downloaded file.</div>
+      <div>The tool removes detected EXIF GPS fields from the downloaded copy. Check the result before relying on it, because location or identifying information might also appear visibly in the image, filename or another metadata container.</div>
     </div>
     <div class="faq-item">
       <div class="q">Will removing metadata reduce photo quality?</div>
-      <div>No, the visible image quality is unaffected — only the hidden data attached to the file is removed.</div>
+      <div>Removing metadata alone does not require changing visible pixels. The export process and format implementation determine whether image bytes are copied or re-encoded, however, so compare an important result and retain the original.</div>
     </div>
     <div class="faq-item">
       <div class="q">What if no metadata is found?</div>
-      <div>Some images (especially screenshots, or photos already shared through social media) have no EXIF data left. The tool will let you know if nothing was found.</div>
+      <div>Screenshots and images processed by messaging or social platforms often contain no EXIF. The tool reports when it does not detect supported fields; that is not proof that every possible metadata type is absent.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my photo uploaded to a server?</div>
-      <div>No. Both the metadata detection and the removal happen locally in your browser — the photo never leaves your device.</div>
+      <div>No. Metadata inspection and removal occur locally in your browser.</div>
     </div>
   </div>
 

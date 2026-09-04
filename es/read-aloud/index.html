@@ -210,33 +210,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué hace esta herramienta?</h2>
-    <p>Leer en Voz Alta lee en voz alta cualquier texto que pegues, usando las voces de texto a voz integradas de tu propio navegador. Mientras lee, la frase actual se resalta para que puedas seguir la lectura visualmente mientras escuchas. Todo — dividir el texto, elegir una voz y generar el habla en sí — ocurre localmente en tu navegador mediante la API Web Speech. Nada de lo que escribas o pegues se envía nunca a un servidor.</p>
+    <h2>Texto a voz en vivo con resaltado de oraciones</h2>
+    <p>Pega texto, selecciona una voz disponible y ajusta velocidad o tono antes de reproducir. La oración actual se resalta mientras la API Web Speech la lee. Las voces y el comportamiento proceden del navegador, el sistema y sus servicios, por lo que disponibilidad, calidad, idiomas y uso de red cambian entre dispositivos. Orisod no sube intencionalmente el texto, pero el proveedor de voz controla cómo se sintetiza.</p>
 
-    <h2>¿Cuándo deberías usar esta herramienta?</h2>
+    <h2>Escucha, corrige o sigue el texto de otra manera</h2>
     <ul>
-      <li>Para corregir un borrador — escuchar tu propio texto en voz alta hace que sea mucho más fácil detectar frases torpes o errores</li>
-      <li>Para escuchar un artículo largo, un guion o unas notas mientras haces otra cosa</li>
-      <li>Para practicar la pronunciación mientras aprendes un idioma</li>
-      <li>Para hacer que un contenido escrito sea más accesible para quien prefiera o necesite escuchar en lugar de leer</li>
+      <li>Escuchar un borrador para encontrar ritmo torpe o palabras omitidas</li>
+      <li>Oír notas o un artículo mientras realizas otra tarea</li>
+      <li>Comparar pronunciación con una voz disponible para el idioma</li>
+      <li>Ofrecer otra forma de acceder al contenido escrito</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿Puedo descargar el audio como un archivo?</div>
-      <div>No. La API Web Speech en la que se basa esta herramienta solo admite reproducción en vivo dentro del navegador — no ofrece ninguna forma de guardar lo que lee como un MP3, WAV u otro archivo de audio. Es una limitación de la tecnología del navegador, no algo que Orisod pueda añadir.</div>
+      <div>No. La API Web Speech ofrece reproducción en vivo, pero no entrega a Orisod un flujo de audio que pueda exportar como MP3, WAV u otro archivo.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Por qué solo veo unas pocas voces, o por qué suenan robóticas?</div>
-      <div>Todas las voces que aparecen provienen de tu propio dispositivo y navegador, no de Orisod — nosotros no instalamos ni distribuimos ninguna voz. macOS e iOS suelen incluir varias voces de sonido natural de fábrica; otras configuraciones pueden ofrecer menos opciones, y más robóticas. El conjunto que ves depende por completo de tu sistema operativo.</div>
+      <div>La lista procede del navegador y del sistema operativo. Las voces instaladas, los valores y la calidad varían; algunas plataformas pueden obtener voces o síntesis mediante servicios en línea. Orisod no las instala.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se envía mi texto a algún servidor?</div>
-      <div>No. La lectura de tu texto, incluida la generación del habla, ocurre completamente en tu dispositivo mediante la API <code style="background:var(--bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;">speechSynthesis</code> integrada de tu navegador. Nada se sube.</div>
+      <div>Orisod no sube intencionalmente el texto. La API Web Speech delega la síntesis al navegador, el sistema o el servicio de voz configurado, y algunas implementaciones pueden usar la red. Consulta la privacidad de tu plataforma antes de introducir contenido sensible.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Por qué se detuvo la reproducción a mitad de un texto largo?</div>
-      <div>El texto se divide automáticamente en fragmentos del tamaño de una frase antes de leerse, lo cual evita un error conocido en algunos navegadores donde bloques de texto muy largos se cortan a mitad de camino. Si la reproducción sigue deteniéndose antes de tiempo, prueba a pulsar Reproducir de nuevo o a cambiar a otra voz instalada.</div>
+      <div>La herramienta divide el texto en fragmentos para reducir cortes, pero Web Speech todavía puede detenerse. Prueba Reproducir de nuevo, otra voz instalada, una selección más corta u otro navegador.</div>
     </div>
   </div>
 

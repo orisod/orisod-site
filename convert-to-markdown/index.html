@@ -177,7 +177,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M6 15V9l3 3 3-3v6"/><path d="M15 9v4"/><path d="M13 11l2 2 2-2"/></svg></div>
     <h1>Convert to Markdown</h1>
   </div>
-  <p class="tool-sub">Paste rich text or HTML and get clean Markdown — headings, lists, links, tables, and more. Everything happens locally in your browser.</p>
+  <p class="tool-sub">Turn pasted rich text or raw HTML into Markdown that you can inspect, edit and copy.</p>
 
   <div class="workspace">
     <div class="box">
@@ -208,33 +208,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>Paste formatted content — copied from a webpage, a Word document, or Google Docs — into the Rich Text box, or paste raw HTML markup into the HTML Source box, and this tool converts it to clean Markdown as you go: headings, bold and italic, links, images, ordered and unordered lists, blockquotes, code blocks, tables, and strikethrough.</p>
+    <h2>Translate supported document structure into Markdown</h2>
+    <p>Paste formatted content into Rich Text mode or provide markup in HTML Source mode. The converter maps supported headings, emphasis, links, images, lists, blockquotes, code, tables and strikethrough into Markdown. The formats are not equivalent: custom styling, scripts, interactive elements, precise spacing and complex table structure can be simplified or discarded, so review the output before publishing.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>Move content into wikis, notes and static sites</h2>
     <ul>
-      <li>Moving a document or article into a Markdown-based wiki, README, or static site</li>
-      <li>Converting a formatted webpage or Google Doc into Markdown for a note-taking app</li>
-      <li>Turning an HTML email or exported HTML file into Markdown you can edit as plain text</li>
-      <li>Quickly converting a table copied from a webpage into a Markdown table</li>
+      <li>Move an article into a Markdown wiki, README or static site</li>
+      <li>Prepare content from a webpage or document for a note-taking app</li>
+      <li>Turn supported HTML structure into editable plain-text Markdown</li>
+      <li>Convert a simple copied table into Markdown table syntax</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">What's the difference between Rich Text and HTML Source mode?</div>
-      <div>Rich Text mode accepts a normal paste — the browser carries the formatting from whatever you copied automatically. HTML Source mode is for when you already have raw HTML markup (like view-source output) and want to paste that text directly.</div>
+      <div>Rich Text mode receives the formatted clipboard content exposed by the browser. HTML Source mode parses markup that you paste as text. Clipboard behavior varies by source application, so the same document may produce different input in each mode.</div>
     </div>
     <div class="faq-item">
       <div class="q">Will tables convert correctly?</div>
-      <div>Yes — tables convert to GitHub-Flavored Markdown table syntax, which is supported by GitHub, most static site generators, and most Markdown editors.</div>
+      <div>Simple rectangular tables can become GitHub-Flavored Markdown. Merged cells, nested content, multiple header rows and other complex structures have no faithful standard equivalent and may need manual rebuilding. Renderer support also varies.</div>
     </div>
     <div class="faq-item">
       <div class="q">What happens to images and complex formatting?</div>
-      <div>Images convert to Markdown image syntax referencing their original source URL. Formatting with no Markdown equivalent (custom fonts, colors, exact spacing) is dropped, since Markdown itself doesn't support it.</div>
+      <div>Images become Markdown references to available source URLs; embedded or protected sources may not remain usable elsewhere. Styling without a Markdown equivalent, including fonts, colors and exact spacing, is dropped.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my content uploaded to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No. JavaScript performs the conversion locally in your browser.</div>
     </div>
   </div>
 

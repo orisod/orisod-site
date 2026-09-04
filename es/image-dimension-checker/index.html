@@ -171,33 +171,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué hace esta herramienta?</h2>
-    <p>Esta herramienta lee y muestra los detalles técnicos de un archivo de imagen: su ancho y alto exactos en píxeles, tamaño de archivo, formato, proporción y — cuando el archivo lo incluye — resolución DPI (puntos por pulgada). Es una forma rápida de confirmar exactamente con qué estás trabajando antes de subir o imprimir una imagen.</p>
+    <h2>Lee las medidas guardadas en un archivo de imagen</h2>
+    <p>Abre una imagen para ver ancho y alto en píxeles, proporción, formato y tamaño de archivo. La herramienta también informa metadatos DPI cuando encuentra un valor compatible. Los píxeles describen los datos rasterizados reales; el DPI guardado funciona sobre todo como indicación de impresión y no añade detalle ni controla todas las aplicaciones.</p>
 
-    <h2>¿Cuándo deberías usar esta herramienta?</h2>
+    <h2>Comprueba requisitos antes de subir o imprimir</h2>
     <ul>
-      <li>Un formulario o plataforma requiere dimensiones específicas en píxeles y necesitas comprobar si tu imagen cumple</li>
-      <li>Estás preparando una imagen para imprimir y necesitas confirmar su DPI</li>
-      <li>Quieres comparar rápidamente la proporción de una imagen con una proporción objetivo</li>
-      <li>Necesitas el tamaño exacto del archivo antes de adjuntarlo en algún lugar con límites de tamaño</li>
+      <li>Verificar los píxeles exigidos por un formulario o plataforma</li>
+      <li>Examinar el DPI guardado antes de elegir un tamaño de impresión</li>
+      <li>Comparar la proporción con el marco requerido</li>
+      <li>Confirmar el peso antes de una subida con límite</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿Por qué el DPI aparece como "no encontrado" en algunas imágenes?</div>
-      <div>No todos los archivos de imagen almacenan un valor de DPI — muchas imágenes web y capturas de pantalla simplemente no lo incluyen. Cuando está presente, suele ser una referencia para impresión más que para visualización en pantalla.</div>
+      <div>Muchas capturas e imágenes web no guardan una etiqueta DPI. Su ausencia no significa que falten píxeles; calcula la impresión con las dimensiones y la resolución que requiera la salida.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Cuál es la diferencia entre dimensiones en píxeles y DPI?</div>
-      <div>Las dimensiones en píxeles, como 1920 × 1080, indican cuántos píxeles contiene la imagen. El valor DPI expresa la densidad prevista de impresión; una imagen con las mismas dimensiones puede imprimirse más grande o más pequeña según ese valor.</div>
+      <div>Las dimensiones son el ancho y alto reales en píxeles. El metadato DPI sugiere cuántos deberían ocupar una pulgada impresa. Cambiar solo esa etiqueta puede variar el tamaño sugerido sin aumentar el detalle.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se envía mi imagen a algún servidor?</div>
-      <div>No. Todo se procesa localmente en tu navegador mediante JavaScript; el archivo permanece en tu dispositivo.</div>
+      <div>No. JavaScript lee localmente la imagen y sus metadatos compatibles.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Qué formatos son compatibles?</div>
-      <div>JPG, PNG, WebP, GIF y otros formatos comunes que tu navegador pueda leer. La detección de DPI actualmente funciona para archivos JPEG y PNG.</div>
+      <div>El navegador puede inspeccionar JPG, PNG, WebP, GIF y otros formatos que decodifique. En esta versión, la detección de DPI se limita a metadatos JPEG y PNG compatibles.</div>
     </div>
   </div>
 

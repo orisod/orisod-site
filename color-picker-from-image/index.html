@@ -196,33 +196,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>This tool lets you click any point on an uploaded image and instantly get that exact pixel's color as a HEX code (like <code>#3b82f6</code>) and RGB value (like <code>rgb(59, 130, 246)</code>) — both ready to copy and use in CSS, design software, or anywhere else you need a precise color match.</p>
+    <h2>Read the stored color of a selected pixel</h2>
+    <p>Open an image and click a point to read that pixel as a HEX code and RGB value. Recent selections remain available as swatches for comparison and copying into CSS or design software. The reading reports the pixel data in the decoded file; the way that color looks elsewhere can still vary with display calibration, color profiles, lighting and print reproduction.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>Build palettes and inspect small color differences</h2>
     <ul>
-      <li>You want to match a color from a photo or screenshot in your website or design</li>
-      <li>You're building a brand palette based on colors in a logo or photo</li>
-      <li>You need the exact HEX code of a color you can only see, not measure</li>
-      <li>You're comparing colors across multiple points in an image</li>
+      <li>Sample a color from a photograph or screenshot for a design</li>
+      <li>Build a starting palette from a logo or reference image</li>
+      <li>Copy the stored HEX value of a visible pixel</li>
+      <li>Compare neighboring pixels or several areas of one image</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">How accurate is the color reading?</div>
-      <div>It reads the exact pixel value at the point you click, so it's as accurate as the image itself — though compressed images (like JPG) can have slight color variation between neighboring pixels.</div>
+      <div>It reports the decoded RGB value at the selected pixel. That is precise for the file data presented to the canvas, but it does not guarantee identical appearance on every screen or printer. JPG compression can also create small variations between neighboring pixels.</div>
     </div>
     <div class="faq-item">
       <div class="q">Can I pick multiple colors from the same image?</div>
-      <div>Yes, keep clicking different points — your recent picks are shown as a row of swatches you can click to bring back.</div>
+      <div>Yes. Select additional points and use the recent-color swatches to revisit earlier readings.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my image uploaded anywhere?</div>
-      <div>No, the entire process happens locally in your browser using the Canvas API.</div>
+      <div>No. The browser uses the Canvas API to read the image locally.</div>
     </div>
     <div class="faq-item">
       <div class="q">What formats does this support?</div>
-      <div>JPG, PNG, WEBP and other common image formats your browser can display.</div>
+      <div>It accepts JPG, PNG, WEBP and other image types that the current browser can decode. Support can vary by browser and version.</div>
     </div>
   </div>
 

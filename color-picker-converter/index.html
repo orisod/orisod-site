@@ -209,33 +209,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>Pick a color visually or type a value into any field — HEX, RGB, or HSL — and the other two update instantly. An opacity slider adds alpha channel support to all three formats (8-digit HEX, <code style="background:var(--bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;">rgba()</code>, and <code style="background:var(--bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;">hsla()</code>). This tool converts a color you choose or type — it doesn't extract a color from an uploaded image (for that, see Color Picker from Image below).</p>
+    <h2>Edit one color through three web formats</h2>
+    <p>Choose a color visually or enter a valid HEX, RGB or HSL value; the other fields update from the same color. A separate opacity control produces eight-digit HEX, rgba() and hsla() forms. The conversion is intended for web color notation and does not sample uploaded images or simulate printer-dependent CMYK output. Rounding can make a converted value textually different while remaining visually equivalent.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>Move values between design tools and CSS</h2>
     <ul>
-      <li>You have a HEX value from a design file and need the RGB or HSL equivalent for code</li>
-      <li>You want to fine-tune a color's lightness or saturation using HSL, then get the HEX for CSS</li>
-      <li>You need a semi-transparent color and want the exact rgba()/hsla() syntax</li>
-      <li>You're translating a color between a design tool and a codebase that expects a different format</li>
+      <li>Translate a HEX design value into RGB or HSL</li>
+      <li>Adjust lightness or saturation in HSL and copy the HEX value for CSS</li>
+      <li>Build an rgba() or hsla() color with a chosen opacity</li>
+      <li>Move a color between tools that use different web formats</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Does the native color picker support transparency?</div>
-      <div>No — browsers' built-in color picker only selects an opaque color, which is why opacity is a separate slider here. The slider's value combines with the picker's color to produce the alpha-aware HEX/RGB/HSL output.</div>
+      <div>The browser’s native color input selects an opaque RGB color. Use the separate opacity slider to add alpha to the generated HEX, RGB and HSL representations.</div>
     </div>
     <div class="faq-item">
       <div class="q">What formats can I type directly into each field?</div>
-      <div>HEX accepts 3, 4, 6, or 8 hex digits, with or without a leading #. RGB accepts <code style="background:var(--bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;">rgb(r, g, b)</code> or <code style="background:var(--bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;">rgba(r, g, b, a)</code>. HSL accepts <code style="background:var(--bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;">hsl(h, s%, l%)</code> or <code style="background:var(--bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;">hsla(h, s%, l%, a)</code>. An invalid value shows an error instead of silently guessing.</div>
+      <div>HEX accepts supported 3, 4, 6 or 8 digit notation with or without #. The RGB and HSL fields accept the rgb()/rgba() and hsl()/hsla() forms described in the interface. Invalid or unsupported syntax is rejected rather than guessed.</div>
     </div>
     <div class="faq-item">
       <div class="q">Does this tool support CMYK?</div>
-      <div>No — CMYK is a print-oriented format without one universally correct conversion formula (the "right" RGB-to-CMYK math depends on the specific printer/ink profile), so it's out of scope for a browser-based color tool aimed at web/CSS use.</div>
+      <div>No. CMYK values depend on profiles, inks, paper and printing conditions; there is no single RGB-to-CMYK conversion that predicts every press. Use profile-aware design software for print production rather than a CSS-focused tool.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is anything sent to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No. JavaScript parses and converts the values locally.</div>
     </div>
   </div>
 

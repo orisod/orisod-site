@@ -209,32 +209,32 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What makes a password strong?</h2>
-    <p>A password's strength comes down to how many possible combinations an attacker would have to try — which depends on both its length and how many different characters it could contain. A long, fully random password drawing from a large character set (uppercase, lowercase, numbers, and symbols) is far harder to guess or brute-force than a short one, even one with unusual substitutions like "P@ssw0rd."</p>
+    <h2>Length and unpredictability matter more than clever substitutions</h2>
+    <p>A password becomes harder to guess when it is long, unpredictable and drawn from enough possible characters. Random generation avoids familiar words, dates and substitutions that attackers already test. Use a different password for every account and store it in a reputable password manager; even a strong generated password becomes unsafe if it is reused or exposed.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>Create unique credentials for new accounts</h2>
     <ul>
-      <li>You're creating a new account and want a genuinely random password instead of a memorable-but-guessable one</li>
-      <li>You're setting up a password manager and need strong passwords for every site</li>
-      <li>A site requires a password meeting specific character requirements (the toggles here match common length/character rules)</li>
+      <li>Create an unpredictable password for a new account</li>
+      <li>Generate unique credentials to store in a password manager</li>
+      <li>Meet a site’s required length and character categories</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Is this password actually random?</div>
-      <div>Yes — it's generated using the Web Crypto API's <code style="background:var(--bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;">crypto.getRandomValues()</code>, a cryptographically secure source of randomness, not <code style="background:var(--bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;">Math.random()</code>, which isn't designed for security-sensitive use.</div>
+      <div>It uses crypto.getRandomValues() from the Web Crypto API, which is designed for cryptographic randomness. Strength still depends on the selected length, character pool and safe handling after generation.</div>
     </div>
     <div class="faq-item">
       <div class="q">Does this tool store or remember my passwords?</div>
-      <div>No — nothing is saved anywhere, on this device or any server. Once you leave or reload the page, the password is gone unless you've copied and saved it yourself.</div>
+      <div>The page does not intentionally save generated passwords locally or send them to Orisod. Browser extensions, clipboard history, screen recording or other software on the device remain outside this tool’s control.</div>
     </div>
     <div class="faq-item">
       <div class="q">What does "exclude ambiguous characters" do?</div>
-      <div>It removes characters that are easy to misread or mistype, like the digit 0 vs. the letter O, or 1 vs. l vs. I. Useful if you need to type the password by hand rather than copy-paste it — at a small cost to the total character pool.</div>
+      <div>It removes look-alike characters such as 0 and O or 1, l and I. That can help with manual transcription, while slightly reducing the available character set.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my password sent to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No. JavaScript generates it locally in the browser. Copy it directly into a trusted password manager rather than leaving it in clipboard history.</div>
     </div>
   </div>
 

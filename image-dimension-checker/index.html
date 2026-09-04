@@ -171,33 +171,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>This tool reads and displays the technical details of an image file: its exact width and height in pixels, file size, format, aspect ratio, and — when the file includes it — DPI (dots per inch) resolution. It's a quick way to confirm exactly what you're working with before uploading or printing an image.</p>
+    <h2>Read the measurements stored in an image file</h2>
+    <p>Open an image to see its width and height in pixels, aspect ratio, format and file size. The tool also reports DPI metadata when it can find a supported value. Pixel dimensions describe the actual raster data; stored DPI is mainly a print-size hint and does not add detail or control how every application prints the image.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>Check requirements before uploading or printing</h2>
     <ul>
-      <li>A form or platform requires specific pixel dimensions and you need to check if your image qualifies</li>
-      <li>You're preparing an image for print and need to confirm its DPI</li>
-      <li>You want to quickly compare the aspect ratio of an image against a target ratio</li>
-      <li>You need the exact file size before attaching it somewhere with size limits</li>
+      <li>Verify pixel requirements for a form or platform</li>
+      <li>Inspect stored DPI before planning a print size</li>
+      <li>Compare the image aspect ratio with a required frame</li>
+      <li>Confirm file size before an upload with a limit</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Why does DPI show as "not found" for some images?</div>
-      <div>Not every image file stores a DPI value — many web images and screenshots simply don't include it. When present, it's usually meant for print reference rather than screen display.</div>
+      <div>Many screenshots and web images do not store a DPI tag. Its absence does not mean the image lacks pixels; choose a print size from the pixel dimensions and the resolution your output requires.</div>
     </div>
     <div class="faq-item">
       <div class="q">What's the difference between pixel dimensions and DPI?</div>
-      <div>Pixel dimensions (like 1920×1080) are the actual number of pixels in the image. DPI describes how densely those pixels are meant to be printed per inch — the same pixel image can be printed larger or smaller depending on DPI.</div>
+      <div>Pixel dimensions are the image’s actual width and height in samples. DPI metadata suggests how many of those pixels should cover one printed inch. Changing only that tag can alter the suggested print size without changing image detail.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my image uploaded anywhere?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No. JavaScript reads the image and its supported metadata locally.</div>
     </div>
     <div class="faq-item">
       <div class="q">What formats are supported?</div>
-      <div>JPG, PNG, WEBP, GIF, and other common formats your browser can read. DPI detection currently works for JPEG and PNG files.</div>
+      <div>The browser can inspect JPG, PNG, WEBP, GIF and other formats it decodes. DPI detection in this version is limited to supported JPEG and PNG metadata.</div>
     </div>
   </div>
 

@@ -160,7 +160,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h16M4 15h16M10 3L8 21M16 3l-2 18"/></svg></div>
     <h1>Generador de Hash y Checksum</h1>
   </div>
-  <p class="tool-sub">Calcula hashes MD5, SHA-1, SHA-256, SHA-384 y SHA-512 de texto o un archivo, y compáralos con un checksum esperado. Todo ocurre localmente en tu navegador.</p>
+  <p class="tool-sub">Calcula hashes MD5, SHA-1, SHA-256, SHA-384 y SHA-512 para texto o un archivo y compáralos con un checksum de confianza.</p>
 
   <div class="workspace">
     <div class="box">
@@ -196,33 +196,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué hace esta herramienta?</h2>
-    <p>Escribe o pega texto, o suelta un archivo, y esta herramienta calcula sus hashes MD5, SHA-1, SHA-256, SHA-384 y SHA-512 todos a la vez — sin necesidad de adivinar qué algoritmo usa un checksum publicado. Pega un hash esperado en el campo de verificación y se comprueba automáticamente contra el que coincida en longitud de los cinco calculados.</p>
+    <h2>Calcula varios resúmenes de longitud fija</h2>
+    <p>Introduce texto o elige un archivo para calcular MD5, SHA-1, SHA-256, SHA-384 y SHA-512. El campo de verificación usa la longitud hexadecimal para seleccionar un algoritmo candidato y compara los valores. Una coincidencia indica que los bytes corresponden al checksum suministrado; no demuestra que el archivo sea seguro o auténtico si ese valor no procede de un canal confiable.</p>
 
-    <h2>¿Cuándo usar esta herramienta?</h2>
+    <h2>Comprueba la integridad frente a un valor confiable</h2>
     <ul>
-      <li>Confirmar que un archivo descargado coincide con el checksum publicado por su autor</li>
-      <li>Generar un checksum para compartir junto a un archivo que estás distribuyendo</li>
-      <li>Comparar dos archivos para ver si son idénticos byte a byte sin abrir ninguno</li>
-      <li>Calcular un hash rápido de un fragmento de texto o una contraseña como referencia</li>
+      <li>Comparar una descarga con un checksum publicado por una fuente confiable</li>
+      <li>Publicar un valor de integridad junto con un archivo distribuido</li>
+      <li>Comprobar si dos archivos accesibles contienen los mismos bytes</li>
+      <li>Calcular un resumen para pruebas o identificación, no para guardar contraseñas</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿Es seguro usar MD5 o SHA-1?</div>
-      <div>No para fines de seguridad — ambos tienen debilidades de colisión conocidas y no deben usarse para contraseñas ni firmas digitales. Se incluyen aquí porque las comprobaciones de integridad de archivos (confirmar que una descarga no se corrompió) todavía publican comúnmente checksums MD5 o SHA-1, un caso de uso distinto y no adversarial.</div>
+      <div>MD5 y SHA-1 tienen debilidades de colisión y no sirven para firmas, comprobaciones frente a atacantes ni almacenamiento de contraseñas. Todavía detectan corrupción accidental en flujos heredados, pero conviene SHA-2 cuando controlas el proceso. Las contraseñas necesitan una función lenta y con sal.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Cómo sabe el campo de verificación qué algoritmo comprobar?</div>
-      <div>Cada algoritmo de hash siempre produce una longitud fija de salida (MD5 son 32 caracteres hexadecimales, SHA-1 son 40, y así sucesivamente), así que la herramienta hace coincidir la longitud del hash que pegaste con el algoritmo correcto automáticamente.</div>
+      <div>La herramienta deduce un candidato por longitud hexadecimal: MD5 tiene 32 caracteres y SHA-1, 40; las opciones SHA-2 son más largas. La longitud no identifica todos los algoritmos posibles, así que confirma cuál utilizó el autor.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Hay un límite de tamaño de archivo?</div>
-      <div>No hay un límite estricto, pero el archivo completo se carga en memoria para calcular los hashes, así que los archivos extremadamente grandes (varios gigabytes) pueden ser lentos o toparse con los límites de memoria de tu navegador.</div>
+      <div>No se promete una cuota fija. El navegador debe leer el archivo y mantener datos de trabajo; el límite depende de memoria, dispositivo e implementación. Los archivos enormes pueden tardar o fallar.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se sube mi archivo o texto a un servidor?</div>
-      <div>No, todo el proceso ocurre localmente en tu navegador con JavaScript.</div>
+      <div>No. JavaScript lee la entrada y calcula los hashes localmente en tu navegador.</div>
     </div>
   </div>
 
