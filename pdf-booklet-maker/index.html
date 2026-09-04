@@ -161,7 +161,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5c2-1.5 5-1.5 7 0v14c-2-1.5-5-1.5-7 0z"/><path d="M22 5c-2-1.5-5-1.5-7 0v14c2-1.5 5-1.5 7 0z"/></svg></div>
     <h1>PDF Booklet Maker</h1>
   </div>
-  <p class="tool-sub">Reorder a PDF's pages into booklet order, so printing it double-sided and folding down the middle reads correctly. Everything happens locally in your browser.</p>
+  <p class="tool-sub">Arrange PDF pages into booklet order for double-sided printing, folding and optional center stapling.</p>
 
   <div class="workspace">
     <div class="box">
@@ -212,33 +212,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>This tool reorders a PDF's pages into booklet (saddle-stitch) imposition order — page 1 and the last page share one sheet, page 2 and the second-to-last page share the next, and so on — and lays two pages side by side on each landscape sheet. Print the result double-sided, fold each sheet in half, and stack them together: the pages read in the correct order from front cover to back.</p>
+    <h2>Booklet order is different from reading order</h2>
+    <p>PDF booklet imposition pairs early and late pages on landscape sheets so the sequence becomes correct after double-sided printing and folding. Two document pages are placed on each side. The total is padded to a multiple of four when necessary. Printer duplex behavior, paper orientation, scaling and binding direction vary, so print a short test before producing the full run.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>Documents suited to simple booklet imposition</h2>
     <ul>
-      <li>Printing a short report, program, or zine as a foldable, staple-in-the-middle booklet</li>
-      <li>Making a compact handout from a longer document without a print shop</li>
-      <li>Preparing a document for saddle-stitch binding at home or in an office</li>
-      <li>Creating an event program or menu that folds into a small booklet</li>
+      <li>Print a short program, report or zine with a center fold</li>
+      <li>Create a compact handout without sending it to a print shop</li>
+      <li>Prepare pages for simple saddle-stitch binding</li>
+      <li>Lay out a small event program or folded menu</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Why does my page count get padded with blank pages?</div>
-      <div>A booklet is built from full sheets, and each sheet holds exactly 4 pages (2 per side), so the total page count needs to be a multiple of 4. Blank pages are added at the end — they typically end up as blank space near the inside back cover, not disrupting your content's order.</div>
+      <div>Each physical sheet carries four document pages, two on each side, so the imposed total must be divisible by four. The tool adds blank pages at the end of the source sequence as needed; inspect the preview to see where they land after imposition.</div>
     </div>
     <div class="faq-item">
       <div class="q">Why "Flip on Short Edge" specifically?</div>
-      <div>The output sheets are landscape, and folding a landscape sheet in half along its short axis is what turns it into two portrait pages. Flip on Short Edge duplex printing keeps the front and back sides aligned correctly for that specific fold — Flip on Long Edge will print the back sides upside down relative to the front.</div>
+      <div>For the landscape sheets produced here, short-edge duplex is the usual setting needed for the intended fold. Printer drivers describe and implement duplex options differently, however. Print one test sheet and confirm front-to-back orientation before running the booklet.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is there a page limit?</div>
-      <div>No hard limit, but a very long document makes a very thick booklet that may not fold or staple neatly by hand — this works best for shorter documents (roughly under 60 pages).</div>
+      <div>There is no fixed page quota in the interface, but browser memory and physical binding impose practical limits. Paper thickness, creep and stapler capacity matter more as page count grows; “under 60 pages” is only a rough starting point, not a universal rule.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my PDF uploaded to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No. JavaScript performs the imposition locally in your browser.</div>
     </div>
   </div>
 

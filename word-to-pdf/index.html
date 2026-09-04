@@ -186,7 +186,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17V5"/><path d="M4 8l3-3 3 3"/><path d="M17 7v12"/><path d="M20 16l-3 3-3-3"/></svg></div>
     <h1>Word to PDF</h1>
   </div>
-  <p class="tool-sub">Convert a Word (.docx) document into a PDF. Everything happens locally in your browser.</p>
+  <p class="tool-sub">Render a .docx document as an image-based PDF without uploading the source file.</p>
 
   <div class="workspace">
     <div class="box">
@@ -225,33 +225,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>This tool reads a Word (.docx) file's content — headings, paragraphs, bold/italic text, lists, tables, and inline images — renders it in your browser, and captures that rendering as a PDF, entirely on your device. It's a best-effort conversion: since it takes a visual snapshot rather than using Word's own layout engine, the output won't be pixel-identical to opening the file in Microsoft Word, and its text is embedded as an image rather than selectable text.</p>
+    <h2>Capture a browser rendering of a Word document</h2>
+    <p>The converter reads headings, paragraphs, basic text styling, lists, tables and inline images from a Word .docx file, renders the content in the browser and captures that rendering in a PDF. It does not use Microsoft Word’s layout engine, so fonts, pagination, headers, footers and complex positioning may differ. The pages are image-based, which means their text is not selectable or searchable.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>Best for straightforward documents and visual sharing</h2>
     <ul>
-      <li>You need to share a Word document as a PDF and don't have Word installed</li>
-      <li>Your document is mostly text, with simple formatting, lists, or tables</li>
-      <li>You don't need the recipient to select, search, or copy the PDF's text</li>
-      <li>You want the conversion to happen privately, without uploading the file anywhere</li>
+      <li>Create a shareable PDF when Microsoft Word is unavailable</li>
+      <li>Convert a document built with simple paragraphs, lists or tables</li>
+      <li>Produce a visual copy when selectable PDF text is unnecessary</li>
+      <li>Keep the source document on your device during conversion</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Will the PDF's text be selectable or searchable?</div>
-      <div>No. The PDF is built from a rendered snapshot of the document, the same way our HTML to PDF tool works, so the text is part of an image rather than real, selectable text.</div>
+      <div>No. Each PDF page contains a rendered image of the document, much like an HTML canvas snapshot, so the words are not stored as selectable text. OCR applied afterward may add a text layer, but it requires proofreading.</div>
     </div>
     <div class="faq-item">
       <div class="q">Does this work with the older .doc format?</div>
-      <div>No, only the modern .docx format (Word 2007 and later) is supported. Re-save an older .doc file as .docx in Word first.</div>
+      <div>Only .docx is supported. Convert an older .doc file to .docx with compatible word-processing software before using this tool.</div>
     </div>
     <div class="faq-item">
       <div class="q">Will complex formatting be preserved exactly?</div>
-      <div>Not exactly — this is a best-effort rendering, not Word's own layout engine, so exact fonts, spacing, headers/footers, and very complex layouts may differ from the original. Simple documents (headings, paragraphs, lists, basic tables) convert well.</div>
+      <div>Not always. The browser renderer is different from Word, and unsupported fonts, page breaks, headers, footers, floating objects or elaborate layouts can shift. Inspect every page of an important document.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my document uploaded to a server?</div>
-      <div>No, the entire conversion happens locally in your browser using JavaScript. Your file never leaves your device.</div>
+      <div>No. JavaScript reads, renders and exports the document locally in your browser.</div>
     </div>
   </div>
 

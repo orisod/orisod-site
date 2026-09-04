@@ -161,7 +161,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5c2-1.5 5-1.5 7 0v14c-2-1.5-5-1.5-7 0z"/><path d="M22 5c-2-1.5-5-1.5-7 0v14c2-1.5 5-1.5 7 0z"/></svg></div>
     <h1>Creador de Folletos PDF</h1>
   </div>
-  <p class="tool-sub">Reordena las páginas de un PDF en orden de folleto, para que al imprimirlo a doble cara y doblarlo por la mitad se lea correctamente. Todo ocurre localmente en tu navegador.</p>
+  <p class="tool-sub">Organiza las páginas PDF en orden de folleto para imprimir a doble cara, doblar y, si lo deseas, grapar por el centro.</p>
 
   <div class="workspace">
     <div class="box">
@@ -212,33 +212,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué hace esta herramienta?</h2>
-    <p>Esta herramienta reordena las páginas de un PDF en orden de imposición de folleto (encuadernación a caballete) — la página 1 y la última página comparten una hoja, la página 2 y la penúltima comparten la siguiente, y así sucesivamente — y coloca dos páginas una junto a otra en cada hoja apaisada. Imprime el resultado a doble cara, dobla cada hoja por la mitad y apílalas: las páginas se leen en el orden correcto desde la portada hasta la contraportada.</p>
+    <h2>El orden de imposición no es el orden de lectura</h2>
+    <p>La imposición de un PDF combina páginas iniciales y finales sobre hojas apaisadas para que la secuencia quede correcta después de imprimir a doble cara y doblar. Cada cara contiene dos páginas del documento. Si hace falta, el total se completa hasta un múltiplo de cuatro. La orientación, escala y configuración dúplex varían entre impresoras, así que realiza una prueba corta antes de imprimir todo.</p>
 
-    <h2>¿Cuándo usar esta herramienta?</h2>
+    <h2>Documentos adecuados para una imposición sencilla</h2>
     <ul>
-      <li>Imprimir un informe corto, un programa o una revista como folleto plegable grapado por el centro</li>
-      <li>Crear un folleto compacto a partir de un documento más largo sin una imprenta</li>
-      <li>Preparar un documento para encuadernación a caballete en casa o en la oficina</li>
-      <li>Crear un programa de evento o un menú que se doble en un pequeño folleto</li>
+      <li>Imprimir un programa, informe o revista breve con pliegue central</li>
+      <li>Crear un folleto compacto sin recurrir a una imprenta</li>
+      <li>Preparar páginas para una encuadernación sencilla a caballete</li>
+      <li>Maquetar un programa pequeño o un menú plegado</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿Por qué se rellena mi número de páginas con páginas en blanco?</div>
-      <div>Un folleto se construye a partir de hojas completas, y cada hoja contiene exactamente 4 páginas (2 por cara), así que el total de páginas debe ser múltiplo de 4. Las páginas en blanco se añaden al final — normalmente acaban como espacio en blanco cerca de la contraportada interior, sin alterar el orden de tu contenido.</div>
+      <div>Cada hoja física contiene cuatro páginas del documento, dos por cara, así que el total impuesto debe ser divisible por cuatro. La herramienta añade al final las páginas en blanco necesarias. Revisa la vista previa para ver dónde aparecen después de la imposición.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Por qué "Voltear por el lado corto" específicamente?</div>
-      <div>Las hojas de salida son apaisadas, y doblar una hoja apaisada por la mitad a lo largo de su eje corto es lo que la convierte en dos páginas verticales. La impresión dúplex con volteo por el lado corto mantiene el frente y el reverso alineados correctamente para ese pliegue específico — volteando por el lado largo el reverso saldría al revés respecto al frente.</div>
+      <div>Para las hojas apaisadas creadas aquí, el volteo por el lado corto suele ser el ajuste adecuado. Sin embargo, los controladores describen y aplican el dúplex de manera distinta. Imprime una hoja de prueba y confirma la orientación antes de producir el folleto.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Hay un límite de páginas?</div>
-      <div>No hay un límite estricto, pero un documento muy largo produce un folleto muy grueso que puede no doblarse ni grapar bien a mano — funciona mejor con documentos más cortos (aproximadamente menos de 60 páginas).</div>
+      <div>La interfaz no impone una cuota fija, pero la memoria del navegador y la encuadernación crean límites prácticos. El grosor del papel, el desplazamiento de las hojas y la capacidad de la grapadora importan cada vez más. “Menos de 60 páginas” es solo una referencia aproximada.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se sube mi PDF a un servidor?</div>
-      <div>No, todo el proceso ocurre localmente en tu navegador con JavaScript.</div>
+      <div>No. JavaScript realiza la imposición localmente dentro de tu navegador.</div>
     </div>
   </div>
 

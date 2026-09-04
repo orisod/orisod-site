@@ -176,7 +176,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M8.5 13l2 2 4.5-4.5"/></svg></div>
     <h1>Reparar PDF</h1>
   </div>
-  <p class="tool-sub">Intenta arreglar un PDF corrupto o mal formado para que vuelva a abrirse correctamente. Todo se diagnostica y repara localmente en tu navegador.</p>
+  <p class="tool-sub">Diagnostica un PDF, reconstruye la estructura legible cuando sea posible y verifica localmente el resultado.</p>
 
   <div class="workspace">
     <div class="box">
@@ -199,33 +199,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué hace esta herramienta?</h2>
-    <p>Reparar PDF lee un PDF y te dice honestamente lo que encuentra: si el archivo no tiene problemas estructurales detectados, si tiene problemas que probablemente se puedan arreglar, si está protegido con contraseña (un problema distinto que esta herramienta no intenta resolver), o si está demasiado dañado como para abrirse siquiera. Cuando se intenta una reparación, el archivo se vuelve a analizar omitiendo solo las partes concretas que no se pueden leer, y luego se reconstruye con una estructura de archivo nueva y válida — y el resultado se verifica abriéndolo de nuevo con un segundo motor de PDF independiente antes de ofrecerlo para descargar.</p>
+    <h2>Reconstruye lo que el navegador todavía puede leer</h2>
+    <p>La herramienta determina primero si el PDF parece válido, está protegido con contraseña, se puede leer parcialmente o está demasiado dañado para analizarlo. Cuando la reparación es posible, omite objetos ilegibles, reconstruye la estructura restante y prueba el resultado con otro motor PDF. Puede rescatar material accesible, pero no recrea bytes, imágenes, fuentes ni páginas ausentes o realmente corruptas.</p>
 
-    <h2>¿Cuándo deberías usar esta herramienta?</h2>
+    <h2>Cuando un PDF se abre con errores o no se abre</h2>
     <ul>
-      <li>Un PDF no se abre, o se abre con errores, en uno o varios visores de PDF</li>
-      <li>Un archivo se interrumpió a mitad de una descarga o transferencia y ahora se comporta de forma extraña</li>
-      <li>Quieres saber honestamente si un PDF concreto se puede recuperar antes de dedicarle más tiempo</li>
-      <li>Un PDF se abre pero un visor muestra advertencias sobre su estructura</li>
+      <li>Investigar un PDF que falla en uno o varios visores</li>
+      <li>Intentar rescatar un archivo afectado por una transferencia interrumpida</li>
+      <li>Comprobar si vale la pena recuperar la estructura legible de un PDF</li>
+      <li>Reconstruir un PDF cuyo visor informa errores estructurales</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿Puede esto recuperar una página que está realmente dañada, no solo la estructura del archivo?</div>
-      <div>No. La reparación funciona omitiendo las partes del archivo que no se pueden leer y reconstruyendo una estructura limpia alrededor de lo que queda — no puede reconstruir contenido que esté realmente corrupto o ausente, como una imagen o fuente dañada dentro de una página concreta.</div>
+      <div>No. La reparación puede omitir objetos ilegibles y crear un contenedor válido con lo que queda. No puede deducir los píxeles, el texto ni los datos de una fuente cuando ese contenido está dañado o ausente.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Puede esto quitar la contraseña de un PDF protegido?</div>
-      <div>No, ese es un problema distinto de la corrupción estructural, y esta herramienta no lo intenta. Si un PDF está protegido con contraseña, la reparación simplemente no es posible hasta que se descifre.</div>
+      <div>No. El cifrado no es corrupción estructural. Un PDF protegido debe abrirse o descifrarse primero con la autorización y las credenciales correspondientes.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Por qué dice "no se detectaron problemas" en lugar de "reparado"?</div>
-      <div>Porque eso es lo que realmente es cierto — muchos PDF que se ven raros en un visor no tienen ningún problema estructural detectable, y sería poco honesto afirmar una reparación en un archivo que no estaba roto. Aun así puedes volver a guardarlo si estás solucionando un problema de visualización específico de un visor.</div>
+      <div>El diagnóstico no encontró un defecto estructural del PDF que este proceso pueda reparar. Aún podría existir un problema del visor, una función no compatible o contenido dañado dentro de una estructura válida. Puedes volver a guardarlo, pero no sería correcto llamarlo una reparación confirmada.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se sube mi PDF a un servidor?</div>
-      <div>No, todo el proceso ocurre localmente en tu navegador mediante JavaScript.</div>
+      <div>No. El diagnóstico, la reconstrucción y la verificación ocurren localmente en tu navegador.</div>
     </div>
   </div>
 

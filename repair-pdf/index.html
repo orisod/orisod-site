@@ -176,7 +176,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M8.5 13l2 2 4.5-4.5"/></svg></div>
     <h1>Repair PDF</h1>
   </div>
-  <p class="tool-sub">Attempt to fix a corrupted or malformed PDF so it opens correctly again. Everything is diagnosed and repaired locally in your browser.</p>
+  <p class="tool-sub">Diagnose a PDF, rebuild the readable structure when possible and verify the resulting file locally.</p>
 
   <div class="workspace">
     <div class="box">
@@ -199,33 +199,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>Repair PDF reads a PDF and tells you honestly what it finds: whether the file has no detected structural problems, whether it has issues that can likely be fixed, whether it's password-protected (a different problem this tool doesn't attempt to solve), or whether it's too damaged to open at all. When a repair is attempted, the file is re-parsed while skipping only the specific pieces that can't be read, then rebuilt with a fresh, valid file structure — and the result is verified by opening it again with a second, independent PDF engine before being offered for download.</p>
+    <h2>Rebuild what the browser can still read</h2>
+    <p>The tool first determines whether a PDF appears structurally valid, protected by a password, partly readable or too damaged to parse. When repair is possible, it skips unreadable objects, rebuilds the remaining structure and tests the result with another PDF engine before offering it. This can salvage accessible material, but it cannot recreate bytes, images, fonts or pages that are missing or genuinely corrupted.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>When a PDF opens with errors or not at all</h2>
     <ul>
-      <li>A PDF fails to open, or opens with errors, in one or more PDF viewers</li>
-      <li>A file was interrupted mid-download or mid-transfer and now behaves oddly</li>
-      <li>You want an honest read on whether a specific PDF is actually salvageable before spending more time on it</li>
-      <li>A PDF opens but a viewer shows warnings about its structure</li>
+      <li>Investigate a PDF that fails in one or more viewers</li>
+      <li>Try to salvage a file affected by an interrupted transfer</li>
+      <li>Check whether a PDF’s readable structure is worth recovering</li>
+      <li>Rebuild a PDF whose viewer reports structural warnings</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Can this recover a page that's genuinely damaged, not just the file's structure?</div>
-      <div>No. Repair works by skipping pieces of the file it can't read and rebuilding a clean structure around whatever's left — it can't reconstruct content that's actually corrupted or missing, such as a damaged image or font inside a specific page.</div>
+      <div>No. Repair can omit unreadable objects and rebuild a valid container around what remains. It cannot infer the original pixels, text or font data once that content is damaged or absent.</div>
     </div>
     <div class="faq-item">
       <div class="q">Can this remove a password from a protected PDF?</div>
-      <div>No, that's a different problem from structural corruption, and this tool doesn't attempt it. If a PDF is password-protected, repair simply isn't possible until it's decrypted.</div>
+      <div>No. Encryption is not structural corruption. A protected PDF must first be opened or decrypted with proper authorization and credentials.</div>
     </div>
     <div class="faq-item">
       <div class="q">Why does it say "no problems detected" instead of "fixed"?</div>
-      <div>Because that's what's actually true — many PDFs that display oddly in one viewer have no detectable structural issues at all, and it would be dishonest to claim a fix on a file that wasn't broken. You can still re-save it anyway if you're troubleshooting a viewer-specific display issue.</div>
+      <div>The diagnostic found no structural fault that this workflow can repair. A viewer-specific display problem, unsupported feature or damaged content inside an otherwise valid structure may still exist. Re-saving is available, but should not be described as a confirmed fix.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my PDF uploaded to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No. Diagnosis, rebuilding and verification run locally in your browser.</div>
     </div>
   </div>
 

@@ -186,7 +186,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17V5"/><path d="M4 8l3-3 3 3"/><path d="M17 7v12"/><path d="M20 16l-3 3-3-3"/></svg></div>
     <h1>Word a PDF</h1>
   </div>
-  <p class="tool-sub">Convierte un documento Word (.docx) en PDF. Todo ocurre localmente en tu navegador.</p>
+  <p class="tool-sub">Renderiza un documento .docx como PDF basado en imágenes sin subir el archivo original.</p>
 
   <div class="workspace">
     <div class="box">
@@ -225,33 +225,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué hace esta herramienta?</h2>
-    <p>Esta herramienta lee el contenido de un archivo Word (.docx) — encabezados, párrafos, texto en negrita/cursiva, listas, tablas e imágenes en línea — lo renderiza en tu navegador y captura esa representación como un PDF, completamente en tu dispositivo. Es una conversión de mejor esfuerzo: como toma una instantánea visual en lugar de usar el motor de diseño propio de Word, el resultado no será idéntico píxel a píxel a abrir el archivo en Microsoft Word, y su texto queda incrustado como imagen en lugar de texto seleccionable.</p>
+    <h2>Captura en PDF la representación del documento en el navegador</h2>
+    <p>El convertidor lee encabezados, párrafos, estilos básicos, listas, tablas e imágenes en línea de un archivo Word .docx, renderiza el contenido en el navegador y captura esa representación en un PDF. No utiliza el motor de diseño de Microsoft Word, así que las fuentes, la paginación, los encabezados, los pies y las posiciones complejas pueden cambiar. Las páginas se basan en imágenes y su texto no es seleccionable ni buscable.</p>
 
-    <h2>¿Cuándo usar esta herramienta?</h2>
+    <h2>Adecuado para documentos sencillos y distribución visual</h2>
     <ul>
-      <li>Necesitas compartir un documento Word como PDF y no tienes Word instalado</li>
-      <li>Tu documento es mayormente texto, con formato, listas o tablas sencillas</li>
-      <li>No necesitas que quien lo reciba pueda seleccionar, buscar o copiar el texto del PDF</li>
-      <li>Quieres que la conversión ocurra en privado, sin subir el archivo a ningún sitio</li>
+      <li>Crear un PDF para compartir cuando no tienes Microsoft Word</li>
+      <li>Convertir un documento con párrafos, listas o tablas sencillas</li>
+      <li>Producir una copia visual cuando no necesitas texto PDF seleccionable</li>
+      <li>Mantener el documento original en tu dispositivo durante la conversión</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿El texto del PDF será seleccionable o buscable?</div>
-      <div>No. El PDF se construye a partir de una instantánea renderizada del documento, igual que funciona nuestra herramienta HTML a PDF, así que el texto forma parte de una imagen en lugar de ser texto real y seleccionable.</div>
+      <div>No. Cada página PDF contiene una imagen renderizada del documento, parecida a una captura de lienzo HTML, así que las palabras no se almacenan como texto seleccionable. Aplicar OCR después puede añadir una capa de texto, pero tendrás que revisarla.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Funciona con el formato .doc anterior?</div>
-      <div>No, solo se admite el formato moderno .docx (Word 2007 en adelante). Vuelve a guardar un archivo .doc antiguo como .docx en Word primero.</div>
+      <div>Solo se admite .docx. Convierte un archivo .doc antiguo en .docx con un procesador compatible antes de usar esta herramienta.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se conservará el formato complejo exactamente?</div>
-      <div>No exactamente — es una representación de mejor esfuerzo, no el motor de diseño propio de Word, así que las fuentes exactas, el espaciado, los encabezados/pies de página y los diseños muy complejos pueden diferir del original. Los documentos sencillos (encabezados, párrafos, listas, tablas básicas) se convierten bien.</div>
+      <div>No siempre. El renderizador del navegador es distinto al de Word; las fuentes no disponibles, saltos de página, encabezados, pies, objetos flotantes o diseños elaborados pueden moverse. Revisa todas las páginas importantes.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se sube mi documento a un servidor?</div>
-      <div>No, toda la conversión ocurre localmente en tu navegador mediante JavaScript. Tu archivo nunca sale de tu dispositivo.</div>
+      <div>No. JavaScript lee, renderiza y exporta el documento localmente en tu navegador.</div>
     </div>
   </div>
 

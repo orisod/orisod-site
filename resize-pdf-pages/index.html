@@ -185,7 +185,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M20 20l-5-5M20 20h-4M20 20v-4"/></svg></div>
     <h1>Resize PDF Pages</h1>
   </div>
-  <p class="tool-sub">Change the page dimensions of a PDF — switch to A4, Letter, Legal or a custom size — then download the resized file. Everything happens locally in your browser.</p>
+  <p class="tool-sub">Set PDF pages to A4, Letter, Legal or custom dimensions and download the resized document.</p>
 
   <div class="workspace">
     <div class="box">
@@ -248,33 +248,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does resizing a PDF do?</h2>
-    <p>Resizing changes the physical page dimensions of a PDF — for example turning a US Letter document into A4, or the reverse. The content on each page is scaled proportionally to fit the new dimensions, so nothing is cropped or cut off; it's stretched or shrunk to match the target size.</p>
+    <h2>Change the physical dimensions of every PDF page</h2>
+    <p>Resizing changes the physical dimensions of PDF pages, such as converting US Letter to A4. The tool scales page content to the chosen width and height. If the target has a different aspect ratio, that scaling can alter proportions; inspect the result for stretched text, images and margins before printing or submitting it. This operation changes page geometry, not the underlying purpose of the document.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>Prepare a document for a required paper size</h2>
     <ul>
-      <li>You received a Letter-sized PDF but need to print it on A4 paper (or vice versa)</li>
-      <li>A document needs to match a specific page size required by a printer or publisher</li>
-      <li>You're standardizing a batch of PDFs from different sources to one consistent size</li>
-      <li>You need a custom page size that isn't one of the standard presets</li>
+      <li>Prepare a Letter PDF for A4 paper or the reverse</li>
+      <li>Match dimensions requested by a printer, publisher or submission portal</li>
+      <li>Give PDF files from different sources a consistent page size</li>
+      <li>Use dimensions that are not available as a standard preset</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Will resizing distort my content?</div>
-      <div>Content is scaled to fit the new page dimensions. If the new size has a different aspect ratio than the original, the content will stretch slightly to fill it — the same trade-off any "resize to fit" tool makes.</div>
+      <div>It can. Content is scaled to the selected width and height. When the original and target aspect ratios differ, text and images may look wider or taller. Preview important pages before using the result.</div>
     </div>
     <div class="faq-item">
       <div class="q">Does this change the file size significantly?</div>
-      <div>Not usually — the underlying content and images aren't recompressed, only the page dimensions and content scale change.</div>
+      <div>Changing page geometry is not a compression method. The output may be similar in size, but PDF structure, document complexity and the way content is rewritten can make it somewhat larger or smaller.</div>
     </div>
     <div class="faq-item">
       <div class="q">Can I enter a size that isn't in the preset list?</div>
-      <div>Yes, choose "Custom size…" and enter any width and height in millimeters.</div>
+      <div>Yes. Choose "Custom size…" and enter the required width and height in millimeters. Verify the specification supplied by your printer or platform.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my PDF uploaded to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No. JavaScript processes the PDF locally in your browser. Rebuilding a signed document may invalidate its digital signatures, so retain the original.</div>
     </div>
   </div>
 

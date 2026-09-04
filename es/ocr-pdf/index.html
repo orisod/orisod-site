@@ -190,7 +190,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l1.5 5.5L19 9l-5.5 1.5L12 16l-1.5-5.5L5 9l5.5-1.5z"/></svg></div>
     <h1>OCR de PDF</h1>
   </div>
-  <p class="tool-sub">Aplica OCR a un PDF escaneado para hacerlo buscable y seleccionable. Todo ocurre localmente en tu navegador.</p>
+  <p class="tool-sub">Aplica OCR a páginas PDF escaneadas para añadir texto seleccionable y descargar, si quieres, las palabras reconocidas como .txt.</p>
 
   <div class="workspace">
     <div class="box">
@@ -218,33 +218,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué hace esta herramienta?</h2>
-    <p>Esta herramienta lee un PDF escaneado página por página, reconoce el texto de cada página mediante OCR (reconocimiento óptico de caracteres) y reconstruye el PDF colocando el texto reconocido de forma invisible sobre la imagen original de la página. La página se ve exactamente igual que tu escaneo original, pero un visor de PDF ahora puede encontrar, seleccionar y copiar su texto — algo que una simple imagen escaneada nunca puede hacer por sí sola. Como resultado del mismo proceso de OCR, también puedes descargar el texto reconocido como un archivo .txt sencillo.</p>
+    <h2>OCR añade una capa de texto sobre las imágenes</h2>
+    <p>La herramienta renderiza cada página del PDF escaneado, aplica OCR (reconocimiento óptico de caracteres) y coloca el texto reconocido como una capa invisible alineada con la imagen. Así permite buscar, seleccionar y copiar mientras conserva el escaneo como página visible. También ofrece una versión .txt. El reconocimiento y la alineación son estimaciones; revisa todo lo importante.</p>
 
-    <h2>¿Cuándo usar esta herramienta?</h2>
+    <h2>Cuando un escaneo necesita texto buscable</h2>
     <ul>
-      <li>Tienes un documento escaneado y necesitas buscar una palabra o frase específica</li>
-      <li>Quieres seleccionar y copiar un pasaje de un escaneo en lugar de volver a escribirlo</li>
-      <li>La herramienta <a href="/es/extract-pdf-text/" style="color:var(--accent);">Extraer texto de PDF</a> de Orisod te dijo "no se encontró texto seleccionable" — justo para eso es esta herramienta</li>
-      <li>Quieres el texto reconocido como un archivo .txt sencillo, no solo incrustado en el PDF</li>
+      <li>Buscar una palabra o frase dentro de un documento escaneado</li>
+      <li>Copiar un pasaje de un escaneo sin volver a escribirlo</li>
+      <li>Añadir una capa después de que <a href="/es/extract-pdf-text/" style="color:var(--accent);">Extraer texto de PDF</a> de Orisod informe que no encontró texto seleccionable</li>
+      <li>Descargar el texto OCR como archivo .txt además de integrarlo en el PDF</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿El PDF se verá diferente después?</div>
-      <div>No. El texto reconocido se añade de forma invisible, sobre la misma imagen de página exacta. Visualmente, el PDF resultante se ve idéntico al que subiste.</div>
+      <div>El escaneo original sigue siendo la base visible de cada página, por lo que debería verse muy parecido. Reconstruir el PDF todavía puede cambiar compresión, dimensiones, metadatos u otros elementos estructurales. Compara las páginas críticas en lugar de asumir que serán idénticas.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Qué tan preciso es el OCR?</div>
-      <div>Depende mucho de la calidad del escaneo. Los escaneos limpios, de alta resolución y bien iluminados de texto impreso se reconocen muy bien; las fotos borrosas, la baja resolución, las fuentes poco comunes o la escritura a mano tendrán más errores. Revisa siempre cualquier cosa importante.</div>
+      <div>La precisión varía según resolución, contraste, orientación, idioma, tipografía y estado de la página. La escritura manual y los diseños complejos son especialmente difíciles. Trata el texto reconocido como borrador y revisa lo importante.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Funciona con un documento grande, de muchas páginas?</div>
-      <div>Sí, no hay límite de páginas, pero el OCR procesa una página a la vez y puede tardar en documentos largos — espera entre medio segundo y unos pocos segundos por página, según tu dispositivo. Mantén la pestaña abierta mientras se ejecuta.</div>
+      <div>La interfaz no establece una cuota simple de páginas, pero la memoria y el tiempo del dispositivo crean límites prácticos. El OCR trabaja página por página y los documentos largos o de alta resolución pueden tardar mucho más. Mantén abierta la pestaña y divide archivos enormes si hace falta.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se sube mi PDF a un servidor?</div>
-      <div>No, todo el proceso — renderizado, OCR y reconstrucción del PDF — ocurre localmente en tu navegador mediante JavaScript. Tu archivo nunca sale de tu dispositivo. La única excepción es la primera vez que usas esta herramienta, cuando tu navegador descarga los datos del modelo de idioma para el OCR (un modelo público y genérico, no tu archivo) y los guarda en caché para la próxima vez.</div>
+      <div>El documento se renderiza, reconoce y reconstruye localmente. En el primer uso, el navegador descarga datos genéricos de idioma para OCR y puede guardarlos en caché; esa descarga no contiene páginas de tu PDF.</div>
     </div>
   </div>
 
