@@ -152,7 +152,7 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <div class="article-body">
 
 <h2>El único trabajo de una función hash</h2>
-<p>Una función hash toma una entrada de cualquier tamaño; una palabra, una frase, un archivo de varios gigabytes; y produce una cadena de caracteres de longitud fija, de forma determinista: la misma entrada siempre produce exactamente la misma salida, cada vez, en cualquier computadora. Dale una entrada distinta, aunque difiera en un solo bit, y la salida se ve completamente distinta a la anterior. Ese es todo el mecanismo. Un "checksum" es solo esa salida, usada específicamente para comprobar que algo coincide.</p>
+<p>Una función hash toma una entrada de cualquier tamaño; una palabra, una frase, un archivo de varios gigabytes; y produce una cadena de caracteres de longitud fija, de forma determinista: la misma entrada siempre produce exactamente la misma salida, cada vez, en cualquier computadora. Dale una entrada distinta, aunque difiera en un solo bit, y la salida se ve completamente distinta a la anterior. Ese es todo el mecanismo. Un "checksum" es esa salida, usada específicamente para comprobar que algo coincide.</p>
 
 <h2>Por qué invertir un bit lo cambia todo</h2>
 <p>Esta es la propiedad que hace útil a un checksum: una función hash bien diseñada está construida para que cambiar incluso un solo bit de la entrada revuelva aproximadamente la mitad de los bits de salida, de forma impredecible. No existe un hash "más o menos igual" para un archivo "más o menos igual"; una diferencia de un byte y un archivo completamente reescrito producen salidas igualmente distintas de la original. Esto se llama efecto avalancha, y es precisamente por lo que un hash coincidente es significativo: prácticamente no hay forma de que datos corruptos o alterados produzcan accidentalmente el mismo hash que el original.</p>
@@ -164,7 +164,7 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <text x="180" y="82" text-anchor="middle" font-size="11" fill="var(--muted-text)">11 caracteres</text>
 <rect x="40" y="130" width="280" height="70" rx="6" fill="var(--card-bg)" stroke="#f59e0b" stroke-width="2"/>
 <text x="180" y="158" text-anchor="middle" font-family="Courier New, monospace" font-size="15" fill="var(--text)">"hello world."</text>
-<text x="180" y="182" text-anchor="middle" font-size="11" fill="#f59e0b">12 caracteres — un punto añadido</text>
+<text x="180" y="182" text-anchor="middle" font-size="11" fill="#f59e0b">12 caracteres, un punto añadido</text>
 <path d="M 330 65 L 400 65" stroke="var(--muted-text)" stroke-width="2"/>
 <polygon points="400,65 390,60 390,70" fill="var(--muted-text)"/>
 <path d="M 330 165 L 400 165" stroke="var(--muted-text)" stroke-width="2"/>
@@ -187,7 +187,7 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 
 <h2>Cómo interpretar el resultado</h2>
 <p>Dos archivos diferentes pueden compartir teóricamente cualquier hash de longitud fija. Con SHA-256 y sin una debilidad adversarial, una coincidencia accidental es extraordinariamente improbable, no lógicamente imposible.</p>
-<p><strong>¿Por qué los checksums parecen letras y números aleatorios?</strong> Son simplemente una secuencia de bytes (la salida cruda de la función hash) mostrada en hexadecimal, ya que los bytes crudos no son fáciles de leer ni de copiar y pegar de forma fiable como texto.</p>
+<p><strong>¿Por qué los checksums parecen letras y números aleatorios?</strong> Son una secuencia de bytes (la salida cruda de la función hash) mostrada en hexadecimal, ya que los bytes crudos no son fáciles de leer ni de copiar y pegar de forma fiable como texto.</p>
 <p><strong>¿Un hash más largo significa un algoritmo más seguro?</strong> Generalmente sí dentro de la misma familia de algoritmos; SHA-512 tiene más bits de salida que SHA-256, lo que dificulta los ataques de fuerza bruta y de colisión -, pero el diseño del algoritmo importa más que la longitud por sí sola, por lo que la salida de 128 bits de MD5 es más débil que la de 160 bits de SHA-1 en mayor medida de lo que sugeriría solo la diferencia de longitud.</p>
 
 <div class="cta-box">

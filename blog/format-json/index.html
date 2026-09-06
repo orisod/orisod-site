@@ -155,7 +155,7 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <p>JSON requires double-quoted property names and string values. It does not allow comments, trailing commas, undefined, functions, NaN or Infinity. JSON.parse() also rejects extra characters before or after the single top-level value. JavaScript object literals permit several of those features, which is why copied code may fail as JSON.</p>
 
 <figure class="theme-figure">
-<svg viewBox="0 0 700 230" width="700" height="230" role="img" aria-label="Comparison table of four JSON syntax rules: object keys must be double-quoted, strings must be double-quoted, no trailing commas are allowed, and comments are not allowed at all — each shown with an invalid example in red and the valid equivalent in green." xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 700 230" width="700" height="230" role="img" aria-label="Comparison table of four JSON syntax rules: object keys must be double-quoted, strings must be double-quoted, no trailing commas are allowed, and comments are not allowed at all: each shown with an invalid example in red and the valid equivalent in green." xmlns="http://www.w3.org/2000/svg">
 <text x="24" y="28" text-anchor="start" font-size="13" font-weight="bold" fill="var(--muted-text)">RULE</text>
 <text x="260" y="28" text-anchor="start" font-size="13" font-weight="bold" fill="#f87171">✗ INVALID</text>
 <text x="480" y="28" text-anchor="start" font-size="13" font-weight="bold" fill="#4ade80">✓ VALID</text>
@@ -173,12 +173,12 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <text x="260" y="180" text-anchor="start" font-family="Courier New, monospace" font-size="14" fill="#f87171">// a note</text>
 <text x="480" y="180" text-anchor="start" font-family="Courier New, monospace" font-size="13" fill="var(--muted-text)">(not allowed at all)</text>
 <line x1="0" y1="198" x2="700" y2="198" stroke="var(--border)" stroke-width="1.5"/>
-<text x="350" y="220" text-anchor="middle" font-size="13" fill="var(--muted-text)">JSON.parse() enforces all four — the error message tells you the exact line and column that broke.</text>
+<text x="350" y="220" text-anchor="middle" font-size="13" fill="var(--muted-text)">JSON.parse() enforces all four, and the error message tells you the exact line and column that broke.</text>
 </svg>
 </figure>
 
 <h2>Why pretty-printing matters</h2>
-<p>An API response or a minified config file is usually returned as a single unbroken line; technically valid, but unreadable the moment you need to check a nested value or compare it against something else. Pretty-printing (adding consistent indentation and line breaks) doesn't change the data at all, it just re-serializes the same parsed structure with whitespace a human can actually scan.</p>
+<p>An API response or a minified config file is usually returned as a single unbroken line; technically valid, but unreadable the moment you need to check a nested value or compare it against something else. Pretty-printing (adding consistent indentation and line breaks) doesn't change the data at all, it re-serializes the same parsed structure with whitespace a human can scan.</p>
 
 <h2>When to minify instead</h2>
 <p>Minifying does the opposite: it strips every non-essential space, so the same data takes less room. That matters when you're pasting JSON somewhere with a character limit, storing it compactly, or sending it over a network where every byte counts; none of which benefit from indentation that a machine doesn't need.</p>

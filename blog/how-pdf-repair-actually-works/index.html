@@ -175,7 +175,7 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <rect x="410" y="35" width="80" height="50" rx="6" fill="none" stroke="var(--accent)" stroke-width="2"/>
 <text x="450" y="65" text-anchor="middle" font-size="12" fill="var(--accent)">Obj 5</text>
 <line x1="255" y1="85" x2="255" y2="110" stroke="var(--muted-text)" stroke-width="1.5"/>
-<text x="255" y="123" text-anchor="middle" font-size="11" fill="var(--muted-text)">skipped — the rest carry through untouched</text>
+<text x="255" y="123" text-anchor="middle" font-size="11" fill="var(--muted-text)">skipped, the rest carry through untouched</text>
 <rect x="140" y="140" width="300" height="55" rx="8" fill="none" stroke="#4ade80" stroke-width="2"/>
 <text x="290" y="164" text-anchor="middle" font-size="13" fill="#4ade80">Rebuilt file: objects 1, 2, 4, 5</text>
 <text x="290" y="181" text-anchor="middle" font-size="12" fill="#4ade80">+ a fresh index listing exactly those</text>
@@ -190,7 +190,7 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <p>Opening the result with a second PDF engine is a useful compatibility check because parsers have different tolerances. It is not proof that every object is correct. Compare page count and visible content, and test text, links, forms and attachments that matter.</p>
 
 <h2>What the repair result can tell you</h2>
-<p><strong>If my PDF has a damaged index, will repair "fix" it?</strong> Usually there's nothing to fix; a reader built to scan the file directly already works around a broken index on its own, so a file like that typically comes back as "no problems detected" rather than "repaired." That's not a failure to detect the damage; the damage just never stopped the file from being readable in the first place.</p>
+<p><strong>If my PDF has a damaged index, will repair "fix" it?</strong> Usually there's nothing to fix; a reader built to scan the file directly already works around a broken index on its own, so a file like that typically comes back as "no problems detected" rather than "repaired." That's not a failure to detect the damage; the damage never stopped the file from being readable in the first place.</p>
 <p>A repaired file can contain fewer pages when its page tree or required objects were damaged. Check the result against a known copy whenever possible.</p>
 <p><strong>Can repair fix a PDF that won't open because it's password-protected?</strong> No; that's an access-control problem, not a damage problem. The file's objects might be perfectly fine; the reader simply isn't allowed to look at them without the password, which is an entirely different kind of "won't open."</p>
 <p>The repaired output is a reconstruction, not a promise of byte-for-byte identity with the original. Save it as a new file and retain the damaged source for further recovery attempts.</p>

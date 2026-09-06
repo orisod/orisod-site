@@ -153,7 +153,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <h2>Why a scanned PDF isn't searchable in the first place</h2>
 <p>Many scanned PDFs contain page images without a usable text layer, so search and copy return nothing. You can confirm this with Orisod's <a href="/extract-pdf-text/" style="color:var(--accent);">Extract PDF Text</a> tool before running OCR. OCR can recognize characters and create searchable text, but the result is an interpretation of the scan rather than a guaranteed transcript.</p>
 
-<h2>What OCR actually adds</h2>
+<h2>What OCR adds</h2>
 <p>OCR analyzes image regions, predicts characters and words, and estimates their positions. A searchable PDF often keeps the page image visible while adding an invisible text layer aligned behind it. Alignment, reading order, punctuation, columns, and character encoding can be imperfect even when a simple search succeeds.</p>
 
 <figure class="theme-figure">
@@ -165,7 +165,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <line x1="242.5" y1="66.5" x2="253.5" y2="77.5" stroke="var(--muted-text)" stroke-width="2" stroke-linecap="round"/>
 <line x1="253.5" y1="66.5" x2="242.5" y2="77.5" stroke="var(--muted-text)" stroke-width="2" stroke-linecap="round"/>
 <text x="155" y="240" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14.5" font-weight="bold" fill="var(--text)">Scanned page</text>
-<text x="155" y="259" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12.5" fill="var(--muted-text)">pixels only — not searchable</text>
+<text x="155" y="259" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12.5" fill="var(--muted-text)">pixels only, not searchable</text>
 <path d="M 278,150 L 418,150" stroke="var(--accent)" stroke-width="3" fill="none"/>
 <polygon points="418,150 406,144 406,156" fill="var(--accent)"/>
 <text x="348" y="132" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="var(--accent)">OCR</text>
@@ -178,9 +178,9 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <line x1="475" y1="208" x2="598" y2="208" stroke="var(--accent)" stroke-width="1.6" stroke-dasharray="3 3" opacity="0.75"/>
 <circle cx="638" cy="72" r="11" fill="var(--accent)"/><path d="M 632.5,72 l 3.5,4.5 l 7,-8" stroke="var(--card-bg)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
 <text x="545" y="240" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14.5" font-weight="bold" fill="var(--text)">After OCR</text>
-<text x="545" y="259" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12.5" fill="var(--muted-text)">looks identical — now searchable</text>
+<text x="545" y="259" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12.5" fill="var(--muted-text)">looks identical, now searchable</text>
 </svg>
-<figcaption>The visible page doesn't change — the dashed lines above represent the invisible, selectable text layer added underneath the exact same image, roughly where OCR found each word.</figcaption>
+<figcaption>The visible page doesn't change: the dashed lines above represent the invisible, selectable text layer added underneath the exact same image, roughly where OCR found each word.</figcaption>
 </figure>
 
 <h2>Accuracy depends on more than resolution</h2>
