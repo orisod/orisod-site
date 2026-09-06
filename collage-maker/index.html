@@ -252,25 +252,25 @@ h2{margin-top:50px;font-size:22px;}
           <button type="button" class="aspect-btn" data-aspect="custom">Custom</button>
         </div>
         <div class="custom-dims" id="customDims">
-          <input type="number" id="customW" placeholder="Width" min="100" max="6000" value="1080">
-          <input type="number" id="customH" placeholder="Height" min="100" max="6000" value="1350">
+          <input type="number" id="customW" placeholder="Width" aria-label="Width" min="100" max="6000" value="1080">
+          <input type="number" id="customH" placeholder="Height" aria-label="Height" min="100" max="6000" value="1350">
         </div>
       </div>
       <div class="panel">
         <h3>Spacing &amp; corners</h3>
         <div class="field-row">
-          <label><span>Spacing</span><span id="spacingVal">2%</span></label>
+          <label for="spacingSlider"><span>Spacing</span><span id="spacingVal">2%</span></label>
           <input type="range" id="spacingSlider" min="0" max="6" step="0.5" value="2">
         </div>
         <div class="field-row" style="margin-bottom:0;">
-          <label><span>Corner radius</span><span id="radiusVal">2%</span></label>
+          <label for="radiusSlider"><span>Corner radius</span><span id="radiusVal">2%</span></label>
           <input type="range" id="radiusSlider" min="0" max="12" step="0.5" value="2">
         </div>
       </div>
       <div class="panel">
         <h3>Background color</h3>
         <div class="color-row">
-          <input type="color" id="bgColorInput" value="#0b0f1a">
+          <input type="color" id="bgColorInput" aria-label="Background color" value="#0b0f1a">
           <span class="tool-sub" style="margin:0;font-size:13px;" id="bgColorHex">#0B0F1A</span>
         </div>
       </div>
@@ -283,11 +283,11 @@ h2{margin-top:50px;font-size:22px;}
       </div>
       <div class="tool-sub" style="margin:0;font-size:13px;" id="selectedHint">Click a photo in the grid to zoom, pan, or rotate it.</div>
       <div class="stage-actions">
-        <select id="formatSelect" style="width:auto;">
+        <select id="formatSelect" aria-label="Export format" style="width:auto;">
           <option value="png">PNG</option>
           <option value="jpg">JPG</option>
         </select>
-        <select id="resSelect" style="width:auto;">
+        <select id="resSelect" aria-label="Export resolution" style="width:auto;">
           <option value="1080">1080px</option>
           <option value="1600" selected>1600px</option>
           <option value="2400">2400px</option>
@@ -304,11 +304,11 @@ h2{margin-top:50px;font-size:22px;}
       <div class="panel" id="photoAdjustPanel" style="display:none;">
         <h3>Selected photo</h3>
         <div class="field-row">
-          <label><span>Zoom</span><span id="zoomVal">100%</span></label>
+          <label for="zoomSlider"><span>Zoom</span><span id="zoomVal">100%</span></label>
           <input type="range" id="zoomSlider" min="100" max="300" step="1" value="100">
         </div>
         <div class="field-row" style="margin-bottom:0;">
-          <label><span>Rotate</span><span id="rotateVal">0°</span></label>
+          <label for="rotateSlider"><span>Rotate</span><span id="rotateVal">0°</span></label>
           <input type="range" id="rotateSlider" min="-180" max="180" step="1" value="0">
         </div>
         <p class="tool-sub" style="text-align:left;font-size:12px;margin:8px 0 0 0;">Drag the photo inside its cell to pan.</p>
@@ -318,22 +318,22 @@ h2{margin-top:50px;font-size:22px;}
         <h3>Filter</h3>
         <div class="filter-cats" id="filterCats"></div>
         <div class="field-row" style="margin-top:14px;">
-          <label><span>Brightness</span><span id="mBrightnessVal">0</span></label>
+          <label for="mBrightness"><span>Brightness</span><span id="mBrightnessVal">0</span></label>
           <input type="range" id="mBrightness" min="-50" max="50" step="1" value="0">
         </div>
         <div class="field-row">
-          <label><span>Contrast</span><span id="mContrastVal">0</span></label>
+          <label for="mContrast"><span>Contrast</span><span id="mContrastVal">0</span></label>
           <input type="range" id="mContrast" min="-50" max="50" step="1" value="0">
         </div>
         <div class="field-row" style="margin-bottom:0;">
-          <label><span>Saturation</span><span id="mSaturationVal">0</span></label>
+          <label for="mSaturation"><span>Saturation</span><span id="mSaturationVal">0</span></label>
           <input type="range" id="mSaturation" min="-50" max="50" step="1" value="0">
         </div>
       </div>
 
       <div class="panel">
         <h3>Text overlay</h3>
-        <input type="text" class="text-input" id="textInput" placeholder="Add a caption…">
+        <input type="text" class="text-input" id="textInput" placeholder="Add a caption…" aria-label="Caption text">
         <div class="field-row" style="margin-top:10px;">
           <label for="fontSelect"><span>Font</span></label>
           <select id="fontSelect">
@@ -349,12 +349,12 @@ h2{margin-top:50px;font-size:22px;}
           </select>
         </div>
         <div class="field-row">
-          <label><span>Size</span><span id="textSizeVal">6%</span></label>
+          <label for="textSizeSlider"><span>Size</span><span id="textSizeVal">6%</span></label>
           <input type="range" id="textSizeSlider" min="2" max="14" step="0.5" value="6">
         </div>
         <div class="color-row" style="margin-bottom:10px;">
           <input type="color" id="textColorInput" value="#ffffff">
-          <span class="tool-sub" style="margin:0;font-size:13px;">Text color</span>
+          <label for="textColorInput" class="tool-sub" style="margin:0;font-size:13px;">Text color</label>
         </div>
         <label style="display:block;font-size:12.5px;color:var(--muted-text);margin-bottom:0;">Position</label>
         <div class="pos-row">

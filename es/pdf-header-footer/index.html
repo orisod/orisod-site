@@ -202,7 +202,7 @@ h2{margin-top:50px;font-size:22px;}
         <div class="option-card">
           <h3><label class="hf-toggle"><input type="checkbox" id="headerEnable"> Encabezado</label></h3>
           <div class="hf-body disabled" id="headerBody">
-            <input type="text" class="hf-text-input" id="headerText" placeholder="ej. Nombre de la Empresa">
+            <input type="text" class="hf-text-input" id="headerText" placeholder="ej. Nombre de la Empresa" aria-label="Texto del encabezado">
             <div class="align-grid">
               <div class="align-btn" data-target="header" data-align="left">Izquierda</div>
               <div class="align-btn active" data-target="header" data-align="center">Centro</div>
@@ -219,7 +219,7 @@ h2{margin-top:50px;font-size:22px;}
         <div class="option-card">
           <h3><label class="hf-toggle"><input type="checkbox" id="footerEnable" checked> Pie de página</label></h3>
           <div class="hf-body" id="footerBody">
-            <input type="text" class="hf-text-input" id="footerText" placeholder="ej. Página {page} de {pages}" value="Página {page} de {pages}">
+            <input type="text" class="hf-text-input" id="footerText" placeholder="ej. Página {page} de {pages}" value="Página {page} de {pages}" aria-label="Texto del pie de página">
             <div class="align-grid">
               <div class="align-btn" data-target="footer" data-align="left">Izquierda</div>
               <div class="align-btn active" data-target="footer" data-align="center">Centro</div>
@@ -235,7 +235,7 @@ h2{margin-top:50px;font-size:22px;}
 
         <div class="option-card">
           <h3>Tamaño de fuente</h3>
-          <input type="number" id="fontSizeInput" min="6" max="36" value="10">
+          <input type="number" id="fontSizeInput" min="6" max="36" value="10" aria-label="Tamaño de fuente">
         </div>
 
         <div class="workspace-controls">
