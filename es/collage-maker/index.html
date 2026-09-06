@@ -104,6 +104,8 @@ p{line-height:1.6;}
 .panel{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
 .panel + .panel{margin-top:14px;}
 .panel h3{margin:0 0 12px 0;font-size:13px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted-text);}
+.workspace-title{display:none;margin:0 0 14px 0;font-size:13px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted-text);}
+.workspace-title.active{display:block;}
 
 .count-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px;}
 .count-btn{padding:8px 0;border-radius:6px;border:1px solid var(--dropzone-border);background:var(--bg);color:var(--text);cursor:pointer;font-size:13px;}
@@ -232,6 +234,7 @@ h2{margin-top:50px;font-size:22px;}
   </label>
   <div class="error" id="uploadError"></div>
 
+  <h2 class="workspace-title" id="workspaceTitle">Personaliza tu collage</h2>
   <div class="workspace" id="workspace">
     <!-- LEFT RAIL: layout + canvas style -->
     <div class="left-rail">
@@ -784,6 +787,7 @@ function addPhotos(fileList){
     });
     if(photos.length >= 2){
       workspace.classList.add('active');
+      document.getElementById('workspaceTitle').classList.add('active');
       var wantCount = Math.max(2, Math.min(9, photos.length));
       setPhotoCount(wantCount, true);
     }

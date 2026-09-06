@@ -96,6 +96,7 @@ input[type="file"]{display:none;}
 .hf-options{margin-top:20px;text-align:left;}
 .option-card{color:var(--text);background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:18px;margin-bottom:14px;}
 .option-card h3{margin:0 0 8px 0;font-size:15px;display:flex;align-items:center;gap:10px;}
+.options-title{margin:0 0 14px 0;font-size:15px;}
 .option-card p{margin:0 0 12px 0;font-size:13px;opacity:0.7;text-align:left;}
 .hf-toggle{display:flex;align-items:center;gap:8px;cursor:pointer;}
 .hf-toggle input{width:16px;height:16px;cursor:pointer;}
@@ -199,6 +200,7 @@ h2{margin-top:50px;font-size:22px;}
       <div class="page-info" id="pageInfo"></div>
 
       <div class="hf-options" id="hfOptions" style="display:none;">
+        <h2 class="options-title">Header &amp; footer options</h2>
         <div class="option-card">
           <h3><label class="hf-toggle"><input type="checkbox" id="headerEnable"> Header</label></h3>
           <div class="hf-body disabled" id="headerBody">
