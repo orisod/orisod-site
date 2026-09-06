@@ -158,16 +158,16 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <p>AVIF (AV1 Image File Format) stores still images using compression derived from the AV1 video codec. The format supports lossy and lossless compression, transparency, HDR, wide color gamuts, and higher bit depths. It often compresses photographic content efficiently, although results depend on the image, encoder, quality target, and features being preserved.</p>
 
 <h2>File size depends on the test</h2>
-<p>AVIF can be smaller than WebP or JPG at a similar visual quality, but no percentage applies to every image. Photographs, illustrations, text, transparency, encoder versions, and quality settings can change the result substantially. Compare representative files at the quality your site actually needs before choosing a format.</p>
+<p>AVIF can be smaller than WebP or JPG at a similar visual quality, but no percentage applies to every image. Photographs, illustrations, text, transparency, encoder versions, and quality settings can change the result substantially. Compare representative files at the quality your site needs before choosing a format.</p>
 
 <h2>Why AVIF compatibility is narrower than WebP's</h2>
-<p>AVIF is newer, and format support takes time to spread through the entire software ecosystem — browsers, operating systems, photo viewers, editing tools, and everything in between. Every major modern browser now supports AVIF for viewing images on the web, but plenty of desktop software, older devices, and offline tools haven't caught up yet. This is the same compatibility curve WebP went through a few years earlier, just at an earlier point in the process.</p>
+<p>AVIF is newer, and format support takes time to spread through the entire software ecosystem: browsers, operating systems, photo viewers, editing tools, and everything in between. Every major modern browser now supports AVIF for viewing images on the web, but plenty of desktop software, older devices, and offline tools haven't caught up yet. This is the same compatibility curve WebP went through in its own early rollout, a few years ago.</p>
 
-<h2>Where you'll actually run into AVIF files</h2>
+<h2>Where you'll run into AVIF files</h2>
 <ul>
-  <li><strong>Saving images from performance-conscious websites</strong> — sites chasing every bit of load-time improvement have started serving AVIF to browsers that support it.</li>
-  <li><strong>Some newer phone cameras and apps</strong> — a handful of devices and photo apps have started offering AVIF as a storage option, similar to how iPhones defaulted to HEIC.</li>
-  <li><strong>Design and stock photo platforms experimenting with smaller formats</strong> — some are offering AVIF downloads to reduce their own bandwidth costs.</li>
+  <li><strong>Saving images from performance-conscious websites:</strong> sites chasing every bit of load-time improvement have started serving AVIF to browsers that support it.</li>
+  <li><strong>Some newer phone cameras and apps:</strong> a handful of devices and photo apps have started offering AVIF as a storage option, similar to how iPhones defaulted to HEIC.</li>
+  <li><strong>Design and stock photo platforms experimenting with smaller formats:</strong> some are offering AVIF downloads to reduce their own bandwidth costs.</li>
 </ul>
 
 <h2>When an AVIF file will not open</h2>
@@ -197,14 +197,14 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <text x="586.8" y="225.9" text-anchor="middle" font-size="18" font-weight="bold" fill="var(--text)">207 KB</text>
 <text x="586.8" y="304.0" text-anchor="middle" font-size="15" fill="var(--muted-text)">AVIF</text>
 </svg>
-<figcaption>Measured on a 3000×2250 test photo, encoded with Pillow 12.3.0 (libwebp / pillow-avif-plugin), JPG quality 80, WebP quality 80, AVIF quality 50 — each near each format's typical "good quality" setting. Treat as this example, not a universal guarantee; actual savings vary by image.</figcaption>
+<figcaption>Measured on a 3000×2250 test photo, encoded with Pillow 12.3.0 (libwebp / pillow-avif-plugin), JPG quality 80, WebP quality 80, AVIF quality 50, each near each format's typical "good quality" setting. Treat as this example, not a universal guarantee; actual savings vary by image.</figcaption>
 </figure>
 
 <h2>Choose a compatible destination format</h2>
 <p>Converting to JPG or PNG broadens compatibility, but neither format opens in literally every system. JPG is usually practical for photographs and does not preserve transparency. PNG can preserve transparency and lossless pixel data, although it may produce a much larger file. Standard conversions can also discard HDR, high bit depth, animation, color information, or metadata.</p>
 
 <h2>Questions to ask before converting AVIF</h2>
-<p><strong>Is AVIF better than WebP?</strong> By most measures of compression efficiency, yes, slightly — but WebP currently has broader software support, so which one is "better" depends on whether file size or compatibility matters more for your situation.</p>
+<p><strong>Is AVIF better than WebP?</strong> By most measures of compression efficiency, yes, slightly, but WebP currently has broader software support, so which one is "better" depends on whether file size or compatibility matters more for your situation.</p>
 <p><strong>Will AVIF eventually replace JPG the way WebP is trying to?</strong> It's trending that direction as support spreads, but JPG's near-universal compatibility means it won't disappear from general use anytime soon.</p>
 <p><strong>Does converting AVIF to JPG reduce quality?</strong> It can. JPG requires lossy encoding and cannot preserve every AVIF feature. Inspect gradients, fine texture, transparency, and HDR content after conversion.</p>
 
@@ -223,7 +223,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <div class="related-grid">
     <a class="blog-card" href="/blog/extract-image-from-gif/">
       <h3>How to Extract a Still Image From a GIF</h3>
-      <p>How GIFs actually work frame-by-frame, and how to pull out one still image.</p>
+      <p>How GIFs work frame-by-frame, and how to pull out one still image.</p>
     </a>
 
     <a class="blog-card" href="/blog/how-to-open-webp-file/">

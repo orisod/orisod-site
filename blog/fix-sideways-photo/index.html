@@ -194,8 +194,8 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <h2>Metadata changes and pixel rotation are different</h2>
 <ul>
-  <li><strong>Metadata-only rotation.</strong> Some tools just change the EXIF flag without touching the actual pixel data. This is fast, but it only works reliably in software that respects the flag — anywhere that ignores it, the photo is right back to looking sideways.</li>
-  <li><strong>Actual pixel rotation.</strong> A proper rotate tool physically re-renders the image data in the new orientation and saves it that way. The photo now looks correct in absolutely everything, regardless of whether the viewing software reads EXIF data or not, because there's no flag to ignore — the pixels themselves are oriented correctly.</li>
+  <li><strong>Metadata-only rotation.</strong> Some tools change the EXIF flag without touching the actual pixel data. This is fast, but it only works reliably in software that respects the flag; anywhere that ignores it, the photo is right back to looking sideways.</li>
+  <li><strong>Actual pixel rotation.</strong> A proper rotate tool physically re-renders the image data in the new orientation and saves it that way. The photo now looks correct in absolutely everything, regardless of whether the viewing software reads EXIF data or not, because there's no flag to ignore: the pixels themselves are oriented correctly.</li>
 </ul>
 <p>Changing only the orientation tag still depends on every later application reading that metadata. Rotating the image content and exporting it in the intended orientation removes that dependency for the new file.</p>
 
