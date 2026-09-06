@@ -143,6 +143,55 @@ That removal PR never added this rule to CLAUDE.md, and the page-structure and S
 
 If you ever find this section on any tool page again — old or new — remove it the same way: drop the `<h2>...</h2>` line and its one following `<p>...</p>` line and the blank line after it, nothing else changes.
 
+## Editorial & accessibility standards for new pages
+
+These 4 rules apply to every new tool page, blog post, and guide from day
+one — the goal is to never need another retroactive cleanup pass on these
+categories again. The first documents a convention that's been enforced
+across 4 cleanup rounds (Phase 12b PRs #81-87; PRs #88-92; PRs #93-100; and
+a third-audit round covering accessibility/JSON-LD/headings) but was never
+actually written down until now; the other 3 are new standing rules.
+
+1. **No em dashes in visible content.** Use a comma, colon, parentheses, or
+   a period splitting into two sentences instead — never an em dash (—) in
+   anything a visitor reads or a screen reader announces. Two standing
+   exceptions, permanent, not subject to a future cleanup pass: `<title>`
+   and `<meta name="description">` tags are never rewritten for tone at all
+   (risk of stripping "Free"/"Online"/"Gratis" from SEO-critical text — a
+   Phase 12b decision), and JS string literals inside `<script>` blocks
+   (dropzone/progress/error messages) are an accepted gap since DOM-based
+   content review doesn't reach them.
+2. **Every form control ships with a programmatic label.** Connect every
+   `<input>`, `<select>`, `<textarea>`, and slider to a real `<label for=
+   "id">` — reuse the control's existing visible label text as the `for`
+   target rather than duplicating it in an `aria-label`. Only use
+   `aria-label`/`aria-labelledby` when there's genuinely no visible label
+   to reference (e.g. an icon-only control). Never rely on placeholder text
+   alone — placeholders aren't reliably announced by assistive tech and
+   disappear the moment the user types.
+3. **Every new tool/post ships with JSON-LD from day one**, matching its
+   page type: tool pages get `WebApplication` + `FAQPage` (built from that
+   page's own real `.faq-item` Q&A content); blog/guide posts get
+   `BlogPosting` (no `FAQPage` — posts don't have genuinely structured FAQ
+   markup, and forcing it risks a wasted/ineligible rich result); index
+   pages (blog index, `/tools`) get `BreadcrumbList` only, never an
+   `ItemList`/`CollectionPage` enumerating every post/tool (the site
+   already has 3+ hand-synced duplicates of that list — homepage search
+   array, related-cards, `/tools/index.html` itself — a 4th adds staleness
+   risk for marginal value). Schema must strictly reflect only what's
+   visibly on the page: never invent a rating, review count, publish date,
+   or author name that doesn't exist in the visible content — this site
+   has none of those, so no tool/post schema should either.
+4. **Sequential heading levels only — H1 → H2 → H3, never skip a level.**
+   If a tool's settings panel uses H3 sub-labels for control groups, it
+   needs a parent H2 container (reuse an existing visible section label as
+   the H2 text where one already exists, rather than inventing new copy).
+   Watch for CSS: if headings are styled by a bare tag-selector (`h2{...}`)
+   rather than a class, adding or changing a heading level without a
+   matching scoped class can visually break — a settings-panel H3 promoted
+   to H2 without its own class will inherit the larger content-section H2
+   style instead of staying compact.
+
 - **Monetization plan:** SEO/organic traffic first, then Google AdSense (site already meets AdSense's structural requirements: About, Privacy Policy, real content, Analytics). Affiliate links (cloud storage, design software, VPN/privacy tools) being considered as a faster parallel path. Paid traffic ads (Facebook/etc.) are NOT worth it yet — no monetization is active to make the unit economics work.
 - **Trademark note:** "Orisod" is a registered US trademark for cosmetics/supplements (different class from software) — low risk, monitored, not urgent to act on.
 - **Reddit/community growth strategy** is tracked in a separate conversation, not this one — don't mix Reddit tactics into this repo's context.
