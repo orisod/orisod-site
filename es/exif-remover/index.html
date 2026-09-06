@@ -32,6 +32,17 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Eliminar EXIF","description":"Elimina los metadatos EXIF (ubicación GPS, modelo de cámara, fecha de captura) de tus fotos gratis, en línea. Todo se ejecuta en tu navegador, no se sube ningún archivo.","url":"https://orisod.com/es/exif-remover/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"¿Esto elimina los datos de ubicación GPS?","acceptedAnswer":{"@type":"Answer","text":"La herramienta elimina los campos GPS EXIF detectados de la copia descargada. Comprueba el resultado, porque la ubicación u otros datos también podrían aparecer visiblemente, en el nombre del archivo o en otro contenedor de metadatos."}},
+{"@type":"Question","name":"¿Eliminar los metadatos reduce la calidad de la foto?","acceptedAnswer":{"@type":"Answer","text":"Eliminar metadatos no exige modificar los píxeles visibles. Sin embargo, el proceso de exportación determina si los datos de imagen se copian o recodifican, así que compara cualquier resultado importante y conserva el original."}},
+{"@type":"Question","name":"¿Qué pasa si no se encuentran metadatos?","acceptedAnswer":{"@type":"Answer","text":"Las capturas y las imágenes procesadas por mensajería o redes suelen carecer de EXIF. La herramienta informa cuando no detecta campos compatibles; eso no demuestra que esté ausente todo tipo posible de metadatos."}},
+{"@type":"Question","name":"¿Se envía mi foto a algún servidor?","acceptedAnswer":{"@type":"Answer","text":"No. La inspección y eliminación ocurren localmente en tu navegador."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

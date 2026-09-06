@@ -33,6 +33,17 @@
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Generador de favicon","description":"Genera un paquete completo de favicon (favicon.ico más todos los tamaños estándar) a partir de cualquier imagen, gratis y en línea. Todo se ejecuta en tu navegador, sin subidas.","url":"https://orisod.com/es/favicon-generator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"¿Qué tamaños incluye el paquete?","acceptedAnswer":{"@type":"Answer","text":"El ZIP incluye favicon.ico con entradas de 16x16 y 32x32, favicon-16x16.png, favicon-32x32.png, apple-touch-icon.png a 180x180 y PNG para Android Chrome a 192x192 y 512x512."}},
+{"@type":"Question","name":"¿Qué pasa si mi imagen no es cuadrada?","acceptedAnswer":{"@type":"Answer","text":"La imagen se recorta al centro en forma cuadrada antes de redimensionarla. Así no se estira, pero puede perder contenido en los bordes largos. Revisa el recorte o añade espacio al original si el motivo lo necesita."}},
+{"@type":"Question","name":"¿Cómo añado esto a mi sitio web?","acceptedAnswer":{"@type":"Answer","text":"Coloca los archivos donde se resuelvan las rutas indicadas y añade el fragmento HTML dentro del head. Si usas otra carpeta o framework, ajusta los href y limpia la caché al probar."}},
+{"@type":"Question","name":"¿Se envía mi imagen a algún servidor?","acceptedAnswer":{"@type":"Answer","text":"No. JavaScript recorta, redimensiona y empaqueta la imagen dentro de tu navegador."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

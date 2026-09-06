@@ -32,6 +32,17 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Password Generator","description":"Generate a strong, random password using your browser's secure random number generator. Free, no upload, nothing is sent anywhere.","url":"https://orisod.com/password-generator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Is this password actually random?","acceptedAnswer":{"@type":"Answer","text":"It uses crypto.getRandomValues() from the Web Crypto API, which is designed for cryptographic randomness. Strength still depends on the selected length, character pool and safe handling after generation."}},
+{"@type":"Question","name":"Does this tool store or remember my passwords?","acceptedAnswer":{"@type":"Answer","text":"The page does not intentionally save generated passwords locally or send them to Orisod. Browser extensions, clipboard history, screen recording or other software on the device remain outside this tool's control."}},
+{"@type":"Question","name":"What does exclude ambiguous characters do?","acceptedAnswer":{"@type":"Answer","text":"It removes look-alike characters such as 0 and O or 1, l and I. That can help with manual transcription, while slightly reducing the available character set."}},
+{"@type":"Question","name":"Is my password sent to a server?","acceptedAnswer":{"@type":"Answer","text":"No. JavaScript generates it locally in the browser. Copy it directly into a trusted password manager rather than leaving it in clipboard history."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

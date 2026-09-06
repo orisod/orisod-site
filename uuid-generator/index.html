@@ -32,6 +32,17 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"UUID Generator","description":"Generate random UUID v4 identifiers using your browser's built-in secure random number generator. Free, generate multiple at once, nothing is sent anywhere.","url":"https://orisod.com/uuid-generator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What UUID version does this generate?","acceptedAnswer":{"@type":"Answer","text":"It generates UUID version 4 values from random data. Use another implementation when a system specifically requires a time-based, name-based or time-ordered version such as UUID v7."}},
+{"@type":"Question","name":"Can two generated UUIDs ever collide?","acceptedAnswer":{"@type":"Answer","text":"Yes, a UUID collision is theoretically possible. With 122 random bits the probability is extraordinarily small, provided the randomness source works correctly. Systems with strict requirements should still enforce uniqueness."}},
+{"@type":"Question","name":"Are these UUIDs stored anywhere?","acceptedAnswer":{"@type":"Answer","text":"The page does not intentionally store generated UUID values. They disappear when the session is cleared unless you copy or save them elsewhere."}},
+{"@type":"Question","name":"Is anything sent to a server?","acceptedAnswer":{"@type":"Answer","text":"No. JavaScript generates the UUID values locally with the browser's secure randomness source."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

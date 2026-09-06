@@ -32,6 +32,17 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Verificador de dimensiones de imagen","description":"Consulta las dimensiones exactas en píxeles, tamaño de archivo, formato, DPI y proporción de una imagen, gratis y en línea. Nada se sube, todo se ejecuta en tu navegador.","url":"https://orisod.com/es/image-dimension-checker/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"¿Por qué el DPI aparece como no encontrado en algunas imágenes?","acceptedAnswer":{"@type":"Answer","text":"Muchas capturas e imágenes web no guardan una etiqueta DPI. Su ausencia no significa que falten píxeles; calcula la impresión con las dimensiones y la resolución que requiera la salida."}},
+{"@type":"Question","name":"¿Cuál es la diferencia entre dimensiones en píxeles y DPI?","acceptedAnswer":{"@type":"Answer","text":"Las dimensiones son el ancho y alto reales en píxeles. El metadato DPI sugiere cuántos deberían ocupar una pulgada impresa. Cambiar solo esa etiqueta puede variar el tamaño sugerido sin aumentar el detalle."}},
+{"@type":"Question","name":"¿Se envía mi imagen a algún servidor?","acceptedAnswer":{"@type":"Answer","text":"No. JavaScript lee localmente la imagen y sus metadatos compatibles."}},
+{"@type":"Question","name":"¿Qué formatos son compatibles?","acceptedAnswer":{"@type":"Answer","text":"El navegador puede inspeccionar JPG, PNG, WebP, GIF y otros formatos que decodifique. En esta versión, la detección de DPI se limita a metadatos JPEG y PNG compatibles."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

@@ -32,6 +32,17 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Verificador de Escritura con IA","description":"Analiza texto en busca de frases hechas, aperturas de oración repetitivas y otros patrones de escritura genérica, gratis y en línea. Un detector de patrones de estilo, no un detector de IA. Funciona directamente en tu navegador: no se sube ningún archivo.","url":"https://orisod.com/es/ai-writing-checker/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"¿Puede esto decirme si un texto fue escrito por IA?","acceptedAnswer":{"@type":"Answer","text":"No. Tanto una persona como una IA pueden usar o evitar todos los patrones medidos. El resultado solo describe características del texto pegado y no establece su autoría."}},
+{"@type":"Question","name":"¿Por qué no hay una puntuación de IA o porcentaje general?","acceptedAnswer":{"@type":"Answer","text":"Combinar señales de estilo distintas en un porcentaje implicaría una probabilidad de autoría por IA sin respaldo. Los conteos separados muestran qué detectó cada regla y permiten decidir si vale la pena editarlo."}},
+{"@type":"Question","name":"¿Y si mi escritura tiene naturalmente algunos de estos patrones?","acceptedAnswer":{"@type":"Answer","text":"Es normal. Un resaltado indica que el patrón aparece, no que sea un error. El contexto, el género, una cita, la accesibilidad o la voz personal pueden justificar la repetición."}},
+{"@type":"Question","name":"¿Se sube mi texto a un servidor?","acceptedAnswer":{"@type":"Answer","text":"No. JavaScript analiza el texto pegado localmente en tu navegador."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

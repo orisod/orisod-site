@@ -32,6 +32,17 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Ver metadatos de imagen","description":"Consulta los metadatos EXIF ocultos de una foto (cámara, fecha, ubicación GPS y ajustes) gratis y en línea. Nada se sube, todo se ejecuta en tu navegador.","url":"https://orisod.com/es/image-metadata-viewer/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"¿Por qué esta foto no muestra metadatos?","acceptedAnswer":{"@type":"Answer","text":"Las aplicaciones de mensajería, redes y edición suelen quitar EXIF al crear una copia. Algunas cámaras también omiten campos, y este visor no pretende mostrar todos los contenedores posibles."}},
+{"@type":"Question","name":"¿Puedo eliminar los metadatos que muestra esta herramienta?","acceptedAnswer":{"@type":"Answer","text":"Sí. Eliminar EXIF puede crear una copia sin los campos compatibles que detecta. Revisa el resultado porque podrían quedar otros metadatos o información identificativa visible."}},
+{"@type":"Question","name":"¿Se envía mi foto a algún servidor?","acceptedAnswer":{"@type":"Answer","text":"No. JavaScript lee los campos compatibles localmente en tu navegador."}},
+{"@type":"Question","name":"¿Funciona con archivos PNG o WebP?","acceptedAnswer":{"@type":"Answer","text":"EXIF es frecuente en JPEG, pero los archivos PNG y WebP modernos también pueden contener metadatos. Este visor se limita a las codificaciones compatibles, por lo que un resultado vacío no garantiza universalmente que no exista ninguno."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

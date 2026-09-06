@@ -32,6 +32,17 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Contador de Palabras y Caracteres","description":"Cuenta palabras, caracteres, oraciones y párrafos mientras escribes, además de un tiempo de lectura estimado, al instante, en tu navegador, nada se sube.","url":"https://orisod.com/es/word-character-counter/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"¿Cómo se calcula el número de palabras?","acceptedAnswer":{"@type":"Answer","text":"Divide por espacios en blanco y cuenta los fragmentos no vacíos. Las expresiones con guion y cadenas largas sin espacios cuentan como una palabra. Otros editores pueden tratar de otra forma la puntuación y distintos idiomas."}},
+{"@type":"Question","name":"¿Qué tan preciso es el conteo de oraciones?","acceptedAnswer":{"@type":"Answer","text":"Es una estimación basada en signos finales, no un análisis completo del idioma. Las abreviaturas, decimales, iniciales y puntuación poco usual pueden crear cortes falsos u omitirlos."}},
+{"@type":"Question","name":"¿Cómo se estima el tiempo de lectura?","acceptedAnswer":{"@type":"Answer","text":"Divide el número de palabras entre 200 por minuto y redondea según la regla mostrada, con al menos un minuto para texto no vacío. La velocidad real cambia mucho según lector, idioma y complejidad."}},
+{"@type":"Question","name":"¿Se envía algo a un servidor?","acceptedAnswer":{"@type":"Answer","text":"No. JavaScript calcula las estadísticas localmente mientras escribes."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

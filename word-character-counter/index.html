@@ -32,6 +32,17 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Word & Character Counter","description":"Count words, characters, sentences, and paragraphs as you type, plus an estimated reading time, instantly, in your browser, nothing uploaded.","url":"https://orisod.com/word-character-counter/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How is the word count calculated?","acceptedAnswer":{"@type":"Answer","text":"It splits on whitespace and counts the nonempty chunks. Hyphenated expressions and long strings without spaces therefore count as one word. Other editors may tokenize punctuation and languages differently."}},
+{"@type":"Question","name":"How accurate is sentence counting?","acceptedAnswer":{"@type":"Answer","text":"It is an estimate based on sentence-ending punctuation rather than full language analysis. Abbreviations, decimals, initials and unusual punctuation can create false breaks or missed sentences."}},
+{"@type":"Question","name":"How is reading time estimated?","acceptedAnswer":{"@type":"Answer","text":"It divides the word count by 200 words per minute and rounds according to the tool's display rule, with at least one minute for nonempty text. Actual speed varies widely with reader, language and complexity."}},
+{"@type":"Question","name":"Is anything sent to a server?","acceptedAnswer":{"@type":"Answer","text":"No. JavaScript calculates the statistics locally while you type."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

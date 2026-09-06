@@ -32,6 +32,17 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Image Dimension Checker","description":"Check an image's exact pixel dimensions, file size, format, DPI, and aspect ratio, free and online. Nothing is uploaded, everything runs in your browser.","url":"https://orisod.com/image-dimension-checker/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Why does DPI show as not found for some images?","acceptedAnswer":{"@type":"Answer","text":"Many screenshots and web images do not store a DPI tag. Its absence does not mean the image lacks pixels; choose a print size from the pixel dimensions and the resolution your output requires."}},
+{"@type":"Question","name":"What's the difference between pixel dimensions and DPI?","acceptedAnswer":{"@type":"Answer","text":"Pixel dimensions are the image's actual width and height in samples. DPI metadata suggests how many of those pixels should cover one printed inch. Changing only that tag can alter the suggested print size without changing image detail."}},
+{"@type":"Question","name":"Is my image uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. JavaScript reads the image and its supported metadata locally."}},
+{"@type":"Question","name":"What formats are supported?","acceptedAnswer":{"@type":"Answer","text":"The browser can inspect JPG, PNG, WEBP, GIF and other formats it decodes. DPI detection in this version is limited to supported JPEG and PNG metadata."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

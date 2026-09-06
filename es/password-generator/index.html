@@ -32,6 +32,17 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Generador de Contraseñas","description":"Genera una contraseña fuerte y aleatoria usando el generador de números aleatorios seguro de tu navegador. Gratis, sin subir nada, nada se envía a ningún sitio.","url":"https://orisod.com/es/password-generator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"¿Esta contraseña es realmente aleatoria?","acceptedAnswer":{"@type":"Answer","text":"Utiliza crypto.getRandomValues() de Web Crypto API, diseñado para aleatoriedad criptográfica. La fortaleza todavía depende de la longitud, el conjunto elegido y el manejo posterior."}},
+{"@type":"Question","name":"¿Esta herramienta guarda o recuerda mis contraseñas?","acceptedAnswer":{"@type":"Answer","text":"La página no guarda intencionalmente las contraseñas ni las envía a Orisod. Las extensiones, el historial del portapapeles, la grabación de pantalla u otro software quedan fuera del control de la herramienta."}},
+{"@type":"Question","name":"¿Qué hace excluir caracteres ambiguos?","acceptedAnswer":{"@type":"Answer","text":"Elimina caracteres parecidos como 0 y O, o 1, l e I. Ayuda al escribirlos manualmente, aunque reduce ligeramente el conjunto disponible."}},
+{"@type":"Question","name":"¿Se envía mi contraseña a un servidor?","acceptedAnswer":{"@type":"Answer","text":"No. JavaScript la genera localmente. Cópiala directamente en un gestor confiable en vez de dejarla en el historial del portapapeles."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

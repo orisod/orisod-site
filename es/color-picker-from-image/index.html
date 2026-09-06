@@ -32,6 +32,17 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Selector de color de imagen","description":"Haz clic en cualquier punto de una imagen para obtener su código de color HEX y RGB exacto, gratis y en línea. Todo se ejecuta en tu navegador, sin subidas.","url":"https://orisod.com/es/color-picker-from-image/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"¿Qué tan precisa es la lectura de color?","acceptedAnswer":{"@type":"Answer","text":"Informa el valor RGB decodificado del píxel seleccionado. Es preciso para los datos presentados al lienzo, pero no garantiza una apariencia idéntica en cada pantalla o impresora. La compresión JPG también puede crear pequeñas variaciones entre píxeles vecinos."}},
+{"@type":"Question","name":"¿Puedo elegir varios colores de la misma imagen?","acceptedAnswer":{"@type":"Answer","text":"Sí. Selecciona más puntos y utiliza las muestras recientes para recuperar lecturas anteriores."}},
+{"@type":"Question","name":"¿Se envía mi imagen a algún servidor?","acceptedAnswer":{"@type":"Answer","text":"No. El navegador usa la API Canvas para leer la imagen localmente."}},
+{"@type":"Question","name":"¿Qué formatos son compatibles?","acceptedAnswer":{"@type":"Answer","text":"Admite JPG, PNG, WebP y otros tipos que el navegador actual pueda decodificar. La compatibilidad varía según el navegador y su versión."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

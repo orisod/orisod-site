@@ -33,6 +33,17 @@
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"QR Code Generator","description":"Generate a QR code from any text or URL, free and instant. Works directly in your browser: no data is sent anywhere.","url":"https://orisod.com/qr-code-generator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Is there a limit to how much text I can encode?","acceptedAnswer":{"@type":"Answer","text":"Capacity depends on the data type and QR version, but using thousands of characters creates a dense symbol that is harder to print and scan. A short URL is usually more reliable."}},
+{"@type":"Question","name":"Do QR codes expire?","acceptedAnswer":{"@type":"Answer","text":"The static QR image itself has no expiration date. A URL encoded inside it can still stop working, change ownership or lead to different content later."}},
+{"@type":"Question","name":"Is what I type sent to a server?","acceptedAnswer":{"@type":"Answer","text":"No. JavaScript creates the QR code in your browser from the entered content."}},
+{"@type":"Question","name":"Can I change the color of the QR code?","acceptedAnswer":{"@type":"Answer","text":"Yes. Keep substantial contrast between the modules and background, preserve the quiet zone and test both screen and printed versions before distribution."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

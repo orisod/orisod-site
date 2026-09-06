@@ -32,6 +32,17 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Convertidor de imagen a Base64","description":"Convierte una imagen a un URI de datos Base64, o decodifica Base64 de vuelta a una imagen. Gratis, en el navegador, sin subidas, útil para desarrolladores.","url":"https://orisod.com/es/image-to-base64/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"¿La codificación Base64 aumenta el tamaño del archivo?","acceptedAnswer":{"@type":"Answer","text":"La codificación Base64 añade aproximadamente un tercio al número de bytes binarios antes del prefijo o la compresión de texto. El tamaño final depende de los formatos circundantes, por lo que suele convenir para recursos pequeños."}},
+{"@type":"Question","name":"¿Puedo pegar una cadena Base64 sin el prefijo data:image/...?","acceptedAnswer":{"@type":"Answer","text":"Sí. El decodificador puede intentar identificar bytes de imagen compatibles a partir de Base64 puro. Si conoces el formato, incluir el prefijo data:image/... correcto es más seguro."}},
+{"@type":"Question","name":"¿Se envían mi imagen o los datos Base64 a algún servidor?","acceptedAnswer":{"@type":"Answer","text":"No. La codificación y decodificación se ejecutan localmente con JavaScript."}},
+{"@type":"Question","name":"¿Qué formatos de imagen son compatibles?","acceptedAnswer":{"@type":"Answer","text":"Admite JPG, PNG, WebP, GIF y otros formatos que el navegador pueda reconocer y mostrar."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

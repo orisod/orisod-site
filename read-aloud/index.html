@@ -32,6 +32,17 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Read Aloud","description":"Have any text read aloud right in your browser. Pick a voice, adjust speed and pitch, and follow along with live sentence highlighting: nothing uploaded, no audio file created.","url":"https://orisod.com/read-aloud/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Can I download the speech as an audio file?","acceptedAnswer":{"@type":"Answer","text":"No. The Web Speech API offers live playback but does not provide Orisod with an audio stream to export as MP3, WAV or another file."}},
+{"@type":"Question","name":"Why do I only see a few voices, or why do they sound robotic?","acceptedAnswer":{"@type":"Answer","text":"The voice list is supplied by the browser and operating system. Installed voices, defaults and quality vary, and some platforms may obtain voices or synthesis through online services. Orisod does not install them."}},
+{"@type":"Question","name":"Is my text ever sent to a server?","acceptedAnswer":{"@type":"Answer","text":"Orisod does not intentionally upload the text. The Web Speech API delegates synthesis to your browser, operating system or configured voice service, and some implementations may use a network service. Consult the platform's privacy information for sensitive content."}},
+{"@type":"Question","name":"Why did playback stop partway through a long text?","acceptedAnswer":{"@type":"Answer","text":"The tool splits text into smaller utterances to reduce browser cutoffs, but Web Speech implementations can still pause or stop. Try Play again, another installed voice, a shorter selection or a different browser."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

@@ -32,6 +32,17 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Image to Base64 Converter","description":"Convert an image to a Base64 data URI, or decode Base64 back into an image. Free, browser-based, no uploads, useful for developers.","url":"https://orisod.com/image-to-base64/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Does Base64 encoding increase file size?","acceptedAnswer":{"@type":"Answer","text":"Base64 encoding adds roughly one third to the binary byte count before the data-URI prefix or text compression. The exact stored or transmitted size depends on surrounding formats and compression, so it is usually better suited to small assets."}},
+{"@type":"Question","name":"Can I paste a Base64 string without the data:image/... prefix?","acceptedAnswer":{"@type":"Answer","text":"Yes. The decoder can attempt to identify supported image bytes from raw Base64. Supplying a correct data:image/... prefix is safer when the format is known."}},
+{"@type":"Question","name":"Is my image or Base64 data uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. Encoding and decoding run locally with JavaScript."}},
+{"@type":"Question","name":"What image formats are supported?","acceptedAnswer":{"@type":"Answer","text":"It handles JPG, PNG, WEBP, GIF and other image formats that the browser can recognize and display."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;
