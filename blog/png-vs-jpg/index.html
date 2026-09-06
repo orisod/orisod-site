@@ -159,7 +159,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <h2>When PNG is the better choice</h2>
 <ul>
-  <li><strong>Screenshots</strong>, especially ones with text or sharp UI edges — JPG compression tends to blur fine lines and create visible artifacts around text.</li>
+  <li><strong>Screenshots</strong>, especially ones with text or sharp UI edges. JPG compression tends to blur fine lines and create visible artifacts around text.</li>
   <li><strong>Logos, icons, and flat-color graphics</strong>, where crisp edges matter more than file size.</li>
   <li><strong>Anything that needs a transparent background</strong>, like a logo you'll place over different colored backgrounds.</li>
   <li><strong>Images you'll re-save repeatedly</strong> while editing, since JPG loses a little quality every time it's re-compressed and PNG doesn't.</li>
@@ -182,7 +182,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <p>A photographic JPG can be much smaller than a PNG, but the visual difference depends on quality, repeated encoding, image content, display size, and close inspection. For screenshots with text, PNG usually preserves hard edges cleanly. JPG can introduce ringing, blocking, or softness, especially at lower quality settings.</p>
 <figure class="theme-figure">
   <img src="/assets/blog/png-vs-jpg/png-vs-jpg-text-crop-comparison.webp" alt="Magnified crop of the same text graphic showing crisp PNG edges next to a JPG version with visible fuzziness and block artifacts around the letters" width="1330" height="319" loading="lazy">
-  <figcaption>A magnified crop of the same text graphic — PNG on the left, JPG saved at a low quality setting on the right. PNG keeps every edge crisp; the JPG version shows visible blur and blocky artifacts around the letters — exactly the "slightly fuzzy" effect the table above describes.</figcaption>
+  <figcaption>A magnified crop of the same text graphic: PNG on the left, JPG saved at a low quality setting on the right. PNG keeps every edge crisp; the JPG version shows visible blur and blocky artifacts around the letters, exactly the "slightly fuzzy" effect the table above describes.</figcaption>
 </figure>
 <figure class="theme-figure">
 <svg viewBox="0 0 700 340" width="700" height="340" role="img" aria-label="Bar chart: for this text graphic, PNG (18 KB) is smaller than a visually clean JPG (27 KB); only a visibly degraded JPG (15 KB) gets close to PNG's size" xmlns="http://www.w3.org/2000/svg">
@@ -198,7 +198,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <text x="586.8" y="136.5" text-anchor="middle" font-size="18" font-weight="bold" fill="var(--text)">15 KB</text>
 <text x="586.8" y="304.0" text-anchor="middle" font-size="15" fill="var(--muted-text)">JPG (degraded)</text>
 </svg>
-<figcaption>Measured on the text graphic above (Pillow 12.3.0): a visually clean JPG (quality 85) is actually larger than the PNG — for this kind of flat-color, sharp-edged content, JPG only gets smaller once you drop quality enough to see the artifacts above (quality 10). Treat as this example, not a universal guarantee.</figcaption>
+<figcaption>Measured on the text graphic above (Pillow 12.3.0): a visually clean JPG (quality 85) is larger than the PNG. For this kind of flat-color, sharp-edged content, JPG only gets smaller once you drop quality enough to see the artifacts above (quality 10). Treat as this example, not a universal guarantee.</figcaption>
 </figure>
 
 <h2>Why does my computer default to PNG for screenshots?</h2>

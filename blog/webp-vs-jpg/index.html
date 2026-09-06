@@ -161,7 +161,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <p>When WebP produces a useful size reduction, it can reduce image transfer and improve loading time. A site may store WebP directly or generate it through an image service and negotiate formats with the browser. Teams still need to consider source quality, encoding cost, caching, fallbacks, editing workflows, and the formats accepted by downstream systems.</p>
 
 <h2>Where WebP compatibility breaks down</h2>
-<p>The catch is that "the web" and "every piece of software on your computer" aren't the same thing. Plenty of image editors, older design tools, some printing services, and certain upload forms still don't recognize .webp files, especially software that hasn't been updated in a while. When that happens you'll see a generic "unsupported format" error, a broken image icon, or the upload simply gets rejected outright — the file itself isn't broken, the receiving software just doesn't have a WebP decoder.</p>
+<p>The catch is that "the web" and "every piece of software on your computer" aren't the same thing. Plenty of image editors, older design tools, some printing services, and certain upload forms still don't recognize .webp files, especially software that hasn't been updated in a while. When that happens you'll see a generic "unsupported format" error, a broken image icon, or the upload gets rejected outright. The file itself isn't broken; the receiving software doesn't have a WebP decoder.</p>
 
 <h2>One measured WebP and JPG comparison</h2>
 <table class="compare-table">
@@ -182,7 +182,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <text x="322.2" y="135.1" text-anchor="middle" font-size="18" font-weight="bold" fill="var(--text)">773 KB</text>
 <text x="322.2" y="304.0" text-anchor="middle" font-size="15" fill="var(--muted-text)">WebP</text>
 </svg>
-<figcaption>Measured on a 3000×2250 test photo, Pillow 12.3.0 (libwebp), JPG and WebP both at quality 85 — a 31% reduction. Treat as this example, not a universal guarantee.</figcaption>
+<figcaption>Measured on a 3000×2250 test photo, Pillow 12.3.0 (libwebp), JPG and WebP both at quality 85, a 31% reduction. Treat as this example, not a universal guarantee.</figcaption>
 </figure>
 
 <h2>Why the saved format may not match what you expected</h2>

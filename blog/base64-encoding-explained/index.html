@@ -157,7 +157,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <p>Base64 represents binary data using a set of 64 printable characters. An image is normally stored as raw bytes, while formats such as CSS, HTML, JSON, and email are built to handle text. Encoding bridges that gap by turning the image bytes into a string those formats can carry safely.</p>
 
 <h2>Why images get encoded this way</h2>
-<p>The main reason is embedding: a Base64-encoded image can be pasted directly into an HTML <code>&lt;img&gt;</code> tag's <code>src</code> attribute, a CSS <code>background-image</code> property, or a JSON field, without needing to reference a separate image file at all. That matters because every separate image file a browser needs normally means a separate network request. For a handful of small icons or a tiny logo, embedding them as Base64 directly inside the CSS or HTML means the browser doesn't need to make additional requests just to fetch those small files.</p>
+<p>The main reason is embedding: a Base64-encoded image can be pasted directly into an HTML <code>&lt;img&gt;</code> tag's <code>src</code> attribute, a CSS <code>background-image</code> property, or a JSON field, without needing to reference a separate image file at all. That matters because every separate image file a browser needs normally means a separate network request. For a handful of small icons or a tiny logo, embedding them as Base64 directly inside the CSS or HTML means the browser doesn't need to make additional requests to fetch those small files.</p>
 
 <h2>The size trade-off</h2>
 <p>Encoding increases the data size by roughly one third. A 10 KB image becomes about 13–14 KB of Base64 text. That overhead may be acceptable for a tiny asset embedded once, but it becomes expensive with large images or content repeated across several pages.</p>
@@ -289,7 +289,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
     <a class="blog-card" href="/blog/what-is-exif-data/">
       <h3>What Is EXIF Data and Why You Should Remove It Before Sharing Photos</h3>
-      <p>The hidden data your photos carry — including GPS location — and how to strip it before you share.</p>
+      <p>The hidden data your photos carry (including GPS location) and how to strip it before you share.</p>
     </a>
 
     <a class="blog-card" href="/blog/what-is-a-checksum/">

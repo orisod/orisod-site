@@ -154,7 +154,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <div class="article-body">
 
 <h2>Qué es Base64</h2>
-<p>Base64 representa datos binarios —los bytes que forman un archivo— mediante un conjunto de 64 caracteres de texto. Las imágenes son binarias, pero CSS, HTML, JSON y el correo electrónico suelen trabajar con texto plano. La codificación transforma los datos de la imagen en una cadena que esos formatos pueden transportar sin adjuntar un archivo binario independiente.</p>
+<p>Base64 representa datos binarios (los bytes que forman un archivo) mediante un conjunto de 64 caracteres de texto. Las imágenes son binarias, pero CSS, HTML, JSON y el correo electrónico suelen trabajar con texto plano. La codificación transforma los datos de la imagen en una cadena que esos formatos pueden transportar sin adjuntar un archivo binario independiente.</p>
 
 <h2>Por qué las imágenes se codifican así</h2>
 <p>La principal ventaja es poder incrustar la imagen: la cadena Base64 puede colocarse en el atributo <code>src</code> <code>de una etiqueta &lt;img&gt;, en una propiedad</code> <code>background-image</code> de CSS o en un campo JSON. Así se evita solicitar un archivo independiente. Puede ser útil para unos pocos iconos muy pequeños, aunque no suele convenir con imágenes grandes.</p>
@@ -256,7 +256,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 </ul>
 
 <h2>Cuándo es la decisión equivocada</h2>
-<p>Para la mayoría de las imágenes de un sitio —fotos, gráficos grandes o recursos reutilizados— Base64 no conviene. El navegador no puede guardar la imagen en caché como un archivo independiente: si el mismo icono aparece en diez páginas, la versión incrustada vuelve a viajar dentro del HTML o CSS de cada una. Para archivos grandes o frecuentes, enlazar la imagen normal ahorra ancho de banda.</p>
+<p>Para la mayoría de las imágenes de un sitio (fotos, gráficos grandes o recursos reutilizados), Base64 no conviene. El navegador no puede guardar la imagen en caché como un archivo independiente: si el mismo icono aparece en diez páginas, la versión incrustada vuelve a viajar dentro del HTML o CSS de cada una. Para archivos grandes o frecuentes, enlazar la imagen normal ahorra ancho de banda.</p>
 
 <h2>Cómo generar una cadena Base64 a partir de una imagen</h2>
 <p>Convertir una imagen a Base64 consiste en leer sus datos binarios y representarlos como texto, algo que rara vez necesitas hacer a mano. Una herramienta en el navegador se encarga del proceso: seleccionas la imagen y obtienes la cadena codificada, con o sin el prefijo completo del URI de datos, lista para utilizar en CSS, HTML o JSON.</p>
@@ -289,7 +289,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
     <a class="blog-card" href="/es/blog/what-is-exif-data/">
       <h3>Qué son los datos EXIF y por qué eliminarlos antes de compartir fotos</h3>
-      <p>Los datos ocultos que llevan tus fotos — incluida la ubicación GPS — y cómo eliminarlos antes de compartir.</p>
+      <p>Los datos ocultos que llevan tus fotos (incluida la ubicación GPS) y cómo eliminarlos antes de compartir.</p>
     </a>
 
     <a class="blog-card" href="/es/blog/what-is-a-checksum/">
