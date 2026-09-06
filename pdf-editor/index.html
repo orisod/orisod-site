@@ -115,7 +115,7 @@ input[type="file"]{display:none;}
 .textbox-mark{position:absolute;color:#0f172a;background:rgba(255,255,255,.85);border:1px dashed var(--accent);padding:1px 3px;white-space:pre-wrap;font-family:Arial, Helvetica, sans-serif;line-height:1.15;}
 .textbox-input{position:absolute;z-index:10;pointer-events:auto;border:1.5px solid var(--accent);background:#ffffff;color:#0f172a;font-family:Arial, Helvetica, sans-serif;padding:2px 4px;resize:none;min-width:120px;min-height:26px;}
 .annotations-panel{margin-top:20px;border-top:1px solid var(--border);padding-top:16px;}
-.annotations-panel h3{font-size:14px;margin:0 0 10px 0;opacity:0.85;}
+.annotations-panel h2{font-size:14px;margin:0 0 10px 0;opacity:0.85;}
 .annotation-item{display:flex;align-items:center;gap:10px;font-size:13px;padding:7px 10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;margin-bottom:6px;}
 .annotation-item .tag{flex:none;font-size:10px;font-weight:bold;text-transform:uppercase;padding:2px 6px;border-radius:4px;background:var(--card-bg);color:var(--muted-text);}
 .annotation-item .desc{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;opacity:0.9;}
@@ -222,7 +222,7 @@ h2{margin-top:50px;font-size:22px;}
         <div id="pagesContainer"></div>
 
         <div class="annotations-panel">
-          <h3>Pending changes (<span id="annCount">0</span>)</h3>
+          <h2>Pending changes (<span id="annCount">0</span>)</h2>
           <div id="annotationsList"><div class="no-annotations">Nothing added yet.</div></div>
           <button class="clear-all-btn" id="clearAllBtn" style="display:none;">Clear all</button>
         </div>
