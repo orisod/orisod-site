@@ -175,7 +175,7 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <rect x="410" y="35" width="80" height="50" rx="6" fill="none" stroke="var(--accent)" stroke-width="2"/>
 <text x="450" y="65" text-anchor="middle" font-size="12" fill="var(--accent)">Obj 5</text>
 <line x1="255" y1="85" x2="255" y2="110" stroke="var(--muted-text)" stroke-width="1.5"/>
-<text x="255" y="123" text-anchor="middle" font-size="11" fill="var(--muted-text)">omitido — el resto pasa sin tocar</text>
+<text x="255" y="123" text-anchor="middle" font-size="11" fill="var(--muted-text)">omitido, el resto pasa sin tocar</text>
 <rect x="140" y="140" width="300" height="55" rx="8" fill="none" stroke="#4ade80" stroke-width="2"/>
 <text x="290" y="164" text-anchor="middle" font-size="13" fill="#4ade80">Archivo reconstruido: objetos 1, 2, 4, 5</text>
 <text x="290" y="181" text-anchor="middle" font-size="12" fill="#4ade80">+ un índice nuevo que enumera exactamente esos</text>
@@ -190,7 +190,7 @@ code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border
 <p>Abrir el resultado con otro motor PDF aporta una comprobación útil porque cada analizador tiene tolerancias diferentes. No demuestra que todos los objetos sean correctos. Compara páginas y contenido visible, y prueba el texto, enlaces, formularios o adjuntos importantes.</p>
 
 <h2>Qué significa el resultado de la reparación</h2>
-<p><strong>Si mi PDF tiene un índice dañado, ¿la reparación lo "arreglará"?</strong> Normalmente no hay nada que arreglar; un lector construido para escanear el archivo directamente ya evita por sí solo un índice roto, así que un archivo así típicamente vuelve como "no se detectaron problemas" en lugar de "reparado". Eso no es que no se detecte el daño; el daño simplemente nunca impidió que el archivo se pudiera leer.</p>
+<p><strong>Si mi PDF tiene un índice dañado, ¿la reparación lo "arreglará"?</strong> Normalmente no hay nada que arreglar; un lector construido para escanear el archivo directamente ya evita por sí solo un índice roto, así que un archivo así típicamente vuelve como "no se detectaron problemas" en lugar de "reparado". Eso no es que no se detecte el daño; el daño nunca impidió que el archivo se pudiera leer.</p>
 <p>El archivo reparado puede tener menos páginas si se dañaron su árbol de páginas u objetos necesarios. Compáralo con una copia conocida cuando sea posible.</p>
 <p><strong>¿Puede la reparación arreglar un PDF que no se abre porque está protegido con contraseña?</strong> No; ese es un problema de control de acceso, no de daño. Los objetos del archivo pueden estar perfectamente bien; simplemente al lector no se le permite verlos sin la contraseña, lo cual es un tipo de "no se abre" completamente distinto.</p>
 <p>El resultado es una reconstrucción, no una promesa de identidad byte por byte. Guárdalo como otro archivo y conserva la fuente dañada para futuros intentos.</p>
