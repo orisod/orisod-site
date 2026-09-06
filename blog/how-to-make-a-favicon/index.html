@@ -160,10 +160,10 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <h2>Which favicon files are useful</h2>
 <p>There is no single package required in every project. Common choices include an ICO file for broad legacy support, PNG or SVG icons for current browsers, and an Apple touch icon when you want a tailored iOS home-screen image:</p>
 <ul>
-  <li><strong>favicon.ico</strong> — the classic format, still expected by many browsers as a fallback.</li>
-  <li><strong>Multiple PNG sizes</strong> (typically 16×16, 32×32, 192×192, 512×512) — for different display contexts, from browser tabs to Android home screens.</li>
-  <li><strong>apple-touch-icon</strong> — a specific size Apple devices use when a site is saved to an iPhone or iPad home screen.</li>
-  <li><strong>A manifest reference</strong> — for progressive web apps, tying the icon set together.</li>
+  <li><strong>favicon.ico</strong>: the classic format, still expected by many browsers as a fallback.</li>
+  <li><strong>Multiple PNG sizes</strong> (typically 16×16, 32×32, 192×192, 512×512): for different display contexts, from browser tabs to Android home screens.</li>
+  <li><strong>apple-touch-icon</strong>: a specific size Apple devices use when a site is saved to an iPhone or iPad home screen.</li>
+  <li><strong>A manifest reference</strong>: for progressive web apps, tying the icon set together.</li>
 </ul>
 <p>A generator can create the selected sizes, filenames, and HTML references from one source image. Review the output rather than assuming every generated file is necessary for your site.</p>
 <figure class="theme-figure">
@@ -201,7 +201,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <text x="358.0" y="329.0" text-anchor="middle" font-size="11.5" fill="var(--accent)">512x512px</text>
 <text x="358.0" y="345.0" text-anchor="middle" font-size="10.5" fill="var(--muted-text)">Android splash / PWA</text>
 </svg>
-<figcaption>Reflects exactly what Orisod's own Favicon Generator tool produces: favicon.ico (16×16 + 32×32 combined), favicon-16x16.png, favicon-32x32.png, apple-touch-icon.png (180×180), android-chrome-192x192.png, and android-chrome-512x512.png. Not every site needs all six — a minimal site can get by with just favicon.ico and one PNG size — but this is the complete, cross-platform set.</figcaption>
+<figcaption>Reflects exactly what Orisod's own Favicon Generator tool produces: favicon.ico (16×16 + 32×32 combined), favicon-16x16.png, favicon-32x32.png, apple-touch-icon.png (180×180), android-chrome-192x192.png, and android-chrome-512x512.png. Not every site needs all six: a minimal site can get by with favicon.ico and one PNG size, but this is the complete, cross-platform set.</figcaption>
 </figure>
 <table class="compare-table">
   <tr><th>File</th><th>Size</th><th>Used for</th></tr>
@@ -224,10 +224,10 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <h2>Common favicon mistakes</h2>
 <ul>
-  <li><strong>Using a busy or detailed image.</strong> Anything with fine text or intricate shading turns into an unreadable smudge at 16×16 pixels — simpler is almost always better.</li>
+  <li><strong>Using a busy or detailed image.</strong> Anything with fine text or intricate shading turns into an unreadable smudge at 16×16 pixels. Simpler is almost always better.</li>
   <li><strong>Only uploading one size.</strong> A single PNG might look fine in a browser tab but appear blank or oddly cropped when someone saves your site to a phone home screen.</li>
   <li><strong>Forgetting to clear the cache after updating.</strong> Browsers aggressively cache favicons, so after replacing one, you may need to hard-refresh or clear cached images before the new one shows up.</li>
-  <li><strong>Placing the files in the wrong folder.</strong> The <code>&lt;link&gt;</code> tags need to point to wherever the files actually live on your server — a mismatch here is the most common reason a "correctly generated" favicon still doesn't appear.</li>
+  <li><strong>Placing the files in the wrong folder.</strong> The <code>&lt;link&gt;</code> tags need to point to wherever the files live on your server. A mismatch here is the most common reason a "correctly generated" favicon still doesn't appear.</li>
 </ul>
 
 <h2>Favicon setup questions</h2>
@@ -250,12 +250,12 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <div class="related-grid">
     <a class="blog-card" href="/blog/check-image-dimensions/">
       <h3>How to Check an Image's Dimensions and Resolution Online</h3>
-      <p>What pixels, dimensions, and DPI actually mean, and the fastest way to check them on any device.</p>
+      <p>What pixels, dimensions, and DPI mean, and the fastest way to check them on any device.</p>
     </a>
 
     <a class="blog-card" href="/blog/how-to-make-a-qr-code/">
       <h3>How to Make a QR Code for Free (No App Needed)</h3>
-      <p>What QR codes actually store, why “expiring” codes are a myth, and how to make one in under a minute.</p>
+      <p>What QR codes store, why “expiring” codes are a myth, and how to make one in under a minute.</p>
     </a>
 
     <a class="blog-card" href="/blog/find-color-code-from-image/">

@@ -173,7 +173,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <text x="586.8" y="232.4" text-anchor="middle" font-size="18" font-weight="bold" fill="var(--text)">85 KB</text>
 <text x="586.8" y="304.0" text-anchor="middle" font-size="15" fill="var(--muted-text)">WebP (con pérdida)</text>
 </svg>
-<figcaption>Medido en una imagen de prueba tipo interfaz de 1600×1000, Pillow 12.3.0 (libwebp): codificación WebP sin pérdida frente a WebP con pérdida en calidad 80. Trátalo como este ejemplo concreto, no como una garantía universal — el ahorro real varía según el contenido de la imagen.</figcaption>
+<figcaption>Medido en una imagen de prueba tipo interfaz de 1600×1000, Pillow 12.3.0 (libwebp): codificación WebP sin pérdida frente a WebP con pérdida en calidad 80. Trátalo como este ejemplo concreto, no como una garantía universal. El ahorro real varía según el contenido de la imagen.</figcaption>
 </figure>
 <table class="compare-table">
   <tr><th>Formato</th><th>Tamaño</th></tr>
@@ -193,7 +193,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 </ul>
 
 <h2>Cuándo vale la pena convertir</h2>
-<p>El caso más claro es el rendimiento de sitios web — archivos de imagen más pequeños significan páginas que cargan más rápido, y eso se acumula rápidamente en un sitio con docenas de imágenes. También vale la pena cuando gestionas una gran biblioteca de recursos y el espacio de almacenamiento importa, o cuando necesitas compartir un gran lote de gráficos PNG en algún lugar con límite de tamaño. Para un único PNG que usarás una sola vez, el ahorro normalmente no vale el paso extra — es cuando la misma elección se repite cientos o miles de veces que la diferencia de tamaño realmente se nota.</p>
+<p>El caso más claro es el rendimiento de sitios web: archivos de imagen más pequeños significan páginas que cargan más rápido, y eso se acumula rápidamente en un sitio con docenas de imágenes. También vale la pena cuando gestionas una gran biblioteca de recursos y el espacio de almacenamiento importa, o cuando necesitas compartir un gran lote de gráficos PNG en algún lugar con límite de tamaño. Para un único PNG que usarás una sola vez, el ahorro normalmente no vale el paso extra. Es cuando la misma elección se repite cientos o miles de veces que la diferencia de tamaño se nota.</p>
 
 <h2>Ejemplo medido: una imagen de interfaz</h2>
 <p>La comparación ilustrada utiliza una imagen sintética de interfaz de 1600 × 1000 e indica el codificador y el ajuste empleados. Sirve para entender el contraste, no para pronosticar un sitio completo. En producción, prueba una muestra representativa y calcula el total con esos resultados medidos.</p>

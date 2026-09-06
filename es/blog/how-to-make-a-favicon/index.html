@@ -160,10 +160,10 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <h2>Qué archivos de favicon pueden ser útiles</h2>
 <p>No existe un único paquete obligatorio para todos los proyectos. Las opciones habituales incluyen ICO para compatibilidad con sistemas antiguos, PNG o SVG para navegadores actuales y un ícono táctil de Apple cuando se quiere controlar la imagen de la pantalla de inicio:</p>
 <ul>
-  <li><strong>favicon.ico</strong> — el formato clásico, todavía esperado por muchos navegadores como respaldo.</li>
-  <li><strong>Varios tamaños PNG</strong> (típicamente 16 × 16, 32 × 32, 192 × 192, 512 × 512) — para distintos contextos de visualización, desde pestañas del navegador hasta pantallas de inicio de Android.</li>
-  <li><strong>apple-touch-icon</strong> — un tamaño específico que usan los dispositivos Apple cuando un sitio se guarda en la pantalla de inicio de un iPhone o iPad.</li>
-  <li><strong>Una referencia en el manifest</strong> — para aplicaciones web progresivas, uniendo el conjunto de íconos.</li>
+  <li><strong>favicon.ico</strong>: el formato clásico, todavía esperado por muchos navegadores como respaldo.</li>
+  <li><strong>Varios tamaños PNG</strong> (típicamente 16 × 16, 32 × 32, 192 × 192, 512 × 512): para distintos contextos de visualización, desde pestañas del navegador hasta pantallas de inicio de Android.</li>
+  <li><strong>apple-touch-icon</strong>: un tamaño específico que usan los dispositivos Apple cuando un sitio se guarda en la pantalla de inicio de un iPhone o iPad.</li>
+  <li><strong>Una referencia en el manifest</strong>: para aplicaciones web progresivas, uniendo el conjunto de íconos.</li>
 </ul>
 <p>Un generador puede crear los tamaños, nombres y referencias HTML elegidos a partir de una sola imagen. Revisa el resultado en lugar de asumir que tu sitio necesita todos los archivos producidos.</p>
 <figure class="theme-figure">
@@ -201,7 +201,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <text x="358.0" y="329.0" text-anchor="middle" font-size="11.5" fill="var(--accent)">512x512px</text>
 <text x="358.0" y="345.0" text-anchor="middle" font-size="10.5" fill="var(--muted-text)">Splash de Android / PWA</text>
 </svg>
-<figcaption>Refleja exactamente lo que genera la propia herramienta Generador de Favicon de Orisod: favicon.ico (16×16 + 32×32 combinados), favicon-16x16.png, favicon-32x32.png, apple-touch-icon.png (180×180), android-chrome-192x192.png y android-chrome-512x512.png. No todos los sitios necesitan los seis — un sitio mínimo puede bastar con favicon.ico y un tamaño PNG — pero este es el conjunto completo multiplataforma.</figcaption>
+<figcaption>Refleja exactamente lo que genera la propia herramienta Generador de Favicon de Orisod: favicon.ico (16×16 + 32×32 combinados), favicon-16x16.png, favicon-32x32.png, apple-touch-icon.png (180×180), android-chrome-192x192.png y android-chrome-512x512.png. No todos los sitios necesitan los seis: un sitio mínimo puede bastar con favicon.ico y un tamaño PNG, pero este es el conjunto completo multiplataforma.</figcaption>
 </figure>
 <table class="compare-table">
   <tr><th>Archivo</th><th>Tamaño</th><th>Se usa para</th></tr>
@@ -224,10 +224,10 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <h2>Errores comunes con el favicon</h2>
 <ul>
-  <li><strong>Usar una imagen recargada o con mucho detalle.</strong> Cualquier cosa con texto fino o sombreado intrincado se convierte en una mancha ilegible a 16 × 16 píxeles — más simple casi siempre es mejor.</li>
+  <li><strong>Usar una imagen recargada o con mucho detalle.</strong> Cualquier cosa con texto fino o sombreado intrincado se convierte en una mancha ilegible a 16 × 16 píxeles. Más simple casi siempre es mejor.</li>
   <li><strong>Subir solo un tamaño.</strong> Un único PNG puede verse bien en una pestaña del navegador pero aparecer en blanco o mal recortado cuando alguien guarda tu sitio en la pantalla de inicio de un teléfono.</li>
   <li><strong>Olvidar limpiar la caché después de actualizarlo.</strong> Los navegadores guardan los favicons en caché de forma muy agresiva, así que después de reemplazar uno, puede que necesites forzar una actualización o borrar las imágenes en caché antes de que aparezca el nuevo.</li>
-  <li><strong>Colocar los archivos en la carpeta equivocada.</strong> Las etiquetas <code>&lt;link&gt;</code> necesitan apuntar a donde realmente viven los archivos en tu servidor — un desajuste aquí es la razón más común por la que un favicon "generado correctamente" sigue sin aparecer.</li>
+  <li><strong>Colocar los archivos en la carpeta equivocada.</strong> Las etiquetas <code>&lt;link&gt;</code> necesitan apuntar a donde viven los archivos en tu servidor. Un desajuste aquí es la razón más común por la que un favicon "generado correctamente" sigue sin aparecer.</li>
 </ul>
 
 <h2>Preguntas sobre la configuración del favicon</h2>
