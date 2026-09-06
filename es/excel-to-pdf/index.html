@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Excel a PDF",
+      "description": "Convierte una hoja de cálculo Excel en PDF, gratis y en línea, con texto real seleccionable, una página por hoja. Los gráficos, colores de celda y fórmulas no se conservan. Funciona directamente en tu navegador, sin subir archivos.",
+      "url": "https://orisod.com/es/excel-to-pdf/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Se incluirán los gráficos y los colores de celda?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. El conversor utiliza el texto y los valores guardados en las celdas. Omite gráficos, colores, formato condicional, celdas combinadas y otros elementos de diseño."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se conservan las fórmulas?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Un PDF no realiza cálculos de hoja de cálculo, así que se utiliza el último resultado guardado en cada celda con fórmula. Ese valor puede estar desactualizado si el libro no se recalculó y guardó antes de convertirlo."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Cómo se manejan varias hojas?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Cada hoja se convierte en una página identificada dentro del PDF. Las hojas grandes pueden necesitar texto pequeño o encajar peor que en la hoja de cálculo, así que revisa el resultado."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se sube mi hoja de cálculo a un servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript lee el libro y crea el PDF dentro de tu navegador."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.4/jspdf.plugin.autotable.min.js"></script>

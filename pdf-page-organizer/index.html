@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "PDF Page Organizer",
+      "description": "Reorder or delete pages in a PDF with a visual drag-and-drop editor, free and online. Works directly in your browser: no files are uploaded.",
+      "url": "https://orisod.com/pdf-page-organizer/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does this affect text selectability?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "PDF pages are copied without intentional rasterization, so ordinary selectable text can retain that property. The document structure is rebuilt, however, and interactive elements or signatures may not survive unchanged."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I delete more than one page?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Remove as many thumbnails as needed, provided at least one page remains. Review the complete sequence before saving."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What if I want to undo a deletion?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Before export, reload and select the original PDF again to reset the session. After export, keep the original file as the reliable way to recover a deleted page."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my PDF uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript renders the thumbnails and rebuilds the PDF locally."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <style>

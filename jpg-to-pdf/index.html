@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "JPG to PDF Converter",
+      "description": "Convert JPG images to PDF online for free. Fast, simple, and works directly in your browser: no files are uploaded.",
+      "url": "https://orisod.com/jpg-to-pdf/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Can I combine multiple JPGs into one PDF?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Each selected JPG becomes one PDF page. Available browser memory and the dimensions of the images determine how large a batch is practical."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I reorder or remove images before converting?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You can remove a file from the displayed list before conversion. Confirm the sequence shown, because changing it after export requires rebuilding or reorganizing the PDF."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my image uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript reads the images and creates the PDF inside your browser."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does the PDF keep the original image quality?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The PDF retains the image’s available pixel dimensions, but how sharp it looks or prints also depends on page scaling, source compression and the viewer or printer. Conversion does not add missing detail, and metadata may not be preserved."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root{

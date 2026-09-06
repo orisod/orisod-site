@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Split PDF",
+      "description": "Split a PDF into separate files by page range or extract individual pages online for free. Works directly in your browser: no files are uploaded.",
+      "url": "https://orisod.com/split-pdf/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does splitting affect the quality of my PDF?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pages are copied without deliberate rasterization or image recompression, so visible quality and selectable text normally remain. The PDF structure is rebuilt, however, and interactive features or signatures may change."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I extract pages that aren't in order?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Enter pages and ranges in the sequence required. For example, \"5, 1-3\" places page 5 before pages 1 through 3. Duplicate entries may also duplicate a page, so review the selection."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens if I split a 50-page PDF into individual pages?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The download contains a ZIP with 50 one-page PDF files. Each page retains its ordinary visible content, although document-level features do not necessarily transfer to every individual file."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my file uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript reads and rebuilds the document inside your browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>

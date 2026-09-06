@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "PDF a Word",
+      "description": "Convierte el texto de un PDF en un archivo .docx editable, gratis y en línea. Conversión de solo texto: el diseño, las imágenes y las tablas no se conservan. Funciona directamente en tu navegador, sin subir archivos.",
+      "url": "https://orisod.com/es/pdf-to-word/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Las tablas se convertirán en tablas reales de Word?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. El convertidor lee texto PDF, no la estructura de la tabla. Cada fila puede aparecer como una línea con espacios entre sus valores, por lo que tendrás que reconstruir la tabla editable en Word."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se conservarán las imágenes o el diseño original?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. El resultado contiene texto seleccionable, pero no recrea imágenes, fuentes exactas, columnas ni el espaciado preciso. Úsalo como borrador editable, no como duplicado visual."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Por qué mi resultado está vacío o le falta texto?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Un escaneo puede contener solamente imágenes y carecer de una capa de texto seleccionable. Esta herramienta no aplica OCR, por lo que esas páginas pueden generar poco contenido o ninguno. La codificación y el orden de lectura de algunos PDF también afectan la extracción."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se envía mi PDF a algún servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript lee el PDF y crea el .docx localmente en tu navegador."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/docx@9.7.1/dist/index.iife.js"></script>
 <style>

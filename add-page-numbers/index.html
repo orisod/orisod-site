@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Add Page Numbers",
+      "description": "Stamp page numbers onto a PDF online for free. Choose the position and starting number: works directly in your browser, no files are uploaded.",
+      "url": "https://orisod.com/add-page-numbers/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does this affect text selectability?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The tool does not rasterize the existing pages, so selectable text normally remains selectable. It does alter the PDF by drawing new content, which can invalidate digital signatures or affect workflows that require a byte-for-byte original."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I start counting from a number other than 1?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Enter the first number you want, and each following page increases the sequence by one."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I choose where the number appears?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Choose top or bottom and align the number left, center or right. Preview pages with different sizes or rotations and check that the number does not cover existing content."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my PDF uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript edits and exports the PDF inside your browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <style>
 :root{

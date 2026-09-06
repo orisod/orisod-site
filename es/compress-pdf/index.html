@@ -32,6 +32,72 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Comprimir PDF",
+      "description": "Reduce el tamaño de archivo de un PDF gratis. Ideal para PDF escaneados o con muchas imágenes. Funciona directamente en tu navegador: no se sube ningún archivo.",
+      "url": "https://orisod.com/es/compress-pdf/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Perderé la capacidad de seleccionar texto?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Compresión fuerte rasteriza las páginas, por lo que el texto seleccionable o buscable suele perderse salvo que después se aplique OCR. Limpieza rápida no rasteriza intencionalmente el contenido, pero revisa siempre la salida cuando la búsqueda o la accesibilidad sean esenciales."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué modo debería usar para un informe o contrato con mucho texto?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Empieza con Limpieza rápida. Reorganiza el PDF en vez de renderizar cada página como imagen, lo que ayuda a conservar el texto buscable y el contenido de la página. Revisa formularios, enlaces y firmas digitales después de cualquier modificación; las firmas pueden quedar invalidadas."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Cuánto se reducirá mi archivo?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No existe un porcentaje fiable. Limpieza rápida puede ahorrar poco si el PDF ya está optimizado. Compresión fuerte puede reducir más un archivo cargado de imágenes, pero el resultado depende de las dimensiones, el contenido y el ajuste de calidad."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué pasa si la compresión no fuera a reducir realmente el tamaño del archivo?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La herramienta conserva el original cuando la versión generada no sería más pequeña y explica el resultado. Puedes probar el otro modo si sus concesiones encajan con el documento."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se envía mi PDF a algún servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript realiza la compresión localmente dentro de tu navegador."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>

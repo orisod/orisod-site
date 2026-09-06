@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Convertidor de PDF a JPG",
+      "description": "Convierte páginas de PDF en imágenes JPG en línea y gratis. Rápido, simple y fácil de usar: todo ocurre en tu navegador, no se sube ningún archivo.",
+      "url": "https://orisod.com/es/pdf-to-jpg/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Funciona con archivos PDF de varias páginas?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Cada página PDF se convierte en su propio JPG. Descarga imágenes individuales, indica un rango como \"2-5, 8\" o reúne todos los resultados en un archivo ZIP."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se envía mi PDF a algún servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. El navegador lee y convierte el PDF localmente, así que no se envía a Orisod para procesarlo."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo controlar la calidad de la imagen?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Ajusta la calidad antes de convertir. Los valores altos pueden conservar más detalle visual, aunque normalmente producen archivos mayores; no pueden recuperar detalle ausente en el original."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Funciona con archivos PDF escaneados o protegidos con contraseña?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Los escaneos basados en imágenes se pueden renderizar como cualquier otra página PDF, pero la conversión no aplica OCR. Un PDF cifrado debe desbloquearse con la autorización correspondiente antes de que el navegador pueda leerlo."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>

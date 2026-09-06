@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Eliminar páginas de PDF",
+      "description": "Elimina páginas específicas de un PDF escribiendo números o rangos de página, gratis y en línea. Funciona directamente en tu navegador, sin subir archivos.",
+      "url": "https://orisod.com/es/delete-pdf-pages/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Cómo indico qué páginas eliminar?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Separa los números individuales con comas y escribe los rangos con un guion. Por ejemplo, “2, 4, 7-9” elimina las páginas 2, 4, 7, 8 y 9. Comprueba la cantidad mostrada antes de descargar."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo eliminar todas las páginas?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Un PDF válido debe conservar al menos una página, así que la herramienta rechaza cualquier selección que elimine el documento completo."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se conserva la calidad de las páginas restantes?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Las páginas se copian sin rasterizar ni recomprimir intencionalmente su contenido visible. Sin embargo, el documento se reconstruye, por lo que los marcadores, enlaces, formularios, etiquetas de página o firmas digitales pueden cambiar o quedar invalidados. Revisa los archivos importantes antes de sustituir el original."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se envía mi PDF a algún servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript lee y reconstruye el PDF dentro de tu navegador."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <style>
 :root{

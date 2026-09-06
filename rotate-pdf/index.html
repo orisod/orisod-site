@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Rotate PDF Pages",
+      "description": "Rotate all or specific pages of a PDF online for free. Works directly in your browser: no files are uploaded.",
+      "url": "https://orisod.com/rotate-pdf/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does this affect text selectability?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The tool changes page rotation rather than deliberately rasterizing the content, so ordinary selectable text should remain selectable. Because the PDF is rebuilt, verify forms, annotations and signed documents separately."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I rotate only some pages?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Enter individual pages or ranges such as \"1-2, 4\". Only the selected pages receive the requested rotation."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I rotate in both directions?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Choose 90 degrees clockwise, 90 degrees counterclockwise or 180 degrees. Applying a new rotation is relative to each page’s current orientation."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my PDF uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript reads and rebuilds the PDF locally in your browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>

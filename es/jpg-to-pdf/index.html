@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Convertidor de JPG a PDF",
+      "description": "Convierte imágenes JPG a PDF en línea gratis. Rápido, simple y funciona directamente en tu navegador: no se sube ningún archivo.",
+      "url": "https://orisod.com/es/jpg-to-pdf/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Puedo combinar varios JPG en un solo PDF?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Cada JPG seleccionado se convierte en una página PDF. La memoria del navegador y las dimensiones de las imágenes determinan cuántas resulta práctico combinar."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo reordenar o eliminar imágenes antes de convertir?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Puedes quitar archivos de la lista antes de convertir. Comprueba la secuencia mostrada, porque modificarla después exige reconstruir o reorganizar el PDF."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se envía mi imagen a algún servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript lee las imágenes y crea el PDF dentro de tu navegador."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿El PDF conserva la calidad original de la imagen?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "El PDF conserva las dimensiones en píxeles disponibles, pero la nitidez visible o impresa también depende de la escala de página, la compresión original y el visor o la impresora. La conversión no crea detalle y puede no conservar metadatos."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root{

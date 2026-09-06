@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Convertidor de imágenes a PDF",
+      "description": "Convierte imágenes como JPG, PNG y WEBP en un solo archivo PDF en línea y gratis. Todo ocurre en tu navegador: no se sube ningún archivo.",
+      "url": "https://orisod.com/es/image-to-pdf/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Puedo mezclar JPG, PNG y WebP en el mismo PDF?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Puedes seleccionar juntos archivos JPG, PNG y WebP y colocarlos en el mismo PDF, siempre que el navegador pueda decodificar cada imagen de origen."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo cambiar el orden de las páginas?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La herramienta utiliza el orden mostrado y permite quitar imágenes antes de convertir. Comprueba bien la lista; para cambiar el orden después tendrás que reconstruir o reorganizar el PDF."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Hay un límite de cuántas imágenes puedo combinar?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La interfaz no establece una cantidad fija. La memoria disponible, las dimensiones y el peso de los archivos determinan el límite práctico. Muchas imágenes de alta resolución pueden agotar la memoria; divide un trabajo enorme en varios PDF si es necesario."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se envían mis archivos a algún servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript decodifica las imágenes y construye el PDF localmente dentro de tu navegador."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root{

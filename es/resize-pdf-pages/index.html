@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Redimensionar páginas de PDF",
+      "description": "Cambia las dimensiones de página de un PDF: pasa entre A4, Letter, Legal o un tamaño personalizado, gratis y en línea. Funciona directamente en tu navegador, sin subir archivos.",
+      "url": "https://orisod.com/es/resize-pdf-pages/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Redimensionar distorsiona mi contenido?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Puede hacerlo. El contenido se escala al ancho y alto seleccionados. Si la relación de aspecto cambia, el texto y las imágenes podrían verse más anchos o más altos. Previsualiza las páginas importantes."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Esto cambia mucho el tamaño del archivo?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Cambiar la geometría no es un método de compresión. El resultado puede tener un tamaño parecido, aunque la estructura, la complejidad y la forma de reescribir el contenido pueden volverlo algo mayor o menor."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo indicar un tamaño que no está en la lista?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Elige \"Tamaño personalizado…\" e introduce el ancho y el alto necesarios en milímetros. Confirma las especificaciones de la imprenta o plataforma."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se envía mi PDF a algún servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript procesa el PDF localmente en tu navegador. Reconstruir un documento firmado puede invalidar sus firmas digitales, así que conserva el original."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>

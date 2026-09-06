@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "PowerPoint to PDF",
+      "description": "Export a PowerPoint (.pptx) presentation's text as a PDF outline, free and online. Text and reading order only: no slide design, images, or layout. Works directly in your browser: no files are uploaded.",
+      "url": "https://orisod.com/powerpoint-to-pdf/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Will the PDF look like my actual slides?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The PDF is a text outline, not a rendered copy of the slides. It excludes slide design, images, backgrounds, charts and layout."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are speaker notes included?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The converter extracts visible slide text but does not include speaker notes."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does this work with the older .ppt format?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Only .pptx files are supported. Open an older .ppt file in compatible presentation software and save a .pptx copy before using this converter."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my presentation uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript reads the presentation and creates the PDF inside your browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>

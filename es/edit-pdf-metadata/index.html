@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Editar metadatos de PDF",
+      "description": "Consulta y edita el título, autor, asunto y palabras clave de un PDF, o bórralos todos, gratis y en línea. Funciona directamente en tu navegador, sin subir archivos.",
+      "url": "https://orisod.com/es/edit-pdf-metadata/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Esto cambia el contenido visible de mi PDF?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Modifica las propiedades indicadas, no el diseño visible de las páginas. Aun así, guardar crea un PDF modificado y puede invalidar una firma digital. Conserva el original firmado cuando corresponda."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo eliminar todos los metadatos a la vez?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Puedes borrar juntos los campos PDF de título, autor, asunto y palabras clave. Puede existir información adicional en paquetes XMP, adjuntos, comentarios o datos propios de otras aplicaciones. Por eso, esta acción no garantiza que desaparezca todo rastro de metadatos."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué pasa si un campo ya está vacío?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No todos los PDF definen todas las propiedades. Puedes dejar un campo vacío, introducir un valor nuevo o borrar en grupo los campos disponibles."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se envía mi PDF a algún servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript lee y guarda el PDF localmente dentro de tu navegador."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <style>
 :root{

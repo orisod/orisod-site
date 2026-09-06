@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Organizador de páginas PDF",
+      "description": "Reordena o elimina páginas de un PDF con un editor visual de arrastrar y soltar, gratis y en línea. Funciona directamente en tu navegador: no se sube ningún archivo.",
+      "url": "https://orisod.com/es/pdf-page-organizer/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Esto afecta la selección de texto?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Las páginas PDF se copian sin rasterización intencional, así que el texto seleccionable normal puede conservar esa propiedad. Sin embargo, la estructura se reconstruye y los elementos interactivos o las firmas podrían cambiar."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo eliminar más de una página?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Elimina tantas miniaturas como necesites, siempre que quede al menos una página. Revisa toda la secuencia antes de guardar."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué pasa si quiero deshacer una eliminación?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Antes de exportar, recarga y selecciona otra vez el PDF original para reiniciar la sesión. Después de exportar, conservar el original es la forma fiable de recuperar una página eliminada."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se envía mi PDF a algún servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript renderiza las miniaturas y reconstruye el PDF localmente."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <style>

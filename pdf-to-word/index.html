@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "PDF to Word",
+      "description": "Convert a PDF's text into an editable .docx file, free and online. Text-only conversion: layout, images, and tables are not preserved. Works directly in your browser: no files are uploaded.",
+      "url": "https://orisod.com/pdf-to-word/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Will tables come through as real Word tables?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The converter reads PDF text, not the table structure. Each source row may appear as a line with spaces between its values, so you will need to rebuild any editable table in Word."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Will images or the original layout be preserved?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The output contains selectable text but does not recreate images, exact fonts, columns or precise page spacing. Use it as an editable draft rather than a visual duplicate."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why is my output empty or missing text?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A scan may contain only page images and no selectable text layer. This tool does not perform OCR, so such pages can produce little or no output. Text encoding and reading order in unusual PDFs may also affect extraction."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my PDF uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript reads the PDF and builds the .docx locally in your browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/docx@9.7.1/dist/index.iife.js"></script>
 <style>
