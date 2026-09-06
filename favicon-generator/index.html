@@ -33,6 +33,17 @@
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Favicon Generator","description":"Generate a complete favicon package (favicon.ico plus all standard sizes) from any image, free and online. Everything runs in your browser, no uploads.","url":"https://orisod.com/favicon-generator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What sizes are included in the package?","acceptedAnswer":{"@type":"Answer","text":"The ZIP includes favicon.ico with 16x16 and 32x32 entries, favicon-16x16.png, favicon-32x32.png, apple-touch-icon.png at 180x180, and Android Chrome PNGs at 192x192 and 512x512."}},
+{"@type":"Question","name":"What if my image isn't square?","acceptedAnswer":{"@type":"Answer","text":"The source is center-cropped to a square before resizing, which avoids stretching but can remove content near the longer edges. Preview the crop and add padding to the source if the subject needs more room."}},
+{"@type":"Question","name":"How do I add these to my website?","acceptedAnswer":{"@type":"Answer","text":"Place the files where the supplied paths can resolve, then add the included HTML snippet inside the site's head. If you use another folder or framework, adjust the href paths and clear browser caches when testing."}},
+{"@type":"Question","name":"Is my image uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. JavaScript crops, resizes and packages the image inside your browser."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

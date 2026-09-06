@@ -32,6 +32,17 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Image Metadata Viewer","description":"View the hidden EXIF metadata in a photo (camera, date, GPS location, and settings) free and online. Nothing is uploaded, everything runs in your browser.","url":"https://orisod.com/image-metadata-viewer/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Why does this photo show no metadata?","acceptedAnswer":{"@type":"Answer","text":"Messaging, social and editing applications often strip EXIF when they create a new copy. Some cameras also omit fields, and this viewer does not claim to expose every possible metadata container."}},
+{"@type":"Question","name":"Can I remove the metadata this tool shows?","acceptedAnswer":{"@type":"Answer","text":"Yes. The EXIF Remover can create a copy without the supported fields it detects. Review the output because other metadata or visible identifying information may remain."}},
+{"@type":"Question","name":"Is my photo uploaded to a server?","acceptedAnswer":{"@type":"Answer","text":"No. JavaScript reads supported fields locally in your browser."}},
+{"@type":"Question","name":"Does this work with PNG or WEBP files?","acceptedAnswer":{"@type":"Answer","text":"EXIF is common in JPEG, but modern PNG and WEBP files can also carry metadata. This viewer focuses on the encodings it supports, so a blank result is not a universal guarantee that the file contains none."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

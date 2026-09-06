@@ -32,6 +32,17 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"EXIF Remover","description":"Remove EXIF metadata (GPS location, camera model, date taken) from your photos online for free. Everything runs in your browser, no files are uploaded.","url":"https://orisod.com/exif-remover/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Does this remove GPS location data?","acceptedAnswer":{"@type":"Answer","text":"The tool removes detected EXIF GPS fields from the downloaded copy. Check the result before relying on it, because location or identifying information might also appear visibly in the image, filename or another metadata container."}},
+{"@type":"Question","name":"Will removing metadata reduce photo quality?","acceptedAnswer":{"@type":"Answer","text":"Removing metadata alone does not require changing visible pixels. The export process and format implementation determine whether image bytes are copied or re-encoded, however, so compare an important result and retain the original."}},
+{"@type":"Question","name":"What if no metadata is found?","acceptedAnswer":{"@type":"Answer","text":"Screenshots and images processed by messaging or social platforms often contain no EXIF. The tool reports when it does not detect supported fields; that is not proof that every possible metadata type is absent."}},
+{"@type":"Question","name":"Is my photo uploaded to a server?","acceptedAnswer":{"@type":"Answer","text":"No. Metadata inspection and removal occur locally in your browser."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

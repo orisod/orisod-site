@@ -32,6 +32,17 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Formateador de JSON","description":"Formatea, valida y minifica JSON online. Sangría de 2/4 espacios o tabulación, ordena las claves alfabéticamente y ve la línea y columna exactas de cualquier error de sintaxis: 100% en tu navegador, nada se sube.","url":"https://orisod.com/es/json-formatter/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"¿Esta herramienta valida mi JSON?","acceptedAnswer":{"@type":"Answer","text":"Sí. Formatear y Minificar usan análisis JSON estricto. Los detalles de ubicación dependen del motor y del mensaje que expone, por lo que línea y columna pueden variar entre navegadores."}},
+{"@type":"Question","name":"¿Qué pasa con las claves duplicadas en un objeto?","acceptedAnswer":{"@type":"Answer","text":"Al analizar con JSON.parse, la última aparición normalmente reemplaza las claves anteriores del mismo nombre. Esos valores ya no pueden recuperarse, así que inspecciona datos no confiables antes de formatear si importan los duplicados."}},
+{"@type":"Question","name":"¿Ordenar las claves cambia mis datos?","acceptedAnswer":{"@type":"Answer","text":"Cambia el orden de claves JSON, pero conserva el orden de arrays y la estructura analizada. El análisis puede haber colapsado duplicados o normalizado números. No uses esa salida para firmas ni comparaciones de bytes."}},
+{"@type":"Question","name":"¿Hay un límite de tamaño?","acceptedAnswer":{"@type":"Answer","text":"La interfaz no fija una cuota para JSON. La capacidad depende de memoria, estructura y costo de análisis; datos enormes o muy anidados pueden ralentizar o cerrar la pestaña."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

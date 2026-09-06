@@ -32,6 +32,17 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Selector y Conversor de Color","description":"Elige un color y conviértelo en vivo entre HEX, RGB y HSL, con soporte de canal alfa, al instante, en tu navegador, nada se sube.","url":"https://orisod.com/es/color-picker-converter/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"¿El selector de color nativo admite transparencia?","acceptedAnswer":{"@type":"Answer","text":"El selector nativo del navegador elige un color RGB opaco. Usa el control separado de opacidad para añadir alfa a las representaciones HEX, RGB y HSL generadas."}},
+{"@type":"Question","name":"¿Qué formatos puedo escribir directamente en cada campo?","acceptedAnswer":{"@type":"Answer","text":"HEX admite notación compatible de 3, 4, 6 u 8 dígitos con o sin #. Los campos RGB y HSL aceptan las formas rgb()/rgba() y hsl()/hsla() descritas en la interfaz. La sintaxis inválida se rechaza en vez de adivinarse."}},
+{"@type":"Question","name":"¿Esta herramienta admite CMYK?","acceptedAnswer":{"@type":"Answer","text":"No. Los valores CMYK dependen de perfiles, tintas, papel y condiciones de impresión; no existe una conversión RGB a CMYK única que prediga todas las prensas. Para impresión usa software con gestión de color, no una herramienta orientada a CSS."}},
+{"@type":"Question","name":"¿Se envía algo a un servidor?","acceptedAnswer":{"@type":"Answer","text":"No. JavaScript analiza y convierte los valores localmente."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

@@ -32,6 +32,17 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Generador de UUID","description":"Genera identificadores UUID v4 aleatorios usando el generador de números aleatorios seguro de tu navegador. Gratis, genera varios a la vez, nada se envía a ningún sitio.","url":"https://orisod.com/es/uuid-generator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"¿Qué versión de UUID genera esta herramienta?","acceptedAnswer":{"@type":"Answer","text":"Genera valores UUID versión 4 a partir de datos aleatorios. Usa otra implementación si el sistema exige específicamente una versión temporal, basada en nombre u ordenada por tiempo, como UUID v7."}},
+{"@type":"Question","name":"¿Pueden coincidir dos UUID generados?","acceptedAnswer":{"@type":"Answer","text":"Sí, una colisión de UUID es teóricamente posible. Con 122 bits aleatorios, la probabilidad es extraordinariamente baja si la fuente funciona correctamente. Los sistemas con requisitos estrictos todavía deben imponer unicidad."}},
+{"@type":"Question","name":"¿Se guardan estos UUID en algún sitio?","acceptedAnswer":{"@type":"Answer","text":"La página no guarda intencionalmente los UUID generados. Desaparecen al limpiar la sesión salvo que los copies o almacenes aparte."}},
+{"@type":"Question","name":"¿Se envía algo a un servidor?","acceptedAnswer":{"@type":"Answer","text":"No. JavaScript genera los UUID localmente con la fuente segura de aleatoriedad del navegador."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

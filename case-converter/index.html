@@ -32,6 +32,17 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Case Converter","description":"Convert text between UPPERCASE, lowercase, Title Case, Sentence case, camelCase, PascalCase, snake_case, kebab-case, and CONSTANT_CASE, instantly, in your browser, nothing uploaded.","url":"https://orisod.com/case-converter/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Do the case buttons stack on top of each other?","acceptedAnswer":{"@type":"Answer","text":"No. Each choice starts from the original pasted input, not the previous output. Edit or replace the source when you want a new transformation chain."}},
+{"@type":"Question","name":"How does Title Case decide what to capitalize?","acceptedAnswer":{"@type":"Answer","text":"It capitalizes each whitespace-separated word. It is a mechanical transformation, not an editorial style guide, so it does not leave articles or prepositions lowercase."}},
+{"@type":"Question","name":"How do camelCase and the other developer cases handle spaces or existing punctuation?","acceptedAnswer":{"@type":"Answer","text":"They split on supported spaces, hyphens, underscores and recognized camel or Pascal boundaries, then rejoin the pieces. Acronyms, apostrophes, punctuation and non-Latin writing systems can produce results that need manual review."}},
+{"@type":"Question","name":"Is anything sent to a server?","acceptedAnswer":{"@type":"Answer","text":"No. JavaScript transforms the text locally in your browser."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

@@ -32,6 +32,17 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Leer en Voz Alta","description":"Haz que cualquier texto se lea en voz alta directamente en tu navegador. Elige una voz, ajusta la velocidad y el tono, y sigue la lectura con resaltado en vivo: nada se sube, no se crea ningún archivo de audio.","url":"https://orisod.com/es/read-aloud/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"¿Puedo descargar el audio como un archivo?","acceptedAnswer":{"@type":"Answer","text":"No. La API Web Speech ofrece reproducción en vivo, pero no entrega a Orisod un flujo de audio que pueda exportar como MP3, WAV u otro archivo."}},
+{"@type":"Question","name":"¿Por qué solo veo unas pocas voces, o por qué suenan robóticas?","acceptedAnswer":{"@type":"Answer","text":"La lista procede del navegador y del sistema operativo. Las voces instaladas, los valores y la calidad varían; algunas plataformas pueden obtener voces o síntesis mediante servicios en línea. Orisod no las instala."}},
+{"@type":"Question","name":"¿Se envía mi texto a algún servidor?","acceptedAnswer":{"@type":"Answer","text":"Orisod no sube intencionalmente el texto. La API Web Speech delega la síntesis al navegador, el sistema o el servicio de voz configurado, y algunas implementaciones pueden usar la red. Consulta la privacidad de tu plataforma antes de introducir contenido sensible."}},
+{"@type":"Question","name":"¿Por qué se detuvo la reproducción a mitad de un texto largo?","acceptedAnswer":{"@type":"Answer","text":"La herramienta divide el texto en fragmentos para reducir cortes, pero Web Speech todavía puede detenerse. Prueba Reproducir de nuevo, otra voz instalada, una selección más corta u otro navegador."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

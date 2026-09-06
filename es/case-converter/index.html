@@ -32,6 +32,17 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Conversor de Mayúsculas y Minúsculas","description":"Convierte texto entre MAYÚSCULAS, minúsculas, Tipo Título, Tipo oración, camelCase, PascalCase, snake_case, kebab-case y CONSTANT_CASE, al instante, en tu navegador, nada se sube.","url":"https://orisod.com/es/case-converter/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"¿Los botones de conversión se acumulan entre sí?","acceptedAnswer":{"@type":"Answer","text":"No. Cada opción parte de la entrada original y no del resultado anterior. Modifica o reemplaza la fuente si quieres encadenar otra transformación."}},
+{"@type":"Question","name":"¿Cómo decide el Tipo Título qué palabras capitalizar?","acceptedAnswer":{"@type":"Answer","text":"Capitaliza cada palabra separada por espacios. Es una transformación mecánica, no una guía editorial, por lo que no deja artículos ni preposiciones en minúscula."}},
+{"@type":"Question","name":"¿Cómo manejan camelCase y los demás estilos de desarrollo los espacios o la puntuación existente?","acceptedAnswer":{"@type":"Answer","text":"Separan espacios, guiones, guiones bajos y límites camel o Pascal compatibles, y luego reúnen las piezas. Las siglas, apóstrofos, puntuación y escrituras no latinas pueden necesitar corrección manual."}},
+{"@type":"Question","name":"¿Se envía algo a un servidor?","acceptedAnswer":{"@type":"Answer","text":"No. JavaScript transforma el texto localmente en tu navegador."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

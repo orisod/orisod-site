@@ -33,6 +33,17 @@
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/spark-md5/3.0.2/spark-md5.min.js"></script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Generador de Hash y Checksum","description":"Calcula hashes MD5, SHA-1, SHA-256, SHA-384 y SHA-512 de texto o un archivo, y verifícalos contra un checksum esperado, gratis y en línea. Funciona directamente en tu navegador: no se sube ningún archivo.","url":"https://orisod.com/es/hash-checksum-generator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"¿Es seguro usar MD5 o SHA-1?","acceptedAnswer":{"@type":"Answer","text":"MD5 y SHA-1 tienen debilidades de colisión y no sirven para firmas, comprobaciones frente a atacantes ni almacenamiento de contraseñas. Todavía detectan corrupción accidental en flujos heredados, pero conviene SHA-2 cuando controlas el proceso. Las contraseñas necesitan una función lenta y con sal."}},
+{"@type":"Question","name":"¿Cómo sabe el campo de verificación qué algoritmo comprobar?","acceptedAnswer":{"@type":"Answer","text":"La herramienta deduce un candidato por longitud hexadecimal: MD5 tiene 32 caracteres y SHA-1, 40; las opciones SHA-2 son más largas. La longitud no identifica todos los algoritmos posibles, así que confirma cuál utilizó el autor."}},
+{"@type":"Question","name":"¿Hay un límite de tamaño de archivo?","acceptedAnswer":{"@type":"Answer","text":"No se promete una cuota fija. El navegador debe leer el archivo y mantener datos de trabajo; el límite depende de memoria, dispositivo e implementación. Los archivos enormes pueden tardar o fallar."}},
+{"@type":"Question","name":"¿Se sube mi archivo o texto a un servidor?","acceptedAnswer":{"@type":"Answer","text":"No. JavaScript lee la entrada y calcula los hashes localmente en tu navegador."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

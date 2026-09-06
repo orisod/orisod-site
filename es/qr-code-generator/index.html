@@ -33,6 +33,17 @@
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Generador de códigos QR","description":"Genera un código QR a partir de cualquier texto o URL, gratis e instantáneo. Funciona directamente en tu navegador: no se envían datos a ningún lugar.","url":"https://orisod.com/es/qr-code-generator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"¿Cuánto texto puedo codificar?","acceptedAnswer":{"@type":"Answer","text":"La capacidad depende del tipo de datos y la versión QR, pero miles de caracteres producen un símbolo denso, más difícil de imprimir y leer. Una URL corta suele ser más fiable."}},
+{"@type":"Question","name":"¿Los códigos QR caducan?","acceptedAnswer":{"@type":"Answer","text":"La imagen QR estática no tiene fecha de caducidad. Sin embargo, una URL codificada puede dejar de funcionar, cambiar de dueño o mostrar otro contenido con el tiempo."}},
+{"@type":"Question","name":"¿Se envía a un servidor lo que escribo?","acceptedAnswer":{"@type":"Answer","text":"No. JavaScript crea el código QR en el navegador a partir del contenido introducido."}},
+{"@type":"Question","name":"¿Puedo cambiar el color del código QR?","acceptedAnswer":{"@type":"Answer","text":"Sí. Mantén buen contraste con el fondo, conserva la zona silenciosa y prueba las versiones en pantalla e impresas antes de distribuirlas."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

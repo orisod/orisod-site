@@ -34,6 +34,17 @@
 <meta name="theme-color" content="#2563eb">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/turndown/7.2.4/turndown.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/turndown-plugin-gfm@1.0.2/dist/turndown-plugin-gfm.js"></script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Convertir a Markdown","description":"Pega texto enriquecido o HTML y conviértelo a sintaxis Markdown, incluidas tablas y formato, gratis y en línea. Funciona directamente en tu navegador: no se sube ningún archivo.","url":"https://orisod.com/es/convert-to-markdown/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"¿Cuál es la diferencia entre el modo Texto enriquecido y Código HTML?","acceptedAnswer":{"@type":"Answer","text":"Texto enriquecido recibe el contenido formateado que el navegador obtiene del portapapeles. Código HTML analiza el marcado pegado como texto. El comportamiento cambia según la aplicación de origen, por lo que un documento puede dar entradas distintas."}},
+{"@type":"Question","name":"¿Las tablas se convierten correctamente?","acceptedAnswer":{"@type":"Answer","text":"Las tablas rectangulares sencillas pueden convertirse a Markdown estilo GitHub. Las celdas combinadas, contenido anidado y encabezados múltiples no tienen equivalente estándar fiel y pueden requerir reconstrucción manual. La compatibilidad también varía entre renderizadores."}},
+{"@type":"Question","name":"¿Qué pasa con las imágenes y el formato complejo?","acceptedAnswer":{"@type":"Answer","text":"Las imágenes se vuelven referencias Markdown a las URL disponibles; las fuentes incrustadas o protegidas quizá no funcionen fuera del origen. Se descartan fuentes, colores, espaciado y otros estilos sin equivalente."}},
+{"@type":"Question","name":"¿Se sube mi contenido a un servidor?","acceptedAnswer":{"@type":"Answer","text":"No. JavaScript realiza la conversión localmente en tu navegador."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

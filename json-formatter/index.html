@@ -32,6 +32,17 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"JSON Formatter","description":"Format, validate, and minify JSON online. Pretty-print with 2/4-space or tab indentation, sort keys alphabetically, and see the exact line and column of any syntax error: 100% in your browser, nothing uploaded.","url":"https://orisod.com/json-formatter/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Does this validate my JSON?","acceptedAnswer":{"@type":"Answer","text":"Yes. Format and Minify both invoke strict JSON parsing. Error location details depend on the browser parser and the message it exposes, so line and column information may vary."}},
+{"@type":"Question","name":"What happens to duplicate keys in an object?","acceptedAnswer":{"@type":"Answer","text":"When parsed with JSON.parse, later occurrences normally replace earlier keys with the same name. Since the discarded values cannot be recovered afterward, inspect untrusted data before formatting if duplicates matter."}},
+{"@type":"Question","name":"Does sorting keys change my data?","acceptedAnswer":{"@type":"Answer","text":"It changes JSON object-key order but preserves array order and the parsed value structure. Parsing may already have collapsed duplicate keys or normalized certain numbers. Do not use sorted output for signatures or byte-level comparisons."}},
+{"@type":"Question","name":"Is there a size limit?","acceptedAnswer":{"@type":"Answer","text":"The interface sets no fixed JSON quota. Practical capacity depends on browser memory, input structure and parsing cost; very large or deeply nested data can slow or crash a tab."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

@@ -32,6 +32,17 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"AI Writing Checker","description":"Scan text for stock phrases, repetitive sentence openers, and other generic-writing patterns, free and online. A style-pattern flagger, not an AI detector. Works directly in your browser: no files are uploaded.","url":"https://orisod.com/ai-writing-checker/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Can this tell me if text was written by AI?","acceptedAnswer":{"@type":"Answer","text":"No. Human and AI-generated writing can both contain or avoid every measured pattern. The result only reports features in the pasted text and cannot establish authorship."}},
+{"@type":"Question","name":"Why isn't there an overall AI score or percentage?","acceptedAnswer":{"@type":"Answer","text":"Combining unrelated style signals into a percentage would imply an unsupported probability of AI authorship. Separate counts show what the rules actually detected and let the writer decide whether any match deserves editing."}},
+{"@type":"Question","name":"What if my writing naturally has some of these patterns?","acceptedAnswer":{"@type":"Answer","text":"That is normal. A highlight reports the presence of a pattern, not an error. Context, genre, quotation, accessibility and personal voice can make repetition entirely appropriate."}},
+{"@type":"Question","name":"Is my text uploaded to a server?","acceptedAnswer":{"@type":"Answer","text":"No. JavaScript analyzes the pasted text locally in your browser."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;
