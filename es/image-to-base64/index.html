@@ -183,7 +183,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="error" id="encodeError"></div>
     <div class="trust-strip">🔒 Procesamiento local · Archivos siempre en tu dispositivo · Sin cuenta · Sin marca de agua</div>
 
-    <textarea id="base64Output" readonly placeholder="El resultado en Base64 aparecerá aquí…"></textarea>
+    <textarea id="base64Output" readonly placeholder="El resultado en Base64 aparecerá aquí…" aria-label="Resultado en Base64"></textarea>
     <br>
     <button id="copyBtn" style="display:none;">Copiar al portapapeles</button>
     <div class="copied-msg" id="copiedMsg">✅ ¡Copiado al portapapeles!</div>
@@ -191,7 +191,7 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="box" id="decodePanel" style="display:none;">
-    <textarea id="base64Input" placeholder="Pega aquí una cadena Base64 (con o sin el prefijo data:image/...;base64,)..."></textarea>
+    <textarea id="base64Input" placeholder="Pega aquí una cadena Base64 (con o sin el prefijo data:image/...;base64,)..." aria-label="Entrada en Base64"></textarea>
     <br>
     <button id="decodeBtn">Decodificar a imagen</button>
     <div class="error" id="decodeError"></div>
