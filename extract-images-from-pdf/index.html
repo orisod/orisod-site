@@ -150,6 +150,64 @@ h2{margin-top:50px;font-size:22px;}
 .footer-col a{display:block;font-size:14px;color:var(--text);text-decoration:none;opacity:0.8;margin-bottom:10px;}
 .footer-col a:hover{opacity:1;color:var(--accent);}
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Extract Images from PDF",
+      "description": "Pull every embedded photo and picture out of a PDF and download them as PNG files, individually or all at once as a ZIP. Works entirely in your browser: nothing uploaded.",
+      "url": "https://orisod.com/extract-images-from-pdf/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Why does this only give me PNG files, not the original JPEGs?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "PDF images can use several internal encodings. The tool decodes their pixels and writes PNG copies rather than recovering the original compressed JPEG byte stream. PNG avoids an additional lossy encoding step, but color handling, masks or unusual PDF image structures can still affect the result."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why didn't this find any images in my PDF?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A page may consist entirely of text and vector paths, even when it looks highly graphical. Such a PDF has no embedded raster image object to extract. Some unusual image encodings or masks may also be unsupported."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why do some pages seem to be missing their images?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A logo or other image object reused across several pages is listed once, together with its page references. That avoids producing identical downloads for every occurrence."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my PDF uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript reads the PDF and decodes its embedded images locally in your browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 

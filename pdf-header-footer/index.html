@@ -162,6 +162,64 @@ h2{margin-top:50px;font-size:22px;}
 .related-card .arrow{flex:none;font-size:16px;color:var(--muted-text);transition:0.2s;}
 .related-card:hover .arrow{color:var(--accent);transform:translateX(2px);}
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "PDF Header & Footer",
+      "description": "Add custom header and footer text to every page of a PDF: titles, dates, page numbers, confidentiality notices. Works directly in your browser, no files are uploaded.",
+      "url": "https://orisod.com/pdf-header-footer/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What's the difference between this and Add Page Numbers?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Add Page Numbers is designed for a single number in a standard position. This tool supports longer header or footer lines that can combine a title, notice, date, current page and total count."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What date format does {date} insert?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It inserts the current date as YYYY-MM-DD. This year-month-day format avoids the month-and-day ambiguity found in short numeric dates."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use different fonts, colors, or bold text?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "This version uses one default font in the size selected; it does not offer bold, multiple colors or logo placement. Use a suitable watermark or PDF editing workflow when richer styling is required."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my PDF uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript adds the text and rebuilds the PDF locally in your browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 

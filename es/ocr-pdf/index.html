@@ -165,6 +165,64 @@ h2{margin-top:50px;font-size:22px;}
 .related-card:hover .arrow{color:var(--accent);transform:translateX(2px);}
 .trust-strip{font-size:12px;color:var(--muted-text);margin-top:12px;line-height:1.5;}
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "OCR de PDF",
+      "description": "Aplica OCR a un PDF escaneado para hacerlo buscable y seleccionable, gratis y en línea. El OCR nunca es 100% preciso: revisa lo que sea importante. Funciona directamente en tu navegador, sin subir archivos.",
+      "url": "https://orisod.com/es/ocr-pdf/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿El PDF se verá diferente después?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "El escaneo original sigue siendo la base visible de cada página, por lo que debería verse muy parecido. Reconstruir el PDF todavía puede cambiar compresión, dimensiones, metadatos u otros elementos estructurales. Compara las páginas críticas en lugar de asumir que serán idénticas."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué tan preciso es el OCR?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La precisión varía según resolución, contraste, orientación, idioma, tipografía y estado de la página. La escritura manual y los diseños complejos son especialmente difíciles. Trata el texto reconocido como borrador y revisa lo importante."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Funciona con un documento grande, de muchas páginas?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La interfaz no establece una cuota simple de páginas, pero la memoria y el tiempo del dispositivo crean límites prácticos. El OCR trabaja página por página y los documentos largos o de alta resolución pueden tardar mucho más. Mantén abierta la pestaña y divide archivos enormes si hace falta."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se sube mi PDF a un servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "El documento se renderiza, reconoce y reconstruye localmente. En el primer uso, el navegador descarga datos genéricos de idioma para OCR y puede guardarlos en caché; esa descarga no contiene páginas de tu PDF."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 

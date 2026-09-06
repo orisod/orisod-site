@@ -145,6 +145,64 @@ h2{margin-top:50px;font-size:22px;}
 .footer-col a{display:block;font-size:14px;color:var(--text);text-decoration:none;opacity:0.8;margin-bottom:10px;}
 .footer-col a:hover{opacity:1;color:var(--accent);}
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Texto a PDF",
+      "description": "Convierte texto plano en un PDF paginado: elige tamaño de página, fuente y tamaño de fuente. Gratis, funciona en tu navegador, nada se sube.",
+      "url": "https://orisod.com/es/text-to-pdf/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Admite negrita, cursiva o encabezados?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. La entrada del PDF es texto plano, así que negritas, cursivas, encabezados, listas e imágenes no se interpretan como formato. Utiliza un editor de documentos cuando necesites esas funciones."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿El texto del PDF es seleccionable y buscable?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí, siempre que la fuente elegida admita los caracteres utilizados. El contenido se escribe como texto PDF y no como imagen, de modo que normalmente se puede seleccionar, buscar y copiar."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Hay un límite de longitud?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La herramienta no impone una cuota fija de caracteres, pero la memoria y el tiempo de procesamiento del navegador establecen límites prácticos para entradas enormes. Los textos largos se paginan automáticamente."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Mi texto se sube a un servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. El texto y el PDF generado permanecen dentro de tu navegador."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 

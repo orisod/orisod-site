@@ -151,6 +151,64 @@ h2{margin-top:50px;font-size:22px;}
 .related-card .arrow{flex:none;font-size:16px;color:var(--muted-text);transition:0.2s;}
 .related-card:hover .arrow{color:var(--accent);transform:translateX(2px);}
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Repair PDF",
+      "description": "Attempt to fix a corrupted or malformed PDF so it opens correctly again. Diagnoses the problem honestly, repairs what's recoverable, and verifies the result, all in your browser.",
+      "url": "https://orisod.com/repair-pdf/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Can this recover a page that's genuinely damaged, not just the file's structure?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Repair can omit unreadable objects and rebuild a valid container around what remains. It cannot infer the original pixels, text or font data once that content is damaged or absent."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can this remove a password from a protected PDF?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Encryption is not structural corruption. A protected PDF must first be opened or decrypted with proper authorization and credentials."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why does it say \"no problems detected\" instead of \"fixed\"?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The diagnostic found no structural fault that this workflow can repair. A viewer-specific display problem, unsupported feature or damaged content inside an otherwise valid structure may still exist. Re-saving is available, but should not be described as a confirmed fix."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my PDF uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Diagnosis, rebuilding and verification run locally in your browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 

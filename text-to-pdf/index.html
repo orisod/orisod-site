@@ -145,6 +145,64 @@ h2{margin-top:50px;font-size:22px;}
 .footer-col a{display:block;font-size:14px;color:var(--text);text-decoration:none;opacity:0.8;margin-bottom:10px;}
 .footer-col a:hover{opacity:1;color:var(--accent);}
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Text to PDF",
+      "description": "Turn plain text into a paginated PDF: choose page size, font, and font size. Free, works in your browser, nothing uploaded.",
+      "url": "https://orisod.com/text-to-pdf/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does this support bold, italics, or headings?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The PDF input is plain text, so bold, italics, headings, lists and images are not interpreted as formatting. Use a document editor when the layout needs those features."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is the text in the PDF selectable and searchable?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, when the selected font supports the characters used. The content is written as PDF text rather than rendered as an image, so it can normally be selected, searched and copied."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there a length limit?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The tool does not impose a fixed text-length quota, but browser memory and processing time create practical limits for very large input. Long text is paginated automatically."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my text uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The text and generated PDF remain in your browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 

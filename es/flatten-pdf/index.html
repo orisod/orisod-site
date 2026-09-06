@@ -142,6 +142,64 @@ h2{margin-top:50px;font-size:22px;}
 .related-card:hover .arrow{color:var(--accent);transform:translateX(2px);}
 .trust-strip{font-size:12px;color:var(--muted-text);margin-top:12px;line-height:1.5;}
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Aplanar PDF",
+      "description": "Aplana un formulario PDF rellenable en un documento permanente y no editable: los valores de los campos se convierten en contenido normal de la página. Gratis, funciona en tu navegador, nada se sube.",
+      "url": "https://orisod.com/es/flatten-pdf/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Aplanar cambia el aspecto del PDF?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Normalmente los valores actuales del PDF deben verse similares, pero no se puede garantizar un resultado idéntico para todos los formularios. Las apariencias personalizadas, scripts, fuentes o campos incompatibles pueden variar. Compara la copia aplanada con el original antes de enviarla."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué pasa si mi PDF no tiene campos rellenables?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La herramienta indica que no encontró campos rellenables y evita crear una copia innecesaria. Un PDF sin campos interactivos compatibles no tiene nada que este proceso pueda aplanar."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo deshacer el aplanado después?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Los campos interactivos eliminados no se pueden reconstruir automáticamente desde la copia aplanada. Conserva el PDF rellenable original por si necesitas modificar las respuestas."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Mi PDF se sube a un servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript lee y aplana el PDF localmente dentro de tu navegador."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
