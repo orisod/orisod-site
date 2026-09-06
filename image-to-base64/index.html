@@ -183,7 +183,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="error" id="encodeError"></div>
     <div class="trust-strip">🔒 Processed on your device · No upload · No account · No watermark</div>
 
-    <textarea id="base64Output" readonly placeholder="Your Base64 output will appear here..."></textarea>
+    <textarea id="base64Output" readonly placeholder="Your Base64 output will appear here..." aria-label="Base64 output"></textarea>
     <br>
     <button id="copyBtn" style="display:none;">Copy to Clipboard</button>
     <div class="copied-msg" id="copiedMsg">✅ Copied to clipboard!</div>
@@ -191,7 +191,7 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="box" id="decodePanel" style="display:none;">
-    <textarea id="base64Input" placeholder="Paste a Base64 string here (with or without the data:image/...;base64, prefix)..."></textarea>
+    <textarea id="base64Input" placeholder="Paste a Base64 string here (with or without the data:image/...;base64, prefix)..." aria-label="Base64 input"></textarea>
     <br>
     <button id="decodeBtn">Decode to Image</button>
     <div class="error" id="decodeError"></div>
