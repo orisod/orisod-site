@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Word a PDF",
+      "description": "Convierte un documento Word (.docx) en PDF, gratis y en línea. Conversión de mejor esfuerzo: el resultado es una instantánea de imagen, así que su texto no es seleccionable. Funciona directamente en tu navegador, sin subir archivos.",
+      "url": "https://orisod.com/es/word-to-pdf/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿El texto del PDF será seleccionable o buscable?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Cada página PDF contiene una imagen renderizada del documento, parecida a una captura de lienzo HTML, así que las palabras no se almacenan como texto seleccionable. Aplicar OCR después puede añadir una capa de texto, pero tendrás que revisarla."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Funciona con el formato .doc anterior?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Solo se admite .docx. Convierte un archivo .doc antiguo en .docx con un procesador compatible antes de usar esta herramienta."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se conservará el formato complejo exactamente?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No siempre. El renderizador del navegador es distinto al de Word; las fuentes no disponibles, saltos de página, encabezados, pies, objetos flotantes o diseños elaborados pueden moverse. Revisa todas las páginas importantes."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se sube mi documento a un servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript lee, renderiza y exporta el documento localmente en tu navegador."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdn.jsdelivr.net/npm/mammoth@1.12.1/mammoth.browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>

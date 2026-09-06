@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Image to PDF Converter",
+      "description": "Convert images like JPG, PNG, and WEBP into a single PDF file online for free. Everything happens in your browser: no files are uploaded.",
+      "url": "https://orisod.com/image-to-pdf/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Can I mix JPG, PNG and WEBP in the same PDF?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. JPG, PNG and WEBP files can be selected together and placed into the same PDF, provided the browser can decode each source image."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I change the order of the pages?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The tool uses the displayed selection order and lets you remove images before conversion. Confirm the list carefully; changing order after export requires rebuilding or reorganizing the PDF."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there a limit on how many images I can combine?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "There is no fixed count in the interface. Available browser memory, image dimensions and file sizes determine the practical limit. Many high-resolution images can exhaust memory, so split a very large job into smaller PDFs if necessary."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are my files uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript decodes the images and builds the PDF locally in your browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root{

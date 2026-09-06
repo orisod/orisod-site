@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Añadir números de página",
+      "description": "Numera las páginas de un PDF gratis, en línea. Elige la posición y el número inicial: funciona directamente en tu navegador, no se sube ningún archivo.",
+      "url": "https://orisod.com/es/add-page-numbers/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Esto afecta la selección de texto?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La herramienta no rasteriza las páginas existentes, así que el texto seleccionable normalmente conserva esa propiedad. Sin embargo, dibuja contenido nuevo y modifica el PDF, lo que puede invalidar firmas digitales o afectar procesos que requieren el original exacto."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo empezar a contar desde un número distinto de 1?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Indica el primer número y cada página siguiente aumentará la secuencia en una unidad."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo elegir dónde aparece el número?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Elige la parte superior o inferior y alinea el número a la izquierda, al centro o a la derecha. Revisa páginas con tamaños o rotaciones diferentes para comprobar que no tape contenido."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se envía mi PDF a algún servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript edita y exporta el PDF dentro de tu navegador."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <style>
 :root{

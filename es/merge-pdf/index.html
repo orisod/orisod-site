@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Unir PDF",
+      "description": "Combina varios archivos PDF en un solo documento en línea y gratis. Funciona directamente en tu navegador: no se sube ningún archivo.",
+      "url": "https://orisod.com/es/merge-pdf/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Unir los archivos afecta la calidad o el texto de los PDF?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La herramienta no rasteriza ni recomprime intencionalmente el contenido, así que el texto y las imágenes normales pueden conservar su representación. La estructura del PDF sí cambia, y los elementos interactivos o las firmas podrían no sobrevivir igual. Revisa los resultados importantes."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo cambiar el orden de los archivos?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Utiliza los controles junto a cada archivo para definir la secuencia antes de unir. Las páginas de cada PDF original conservan su orden interno."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Existe un límite de archivos PDF que puedo unir?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La interfaz no fija una cantidad de archivos. La memoria del navegador, el total de páginas y la complejidad determinan el límite práctico. Divide los trabajos enormes si la pestaña se ralentiza o agota la memoria."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se envían mis archivos a algún servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript realiza la unión localmente dentro de tu navegador."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <style>
 :root{

@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Resize PDF Pages",
+      "description": "Change the page dimensions of a PDF: switch between A4, Letter, Legal or a custom size, online for free. Works directly in your browser: no files are uploaded.",
+      "url": "https://orisod.com/resize-pdf-pages/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Will resizing distort my content?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It can. Content is scaled to the selected width and height. When the original and target aspect ratios differ, text and images may look wider or taller. Preview important pages before using the result."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does this change the file size significantly?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Changing page geometry is not a compression method. The output may be similar in size, but PDF structure, document complexity and the way content is rewritten can make it somewhat larger or smaller."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I enter a size that isn't in the preset list?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Choose \"Custom size…\" and enter the required width and height in millimeters. Verify the specification supplied by your printer or platform."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my PDF uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript processes the PDF locally in your browser. Rebuilding a signed document may invalidate its digital signatures, so retain the original."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>

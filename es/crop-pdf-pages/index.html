@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Recortar páginas de PDF",
+      "description": "Recorta los márgenes de cada página de un PDF indicando medidas exactas de arriba, abajo, izquierda y derecha, gratis y en línea. Funciona directamente en tu navegador, sin subir archivos.",
+      "url": "https://orisod.com/es/crop-pdf-pages/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Recortar elimina contenido de forma permanente?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. El recorte cambia el cuadro visible, pero no borra de manera segura lo que queda fuera. El material oculto puede seguir siendo recuperable y nunca debe usarse este método para redactar información. El texto existente normalmente continúa seleccionable porque la página no se rasteriza."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo recortar diferentes cantidades en cada lado?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Define valores independientes para arriba, abajo, izquierda y derecha. Deja un lado en 0 si no quieres modificar ese límite."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué pasa si mi PDF tiene páginas de distinto tamaño?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Las mismas medidas se aplican a todas las páginas. Si tienen dimensiones diferentes, los márgenes resultantes también pueden verse distintos. Cuando el recorte indicado es demasiado grande para alguna página, reduce los valores e inténtalo de nuevo."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se envía mi PDF a algún servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript cambia los cuadros de página y exporta el PDF dentro de tu navegador."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>

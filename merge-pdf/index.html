@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Merge PDF",
+      "description": "Combine multiple PDF files into one document online for free. Works directly in your browser: no files are uploaded.",
+      "url": "https://orisod.com/merge-pdf/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does merging affect the quality or text of my PDFs?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The tool does not intentionally rasterize or recompress page content, so ordinary text and images can retain their existing representation. The PDF structure changes, however, and interactive elements or signatures may not survive unchanged. Review important output."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I change the order of the files?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Use the controls beside each file to set the sequence before merging. Pages within each source PDF retain their internal order."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there a limit on how many PDFs I can merge?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "There is no fixed file count in the interface. Browser memory, total page count and document complexity determine the practical limit. Split an unusually large job if the tab becomes slow or runs out of memory."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are my files uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript performs the merge locally in your browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <style>
 :root{

@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "PowerPoint a PDF",
+      "description": "Exporta el texto de una presentación PowerPoint (.pptx) como un PDF, gratis y en línea. Solo texto y orden de lectura, sin diseño, imágenes ni maquetación. Funciona directamente en tu navegador, sin subir archivos.",
+      "url": "https://orisod.com/es/powerpoint-to-pdf/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿El PDF se verá como mis diapositivas reales?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. El PDF es un esquema de texto, no una copia renderizada de las diapositivas. Omite diseño, imágenes, fondos, gráficos y maquetación."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se incluyen las notas del orador?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. El convertidor extrae el texto visible de las diapositivas, pero no incluye las notas del orador."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Funciona con el formato .ppt anterior?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Solo admite archivos .pptx. Abre un .ppt antiguo en un programa compatible y guarda una copia .pptx antes de usar el convertidor."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se sube mi presentación a un servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript lee la presentación y crea el PDF dentro de tu navegador."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>

@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Extraer texto de PDF",
+      "description": "Extrae todo el texto seleccionable de un PDF y cópialo o descárgalo como archivo .txt, gratis y en línea. Funciona directamente en tu navegador, sin subir archivos.",
+      "url": "https://orisod.com/es/extract-pdf-text/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Por qué el resultado está vacío o es muy corto?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Una página PDF escaneada puede contener solo píxeles, sin objetos de texto que extraer. Un resultado vacío también puede deberse a texto convertido en contornos, mapas de caracteres inusuales, cifrado o un archivo dañado. Esta herramienta no realiza OCR."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿El texto extraído conserva el formato original?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. El resultado es texto plano. No conserva fuentes, espaciado preciso, columnas, tablas, imágenes ni diseño de página, y una maquetación compleja puede producir un orden de lectura inesperado."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo extraer texto de una sola página?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La herramienta procesa todas las páginas. Los marcadores incluidos facilitan localizar y copiar la sección que necesitas."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se envía mi PDF a algún servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript extrae el texto localmente dentro de tu navegador."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
 :root{

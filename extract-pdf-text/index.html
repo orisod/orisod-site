@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Extract PDF Text",
+      "description": "Pull all the selectable text out of a PDF and copy it or download it as a .txt file, free and online. Works directly in your browser: no files are uploaded.",
+      "url": "https://orisod.com/extract-pdf-text/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Why is the output empty or very short?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A scanned PDF page may contain only pixels, with no text objects to extract. Empty output can also result from outlined text, unusual character maps, encryption or a damaged file. This tool does not perform OCR."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Will the extracted text keep the original formatting?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The result is plain text. Fonts, precise spacing, columns, tables, images and page design are not retained, and complex layouts can produce an unexpected reading order."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I extract text from just one page?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The tool processes every page. Page markers in the output make it easier to locate and copy the section you need."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my PDF uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript extracts the text locally inside your browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
 :root{

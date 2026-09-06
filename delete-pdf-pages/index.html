@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Delete PDF Pages",
+      "description": "Remove specific pages from a PDF by typing page numbers or ranges, online for free. Works directly in your browser: no files are uploaded.",
+      "url": "https://orisod.com/delete-pdf-pages/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do I specify which pages to delete?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Separate individual numbers with commas and write a range with a hyphen. For example, “2, 4, 7-9” removes pages 2, 4, 7, 8 and 9. Check the displayed count before downloading."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I delete every page?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. A valid PDF must retain at least one page, so the tool rejects a selection that would remove the entire document."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does this preserve the quality of the remaining pages?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pages are copied without intentionally rasterizing or recompressing their visible content. The document itself is rebuilt, however, so bookmarks, links, forms, page labels or digital signatures may change or become invalid. Review important output before replacing the original."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my PDF uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript reads and rebuilds the PDF inside your browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <style>
 :root{

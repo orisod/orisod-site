@@ -32,6 +32,72 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Compress PDF",
+      "description": "Reduce PDF file size online for free. Best for scanned or image-heavy PDFs. Works directly in your browser: no files are uploaded.",
+      "url": "https://orisod.com/compress-pdf/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Will I lose the ability to select text?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Strong compression rasterizes pages, so selectable or searchable text is generally lost unless OCR is applied afterward. Quick clean does not intentionally rasterize page content, but always inspect the output when searchability or accessibility is essential."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which mode should I use for a text-heavy report or contract?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Start with Quick clean. It reorganizes the PDF rather than rendering each page as an image, which helps preserve searchable text and other page content. Review forms, links and digital signatures after any modification; signatures may become invalid when the file changes."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much smaller will my file be?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "There is no dependable percentage. Quick clean may save little when the PDF is already optimized. Strong compression can reduce image-heavy files further, but the outcome depends on page dimensions, image content and the quality setting."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens if compression wouldn't actually reduce the file size?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The tool keeps the original when the generated version would not be smaller and explains the result. You can try the other mode if its tradeoffs suit the document."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my PDF uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript performs the compression locally in your browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>

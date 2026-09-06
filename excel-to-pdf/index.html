@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Excel to PDF",
+      "description": "Convert an Excel spreadsheet into a PDF, free and online, with real selectable text: one page per sheet. Charts, cell colors, and formulas aren't preserved. Works directly in your browser: no files are uploaded.",
+      "url": "https://orisod.com/excel-to-pdf/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Will charts and cell colors be included?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The converter uses cell text and stored values. Charts, colors, conditional formatting, merged cells and other layout features are omitted."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are formulas preserved?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. PDF has no live spreadsheet calculation, so the converter uses each formula cell’s last stored result. That cached result can be outdated if the workbook was not recalculated and saved before conversion."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How are multiple sheets handled?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Each sheet becomes one labeled page in the output PDF. Large sheets may require small text or may not fit as comfortably as they would in a spreadsheet, so inspect the result."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my spreadsheet uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript reads the workbook and creates the PDF in your browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.4/jspdf.plugin.autotable.min.js"></script>

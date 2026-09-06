@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Rotar páginas de PDF",
+      "description": "Rota todas o algunas páginas de un PDF gratis. Funciona directamente en tu navegador: no se sube ningún archivo.",
+      "url": "https://orisod.com/es/rotate-pdf/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Esto afecta la selección de texto?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La herramienta cambia la rotación de página sin rasterizar deliberadamente el contenido, por lo que el texto seleccionable normal debería conservarse. Como el PDF se reconstruye, revisa por separado formularios, anotaciones y documentos firmados."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo rotar solo algunas páginas?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Introduce páginas individuales o rangos como \"1-2, 4\". Solo las páginas seleccionadas reciben la rotación indicada."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo rotar en ambas direcciones?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Elige 90 grados a la derecha, 90 grados a la izquierda o 180 grados. Cada giro nuevo se aplica con respecto a la orientación actual de la página."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se envía mi PDF a algún servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript lee y reconstruye el PDF localmente en tu navegador."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>

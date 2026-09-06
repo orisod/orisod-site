@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Word to PDF",
+      "description": "Convert a Word (.docx) document into a PDF, free and online. Best-effort conversion: the output is an image snapshot, so its text isn't selectable. Works directly in your browser: no files are uploaded.",
+      "url": "https://orisod.com/word-to-pdf/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Will the PDF's text be selectable or searchable?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Each PDF page contains a rendered image of the document, much like an HTML canvas snapshot, so the words are not stored as selectable text. OCR applied afterward may add a text layer, but it requires proofreading."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does this work with the older .doc format?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Only .docx is supported. Convert an older .doc file to .docx with compatible word-processing software before using this tool."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Will complex formatting be preserved exactly?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not always. The browser renderer is different from Word, and unsupported fonts, page breaks, headers, footers, floating objects or elaborate layouts can shift. Inspect every page of an important document."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my document uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript reads, renders and exports the document locally in your browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdn.jsdelivr.net/npm/mammoth@1.12.1/mammoth.browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>

@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Crop PDF Pages",
+      "description": "Trim the margins off every page of a PDF by entering exact top, bottom, left and right measurements, online for free. Works directly in your browser: no files are uploaded.",
+      "url": "https://orisod.com/crop-pdf-pages/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does cropping delete any content permanently?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Cropping changes the visible page box; it does not securely erase content outside that boundary. Hidden material may remain extractable, and cropping must never be used as redaction. Existing text generally stays selectable because the page is not rasterized."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I crop different amounts from each side?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Set separate values for the top, bottom, left and right. Leave a side at 0 when its boundary should remain unchanged."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What if my PDF has pages of different sizes?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The same measurements apply to every page. Pages with different dimensions can therefore produce different-looking margins. If the entered crop is too large for any page, reduce the values and try again."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my PDF uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript changes the page boxes and exports the PDF in your browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
