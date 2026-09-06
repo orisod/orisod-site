@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Redondear bordes y recortar en círculo",
+      "description": "Redondea los bordes de una imagen o recórtala en forma de círculo, gratis y en línea. Ideal para avatares y fotos de perfil: todo se ejecuta en tu navegador.",
+      "url": "https://orisod.com/es/round-image-corners/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿El fondo será transparente?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Los píxeles situados fuera del círculo o rectángulo redondeado quedan transparentes en el PNG descargado."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo controlar qué tan redondeadas son las esquinas?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Mueve el control de radio desde una curva leve hasta una esquina mucho más redondeada y utiliza la vista previa para evaluar el resultado."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿El recorte circular usa toda la imagen?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No cuando el original es rectangular. El círculo centrado se calcula con la dimensión más corta, así que excluye contenido de los extremos del lado más largo. Recorta primero un cuadrado si necesitas controlar mejor el encuadre."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se envía mi foto a algún servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. La máscara y la exportación PNG se crean localmente dentro de tu navegador."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

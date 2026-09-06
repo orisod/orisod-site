@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Comprimir imagen",
+      "description": "Comprime imágenes en línea gratis. Reduce el tamaño del archivo manteniendo buena calidad: todo ocurre en tu navegador, no se sube ningún archivo.",
+      "url": "https://orisod.com/es/compress-image/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Se envía mi imagen a algún servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. La API Canvas procesa la imagen dentro de tu navegador, por lo que el archivo seleccionado permanece en tu dispositivo."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Comprimir reduce la calidad visible?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Puede hacerlo. El cambio visible depende de la imagen, el formato, el codificador y el ajuste elegido. Revisa zonas detalladas, texto y bordes definidos antes de descargar. Los niveles de calidad más bajos suelen cambiar más detalle a cambio de un archivo menor."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Cuál es la diferencia entre comprimir y redimensionar?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La compresión modifica la forma de codificar los datos sin cambiar las dimensiones en píxeles. Redimensionar sí cambia el ancho y el alto. Combinar ambas acciones puede reducir más el archivo, pero el nuevo tamaño debe corresponder al uso previsto de la imagen."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué formatos de imagen son compatibles?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La herramienta acepta JPG, PNG, WebP y otros formatos que el navegador pueda decodificar. La compatibilidad con un formato o una función concreta puede variar entre navegadores."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

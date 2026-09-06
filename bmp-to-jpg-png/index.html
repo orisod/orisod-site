@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "BMP to JPG/PNG Converter",
+      "description": "Convert BMP images to JPG or PNG online for free. Works directly in your browser: no files are uploaded.",
+      "url": "https://orisod.com/bmp-to-jpg-png/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Why is my BMP file so much larger than other formats?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Many BMP files store pixel data with little or no compression, which can make them larger than JPG or PNG copies. File size also depends on dimensions, color depth, headers and the BMP encoding used."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Should I choose JPG or PNG?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "JPG is usually efficient for photographs, but it uses lossy compression and has no transparency. PNG is lossless and supports transparency, making it a better fit for graphics, text and images that need an alpha channel."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are my files uploaded anywhere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript performs the conversion in your browser, so the selected files remain on your device."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I convert multiple BMP files at once?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, select or drag multiple files and download them individually or all together."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Resize Image",
+      "description": "Resize images online for free. Change width and height instantly: everything happens in your browser, no files are uploaded.",
+      "url": "https://orisod.com/resize-image/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Will resizing distort my image?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It can if width and height are changed independently. Leave “Keep aspect ratio” enabled to preserve the original proportions. A correct aspect ratio prevents stretching, although heavy enlargement can still look soft."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I make an image larger without losing quality?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You can enlarge it, but resizing does not create genuine new detail. Interpolation estimates the added pixels, so a large increase may look softer or reveal artifacts already present in the source."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my image uploaded anywhere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The Canvas API resizes the image inside your browser, and the file is not uploaded for processing."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What formats does this support?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The tool accepts JPG, PNG, WEBP and other formats the browser can decode. Support for a particular format can vary by browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Crop Image",
+      "description": "Crop images online for free. Drag to select the area you want and download the result instantly. Everything happens in your browser: no files are uploaded.",
+      "url": "https://orisod.com/crop-image/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Can I crop to an exact size?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. The tool displays the selection width and height in pixels as you drag, allowing you to refine the crop to the required dimensions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does cropping reduce image quality?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The crop itself removes outer pixels without resampling the area you keep. Exporting the result may still re-encode the image or remove metadata, depending on the source and output format. Keep the original if those details matter."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my image uploaded anywhere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Both the selection and export happen in your browser, and the image is not uploaded for processing."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does this work on mobile devices?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. You can adjust the selection with touch input on phones and tablets or use a mouse or trackpad on a computer."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

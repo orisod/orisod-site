@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Convertidor de PNG a WebP",
+      "description": "Convierte imágenes PNG a WEBP en línea gratis. Reduce el tamaño del archivo manteniendo alta calidad. Todo ocurre en tu navegador: no se sube ningún archivo.",
+      "url": "https://orisod.com/es/png-to-webp/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿WebP admite transparencia como PNG?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. WebP puede almacenar un canal alfa, así que las zonas transparentes del PNG pueden seguir siéndolo. Comprueba el archivo exportado en su destino porque la compatibilidad entre aplicaciones varía."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Cuánto se reducirán mis archivos?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No existe un porcentaje fiable para todas las imágenes. Una foto, una captura y un gráfico de colores planos pueden producir resultados muy distintos. Los ajustes sin pérdida también se comportan de manera diferente a los que usan pérdida. Compara el archivo generado con el PNG original."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se envían mis imágenes a algún servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. El navegador realiza la conversión localmente, por lo que las imágenes seleccionadas permanecen en tu dispositivo."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo convertir varios PNG a la vez?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Selecciona o arrastra varios archivos PNG, conviértelos en grupo y descarga los resultados WebP por separado o juntos."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

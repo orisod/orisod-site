@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Blur Faces / Blur Area Tool",
+      "description": "Drag to select and blur any area of an image: faces, license plates, or private details. Free, browser-based, no uploads.",
+      "url": "https://orisod.com/blur-area-tool/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does this automatically detect faces?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. You select each area manually, which also lets you cover objects such as license plates, addresses or document details."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I blur more than one area?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Draw as many selections as needed before choosing “Apply Blur & Download.” Review the result before sharing it."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does pixelation securely remove the original detail?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The exported image replaces the selected pixels, but weak pixelation can sometimes be inferred or reconstructed. Keep the original private and use purpose-built redaction for highly sensitive information."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my photo uploaded anywhere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript processes the photograph locally in your browser, and the file remains on your device."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

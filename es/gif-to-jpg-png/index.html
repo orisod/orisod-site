@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Convertidor de GIF a JPG/PNG",
+      "description": "Extrae el primer fotograma de un GIF como imagen JPG o PNG, gratis y en línea. Funciona directamente en tu navegador: no se sube ningún archivo.",
+      "url": "https://orisod.com/es/gif-to-jpg-png/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Puedo extraer un fotograma distinto al primero?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. La herramienta actual solo extrae el primer fotograma del GIF. Si necesitas un momento posterior, utiliza un editor de animaciones que permita elegir el fotograma."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Esto convertirá toda la animación?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. La descarga contiene una sola imagen fija, por lo que no incluye los demás fotogramas ni los tiempos de la animación."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Debería elegir JPG o PNG?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Elige PNG si el fotograma del GIF necesita transparencia o una salida sin pérdida. JPG puede ser eficiente para contenido fotográfico, pero utiliza compresión con pérdida y no admite transparencia. El formato más ligero depende de la imagen."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se envía mi archivo a algún servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript decodifica y exporta la imagen localmente dentro de tu navegador."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Watermark Adder",
+      "description": "Add a text watermark to your image, free and online. Choose position, size, color, opacity, or tile it across the whole photo: everything runs in your browser.",
+      "url": "https://orisod.com/watermark-adder/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What's the difference between single and tiled watermarks?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Single placement adds the text once in a selected corner or at the center. Tiled placement repeats it diagonally across the image, making a simple crop less likely to remove every instance. Neither option prevents someone from editing the file."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I make the watermark subtle?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Lower the opacity for a quieter mark or raise it when readability matters more. Check the result over both light and dark areas of the photograph."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my image uploaded anywhere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript adds the text and creates the exported image in your browser."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I add a logo image instead of text?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. This tool currently creates text watermarks. Use an image editor if you need to overlay a logo file."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

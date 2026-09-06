@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Convertidor de SVG a PNG",
+      "description": "Convierte archivos SVG a PNG en cualquier resolución, gratis y en línea. Funciona directamente en tu navegador: no se sube ningún archivo.",
+      "url": "https://orisod.com/es/svg-to-png/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿El PNG se verá borroso si lo amplío?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Renderiza el SVG con las dimensiones finales o superiores para obtener suficientes píxeles. El PNG resultante ya no es vectorial, así que ampliarlo después puede suavizar los bordes. Las imágenes rasterizadas incrustadas también pueden limitar la nitidez."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Esto conserva la transparencia?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Las zonas transparentes del SVG pueden conservarse en el PNG. Si el navegador no representa correctamente alguna función, el resultado puede variar, por lo que conviene revisar la exportación."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se envían mis archivos a algún servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. El navegador renderiza el SVG y crea el PNG localmente."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Esto funciona con cualquier archivo SVG?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Los SVG estándar y autocontenidos suelen renderizarse bien. Las fuentes o imágenes externas, los scripts, los filtros incompatibles y otros recursos activos o remotos pueden bloquearse o verse distintos. Revisa el PNG antes de usarlo."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "PNG to JPG Converter",
+      "description": "Convert PNG images to JPG online for free. Fast, simple, and works directly in your browser: no files are uploaded.",
+      "url": "https://orisod.com/png-to-jpg/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What happens to transparent areas in my PNG?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "JPG has no alpha channel. This converter places transparent PNG areas on a white background before creating the JPG."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Will the converted JPG look different?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Possibly. JPG compression can soften edges, add artifacts or alter fine detail. The change may be subtle in a photograph and more obvious around text, logos and flat-color graphics. Compare the output before replacing the PNG."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are my files uploaded anywhere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript performs the conversion locally in your browser."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I convert multiple PNGs at once?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Select or drag several PNG files, then download the JPG results individually or together."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

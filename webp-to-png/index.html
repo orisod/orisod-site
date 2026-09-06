@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "WEBP to PNG Converter",
+      "description": "Convert WEBP images to PNG online for free, keeping transparency intact. Works directly in your browser: no files are uploaded.",
+      "url": "https://orisod.com/webp-to-png/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Will transparency be preserved?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Unlike JPG, PNG can store the transparent pixels decoded from the WEBP. Inspect the output because an unusual or unsupported source feature may render differently."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Will the file size increase?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It may. PNG and WEBP use different encoding methods, and file size depends on image content and how the source was compressed. A photographic or lossy WEBP often expands substantially when saved as PNG."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are my files uploaded anywhere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The conversion runs locally in your browser."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I convert multiple WEBP files at once?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Select or drag multiple WEBP files and download the PNG copies individually or as a group."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

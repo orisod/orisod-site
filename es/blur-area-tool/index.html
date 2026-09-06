@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Difuminar caras o áreas",
+      "description": "Arrastra para seleccionar y difuminar cualquier área de una imagen: caras, matrículas o datos privados. Gratis, en el navegador, sin subir archivos.",
+      "url": "https://orisod.com/es/blur-area-tool/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Detecta caras automáticamente?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Tú seleccionas cada zona manualmente, lo que también permite cubrir matrículas, direcciones o detalles de un documento."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo difuminar más de un área?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Marca tantas zonas como necesites antes de elegir “Aplicar difuminado y descargar”. Revisa el resultado antes de compartirlo."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿El pixelado elimina el detalle original de forma segura?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La imagen exportada sustituye los píxeles seleccionados, pero un pixelado débil a veces puede inferirse o reconstruirse. Mantén el original en privado y utiliza una herramienta de redacción especializada para información muy sensible."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se envía mi foto a algún servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Todo se procesa localmente en tu navegador mediante JavaScript; el archivo permanece en tu dispositivo."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

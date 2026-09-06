@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Convertidor de WebP a PNG",
+      "description": "Convierte imágenes WEBP a PNG en línea gratis, conservando la transparencia. Funciona directamente en tu navegador: no se sube ningún archivo.",
+      "url": "https://orisod.com/es/webp-to-png/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Se conservará la transparencia?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. A diferencia de JPG, PNG puede almacenar los píxeles transparentes decodificados del WebP. Revisa la salida porque alguna función inusual o incompatible del original podría representarse de manera distinta."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Aumentará el tamaño del archivo?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Es posible. PNG y WebP utilizan métodos de codificación distintos, y el tamaño depende del contenido y de cómo se comprimió el original. Un WebP fotográfico o con pérdida suele aumentar bastante al guardarse como PNG."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se envían mis archivos a algún servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. La conversión se realiza localmente dentro de tu navegador."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo convertir varios archivos WebP a la vez?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Selecciona o arrastra varios archivos WebP y descarga las copias PNG por separado o en grupo."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;
