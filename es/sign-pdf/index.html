@@ -160,6 +160,64 @@ h2{margin-top:50px;font-size:22px;}
 .related-card:hover .arrow{color:var(--accent);transform:translateX(2px);}
 .trust-strip{font-size:12px;color:var(--muted-text);margin-top:12px;line-height:1.5;}
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Firmar PDF",
+      "description": "Dibuja tu firma y colócala en cualquier parte de una página de un PDF, gratis y en línea. Funciona directamente en tu navegador, sin subir archivos, sin cuenta.",
+      "url": "https://orisod.com/es/sign-pdf/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Es esto una firma electrónica con validez legal?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Una firma dibujada sobre un PDF puede aceptarse en muchas situaciones, pero esta herramienta no verifica identidad, no crea un registro de auditoría ni aplica un certificado criptográfico. Los requisitos legales y administrativos varían; usa un servicio compatible cuando necesites esos controles."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo firmar más de una página?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La herramienta coloca una firma en una página por cada pasada. Para marcar otra página, abre la copia descargada y repite el proceso. Conserva el original porque cada pasada reconstruye el PDF."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo cambiar el tamaño de mi firma después de colocarla?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Ajusta el ancho antes de descargar y utiliza la vista previa para confirmar el tamaño y la posición."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se envía mi PDF a algún servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript lee y modifica el PDF localmente en tu navegador. Guardar el archivo modificado puede invalidar una firma digital existente."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 

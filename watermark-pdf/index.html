@@ -162,6 +162,64 @@ h2{margin-top:50px;font-size:22px;}
 .related-card:hover .arrow{color:var(--accent);transform:translateX(2px);}
 .trust-strip{font-size:12px;color:var(--muted-text);margin-top:12px;line-height:1.5;}
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Watermark PDF",
+      "description": "Stamp a text watermark across every page of a PDF: choose position, rotation, size, color and opacity, with a live preview. Free, online, and processed entirely in your browser.",
+      "url": "https://orisod.com/watermark-pdf/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does the watermark apply to every page?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Export applies the same text and visual settings to every PDF page. Check documents with mixed page sizes or orientations because placement can look different."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I remove the watermark afterward?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The mark is written into the exported page content. Specialized software may still be able to modify it, so keep the source PDF if you need a reliable clean copy later."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I add a logo image instead of text?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. This version creates text watermarks; it does not accept a logo or other image."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my PDF uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript previews and writes the watermark locally. The modified PDF may no longer validate an existing digital signature."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 

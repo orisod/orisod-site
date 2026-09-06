@@ -150,6 +150,64 @@ h2{margin-top:50px;font-size:22px;}
 .footer-col a{display:block;font-size:14px;color:var(--text);text-decoration:none;opacity:0.8;margin-bottom:10px;}
 .footer-col a:hover{opacity:1;color:var(--accent);}
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Extraer Imágenes de un PDF",
+      "description": "Extrae todas las fotos e imágenes incrustadas en un PDF y descárgalas como archivos PNG, una por una o todas juntas en un ZIP. Funciona completamente en tu navegador: nada se sube.",
+      "url": "https://orisod.com/es/extract-images-from-pdf/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Por qué esto solo me da archivos PNG y no los JPEG originales?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Las imágenes PDF pueden usar distintas codificaciones internas. La herramienta decodifica sus píxeles y crea copias PNG en lugar de recuperar el flujo JPEG comprimido original. PNG evita otra codificación con pérdida, aunque el color, las máscaras o estructuras poco comunes todavía pueden afectar el resultado."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Por qué no encontró ninguna imagen en mi PDF?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Una página puede estar hecha por completo con texto y trazos vectoriales aunque parezca muy gráfica. Ese PDF no contiene un objeto rasterizado que se pueda extraer. Algunas codificaciones o máscaras poco comunes también podrían no ser compatibles."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Por qué parece que faltan las imágenes de algunas páginas?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Un logotipo u otro objeto reutilizado en varias páginas aparece una sola vez junto con sus referencias. Así se evitan descargas idénticas por cada aparición."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se sube mi PDF a un servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript lee el PDF y decodifica sus imágenes incrustadas localmente en tu navegador."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 

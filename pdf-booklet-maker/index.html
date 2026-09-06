@@ -136,6 +136,64 @@ h2{margin-top:50px;font-size:22px;}
 .related-card:hover .arrow{color:var(--accent);transform:translateX(2px);}
 .trust-strip{font-size:12px;color:var(--muted-text);margin-top:12px;line-height:1.5;}
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "PDF Booklet Maker",
+      "description": "Reorder a PDF's pages into booklet imposition order so it reads correctly when printed double-sided and folded in half, free and online. Works directly in your browser: no files are uploaded.",
+      "url": "https://orisod.com/pdf-booklet-maker/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Why does my page count get padded with blank pages?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Each physical sheet carries four document pages, two on each side, so the imposed total must be divisible by four. The tool adds blank pages at the end of the source sequence as needed; inspect the preview to see where they land after imposition."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why \"Flip on Short Edge\" specifically?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For the landscape sheets produced here, short-edge duplex is the usual setting needed for the intended fold. Printer drivers describe and implement duplex options differently, however. Print one test sheet and confirm front-to-back orientation before running the booklet."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there a page limit?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "There is no fixed page quota in the interface, but browser memory and physical binding impose practical limits. Paper thickness, creep and stapler capacity matter more as page count grows; “under 60 pages” is only a rough starting point, not a universal rule."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my PDF uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript performs the imposition locally in your browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 

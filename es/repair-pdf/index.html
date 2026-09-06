@@ -151,6 +151,64 @@ h2{margin-top:50px;font-size:22px;}
 .related-card .arrow{flex:none;font-size:16px;color:var(--muted-text);transition:0.2s;}
 .related-card:hover .arrow{color:var(--accent);transform:translateX(2px);}
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Reparar PDF",
+      "description": "Intenta arreglar un PDF corrupto o mal formado para que vuelva a abrirse correctamente. Diagnostica el problema honestamente, repara lo recuperable y verifica el resultado: todo en tu navegador.",
+      "url": "https://orisod.com/es/repair-pdf/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Puede esto recuperar una página que está realmente dañada, no solo la estructura del archivo?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. La reparación puede omitir objetos ilegibles y crear un contenedor válido con lo que queda. No puede deducir los píxeles, el texto ni los datos de una fuente cuando ese contenido está dañado o ausente."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puede esto quitar la contraseña de un PDF protegido?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. El cifrado no es corrupción estructural. Un PDF protegido debe abrirse o descifrarse primero con la autorización y las credenciales correspondientes."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Por qué dice \"no se detectaron problemas\" en lugar de \"reparado\"?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "El diagnóstico no encontró un defecto estructural del PDF que este proceso pueda reparar. Aún podría existir un problema del visor, una función no compatible o contenido dañado dentro de una estructura válida. Puedes volver a guardarlo, pero no sería correcto llamarlo una reparación confirmada."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se sube mi PDF a un servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. El diagnóstico, la reconstrucción y la verificación ocurren localmente en tu navegador."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 

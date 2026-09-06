@@ -165,6 +165,64 @@ h2{margin-top:50px;font-size:22px;}
 .related-card:hover .arrow{color:var(--accent);transform:translateX(2px);}
 .trust-strip{font-size:12px;color:var(--muted-text);margin-top:12px;line-height:1.5;}
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "OCR PDF",
+      "description": "Run OCR on a scanned PDF to make it searchable and selectable, free and online. OCR is never 100% accurate: proofread anything that matters. Works directly in your browser: no files are uploaded.",
+      "url": "https://orisod.com/ocr-pdf/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Will the PDF look any different afterward?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The original scan remains the visible basis of each page, so it should look broadly similar. Rebuilding the PDF can still change compression, dimensions, metadata or other document structure. Compare critical pages rather than assuming byte-for-byte or visual identity."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How accurate is the OCR?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Accuracy varies with resolution, contrast, orientation, language, typeface and page condition. Handwriting and complex layouts are especially difficult. Treat recognized text as a draft and proofread material that matters."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does this work with a large, many-page document?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The interface does not set a simple page quota, but device memory and processing time impose practical limits. OCR works page by page and long or high-resolution documents can take substantially longer than short scans. Keep the tab open and split very large files if needed."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my PDF uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The document is rendered, recognized and rebuilt locally. On first use, the browser downloads generic OCR language data and may cache it; that download contains no pages from your PDF."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 

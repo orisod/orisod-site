@@ -162,6 +162,64 @@ h2{margin-top:50px;font-size:22px;}
 .related-card .arrow{flex:none;font-size:16px;color:var(--muted-text);transition:0.2s;}
 .related-card:hover .arrow{color:var(--accent);transform:translateX(2px);}
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Encabezado y Pie de Página en PDF",
+      "description": "Añade texto de encabezado y/o pie de página a cada página de un PDF: títulos, fechas, números de página, avisos de confidencialidad. Funciona directamente en tu navegador, sin subir archivos.",
+      "url": "https://orisod.com/es/pdf-header-footer/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Cuál es la diferencia con Añadir Números de Página?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Añadir Números de Página está pensado para colocar un único número en una posición estándar. Esta herramienta admite líneas más largas que combinan título, aviso, fecha, página actual y total."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué formato de fecha inserta {date}?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Inserta la fecha actual como AAAA-MM-DD. Este orden de año, mes y día evita la ambigüedad de las fechas numéricas cortas."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo usar diferentes fuentes, colores o negrita?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Esta versión utiliza una fuente predeterminada con el tamaño elegido; no ofrece negrita, varios colores ni logotipos. Usa una marca de agua o un editor PDF adecuado si necesitas un estilo más elaborado."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se sube mi PDF a un servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript añade el texto y reconstruye el PDF localmente en tu navegador."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 

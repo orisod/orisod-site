@@ -173,6 +173,64 @@ h2{margin-top:50px;font-size:22px;}
 .related-card:hover .arrow{color:var(--accent);transform:translateX(2px);}
 .trust-strip{font-size:12px;color:var(--muted-text);margin-top:12px;line-height:1.5;}
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Rellenar formularios PDF",
+      "description": "Rellena los campos reales de un formulario PDF (cuadros de texto, casillas, botones de opción, listas desplegables) directamente sobre la página, y descarga una copia aplanada. Gratis, sin subir archivos, en tu navegador.",
+      "url": "https://orisod.com/es/fill-pdf-forms/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Y si mi PDF no tiene campos rellenables?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Algunos PDF solo dibujan líneas y cuadros que parecen un formulario. Si no existen campos interactivos incorporados, la herramienta indica que no encontró ninguno en vez de adivinar posiciones. Ese archivo no puede completarse mediante este sistema basado en campos."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Es compatible con campos de firma digital?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Los campos de firma digital criptográfica no se completan aquí y aparecen desactivados en la vista previa. Para colocar una firma manuscrita o una imagen, utiliza la herramienta Firmar PDF."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Seguirán funcionando los campos calculados o la validación del formulario?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. La herramienta no ejecuta el JavaScript incrustado en el PDF para cálculos, validaciones o relaciones entre campos. Comprueba por tu cuenta los totales, las respuestas obligatorias y las opciones mutuamente excluyentes antes de descargar."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se sube mi PDF a un servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. La lectura, el llenado y el aplanado del PDF ocurren localmente dentro de tu navegador."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 

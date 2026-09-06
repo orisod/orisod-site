@@ -133,6 +133,64 @@ h2{margin-top:50px;font-size:22px;}
 .related-card:hover .arrow{color:var(--accent);transform:translateX(2px);}
 .trust-strip{font-size:12px;color:var(--muted-text);margin-top:16px;line-height:1.5;}
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Alternar y Mezclar Páginas",
+      "description": "Intercala las páginas de dos PDF, como el anverso y el reverso de un escaneo dúplex, en un solo documento, gratis y en línea. Funciona directamente en tu navegador: no se sube ningún archivo.",
+      "url": "https://orisod.com/es/alternate-mix-pages/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Qué pasa si el Archivo A y el Archivo B tienen distinto número de páginas?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Las páginas se alternan mientras ambos archivos tengan contenido. Cuando termina el PDF más corto, las páginas restantes del más largo se añaden en su orden actual. No se duplica nada para igualar los archivos."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Cuándo debo usar \"Invertir el orden de páginas del Archivo B\"?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Úsala cuando voltear la pila hizo que los reversos se escanearan desde la última hoja hacia la primera. Comprueba la vista previa porque la dirección de alimentación y la forma de voltear varían entre escáneres."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Las páginas saldrán al revés (boca abajo)?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La herramienta cambia el orden, no la orientación. Si los reversos están boca abajo, rota primero ese PDF y verifica después la vista combinada."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se suben mis PDF a un servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript lee y combina ambos PDF dentro de tu navegador."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 

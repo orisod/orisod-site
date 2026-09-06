@@ -173,6 +173,64 @@ h2{margin-top:50px;font-size:22px;}
 .related-card:hover .arrow{color:var(--accent);transform:translateX(2px);}
 .trust-strip{font-size:12px;color:var(--muted-text);margin-top:12px;line-height:1.5;}
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Fill PDF Forms",
+      "description": "Fill in the real fillable fields of a PDF form (text boxes, checkboxes, radio buttons, dropdowns) right on the page, then download a flattened copy. Free, no upload, works in your browser.",
+      "url": "https://orisod.com/fill-pdf-forms/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What if my PDF has no fillable fields?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Some documents only draw lines and boxes that resemble a form. If no interactive fields are embedded, the tool reports that none were found instead of guessing where inputs belong. Such a file cannot be completed with this field-based workflow."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does this support digital signature fields?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Cryptographic digital-signature fields are not completed here and appear disabled in the preview. To place a handwritten or uploaded signature image instead, use the Sign PDF tool."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Will calculated fields or form validation still work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The tool does not execute embedded PDF JavaScript used for calculations, validation or relationships among fields. Verify totals, required answers and mutually exclusive choices yourself before downloading."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my PDF uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Reading, completing and flattening the PDF all happen locally in your browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 

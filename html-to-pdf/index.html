@@ -153,6 +153,72 @@ h2{margin-top:50px;font-size:22px;}
 .related-card:hover .arrow{color:var(--accent);transform:translateX(2px);}
 .trust-strip{font-size:12px;color:var(--muted-text);margin-top:12px;line-height:1.5;text-align:center;}
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "HTML to PDF",
+      "description": "Paste or upload HTML code, preview how it renders, and convert it to a paginated PDF, free and online. Works directly in your browser: no files are uploaded.",
+      "url": "https://orisod.com/html-to-pdf/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Can I convert a live website by entering its URL?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The tool receives HTML code, not a URL, and it does not fetch or reproduce an entire live website. Copying page source may still omit generated content, authenticated data, stylesheets and resources addressed with relative URLs."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why don't some images show up in the PDF?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A remote image must load successfully and permit the browser to use its pixels across origins. CORS restrictions, authentication, blocked mixed content, relative paths or network failure can leave it out of the PDF. Self-contained data URLs are more predictable."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can a line of text get split across two pages?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Pagination cuts the rendered surface at fixed heights rather than reflowing the HTML for each page. Text, tables or images that cross a boundary can be split. Adjust the source spacing and test the complete output."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do <script> tags in my HTML run?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. content is not executed. The tool renders the supplied HTML structure and supported CSS only."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my content uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The supplied markup and generated PDF are processed locally in your browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
