@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Rotar imagen",
+      "description": "Rota o voltea una imagen en línea gratis. Rota 90°, 180°, o voltea horizontal/verticalmente: todo se ejecuta en tu navegador, no se sube ningún archivo.",
+      "url": "https://orisod.com/es/rotate-image/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Rotar reduce la calidad de la imagen?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Un giro de 90°, 180° o 270° no necesita la interpolación de píxeles propia de una rotación libre. Sin embargo, la exportación puede volver a codificar el archivo o eliminar metadatos, según el origen y el formato de salida. Conserva el original si esos detalles importan."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo combinar una rotación con un volteo?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Las rotaciones y los volteos se aplican sobre la vista previa actual, de modo que puedes combinarlos antes de descargar la orientación final."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo deshacer una rotación?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Selecciona “Restablecer” para recuperar la orientación original y comenzar de nuevo."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se envía mi imagen a algún servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript realiza la rotación, el volteo y la exportación dentro de tu navegador."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

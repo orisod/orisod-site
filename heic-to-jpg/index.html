@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "HEIC to JPG Converter",
+      "description": "Convert HEIC images from iPhone to JPG online for free. Fast, simple, and works directly in your browser: no files are uploaded.",
+      "url": "https://orisod.com/heic-to-jpg/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Why won't my iPhone photos open on my computer?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "HEIC support depends on the operating system, installed codecs and application version. A JPG copy is accepted by many more programs, although no format is guaranteed to work in every application."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Will I lose photo quality converting to JPG?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "JPG uses lossy compression, so conversion can change fine detail. How visible that change becomes depends on the source photo and quality setting. Compare the preview at full size and keep the HEIC original, especially when it contains HDR, depth or other auxiliary data."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are my photos uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Decoding and conversion take place locally in your browser, so the selected photos stay on your device."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does this also work with HEIF files?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "HEIF is a container format, and HEIC is a common filename extension for HEVC-encoded images in that container. Whether a particular file converts depends on the browser decoder and the features used in the file."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/heic2any/0.0.4/heic2any.min.js"></script>
 <style>
 :root{

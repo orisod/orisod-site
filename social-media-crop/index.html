@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Social Media Image Cropper",
+      "description": "Crop images to the exact size for Instagram, YouTube, Twitter/X, Facebook, LinkedIn and TikTok. Free, browser-based, no uploads.",
+      "url": "https://orisod.com/social-media-crop/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Will my image be stretched to fit the preset?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The selection retains the preset aspect ratio, then the chosen area is resized to the configured pixel dimensions. This avoids stretching, although resizing can still soften a small source image."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What if my photo is too small for the preset's pixel size?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The crop keeps the requested ratio and the export scales it to the preset dimensions. Significant enlargement cannot add real detail, so a small source may appear soft or pixelated."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use this for platforms not listed?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The presets cover common formats. For another ratio or dimensions, use the regular Crop Image tool and confirm the current requirements with the destination platform."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my image uploaded anywhere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript performs the crop and resize locally in your browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

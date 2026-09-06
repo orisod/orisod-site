@@ -32,6 +32,72 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Creador de Collages",
+      "description": "Crea un collage de fotos gratis, en línea, sin registro y sin marca de agua. De 2 a 9 fotos, diseños de cuadrícula, más de 30 filtros y texto superpuesto. Todo se ejecuta en tu navegador: no se sube nada.",
+      "url": "https://orisod.com/es/collage-maker/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿El collage descargado lleva marca de agua?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. El PNG o JPG exportado no incluye una marca de agua, un logotipo ni otra identificación añadida por Orisod."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Los filtros se aplican a todo el collage o a cada foto por separado?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Los ajustes se aplican por foto. Selecciona una celda, elige su filtro y repite el proceso con las demás imágenes que quieras modificar. No es necesario usar el mismo filtro en todas."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Cuál es el número máximo de fotos?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Puedes incluir hasta nueve fotos. Hay diseños para cada cantidad entre 2 y 9, y varias cantidades ofrecen más de una disposición."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo usar una imagen de fondo en lugar de un color sólido?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Esta versión utiliza un color de fondo sólido que eliges con el selector."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Mis fotos se suben a algún servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript procesa las fotos y construye el collage final dentro de tu navegador. Los archivos no se envían a un servidor para realizar esta tarea."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 @font-face{font-family:'CM Poppins';src:url('/assets/fonts/collage/Poppins-SemiBold.woff2') format('woff2');font-weight:600;font-display:swap;}
 @font-face{font-family:'CM Montserrat';src:url('/assets/fonts/collage/Montserrat-Bold.woff2') format('woff2');font-weight:700;font-display:swap;}

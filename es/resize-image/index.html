@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Redimensionar imagen",
+      "description": "Redimensiona imágenes en línea gratis. Cambia el ancho y el alto al instante: todo ocurre en tu navegador, no se sube ningún archivo.",
+      "url": "https://orisod.com/es/resize-image/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Redimensionar distorsionará mi imagen?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Puede deformarse si modificas el ancho y el alto por separado. Mantén activada la opción “Mantener la relación de aspecto” para conservar las proporciones originales. Esto evita el estiramiento, aunque una ampliación fuerte todavía puede verse suave."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo agrandar una imagen sin perder calidad?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Puedes ampliarla, pero el cambio de tamaño no crea detalle auténtico. La interpolación estima los píxeles añadidos, así que un aumento grande puede verse más suave o revelar artefactos que ya estaban en el original."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se envía mi imagen a algún servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. La API Canvas redimensiona la imagen dentro de tu navegador y el archivo no se sube para procesarlo."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué formatos admite esta herramienta?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La herramienta acepta JPG, PNG, WebP y otros formatos que el navegador pueda decodificar. La compatibilidad con un formato concreto puede variar entre navegadores."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

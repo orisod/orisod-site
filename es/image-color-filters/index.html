@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Filtros de color para imágenes",
+      "description": "Aplica filtros de blanco y negro, sepia, brillo y contraste a tu imagen, gratis y en línea. Todo se ejecuta en tu navegador, sin subidas.",
+      "url": "https://orisod.com/es/image-color-filters/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Puedo combinar un filtro con ajustes de brillo y contraste?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. El filtro elegido funciona junto con los controles de brillo y contraste. Por ejemplo, puedes aumentar el contraste después de seleccionar blanco y negro."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Esto reduce la calidad de la imagen?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Los ajustes conservan las dimensiones actuales en píxeles, pero la exportación crea un archivo nuevo y puede volver a codificarlo. El resultado visible depende del formato de origen y del de salida. Conserva el original si piensas editarlo de nuevo."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se envía mi foto a algún servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript aplica los cambios localmente en tu navegador, por lo que la fotografía permanece en tu dispositivo."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo deshacer el filtro después de aplicarlo?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Selecciona “Original” y devuelve los controles a 0 antes de descargar. También puedes elegir otra vez el archivo de origen para comenzar con una copia limpia."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "GIF to JPG/PNG Converter",
+      "description": "Extract the first frame of a GIF as a JPG or PNG image, free and online. Works directly in your browser: no files are uploaded.",
+      "url": "https://orisod.com/gif-to-jpg-png/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Can I extract a frame other than the first one?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The current tool extracts only the first GIF frame. Use a frame-specific animation editor if you need a later moment."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Will this convert the whole animation?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The download contains one still image, so the remaining frames and animation timing are not included."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Should I choose JPG or PNG?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Choose PNG when the GIF frame needs transparency or lossless output. JPG can be efficient for photographic frames, but it uses lossy compression and does not support transparency. The smaller option depends on the image."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my file uploaded anywhere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript decodes and exports the image locally in your browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

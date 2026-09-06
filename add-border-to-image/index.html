@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Add Border/Frame to Image",
+      "description": "Add a colored border or frame around your image, free and online. Adjust width, color, and corner rounding: everything runs in your browser.",
+      "url": "https://orisod.com/add-border-to-image/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does the border change the image's original dimensions?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. The border adds pixels outside the image, so the final width and height increase by twice the selected border thickness."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I make the border transparent?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The border uses a solid color. If you need transparent outer corners instead, use the Round Image Corners tool."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my image uploaded anywhere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript processes the image locally in your browser, and the file remains on your device."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What formats does this support?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The tool accepts JPG, PNG, WEBP and other image formats that your browser can decode. Format support may vary by browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

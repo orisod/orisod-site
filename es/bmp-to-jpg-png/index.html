@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Convertidor de BMP a JPG/PNG",
+      "description": "Convierte imágenes BMP a JPG o PNG en línea gratis. Funciona directamente en tu navegador: no se sube ningún archivo.",
+      "url": "https://orisod.com/es/bmp-to-jpg-png/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Por qué mi archivo BMP es mucho más grande que otros formatos?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Muchos archivos BMP guardan los píxeles con poca compresión o sin ella, por lo que pueden pesar más que una copia JPG o PNG. El tamaño también depende de las dimensiones, la profundidad de color, los encabezados y la codificación utilizada."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Debería elegir JPG o PNG?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "JPG suele ser eficiente para fotografías, pero utiliza compresión con pérdida y no admite transparencia. PNG comprime sin pérdida y conserva transparencia, por lo que funciona mejor con gráficos, texto e imágenes que necesitan un canal alfa."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se envían mis archivos a algún servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. La conversión se realiza localmente en tu navegador mediante JavaScript; el archivo permanece en tu dispositivo."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo convertir varios archivos BMP a la vez?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí, selecciona o arrastra varios archivos y descárgalos individualmente o todos juntos."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

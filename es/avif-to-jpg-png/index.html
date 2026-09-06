@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Convertidor de AVIF a JPG/PNG",
+      "description": "Convierte imágenes AVIF a JPG o PNG en línea gratis. Funciona directamente en tu navegador: no se sube ningún archivo.",
+      "url": "https://orisod.com/es/avif-to-jpg-png/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Por qué no se convierte mi archivo AVIF?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "El navegador debe poder decodificar el archivo AVIF específico. Si la conversión falla, actualiza el navegador o prueba otro navegador reciente. Un archivo dañado o una función AVIF incompatible también puede causar el error."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Debería elegir JPG o PNG?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Elige PNG si el AVIF contiene transparencia que necesitas conservar o si prefieres una salida sin pérdida. JPG suele ocupar menos en fotografías y tiene amplia compatibilidad, pero no admite transparencia."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se envían mis archivos a algún servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. La conversión se realiza localmente en tu navegador mediante JavaScript; el archivo permanece en tu dispositivo."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo convertir varios archivos AVIF a la vez?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí, selecciona o arrastra varios archivos y descárgalos individualmente o todos juntos."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

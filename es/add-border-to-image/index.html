@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Añadir marco a una imagen",
+      "description": "Añade un marco de color alrededor de tu imagen, gratis y en línea. Ajusta el ancho, color y redondeo de esquinas: todo se ejecuta en tu navegador.",
+      "url": "https://orisod.com/es/add-border-to-image/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿El borde cambia las dimensiones originales de la imagen?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. El borde añade píxeles por fuera de la imagen, así que el ancho y el alto finales aumentan dos veces el grosor seleccionado."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo hacer el borde transparente?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "El borde utiliza un color sólido. Si necesitas esquinas exteriores transparentes, utiliza la herramienta Redondear bordes."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se envía mi imagen a algún servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Todo se procesa localmente en tu navegador mediante JavaScript; el archivo permanece en tu dispositivo."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué formatos son compatibles?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La herramienta admite JPG, PNG, WebP y otros formatos que tu navegador pueda decodificar. La compatibilidad puede variar entre navegadores."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

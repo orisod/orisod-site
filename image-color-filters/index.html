@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Image Color Filters",
+      "description": "Apply black & white, sepia, brightness, and contrast filters to your image, free and online. Everything runs in your browser, no uploads.",
+      "url": "https://orisod.com/image-color-filters/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Can I combine a filter with brightness/contrast changes?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. The selected filter works together with the brightness and contrast controls. For example, you can increase contrast after choosing black and white."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does this reduce image quality?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The adjustments use the image at its current pixel dimensions, but exporting creates a new file and may re-encode it. The visible result therefore depends on the source and output format. Keep the original if you may need to edit it again."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my photo uploaded anywhere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript applies the changes locally in your browser, so the photograph stays on your device."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I undo the filter after applying it?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Choose “Original” and return the sliders to 0 before downloading. You can also select the source file again to begin with a clean copy."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

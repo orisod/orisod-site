@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Convertidor de PNG a JPG",
+      "description": "Convierte imágenes PNG a JPG en línea gratis. Rápido, simple y funciona directamente en tu navegador: no se sube ningún archivo.",
+      "url": "https://orisod.com/es/png-to-jpg/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Qué pasa con las áreas transparentes de mi PNG?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "JPG no tiene canal alfa. Antes de crear el JPG, este conversor coloca las zonas transparentes del PNG sobre un fondo blanco."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se verá diferente el JPG convertido?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Es posible. La compresión JPG puede suavizar bordes, crear artefactos o modificar detalles finos. El cambio puede ser discreto en una fotografía y más evidente alrededor de texto, logotipos y gráficos de colores planos. Compara la salida antes de sustituir el PNG."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se envían mis archivos a algún servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript realiza la conversión localmente dentro de tu navegador."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo convertir varios PNG a la vez?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Selecciona o arrastra varios archivos PNG y descarga los resultados JPG por separado o juntos."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

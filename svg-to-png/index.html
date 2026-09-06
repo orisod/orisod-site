@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "SVG to PNG Converter",
+      "description": "Convert SVG files to PNG at any resolution, free and online. Works directly in your browser: no files are uploaded.",
+      "url": "https://orisod.com/svg-to-png/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Will the PNG look blurry if I scale it up?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Render the SVG at the final dimensions or larger to obtain enough pixels for the intended use. The resulting PNG is no longer vector-based, so enlarging that PNG later can make edges look soft. Embedded bitmap content may also limit sharpness."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does this preserve transparency?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Transparent SVG areas can remain transparent in the PNG. Features that do not render correctly in the browser may still affect the result, so inspect the export."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are my files uploaded anywhere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The browser renders the SVG and creates the PNG locally."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does this work with any SVG file?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Standard self-contained SVG files usually render well. External fonts or images, scripts, unsupported filters and other active or remote resources may be blocked or appear differently. Review the PNG before using it."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

@@ -32,6 +32,72 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Collage Maker",
+      "description": "Make a photo collage free, online, with no sign-up and no watermark. 2–9 photos, grid layouts, 30+ filters, text overlay. Everything runs in your browser: nothing is uploaded.",
+      "url": "https://orisod.com/collage-maker/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is there a watermark on the downloaded collage?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The exported PNG or JPG does not include an Orisod watermark, logo or other added branding."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do filters apply to the whole collage or each photo separately?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Adjustments are applied per photo. Select a cell, choose its filter and repeat for any other image you want to change. The photos do not have to use the same filter."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What's the maximum number of photos?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You can include up to nine photos. The tool provides layouts for every count from 2 through 9, with more than one arrangement for many counts."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use a background image instead of a solid color?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. This version uses a solid background color selected with the color picker."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are my photos uploaded anywhere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript processes the photos and builds the final collage in your browser. The files are not sent to a server for this task."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 @font-face{font-family:'CM Poppins';src:url('/assets/fonts/collage/Poppins-SemiBold.woff2') format('woff2');font-weight:600;font-display:swap;}
 @font-face{font-family:'CM Montserrat';src:url('/assets/fonts/collage/Montserrat-Bold.woff2') format('woff2');font-weight:700;font-display:swap;}

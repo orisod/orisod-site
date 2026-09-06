@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Round Image Corners / Circle Crop",
+      "description": "Round the corners of an image or crop it into a circle, free and online. Great for avatars and profile pictures: everything runs in your browser.",
+      "url": "https://orisod.com/round-image-corners/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Will the background be transparent?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Pixels outside the selected circle or rounded rectangle become transparent in the downloaded PNG."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I control how rounded the corners are?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Move the radius control from a slight curve toward a much rounder corner and use the preview to judge the result."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does the circle crop use the full image?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not when the source is rectangular. The centered circle is sized from the shorter dimension, so content near the ends of the longer dimension is excluded. Start with a square crop if you need more control over the framing."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my photo uploaded anywhere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The mask and PNG export are created locally in your browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

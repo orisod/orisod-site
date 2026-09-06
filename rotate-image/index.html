@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Rotate Image",
+      "description": "Rotate or flip an image online for free. Rotate 90°, 180°, or flip horizontally/vertically: everything runs in your browser, no files are uploaded.",
+      "url": "https://orisod.com/rotate-image/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does rotating reduce image quality?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A 90°, 180° or 270° turn does not require the pixel interpolation used for an arbitrary-angle rotation. Exporting can still re-encode the file or remove metadata, depending on the source and output format. Keep the original when those details matter."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I combine a rotation with a flip?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Rotations and flips build on the current preview, so you can combine them before downloading the final orientation."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I undo a rotation?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Choose “Reset” to restore the original orientation and begin again."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my image uploaded anywhere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript performs the rotation, flip and export in your browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

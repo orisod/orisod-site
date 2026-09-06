@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Recortar imagen",
+      "description": "Recorta imágenes en línea gratis. Arrastra para seleccionar el área que quieres y descarga el resultado al instante. Todo ocurre en tu navegador: no se sube ningún archivo.",
+      "url": "https://orisod.com/es/crop-image/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Puedo recortar a un tamaño exacto?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Mientras arrastras, la herramienta muestra el ancho y el alto de la selección en píxeles para que puedas ajustarla a las dimensiones necesarias."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Recortar reduce la calidad de la imagen?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "El recorte elimina los píxeles exteriores sin remuestrear el área conservada. Aun así, la exportación puede volver a codificar la imagen o eliminar metadatos, según el archivo de origen y el formato de salida. Conserva el original si esos datos son importantes."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se envía mi imagen a algún servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Tanto la selección como la exportación ocurren en tu navegador, y la imagen no se sube para procesarla."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Esto funciona en dispositivos móviles?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Puedes ajustar la selección con el dedo en teléfonos y tabletas, o utilizar un ratón o panel táctil en una computadora."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

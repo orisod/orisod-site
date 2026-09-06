@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Compress Image",
+      "description": "Compress images online for free. Reduce file size while keeping good quality: everything happens in your browser, no files are uploaded.",
+      "url": "https://orisod.com/compress-image/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is my image uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The Canvas API processes the image inside your browser, so the selected file stays on your device."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does compressing reduce visible quality?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It can. The visible effect depends on the image, format, encoder and chosen setting. Inspect detailed areas such as hair, text and sharp edges before downloading; lower quality settings usually trade more detail for a smaller file."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What's the difference between compressing and resizing?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Compression changes how the image data is encoded while retaining its pixel dimensions. Resizing changes the pixel width and height. Using both may reduce the file further, but resizing also changes the pixel grid and should match the image’s intended display size."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What image formats are supported?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The tool accepts JPG, PNG, WEBP and other formats that the browser can decode. Support for a particular format or feature can vary by browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;
