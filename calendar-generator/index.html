@@ -33,6 +33,72 @@
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Calendar generator",
+      "description": "Create a free, printable 12-month PDF calendar with automatic public holidays for 50+ countries, religious dates, your own photos, and custom events. Everything runs in your browser.",
+      "url": "https://orisod.com/calendar-generator/",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Why do Islamic dates have a disclaimer but Jewish and Hindu dates don't?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The Islamic (Hijri) calendar traditionally depends on local moon sighting, so different countries and communities can announce the same date up to a day apart, and any calculated date is a well-informed approximation. The modern Hebrew calendar, by contrast, has been a fixed mathematical calculation since the 4th century CE, the same way the Christian Easter date is computed. There's nothing to approximate."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I generate more than one year in a single PDF?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not in this version. Each download covers one calendar year, one month per page."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What if my country isn't in the list?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You can still build a calendar without automatic public holidays, and add any dates you need manually using the custom events section."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Where do I get candle-lighting times for Jewish holidays?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "That lives on the dedicated Hebrew Calendar Generator, linked from the Judaism toggle above. It adds location-based candle-lighting and tzeit hakochavim times, and the weekly Torah portion, on top of everything already shown here."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are my photos or custom events uploaded anywhere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Everything, including holiday data lookup, photos, custom events, and PDF generation, happens locally in your browser. Nothing is sent to a server."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;

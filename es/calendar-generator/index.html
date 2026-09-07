@@ -33,6 +33,72 @@
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Generador de calendarios",
+      "description": "Crea un calendario PDF imprimible de 12 meses, gratis, con días festivos automáticos de más de 50 países, fechas religiosas, tus propias fotos y eventos personalizados. Todo se ejecuta en tu navegador.",
+      "url": "https://orisod.com/es/calendar-generator/",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Por qué las fechas islámicas tienen un aviso pero las judías e hindúes no?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "El calendario islámico (hijri) depende tradicionalmente del avistamiento local de la luna, por lo que distintos países y comunidades pueden anunciar la misma fecha con hasta un día de diferencia, y cualquier fecha calculada es una aproximación bien fundamentada. El calendario hebreo moderno, en cambio, es un cálculo matemático fijo desde el siglo IV d.C., igual que se calcula la fecha de la Pascua cristiana. No hay nada que aproximar."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo generar más de un año en un mismo PDF?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No en esta versión. Cada descarga cubre un año de calendario, un mes por página."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Y si mi país no está en la lista?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Aun así puedes crear un calendario sin días festivos automáticos, y añadir manualmente cualquier fecha que necesites en la sección de eventos personalizados."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Dónde consigo los horarios de encendido de velas para las festividades judías?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Eso está en el Generador de Calendario Hebreo dedicado, enlazado desde el interruptor de Judaísmo más arriba. Añade horarios de encendido de velas y tzeit hakojavim según tu ubicación, y la porción semanal de la Torá, sobre todo lo que ya se muestra aquí."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Mis fotos o eventos personalizados se suben a algún sitio?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Todo, incluida la consulta de datos festivos, las fotos, los eventos personalizados y la generación del PDF, ocurre localmente en tu navegador. No se envía nada a un servidor."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;
