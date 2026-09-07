@@ -20,7 +20,7 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How Images Get Pulled Out of a PDF (and Why They Come Back as PNG) | Orisod Blog</title>
+<title>How images get pulled out of a PDF (and why they come back as PNG) | Orisod Blog</title>
 <meta name="description" content="How a PDF actually stores embedded pictures, why extracting them means decoding pixels rather than copying a file, and why PNG is the only format that can hold the result losslessly.">
 <link rel="canonical" href="https://orisod.com/blog/extract-images-from-pdf-explained/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/blog/extract-images-from-pdf-explained/">
@@ -172,7 +172,7 @@ code{background:var(--card-bg);color:#60a5fa;border:1px solid var(--border);padd
 <div class="container">
 
 <span class="blog-cat cat-guide">Guides</span>
-<h1>How Images Get Pulled Out of a PDF (and Why They Come Back as PNG)</h1>
+<h1>How images get pulled out of a PDF (and why they come back as PNG)</h1>
 <p class="intro">A PDF doesn't store a folder of neat, separate image files the way a ZIP archive does. Getting a picture back out means walking the page's actual drawing instructions, decoding whatever image data those instructions point to, and rebuilding it as a standalone file; which is exactly why the result comes back as PNG, regardless of what format went in.</p>
 
 <div class="article-body">
