@@ -20,8 +20,8 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Conversor de Mayúsculas y Minúsculas – Herramienta Gratuita | Orisod</title>
-<meta name="description" content="Convierte texto entre MAYÚSCULAS, minúsculas, Tipo Título, Tipo oración, camelCase, PascalCase, snake_case, kebab-case y CONSTANT_CASE — al instante, en tu navegador, nada se sube.">
+<title>Conversor de mayúsculas y minúsculas – Herramienta gratuita | Orisod</title>
+<meta name="description" content="Convierte texto entre MAYÚSCULAS, minúsculas, Tipo Título, Tipo oración, camelCase, PascalCase, snake_case, kebab-case y CONSTANT_CASE, al instante, en tu navegador, nada se sube.">
 <link rel="canonical" href="https://orisod.com/es/case-converter/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/case-converter/">
 <link rel="alternate" hreflang="es" href="https://orisod.com/es/case-converter/">
@@ -32,6 +32,17 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Conversor de Mayúsculas y Minúsculas","description":"Convierte texto entre MAYÚSCULAS, minúsculas, Tipo Título, Tipo oración, camelCase, PascalCase, snake_case, kebab-case y CONSTANT_CASE, al instante, en tu navegador, nada se sube.","url":"https://orisod.com/es/case-converter/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"¿Los botones de conversión se acumulan entre sí?","acceptedAnswer":{"@type":"Answer","text":"No. Cada opción parte de la entrada original y no del resultado anterior. Modifica o reemplaza la fuente si quieres encadenar otra transformación."}},
+{"@type":"Question","name":"¿Cómo decide el Tipo Título qué palabras capitalizar?","acceptedAnswer":{"@type":"Answer","text":"Capitaliza cada palabra separada por espacios. Es una transformación mecánica, no una guía editorial, por lo que no deja artículos ni preposiciones en minúscula."}},
+{"@type":"Question","name":"¿Cómo manejan camelCase y los demás estilos de desarrollo los espacios o la puntuación existente?","acceptedAnswer":{"@type":"Answer","text":"Separan espacios, guiones, guiones bajos y límites camel o Pascal compatibles, y luego reúnen las piezas. Las siglas, apóstrofos, puntuación y escrituras no latinas pueden necesitar corrección manual."}},
+{"@type":"Question","name":"¿Se envía algo a un servidor?","acceptedAnswer":{"@type":"Answer","text":"No. JavaScript transforma el texto localmente en tu navegador."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;
@@ -153,7 +164,7 @@ h2{margin-top:50px;font-size:22px;}
 <main>
 <div class="container">
   <h1>Conversor de Mayúsculas y Minúsculas</h1>
-  <p>Pega tu texto una vez y haz clic en cualquier estilo para convertirlo — cada conversión siempre parte de tu texto original, así que cambiar entre estilos nunca se acumula ni pierde información. Nada de lo que escribes se sube a ningún sitio.</p>
+  <p>Pega tu texto una vez y haz clic en cualquier estilo para convertirlo: cada conversión siempre parte de tu texto original, así que cambiar entre estilos nunca se acumula ni pierde información. Nada de lo que escribes se sube a ningún sitio.</p>
 
   <div class="box">
     <label class="cc-label" for="textInput">Tu texto</label>
@@ -179,33 +190,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué hace esta herramienta?</h2>
-    <p>Pega cualquier texto una vez y haz clic en un estilo para reescribirlo al instante. Cada botón convierte tu texto original pegado, no lo que el cuadro muestra en ese momento — así que hacer clic en MAYÚSCULAS y luego en camelCase da exactamente el mismo resultado que hacer clic en camelCase directamente. Las conversiones nunca se encadenan ni se acumulan entre sí.</p>
+    <h2>Aplica nueve estilos al mismo texto original</h2>
+    <p>Pega el texto una vez y elige el estilo necesario. Cada botón trabaja desde la entrada original, no desde el resultado mostrado, así puedes comparar sin acumular transformaciones. Los estilos de desarrollo separan límites reconocibles y vuelven a unirlos; la puntuación, las siglas, los caracteres Unicode y las reglas propias de un idioma pueden exigir una revisión manual.</p>
 
-    <h2>¿Cuándo usar esta herramienta?</h2>
+    <h2>Limpia prosa, títulos e identificadores de código</h2>
     <ul>
-      <li>Alguien pegó un párrafo en MAYÚSCULAS o en minúsculas y necesitas que sea legible</li>
-      <li>Estás renombrando una variable, archivo o clase CSS y la necesitas en camelCase, snake_case o kebab-case</li>
-      <li>Estás formateando un título y necesitas un Tipo Título consistente</li>
-      <li>Necesitas el nombre de una constante en CONSTANT_CASE para un archivo de configuración</li>
+      <li>Volver legible un párrafo escrito enteramente en mayúsculas o minúsculas</li>
+      <li>Preparar una variable, archivo o clase CSS en un estilo de desarrollo</li>
+      <li>Aplicar una capitalización sencilla de título a un encabezado</li>
+      <li>Crear un nombre CONSTANT_CASE para código o configuración</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿Los botones de conversión se acumulan entre sí?</div>
-      <div>No — cada botón siempre convierte tu entrada original, nunca el resultado mostrado en ese momento. Puedes hacer clic en los nueve estilos en cualquier orden y cada uno siempre da el mismo resultado para ese estilo.</div>
+      <div>No. Cada opción parte de la entrada original y no del resultado anterior. Modifica o reemplaza la fuente si quieres encadenar otra transformación.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Cómo decide el Tipo Título qué palabras capitalizar?</div>
-      <div>Capitaliza la primera letra de cada palabra, separando por espacios en blanco. No aplica excepciones de estilo editorial para palabras cortas — se capitaliza cada palabra.</div>
+      <div>Capitaliza cada palabra separada por espacios. Es una transformación mecánica, no una guía editorial, por lo que no deja artículos ni preposiciones en minúscula.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Cómo manejan camelCase y los demás estilos de desarrollo los espacios o la puntuación existente?</div>
-      <div>La entrada primero se divide en palabras por espacios, guiones, guiones bajos y los límites existentes de camelCase/PascalCase, y luego se vuelve a unir en el estilo de destino — así que pegar "nombre-de_usuario" o "NombreDeUsuario" se convierte igual de bien en la misma lista de palabras.</div>
+      <div>Separan espacios, guiones, guiones bajos y límites camel o Pascal compatibles, y luego reúnen las piezas. Las siglas, apóstrofos, puntuación y escrituras no latinas pueden necesitar corrección manual.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se envía algo a un servidor?</div>
-      <div>No, todo el proceso ocurre localmente en tu navegador con JavaScript.</div>
+      <div>No. JavaScript transforma el texto localmente en tu navegador.</div>
     </div>
   </div>
 
@@ -243,7 +254,7 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF en tu navegador. Procesamiento 100% local — tus archivos nunca se suben a ningún sitio.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF en tu navegador. Todo el procesamiento de imágenes y PDF es 100 % local: tus archivos permanecen en tu dispositivo.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">

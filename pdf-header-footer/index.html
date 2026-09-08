@@ -20,8 +20,8 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PDF Header & Footer – Free Online Tool | Orisod</title>
-<meta name="description" content="Add custom header and footer text to every page of a PDF — titles, dates, page numbers, confidentiality notices. Works directly in your browser, no files are uploaded.">
+<title>PDF header & footer – Free online tool | Orisod</title>
+<meta name="description" content="Add custom header and footer text to every page of a PDF: titles, dates, page numbers, confidentiality notices. Works directly in your browser, no files are uploaded.">
 <link rel="canonical" href="https://orisod.com/pdf-header-footer/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/pdf-header-footer/">
 <link rel="alternate" hreflang="es" href="https://orisod.com/es/pdf-header-footer/">
@@ -96,6 +96,7 @@ input[type="file"]{display:none;}
 .hf-options{margin-top:20px;text-align:left;}
 .option-card{color:var(--text);background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:18px;margin-bottom:14px;}
 .option-card h3{margin:0 0 8px 0;font-size:15px;display:flex;align-items:center;gap:10px;}
+.options-title{margin:0 0 14px 0;font-size:15px;}
 .option-card p{margin:0 0 12px 0;font-size:13px;opacity:0.7;text-align:left;}
 .hf-toggle{display:flex;align-items:center;gap:8px;cursor:pointer;}
 .hf-toggle input{width:16px;height:16px;cursor:pointer;}
@@ -161,6 +162,64 @@ h2{margin-top:50px;font-size:22px;}
 .related-card .arrow{flex:none;font-size:16px;color:var(--muted-text);transition:0.2s;}
 .related-card:hover .arrow{color:var(--accent);transform:translateX(2px);}
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "PDF Header & Footer",
+      "description": "Add custom header and footer text to every page of a PDF: titles, dates, page numbers, confidentiality notices. Works directly in your browser, no files are uploaded.",
+      "url": "https://orisod.com/pdf-header-footer/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What's the difference between this and Add Page Numbers?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Add Page Numbers is designed for a single number in a standard position. This tool supports longer header or footer lines that can combine a title, notice, date, current page and total count."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What date format does {date} insert?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It inserts the current date as YYYY-MM-DD. This year-month-day format avoids the month-and-day ambiguity found in short numeric dates."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use different fonts, colors, or bold text?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "This version uses one default font in the size selected; it does not offer bold, multiple colors or logo placement. Use a suitable watermark or PDF editing workflow when richer styling is required."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my PDF uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript adds the text and rebuilds the PDF locally in your browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
@@ -186,7 +245,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="1.5"/><path d="M7 6h10M7 18h10"/></svg></div>
     <h1>PDF Header & Footer</h1>
   </div>
-  <p class="tool-sub">Add custom header and/or footer text to every page — a title, date, confidentiality notice, or page count. Everything happens locally in your browser.</p>
+  <p class="tool-sub">Place custom text at the top or bottom of every PDF page, including dates and page counts.</p>
 
   <div class="workspace">
     <div class="box">
@@ -199,10 +258,11 @@ h2{margin-top:50px;font-size:22px;}
       <div class="page-info" id="pageInfo"></div>
 
       <div class="hf-options" id="hfOptions" style="display:none;">
+        <h2 class="options-title">Header &amp; footer options</h2>
         <div class="option-card">
           <h3><label class="hf-toggle"><input type="checkbox" id="headerEnable"> Header</label></h3>
           <div class="hf-body disabled" id="headerBody">
-            <input type="text" class="hf-text-input" id="headerText" placeholder="e.g. Company Name">
+            <input type="text" class="hf-text-input" id="headerText" placeholder="e.g. Company Name" aria-label="Header text">
             <div class="align-grid">
               <div class="align-btn" data-target="header" data-align="left">Left</div>
               <div class="align-btn active" data-target="header" data-align="center">Center</div>
@@ -219,7 +279,7 @@ h2{margin-top:50px;font-size:22px;}
         <div class="option-card">
           <h3><label class="hf-toggle"><input type="checkbox" id="footerEnable" checked> Footer</label></h3>
           <div class="hf-body" id="footerBody">
-            <input type="text" class="hf-text-input" id="footerText" placeholder="e.g. Page {page} of {pages}" value="Page {page} of {pages}">
+            <input type="text" class="hf-text-input" id="footerText" placeholder="e.g. Page {page} of {pages}" value="Page {page} of {pages}" aria-label="Footer text">
             <div class="align-grid">
               <div class="align-btn" data-target="footer" data-align="left">Left</div>
               <div class="align-btn active" data-target="footer" data-align="center">Center</div>
@@ -235,7 +295,7 @@ h2{margin-top:50px;font-size:22px;}
 
         <div class="option-card">
           <h3>Font size</h3>
-          <input type="number" id="fontSizeInput" min="6" max="36" value="10">
+          <input type="number" id="fontSizeInput" min="6" max="36" value="10" aria-label="Font size">
         </div>
 
         <div class="workspace-controls">
@@ -249,37 +309,37 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>This tool draws your own header and/or footer text onto every page of a PDF — a title, company name, confidentiality notice, date, or page count, aligned left, center, or right. Small "insert" buttons let you drop in a page number, the total page count, or today's date without needing to type any special syntax yourself. The underlying PDF content is untouched — text stays selectable, only your header/footer text is added.</p>
+    <h2>Repeat useful text across every PDF page</h2>
+    <p>Write a header, a footer or both, choose left, center or right alignment and apply the text throughout the PDF. Insert controls add the current page number, total page count or today’s date without requiring special syntax. The export draws new content onto each page. Existing text is not intentionally rasterized, but the PDF is modified and digital signatures may become invalid.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>For titles, dates, notices and page counts</h2>
     <ul>
-      <li>You need a document title or company name repeated at the top of every page</li>
-      <li>You want "Page 3 of 12" style page counts instead of a bare number</li>
-      <li>You're marking a document as a draft, confidential, or dated for a specific version</li>
-      <li>You just want a plain page number in a corner — for that simpler case, see <a href="/add-page-numbers/" style="color:var(--accent);text-decoration:none;">Add Page Numbers</a> instead</li>
+      <li>Repeat a document title or organization name on every page</li>
+      <li>Display a line such as “Page 3 of 12” rather than a number alone</li>
+      <li>Identify a draft, confidential copy or dated version</li>
+      <li>Use <a href="/add-page-numbers/" style="color:var(--accent);text-decoration:none;">Add Page Numbers</a> when a plain number in a corner is enough</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">What's the difference between this and Add Page Numbers?</div>
-      <div>Add Page Numbers stamps a single number in one of six corners — it's the simplest option if that's literally all you need. This tool is for actual header/footer text — a title, notice, or date — which can optionally include a page number as part of a longer line, like "Draft — Page 3 of 12".</div>
+      <div>Add Page Numbers is designed for a single number in a standard position. This tool supports longer header or footer lines that can combine a title, notice, date, current page and total count.</div>
     </div>
     <div class="faq-item">
       <div class="q">What date format does {date} insert?</div>
-      <div>Today's date in the unambiguous <code style="background:var(--bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;">YYYY-MM-DD</code> format, so it reads the same way regardless of which country's date convention a reader is used to.</div>
+      <div>It inserts the current date as YYYY-MM-DD. This year-month-day format avoids the month-and-day ambiguity found in short numeric dates.</div>
     </div>
     <div class="faq-item">
       <div class="q">Can I use different fonts, colors, or bold text?</div>
-      <div>Not currently — header and footer text is drawn in a single default font at a size you choose, kept simple on purpose. If you need heavier styling or a logo image, see Watermark PDF or the full PDF Editor.</div>
+      <div>This version uses one default font in the size selected; it does not offer bold, multiple colors or logo placement. Use a suitable watermark or PDF editing workflow when richer styling is required.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my PDF uploaded to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No. JavaScript adds the text and rebuilds the PDF locally in your browser.</div>
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/pdf-header-footer-explained/" style="color:var(--accent);text-decoration:none;">How to Add a Header or Footer to Every Page of a PDF</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/pdf-header-footer-explained/" style="color:var(--accent);text-decoration:none;">How to add a header or footer to every page of a PDF</a></p>
 
   <h2>Related tools</h2>
   <div class="related-grid">
@@ -313,7 +373,7 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Free, browser-based image and PDF tools. 100% local processing: your files are never uploaded anywhere.</div>
+      <div class="footer-brand-desc">Free, browser-based image and PDF tools. All image and PDF processing happens 100% locally: your files are never uploaded anywhere.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">

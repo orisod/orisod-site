@@ -21,7 +21,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Añadir números de página a un PDF – Herramienta gratuita | Orisod</title>
-<meta name="description" content="Numera las páginas de un PDF gratis, en línea. Elige la posición y el número inicial — funciona directamente en tu navegador, no se sube ningún archivo.">
+<meta name="description" content="Numera las páginas de un PDF gratis, en línea. Elige la posición y el número inicial: funciona directamente en tu navegador, no se sube ningún archivo.">
 <link rel="canonical" href="https://orisod.com/es/add-page-numbers/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/add-page-numbers/">
 <link rel="alternate" hreflang="es" href="https://orisod.com/es/add-page-numbers/">
@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Añadir números de página",
+      "description": "Numera las páginas de un PDF gratis, en línea. Elige la posición y el número inicial: funciona directamente en tu navegador, no se sube ningún archivo.",
+      "url": "https://orisod.com/es/add-page-numbers/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Esto afecta la selección de texto?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La herramienta no rasteriza las páginas existentes, así que el texto seleccionable normalmente conserva esa propiedad. Sin embargo, dibuja contenido nuevo y modifica el PDF, lo que puede invalidar firmas digitales o afectar procesos que requieren el original exacto."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo empezar a contar desde un número distinto de 1?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Indica el primer número y cada página siguiente aumentará la secuencia en una unidad."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo elegir dónde aparece el número?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Elige la parte superior o inferior y alinea el número a la izquierda, al centro o a la derecha. Revisa páginas con tamaños o rotaciones diferentes para comprobar que no tape contenido."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se envía mi PDF a algún servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript edita y exporta el PDF dentro de tu navegador."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <style>
 :root{
@@ -97,6 +155,7 @@ input[type="file"]{display:none;}
 .number-options{margin-top:20px;text-align:left;}
 .option-card{color:var(--text);background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:18px;margin-bottom:14px;}
 .option-card h3{margin:0 0 8px 0;font-size:15px;}
+.options-title{margin:0 0 14px 0;font-size:15px;}
 .option-card p{margin:0 0 12px 0;font-size:13px;opacity:0.7;text-align:left;}
 .position-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:8px;max-width:360px;margin:10px auto 0 auto;}
 .position-btn{padding:10px 8px;border-radius:6px;border:1px solid var(--dropzone-border);background:var(--card-bg);color:var(--text);cursor:pointer;font-size:12px;text-align:center;}
@@ -179,7 +238,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><circle cx="17" cy="17" r="3"/><path d="M17 15.5v3"/></svg></div>
     <h1>Añadir números de página</h1>
   </div>
-  <p class="tool-sub">Numera todas las páginas de un PDF. Elige la posición y el número inicial — todo ocurre localmente en tu navegador.</p>
+  <p class="tool-sub">Elige dónde aparecerá la numeración, define el primer número y aplica la secuencia a todo el PDF.</p>
 
   <div class="workspace">
     <div class="box">
@@ -192,6 +251,7 @@ h2{margin-top:50px;font-size:22px;}
       <div class="page-info" id="pageInfo"></div>
 
       <div class="number-options" id="numberOptions" style="display:none;">
+        <h2 class="options-title">Opciones de numeración</h2>
         <div class="option-card">
           <h3>Posición</h3>
           <div class="position-grid">
@@ -207,7 +267,7 @@ h2{margin-top:50px;font-size:22px;}
         <div class="option-card">
           <h3>Número inicial</h3>
           <p>La primera página mostrará ese número y la numeración continuará a partir de él.</p>
-          <input type="number" id="startNumberInput" min="0" value="1">
+          <input type="number" id="startNumberInput" min="0" value="1" aria-label="Número inicial">
         </div>
 
         <div class="workspace-controls">
@@ -221,33 +281,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué hace esta herramienta?</h2>
-    <p>Esta herramienta añade un número en la posición que elijas de cada página y comienza por el valor que indiques. El contenido original del PDF no cambia: el texto sigue siendo seleccionable y solo se incorpora la numeración.</p>
+    <h2>Añade una secuencia visible sin reconstruir las páginas</h2>
+    <p>La herramienta dibuja un número consecutivo en la posición elegida de cada página, comenzando por el valor que indiques. En documentos normales, el texto existente sigue siendo seleccionable porque las páginas no se rasterizan. El PDF sí se modifica, así que una firma digital puede quedar invalidada y la numeración puede cubrir contenido si hay poco margen libre.</p>
 
-    <h2>¿Cuándo deberías usarla?</h2>
+    <h2>Documentos que necesitan referencias de página</h2>
     <ul>
-      <li>Estás preparando un documento para imprimir y los lectores necesitan referenciar páginas específicas</li>
-      <li>Estás armando un informe, contrato o manuscrito que necesita referencias de página</li>
-      <li>Tu documento no empieza en la página 1 (por ejemplo, continúa desde otro documento) y necesitas un número inicial personalizado</li>
-      <li>Quieres los números de página en una esquina específica en lugar de donde los pone una impresora por defecto</li>
+      <li>Dar a los lectores de una copia impresa una referencia clara</li>
+      <li>Numerar un informe, contrato o manuscrito antes de distribuirlo</li>
+      <li>Continuar la numeración de otro documento con un valor inicial personalizado</li>
+      <li>Colocar la secuencia de forma uniforme en la parte superior o inferior</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿Esto afecta la selección de texto?</div>
-      <div>No, el contenido existente del PDF se conserva exactamente igual — solo se dibuja un número de página en cada página.</div>
+      <div>La herramienta no rasteriza las páginas existentes, así que el texto seleccionable normalmente conserva esa propiedad. Sin embargo, dibuja contenido nuevo y modifica el PDF, lo que puede invalidar firmas digitales o afectar procesos que requieren el original exacto.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Puedo empezar a contar desde un número distinto de 1?</div>
-      <div>Sí. Indica el número inicial que prefieras y la numeración continuará a partir de él en el resto del documento.</div>
+      <div>Sí. Indica el primer número y cada página siguiente aumentará la secuencia en una unidad.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Puedo elegir dónde aparece el número?</div>
-      <div>Sí. Puedes colocarlo en la parte superior o inferior y alinearlo a la izquierda, al centro o a la derecha.</div>
+      <div>Sí. Elige la parte superior o inferior y alinea el número a la izquierda, al centro o a la derecha. Revisa páginas con tamaños o rotaciones diferentes para comprobar que no tape contenido.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se envía mi PDF a algún servidor?</div>
-      <div>No. Todo se procesa localmente en tu navegador mediante JavaScript; el archivo permanece en tu dispositivo.</div>
+      <div>No. JavaScript edita y exporta el PDF dentro de tu navegador.</div>
     </div>
   </div>
 
@@ -309,7 +369,7 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Procesamiento 100 % local: tus archivos permanecen en tu dispositivo.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Todo el procesamiento de imágenes y PDF es 100 % local: tus archivos permanecen en tu dispositivo.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">

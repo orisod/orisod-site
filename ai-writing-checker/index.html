@@ -20,8 +20,8 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Writing Checker – Free Online Tool | Orisod</title>
-<meta name="description" content="Scan text for stock phrases, repetitive sentence openers, and other generic-writing patterns, free and online. A style-pattern flagger, not an AI detector. Works directly in your browser — no files are uploaded.">
+<title>AI writing checker – Free online tool | Orisod</title>
+<meta name="description" content="Scan text for stock phrases, repetitive sentence openers, and other generic-writing patterns, free and online. A style-pattern flagger, not an AI detector. Works directly in your browser: no files are uploaded.">
 <link rel="canonical" href="https://orisod.com/ai-writing-checker/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/ai-writing-checker/">
 <link rel="alternate" hreflang="es" href="https://orisod.com/es/ai-writing-checker/">
@@ -32,6 +32,17 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"AI Writing Checker","description":"Scan text for stock phrases, repetitive sentence openers, and other generic-writing patterns, free and online. A style-pattern flagger, not an AI detector. Works directly in your browser: no files are uploaded.","url":"https://orisod.com/ai-writing-checker/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Can this tell me if text was written by AI?","acceptedAnswer":{"@type":"Answer","text":"No. Human and AI-generated writing can both contain or avoid every measured pattern. The result only reports features in the pasted text and cannot establish authorship."}},
+{"@type":"Question","name":"Why isn't there an overall AI score or percentage?","acceptedAnswer":{"@type":"Answer","text":"Combining unrelated style signals into a percentage would imply an unsupported probability of AI authorship. Separate counts show what the rules actually detected and let the writer decide whether any match deserves editing."}},
+{"@type":"Question","name":"What if my writing naturally has some of these patterns?","acceptedAnswer":{"@type":"Answer","text":"That is normal. A highlight reports the presence of a pattern, not an error. Context, genre, quotation, accessibility and personal voice can make repetition entirely appropriate."}},
+{"@type":"Question","name":"Is my text uploaded to a server?","acceptedAnswer":{"@type":"Answer","text":"No. JavaScript analyzes the pasted text locally in your browser."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;
@@ -183,15 +194,15 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="14" height="18" rx="2"/><path d="M5 7h8M5 11h6M5 15h4"/><circle cx="16.5" cy="16.5" r="3.5"/><path d="M19 19l3 3"/></svg></div>
     <h1>AI Writing Checker</h1>
   </div>
-  <p class="tool-sub">Scan text for stock phrases, repetitive sentence openers, and other generic-writing patterns. A style-pattern flagger, not an AI detector — everything happens locally in your browser.</p>
+  <p class="tool-sub">Inspect explainable style patterns in a draft without pretending to determine who or what wrote it.</p>
 
   <div class="workspace">
     <div class="box">
-      <textarea id="textInput" class="tp-textarea" placeholder="Paste or type text to check..."></textarea>
+      <textarea id="textInput" class="tp-textarea" placeholder="Paste or type text to check..." aria-label="Text to check"></textarea>
       <div class="trust-strip">🔒 Processed on your device · No upload · No account</div>
 
       <div class="disclosure-banner">
-        <strong>What this actually is:</strong> This tool flags stylistic patterns sometimes associated with generic or AI-generated writing — overused stock phrases, repetitive sentence openers, unusually uniform sentence length, and heavy em-dash use. Human writers use these patterns constantly, and genuinely AI-written text can avoid every one of them. This is a style-awareness signal, not an AI detector and not a verdict — treat flagged patterns as things worth a second look, not proof of anything.
+        <strong>What this actually is:</strong> This tool flags stylistic patterns sometimes associated with generic or AI-generated writing: overused stock phrases, repetitive sentence openers, unusually uniform sentence length, and heavy em-dash use. Human writers use these patterns constantly, and genuinely AI-written text can avoid every one of them. This is a style-awareness signal, not an AI detector and not a verdict: treat flagged patterns as things worth a second look, not proof of anything.
       </div>
 
       <div id="resultsWrap" style="display:none;">
@@ -219,33 +230,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>Paste in text and this tool scans it for four specific, well-defined stylistic patterns: a curated list of overused stock phrases and clichés, runs of consecutive sentences starting with the same word, unusually uniform sentence length across the whole text, and a higher-than-typical rate of em-dashes. Each match is highlighted directly in the text, and a summary panel breaks down counts by category — deliberately without any single combined score.</p>
+    <h2>A transparent style check, not an authorship verdict</h2>
+    <p>Paste a draft to check four defined signals: phrases from a curated list, consecutive sentences beginning with the same word, unusually uniform sentence length and frequent em dashes. Matches are highlighted and counted separately rather than collapsed into an “AI score.” These heuristics can reveal repetitive prose, but they do not measure originality, factual quality or authorship.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>Use flags as editing prompts, not automatic corrections</h2>
     <ul>
-      <li>Reviewing your own draft for generic phrasing before publishing</li>
-      <li>Spotting overused transition words that make writing feel formulaic</li>
-      <li>Checking whether a document leans on the same handful of stock phrases too often</li>
-      <li>Getting a second pair of eyes on sentence-length variety and rhythm</li>
+      <li>Notice generic phrases while revising your own draft</li>
+      <li>Find repeated openings that flatten the rhythm</li>
+      <li>See whether a small set of stock expressions dominates the text</li>
+      <li>Review sentence-length variation with human judgment</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Can this tell me if text was written by AI?</div>
-      <div>No. It flags stylistic patterns that show up often in generic or AI-generated writing, but human writers use every one of these patterns too, and AI-written text can easily avoid all of them. Treat results as a style-awareness signal, not a determination of authorship.</div>
+      <div>No. Human and AI-generated writing can both contain or avoid every measured pattern. The result only reports features in the pasted text and cannot establish authorship.</div>
     </div>
     <div class="faq-item">
       <div class="q">Why isn't there an overall "AI score" or percentage?</div>
-      <div>A single combined number would imply a precision this kind of heuristic checking can't honestly provide. Showing separate, explainable counts per pattern is more accurate about what's actually being measured than collapsing everything into one misleadingly confident figure.</div>
+      <div>Combining unrelated style signals into a percentage would imply an unsupported probability of AI authorship. Separate counts show what the rules actually detected and let the writer decide whether any match deserves editing.</div>
     </div>
     <div class="faq-item">
       <div class="q">What if my writing naturally has some of these patterns?</div>
-      <div>That's expected and normal — these patterns appear throughout ordinary human writing. A flag means "this pattern is present," not "this is a problem," and plenty of well-written text will still show a handful of matches.</div>
+      <div>That is normal. A highlight reports the presence of a pattern, not an error. Context, genre, quotation, accessibility and personal voice can make repetition entirely appropriate.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my text uploaded to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No. JavaScript analyzes the pasted text locally in your browser.</div>
     </div>
   </div>
 
@@ -283,7 +294,7 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Free, browser-based image and PDF tools. 100% local processing: your files are never uploaded anywhere.</div>
+      <div class="footer-brand-desc">Free, browser-based image and PDF tools. All image and PDF processing happens 100% locally: your files are never uploaded anywhere.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">

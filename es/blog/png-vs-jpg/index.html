@@ -32,6 +32,31 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "PNG vs. JPG: qué formato usar y cómo convertirlos",
+  "description": "¿PNG o JPG? La diferencia real entre ambos formatos, cuándo usar cada uno, y cómo convertir entre ellos gratis en tu navegador.",
+  "url": "https://orisod.com/es/blog/png-vs-jpg/",
+  "author": {
+    "@type": "Organization",
+    "name": "Orisod Labs"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Orisod Labs",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://orisod.com/assets/orisod-icon-detailed.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://orisod.com/es/blog/png-vs-jpg/"
+  }
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;
@@ -159,7 +184,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <h2>Cuándo PNG es la mejor opción</h2>
 <ul>
-  <li><strong>Capturas de pantalla</strong>, especialmente con texto o bordes de interfaz nítidos — la compresión JPG tiende a difuminar líneas finas y crear artefactos visibles alrededor del texto.</li>
+  <li><strong>Capturas de pantalla</strong>, especialmente con texto o bordes de interfaz nítidos. La compresión JPG tiende a difuminar líneas finas y crear artefactos visibles alrededor del texto.</li>
   <li><strong>Logotipos, iconos y gráficos de colores planos</strong>, donde los bordes nítidos importan más que el tamaño del archivo.</li>
   <li><strong>Cualquier cosa que necesite fondo transparente</strong>, como un logotipo que colocarás sobre fondos de diferentes colores.</li>
   <li><strong>Imágenes que volverás a guardar repetidamente</strong> mientras editas, ya que JPG pierde un poco de calidad cada vez que se vuelve a comprimir y PNG no.</li>
@@ -182,7 +207,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <p>Un JPG fotográfico puede ocupar mucho menos que un PNG, pero la diferencia visual depende de la calidad, las recodificaciones, el contenido, el tamaño de presentación y el nivel de inspección. En capturas con texto, PNG suele conservar limpios los bordes. JPG puede introducir halos, bloques o suavidad, especialmente con ajustes bajos.</p>
 <figure class="theme-figure">
   <img src="/assets/blog/png-vs-jpg/png-vs-jpg-text-crop-comparison.webp" alt="Recorte ampliado del mismo gráfico de texto que muestra bordes nítidos en PNG junto a una versión JPG con difuminado visible y artefactos de bloque alrededor de las letras" width="1330" height="319" loading="lazy">
-  <figcaption>Un recorte ampliado del mismo gráfico de texto — PNG a la izquierda, JPG guardado con una calidad baja a la derecha. PNG mantiene cada borde nítido; la versión JPG muestra difuminado visible y artefactos de bloque alrededor de las letras — exactamente el efecto "ligeramente borroso" que describe la tabla anterior.</figcaption>
+  <figcaption>Un recorte ampliado del mismo gráfico de texto: PNG a la izquierda, JPG guardado con una calidad baja a la derecha. PNG mantiene cada borde nítido; la versión JPG muestra difuminado visible y artefactos de bloque alrededor de las letras, exactamente el efecto "ligeramente borroso" que describe la tabla anterior.</figcaption>
 </figure>
 <figure class="theme-figure">
 <svg viewBox="0 0 700 340" width="700" height="340" role="img" aria-label="Gráfico de barras: para este gráfico de texto, el PNG (18 KB) pesa menos que un JPG visualmente limpio (27 KB); solo un JPG visiblemente degradado (15 KB) se acerca al tamaño del PNG" xmlns="http://www.w3.org/2000/svg">
@@ -198,7 +223,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <text x="586.8" y="136.5" text-anchor="middle" font-size="18" font-weight="bold" fill="var(--text)">15 KB</text>
 <text x="586.8" y="304.0" text-anchor="middle" font-size="15" fill="var(--muted-text)">JPG (degradado)</text>
 </svg>
-<figcaption>Medido sobre el gráfico de texto de arriba (Pillow 12.3.0): un JPG visualmente limpio (calidad 85) es en realidad más grande que el PNG — para este tipo de contenido de colores planos y bordes definidos, el JPG solo se vuelve más pequeño al bajar la calidad lo suficiente como para ver los artefactos de arriba (calidad 10). Trátalo como este ejemplo concreto, no como una garantía universal.</figcaption>
+<figcaption>Medido sobre el gráfico de texto de arriba (Pillow 12.3.0): un JPG visualmente limpio (calidad 85) es más grande que el PNG. Para este tipo de contenido de colores planos y bordes definidos, el JPG solo se vuelve más pequeño al bajar la calidad lo suficiente como para ver los artefactos de arriba (calidad 10). Trátalo como este ejemplo concreto, no como una garantía universal.</figcaption>
 </figure>
 
 <h2>¿Por qué mi computadora usa PNG por defecto para las capturas de pantalla?</h2>
@@ -253,7 +278,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Procesamiento 100 % local: tus archivos permanecen en tu dispositivo.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Todo el procesamiento de imágenes y PDF es 100 % local: tus archivos permanecen en tu dispositivo.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">

@@ -20,8 +20,8 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Crop PDF Pages – Free Online Tool | Orisod</title>
-<meta name="description" content="Trim the margins off every page of a PDF by entering exact top, bottom, left and right measurements, online for free. Works directly in your browser — no files are uploaded.">
+<title>Crop PDF pages – Free online tool | Orisod</title>
+<meta name="description" content="Trim the margins off every page of a PDF by entering exact top, bottom, left and right measurements, online for free. Works directly in your browser: no files are uploaded.">
 <link rel="canonical" href="https://orisod.com/crop-pdf-pages/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/crop-pdf-pages/">
 <link rel="alternate" hreflang="es" href="https://orisod.com/es/crop-pdf-pages/">
@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Crop PDF Pages",
+      "description": "Trim the margins off every page of a PDF by entering exact top, bottom, left and right measurements, online for free. Works directly in your browser: no files are uploaded.",
+      "url": "https://orisod.com/crop-pdf-pages/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does cropping delete any content permanently?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Cropping changes the visible page box; it does not securely erase content outside that boundary. Hidden material may remain extractable, and cropping must never be used as redaction. Existing text generally stays selectable because the page is not rasterized."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I crop different amounts from each side?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Set separate values for the top, bottom, left and right. Leave a side at 0 when its boundary should remain unchanged."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What if my PDF has pages of different sizes?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The same measurements apply to every page. Pages with different dimensions can therefore produce different-looking margins. If the entered crop is too large for any page, reduce the values and try again."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my PDF uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript changes the page boxes and exports the PDF in your browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
@@ -185,7 +243,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/></svg></div>
     <h1>Crop PDF Pages</h1>
   </div>
-  <p class="tool-sub">Trim the margins off every page of a PDF by entering exact measurements — then download the cropped file. Everything happens locally in your browser.</p>
+  <p class="tool-sub">Enter the top, bottom, left and right measurements to change the visible area of every PDF page.</p>
 
   <div class="workspace">
     <div class="box">
@@ -246,37 +304,37 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does cropping a PDF do?</h2>
-    <p>Cropping trims the visible area of every page by the amount you specify on each side, measured in millimeters. The underlying content isn't deleted or redrawn — the page's visible boundary (its crop box) is simply moved inward, hiding the margins you no longer want to show or print.</p>
+    <h2>PDF cropping changes what the page displays</h2>
+    <p>Cropping moves each page’s visible boundary inward by the millimeter values you provide. It does not redraw or securely delete the hidden content. Text outside the new crop box may remain recoverable in the PDF, so this tool is suitable for presentation and printing adjustments, not for removing confidential information.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>When adjusting the page boundary helps</h2>
     <ul>
-      <li>A scanned document has wide, uneven margins you want to remove</li>
-      <li>You're preparing a PDF for a print layout that requires specific margins</li>
-      <li>A page was exported with extra white space you want to trim off</li>
-      <li>You want to remove a header or footer band that sits within a fixed margin</li>
+      <li>Hide wide or uneven edges around scanned pages</li>
+      <li>Adjust the visible PDF page area for a printing layout</li>
+      <li>Remove excess white space from the displayed page</li>
+      <li>Hide a fixed header or footer band when secure removal is not required</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Does cropping delete any content permanently?</div>
-      <div>No, it moves the page's visible boundary — the content underneath isn't redrawn or rasterized, so text stays selectable.</div>
+      <div>No. Cropping changes the visible page box; it does not securely erase content outside that boundary. Hidden material may remain extractable, and cropping must never be used as redaction. Existing text generally stays selectable because the page is not rasterized.</div>
     </div>
     <div class="faq-item">
       <div class="q">Can I crop different amounts from each side?</div>
-      <div>Yes, the top, bottom, left and right margins are independent — set any of them to 0 to leave that side untouched.</div>
+      <div>Yes. Set separate values for the top, bottom, left and right. Leave a side at 0 when its boundary should remain unchanged.</div>
     </div>
     <div class="faq-item">
       <div class="q">What if my PDF has pages of different sizes?</div>
-      <div>The same margin measurements are applied to every page. If a page is too small for the margins you entered, you'll see an error asking you to reduce them.</div>
+      <div>The same measurements apply to every page. Pages with different dimensions can therefore produce different-looking margins. If the entered crop is too large for any page, reduce the values and try again.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my PDF uploaded to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No. JavaScript changes the page boxes and exports the PDF in your browser.</div>
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/trim-pdf-margins/" style="color:var(--accent);text-decoration:none;">How to Trim the Margins on a PDF (Without Reprinting It)</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/trim-pdf-margins/" style="color:var(--accent);text-decoration:none;">How to trim the margins on a PDF (without reprinting it)</a></p>
 
   <h2>Related tools</h2>
   <div class="related-grid">
@@ -310,7 +368,7 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Free, browser-based image and PDF tools. 100% local processing: your files are never uploaded anywhere.</div>
+      <div class="footer-brand-desc">Free, browser-based image and PDF tools. All image and PDF processing happens 100% locally: your files are never uploaded anywhere.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">

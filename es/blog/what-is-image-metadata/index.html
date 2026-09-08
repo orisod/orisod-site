@@ -21,7 +21,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Qué son los metadatos de una imagen y cómo consultarlos | Blog de Orisod</title>
-<meta name="description" content="Cada archivo de imagen lleva información más allá de sus píxeles — ajustes de cámara, descripciones, notas de derechos de autor, a veces datos GPS. Aquí te explicamos qué incluyen realmente los metadatos, y cómo ver lo que hay dentro de una foto específica.">
+<meta name="description" content="Cada archivo de imagen lleva información más allá de sus píxeles: ajustes de cámara, descripciones, notas de derechos de autor, a veces datos GPS. Aquí te explicamos qué incluyen realmente los metadatos, y cómo ver lo que hay dentro de una foto específica.">
 <link rel="canonical" href="https://orisod.com/es/blog/what-is-image-metadata/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/blog/what-is-image-metadata/">
 <link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/what-is-image-metadata/">
@@ -32,6 +32,31 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Qué son los metadatos de una imagen y cómo consultarlos",
+  "description": "Cada archivo de imagen lleva información más allá de sus píxeles: ajustes de cámara, descripciones, notas de derechos de autor, a veces datos GPS. Aquí te explicamos qué incluyen realmente los metadatos, y cómo ver lo que hay dentro de una foto específica.",
+  "url": "https://orisod.com/es/blog/what-is-image-metadata/",
+  "author": {
+    "@type": "Organization",
+    "name": "Orisod Labs"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Orisod Labs",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://orisod.com/assets/orisod-icon-detailed.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://orisod.com/es/blog/what-is-image-metadata/"
+  }
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;
@@ -161,7 +186,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <tr><th>Tipo de metadatos</th><th>Mantenido por</th><th>Qu&#233; suele almacenar</th></tr>
   <tr><td>EXIF</td><td>CIPA/JEITA (Exif 3.0, 2023)</td><td>Marca/modelo de c&#225;mara, ajustes de exposici&#243;n, fecha y hora de captura, a menudo coordenadas GPS</td></tr>
   <tr><td>IPTC</td><td>IPTC Photo Metadata Standard</td><td>Descripci&#243;n, palabras clave, autor/cr&#233;dito, aviso de derechos de autor, ubicaci&#243;n como texto</td></tr>
-  <tr><td>XMP</td><td>ISO 16684-1 (originalmente Adobe)</td><td>Un formato contenedor &#8212; suele incluir los propios campos de IPTC ("IPTC-in-XMP"), adem&#225;s de historial de edici&#243;n y datos espec&#237;ficos de cada aplicaci&#243;n</td></tr>
+  <tr><td>XMP</td><td>ISO 16684-1 (originalmente Adobe)</td><td>Un formato contenedor que suele incluir los propios campos de IPTC ("IPTC-in-XMP"), adem&#225;s de historial de edici&#243;n y datos espec&#237;ficos de cada aplicaci&#243;n</td></tr>
 </table>
 <figure class="theme-figure">
 <svg viewBox="0 0 700 320" width="700" height="320" role="img" aria-label="Diagrama que muestra EXIF, IPTC y XMP como tres estándares de metadatos, con una nota de que los campos de IPTC suelen almacenarse dentro de XMP en lugar de como un sistema totalmente independiente." xmlns="http://www.w3.org/2000/svg">
@@ -193,9 +218,9 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <p>Este resumen se basa en CIPA Exif 3.0 (2023), IPTC Photo Metadata Standard e ISO 16684-1:2019 para XMP, consultados en agosto de 2026. Cada especificación incluye más campos de los que aparecen en estos ejemplos.</p>
 
 <ul>
-  <li><strong>EXIF</strong> — marca y modelo de cámara, ajustes de exposición, fecha y hora de captura, y a menudo coordenadas GPS en fotos de teléfono.</li>
-  <li><strong>IPTC</strong> — descripción o leyenda, palabras clave, crédito del fotógrafo, aviso de derechos de autor, y a veces la ubicación descrita en texto (ciudad, país) en lugar de coordenadas.</li>
-  <li><strong>XMP</strong> — campos descriptivos similares a IPTC, además de historial de edición en algunos programas, y campos personalizados específicos de ciertas aplicaciones.</li>
+  <li><strong>EXIF</strong>: marca y modelo de cámara, ajustes de exposición, fecha y hora de captura, y a menudo coordenadas GPS en fotos de teléfono.</li>
+  <li><strong>IPTC</strong>: descripción o leyenda, palabras clave, crédito del fotógrafo, aviso de derechos de autor, y a veces la ubicación descrita en texto (ciudad, país) en lugar de coordenadas.</li>
+  <li><strong>XMP</strong>: campos descriptivos similares a IPTC, además de historial de edición en algunos programas, y campos personalizados específicos de ciertas aplicaciones.</li>
 </ul>
 
 <h2>Por qué existen estos metadatos</h2>
@@ -203,10 +228,10 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
 <h2>Dónde resulta útil revisar los metadatos</h2>
 <ul>
-  <li><strong>Verificar el origen de una foto</strong> — revisar el modelo de cámara y la marca de tiempo para confirmar cuándo y cómo se capturó realmente una imagen.</li>
-  <li><strong>Revisar derechos de uso antes de reutilizar una imagen</strong> — los campos IPTC de derechos de autor y crédito pueden indicar si y cómo está licenciada una imagen para reutilizarse.</li>
-  <li><strong>Entender ajustes de cámara</strong> — fotógrafos revisando sus propios datos EXIF para aprender qué ajustes produjeron un resultado particular.</li>
-  <li><strong>Revisión de privacidad antes de compartir</strong> — comprobar si hay GPS u otros datos identificables incrustados antes de publicar una foto públicamente.</li>
+  <li><strong>Verificar el origen de una foto</strong>: revisar el modelo de cámara y la marca de tiempo para confirmar cuándo y cómo se capturó una imagen.</li>
+  <li><strong>Revisar derechos de uso antes de reutilizar una imagen</strong>: los campos IPTC de derechos de autor y crédito pueden indicar si y cómo está licenciada una imagen para reutilizarse.</li>
+  <li><strong>Entender ajustes de cámara</strong>: fotógrafos revisando sus propios datos EXIF para aprender qué ajustes produjeron un resultado particular.</li>
+  <li><strong>Revisión de privacidad antes de compartir</strong>: comprobar si hay GPS u otros datos identificables incrustados antes de publicar una foto públicamente.</li>
 </ul>
 
 <h2>Consultar y eliminar son acciones diferentes</h2>
@@ -226,7 +251,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <div class="cta-box">
   <h3>Consulta los metadatos de tu imagen</h3>
   <p>El visor de metadatos de Orisod muestra con claridad los datos EXIF, de cámara y de ubicación de una foto. Todo se procesa en tu navegador y el archivo permanece en tu dispositivo.</p>
-  <a class="cta-button" href="/es/image-metadata-viewer/">Ver Metadatos de Imagen →</a>
+  <a class="cta-button" href="/es/image-metadata-viewer/">Ver metadatos de imagen →</a>
 </div>
 
 <p>Revisa los metadatos antes de utilizarlos como referencia o compartir el archivo. Algunos campos aportan contexto útil; otros pueden revelar información que no tenías intención de publicar.</p>
@@ -243,7 +268,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
     <a class="blog-card" href="/es/blog/what-is-exif-data/">
       <h3>Qué son los datos EXIF y por qué eliminarlos antes de compartir fotos</h3>
-      <p>Los datos ocultos que llevan tus fotos — incluida la ubicación GPS — y cómo eliminarlos antes de compartir.</p>
+      <p>Los datos ocultos que llevan tus fotos (incluida la ubicación GPS) y cómo eliminarlos antes de compartir.</p>
     </a>
 
     <a class="blog-card" href="/es/blog/format-json/">
@@ -261,7 +286,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Procesamiento 100 % local: tus archivos permanecen en tu dispositivo.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Todo el procesamiento de imágenes y PDF es 100 % local: tus archivos permanecen en tu dispositivo.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">

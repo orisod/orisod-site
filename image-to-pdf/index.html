@@ -20,8 +20,8 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Image to PDF Converter – Convert Images to PDF Online | Orisod</title>
-<meta name="description" content="Convert images like JPG, PNG, and WEBP into a single PDF file online for free. Everything happens in your browser — no files are uploaded.">
+<title>Image to PDF converter – Convert images to PDF online | Orisod</title>
+<meta name="description" content="Convert images like JPG, PNG, and WEBP into a single PDF file online for free. Everything happens in your browser: no files are uploaded.">
 <link rel="canonical" href="https://orisod.com/image-to-pdf/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/image-to-pdf/">
 <link rel="alternate" hreflang="es" href="https://orisod.com/es/image-to-pdf/">
@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Image to PDF Converter",
+      "description": "Convert images like JPG, PNG, and WEBP into a single PDF file online for free. Everything happens in your browser: no files are uploaded.",
+      "url": "https://orisod.com/image-to-pdf/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Can I mix JPG, PNG and WEBP in the same PDF?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. JPG, PNG and WEBP files can be selected together and placed into the same PDF, provided the browser can decode each source image."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I change the order of the pages?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The tool uses the displayed selection order and lets you remove images before conversion. Confirm the list carefully; changing order after export requires rebuilding or reorganizing the PDF."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there a limit on how many images I can combine?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "There is no fixed count in the interface. Available browser memory, image dimensions and file sizes determine the practical limit. Many high-resolution images can exhaust memory, so split a very large job into smaller PDFs if necessary."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are my files uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript decodes the images and builds the PDF locally in your browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root{
@@ -238,7 +296,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="6" width="12" height="10" rx="1.5"/><rect x="2" y="3" width="12" height="10" rx="1.5"/><circle cx="5.5" cy="6.5" r="1"/><path d="M2 11l2.5-2.5 2 2 2.5-3"/><path d="M13.5 10.5l2.5 2.5-2.5 2.5"/><path d="M19 15.5l3.5 3.5-3.5 3.5-3.5-3.5z" fill="currentColor" stroke="none"/></svg></div>
     <h1>Image to PDF Converter</h1>
   </div>
-  <p class="tool-sub">Convert images like JPG, PNG, and WEBP into a single PDF file quickly and for free. Everything happens locally in your browser — your files are never uploaded anywhere.</p>
+  <p class="tool-sub">Place JPG, PNG and WEBP images into a single PDF with one image on each page.</p>
 
   <div class="workspace">
     <div class="box">
@@ -262,37 +320,37 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>This tool combines any mix of JPG, PNG, and WEBP images into a single PDF document — one image per page, in the order you choose. It's the fastest way to turn a batch of photos, scanned pages, or screenshots into one shareable file.</p>
+    <h2>One selected image becomes one PDF page</h2>
+    <p>Select a mixture of JPG, PNG and WEBP files to create one PDF page for each image. The chosen sequence determines the page order, and files can be removed before conversion. This is useful for scans, receipts and photographs that need one container. It does not add OCR, so words visible in an image do not become searchable PDF text.</p>
 
-    <h2>When should you use it?</h2>
+    <h2>When separate images belong in one document</h2>
     <ul>
-      <li>You scanned or photographed several pages of a document and need one PDF</li>
-      <li>You want to send a set of photos as a single, organized file instead of separate attachments</li>
-      <li>You're combining mixed formats (some JPG, some PNG) into a consistent document</li>
-      <li>You need to submit a portfolio, receipts, or ID photos as one file</li>
+      <li>Combine photographed or scanned pages into one PDF</li>
+      <li>Send a set of photographs as one ordered attachment</li>
+      <li>Collect JPG and PNG files in a consistent document container</li>
+      <li>Package receipts, portfolio images or identification copies together</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Can I mix JPG, PNG and WEBP in the same PDF?</div>
-      <div>Yes, you can select any combination of these formats and they'll all be combined into the same document.</div>
+      <div>Yes. JPG, PNG and WEBP files can be selected together and placed into the same PDF, provided the browser can decode each source image.</div>
     </div>
     <div class="faq-item">
       <div class="q">Can I change the order of the pages?</div>
-      <div>Yes, images are added in the order you select them, and you can remove any of them before converting.</div>
+      <div>The tool uses the displayed selection order and lets you remove images before conversion. Confirm the list carefully; changing order after export requires rebuilding or reorganizing the PDF.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is there a limit on how many images I can combine?</div>
-      <div>There's no fixed limit — you can add as many images as your browser's memory can comfortably handle.</div>
+      <div>There is no fixed count in the interface. Available browser memory, image dimensions and file sizes determine the practical limit. Many high-resolution images can exhaust memory, so split a very large job into smaller PDFs if necessary.</div>
     </div>
     <div class="faq-item">
       <div class="q">Are my files uploaded to a server?</div>
-      <div>No. The entire process happens in your browser using JavaScript — nothing is sent anywhere.</div>
+      <div>No. JavaScript decodes the images and builds the PDF locally in your browser.</div>
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/combine-photos-into-pdf/" style="color:var(--accent);text-decoration:none;">How to Combine Multiple Photos Into One PDF</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/combine-photos-into-pdf/" style="color:var(--accent);text-decoration:none;">How to combine multiple photos into one PDF</a></p>
 
   <h2>Related tools</h2>
   <div class="related-grid">
@@ -334,7 +392,7 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Free, browser-based image and PDF tools. 100% local processing: your files are never uploaded anywhere.</div>
+      <div class="footer-brand-desc">Free, browser-based image and PDF tools. All image and PDF processing happens 100% locally: your files are never uploaded anywhere.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">

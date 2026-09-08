@@ -20,8 +20,8 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Encabezado y Pie de Página en PDF – Herramienta Gratis | Orisod</title>
-<meta name="description" content="Añade texto de encabezado y/o pie de página a cada página de un PDF — títulos, fechas, números de página, avisos de confidencialidad. Funciona directamente en tu navegador, sin subir archivos.">
+<title>Encabezado y pie de página en PDF – Herramienta gratis | Orisod</title>
+<meta name="description" content="Añade texto de encabezado y/o pie de página a cada página de un PDF: títulos, fechas, números de página, avisos de confidencialidad. Funciona directamente en tu navegador, sin subir archivos.">
 <link rel="canonical" href="https://orisod.com/es/pdf-header-footer/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/pdf-header-footer/">
 <link rel="alternate" hreflang="es" href="https://orisod.com/es/pdf-header-footer/">
@@ -96,6 +96,7 @@ input[type="file"]{display:none;}
 .hf-options{margin-top:20px;text-align:left;}
 .option-card{color:var(--text);background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:18px;margin-bottom:14px;}
 .option-card h3{margin:0 0 8px 0;font-size:15px;display:flex;align-items:center;gap:10px;}
+.options-title{margin:0 0 14px 0;font-size:15px;}
 .option-card p{margin:0 0 12px 0;font-size:13px;opacity:0.7;text-align:left;}
 .hf-toggle{display:flex;align-items:center;gap:8px;cursor:pointer;}
 .hf-toggle input{width:16px;height:16px;cursor:pointer;}
@@ -161,6 +162,64 @@ h2{margin-top:50px;font-size:22px;}
 .related-card .arrow{flex:none;font-size:16px;color:var(--muted-text);transition:0.2s;}
 .related-card:hover .arrow{color:var(--accent);transform:translateX(2px);}
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Encabezado y Pie de Página en PDF",
+      "description": "Añade texto de encabezado y/o pie de página a cada página de un PDF: títulos, fechas, números de página, avisos de confidencialidad. Funciona directamente en tu navegador, sin subir archivos.",
+      "url": "https://orisod.com/es/pdf-header-footer/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Cuál es la diferencia con Añadir Números de Página?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Añadir Números de Página está pensado para colocar un único número en una posición estándar. Esta herramienta admite líneas más largas que combinan título, aviso, fecha, página actual y total."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué formato de fecha inserta {date}?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Inserta la fecha actual como AAAA-MM-DD. Este orden de año, mes y día evita la ambigüedad de las fechas numéricas cortas."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo usar diferentes fuentes, colores o negrita?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Esta versión utiliza una fuente predeterminada con el tamaño elegido; no ofrece negrita, varios colores ni logotipos. Usa una marca de agua o un editor PDF adecuado si necesitas un estilo más elaborado."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se sube mi PDF a un servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript añade el texto y reconstruye el PDF localmente en tu navegador."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
@@ -186,7 +245,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="1.5"/><path d="M7 6h10M7 18h10"/></svg></div>
     <h1>Encabezado y Pie de Página en PDF</h1>
   </div>
-  <p class="tool-sub">Añade texto de encabezado y/o pie de página a cada página — un título, fecha, aviso de confidencialidad o conteo de páginas. Todo ocurre localmente en tu navegador.</p>
+  <p class="tool-sub">Coloca texto personalizado arriba o abajo de cada página PDF, incluidas fechas y cantidades de páginas.</p>
 
   <div class="workspace">
     <div class="box">
@@ -199,10 +258,11 @@ h2{margin-top:50px;font-size:22px;}
       <div class="page-info" id="pageInfo"></div>
 
       <div class="hf-options" id="hfOptions" style="display:none;">
+        <h2 class="options-title">Opciones de encabezado y pie de página</h2>
         <div class="option-card">
           <h3><label class="hf-toggle"><input type="checkbox" id="headerEnable"> Encabezado</label></h3>
           <div class="hf-body disabled" id="headerBody">
-            <input type="text" class="hf-text-input" id="headerText" placeholder="ej. Nombre de la Empresa">
+            <input type="text" class="hf-text-input" id="headerText" placeholder="ej. Nombre de la Empresa" aria-label="Texto del encabezado">
             <div class="align-grid">
               <div class="align-btn" data-target="header" data-align="left">Izquierda</div>
               <div class="align-btn active" data-target="header" data-align="center">Centro</div>
@@ -219,7 +279,7 @@ h2{margin-top:50px;font-size:22px;}
         <div class="option-card">
           <h3><label class="hf-toggle"><input type="checkbox" id="footerEnable" checked> Pie de página</label></h3>
           <div class="hf-body" id="footerBody">
-            <input type="text" class="hf-text-input" id="footerText" placeholder="ej. Página {page} de {pages}" value="Página {page} de {pages}">
+            <input type="text" class="hf-text-input" id="footerText" placeholder="ej. Página {page} de {pages}" value="Página {page} de {pages}" aria-label="Texto del pie de página">
             <div class="align-grid">
               <div class="align-btn" data-target="footer" data-align="left">Izquierda</div>
               <div class="align-btn active" data-target="footer" data-align="center">Centro</div>
@@ -235,7 +295,7 @@ h2{margin-top:50px;font-size:22px;}
 
         <div class="option-card">
           <h3>Tamaño de fuente</h3>
-          <input type="number" id="fontSizeInput" min="6" max="36" value="10">
+          <input type="number" id="fontSizeInput" min="6" max="36" value="10" aria-label="Tamaño de fuente">
         </div>
 
         <div class="workspace-controls">
@@ -249,37 +309,37 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué hace esta herramienta?</h2>
-    <p>Esta herramienta dibuja tu propio texto de encabezado y/o pie de página en cada página de un PDF — un título, nombre de empresa, aviso de confidencialidad, fecha o conteo de páginas, alineado a la izquierda, al centro o a la derecha. Pequeños botones de "insertar" te permiten añadir un número de página, el total de páginas o la fecha de hoy sin necesidad de escribir ninguna sintaxis especial. El contenido original del PDF no se toca — el texto sigue siendo seleccionable, solo se añade tu texto de encabezado/pie de página.</p>
+    <h2>Repite información útil en todas las páginas PDF</h2>
+    <p>Escribe un encabezado, un pie o ambos, elige alineación izquierda, central o derecha y aplica el texto en todo el PDF. Los controles de inserción añaden el número actual, el total de páginas o la fecha de hoy sin sintaxis especial. La exportación dibuja contenido nuevo en cada página. El texto existente no se rasteriza intencionalmente, pero el PDF se modifica y sus firmas digitales pueden quedar invalidadas.</p>
 
-    <h2>¿Cuándo deberías usar esta herramienta?</h2>
+    <h2>Para títulos, fechas, avisos y conteos</h2>
     <ul>
-      <li>Necesitas un título de documento o nombre de empresa repetido en la parte superior de cada página</li>
-      <li>Quieres un conteo tipo "Página 3 de 12" en lugar de un número simple</li>
-      <li>Estás marcando un documento como borrador, confidencial o fechado para una versión específica</li>
-      <li>Solo quieres un número de página simple en una esquina — para ese caso más sencillo, consulta <a href="/es/add-page-numbers/" style="color:var(--accent);text-decoration:none;">Añadir Números de Página</a> en su lugar</li>
+      <li>Repetir un título o nombre de organización en cada página</li>
+      <li>Mostrar una línea como “Página 3 de 12” en vez de un número aislado</li>
+      <li>Identificar un borrador, una copia confidencial o una versión fechada</li>
+      <li>Usar <a href="/es/add-page-numbers/" style="color:var(--accent);text-decoration:none;">Añadir Números de Página</a> cuando basta un número simple en una esquina</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿Cuál es la diferencia con Añadir Números de Página?</div>
-      <div>Añadir Números de Página estampa un único número en una de seis esquinas — es la opción más simple si eso es literalmente todo lo que necesitas. Esta herramienta es para texto real de encabezado/pie de página — un título, aviso o fecha — que opcionalmente puede incluir un número de página como parte de una línea más larga, como "Borrador — Página 3 de 12".</div>
+      <div>Añadir Números de Página está pensado para colocar un único número en una posición estándar. Esta herramienta admite líneas más largas que combinan título, aviso, fecha, página actual y total.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Qué formato de fecha inserta {date}?</div>
-      <div>La fecha de hoy en el formato inequívoco <code style="background:var(--bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;">AAAA-MM-DD</code>, para que se lea igual sin importar la convención de fecha a la que esté acostumbrado el lector.</div>
+      <div>Inserta la fecha actual como AAAA-MM-DD. Este orden de año, mes y día evita la ambigüedad de las fechas numéricas cortas.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Puedo usar diferentes fuentes, colores o negrita?</div>
-      <div>Actualmente no — el texto de encabezado y pie de página se dibuja en una única fuente predeterminada, en el tamaño que elijas, mantenido simple a propósito. Si necesitas más estilo o un logotipo, consulta Marca de Agua PDF o el Editor de PDF completo.</div>
+      <div>Esta versión utiliza una fuente predeterminada con el tamaño elegido; no ofrece negrita, varios colores ni logotipos. Usa una marca de agua o un editor PDF adecuado si necesitas un estilo más elaborado.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se sube mi PDF a un servidor?</div>
-      <div>No, todo el proceso ocurre localmente en tu navegador mediante JavaScript.</div>
+      <div>No. JavaScript añade el texto y reconstruye el PDF localmente en tu navegador.</div>
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres saber más? Lee nuestra guía: <a href="/es/blog/pdf-header-footer-explained/" style="color:var(--accent);text-decoration:none;">Cómo Añadir un Encabezado o Pie de Página a Cada Página de un PDF</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres saber más? Lee nuestra guía: <a href="/es/blog/pdf-header-footer-explained/" style="color:var(--accent);text-decoration:none;">Cómo añadir un encabezado o pie de página a cada página de un PDF</a></p>
 
   <h2>Herramientas relacionadas</h2>
   <div class="related-grid">
@@ -313,7 +373,7 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF basadas en el navegador. Procesamiento 100% local — tus archivos nunca se suben a ningún lado.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF basadas en el navegador. Todo el procesamiento de imágenes y PDF es 100 % local: tus archivos permanecen en tu dispositivo.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">

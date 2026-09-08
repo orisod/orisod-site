@@ -20,8 +20,8 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hash & Checksum Generator – Free Online Tool | Orisod</title>
-<meta name="description" content="Compute MD5, SHA-1, SHA-256, SHA-384, and SHA-512 hashes of text or a file, and verify against an expected checksum, free and online. Works directly in your browser — no files are uploaded.">
+<title>Hash & checksum generator – Free online tool | Orisod</title>
+<meta name="description" content="Compute MD5, SHA-1, SHA-256, SHA-384, and SHA-512 hashes of text or a file, and verify against an expected checksum, free and online. Works directly in your browser: no files are uploaded.">
 <link rel="canonical" href="https://orisod.com/hash-checksum-generator/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/hash-checksum-generator/">
 <link rel="alternate" hreflang="es" href="https://orisod.com/es/hash-checksum-generator/">
@@ -33,6 +33,17 @@
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/spark-md5/3.0.2/spark-md5.min.js"></script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Hash & Checksum Generator","description":"Compute MD5, SHA-1, SHA-256, SHA-384, and SHA-512 hashes of text or a file, and verify against an expected checksum, free and online. Works directly in your browser: no files are uploaded.","url":"https://orisod.com/hash-checksum-generator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Is MD5 or SHA-1 safe to use?","acceptedAnswer":{"@type":"Answer","text":"MD5 and SHA-1 have practical collision weaknesses and are unsuitable for digital signatures, adversarial integrity checks or password storage. Legacy publishers still use them to detect accidental corruption, but prefer a modern SHA-2 digest when you control the workflow. Passwords require a salted, slow password-hashing function."}},
+{"@type":"Question","name":"How does the verify field know which algorithm to check?","acceptedAnswer":{"@type":"Answer","text":"The tool infers a candidate from hexadecimal length: MD5 has 32 characters, SHA-1 has 40, with longer lengths for the SHA-2 options. Length alone cannot identify every possible algorithm, so verify which method the publisher actually used."}},
+{"@type":"Question","name":"Is there a file size limit?","acceptedAnswer":{"@type":"Answer","text":"No fixed quota is promised. The browser must read the file and maintain working data, so practical limits depend on memory, device and implementation. Very large files can be slow or fail."}},
+{"@type":"Question","name":"Is my file or text uploaded to a server?","acceptedAnswer":{"@type":"Answer","text":"No. JavaScript reads the input and calculates the hashes locally in your browser."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;
@@ -160,7 +171,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h16M4 15h16M10 3L8 21M16 3l-2 18"/></svg></div>
     <h1>Hash & Checksum Generator</h1>
   </div>
-  <p class="tool-sub">Compute MD5, SHA-1, SHA-256, SHA-384, and SHA-512 hashes of text or a file, and check them against an expected checksum. Everything happens locally in your browser.</p>
+  <p class="tool-sub">Calculate MD5, SHA-1, SHA-256, SHA-384 and SHA-512 hashes for text or a file, then compare them with a checksum you trust.</p>
 
   <div class="workspace">
     <div class="box">
@@ -170,7 +181,7 @@ h2{margin-top:50px;font-size:22px;}
       </div>
 
       <div id="textPanel">
-        <textarea id="textInput" class="tp-textarea" placeholder="Type or paste text here..."></textarea>
+        <textarea id="textInput" class="tp-textarea" placeholder="Type or paste text here..." aria-label="Text to hash"></textarea>
       </div>
 
       <div id="filePanel" style="display:none;">
@@ -196,33 +207,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>Type or paste text, or drop in a file, and this tool computes its MD5, SHA-1, SHA-256, SHA-384, and SHA-512 hashes all at once — no need to guess which algorithm a published checksum uses. Paste an expected hash into the verify field and it's checked automatically against whichever of the five matches its length.</p>
+    <h2>Calculate several fixed-length digests at once</h2>
+    <p>Enter text or choose a file to calculate MD5, SHA-1, SHA-256, SHA-384 and SHA-512 digests. The verification field uses the hexadecimal length to select a candidate algorithm and compares the values. A match shows that the processed bytes correspond to the supplied checksum; it does not prove the file is safe or authentic unless that checksum came through a trustworthy channel.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>Check file integrity against a trusted value</h2>
     <ul>
-      <li>Confirming a downloaded file matches the checksum its publisher listed</li>
-      <li>Generating a checksum to share alongside a file you're distributing</li>
-      <li>Comparing two files for byte-for-byte equality without opening either one</li>
-      <li>Computing a quick hash of a text snippet or password for reference</li>
+      <li>Compare a download with a checksum published through a trusted source</li>
+      <li>Publish an integrity value alongside a distributed file</li>
+      <li>Check whether two accessible files have the same bytes</li>
+      <li>Compute a digest for testing or identification, not password storage</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Is MD5 or SHA-1 safe to use?</div>
-      <div>Not for security purposes — both have known collision weaknesses and shouldn't be used for passwords or digital signatures. They're included here because file-integrity checks (confirming a download wasn't corrupted) still commonly publish MD5 or SHA-1 checksums, which is a different, non-adversarial use case.</div>
+      <div>MD5 and SHA-1 have practical collision weaknesses and are unsuitable for digital signatures, adversarial integrity checks or password storage. Legacy publishers still use them to detect accidental corruption, but prefer a modern SHA-2 digest when you control the workflow. Passwords require a salted, slow password-hashing function.</div>
     </div>
     <div class="faq-item">
       <div class="q">How does the verify field know which algorithm to check?</div>
-      <div>Each hash algorithm always produces a fixed length of output (MD5 is 32 hex characters, SHA-1 is 40, and so on), so the tool matches your pasted hash's length to the right algorithm automatically.</div>
+      <div>The tool infers a candidate from hexadecimal length: MD5 has 32 characters, SHA-1 has 40, with longer lengths for the SHA-2 options. Length alone cannot identify every possible algorithm, so verify which method the publisher actually used.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is there a file size limit?</div>
-      <div>No hard limit, but the whole file is read into memory to compute the hashes, so extremely large files (multiple gigabytes) may be slow or run into your browser's memory limits.</div>
+      <div>No fixed quota is promised. The browser must read the file and maintain working data, so practical limits depend on memory, device and implementation. Very large files can be slow or fail.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my file or text uploaded to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No. JavaScript reads the input and calculates the hashes locally in your browser.</div>
     </div>
   </div>
 
@@ -260,7 +271,7 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Free, browser-based image and PDF tools. 100% local processing: your files are never uploaded anywhere.</div>
+      <div class="footer-brand-desc">Free, browser-based image and PDF tools. All image and PDF processing happens 100% locally: your files are never uploaded anywhere.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">

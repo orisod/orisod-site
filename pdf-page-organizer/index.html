@@ -20,8 +20,8 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PDF Page Organizer – Free Online Tool | Orisod</title>
-<meta name="description" content="Reorder or delete pages in a PDF with a visual drag-and-drop editor, free and online. Works directly in your browser — no files are uploaded.">
+<title>PDF page organizer – Free online tool | Orisod</title>
+<meta name="description" content="Reorder or delete pages in a PDF with a visual drag-and-drop editor, free and online. Works directly in your browser: no files are uploaded.">
 <link rel="canonical" href="https://orisod.com/pdf-page-organizer/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/pdf-page-organizer/">
 <link rel="alternate" hreflang="es" href="https://orisod.com/es/pdf-page-organizer/">
@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "PDF Page Organizer",
+      "description": "Reorder or delete pages in a PDF with a visual drag-and-drop editor, free and online. Works directly in your browser: no files are uploaded.",
+      "url": "https://orisod.com/pdf-page-organizer/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does this affect text selectability?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "PDF pages are copied without intentional rasterization, so ordinary selectable text can retain that property. The document structure is rebuilt, however, and interactive elements or signatures may not survive unchanged."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I delete more than one page?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Remove as many thumbnails as needed, provided at least one page remains. Review the complete sequence before saving."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What if I want to undo a deletion?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Before export, reload and select the original PDF again to reset the session. After export, keep the original file as the reliable way to recover a deleted page."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my PDF uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript renders the thumbnails and rebuilds the PDF locally."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <style>
@@ -193,7 +251,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="7" width="12" height="14" rx="1"/><rect x="8" y="3" width="12" height="14" rx="1"/></svg></div>
     <h1>PDF Page Organizer</h1>
   </div>
-  <p class="tool-sub">Drag to reorder pages, or delete the ones you don't need — then download the reorganized PDF. Everything happens locally in your browser.</p>
+  <p class="tool-sub">Drag page thumbnails into a new order, remove unwanted pages and download the rebuilt PDF.</p>
 
   <div class="workspace">
     <div class="box">
@@ -217,37 +275,37 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>This tool shows every page of your PDF as a thumbnail you can drag into a new order, or delete entirely, before saving a rebuilt document. The underlying PDF content stays exactly as it was — text remains selectable, only the page order and count change.</p>
+    <h2>Organize the document from page thumbnails</h2>
+    <p>Every page appears as a thumbnail that you can drag into a new sequence or remove before export. The tool rebuilds a PDF from the pages you keep without intentionally rasterizing their visible content. Ordinary text can remain selectable, but bookmarks, links, forms, annotations, page labels and digital signatures may change or become invalid.</p>
 
-    <h2>When should you use it?</h2>
+    <h2>When a visual page overview helps</h2>
     <ul>
-      <li>Pages in a scanned document came out in the wrong order</li>
-      <li>You need to remove a blank, duplicate, or irrelevant page from a PDF</li>
-      <li>You're assembling a document and need to rearrange sections visually</li>
-      <li>You want to see every page at a glance before deciding what to keep</li>
+      <li>Correct pages scanned in the wrong sequence</li>
+      <li>Remove blank, duplicate or irrelevant PDF pages</li>
+      <li>Rearrange document sections using a visual overview</li>
+      <li>Inspect every page before deciding what to keep</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Does this affect text selectability?</div>
-      <div>No, the actual PDF page content is preserved exactly — only the order and which pages are included change.</div>
+      <div>PDF pages are copied without intentional rasterization, so ordinary selectable text can retain that property. The document structure is rebuilt, however, and interactive elements or signatures may not survive unchanged.</div>
     </div>
     <div class="faq-item">
       <div class="q">Can I delete more than one page?</div>
-      <div>Yes, click the ✕ on as many pages as you want to remove before saving.</div>
+      <div>Yes. Remove as many thumbnails as needed, provided at least one page remains. Review the complete sequence before saving.</div>
     </div>
     <div class="faq-item">
       <div class="q">What if I want to undo a deletion?</div>
-      <div>Reload the page and upload your PDF again to start over from the original.</div>
+      <div>Before export, reload and select the original PDF again to reset the session. After export, keep the original file as the reliable way to recover a deleted page.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my PDF uploaded to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No. JavaScript renders the thumbnails and rebuilds the PDF locally.</div>
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/reorder-delete-pdf-pages/" style="color:var(--accent);text-decoration:none;">How to Reorder or Delete Pages in a PDF</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/reorder-delete-pdf-pages/" style="color:var(--accent);text-decoration:none;">How to reorder or delete pages in a PDF</a></p>
 
   <h2>Related tools</h2>
   <div class="related-grid">
@@ -297,7 +355,7 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Free, browser-based image and PDF tools. 100% local processing: your files are never uploaded anywhere.</div>
+      <div class="footer-brand-desc">Free, browser-based image and PDF tools. All image and PDF processing happens 100% locally: your files are never uploaded anywhere.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">

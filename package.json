@@ -1,0 +1,13 @@
+{
+  "name": "orisod-site-ci-tools",
+  "private": true,
+  "description": "CI-only tooling for orisod-site (a plain static HTML/CSS/JS site with no build step). This package.json does not affect the deployed site at all — it exists solely to pin dependency versions for scripts/check_a11y.js.",
+  "type": "module",
+  "scripts": {
+    "check:a11y": "node scripts/check_a11y.js"
+  },
+  "devDependencies": {
+    "axe-core": "4.10.2",
+    "playwright": "1.55.1"
+  }
+}

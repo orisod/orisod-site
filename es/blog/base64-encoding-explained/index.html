@@ -32,6 +32,31 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Qué es la codificación Base64 y cuándo usarla con imágenes",
+  "description": "¿Alguna vez viste una imagen convertida en un enorme bloque de texto que empieza con 'data:image/png;base64'? Aquí te explicamos qué hace realmente la codificación Base64, y cuándo es la decisión correcta para imágenes en tu proyecto.",
+  "url": "https://orisod.com/es/blog/base64-encoding-explained/",
+  "author": {
+    "@type": "Organization",
+    "name": "Orisod Labs"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Orisod Labs",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://orisod.com/assets/orisod-icon-detailed.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://orisod.com/es/blog/base64-encoding-explained/"
+  }
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;
@@ -154,7 +179,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <div class="article-body">
 
 <h2>Qué es Base64</h2>
-<p>Base64 representa datos binarios —los bytes que forman un archivo— mediante un conjunto de 64 caracteres de texto. Las imágenes son binarias, pero CSS, HTML, JSON y el correo electrónico suelen trabajar con texto plano. La codificación transforma los datos de la imagen en una cadena que esos formatos pueden transportar sin adjuntar un archivo binario independiente.</p>
+<p>Base64 representa datos binarios (los bytes que forman un archivo) mediante un conjunto de 64 caracteres de texto. Las imágenes son binarias, pero CSS, HTML, JSON y el correo electrónico suelen trabajar con texto plano. La codificación transforma los datos de la imagen en una cadena que esos formatos pueden transportar sin adjuntar un archivo binario independiente.</p>
 
 <h2>Por qué las imágenes se codifican así</h2>
 <p>La principal ventaja es poder incrustar la imagen: la cadena Base64 puede colocarse en el atributo <code>src</code> <code>de una etiqueta &lt;img&gt;, en una propiedad</code> <code>background-image</code> de CSS o en un campo JSON. Así se evita solicitar un archivo independiente. Puede ser útil para unos pocos iconos muy pequeños, aunque no suele convenir con imágenes grandes.</p>
@@ -256,7 +281,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 </ul>
 
 <h2>Cuándo es la decisión equivocada</h2>
-<p>Para la mayoría de las imágenes de un sitio —fotos, gráficos grandes o recursos reutilizados— Base64 no conviene. El navegador no puede guardar la imagen en caché como un archivo independiente: si el mismo icono aparece en diez páginas, la versión incrustada vuelve a viajar dentro del HTML o CSS de cada una. Para archivos grandes o frecuentes, enlazar la imagen normal ahorra ancho de banda.</p>
+<p>Para la mayoría de las imágenes de un sitio (fotos, gráficos grandes o recursos reutilizados), Base64 no conviene. El navegador no puede guardar la imagen en caché como un archivo independiente: si el mismo icono aparece en diez páginas, la versión incrustada vuelve a viajar dentro del HTML o CSS de cada una. Para archivos grandes o frecuentes, enlazar la imagen normal ahorra ancho de banda.</p>
 
 <h2>Cómo generar una cadena Base64 a partir de una imagen</h2>
 <p>Convertir una imagen a Base64 consiste en leer sus datos binarios y representarlos como texto, algo que rara vez necesitas hacer a mano. Una herramienta en el navegador se encarga del proceso: seleccionas la imagen y obtienes la cadena codificada, con o sin el prefijo completo del URI de datos, lista para utilizar en CSS, HTML o JSON.</p>
@@ -272,7 +297,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <div class="cta-box">
   <h3>Convierte una imagen a Base64 o decodifícala</h3>
   <p>La herramienta Base64 de Orisod convierte una imagen en una cadena lista para usar y también permite recuperar la imagen a partir de esa cadena. Todo se procesa en tu navegador y los datos permanecen en tu dispositivo.</p>
-  <a class="cta-button" href="/es/image-to-base64/">Convertir Imagen a Base64 →</a>
+  <a class="cta-button" href="/es/image-to-base64/">Convertir imagen a Base64 →</a>
 </div>
 
 <p>Base64 no comprime ni protege una imagen: permite transportar datos binarios como texto. Resulta útil para recursos pequeños e incrustados, pero aumenta innecesariamente el peso de archivos grandes o reutilizados.</p>
@@ -289,7 +314,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 
     <a class="blog-card" href="/es/blog/what-is-exif-data/">
       <h3>Qué son los datos EXIF y por qué eliminarlos antes de compartir fotos</h3>
-      <p>Los datos ocultos que llevan tus fotos — incluida la ubicación GPS — y cómo eliminarlos antes de compartir.</p>
+      <p>Los datos ocultos que llevan tus fotos (incluida la ubicación GPS) y cómo eliminarlos antes de compartir.</p>
     </a>
 
     <a class="blog-card" href="/es/blog/what-is-a-checksum/">
@@ -307,7 +332,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Procesamiento 100 % local: tus archivos permanecen en tu dispositivo.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Todo el procesamiento de imágenes y PDF es 100 % local: tus archivos permanecen en tu dispositivo.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">

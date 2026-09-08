@@ -20,8 +20,8 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>QR Code Generator – Free Online Tool | Orisod</title>
-<meta name="description" content="Generate a QR code from any text or URL, free and instant. Works directly in your browser — no data is sent anywhere.">
+<title>QR code generator – Free online tool | Orisod</title>
+<meta name="description" content="Generate a QR code from any text or URL, free and instant. Works directly in your browser: no data is sent anywhere.">
 <link rel="canonical" href="https://orisod.com/qr-code-generator/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/qr-code-generator/">
 <link rel="alternate" hreflang="es" href="https://orisod.com/es/qr-code-generator/">
@@ -33,6 +33,17 @@
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"QR Code Generator","description":"Generate a QR code from any text or URL, free and instant. Works directly in your browser: no data is sent anywhere.","url":"https://orisod.com/qr-code-generator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Is there a limit to how much text I can encode?","acceptedAnswer":{"@type":"Answer","text":"Capacity depends on the data type and QR version, but using thousands of characters creates a dense symbol that is harder to print and scan. A short URL is usually more reliable."}},
+{"@type":"Question","name":"Do QR codes expire?","acceptedAnswer":{"@type":"Answer","text":"The static QR image itself has no expiration date. A URL encoded inside it can still stop working, change ownership or lead to different content later."}},
+{"@type":"Question","name":"Is what I type sent to a server?","acceptedAnswer":{"@type":"Answer","text":"No. JavaScript creates the QR code in your browser from the entered content."}},
+{"@type":"Question","name":"Can I change the color of the QR code?","acceptedAnswer":{"@type":"Answer","text":"Yes. Keep substantial contrast between the modules and background, preserve the quiet zone and test both screen and printed versions before distribution."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;
@@ -162,10 +173,10 @@ h2{margin-top:50px;font-size:22px;}
 <main>
 <div class="container">
   <h1>QR Code Generator</h1>
-  <p>Turn any link or text into a scannable QR code, instantly. Everything happens locally in your browser — nothing you type is sent anywhere.</p>
+  <p>Turn any link or text into a scannable QR code, instantly. Everything happens locally in your browser: nothing you type is sent anywhere.</p>
 
   <div class="box">
-    <input type="text" id="textInput" placeholder="Enter a URL or any text...">
+    <input type="text" id="textInput" placeholder="Enter a URL or any text..." aria-label="Text or URL to encode">
 
     <div class="options-row">
       <label>Size:
@@ -188,37 +199,37 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What is a QR code?</h2>
-    <p>A QR code is a square barcode that stores text or a link, which any phone camera can scan to open instantly. They're commonly used on business cards, posters, menus, and product packaging to send people to a website or piece of information without typing anything.</p>
+    <h2>A scannable QR symbol that stores the entered data</h2>
+    <p>A QR code stores text, a URL or another supported string in a square pattern that compatible scanner apps can decode. It is useful on posters, cards, menus and packaging because the reader does not have to type the content. Scanning behavior depends on the device, software, contrast, print quality and physical size, so test the final code in its real setting.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>Move short links or text from print to a device</h2>
     <ul>
-      <li>You want to share a link on a printed flyer, poster, or business card</li>
-      <li>You're setting up a Wi-Fi network name/password, contact info, or event link people can scan</li>
-      <li>You need a quick way to transfer a short piece of text between devices</li>
-      <li>You want a custom-colored QR code to match your branding</li>
+      <li>Place a web address on a printed flyer or card</li>
+      <li>Encode compatible Wi-Fi details, contact information or an event link</li>
+      <li>Move a short text string between devices</li>
+      <li>Choose a brand color for a QR code while preserving strong contrast</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Is there a limit to how much text I can encode?</div>
-      <div>QR codes can hold a few thousand characters, but shorter content (like a URL) scans faster and more reliably. Very long text may produce a denser, harder-to-scan code.</div>
+      <div>Capacity depends on the data type and QR version, but using thousands of characters creates a dense symbol that is harder to print and scan. A short URL is usually more reliable.</div>
     </div>
     <div class="faq-item">
       <div class="q">Do QR codes expire?</div>
-      <div>No, a QR code generated here never expires — it's a static image encoding your exact text, not a redirect service.</div>
+      <div>The static QR image itself has no expiration date. A URL encoded inside it can still stop working, change ownership or lead to different content later.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is what I type sent to a server?</div>
-      <div>No, the QR code is generated locally in your browser using JavaScript — nothing you enter is transmitted anywhere.</div>
+      <div>No. JavaScript creates the QR code in your browser from the entered content.</div>
     </div>
     <div class="faq-item">
       <div class="q">Can I change the color of the QR code?</div>
-      <div>Yes, use the color picker before generating. For best scan reliability, keep good contrast against a light background.</div>
+      <div>Yes. Keep substantial contrast between the modules and background, preserve the quiet zone and test both screen and printed versions before distribution.</div>
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/how-to-make-a-qr-code/" style="color:var(--accent);text-decoration:none;">How to Make a QR Code for Free (No App Needed)</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/how-to-make-a-qr-code/" style="color:var(--accent);text-decoration:none;">How to make a QR code for free (no app needed)</a></p>
 
   <h2>Related tools</h2>
   <div class="related-grid">
@@ -252,7 +263,7 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Free, browser-based image and PDF tools. 100% local processing: your files are never uploaded anywhere.</div>
+      <div class="footer-brand-desc">Free, browser-based image and PDF tools. All image and PDF processing happens 100% locally: your files are never uploaded anywhere.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">

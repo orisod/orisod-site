@@ -20,7 +20,7 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>What Is Base64 Encoding and When Developers Need It for Images | Orisod Blog</title>
+<title>What is Base64 encoding and when developers need it for images | Orisod Blog</title>
 <meta name="description" content="Ever seen an image show up as a giant text string starting with 'data:image/png;base64'? Here's what Base64 encoding actually does, and when it's the right call for images in your project.">
 <link rel="canonical" href="https://orisod.com/blog/base64-encoding-explained/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/blog/base64-encoding-explained/">
@@ -32,6 +32,31 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "What is Base64 encoding and when developers need it for images",
+  "description": "Ever seen an image show up as a giant text string starting with 'data:image/png;base64'? Here's what Base64 encoding actually does, and when it's the right call for images in your project.",
+  "url": "https://orisod.com/blog/base64-encoding-explained/",
+  "author": {
+    "@type": "Organization",
+    "name": "Orisod Labs"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Orisod Labs",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://orisod.com/assets/orisod-icon-detailed.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://orisod.com/blog/base64-encoding-explained/"
+  }
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;
@@ -148,7 +173,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <div class="container">
 
 <span class="blog-cat cat-guide">Guides</span>
-<h1>What Is Base64 Encoding and When Developers Need It for Images</h1>
+<h1>What is Base64 encoding and when developers need it for images</h1>
 <p class="intro">A string that begins with data:image/png;base64 may look like corrupted text, but it is an image written in a text-safe form. Developers use it in HTML, CSS, JSON, and other places that cannot carry raw image bytes directly.</p>
 
 <div class="article-body">
@@ -157,7 +182,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <p>Base64 represents binary data using a set of 64 printable characters. An image is normally stored as raw bytes, while formats such as CSS, HTML, JSON, and email are built to handle text. Encoding bridges that gap by turning the image bytes into a string those formats can carry safely.</p>
 
 <h2>Why images get encoded this way</h2>
-<p>The main reason is embedding: a Base64-encoded image can be pasted directly into an HTML <code>&lt;img&gt;</code> tag's <code>src</code> attribute, a CSS <code>background-image</code> property, or a JSON field, without needing to reference a separate image file at all. That matters because every separate image file a browser needs normally means a separate network request. For a handful of small icons or a tiny logo, embedding them as Base64 directly inside the CSS or HTML means the browser doesn't need to make additional requests just to fetch those small files.</p>
+<p>The main reason is embedding: a Base64-encoded image can be pasted directly into an HTML <code>&lt;img&gt;</code> tag's <code>src</code> attribute, a CSS <code>background-image</code> property, or a JSON field, without needing to reference a separate image file at all. That matters because every separate image file a browser needs normally means a separate network request. For a handful of small icons or a tiny logo, embedding them as Base64 directly inside the CSS or HTML means the browser doesn't need to make additional requests to fetch those small files.</p>
 
 <h2>The size trade-off</h2>
 <p>Encoding increases the data size by roughly one third. A 10 KB image becomes about 13–14 KB of Base64 text. That overhead may be acceptable for a tiny asset embedded once, but it becomes expensive with large images or content repeated across several pages.</p>
@@ -270,9 +295,9 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <p><strong>Does Base64 protect an image?</strong> No. It is encoding, not encryption, and anyone can decode it without a key or password.</p>
 
 <div class="cta-box">
-  <h3>Convert an Image to (or from) Base64</h3>
+  <h3>Convert an image to (or from) Base64</h3>
   <p>Encode an image into a ready-to-use data string or decode one back into a file. Orisod performs the conversion in your browser without uploading the data.</p>
-  <a class="cta-button" href="/image-to-base64/">Convert Image to Base64 →</a>
+  <a class="cta-button" href="/image-to-base64/">Convert image to Base64 →</a>
 </div>
 
 <p>Base64 solves a specific compatibility problem: carrying binary data through text-based formats. Use it for small, self-contained assets; keep large or reusable images as separate files.</p>
@@ -283,13 +308,13 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <h2>Related articles</h2>
   <div class="related-grid">
     <a class="blog-card" href="/blog/what-is-image-metadata/">
-      <h3>What Is Image Metadata and How to View It</h3>
+      <h3>What is image metadata and how to view it</h3>
       <p>What's hidden inside an image file beyond the pixels, and how to view it.</p>
     </a>
 
     <a class="blog-card" href="/blog/what-is-exif-data/">
-      <h3>What Is EXIF Data and Why You Should Remove It Before Sharing Photos</h3>
-      <p>The hidden data your photos carry — including GPS location — and how to strip it before you share.</p>
+      <h3>What is EXIF data and why you should remove it before sharing photos</h3>
+      <p>The hidden data your photos carry (including GPS location) and how to strip it before you share.</p>
     </a>
 
     <a class="blog-card" href="/blog/what-is-a-checksum/">
@@ -307,7 +332,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Free, browser-based image and PDF tools. 100% local processing: your files are never uploaded anywhere.</div>
+      <div class="footer-brand-desc">Free, browser-based image and PDF tools. All image and PDF processing happens 100% locally: your files are never uploaded anywhere.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">

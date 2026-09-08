@@ -20,8 +20,8 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Blur Faces / Blur Area Tool – Free Online Tool | Orisod</title>
-<meta name="description" content="Drag to select and blur any area of an image — faces, license plates, or private details. Free, browser-based, no uploads.">
+<title>Blur faces / blur area tool – Free online tool | Orisod</title>
+<meta name="description" content="Drag to select and blur any area of an image: faces, license plates, or private details. Free, browser-based, no uploads.">
 <link rel="canonical" href="https://orisod.com/blur-area-tool/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/blur-area-tool/">
 <link rel="alternate" hreflang="es" href="https://orisod.com/es/blur-area-tool/">
@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Blur Faces / Blur Area Tool",
+      "description": "Drag to select and blur any area of an image: faces, license plates, or private details. Free, browser-based, no uploads.",
+      "url": "https://orisod.com/blur-area-tool/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does this automatically detect faces?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. You select each area manually, which also lets you cover objects such as license plates, addresses or document details."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I blur more than one area?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Draw as many selections as needed before choosing “Apply Blur & Download.” Review the result before sharing it."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does pixelation securely remove the original detail?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The exported image replaces the selected pixels, but weak pixelation can sometimes be inferred or reconstructed. Keep the original private and use purpose-built redaction for highly sensitive information."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my photo uploaded anywhere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript processes the photograph locally in your browser, and the file remains on your device."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;
@@ -174,7 +232,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-image"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="1"/><circle cx="12" cy="7" r="1"/><circle cx="17" cy="7" r="1"/><circle cx="7" cy="12" r="1"/><circle cx="12" cy="12" r="1.8" opacity="0.4"/><circle cx="17" cy="12" r="1"/><circle cx="7" cy="17" r="1"/><circle cx="12" cy="17" r="1"/><circle cx="17" cy="17" r="1"/></svg></div>
     <h1>Blur Faces / Blur Area Tool</h1>
   </div>
-  <p class="tool-sub">Drag to select one or more areas — faces, license plates, or any private detail — and pixelate them before sharing. Everything happens locally in your browser.</p>
+  <p class="tool-sub">Draw over one or more areas to pixelate them before sharing the image. Processing stays in your browser.</p>
 
   <div class="workspace">
     <div class="box">
@@ -188,7 +246,7 @@ h2{margin-top:50px;font-size:22px;}
       <div class="editor" id="editor">
         <div class="workspace-stage">
           <div class="stage-panel">
-            <span class="stage-label">Original — drag to mark areas</span>
+            <span class="stage-label">Original: drag to mark areas</span>
             <div class="canvas-wrap" id="canvasWrap">
               <canvas id="sourceCanvas"></canvas>
               <div id="regionsOverlay"></div>
@@ -224,37 +282,37 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>This tool lets you drag to select one or more rectangular areas on an image and pixelate them — a reliable way to obscure faces, license plates, addresses, or any other detail you don't want visible before sharing a photo.</p>
+    <h2>Choose exactly which areas to pixelate</h2>
+    <p>Draw rectangular selections over faces, license plates or other details, then apply pixelation to those areas. This can reduce casual visibility, but pixelation should not be treated as secure redaction for highly sensitive information.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>When pixelation is useful</h2>
     <ul>
-      <li>You're sharing a photo publicly and need to hide a bystander's face</li>
-      <li>A screenshot contains a license plate, address, or account number you want to redact</li>
-      <li>You need to protect someone's identity while still showing the rest of the photo</li>
-      <li>You want to obscure a specific detail without cropping out the whole area</li>
+      <li>Make a bystander less recognizable before posting a photo</li>
+      <li>Hide a license plate or address in a screenshot intended for casual sharing</li>
+      <li>Reduce identifying detail while keeping the rest of the photograph visible</li>
+      <li>Cover one selected detail without cropping the entire image</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Does this automatically detect faces?</div>
-      <div>No, you manually drag to select the area you want to blur — this gives you full control over exactly what gets obscured, including things that aren't faces, like license plates or documents.</div>
+      <div>No. You select each area manually, which also lets you cover objects such as license plates, addresses or document details.</div>
     </div>
     <div class="faq-item">
       <div class="q">Can I blur more than one area?</div>
-      <div>Yes, drag to select as many areas as you need before clicking "Apply Blur & Download."</div>
+      <div>Yes. Draw as many selections as needed before choosing “Apply Blur & Download.” Review the result before sharing it.</div>
     </div>
     <div class="faq-item">
-      <div class="q">Is pixelation reversible?</div>
-      <div>No, pixelation permanently discards the pixel detail in that area — unlike some blur filters, there's no way to recover the original image content from the pixelated result.</div>
+      <div class="q">Does pixelation securely remove the original detail?</div>
+      <div>The exported image replaces the selected pixels, but weak pixelation can sometimes be inferred or reconstructed. Keep the original private and use purpose-built redaction for highly sensitive information.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my photo uploaded anywhere?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No. JavaScript processes the photograph locally in your browser, and the file remains on your device.</div>
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/blur-face-in-photo/" style="color:var(--accent);text-decoration:none;">How to Blur a Face or Sensitive Info in a Photo</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/blur-face-in-photo/" style="color:var(--accent);text-decoration:none;">How to blur a face or sensitive info in a photo</a></p>
 
   <h2>Related tools</h2>
   <div class="related-grid">
@@ -288,7 +346,7 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Free, browser-based image and PDF tools. 100% local processing: your files are never uploaded anywhere.</div>
+      <div class="footer-brand-desc">Free, browser-based image and PDF tools. All image and PDF processing happens 100% locally: your files are never uploaded anywhere.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">
