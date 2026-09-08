@@ -201,11 +201,11 @@ select, input[type="text"], input[type="date"], input[type="number"]{
 .month-preview .mp-dow{font-size:10px;font-weight:bold;text-align:center;color:#6b7280;padding-bottom:4px;}
 .month-preview .mp-cell{min-height:78px;border:1px solid #e5e7eb;border-radius:4px;padding:3px;font-size:8.5px;text-align:left;overflow:hidden;}
 .month-preview .mp-cell .num{font-weight:bold;font-size:11px;}
-.month-preview .mp-cell .greg-date{display:block;font-size:7.5px;color:#9ca3af;line-height:1.1;margin-top:-1px;}
+.month-preview .mp-cell .greg-date{display:block;font-size:7.5px;color:#4b5563;line-height:1.1;margin-top:-1px;}
 .month-preview .mp-cell .parasha{display:block;color:#7c3aed;font-weight:bold;line-height:1.2;margin-top:1px;}
 .month-preview .mp-cell .candle{display:block;color:#d97706;line-height:1.2;margin-top:1px;}
 .month-preview .mp-cell .tzeit{display:block;color:#4338ca;line-height:1.2;margin-top:1px;}
-.month-preview .mp-cell .evt{display:block;color:#2563eb;line-height:1.2;margin-top:1px;}
+.month-preview .mp-cell .evt{display:block;color:#1d4ed8;line-height:1.2;margin-top:1px;}
 .month-preview .mp-cell.empty{background:#f9fafb;border-color:transparent;}
 /* Sombreado de días del calendario judío -- solo valores de tema claro; la
    superficie del calendario imprimible siempre tiene fondo blanco/claro sin
@@ -373,8 +373,8 @@ h2{margin-top:50px;font-size:22px;}
       <div class="panel">
         <h3>Eventos personalizados</h3>
         <div class="add-row">
-          <input type="date" id="manualDate" style="flex:none;width:150px;">
-          <input type="text" id="manualName" placeholder="Nombre del evento">
+          <input type="date" id="manualDate" aria-label="Fecha del evento" style="flex:none;width:150px;">
+          <input type="text" id="manualName" placeholder="Nombre del evento" aria-label="Nombre del evento">
           <button type="button" id="manualAddBtn" class="secondary">Añadir</button>
         </div>
         <div class="manual-list" id="manualList"></div>

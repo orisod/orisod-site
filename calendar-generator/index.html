@@ -202,8 +202,8 @@ select, input[type="text"], input[type="date"], input[type="number"]{
 .month-preview .mp-cell{min-height:52px;border:1px solid #e5e7eb;border-radius:4px;padding:3px;font-size:9px;text-align:left;overflow:hidden;}
 .month-preview .mp-cell.jewish-mode{min-height:70px;}
 .month-preview .mp-cell .num{font-weight:bold;font-size:11px;}
-.month-preview .mp-cell .heb-date{display:block;font-size:7.5px;color:#9ca3af;line-height:1.1;margin-top:-1px;}
-.month-preview .mp-cell .evt{display:block;color:#2563eb;line-height:1.2;margin-top:1px;}
+.month-preview .mp-cell .heb-date{display:block;font-size:7.5px;color:#4b5563;line-height:1.1;margin-top:-1px;}
+.month-preview .mp-cell .evt{display:block;color:#1d4ed8;line-height:1.2;margin-top:1px;}
 .month-preview .mp-cell.empty{background:#f9fafb;border-color:transparent;}
 /* Jewish-calendar day shading -- light-theme values only; the printable
    calendar surface is always a white/light background regardless of the
@@ -311,19 +311,19 @@ h2{margin-top:50px;font-size:22px;}
         <h3>Religious dates</h3>
         <div class="toggle-row">
           <div class="label">Christianity<small>Epiphany, Ash Wednesday, Palm Sunday, Good Friday, Easter, Pentecost, All Saints' Day, Christmas</small></div>
-          <label class="switch"><input type="checkbox" id="tglChristian"><span class="slider"></span></label>
+          <label class="switch"><input type="checkbox" id="tglChristian" aria-label="Christianity"><span class="slider"></span></label>
         </div>
         <div class="toggle-row">
           <div class="label">Judaism<small>Rosh Hashanah, Yom Kippur, Sukkot, Passover, Shavuot, Hanukkah, Purim, minor fasts, Omer count, and more</small></div>
-          <label class="switch"><input type="checkbox" id="tglJewish"><span class="slider"></span></label>
+          <label class="switch"><input type="checkbox" id="tglJewish" aria-label="Judaism"><span class="slider"></span></label>
         </div>
         <div class="toggle-row">
           <div class="label">Islam<small>Ramadan, Eid al-Fitr, Eid al-Adha, Islamic New Year</small></div>
-          <label class="switch"><input type="checkbox" id="tglIslamic"><span class="slider"></span></label>
+          <label class="switch"><input type="checkbox" id="tglIslamic" aria-label="Islam"><span class="slider"></span></label>
         </div>
         <div class="toggle-row">
           <div class="label">Hinduism<small>Diwali, Holi, Navratri</small></div>
-          <label class="switch"><input type="checkbox" id="tglHindu"><span class="slider"></span></label>
+          <label class="switch"><input type="checkbox" id="tglHindu" aria-label="Hinduism"><span class="slider"></span></label>
         </div>
         <div class="disclaimer-box" id="islamDisclaimer" style="display:none;">
           ⚠️ Islamic dates shown are astronomically-calculated approximations. The Hijri calendar traditionally follows local moon sighting, so actual observed dates may vary by ±1 day depending on region and community.
@@ -336,8 +336,8 @@ h2{margin-top:50px;font-size:22px;}
       <div class="panel">
         <h3>Custom events</h3>
         <div class="add-row">
-          <input type="date" id="manualDate" style="flex:none;width:150px;">
-          <input type="text" id="manualName" placeholder="Event name">
+          <input type="date" id="manualDate" aria-label="Event date" style="flex:none;width:150px;">
+          <input type="text" id="manualName" placeholder="Event name" aria-label="Event name">
           <button type="button" id="manualAddBtn" class="secondary">Add</button>
         </div>
         <div class="manual-list" id="manualList"></div>
