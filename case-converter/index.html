@@ -20,8 +20,8 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Case Converter – Free Online Tool | Orisod</title>
-<meta name="description" content="Convert text between UPPERCASE, lowercase, Title Case, Sentence case, camelCase, PascalCase, snake_case, kebab-case, and CONSTANT_CASE — instantly, in your browser, nothing uploaded.">
+<title>Case converter – Free online tool | Orisod</title>
+<meta name="description" content="Convert text between UPPERCASE, lowercase, Title Case, Sentence case, camelCase, PascalCase, snake_case, kebab-case, and CONSTANT_CASE, instantly, in your browser, nothing uploaded.">
 <link rel="canonical" href="https://orisod.com/case-converter/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/case-converter/">
 <link rel="alternate" hreflang="es" href="https://orisod.com/es/case-converter/">
@@ -32,6 +32,17 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Case Converter","description":"Convert text between UPPERCASE, lowercase, Title Case, Sentence case, camelCase, PascalCase, snake_case, kebab-case, and CONSTANT_CASE, instantly, in your browser, nothing uploaded.","url":"https://orisod.com/case-converter/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Do the case buttons stack on top of each other?","acceptedAnswer":{"@type":"Answer","text":"No. Each choice starts from the original pasted input, not the previous output. Edit or replace the source when you want a new transformation chain."}},
+{"@type":"Question","name":"How does Title Case decide what to capitalize?","acceptedAnswer":{"@type":"Answer","text":"It capitalizes each whitespace-separated word. It is a mechanical transformation, not an editorial style guide, so it does not leave articles or prepositions lowercase."}},
+{"@type":"Question","name":"How do camelCase and the other developer cases handle spaces or existing punctuation?","acceptedAnswer":{"@type":"Answer","text":"They split on supported spaces, hyphens, underscores and recognized camel or Pascal boundaries, then rejoin the pieces. Acronyms, apostrophes, punctuation and non-Latin writing systems can produce results that need manual review."}},
+{"@type":"Question","name":"Is anything sent to a server?","acceptedAnswer":{"@type":"Answer","text":"No. JavaScript transforms the text locally in your browser."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;
@@ -153,7 +164,7 @@ h2{margin-top:50px;font-size:22px;}
 <main>
 <div class="container">
   <h1>Case Converter</h1>
-  <p>Paste your text once, then click any case to convert it — every conversion always runs on your original text, so switching between cases never compounds or loses information. Nothing you type is ever uploaded.</p>
+  <p>Paste your text once, then click any case to convert it: every conversion always runs on your original text, so switching between cases never compounds or loses information. Nothing you type is ever uploaded.</p>
 
   <div class="box">
     <label class="cc-label" for="textInput">Your text</label>
@@ -179,37 +190,37 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>Paste any text once, then click a case to instantly rewrite it. Every button converts your original pasted text, not whatever the box currently shows — so clicking UPPERCASE and then camelCase gives the exact same result as clicking camelCase first. Conversions never chain or compound on top of each other.</p>
+    <h2>Apply nine casing styles to the same source</h2>
+    <p>Paste text once and choose the casing needed. Every button works from that original input rather than chaining from the displayed result, so you can compare styles without accumulating transformations. Developer cases split recognizable word boundaries and join them again; punctuation, acronyms, Unicode letters and language-specific capitalization may not always match a project’s conventions.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>Clean prose, headings and code identifiers</h2>
     <ul>
-      <li>Someone pasted a paragraph in ALL CAPS or all lowercase and you need it readable</li>
-      <li>You're renaming a variable, file, or CSS class and need it in camelCase, snake_case, or kebab-case</li>
-      <li>You're formatting a heading and need consistent Title Case</li>
-      <li>You need a constant name in CONSTANT_CASE for a config file</li>
+      <li>Make an all-caps or all-lowercase passage readable</li>
+      <li>Prepare a variable, filename or CSS class in a developer case</li>
+      <li>Apply a simple title-style capitalization to a heading</li>
+      <li>Create a CONSTANT_CASE name for code or configuration</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Do the case buttons stack on top of each other?</div>
-      <div>No — every button always converts your original input, never the currently displayed result. You can click through all nine cases in any order and each one always gives the same output for that case.</div>
+      <div>No. Each choice starts from the original pasted input, not the previous output. Edit or replace the source when you want a new transformation chain.</div>
     </div>
     <div class="faq-item">
       <div class="q">How does Title Case decide what to capitalize?</div>
-      <div>It capitalizes the first letter of every word, splitting on whitespace. It doesn't apply style-guide exceptions for short words like "a" or "the" — every word is capitalized.</div>
+      <div>It capitalizes each whitespace-separated word. It is a mechanical transformation, not an editorial style guide, so it does not leave articles or prepositions lowercase.</div>
     </div>
     <div class="faq-item">
       <div class="q">How do camelCase and the other developer cases handle spaces or existing punctuation?</div>
-      <div>Input is first split into words on spaces, hyphens, underscores, and existing camelCase/PascalCase boundaries, then rejoined in the target style — so pasting "user-first_name" or "UserFirstName" both convert cleanly to the same word list.</div>
+      <div>They split on supported spaces, hyphens, underscores and recognized camel or Pascal boundaries, then rejoin the pieces. Acronyms, apostrophes, punctuation and non-Latin writing systems can produce results that need manual review.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is anything sent to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No. JavaScript transforms the text locally in your browser.</div>
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/text-case-styles-explained/" style="color:var(--accent);text-decoration:none;">Text Case Styles Explained: When to Use camelCase, snake_case, and More</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/text-case-styles-explained/" style="color:var(--accent);text-decoration:none;">Text case styles explained: When to use camelCase, snake_case, and more</a></p>
 
   <h2>Related tools</h2>
   <div class="related-grid">
@@ -243,7 +254,7 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Free, browser-based image and PDF tools. 100% local processing: your files are never uploaded anywhere.</div>
+      <div class="footer-brand-desc">Free, browser-based image and PDF tools. All image and PDF processing happens 100% locally: your files are never uploaded anywhere.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">

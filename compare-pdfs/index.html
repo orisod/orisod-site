@@ -20,8 +20,8 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Compare PDFs – Free Online Tool | Orisod</title>
-<meta name="description" content="Compare the text of two PDFs and see exactly which lines were added or removed, free and online. Works directly in your browser — no files are uploaded.">
+<title>Compare PDFs – Free online tool | Orisod</title>
+<meta name="description" content="Compare the text of two PDFs and see exactly which lines were added or removed, free and online. Works directly in your browser: no files are uploaded.">
 <link rel="canonical" href="https://orisod.com/compare-pdfs/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/compare-pdfs/">
 <link rel="alternate" hreflang="es" href="https://orisod.com/es/compare-pdfs/">
@@ -157,6 +157,72 @@ h2{margin-top:50px;font-size:22px;}
 .related-card:hover .arrow{color:var(--accent);transform:translateX(2px);}
 .trust-strip{font-size:12px;color:var(--muted-text);margin-top:16px;line-height:1.5;}
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Compare PDFs",
+      "description": "Compare the text of two PDFs and see exactly which lines were added or removed, free and online. Works directly in your browser: no files are uploaded.",
+      "url": "https://orisod.com/compare-pdfs/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does this compare the visual layout of the two PDFs?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Images, fonts, color, layout, annotations and other visual or interactive changes are outside this comparison. Even identical wording can appear different when the two PDFs store or order their text objects differently."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does \"Ignore whitespace differences\" do?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It removes leading and trailing spaces and reduces repeated spaces before comparing each line. This hides simple spacing differences, but it does not normalize punctuation, capitalization or wording."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why does it say one of my PDFs has no selectable text?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A scanned PDF may contain only page images and no text layer. Apply OCR first if you are authorized to process the document, then verify the recognized text because OCR can introduce errors."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there a size limit?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Each document is compared through its first 4,000 extracted lines. The tool displays a notice when this limit truncates a file, so the result should not be treated as a complete comparison in that case."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are my PDFs uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Extraction and comparison happen locally in your browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
@@ -182,7 +248,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3L4 7l4 4"/><path d="M4 7h16"/><path d="M16 21l4-4-4-4"/><path d="M20 17H4"/></svg></div>
     <h1>Compare PDFs</h1>
   </div>
-  <p class="tool-sub">Upload two PDFs and see exactly which lines were added or removed between them. Everything happens locally in your browser.</p>
+  <p class="tool-sub">Compare the extracted text of two PDFs line by line and review what appears only in File A or File B.</p>
 
   <div class="workspace">
     <div class="box">
@@ -229,41 +295,41 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>This tool reads the selectable text out of two PDFs — the same way Extract PDF Text does — splits each into lines, and runs a line-by-line diff to show exactly which lines only appear in File A (removed) and which only appear in File B (added). A summary count sits above the diff, and page markers keep the two documents' page numbers visible throughout.</p>
+    <h2>A text comparison, not a visual PDF diff</h2>
+    <p>The tool extracts selectable text from each PDF, divides it into lines and compares the sequences. Lines found only in File A appear as removed, while lines found only in File B appear as added. Page markers remain visible and a summary counts the differences. Extraction order depends on how each PDF stores its text, so results are clues for review rather than proof that every visual or semantic change was found.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>When line-level changes need a quick review</h2>
     <ul>
-      <li>Checking what actually changed between two drafts of a contract or report</li>
-      <li>Confirming a "final" PDF matches the version you approved earlier</li>
-      <li>Spotting accidental edits after a document was re-exported or re-typeset</li>
-      <li>Reviewing a counterparty's revised PDF without reading the whole thing line by line yourself</li>
+      <li>Review wording changes between contract or report drafts</li>
+      <li>Check whether a final PDF contains the same extracted wording as an approved copy</li>
+      <li>Spot line changes introduced during export or typesetting</li>
+      <li>Focus a manual PDF review on sections where extracted text differs</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Does this compare the visual layout of the two PDFs?</div>
-      <div>No — this tool compares the underlying extracted text only, not images, fonts, page layout, or formatting. Two PDFs that look identical but have differently ordered text, or that were re-typeset with the same wording, may still show differences here.</div>
+      <div>No. Images, fonts, color, layout, annotations and other visual or interactive changes are outside this comparison. Even identical wording can appear different when the two PDFs store or order their text objects differently.</div>
     </div>
     <div class="faq-item">
       <div class="q">What does "Ignore whitespace differences" do?</div>
-      <div>It trims extra spaces at the start/end of each line and collapses repeated spaces before comparing, so purely cosmetic spacing changes don't show up as false differences.</div>
+      <div>It removes leading and trailing spaces and reduces repeated spaces before comparing each line. This hides simple spacing differences, but it does not normalize punctuation, capitalization or wording.</div>
     </div>
     <div class="faq-item">
       <div class="q">Why does it say one of my PDFs has no selectable text?</div>
-      <div>If a PDF is a scanned image without a real text layer, there's nothing to extract or compare — run it through OCR PDF first to give it searchable text.</div>
+      <div>A scanned PDF may contain only page images and no text layer. Apply OCR first if you are authorized to process the document, then verify the recognized text because OCR can introduce errors.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is there a size limit?</div>
-      <div>Very long documents are compared up to the first 4,000 lines of each file to keep the comparison fast in your browser; you'll see a note if a file was truncated.</div>
+      <div>Each document is compared through its first 4,000 extracted lines. The tool displays a notice when this limit truncates a file, so the result should not be treated as a complete comparison in that case.</div>
     </div>
     <div class="faq-item">
       <div class="q">Are my PDFs uploaded to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No. Extraction and comparison happen locally in your browser.</div>
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/how-to-compare-pdfs/" style="color:var(--accent);text-decoration:none;">How to Compare Two PDFs (and What "Compare" Actually Means)</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/how-to-compare-pdfs/" style="color:var(--accent);text-decoration:none;">How to compare two PDFs (and what "compare" actually means)</a></p>
 
   <h2>Related tools</h2>
   <div class="related-grid">
@@ -297,7 +363,7 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Free, browser-based image and PDF tools. 100% local processing: your files are never uploaded anywhere.</div>
+      <div class="footer-brand-desc">Free, browser-based image and PDF tools. All image and PDF processing happens 100% locally: your files are never uploaded anywhere.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">

@@ -20,8 +20,8 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JSON Formatter – Free Online Tool | Orisod</title>
-<meta name="description" content="Format, validate, and minify JSON online. Pretty-print with 2/4-space or tab indentation, sort keys alphabetically, and see the exact line and column of any syntax error — 100% in your browser, nothing uploaded.">
+<title>JSON formatter – Free online tool | Orisod</title>
+<meta name="description" content="Format, validate, and minify JSON online. Pretty-print with 2/4-space or tab indentation, sort keys alphabetically, and see the exact line and column of any syntax error: 100% in your browser, nothing uploaded.">
 <link rel="canonical" href="https://orisod.com/json-formatter/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/json-formatter/">
 <link rel="alternate" hreflang="es" href="https://orisod.com/es/json-formatter/">
@@ -32,6 +32,17 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"JSON Formatter","description":"Format, validate, and minify JSON online. Pretty-print with 2/4-space or tab indentation, sort keys alphabetically, and see the exact line and column of any syntax error: 100% in your browser, nothing uploaded.","url":"https://orisod.com/json-formatter/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Does this validate my JSON?","acceptedAnswer":{"@type":"Answer","text":"Yes. Format and Minify both invoke strict JSON parsing. Error location details depend on the browser parser and the message it exposes, so line and column information may vary."}},
+{"@type":"Question","name":"What happens to duplicate keys in an object?","acceptedAnswer":{"@type":"Answer","text":"When parsed with JSON.parse, later occurrences normally replace earlier keys with the same name. Since the discarded values cannot be recovered afterward, inspect untrusted data before formatting if duplicates matter."}},
+{"@type":"Question","name":"Does sorting keys change my data?","acceptedAnswer":{"@type":"Answer","text":"It changes JSON object-key order but preserves array order and the parsed value structure. Parsing may already have collapsed duplicate keys or normalized certain numbers. Do not use sorted output for signatures or byte-level comparisons."}},
+{"@type":"Question","name":"Is there a size limit?","acceptedAnswer":{"@type":"Answer","text":"The interface sets no fixed JSON quota. Practical capacity depends on browser memory, input structure and parsing cost; very large or deeply nested data can slow or crash a tab."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;
@@ -157,7 +168,7 @@ h2{margin-top:50px;font-size:22px;}
 <main>
 <div class="container">
   <h1>JSON Formatter</h1>
-  <p>Format, validate, and minify JSON right in your browser. Paste JSON below, adjust indentation or sort keys, and get an exact line and column for any syntax error — nothing you paste is ever uploaded.</p>
+  <p>Format, validate, and minify JSON right in your browser. Paste JSON below, adjust indentation or sort keys, and get an exact line and column for any syntax error. Nothing you paste is ever uploaded.</p>
 
   <div class="box">
     <label class="jf-label" for="jsonInput">Paste your JSON</label>
@@ -191,33 +202,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does a JSON formatter do?</h2>
-    <p>JSON (JavaScript Object Notation) is a plain-text data format, but it's picky about syntax — a missing quote, a trailing comma, or a single-quoted string will make it invalid. This tool runs your JSON through your browser's own strict JSON parser, then either pretty-prints it with readable indentation or minifies it into a single compact line, and points out exactly where any syntax error is if parsing fails.</p>
+    <h2>Parse JSON before changing its presentation</h2>
+    <p>Paste JSON to validate it with the browser’s strict parser, then display it with two spaces, four spaces or tabs, or minify it to one line. A syntax failure is reported with available location details. Because the input is parsed into JavaScript values first, duplicate object keys may collapse and numeric edge cases can be normalized; use a lossless specialist parser when those distinctions matter.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>Inspect responses, payloads and configuration files</h2>
     <ul>
-      <li>You're debugging an API response and need to read a wall of minified JSON</li>
-      <li>You have a config file or payload with inconsistent or missing indentation</li>
-      <li>You want to compare two JSON payloads and need their keys in the same order first</li>
-      <li>You need to shrink JSON before pasting it somewhere with a size limit</li>
+      <li>Make a minified JSON API response easier to inspect</li>
+      <li>Apply consistent indentation to a payload or configuration file</li>
+      <li>Sort JSON object keys before a human comparison</li>
+      <li>Remove optional whitespace before copying JSON into a constrained field</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Does this validate my JSON?</div>
-      <div>Yes — clicking Format or Minify runs your input through strict JSON parsing. If there's a syntax error, you'll see the exact line and column instead of just a generic "invalid JSON" message.</div>
+      <div>Yes. Format and Minify both invoke strict JSON parsing. Error location details depend on the browser parser and the message it exposes, so line and column information may vary.</div>
     </div>
     <div class="faq-item">
       <div class="q">What happens to duplicate keys in an object?</div>
-      <div>JSON.parse keeps the last occurrence of a duplicate key and discards the earlier ones — that's standard behavior for every JSON parser, not something this tool changes.</div>
+      <div>When parsed with JSON.parse, later occurrences normally replace earlier keys with the same name. Since the discarded values cannot be recovered afterward, inspect untrusted data before formatting if duplicates matter.</div>
     </div>
     <div class="faq-item">
       <div class="q">Does sorting keys change my data?</div>
-      <div>No — it only reorders keys within each object alphabetically. Values, array order, and nested structure stay exactly the same. It's mainly useful for comparing two JSON payloads that should be identical except for key order.</div>
+      <div>It changes JSON object-key order but preserves array order and the parsed value structure. Parsing may already have collapsed duplicate keys or normalized certain numbers. Do not use sorted output for signatures or byte-level comparisons.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is there a size limit?</div>
-      <div>No hard limit is enforced by this tool — the practical ceiling is how much text your browser can hold in memory, which is comfortably megabytes of JSON on any modern device.</div>
+      <div>The interface sets no fixed JSON quota. Practical capacity depends on browser memory, input structure and parsing cost; very large or deeply nested data can slow or crash a tab.</div>
     </div>
   </div>
 
@@ -255,7 +266,7 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Free, browser-based image and PDF tools. 100% local processing: your files are never uploaded anywhere.</div>
+      <div class="footer-brand-desc">Free, browser-based image and PDF tools. All image and PDF processing happens 100% locally: your files are never uploaded anywhere.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">

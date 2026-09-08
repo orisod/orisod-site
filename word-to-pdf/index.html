@@ -20,8 +20,8 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Word to PDF – Free Online Converter | Orisod</title>
-<meta name="description" content="Convert a Word (.docx) document into a PDF, free and online. Best-effort conversion — the output is an image snapshot, so its text isn't selectable. Works directly in your browser — no files are uploaded.">
+<title>Word to PDF – Free online converter | Orisod</title>
+<meta name="description" content="Convert a Word (.docx) document into a PDF, free and online. Best-effort conversion: the output is an image snapshot, so its text isn't selectable. Works directly in your browser: no files are uploaded.">
 <link rel="canonical" href="https://orisod.com/word-to-pdf/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/word-to-pdf/">
 <link rel="alternate" hreflang="es" href="https://orisod.com/es/word-to-pdf/">
@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Word to PDF",
+      "description": "Convert a Word (.docx) document into a PDF, free and online. Best-effort conversion: the output is an image snapshot, so its text isn't selectable. Works directly in your browser: no files are uploaded.",
+      "url": "https://orisod.com/word-to-pdf/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Will the PDF's text be selectable or searchable?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Each PDF page contains a rendered image of the document, much like an HTML canvas snapshot, so the words are not stored as selectable text. OCR applied afterward may add a text layer, but it requires proofreading."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does this work with the older .doc format?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Only .docx is supported. Convert an older .doc file to .docx with compatible word-processing software before using this tool."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Will complex formatting be preserved exactly?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not always. The browser renderer is different from Word, and unsupported fonts, page breaks, headers, footers, floating objects or elaborate layouts can shift. Inspect every page of an important document."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my document uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript reads, renders and exports the document locally in your browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdn.jsdelivr.net/npm/mammoth@1.12.1/mammoth.browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -186,12 +244,12 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17V5"/><path d="M4 8l3-3 3 3"/><path d="M17 7v12"/><path d="M20 16l-3 3-3-3"/></svg></div>
     <h1>Word to PDF</h1>
   </div>
-  <p class="tool-sub">Convert a Word (.docx) document into a PDF. Everything happens locally in your browser.</p>
+  <p class="tool-sub">Render a .docx document as an image-based PDF without uploading the source file.</p>
 
   <div class="workspace">
     <div class="box">
       <div class="disclaimer">
-        ℹ️ <strong>Best-effort conversion:</strong> this renders your document's content and takes a snapshot to build the PDF — it does not use Word's own layout engine, so exact fonts, spacing, and complex layouts may differ slightly from the original. Like our HTML to PDF tool, the output is an image snapshot, so <strong>the resulting PDF's text is not selectable or searchable</strong>. Works best for straightforward, mostly-text documents. Only the modern <strong>.docx</strong> format is supported — the older .doc format is not.
+        ℹ️ <strong>Best-effort conversion:</strong> this renders your document's content and takes a snapshot to build the PDF: it does not use Word's own layout engine, so exact fonts, spacing, and complex layouts may differ slightly from the original. Like our HTML to PDF tool, the output is an image snapshot, so <strong>the resulting PDF's text is not selectable or searchable</strong>. Works best for straightforward, mostly-text documents. Only the modern <strong>.docx</strong> format is supported. The older .doc format is not.
       </div>
 
       <label class="dropzone" id="dropzone" for="fileInput">
@@ -225,37 +283,37 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>This tool reads a Word (.docx) file's content — headings, paragraphs, bold/italic text, lists, tables, and inline images — renders it in your browser, and captures that rendering as a PDF, entirely on your device. It's a best-effort conversion: since it takes a visual snapshot rather than using Word's own layout engine, the output won't be pixel-identical to opening the file in Microsoft Word, and its text is embedded as an image rather than selectable text.</p>
+    <h2>Capture a browser rendering of a Word document</h2>
+    <p>The converter reads headings, paragraphs, basic text styling, lists, tables and inline images from a Word .docx file, renders the content in the browser and captures that rendering in a PDF. It does not use Microsoft Word’s layout engine, so fonts, pagination, headers, footers and complex positioning may differ. The pages are image-based, which means their text is not selectable or searchable.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>Best for straightforward documents and visual sharing</h2>
     <ul>
-      <li>You need to share a Word document as a PDF and don't have Word installed</li>
-      <li>Your document is mostly text, with simple formatting, lists, or tables</li>
-      <li>You don't need the recipient to select, search, or copy the PDF's text</li>
-      <li>You want the conversion to happen privately, without uploading the file anywhere</li>
+      <li>Create a shareable PDF when Microsoft Word is unavailable</li>
+      <li>Convert a document built with simple paragraphs, lists or tables</li>
+      <li>Produce a visual copy when selectable PDF text is unnecessary</li>
+      <li>Keep the source document on your device during conversion</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Will the PDF's text be selectable or searchable?</div>
-      <div>No. The PDF is built from a rendered snapshot of the document, the same way our HTML to PDF tool works, so the text is part of an image rather than real, selectable text.</div>
+      <div>No. Each PDF page contains a rendered image of the document, much like an HTML canvas snapshot, so the words are not stored as selectable text. OCR applied afterward may add a text layer, but it requires proofreading.</div>
     </div>
     <div class="faq-item">
       <div class="q">Does this work with the older .doc format?</div>
-      <div>No, only the modern .docx format (Word 2007 and later) is supported. Re-save an older .doc file as .docx in Word first.</div>
+      <div>Only .docx is supported. Convert an older .doc file to .docx with compatible word-processing software before using this tool.</div>
     </div>
     <div class="faq-item">
       <div class="q">Will complex formatting be preserved exactly?</div>
-      <div>Not exactly — this is a best-effort rendering, not Word's own layout engine, so exact fonts, spacing, headers/footers, and very complex layouts may differ from the original. Simple documents (headings, paragraphs, lists, basic tables) convert well.</div>
+      <div>Not always. The browser renderer is different from Word, and unsupported fonts, page breaks, headers, footers, floating objects or elaborate layouts can shift. Inspect every page of an important document.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my document uploaded to a server?</div>
-      <div>No, the entire conversion happens locally in your browser using JavaScript. Your file never leaves your device.</div>
+      <div>No. JavaScript reads, renders and exports the document locally in your browser.</div>
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/convert-word-to-pdf/" style="color:var(--accent);text-decoration:none;">How to Convert a Word Document to PDF (and What "Best Effort" Means Here)</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/convert-word-to-pdf/" style="color:var(--accent);text-decoration:none;">How to convert a Word document to PDF (and what "best effort" means here)</a></p>
 
   <h2>Related tools</h2>
   <div class="related-grid">
@@ -289,7 +347,7 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Free, browser-based image and PDF tools. 100% local processing: your files are never uploaded anywhere.</div>
+      <div class="footer-brand-desc">Free, browser-based image and PDF tools. All image and PDF processing happens 100% locally: your files are never uploaded anywhere.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">

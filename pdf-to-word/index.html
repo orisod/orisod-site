@@ -20,8 +20,8 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PDF to Word – Free Online Converter | Orisod</title>
-<meta name="description" content="Convert a PDF's text into an editable .docx file, free and online. Text-only conversion — layout, images, and tables are not preserved. Works directly in your browser — no files are uploaded.">
+<title>PDF to Word – Free online converter | Orisod</title>
+<meta name="description" content="Convert a PDF's text into an editable .docx file, free and online. Text-only conversion: layout, images, and tables are not preserved. Works directly in your browser: no files are uploaded.">
 <link rel="canonical" href="https://orisod.com/pdf-to-word/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/pdf-to-word/">
 <link rel="alternate" hreflang="es" href="https://orisod.com/es/pdf-to-word/">
@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "PDF to Word",
+      "description": "Convert a PDF's text into an editable .docx file, free and online. Text-only conversion: layout, images, and tables are not preserved. Works directly in your browser: no files are uploaded.",
+      "url": "https://orisod.com/pdf-to-word/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Will tables come through as real Word tables?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The converter reads PDF text, not the table structure. Each source row may appear as a line with spaces between its values, so you will need to rebuild any editable table in Word."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Will images or the original layout be preserved?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The output contains selectable text but does not recreate images, exact fonts, columns or precise page spacing. Use it as an editable draft rather than a visual duplicate."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why is my output empty or missing text?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A scan may contain only page images and no selectable text layer. This tool does not perform OCR, so such pages can produce little or no output. Text encoding and reading order in unusual PDFs may also affect extraction."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my PDF uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript reads the PDF and builds the .docx locally in your browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/docx@9.7.1/dist/index.iife.js"></script>
 <style>
@@ -185,12 +243,12 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17V5"/><path d="M4 8l3-3 3 3"/><path d="M17 7v12"/><path d="M20 16l-3 3-3-3"/></svg></div>
     <h1>PDF to Word</h1>
   </div>
-  <p class="tool-sub">Convert a PDF's text into an editable .docx file you can open in Word or Google Docs. Everything happens locally in your browser.</p>
+  <p class="tool-sub">Extract selectable PDF text into a .docx file for Word or Google Docs. The conversion runs locally in your browser.</p>
 
   <div class="workspace">
     <div class="box">
       <div class="disclaimer">
-        ℹ️ <strong>Text-only conversion:</strong> this pulls the selectable text out of the PDF and rebuilds it as editable paragraphs in a .docx file. It does <strong>not</strong> preserve the original layout, fonts, or images. <strong>Tables are flattened into plain text lines</strong> (columns separated by spaces), not rebuilt as real, editable Word tables. This works best for text-heavy documents like letters, reports, and contracts — for anything with complex layout, expect to do some manual cleanup afterward.
+        ℹ️ <strong>Text-only conversion:</strong> this pulls the selectable text out of the PDF and rebuilds it as editable paragraphs in a .docx file. It does <strong>not</strong> preserve the original layout, fonts, or images. <strong>Tables are flattened into plain text lines</strong> (columns separated by spaces), not rebuilt as real, editable Word tables. This works best for text-heavy documents like letters, reports, and contracts. For anything with complex layout, expect to do some manual cleanup afterward.
       </div>
 
       <label class="dropzone" id="dropzone" for="fileInput">
@@ -212,37 +270,37 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>This tool reads every page of a PDF, pulls out the underlying selectable text — grouped back into lines the way it appeared on the page — and rebuilds it as a .docx file you can open and edit in Microsoft Word, Google Docs, or any word processor. It's a text extraction and rebuild, not a full layout-preserving conversion: fonts, exact spacing, images, and multi-column layouts are not recreated, and any table in the source PDF comes through as a line of space-separated text rather than a real, editable Word table grid.</p>
+    <h2>From selectable PDF text to an editable document</h2>
+    <p>The tool reads selectable text from each PDF page, groups it into lines and writes those lines to a .docx file. You can then open the result in Microsoft Word, Google Docs or another compatible editor. This is a text extraction workflow rather than a visual reconstruction: it does not reproduce images, exact fonts, spacing or multi-column layouts, and table cells become space-separated text instead of an editable grid.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>Best suited to text-first documents</h2>
     <ul>
-      <li>You have a PDF report, letter, or contract and need to edit its wording in Word</li>
-      <li>You want to reuse a PDF's text in a new document without retyping it</li>
-      <li>Your source PDF is mostly text, with few or no tables and images</li>
-      <li>You're fine doing light manual cleanup afterward for anything with complex formatting</li>
+      <li>Edit wording from a mostly text-based PDF in Word</li>
+      <li>Reuse text from a PDF without typing the entire document again</li>
+      <li>Recover text from a simple PDF report, letter or contract</li>
+      <li>Create a working draft that you can clean up and reformat</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Will tables come through as real Word tables?</div>
-      <div>No. This is a text-only conversion — a table row in the PDF becomes one line of text with its columns separated by spaces, not an editable Word table grid. This matches how other text-extraction-based PDF-to-Word tools behave; it's not a bug.</div>
+      <div>No. The converter reads PDF text, not the table structure. Each source row may appear as a line with spaces between its values, so you will need to rebuild any editable table in Word.</div>
     </div>
     <div class="faq-item">
       <div class="q">Will images or the original layout be preserved?</div>
-      <div>No. Only the selectable text is extracted. Images, exact fonts, columns, and precise spacing are not recreated in the output .docx.</div>
+      <div>No. The output contains selectable text but does not recreate images, exact fonts, columns or precise page spacing. Use it as an editable draft rather than a visual duplicate.</div>
     </div>
     <div class="faq-item">
       <div class="q">Why is my output empty or missing text?</div>
-      <div>If a PDF is a scanned image without a real text layer, there's no selectable text to extract — the pages are just pictures. This tool can't OCR scanned documents.</div>
+      <div>A scan may contain only page images and no selectable text layer. This tool does not perform OCR, so such pages can produce little or no output. Text encoding and reading order in unusual PDFs may also affect extraction.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my PDF uploaded to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript. Your file never leaves your device.</div>
+      <div>No. JavaScript reads the PDF and builds the .docx locally in your browser.</div>
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/convert-pdf-to-word/" style="color:var(--accent);text-decoration:none;">How to Convert a PDF to Word (and What Actually Happens to Tables)</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/convert-pdf-to-word/" style="color:var(--accent);text-decoration:none;">How to convert a PDF to Word (and what actually happens to tables)</a></p>
 
   <h2>Related tools</h2>
   <div class="related-grid">
@@ -276,7 +334,7 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Free, browser-based image and PDF tools. 100% local processing: your files are never uploaded anywhere.</div>
+      <div class="footer-brand-desc">Free, browser-based image and PDF tools. All image and PDF processing happens 100% locally: your files are never uploaded anywhere.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">

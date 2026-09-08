@@ -21,7 +21,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Convertidor de imagen a Base64 – Herramienta gratuita en línea | Orisod</title>
-<meta name="description" content="Convierte una imagen a un URI de datos Base64, o decodifica Base64 de vuelta a una imagen. Gratis, en el navegador, sin subidas — útil para desarrolladores.">
+<meta name="description" content="Convierte una imagen a un URI de datos Base64, o decodifica Base64 de vuelta a una imagen. Gratis, en el navegador, sin subidas, útil para desarrolladores.">
 <link rel="canonical" href="https://orisod.com/es/image-to-base64/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/image-to-base64/">
 <link rel="alternate" hreflang="es" href="https://orisod.com/es/image-to-base64/">
@@ -32,6 +32,17 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Convertidor de imagen a Base64","description":"Convierte una imagen a un URI de datos Base64, o decodifica Base64 de vuelta a una imagen. Gratis, en el navegador, sin subidas, útil para desarrolladores.","url":"https://orisod.com/es/image-to-base64/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"¿La codificación Base64 aumenta el tamaño del archivo?","acceptedAnswer":{"@type":"Answer","text":"La codificación Base64 añade aproximadamente un tercio al número de bytes binarios antes del prefijo o la compresión de texto. El tamaño final depende de los formatos circundantes, por lo que suele convenir para recursos pequeños."}},
+{"@type":"Question","name":"¿Puedo pegar una cadena Base64 sin el prefijo data:image/...?","acceptedAnswer":{"@type":"Answer","text":"Sí. El decodificador puede intentar identificar bytes de imagen compatibles a partir de Base64 puro. Si conoces el formato, incluir el prefijo data:image/... correcto es más seguro."}},
+{"@type":"Question","name":"¿Se envían mi imagen o los datos Base64 a algún servidor?","acceptedAnswer":{"@type":"Answer","text":"No. La codificación y decodificación se ejecutan localmente con JavaScript."}},
+{"@type":"Question","name":"¿Qué formatos de imagen son compatibles?","acceptedAnswer":{"@type":"Answer","text":"Admite JPG, PNG, WebP, GIF y otros formatos que el navegador pueda reconocer y mostrar."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;
@@ -183,7 +194,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="error" id="encodeError"></div>
     <div class="trust-strip">🔒 Procesamiento local · Archivos siempre en tu dispositivo · Sin cuenta · Sin marca de agua</div>
 
-    <textarea id="base64Output" readonly placeholder="El resultado en Base64 aparecerá aquí…"></textarea>
+    <textarea id="base64Output" readonly placeholder="El resultado en Base64 aparecerá aquí…" aria-label="Resultado en Base64"></textarea>
     <br>
     <button id="copyBtn" style="display:none;">Copiar al portapapeles</button>
     <div class="copied-msg" id="copiedMsg">✅ ¡Copiado al portapapeles!</div>
@@ -191,7 +202,7 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="box" id="decodePanel" style="display:none;">
-    <textarea id="base64Input" placeholder="Pega aquí una cadena Base64 (con o sin el prefijo data:image/...;base64,)..."></textarea>
+    <textarea id="base64Input" placeholder="Pega aquí una cadena Base64 (con o sin el prefijo data:image/...;base64,)..." aria-label="Entrada en Base64"></textarea>
     <br>
     <button id="decodeBtn">Decodificar a imagen</button>
     <div class="error" id="decodeError"></div>
@@ -199,33 +210,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué es la codificación de imágenes en Base64?</h2>
-    <p>Base64 es una forma de representar datos binarios (como un archivo de imagen) como texto plano. Codificar una imagen en Base64 te permite incrustarla directamente dentro de HTML, CSS o JSON — como un "URI de datos" — en lugar de enlazar a un archivo de imagen separado. Esto es común para íconos pequeños, imágenes en línea de correos electrónicos, o para evitar solicitudes HTTP adicionales.</p>
+    <h2>Representa bytes binarios como texto</h2>
+    <p>Base64 representa bytes binarios mediante un conjunto limitado de caracteres. Un URI de datos combina ese texto con el tipo de medio para insertarlo en HTML o CSS y, en ciertos casos, dentro de JSON o solicitudes API. Puede simplificar recursos pequeños y autocontenidos, pero aumenta el tamaño, reduce el beneficio de la caché normal y dificulta mantener el código.</p>
 
-    <h2>¿Cuándo deberías usar esta herramienta?</h2>
+    <h2>Para recursos en línea, datos y comprobaciones rápidas</h2>
     <ul>
-      <li>Estás incrustando una imagen pequeña directamente en HTML o CSS sin un archivo separado</li>
-      <li>Necesitas incluir una imagen dentro de una estructura JSON o una solicitud a una API</li>
-      <li>Estás creando una plantilla de correo electrónico que requiere imágenes en línea</li>
-      <li>Tienes una cadena Base64 y necesitas ver o descargar la imagen real que representa</li>
+      <li>Incrustar una imagen pequeña directamente en HTML o CSS</li>
+      <li>Preparar datos para un campo JSON o API que admita Base64</li>
+      <li>Probar una imagen en línea en una plantilla de correo compatible</li>
+      <li>Previsualizar o descargar la imagen representada por una cadena Base64</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿La codificación Base64 aumenta el tamaño del archivo?</div>
-      <div>Sí, el texto Base64 es aproximadamente un 33 % más grande que el archivo binario original, por lo que es más adecuado para imágenes pequeñas, no para fotos grandes.</div>
+      <div>La codificación Base64 añade aproximadamente un tercio al número de bytes binarios antes del prefijo o la compresión de texto. El tamaño final depende de los formatos circundantes, por lo que suele convenir para recursos pequeños.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Puedo pegar una cadena Base64 sin el prefijo "data:image/..."?</div>
-      <div>Sí. Si pegas únicamente los caracteres Base64, sin el prefijo de datos, el decodificador intentará detectar automáticamente el tipo de imagen.</div>
+      <div>Sí. El decodificador puede intentar identificar bytes de imagen compatibles a partir de Base64 puro. Si conoces el formato, incluir el prefijo data:image/... correcto es más seguro.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se envían mi imagen o los datos Base64 a algún servidor?</div>
-      <div>No. Tanto la codificación como la decodificación se realizan localmente en tu navegador mediante JavaScript; los datos permanecen en tu dispositivo.</div>
+      <div>No. La codificación y decodificación se ejecutan localmente con JavaScript.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Qué formatos de imagen son compatibles?</div>
-      <div>JPG, PNG, WebP, GIF y la mayoría de los formatos comunes que tu navegador puede leer.</div>
+      <div>Admite JPG, PNG, WebP, GIF y otros formatos que el navegador pueda reconocer y mostrar.</div>
     </div>
   </div>
 
@@ -263,7 +274,7 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Procesamiento 100 % local: tus archivos permanecen en tu dispositivo.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Todo el procesamiento de imágenes y PDF es 100 % local: tus archivos permanecen en tu dispositivo.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">

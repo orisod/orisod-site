@@ -21,7 +21,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PDF a Word – Convertidor gratuito en línea | Orisod</title>
-<meta name="description" content="Convierte el texto de un PDF en un archivo .docx editable, gratis y en línea. Conversión de solo texto — el diseño, las imágenes y las tablas no se conservan. Funciona directamente en tu navegador, sin subir archivos.">
+<meta name="description" content="Convierte el texto de un PDF en un archivo .docx editable, gratis y en línea. Conversión de solo texto: el diseño, las imágenes y las tablas no se conservan. Funciona directamente en tu navegador, sin subir archivos.">
 <link rel="canonical" href="https://orisod.com/es/pdf-to-word/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/pdf-to-word/">
 <link rel="alternate" hreflang="es" href="https://orisod.com/es/pdf-to-word/">
@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "PDF a Word",
+      "description": "Convierte el texto de un PDF en un archivo .docx editable, gratis y en línea. Conversión de solo texto: el diseño, las imágenes y las tablas no se conservan. Funciona directamente en tu navegador, sin subir archivos.",
+      "url": "https://orisod.com/es/pdf-to-word/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Las tablas se convertirán en tablas reales de Word?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. El convertidor lee texto PDF, no la estructura de la tabla. Cada fila puede aparecer como una línea con espacios entre sus valores, por lo que tendrás que reconstruir la tabla editable en Word."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se conservarán las imágenes o el diseño original?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. El resultado contiene texto seleccionable, pero no recrea imágenes, fuentes exactas, columnas ni el espaciado preciso. Úsalo como borrador editable, no como duplicado visual."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Por qué mi resultado está vacío o le falta texto?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Un escaneo puede contener solamente imágenes y carecer de una capa de texto seleccionable. Esta herramienta no aplica OCR, por lo que esas páginas pueden generar poco contenido o ninguno. La codificación y el orden de lectura de algunos PDF también afectan la extracción."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se envía mi PDF a algún servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript lee el PDF y crea el .docx localmente en tu navegador."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/docx@9.7.1/dist/index.iife.js"></script>
 <style>
@@ -185,12 +243,12 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17V5"/><path d="M4 8l3-3 3 3"/><path d="M17 7v12"/><path d="M20 16l-3 3-3-3"/></svg></div>
     <h1>PDF a Word</h1>
   </div>
-  <p class="tool-sub">Convierte el texto de un PDF en un archivo .docx editable que puedes abrir en Word o Google Docs. Todo ocurre localmente en tu navegador.</p>
+  <p class="tool-sub">Extrae texto seleccionable de un PDF en un .docx para Word o Google Docs. La conversión ocurre localmente en tu navegador.</p>
 
   <div class="workspace">
     <div class="box">
       <div class="disclaimer">
-        ℹ️ <strong>Conversión de solo texto:</strong> esto extrae el texto seleccionable del PDF y lo reconstruye como párrafos editables en un archivo .docx. <strong>No</strong> conserva el diseño original, las fuentes ni las imágenes. <strong>Las tablas se convierten en líneas de texto plano</strong> (columnas separadas por espacios), no en tablas de Word reales y editables. Funciona mejor con documentos con mucho texto, como cartas, informes y contratos — para cualquier cosa con diseño complejo, cuenta con hacer algo de limpieza manual después.
+        ℹ️ <strong>Conversión de solo texto:</strong> esto extrae el texto seleccionable del PDF y lo reconstruye como párrafos editables en un archivo .docx. <strong>No</strong> conserva el diseño original, las fuentes ni las imágenes. <strong>Las tablas se convierten en líneas de texto plano</strong> (columnas separadas por espacios), no en tablas de Word reales y editables. Funciona mejor con documentos con mucho texto, como cartas, informes y contratos. Para cualquier cosa con diseño complejo, cuenta con hacer algo de limpieza manual después.
       </div>
 
       <label class="dropzone" id="dropzone" for="fileInput">
@@ -212,33 +270,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué hace esta herramienta?</h2>
-    <p>Esta herramienta lee cada página de un PDF, extrae el texto seleccionable subyacente — agrupado de nuevo en líneas tal como aparecía en la página — y lo reconstruye como un archivo .docx que puedes abrir y editar en Microsoft Word, Google Docs o cualquier procesador de texto. Es una extracción y reconstrucción de texto, no una conversión que preserve el diseño por completo: las fuentes, el espaciado exacto, las imágenes y los diseños en varias columnas no se recrean, y cualquier tabla del PDF original llega como una línea de texto separada por espacios en lugar de una tabla de Word real y editable.</p>
+    <h2>Del texto seleccionable a un documento editable</h2>
+    <p>La herramienta lee el texto seleccionable de cada página PDF, lo agrupa en líneas y escribe esas líneas en un archivo .docx. Después puedes abrir el resultado en Microsoft Word, Google Docs u otro editor compatible. Es un proceso de extracción, no una reconstrucción visual: no reproduce imágenes, fuentes exactas, espaciado ni diseños en columnas, y las celdas de una tabla pasan a ser texto separado por espacios en vez de una cuadrícula editable.</p>
 
-    <h2>¿Cuándo usar esta herramienta?</h2>
+    <h2>Pensado para documentos donde importa el texto</h2>
     <ul>
-      <li>Tienes un informe, carta o contrato en PDF y necesitas editar su redacción en Word</li>
-      <li>Quieres reutilizar el texto de un PDF en un documento nuevo sin volver a escribirlo</li>
-      <li>Tu PDF de origen es mayormente texto, con pocas o ninguna tabla e imagen</li>
-      <li>No te importa hacer una pequeña limpieza manual después en las partes con formato complejo</li>
+      <li>Editar en Word la redacción de un PDF compuesto principalmente por texto</li>
+      <li>Reutilizar texto de un PDF sin volver a escribir todo el documento</li>
+      <li>Recuperar texto de un informe, carta o contrato PDF sencillo</li>
+      <li>Crear un borrador editable para limpiarlo y darle formato</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿Las tablas se convertirán en tablas reales de Word?</div>
-      <div>No. Esta es una conversión de solo texto — una fila de tabla en el PDF se convierte en una línea de texto con sus columnas separadas por espacios, no en una tabla de Word editable. Así es como se comportan otras herramientas de PDF a Word basadas en extracción de texto; no es un error.</div>
+      <div>No. El convertidor lee texto PDF, no la estructura de la tabla. Cada fila puede aparecer como una línea con espacios entre sus valores, por lo que tendrás que reconstruir la tabla editable en Word.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se conservarán las imágenes o el diseño original?</div>
-      <div>No. Solo se extrae el texto seleccionable. Las imágenes, las fuentes exactas, las columnas y el espaciado preciso no se recrean en el .docx resultante.</div>
+      <div>No. El resultado contiene texto seleccionable, pero no recrea imágenes, fuentes exactas, columnas ni el espaciado preciso. Úsalo como borrador editable, no como duplicado visual.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Por qué mi resultado está vacío o le falta texto?</div>
-      <div>Si un PDF es una imagen escaneada sin una capa de texto real, no hay texto seleccionable que extraer — las páginas son solo imágenes. Esta herramienta no puede hacer OCR a documentos escaneados.</div>
+      <div>Un escaneo puede contener solamente imágenes y carecer de una capa de texto seleccionable. Esta herramienta no aplica OCR, por lo que esas páginas pueden generar poco contenido o ninguno. La codificación y el orden de lectura de algunos PDF también afectan la extracción.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se envía mi PDF a algún servidor?</div>
-      <div>No. Todo se procesa localmente en tu navegador mediante JavaScript; el archivo permanece en tu dispositivo.</div>
+      <div>No. JavaScript lee el PDF y crea el .docx localmente en tu navegador.</div>
     </div>
   </div>
 
@@ -276,7 +334,7 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Procesamiento 100 % local: tus archivos permanecen en tu dispositivo.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Todo el procesamiento de imágenes y PDF es 100 % local: tus archivos permanecen en tu dispositivo.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">

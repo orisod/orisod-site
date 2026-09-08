@@ -20,8 +20,8 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Edit PDF Metadata – Free Online Tool | Orisod</title>
-<meta name="description" content="View and edit a PDF's title, author, subject and keywords, or clear them all, online for free. Works directly in your browser — no files are uploaded.">
+<title>Edit PDF metadata – Free online tool | Orisod</title>
+<meta name="description" content="View and edit a PDF's title, author, subject and keywords, or clear them all, online for free. Works directly in your browser: no files are uploaded.">
 <link rel="canonical" href="https://orisod.com/edit-pdf-metadata/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/edit-pdf-metadata/">
 <link rel="alternate" hreflang="es" href="https://orisod.com/es/edit-pdf-metadata/">
@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Edit PDF Metadata",
+      "description": "View and edit a PDF's title, author, subject and keywords, or clear them all, online for free. Works directly in your browser: no files are uploaded.",
+      "url": "https://orisod.com/edit-pdf-metadata/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does this change the visible content of my PDF?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It changes the listed document properties, not the visible page design. Saving still creates a modified PDF and can invalidate a digital signature, so retain the signed original when applicable."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I remove all metadata at once?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You can clear the PDF title, author, subject and keyword fields together. Other information may exist elsewhere in the file, including XMP packets, attachments, comments or application-specific data, so this is not a guarantee that every trace of metadata is removed."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What if a field is already empty?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not every PDF defines every property. Leave an empty field alone, enter a new value or clear the listed fields as a group."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my PDF uploaded to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript reads and saves the PDF locally in your browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <style>
 :root{
@@ -175,7 +233,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M9.5 17l1-4L15 8.5 16.5 10 12 14.5z"/></svg></div>
     <h1>Edit PDF Metadata</h1>
   </div>
-  <p class="tool-sub">View and edit a PDF's title, author, subject and keywords — or clear them all. Everything happens locally in your browser.</p>
+  <p class="tool-sub">Review the PDF title, author, subject and keyword fields, change what you need or clear them before saving a new copy.</p>
 
   <div class="workspace">
     <div class="box">
@@ -216,33 +274,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What is PDF metadata?</h2>
-    <p>Every PDF carries a small set of document properties alongside its visible content — title, author, subject and keywords. This metadata doesn't appear on the page itself, but it's what shows up in a file's "Properties" panel, in some search results, and sometimes reveals who created a document or what software was used, even after you've renamed the file.</p>
+    <h2>Properties stored outside the visible PDF page</h2>
+    <p>A PDF can store properties such as title, author, subject and keywords separately from the content readers see. Applications may display these fields in a Properties panel or use them in search and cataloging. They can remain attached after the filename changes. This tool edits those listed fields; it should not be treated as a complete forensic metadata scrubber.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>When document properties need attention</h2>
     <ul>
-      <li>You're sharing a PDF and don't want your name or company left in the author field</li>
-      <li>A document was generated by software that filled in a generic or outdated title</li>
-      <li>You want to add a clear title, author or keywords to a PDF you're publishing</li>
-      <li>You're cleaning up a file's properties before archiving or distributing it</li>
+      <li>Remove an outdated name or organization from a PDF author field</li>
+      <li>Replace a generic title inserted by the program that created the document</li>
+      <li>Add useful title, author, subject or keyword information to a PDF before publication</li>
+      <li>Standardize the listed properties before archiving a collection</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Does this change the visible content of my PDF?</div>
-      <div>No, only the document properties (title, author, subject, keywords) are changed — the pages, text and layout stay exactly as they were.</div>
+      <div>It changes the listed document properties, not the visible page design. Saving still creates a modified PDF and can invalidate a digital signature, so retain the signed original when applicable.</div>
     </div>
     <div class="faq-item">
       <div class="q">Can I remove all metadata at once?</div>
-      <div>Yes, click "Clear all fields" to empty every field, then save — the downloaded PDF will have blank metadata.</div>
+      <div>You can clear the PDF title, author, subject and keyword fields together. Other information may exist elsewhere in the file, including XMP packets, attachments, comments or application-specific data, so this is not a guarantee that every trace of metadata is removed.</div>
     </div>
     <div class="faq-item">
       <div class="q">What if a field is already empty?</div>
-      <div>Some PDFs don't have certain fields set. Those inputs will simply show as empty — you can leave them blank or fill them in.</div>
+      <div>Not every PDF defines every property. Leave an empty field alone, enter a new value or clear the listed fields as a group.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my PDF uploaded to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No. JavaScript reads and saves the PDF locally in your browser.</div>
     </div>
   </div>
 
@@ -302,7 +360,7 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Free, browser-based image and PDF tools. 100% local processing: your files are never uploaded anywhere.</div>
+      <div class="footer-brand-desc">Free, browser-based image and PDF tools. All image and PDF processing happens 100% locally: your files are never uploaded anywhere.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">

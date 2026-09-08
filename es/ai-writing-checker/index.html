@@ -20,8 +20,8 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Verificador de Escritura con IA – Herramienta Gratuita | Orisod</title>
-<meta name="description" content="Analiza texto en busca de frases hechas, aperturas de oración repetitivas y otros patrones de escritura genérica, gratis y en línea. Un detector de patrones de estilo, no un detector de IA. Funciona directamente en tu navegador — no se sube ningún archivo.">
+<title>Verificador de escritura con IA – Herramienta gratuita | Orisod</title>
+<meta name="description" content="Analiza texto en busca de frases hechas, aperturas de oración repetitivas y otros patrones de escritura genérica, gratis y en línea. Un detector de patrones de estilo, no un detector de IA. Funciona directamente en tu navegador: no se sube ningún archivo.">
 <link rel="canonical" href="https://orisod.com/es/ai-writing-checker/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/ai-writing-checker/">
 <link rel="alternate" hreflang="es" href="https://orisod.com/es/ai-writing-checker/">
@@ -32,6 +32,17 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Verificador de Escritura con IA","description":"Analiza texto en busca de frases hechas, aperturas de oración repetitivas y otros patrones de escritura genérica, gratis y en línea. Un detector de patrones de estilo, no un detector de IA. Funciona directamente en tu navegador: no se sube ningún archivo.","url":"https://orisod.com/es/ai-writing-checker/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"¿Puede esto decirme si un texto fue escrito por IA?","acceptedAnswer":{"@type":"Answer","text":"No. Tanto una persona como una IA pueden usar o evitar todos los patrones medidos. El resultado solo describe características del texto pegado y no establece su autoría."}},
+{"@type":"Question","name":"¿Por qué no hay una puntuación de IA o porcentaje general?","acceptedAnswer":{"@type":"Answer","text":"Combinar señales de estilo distintas en un porcentaje implicaría una probabilidad de autoría por IA sin respaldo. Los conteos separados muestran qué detectó cada regla y permiten decidir si vale la pena editarlo."}},
+{"@type":"Question","name":"¿Y si mi escritura tiene naturalmente algunos de estos patrones?","acceptedAnswer":{"@type":"Answer","text":"Es normal. Un resaltado indica que el patrón aparece, no que sea un error. El contexto, el género, una cita, la accesibilidad o la voz personal pueden justificar la repetición."}},
+{"@type":"Question","name":"¿Se sube mi texto a un servidor?","acceptedAnswer":{"@type":"Answer","text":"No. JavaScript analiza el texto pegado localmente en tu navegador."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;
@@ -183,15 +194,15 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="14" height="18" rx="2"/><path d="M5 7h8M5 11h6M5 15h4"/><circle cx="16.5" cy="16.5" r="3.5"/><path d="M19 19l3 3"/></svg></div>
     <h1>Verificador de Escritura con IA</h1>
   </div>
-  <p class="tool-sub">Analiza texto en busca de frases hechas, aperturas de oración repetitivas y otros patrones de escritura genérica. Un detector de patrones de estilo, no un detector de IA — todo ocurre localmente en tu navegador.</p>
+  <p class="tool-sub">Examina patrones explicables de un borrador sin fingir que puede determinar quién o qué lo escribió.</p>
 
   <div class="workspace">
     <div class="box">
-      <textarea id="textInput" class="tp-textarea" placeholder="Pega o escribe el texto a analizar..."></textarea>
+      <textarea id="textInput" class="tp-textarea" placeholder="Pega o escribe el texto a analizar..." aria-label="Texto a analizar"></textarea>
       <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subidas · Sin cuenta</div>
 
       <div class="disclosure-banner">
-        <strong>Qué es realmente esto:</strong> Esta herramienta señala patrones de estilo a veces asociados con escritura genérica o generada por IA — frases hechas sobreutilizadas, aperturas de oración repetitivas, longitud de oración inusualmente uniforme y uso intensivo de rayas. Los escritores humanos usan estos patrones constantemente, y un texto genuinamente generado por IA puede evitarlos todos. Esto es una señal de conciencia de estilo, no un detector de IA ni un veredicto — trata los patrones señalados como algo que merece una segunda mirada, no como prueba de nada.
+        <strong>Qué es realmente esto:</strong> Esta herramienta señala patrones de estilo a veces asociados con escritura genérica o generada por IA: frases hechas sobreutilizadas, aperturas de oración repetitivas, longitud de oración inusualmente uniforme y uso intensivo de rayas. Los escritores humanos usan estos patrones constantemente, y un texto genuinamente generado por IA puede evitarlos todos. Esto es una señal de conciencia de estilo, no un detector de IA ni un veredicto: trata los patrones señalados como algo que merece una segunda mirada, no como prueba de nada.
       </div>
 
       <div id="resultsWrap" style="display:none;">
@@ -219,33 +230,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué hace esta herramienta?</h2>
-    <p>Pega texto y esta herramienta lo analiza en busca de cuatro patrones de estilo concretos y bien definidos: una lista curada de frases hechas y clichés sobreutilizados, series de oraciones consecutivas que empiezan con la misma palabra, una longitud de oración inusualmente uniforme en todo el texto, y una frecuencia de rayas superior a lo habitual. Cada coincidencia se resalta directamente en el texto, y un panel de resumen desglosa los recuentos por categoría — deliberadamente sin ninguna puntuación combinada.</p>
+    <h2>Una revisión transparente, no un veredicto de autoría</h2>
+    <p>Pega un borrador para revisar cuatro señales definidas: frases de una lista curada, oraciones consecutivas que empiezan igual, longitud inusualmente uniforme y uso frecuente de rayas. Las coincidencias se resaltan y cuentan por separado, sin convertirlas en una “puntuación de IA”. Pueden revelar prosa repetitiva, pero no miden originalidad, calidad factual ni autoría.</p>
 
-    <h2>¿Cuándo usar esta herramienta?</h2>
+    <h2>Usa las señales como sugerencias y no como correcciones automáticas</h2>
     <ul>
-      <li>Revisar tu propio borrador en busca de frases genéricas antes de publicar</li>
-      <li>Detectar palabras de transición sobreutilizadas que hacen que la escritura se sienta formulaica</li>
-      <li>Comprobar si un documento se apoya demasiado en las mismas frases hechas</li>
-      <li>Obtener una segunda opinión sobre la variedad y el ritmo de la longitud de las oraciones</li>
+      <li>Detectar frases genéricas al revisar tu propio borrador</li>
+      <li>Encontrar aperturas repetidas que aplanan el ritmo</li>
+      <li>Comprobar si unas pocas expresiones dominan el texto</li>
+      <li>Revisar la variedad de longitudes con criterio humano</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿Puede esto decirme si un texto fue escrito por IA?</div>
-      <div>No. Señala patrones de estilo que aparecen a menudo en escritura genérica o generada por IA, pero los escritores humanos también usan todos estos patrones, y un texto generado por IA puede evitarlos fácilmente todos. Trata los resultados como una señal de conciencia de estilo, no como una determinación de autoría.</div>
+      <div>No. Tanto una persona como una IA pueden usar o evitar todos los patrones medidos. El resultado solo describe características del texto pegado y no establece su autoría.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Por qué no hay una "puntuación de IA" o porcentaje general?</div>
-      <div>Un único número combinado implicaría una precisión que este tipo de comprobación heurística no puede ofrecer honestamente. Mostrar recuentos separados y explicables por patrón es más preciso sobre lo que realmente se está midiendo que reducirlo todo a una cifra engañosamente confiada.</div>
+      <div>Combinar señales de estilo distintas en un porcentaje implicaría una probabilidad de autoría por IA sin respaldo. Los conteos separados muestran qué detectó cada regla y permiten decidir si vale la pena editarlo.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Y si mi escritura tiene naturalmente algunos de estos patrones?</div>
-      <div>Eso es normal y esperado — estos patrones aparecen en la escritura humana común. Una señal significa "este patrón está presente", no "esto es un problema", y mucho texto bien escrito seguirá mostrando algunas coincidencias.</div>
+      <div>Es normal. Un resaltado indica que el patrón aparece, no que sea un error. El contexto, el género, una cita, la accesibilidad o la voz personal pueden justificar la repetición.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se sube mi texto a un servidor?</div>
-      <div>No, todo el proceso ocurre localmente en tu navegador con JavaScript.</div>
+      <div>No. JavaScript analiza el texto pegado localmente en tu navegador.</div>
     </div>
   </div>
 
@@ -283,7 +294,7 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF en tu navegador. Procesamiento 100% local — tus archivos nunca se suben a ningún sitio.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF en tu navegador. Todo el procesamiento de imágenes y PDF es 100 % local: tus archivos permanecen en tu dispositivo.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">

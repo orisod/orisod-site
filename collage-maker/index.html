@@ -20,8 +20,8 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Collage Maker – Free Photo Collage Tool | Orisod</title>
-<meta name="description" content="Make a photo collage free, online, with no sign-up and no watermark. 2–9 photos, grid layouts, 30+ filters, text overlay. Everything runs in your browser — nothing is uploaded.">
+<title>Collage maker – Free photo collage tool | Orisod</title>
+<meta name="description" content="Make a photo collage free, online, with no sign-up and no watermark. 2–9 photos, grid layouts, 30+ filters, text overlay. Everything runs in your browser: nothing is uploaded.">
 <link rel="canonical" href="https://orisod.com/collage-maker/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/collage-maker/">
 <link rel="alternate" hreflang="es" href="https://orisod.com/es/collage-maker/">
@@ -32,6 +32,72 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Collage Maker",
+      "description": "Make a photo collage free, online, with no sign-up and no watermark. 2–9 photos, grid layouts, 30+ filters, text overlay. Everything runs in your browser: nothing is uploaded.",
+      "url": "https://orisod.com/collage-maker/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is there a watermark on the downloaded collage?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The exported PNG or JPG does not include an Orisod watermark, logo or other added branding."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do filters apply to the whole collage or each photo separately?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Adjustments are applied per photo. Select a cell, choose its filter and repeat for any other image you want to change. The photos do not have to use the same filter."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What's the maximum number of photos?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You can include up to nine photos. The tool provides layouts for every count from 2 through 9, with more than one arrangement for many counts."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use a background image instead of a solid color?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. This version uses a solid background color selected with the color picker."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are my photos uploaded anywhere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript processes the photos and builds the final collage in your browser. The files are not sent to a server for this task."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 @font-face{font-family:'CM Poppins';src:url('/assets/fonts/collage/Poppins-SemiBold.woff2') format('woff2');font-weight:600;font-display:swap;}
 @font-face{font-family:'CM Montserrat';src:url('/assets/fonts/collage/Montserrat-Bold.woff2') format('woff2');font-weight:700;font-display:swap;}
@@ -104,6 +170,8 @@ p{line-height:1.6;}
 .panel{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
 .panel + .panel{margin-top:14px;}
 .panel h3{margin:0 0 12px 0;font-size:13px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted-text);}
+.workspace-title{display:none;margin:0 0 14px 0;font-size:13px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted-text);}
+.workspace-title.active{display:block;}
 
 .count-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px;}
 .count-btn{padding:8px 0;border-radius:6px;border:1px solid var(--dropzone-border);background:var(--bg);color:var(--text);cursor:pointer;font-size:13px;}
@@ -224,7 +292,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-image"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="2.5" width="8" height="8" rx="1.5"/><rect x="13.5" y="2.5" width="8" height="8" rx="1.5"/><rect x="2.5" y="13.5" width="8" height="8" rx="1.5"/><rect x="13.5" y="13.5" width="8" height="8" rx="1.5"/></svg></div>
     <h1>Collage Maker</h1>
   </div>
-  <p class="tool-sub" style="text-align:center;">Combine 2–9 photos into one collage — pick a layout, drag photos into place, apply a filter, add text, and download. Everything happens locally in your browser.</p>
+  <p class="tool-sub" style="text-align:center;">Arrange 2 to 9 photos in a single collage. Choose a layout, position each image, add filters or text, and download the result.</p>
 
   <label class="dropzone" id="dropzone" for="fileInput">
     <div id="dropzoneText">📁 Click to select photos or drag and drop them here (2–9 images)</div>
@@ -232,6 +300,7 @@ h2{margin-top:50px;font-size:22px;}
   </label>
   <div class="error" id="uploadError"></div>
 
+  <h2 class="workspace-title" id="workspaceTitle">Customize your collage</h2>
   <div class="workspace" id="workspace">
     <!-- LEFT RAIL: layout + canvas style -->
     <div class="left-rail">
@@ -252,25 +321,25 @@ h2{margin-top:50px;font-size:22px;}
           <button type="button" class="aspect-btn" data-aspect="custom">Custom</button>
         </div>
         <div class="custom-dims" id="customDims">
-          <input type="number" id="customW" placeholder="Width" min="100" max="6000" value="1080">
-          <input type="number" id="customH" placeholder="Height" min="100" max="6000" value="1350">
+          <input type="number" id="customW" placeholder="Width" aria-label="Width" min="100" max="6000" value="1080">
+          <input type="number" id="customH" placeholder="Height" aria-label="Height" min="100" max="6000" value="1350">
         </div>
       </div>
       <div class="panel">
         <h3>Spacing &amp; corners</h3>
         <div class="field-row">
-          <label><span>Spacing</span><span id="spacingVal">2%</span></label>
+          <label for="spacingSlider"><span>Spacing</span><span id="spacingVal">2%</span></label>
           <input type="range" id="spacingSlider" min="0" max="6" step="0.5" value="2">
         </div>
         <div class="field-row" style="margin-bottom:0;">
-          <label><span>Corner radius</span><span id="radiusVal">2%</span></label>
+          <label for="radiusSlider"><span>Corner radius</span><span id="radiusVal">2%</span></label>
           <input type="range" id="radiusSlider" min="0" max="12" step="0.5" value="2">
         </div>
       </div>
       <div class="panel">
         <h3>Background color</h3>
         <div class="color-row">
-          <input type="color" id="bgColorInput" value="#0b0f1a">
+          <input type="color" id="bgColorInput" aria-label="Background color" value="#0b0f1a">
           <span class="tool-sub" style="margin:0;font-size:13px;" id="bgColorHex">#0B0F1A</span>
         </div>
       </div>
@@ -283,11 +352,11 @@ h2{margin-top:50px;font-size:22px;}
       </div>
       <div class="tool-sub" style="margin:0;font-size:13px;" id="selectedHint">Click a photo in the grid to zoom, pan, or rotate it.</div>
       <div class="stage-actions">
-        <select id="formatSelect" style="width:auto;">
+        <select id="formatSelect" aria-label="Export format" style="width:auto;">
           <option value="png">PNG</option>
           <option value="jpg">JPG</option>
         </select>
-        <select id="resSelect" style="width:auto;">
+        <select id="resSelect" aria-label="Export resolution" style="width:auto;">
           <option value="1080">1080px</option>
           <option value="1600" selected>1600px</option>
           <option value="2400">2400px</option>
@@ -304,11 +373,11 @@ h2{margin-top:50px;font-size:22px;}
       <div class="panel" id="photoAdjustPanel" style="display:none;">
         <h3>Selected photo</h3>
         <div class="field-row">
-          <label><span>Zoom</span><span id="zoomVal">100%</span></label>
+          <label for="zoomSlider"><span>Zoom</span><span id="zoomVal">100%</span></label>
           <input type="range" id="zoomSlider" min="100" max="300" step="1" value="100">
         </div>
         <div class="field-row" style="margin-bottom:0;">
-          <label><span>Rotate</span><span id="rotateVal">0°</span></label>
+          <label for="rotateSlider"><span>Rotate</span><span id="rotateVal">0°</span></label>
           <input type="range" id="rotateSlider" min="-180" max="180" step="1" value="0">
         </div>
         <p class="tool-sub" style="text-align:left;font-size:12px;margin:8px 0 0 0;">Drag the photo inside its cell to pan.</p>
@@ -318,22 +387,22 @@ h2{margin-top:50px;font-size:22px;}
         <h3>Filter</h3>
         <div class="filter-cats" id="filterCats"></div>
         <div class="field-row" style="margin-top:14px;">
-          <label><span>Brightness</span><span id="mBrightnessVal">0</span></label>
+          <label for="mBrightness"><span>Brightness</span><span id="mBrightnessVal">0</span></label>
           <input type="range" id="mBrightness" min="-50" max="50" step="1" value="0">
         </div>
         <div class="field-row">
-          <label><span>Contrast</span><span id="mContrastVal">0</span></label>
+          <label for="mContrast"><span>Contrast</span><span id="mContrastVal">0</span></label>
           <input type="range" id="mContrast" min="-50" max="50" step="1" value="0">
         </div>
         <div class="field-row" style="margin-bottom:0;">
-          <label><span>Saturation</span><span id="mSaturationVal">0</span></label>
+          <label for="mSaturation"><span>Saturation</span><span id="mSaturationVal">0</span></label>
           <input type="range" id="mSaturation" min="-50" max="50" step="1" value="0">
         </div>
       </div>
 
       <div class="panel">
         <h3>Text overlay</h3>
-        <input type="text" class="text-input" id="textInput" placeholder="Add a caption…">
+        <input type="text" class="text-input" id="textInput" placeholder="Add a caption…" aria-label="Caption text">
         <div class="field-row" style="margin-top:10px;">
           <label for="fontSelect"><span>Font</span></label>
           <select id="fontSelect">
@@ -349,12 +418,12 @@ h2{margin-top:50px;font-size:22px;}
           </select>
         </div>
         <div class="field-row">
-          <label><span>Size</span><span id="textSizeVal">6%</span></label>
+          <label for="textSizeSlider"><span>Size</span><span id="textSizeVal">6%</span></label>
           <input type="range" id="textSizeSlider" min="2" max="14" step="0.5" value="6">
         </div>
         <div class="color-row" style="margin-bottom:10px;">
           <input type="color" id="textColorInput" value="#ffffff">
-          <span class="tool-sub" style="margin:0;font-size:13px;">Text color</span>
+          <label for="textColorInput" class="tool-sub" style="margin:0;font-size:13px;">Text color</label>
         </div>
         <label style="display:block;font-size:12.5px;color:var(--muted-text);margin-bottom:0;">Position</label>
         <div class="pos-row">
@@ -368,41 +437,41 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>Collage Maker combines multiple photos into a single image using a grid layout you choose — anywhere from 2 to 9 photos, with several row/column arrangements available at each count. Pick a canvas shape (square, a vertical story, A4, or a custom size), drag photos into the grid to reorder them, zoom and pan within each photo's cell, apply one of 30+ filters per photo, add a short caption, and download the finished collage as a PNG or JPG at the resolution you need.</p>
+    <h2>Build a collage around its destination</h2>
+    <p>Start with 2 to 9 photos and choose a grid for that number. You can reorder the images, zoom or reposition each one inside its cell, and apply filters individually. Square, vertical story, A4 and custom canvas sizes are available. Add a short caption if needed, then export the finished collage as PNG or JPG at your chosen resolution.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>Useful collage projects</h2>
     <ul>
-      <li>You want a multi-photo Instagram post or story without a design app</li>
-      <li>You're printing a photo grid and need it sized to A4</li>
-      <li>You want a consistent filter look across several photos combined into one image</li>
-      <li>You need a quick collage with a caption, without watermarks or a sign-up</li>
+      <li>A multi-photo Instagram post or story without a separate design app</li>
+      <li>An A4 photo grid prepared for printing</li>
+      <li>A group of photographs with coordinated filters in one image</li>
+      <li>A captioned collage without an account or added branding</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Is there a watermark on the downloaded collage?</div>
-      <div>No. The exported PNG or JPG has no watermark, no logo, and no branding added.</div>
+      <div>No. The exported PNG or JPG does not include an Orisod watermark, logo or other added branding.</div>
     </div>
     <div class="faq-item">
       <div class="q">Do filters apply to the whole collage or each photo separately?</div>
-      <div>Each photo gets its own filter and adjustments — select a cell, then choose a filter for just that photo. You can mix different filters across the same collage.</div>
+      <div>Adjustments are applied per photo. Select a cell, choose its filter and repeat for any other image you want to change. The photos do not have to use the same filter.</div>
     </div>
     <div class="faq-item">
       <div class="q">What's the maximum number of photos?</div>
-      <div>Nine. Layouts are available for every count from 2 through 9, each with a couple of arrangement options.</div>
+      <div>You can include up to nine photos. The tool provides layouts for every count from 2 through 9, with more than one arrangement for many counts.</div>
     </div>
     <div class="faq-item">
       <div class="q">Can I use a background image instead of a solid color?</div>
-      <div>Not in this version — the background is a solid color you pick with the color picker. Gradient and image backgrounds may come later.</div>
+      <div>No. This version uses a solid background color selected with the color picker.</div>
     </div>
     <div class="faq-item">
       <div class="q">Are my photos uploaded anywhere?</div>
-      <div>No. Every photo you add, and the finished collage, are processed entirely in your browser using JavaScript — nothing is sent to a server.</div>
+      <div>No. JavaScript processes the photos and builds the final collage in your browser. The files are not sent to a server for this task.</div>
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/collage-maker-explained/" style="color:var(--accent);text-decoration:none;">How This Browser-Based Collage Maker Actually Works</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/collage-maker-explained/" style="color:var(--accent);text-decoration:none;">How this browser-based collage maker actually works</a></p>
 
   <h2>Related tools</h2>
   <div class="related-grid">
@@ -452,7 +521,7 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Free, browser-based image and PDF tools. 100% local processing: your files are never uploaded anywhere.</div>
+      <div class="footer-brand-desc">Free, browser-based image and PDF tools. All image and PDF processing happens 100% locally: your files are never uploaded anywhere.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">
@@ -792,6 +861,7 @@ function addPhotos(fileList){
     });
     if(photos.length >= 2){
       workspace.classList.add('active');
+      document.getElementById('workspaceTitle').classList.add('active');
       var wantCount = Math.max(2, Math.min(9, photos.length));
       setPhotoCount(wantCount, true);
     }

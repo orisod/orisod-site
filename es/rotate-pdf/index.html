@@ -21,7 +21,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rotar páginas de PDF – Herramienta gratuita en línea | Orisod</title>
-<meta name="description" content="Rota todas o algunas páginas de un PDF gratis. Funciona directamente en tu navegador — no se sube ningún archivo.">
+<meta name="description" content="Rota todas o algunas páginas de un PDF gratis. Funciona directamente en tu navegador: no se sube ningún archivo.">
 <link rel="canonical" href="https://orisod.com/es/rotate-pdf/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/rotate-pdf/">
 <link rel="alternate" hreflang="es" href="https://orisod.com/es/rotate-pdf/">
@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Rotar páginas de PDF",
+      "description": "Rota todas o algunas páginas de un PDF gratis. Funciona directamente en tu navegador: no se sube ningún archivo.",
+      "url": "https://orisod.com/es/rotate-pdf/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Esto afecta la selección de texto?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La herramienta cambia la rotación de página sin rasterizar deliberadamente el contenido, por lo que el texto seleccionable normal debería conservarse. Como el PDF se reconstruye, revisa por separado formularios, anotaciones y documentos firmados."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo rotar solo algunas páginas?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Introduce páginas individuales o rangos como \"1-2, 4\". Solo las páginas seleccionadas reciben la rotación indicada."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo rotar en ambas direcciones?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Elige 90 grados a la derecha, 90 grados a la izquierda o 180 grados. Cada giro nuevo se aplica con respecto a la orientación actual de la página."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se envía mi PDF a algún servidor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. JavaScript lee y reconstruye el PDF localmente en tu navegador."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
@@ -104,6 +162,7 @@ input[type="file"]{display:none;}
 .rotate-options{margin-top:20px;text-align:left;}
 .option-card{color:var(--text);background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:18px;margin-bottom:14px;}
 .option-card h3{margin:0 0 8px 0;font-size:15px;}
+.options-title{margin:0 0 14px 0;font-size:15px;}
 .option-card p{margin:0 0 12px 0;font-size:13px;opacity:0.7;text-align:left;}
 .option-card input[type="text"]{
   padding:10px;border-radius:6px;border:1px solid var(--dropzone-border);background:var(--card-bg);color:var(--text);font-size:14px;width:160px;
@@ -186,7 +245,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 1 3 6.7"/><path d="M3 19v-5h5"/></svg></div>
     <h1>Rotar páginas de PDF</h1>
   </div>
-  <p class="tool-sub">Rota todas o solo algunas páginas de un PDF. Todo se procesa localmente en tu navegador; el archivo permanece en tu dispositivo.</p>
+  <p class="tool-sub">Corrige páginas PDF de lado o boca abajo en todo el documento o solamente donde haga falta.</p>
 
   <div class="workspace">
     <div class="box">
@@ -211,6 +270,7 @@ h2{margin-top:50px;font-size:22px;}
         </div>
 
         <div class="rotate-options" id="rotateOptions">
+          <h2 class="options-title">Opciones de rotación</h2>
           <div class="option-card">
             <h3>Ángulo de rotación</h3>
             <div class="angle-row">
@@ -223,7 +283,7 @@ h2{margin-top:50px;font-size:22px;}
           <div class="option-card">
             <h3>¿Qué páginas?</h3>
             <p>Deja en blanco para rotar todas las páginas, o introduce páginas/rangos específicos (p. ej. "1-2, 4").</p>
-            <input type="text" id="pagesInput" placeholder="Todas las páginas (o p. ej. 1-2, 4)">
+            <input type="text" id="pagesInput" placeholder="Todas las páginas (o p. ej. 1-2, 4)" aria-label="Páginas a rotar">
           </div>
         </div>
 
@@ -237,33 +297,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué hace esta herramienta?</h2>
-    <p>Esta herramienta rota páginas dentro de un PDF 90°, 180° o 270°, ya sea en todo el documento o solo en las páginas específicas que elijas. El contenido del PDF se mantiene exactamente igual — el texto sigue siendo seleccionable y buscable, solo cambia la orientación de la página.</p>
+    <h2>Corrige la orientación sin convertir páginas en imágenes</h2>
+    <p>Selecciona todas las páginas PDF o indica números concretos y rótalas 90, 180 o 270 grados. La operación actualiza la orientación sin rasterizar intencionalmente el contenido, así que el texto normal puede seguir siendo seleccionable y buscable. Sin embargo, el archivo se reconstruye y eso puede afectar firmas digitales o elementos interactivos poco comunes. Conserva el original y revisa cualquier resultado importante antes de compartirlo.</p>
 
-    <h2>¿Cuándo deberías usarla?</h2>
+    <h2>Repara solamente las páginas orientadas de forma incorrecta</h2>
     <ul>
-      <li>Un documento escaneado tiene una o más páginas que salieron de lado o boca abajo</li>
-      <li>Combinaste páginas de distintas fuentes con orientaciones distintas</li>
-      <li>Solo algunas páginas de un documento necesitan rotarse, no todas</li>
-      <li>Necesitas corregir la orientación antes de imprimir o compartir un documento</li>
+      <li>Corregir páginas escaneadas de lado o boca abajo</li>
+      <li>Uniformar la orientación después de combinar páginas de varias fuentes</li>
+      <li>Rotar un rango sin modificar el resto del documento</li>
+      <li>Preparar la orientación antes de imprimir o compartir</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿Esto afecta la selección de texto?</div>
-      <div>No, solo cambia los metadatos de rotación de la página — el contenido real del PDF, incluido el texto seleccionable, se mantiene exactamente igual.</div>
+      <div>La herramienta cambia la rotación de página sin rasterizar deliberadamente el contenido, por lo que el texto seleccionable normal debería conservarse. Como el PDF se reconstruye, revisa por separado formularios, anotaciones y documentos firmados.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Puedo rotar solo algunas páginas?</div>
-      <div>Sí, introduce números de página o rangos específicos (como "1-2, 4"), y solo esas páginas se rotarán — el resto queda intacto.</div>
+      <div>Sí. Introduce páginas individuales o rangos como "1-2, 4". Solo las páginas seleccionadas reciben la rotación indicada.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Puedo rotar en ambas direcciones?</div>
-      <div>Sí, elige 90° a la derecha, 90° a la izquierda, o un giro completo de 180°.</div>
+      <div>Sí. Elige 90 grados a la derecha, 90 grados a la izquierda o 180 grados. Cada giro nuevo se aplica con respecto a la orientación actual de la página.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se envía mi PDF a algún servidor?</div>
-      <div>No. Todo se procesa localmente en tu navegador mediante JavaScript; el archivo permanece en tu dispositivo.</div>
+      <div>No. JavaScript lee y reconstruye el PDF localmente en tu navegador.</div>
     </div>
   </div>
 
@@ -317,7 +377,7 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Procesamiento 100 % local: tus archivos permanecen en tu dispositivo.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Todo el procesamiento de imágenes y PDF es 100 % local: tus archivos permanecen en tu dispositivo.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">

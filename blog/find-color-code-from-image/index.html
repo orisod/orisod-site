@@ -20,7 +20,7 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How to Find the Exact Color Code From Any Image | Orisod Blog</title>
+<title>How to find the exact color code from any image | Orisod Blog</title>
 <meta name="description" content="Need the exact HEX or RGB code from a photo, screenshot, or logo? Here's why eyeballing it doesn't work, and how to pick the precise color in seconds.">
 <link rel="canonical" href="https://orisod.com/blog/find-color-code-from-image/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/blog/find-color-code-from-image/">
@@ -125,6 +125,31 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 :root[data-theme="light"] .blog-cat.cat-tip{background:#fffbeb;color:#92400e;}
 :root[data-theme="light"] .blog-cat.cat-comparison{background:#f5f3ff;color:#5b21b6;}
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "How to find the exact color code from any image",
+  "description": "Need the exact HEX or RGB code from a photo, screenshot, or logo? Here's why eyeballing it doesn't work, and how to pick the precise color in seconds.",
+  "url": "https://orisod.com/blog/find-color-code-from-image/",
+  "author": {
+    "@type": "Organization",
+    "name": "Orisod Labs"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Orisod Labs",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://orisod.com/assets/orisod-icon-detailed.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://orisod.com/blog/find-color-code-from-image/"
+  }
+}
+</script>
 </head>
 <body>
 
@@ -148,7 +173,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <div class="container">
 
 <span class="blog-cat cat-guide">Guides</span>
-<h1>How to Find the Exact Color Code From Any Image</h1>
+<h1>How to find the exact color code from any image</h1>
 <p class="intro">When you need a color from a logo, screenshot, or photograph, sampling the image gives you the stored pixel value instead of an estimate made by eye. That value is useful, but it should not be confused with a guaranteed visual match on every screen or printer.</p>
 
 <div class="article-body">
@@ -160,7 +185,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <p>HEX and RGB can express the same red, green, and blue channel values in different notation: <code>#2563eb</code> corresponds to <code>rgb(37, 99, 235)</code>. HSL represents that RGB color through hue, saturation, and lightness. Converted HSL values are often rounded, so converting back may differ by a channel value. Choose the format required by your design tool or codebase.</p>
 
 <h2>You do not need a full image editor</h2>
-<p>Before browser-based tools existed, getting a color code out of an image meant opening it in a full image editor, using an eyedropper tool buried in a toolbar, and reading the value off a color picker dialog — assuming you had that kind of software installed at all. It works, but it's a lot of steps for something that should take five seconds, and it's simply not an option if you're on a phone or a computer without design software.</p>
+<p>Before browser-based tools existed, getting a color code out of an image meant opening it in a full image editor, using an eyedropper tool buried in a toolbar, and reading the value off a color picker dialog, assuming you had that kind of software installed at all. It works, but it's a lot of steps for something that should take five seconds, and it's simply not an option if you're on a phone or a computer without design software.</p>
 
 <h2>Select a pixel and read its value</h2>
 <p>Open the image in a browser-based picker and select the point you want to inspect. The tool reads the decoded pixel and reports its HEX, RGB, and HSL representations. With local browser processing, the image can remain on your device.</p>
@@ -177,8 +202,8 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <ul>
   <li>A client sends over an old logo file and you need to pull their exact brand blue to use in a new design, with no style guide to reference.</li>
   <li>You spot a background color on a website or in a screenshot that you want to reuse in your own project.</li>
-  <li>You're recreating a color scheme from a photo — a product shot, a piece of art, a room you're decorating — and want the palette to be precise rather than approximate.</li>
-  <li>You're debugging a CSS issue and need to confirm whether two elements that look the same color actually share the exact same value.</li>
+  <li>You're recreating a color scheme from a photo (a product shot, a piece of art, a room you're decorating) and want the palette to be precise rather than approximate.</li>
+  <li>You're debugging a CSS issue and need to confirm whether two elements that look the same color share the exact same value.</li>
 </ul>
 <p>Sampling provides a reproducible starting value. If the source contains antialiasing, texture, shadows, or gradients, inspect several nearby pixels before deciding which value represents the color you need.</p>
 
@@ -186,14 +211,14 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <p>JPEG compression can alter pixel values, particularly around sharp edges and gradients. Antialiasing can also blend a solid color with its background. Sample a flat area away from edges and use the least-compressed source available. An embedded color profile may further affect how software interprets and displays the values.</p>
 
 <h2>Questions about sampling image colors</h2>
-<p><strong>Does this work with screenshots?</strong> Yes — any image format your browser can display, including PNG, JPG, and WEBP screenshots, works the same way.</p>
+<p><strong>Does this work with screenshots?</strong> Yes. Any image format your browser can display, including PNG, JPG, and WEBP screenshots, works the same way.</p>
 <p><strong>Can I get more than one color from the same image?</strong> Yes, you can click as many different pixels as you need, one at a time, without re-uploading anything.</p>
-<p><strong>Do I need design software installed?</strong> No — the whole process happens in the browser tool itself, so there's nothing to install.</p>
+<p><strong>Do I need design software installed?</strong> No. The whole process happens in the browser tool itself, so there's nothing to install.</p>
 
 <div class="cta-box">
-  <h3>Pick a Color Code From Any Image</h3>
-  <p>Orisod's color picker runs entirely in your browser — upload or drag in any image, click a pixel, and get the exact HEX, RGB, and HSL values instantly. Nothing is uploaded to a server.</p>
-  <a class="cta-button" href="/color-picker-from-image/">Pick a Color From an Image →</a>
+  <h3>Pick a color code from any image</h3>
+  <p>Orisod's color picker runs entirely in your browser: upload or drag in any image, click a pixel, and get the exact HEX, RGB, and HSL values instantly. Nothing is uploaded to a server.</p>
+  <a class="cta-button" href="/color-picker-from-image/">Pick a color from an image →</a>
 </div>
 
 <p>A sampled pixel gives you a defensible value from the source file. Check neighboring pixels and the intended output medium before treating it as the final production color.</p>
@@ -204,18 +229,18 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <h2>Related articles</h2>
   <div class="related-grid">
     <a class="blog-card" href="/blog/check-image-dimensions/">
-      <h3>How to Check an Image's Dimensions and Resolution Online</h3>
-      <p>What pixels, dimensions, and DPI actually mean, and the fastest way to check them on any device.</p>
+      <h3>How to check an image's dimensions and resolution online</h3>
+      <p>What pixels, dimensions, and DPI mean, and the fastest way to check them on any device.</p>
     </a>
 
     <a class="blog-card" href="/blog/how-to-make-a-favicon/">
-      <h3>How to Create a Favicon for Your Website (Free, No Design Skills)</h3>
-      <p>What a favicon actually needs, and how to generate the full file set without touching design software.</p>
+      <h3>How to create a favicon for your website (free, no design skills)</h3>
+      <p>What a favicon needs, and how to generate the full file set without touching design software.</p>
     </a>
 
     <a class="blog-card" href="/blog/how-to-make-a-qr-code/">
-      <h3>How to Make a QR Code for Free (No App Needed)</h3>
-      <p>What QR codes actually store, why “expiring” codes are a myth, and how to make one in under a minute.</p>
+      <h3>How to make a QR code for free (no app needed)</h3>
+      <p>What QR codes store, why “expiring” codes are a myth, and how to make one in under a minute.</p>
     </a>
   </div>
 </div>
@@ -228,7 +253,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Free, browser-based image and PDF tools. 100% local processing: your files are never uploaded anywhere.</div>
+      <div class="footer-brand-desc">Free, browser-based image and PDF tools. All image and PDF processing happens 100% locally: your files are never uploaded anywhere.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">

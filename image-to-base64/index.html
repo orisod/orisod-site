@@ -20,8 +20,8 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Image to Base64 Converter – Free Online Tool | Orisod</title>
-<meta name="description" content="Convert an image to a Base64 data URI, or decode Base64 back into an image. Free, browser-based, no uploads — useful for developers.">
+<title>Image to base64 converter – Free online tool | Orisod</title>
+<meta name="description" content="Convert an image to a Base64 data URI, or decode Base64 back into an image. Free, browser-based, no uploads, useful for developers.">
 <link rel="canonical" href="https://orisod.com/image-to-base64/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/image-to-base64/">
 <link rel="alternate" hreflang="es" href="https://orisod.com/es/image-to-base64/">
@@ -32,6 +32,17 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Image to Base64 Converter","description":"Convert an image to a Base64 data URI, or decode Base64 back into an image. Free, browser-based, no uploads, useful for developers.","url":"https://orisod.com/image-to-base64/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Does Base64 encoding increase file size?","acceptedAnswer":{"@type":"Answer","text":"Base64 encoding adds roughly one third to the binary byte count before the data-URI prefix or text compression. The exact stored or transmitted size depends on surrounding formats and compression, so it is usually better suited to small assets."}},
+{"@type":"Question","name":"Can I paste a Base64 string without the data:image/... prefix?","acceptedAnswer":{"@type":"Answer","text":"Yes. The decoder can attempt to identify supported image bytes from raw Base64. Supplying a correct data:image/... prefix is safer when the format is known."}},
+{"@type":"Question","name":"Is my image or Base64 data uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. Encoding and decoding run locally with JavaScript."}},
+{"@type":"Question","name":"What image formats are supported?","acceptedAnswer":{"@type":"Answer","text":"It handles JPG, PNG, WEBP, GIF and other image formats that the browser can recognize and display."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;
@@ -183,7 +194,7 @@ h2{margin-top:50px;font-size:22px;}
     <div class="error" id="encodeError"></div>
     <div class="trust-strip">🔒 Processed on your device · No upload · No account · No watermark</div>
 
-    <textarea id="base64Output" readonly placeholder="Your Base64 output will appear here..."></textarea>
+    <textarea id="base64Output" readonly placeholder="Your Base64 output will appear here..." aria-label="Base64 output"></textarea>
     <br>
     <button id="copyBtn" style="display:none;">Copy to Clipboard</button>
     <div class="copied-msg" id="copiedMsg">✅ Copied to clipboard!</div>
@@ -191,7 +202,7 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="box" id="decodePanel" style="display:none;">
-    <textarea id="base64Input" placeholder="Paste a Base64 string here (with or without the data:image/...;base64, prefix)..."></textarea>
+    <textarea id="base64Input" placeholder="Paste a Base64 string here (with or without the data:image/...;base64, prefix)..." aria-label="Base64 input"></textarea>
     <br>
     <button id="decodeBtn">Decode to Image</button>
     <div class="error" id="decodeError"></div>
@@ -199,37 +210,37 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What is Base64 image encoding?</h2>
-    <p>Base64 is a way of representing binary data (like an image file) as plain text. Encoding an image as Base64 lets you embed it directly inside HTML, CSS, or JSON — as a "data URI" — instead of linking to a separate image file. This is common for small icons, inline email images, or avoiding extra HTTP requests.</p>
+    <h2>Represent binary image bytes as text</h2>
+    <p>Base64 represents binary bytes with a restricted set of text characters. An image data URI combines that encoded text with its media type so it can be placed inline in HTML or CSS, and sometimes inside JSON or API payloads. This can simplify small self-contained assets, but it increases their size, reduces normal browser caching and can make source files harder to maintain.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>For inline assets, payloads and quick inspection</h2>
     <ul>
-      <li>You're embedding a small image directly into HTML or CSS without a separate file</li>
-      <li>You need to include an image inside a JSON payload or API request</li>
-      <li>You're building an email template that requires inline images</li>
-      <li>You have a Base64 string and need to see or download the actual image it represents</li>
+      <li>Embed a small image directly in HTML or CSS</li>
+      <li>Prepare image data for a JSON field or API that explicitly accepts Base64</li>
+      <li>Test an inline image in a compatible email template</li>
+      <li>Preview or download the image represented by a Base64 string</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Does Base64 encoding increase file size?</div>
-      <div>Yes, Base64 text is roughly 33% larger than the original binary file, which is why it's best suited for small images, not large photos.</div>
+      <div>Base64 encoding adds roughly one third to the binary byte count before the data-URI prefix or text compression. The exact stored or transmitted size depends on surrounding formats and compression, so it is usually better suited to small assets.</div>
     </div>
     <div class="faq-item">
       <div class="q">Can I paste a Base64 string without the "data:image/..." prefix?</div>
-      <div>Yes, the decoder will attempt to detect the image type automatically if you paste just the raw Base64 characters.</div>
+      <div>Yes. The decoder can attempt to identify supported image bytes from raw Base64. Supplying a correct data:image/... prefix is safer when the format is known.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my image or Base64 data uploaded anywhere?</div>
-      <div>No, both encoding and decoding happen locally in your browser using JavaScript.</div>
+      <div>No. Encoding and decoding run locally with JavaScript.</div>
     </div>
     <div class="faq-item">
       <div class="q">What image formats are supported?</div>
-      <div>JPG, PNG, WEBP, GIF, and most other common formats your browser can read.</div>
+      <div>It handles JPG, PNG, WEBP, GIF and other image formats that the browser can recognize and display.</div>
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/base64-encoding-explained/" style="color:var(--accent);text-decoration:none;">What Is Base64 Encoding and When Developers Need It for Images</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/base64-encoding-explained/" style="color:var(--accent);text-decoration:none;">What is Base64 encoding and when developers need it for images</a></p>
 
   <h2>Related tools</h2>
   <div class="related-grid">
@@ -263,7 +274,7 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Free, browser-based image and PDF tools. 100% local processing: your files are never uploaded anywhere.</div>
+      <div class="footer-brand-desc">Free, browser-based image and PDF tools. All image and PDF processing happens 100% locally: your files are never uploaded anywhere.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">

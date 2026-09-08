@@ -20,7 +20,7 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Generador de Contraseñas – Herramienta gratuita | Orisod</title>
+<title>Generador de contraseñas – Herramienta gratuita | Orisod</title>
 <meta name="description" content="Genera una contraseña fuerte y aleatoria usando el generador de números aleatorios seguro de tu navegador. Gratis, sin subir nada, nada se envía a ningún sitio.">
 <link rel="canonical" href="https://orisod.com/es/password-generator/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/password-generator/">
@@ -32,6 +32,17 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Generador de Contraseñas","description":"Genera una contraseña fuerte y aleatoria usando el generador de números aleatorios seguro de tu navegador. Gratis, sin subir nada, nada se envía a ningún sitio.","url":"https://orisod.com/es/password-generator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"¿Esta contraseña es realmente aleatoria?","acceptedAnswer":{"@type":"Answer","text":"Utiliza crypto.getRandomValues() de Web Crypto API, diseñado para aleatoriedad criptográfica. La fortaleza todavía depende de la longitud, el conjunto elegido y el manejo posterior."}},
+{"@type":"Question","name":"¿Esta herramienta guarda o recuerda mis contraseñas?","acceptedAnswer":{"@type":"Answer","text":"La página no guarda intencionalmente las contraseñas ni las envía a Orisod. Las extensiones, el historial del portapapeles, la grabación de pantalla u otro software quedan fuera del control de la herramienta."}},
+{"@type":"Question","name":"¿Qué hace excluir caracteres ambiguos?","acceptedAnswer":{"@type":"Answer","text":"Elimina caracteres parecidos como 0 y O, o 1, l e I. Ayuda al escribirlos manualmente, aunque reduce ligeramente el conjunto disponible."}},
+{"@type":"Question","name":"¿Se envía mi contraseña a un servidor?","acceptedAnswer":{"@type":"Answer","text":"No. JavaScript la genera localmente. Cópiala directamente en un gestor confiable en vez de dejarla en el historial del portapapeles."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;
@@ -209,32 +220,32 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué hace que una contraseña sea fuerte?</h2>
-    <p>La fortaleza de una contraseña depende de cuántas combinaciones posibles tendría que probar un atacante — lo que depende tanto de su longitud como de cuántos caracteres distintos podría contener. Una contraseña larga y totalmente aleatoria que use mayúsculas, minúsculas, números y símbolos es mucho más difícil de adivinar o probar por fuerza bruta que una corta, incluso con sustituciones habituales como "P@ssw0rd".</p>
+    <h2>La longitud y la imprevisibilidad superan a las sustituciones ingeniosas</h2>
+    <p>Una contraseña resulta más difícil de adivinar cuando es larga, imprevisible y utiliza suficientes caracteres posibles. La generación aleatoria evita palabras, fechas y sustituciones que los atacantes ya prueban. Usa una distinta para cada cuenta y guárdala en un gestor confiable; incluso una clave fuerte deja de ser segura si se reutiliza o queda expuesta.</p>
 
-    <h2>¿Cuándo deberías usar esta herramienta?</h2>
+    <h2>Crea credenciales únicas para cuentas nuevas</h2>
     <ul>
-      <li>Estás creando una cuenta nueva y quieres una contraseña realmente aleatoria en lugar de una fácil de recordar pero fácil de adivinar</li>
-      <li>Estás configurando un gestor de contraseñas y necesitas contraseñas fuertes para cada sitio</li>
-      <li>Un sitio exige una contraseña con requisitos concretos de caracteres (las opciones de aquí coinciden con las reglas habituales)</li>
+      <li>Crear una contraseña imprevisible para una cuenta nueva</li>
+      <li>Generar credenciales únicas para guardarlas en un gestor</li>
+      <li>Cumplir la longitud y categorías exigidas por un sitio</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿Esta contraseña es realmente aleatoria?</div>
-      <div>Sí — se genera con <code style="background:var(--bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;">crypto.getRandomValues()</code> de la Web Crypto API, una fuente de aleatoriedad criptográficamente segura, no con <code style="background:var(--bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;">Math.random()</code>, que no está diseñada para usos sensibles a la seguridad.</div>
+      <div>Utiliza crypto.getRandomValues() de Web Crypto API, diseñado para aleatoriedad criptográfica. La fortaleza todavía depende de la longitud, el conjunto elegido y el manejo posterior.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Esta herramienta guarda o recuerda mis contraseñas?</div>
-      <div>No — nada se guarda en ningún sitio, ni en este dispositivo ni en ningún servidor. En cuanto sales o recargas la página, la contraseña desaparece a menos que la hayas copiado y guardado tú mismo.</div>
+      <div>La página no guarda intencionalmente las contraseñas ni las envía a Orisod. Las extensiones, el historial del portapapeles, la grabación de pantalla u otro software quedan fuera del control de la herramienta.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Qué hace "excluir caracteres ambiguos"?</div>
-      <div>Elimina caracteres fáciles de confundir o teclear mal, como el número 0 frente a la letra O, o 1 frente a l frente a I. Útil si necesitas escribir la contraseña a mano en lugar de copiarla y pegarla — a costa de reducir un poco el conjunto de caracteres disponibles.</div>
+      <div>Elimina caracteres parecidos como 0 y O, o 1, l e I. Ayuda al escribirlos manualmente, aunque reduce ligeramente el conjunto disponible.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se envía mi contraseña a un servidor?</div>
-      <div>No, todo el proceso ocurre localmente en tu navegador con JavaScript.</div>
+      <div>No. JavaScript la genera localmente. Cópiala directamente en un gestor confiable en vez de dejarla en el historial del portapapeles.</div>
     </div>
   </div>
 
@@ -272,7 +283,7 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF basadas en el navegador. Procesamiento 100% local — tus archivos nunca se suben a ningún sitio.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas de imagen y PDF basadas en el navegador. Todo el procesamiento de imágenes y PDF es 100 % local: tus archivos permanecen en tu dispositivo.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">

@@ -60,7 +60,7 @@ Orisod (orisod.com) is a free, browser-based toolkit for images and PDFs — thi
 - Category links are plain click-through links — **no hover-triggered dropdowns**, that was explicitly rejected as bad UX.
 - Highlighting rule (updated 2026-08-16): the active category/page — including "Blog" on blog pages, which shares this same treatment — renders as bold blue text wrapped in a **rounded capsule** (`background:rgba(37,99,235,.14); border:1px solid var(--accent); border-radius:999px; padding:5px 14px; margin:-5px 0;` on `.site-nav-links span.active-category`), not plain text. The other categories stay normal clickable links. On Home, all three category names render in their normal, non-highlighted link state (neutral — Home doesn't belong to one category). "All Tools" itself is never highlighted.
 - **The All Tools page (`/tools`) keeps the full nav-links bar like every other page (reversed 2026-08-18 — it previously omitted category links entirely; see below for why).** Its 4 category links plus Blog stay `<a>` tags (not swapped to a static `<span>` like other pages) and carry `data-filter` attributes; clicking one runs the same client-side filter as the filter pills below (no page reload) and toggles an `active-category` class to match, so the CSS selector on this page only is `.site-nav-links span.active-category, .site-nav-links a.active-category` (other pages keep the plain `span.active-category` selector, since their active category is a real static span). In the unfiltered "All" state, no nav link is highlighted, matching the homepage's no-highlight convention — "All Tools" is never highlighted anywhere on the site.
-- The All Tools page additionally has its own **click-based filter pills** (not part of the shared nav bar): "All (N) | Image Tools (20) | PDF Tools (N) | Utility Tools (7)" — N tracks the live tool count above, update both together when adding a tool. Clicking a pill filters/scrolls to that category; clicking "All" shows everything grouped by category and sorted alphabetically within each group (deliberately different from iLovePDF, whose "All" view loses category grouping).
+- The All Tools page additionally has its own **click-based filter pills** (not part of the shared nav bar): "All (N) | Image Tools (21) | PDF Tools (N) | Utility Tools (17)" — N tracks the live tool count above, update both together when adding a tool. Clicking a pill filters/scrolls to that category; clicking "All" shows everything grouped by category and sorted alphabetically within each group (deliberately different from iLovePDF, whose "All" view loses category grouping).
 
 ## Theming (light/dark)
 
@@ -93,9 +93,11 @@ here as a record so they don't get reintroduced:
 
 **Base pages:** `/` (home), `/tools` (catalog, 3 categories), `/about`, `/privacy`
 
-**73 tools**, organized into 3 categories on `/tools`:
+**74 tools**, organized into 3 categories on `/tools`:
 
-**🖼️ Image Tools (20):** webp-to-jpg, heic-to-jpg, png-to-jpg, png-to-webp, jpg-to-webp, webp-to-png, avif-to-jpg-png, gif-to-jpg-png, bmp-to-jpg-png, svg-to-png, resize-image, crop-image, compress-image, rotate-image, social-media-crop, round-image-corners, add-border-to-image, image-color-filters, watermark-adder, blur-area-tool
+**Correction (2026-09-04):** this list said 73 tools (Image at 20) for a long time after Collage Maker actually shipped (`98ddd05`, "Add Collage Maker tool, Phase 10, tool 6/7") — the doc was never updated at the time. Caught during Phase 12b content-humanization reconciliation, which cross-referenced this inventory against the live `/tools` page. Collage Maker is filed under Image on the live site (`icon-box cat-image` in `tools/index.html`).
+
+**🖼️ Image Tools (21):** webp-to-jpg, heic-to-jpg, png-to-jpg, png-to-webp, jpg-to-webp, webp-to-png, avif-to-jpg-png, gif-to-jpg-png, bmp-to-jpg-png, svg-to-png, resize-image, crop-image, compress-image, rotate-image, social-media-crop, round-image-corners, add-border-to-image, image-color-filters, watermark-adder, blur-area-tool, collage-maker
 
 **📄 PDF Tools (36):** jpg-to-pdf, image-to-pdf, pdf-to-jpg, pdf-to-word, word-to-pdf, excel-to-pdf, powerpoint-to-pdf, merge-pdf, split-pdf, compress-pdf, rotate-pdf, pdf-page-organizer, add-page-numbers, edit-pdf-metadata, crop-pdf-pages, resize-pdf-pages, delete-pdf-pages, extract-pdf-text, ocr-pdf, fill-pdf-forms, pdf-editor, watermark-pdf, sign-pdf, html-to-pdf, flatten-pdf, text-to-pdf, add-stamps, compare-pdfs, pdf-color-filters, n-up-pdf, alternate-mix-pages, pdf-booklet-maker, extract-images-from-pdf, pdf-header-footer, repair-pdf, handwriting-worksheets
 
@@ -140,6 +142,55 @@ Behavior: matches on name+description substring (name-starts-with ranked above n
 That removal PR never added this rule to CLAUDE.md, and the page-structure and SEO-conventions bullets above kept saying "why Orisod" was required content for years afterward — so **every tool built after Phase 9.9 (all 23 of them as of 2026-08-31, both the original-17 and 7-tool-expansion batches) re-added the exact same section**, just spelled "Why Orisod" / "Por qué Orisod" instead of the original "Why use Orisod for this?" wording. Caught and removed a second time on 2026-08-31 (46 files: the 23 tools × EN+ES). If you're scaffolding a new tool page from an existing one as a template, **explicitly check the copied page doesn't have this section** — copying a pre-Phase-9.9 page you haven't audited, or copying a page that (like all 23 above) already regressed, will reintroduce it a third time.
 
 If you ever find this section on any tool page again — old or new — remove it the same way: drop the `<h2>...</h2>` line and its one following `<p>...</p>` line and the blank line after it, nothing else changes.
+
+## Editorial & accessibility standards for new pages
+
+These 4 rules apply to every new tool page, blog post, and guide from day
+one — the goal is to never need another retroactive cleanup pass on these
+categories again. The first documents a convention that's been enforced
+across 4 cleanup rounds (Phase 12b PRs #81-87; PRs #88-92; PRs #93-100; and
+a third-audit round covering accessibility/JSON-LD/headings) but was never
+actually written down until now; the other 3 are new standing rules.
+
+1. **No em dashes in visible content.** Use a comma, colon, parentheses, or
+   a period splitting into two sentences instead — never an em dash (—) in
+   anything a visitor reads or a screen reader announces. Two standing
+   exceptions, permanent, not subject to a future cleanup pass: `<title>`
+   and `<meta name="description">` tags are never rewritten for tone at all
+   (risk of stripping "Free"/"Online"/"Gratis" from SEO-critical text — a
+   Phase 12b decision), and JS string literals inside `<script>` blocks
+   (dropzone/progress/error messages) are an accepted gap since DOM-based
+   content review doesn't reach them.
+2. **Every form control ships with a programmatic label.** Connect every
+   `<input>`, `<select>`, `<textarea>`, and slider to a real `<label for=
+   "id">` — reuse the control's existing visible label text as the `for`
+   target rather than duplicating it in an `aria-label`. Only use
+   `aria-label`/`aria-labelledby` when there's genuinely no visible label
+   to reference (e.g. an icon-only control). Never rely on placeholder text
+   alone — placeholders aren't reliably announced by assistive tech and
+   disappear the moment the user types.
+3. **Every new tool/post ships with JSON-LD from day one**, matching its
+   page type: tool pages get `WebApplication` + `FAQPage` (built from that
+   page's own real `.faq-item` Q&A content); blog/guide posts get
+   `BlogPosting` (no `FAQPage` — posts don't have genuinely structured FAQ
+   markup, and forcing it risks a wasted/ineligible rich result); index
+   pages (blog index, `/tools`) get `BreadcrumbList` only, never an
+   `ItemList`/`CollectionPage` enumerating every post/tool (the site
+   already has 3+ hand-synced duplicates of that list — homepage search
+   array, related-cards, `/tools/index.html` itself — a 4th adds staleness
+   risk for marginal value). Schema must strictly reflect only what's
+   visibly on the page: never invent a rating, review count, publish date,
+   or author name that doesn't exist in the visible content — this site
+   has none of those, so no tool/post schema should either.
+4. **Sequential heading levels only — H1 → H2 → H3, never skip a level.**
+   If a tool's settings panel uses H3 sub-labels for control groups, it
+   needs a parent H2 container (reuse an existing visible section label as
+   the H2 text where one already exists, rather than inventing new copy).
+   Watch for CSS: if headings are styled by a bare tag-selector (`h2{...}`)
+   rather than a class, adding or changing a heading level without a
+   matching scoped class can visually break — a settings-panel H3 promoted
+   to H2 without its own class will inherit the larger content-section H2
+   style instead of staying compact.
 
 - **Monetization plan:** SEO/organic traffic first, then Google AdSense (site already meets AdSense's structural requirements: About, Privacy Policy, real content, Analytics). Affiliate links (cloud storage, design software, VPN/privacy tools) being considered as a faster parallel path. Paid traffic ads (Facebook/etc.) are NOT worth it yet — no monetization is active to make the unit economics work.
 - **Trademark note:** "Orisod" is a registered US trademark for cosmetics/supplements (different class from software) — low risk, monitored, not urgent to act on.

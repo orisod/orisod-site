@@ -21,7 +21,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Generador de códigos QR – Herramienta gratuita en línea | Orisod</title>
-<meta name="description" content="Genera un código QR a partir de cualquier texto o URL, gratis e instantáneo. Funciona directamente en tu navegador — no se envían datos a ningún lugar.">
+<meta name="description" content="Genera un código QR a partir de cualquier texto o URL, gratis e instantáneo. Funciona directamente en tu navegador: no se envían datos a ningún lugar.">
 <link rel="canonical" href="https://orisod.com/es/qr-code-generator/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/qr-code-generator/">
 <link rel="alternate" hreflang="es" href="https://orisod.com/es/qr-code-generator/">
@@ -33,6 +33,17 @@
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Generador de códigos QR","description":"Genera un código QR a partir de cualquier texto o URL, gratis e instantáneo. Funciona directamente en tu navegador: no se envían datos a ningún lugar.","url":"https://orisod.com/es/qr-code-generator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"¿Cuánto texto puedo codificar?","acceptedAnswer":{"@type":"Answer","text":"La capacidad depende del tipo de datos y la versión QR, pero miles de caracteres producen un símbolo denso, más difícil de imprimir y leer. Una URL corta suele ser más fiable."}},
+{"@type":"Question","name":"¿Los códigos QR caducan?","acceptedAnswer":{"@type":"Answer","text":"La imagen QR estática no tiene fecha de caducidad. Sin embargo, una URL codificada puede dejar de funcionar, cambiar de dueño o mostrar otro contenido con el tiempo."}},
+{"@type":"Question","name":"¿Se envía a un servidor lo que escribo?","acceptedAnswer":{"@type":"Answer","text":"No. JavaScript crea el código QR en el navegador a partir del contenido introducido."}},
+{"@type":"Question","name":"¿Puedo cambiar el color del código QR?","acceptedAnswer":{"@type":"Answer","text":"Sí. Mantén buen contraste con el fondo, conserva la zona silenciosa y prueba las versiones en pantalla e impresas antes de distribuirlas."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;
@@ -165,7 +176,7 @@ h2{margin-top:50px;font-size:22px;}
   <p>Convierte cualquier enlace o texto en un código QR listo para escanear. Todo se procesa localmente en tu navegador; lo que escribes permanece en tu dispositivo.</p>
 
   <div class="box">
-    <input type="text" id="textInput" placeholder="Escribe una URL o cualquier texto...">
+    <input type="text" id="textInput" placeholder="Escribe una URL o cualquier texto..." aria-label="Texto o URL a codificar">
 
     <div class="options-row">
       <label>Tamaño:
@@ -188,33 +199,33 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>¿Qué es un código QR?</h2>
-    <p>Un código QR es un código de barras cuadrado que almacena texto o un enlace, que cualquier cámara de teléfono puede escanear para abrirlo al instante. Se usan comúnmente en tarjetas de presentación, carteles, menús y empaques de productos para dirigir a las personas a un sitio web o información sin necesidad de escribir nada.</p>
+    <h2>Un símbolo QR escaneable que guarda los datos introducidos</h2>
+    <p>Un código QR guarda texto, una URL u otra cadena compatible en un patrón cuadrado que las aplicaciones adecuadas pueden decodificar. Resulta útil en carteles, tarjetas, menús y empaques porque evita escribir el contenido. El escaneo depende del dispositivo, el programa, el contraste, la impresión y el tamaño físico; prueba el resultado final en su contexto real.</p>
 
-    <h2>¿Cuándo deberías usar esta herramienta?</h2>
+    <h2>Lleva enlaces o textos breves del papel al dispositivo</h2>
     <ul>
-      <li>Quieres compartir un enlace en un folleto impreso, cartel o tarjeta de presentación</li>
-      <li>Estás configurando el nombre/contraseña de una red Wi-Fi, información de contacto o un enlace de evento que la gente pueda escanear</li>
-      <li>Necesitas una forma rápida de transferir un texto corto entre dispositivos</li>
-      <li>Quieres un código QR de color personalizado que combine con tu marca</li>
+      <li>Colocar una dirección web en un folleto o tarjeta impresa</li>
+      <li>Codificar datos Wi-Fi compatibles, un contacto o enlace de evento</li>
+      <li>Transferir una cadena breve entre dispositivos</li>
+      <li>Elegir un color de marca para el código QR manteniendo un contraste fuerte</li>
     </ul>
 
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿Cuánto texto puedo codificar?</div>
-      <div>Los códigos QR pueden contener unos pocos miles de caracteres, pero el contenido más corto (como una URL) se escanea más rápido y con más fiabilidad. Un texto muy largo puede producir un código más denso y difícil de escanear.</div>
+      <div>La capacidad depende del tipo de datos y la versión QR, pero miles de caracteres producen un símbolo denso, más difícil de imprimir y leer. Una URL corta suele ser más fiable.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Los códigos QR caducan?</div>
-      <div>No, un código QR generado aquí nunca caduca — es una imagen estática que codifica tu texto exacto, no un servicio de redirección.</div>
+      <div>La imagen QR estática no tiene fecha de caducidad. Sin embargo, una URL codificada puede dejar de funcionar, cambiar de dueño o mostrar otro contenido con el tiempo.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Se envía a un servidor lo que escribo?</div>
-      <div>No. El código QR se genera localmente en tu navegador mediante JavaScript; el texto o enlace que escribas permanece en tu dispositivo.</div>
+      <div>No. JavaScript crea el código QR en el navegador a partir del contenido introducido.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Puedo cambiar el color del código QR?</div>
-      <div>Sí, usa el selector de color antes de generarlo. Para una mejor fiabilidad de escaneo, mantén buen contraste sobre un fondo claro.</div>
+      <div>Sí. Mantén buen contraste con el fondo, conserva la zona silenciosa y prueba las versiones en pantalla e impresas antes de distribuirlas.</div>
     </div>
   </div>
 
@@ -252,7 +263,7 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Procesamiento 100 % local: tus archivos permanecen en tu dispositivo.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Todo el procesamiento de imágenes y PDF es 100 % local: tus archivos permanecen en tu dispositivo.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">

@@ -20,8 +20,8 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Resize Image – Free Online Tool | Orisod</title>
-<meta name="description" content="Resize images online for free. Change width and height instantly — everything happens in your browser, no files are uploaded.">
+<title>Resize image – Free online tool | Orisod</title>
+<meta name="description" content="Resize images online for free. Change width and height instantly: everything happens in your browser, no files are uploaded.">
 <link rel="canonical" href="https://orisod.com/resize-image/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/resize-image/">
 <link rel="alternate" hreflang="es" href="https://orisod.com/es/resize-image/">
@@ -32,6 +32,64 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Resize Image",
+      "description": "Resize images online for free. Change width and height instantly: everything happens in your browser, no files are uploaded.",
+      "url": "https://orisod.com/resize-image/",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Will resizing distort my image?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It can if width and height are changed independently. Leave “Keep aspect ratio” enabled to preserve the original proportions. A correct aspect ratio prevents stretching, although heavy enlargement can still look soft."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I make an image larger without losing quality?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You can enlarge it, but resizing does not create genuine new detail. Interpolation estimates the added pixels, so a large increase may look softer or reveal artifacts already present in the source."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my image uploaded anywhere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The Canvas API resizes the image inside your browser, and the file is not uploaded for processing."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What formats does this support?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The tool accepts JPG, PNG, WEBP and other formats the browser can decode. Support for a particular format can vary by browser."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;
@@ -178,7 +236,7 @@ h2{margin-top:50px;}
     <div class="icon-box cat-image"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="13" height="13" rx="2"/><path d="M21 21l-5-5M21 21h-4M21 21v-4"/></svg></div>
     <h1>Resize Image</h1>
   </div>
-  <p class="tool-sub">Upload an image and change its width and height instantly. Everything happens locally in your browser — your files are never uploaded anywhere.</p>
+  <p class="tool-sub">Set a new pixel width and height for an image, preserve its proportions if needed, and download the resized copy.</p>
 
   <div class="workspace">
     <div class="box">
@@ -191,9 +249,9 @@ h2{margin-top:50px;}
 
       <div class="workspace-controls">
         <div class="dims-row">
-          <input type="number" id="width" placeholder="Width (px)">
+          <input type="number" id="width" placeholder="Width (px)" aria-label="Width">
           <span>×</span>
-          <input type="number" id="height" placeholder="Height (px)">
+          <input type="number" id="height" placeholder="Height (px)" aria-label="Height">
         </div>
         <div class="lock-row">
           <input type="checkbox" id="lockRatio" checked>
@@ -208,37 +266,37 @@ h2{margin-top:50px;}
   </div>
 
   <div class="seo-content">
-    <h2>What does resizing an image mean?</h2>
-    <p>Resizing changes the pixel dimensions of an image — its width and height — either scaling it down to a smaller size or up to a larger one. It's different from cropping: resizing keeps the entire image visible, just at a different scale, while cropping removes parts of it.</p>
+    <h2>Resizing changes the pixel grid</h2>
+    <p>Resizing rebuilds an image at a different pixel width and height while keeping the full frame. Cropping does something different: it removes part of the frame. Reducing dimensions can make an image lighter and more suitable for its display size. Enlarging adds pixels through interpolation but cannot recover detail that was absent from the source.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>When new dimensions solve the problem</h2>
     <ul>
-      <li>A website, form, or platform requires an exact pixel size (e.g. profile picture, banner)</li>
-      <li>Your photo is too large in file size and you want to shrink its dimensions</li>
-      <li>You need a smaller thumbnail version of a larger image</li>
-      <li>You're preparing images for print at a specific size</li>
+      <li>Meet the exact pixel requirements of a profile image, banner or form</li>
+      <li>Reduce dimensions when a photograph is larger than its intended display area</li>
+      <li>Create a thumbnail while retaining the full composition</li>
+      <li>Prepare pixel dimensions for a print workflow after checking the required resolution</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Will resizing distort my image?</div>
-      <div>Only if you change width and height independently without keeping the aspect ratio. Keep "Keep aspect ratio" checked to avoid stretching.</div>
+      <div>It can if width and height are changed independently. Leave “Keep aspect ratio” enabled to preserve the original proportions. A correct aspect ratio prevents stretching, although heavy enlargement can still look soft.</div>
     </div>
     <div class="faq-item">
       <div class="q">Can I make an image larger without losing quality?</div>
-      <div>You can enlarge an image, but since no new detail is created, very large increases may look softer or blurrier than the original.</div>
+      <div>You can enlarge it, but resizing does not create genuine new detail. Interpolation estimates the added pixels, so a large increase may look softer or reveal artifacts already present in the source.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my image uploaded anywhere?</div>
-      <div>No, resizing happens locally in your browser using the Canvas API — the file never leaves your device.</div>
+      <div>No. The Canvas API resizes the image inside your browser, and the file is not uploaded for processing.</div>
     </div>
     <div class="faq-item">
       <div class="q">What formats does this support?</div>
-      <div>JPG, PNG, WEBP and most other common image formats supported by your browser.</div>
+      <div>The tool accepts JPG, PNG, WEBP and other formats the browser can decode. Support for a particular format can vary by browser.</div>
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/resize-image-without-distorting/" style="color:var(--accent);text-decoration:none;">How to Resize an Image Without Distorting It</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/resize-image-without-distorting/" style="color:var(--accent);text-decoration:none;">How to resize an image without distorting it</a></p>
 
   <h2>Related tools</h2>
   <div class="related-grid">
@@ -272,7 +330,7 @@ h2{margin-top:50px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Free, browser-based image and PDF tools. 100% local processing: your files are never uploaded anywhere.</div>
+      <div class="footer-brand-desc">Free, browser-based image and PDF tools. All image and PDF processing happens 100% locally: your files are never uploaded anywhere.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">

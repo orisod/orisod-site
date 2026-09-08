@@ -20,7 +20,7 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Favicon Generator – Free Online Tool | Orisod</title>
+<title>Favicon generator – Free online tool | Orisod</title>
 <meta name="description" content="Generate a complete favicon package (favicon.ico plus all standard sizes) from any image, free and online. Everything runs in your browser, no uploads.">
 <link rel="canonical" href="https://orisod.com/favicon-generator/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/favicon-generator/">
@@ -33,6 +33,17 @@
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Favicon Generator","description":"Generate a complete favicon package (favicon.ico plus all standard sizes) from any image, free and online. Everything runs in your browser, no uploads.","url":"https://orisod.com/favicon-generator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What sizes are included in the package?","acceptedAnswer":{"@type":"Answer","text":"The ZIP includes favicon.ico with 16x16 and 32x32 entries, favicon-16x16.png, favicon-32x32.png, apple-touch-icon.png at 180x180, and Android Chrome PNGs at 192x192 and 512x512."}},
+{"@type":"Question","name":"What if my image isn't square?","acceptedAnswer":{"@type":"Answer","text":"The source is center-cropped to a square before resizing, which avoids stretching but can remove content near the longer edges. Preview the crop and add padding to the source if the subject needs more room."}},
+{"@type":"Question","name":"How do I add these to my website?","acceptedAnswer":{"@type":"Answer","text":"Place the files where the supplied paths can resolve, then add the included HTML snippet inside the site's head. If you use another folder or framework, adjust the href paths and clear browser caches when testing."}},
+{"@type":"Question","name":"Is my image uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. JavaScript crops, resizes and packages the image inside your browser."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;
@@ -128,7 +139,8 @@ h2{margin-top:50px;font-size:22px;}
 .related-card .desc{font-size:12px;color:var(--muted-text);line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .related-card .arrow{flex:none;font-size:16px;color:var(--muted-text);transition:0.2s;}
 .related-card:hover .arrow{color:var(--accent);transform:translateX(2px);}
-code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;}
+code{background:var(--card-bg);color:#60a5fa;border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;}
+:root[data-theme="light"] code{color:var(--accent);}
 pre{background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-align:left;overflow-x:auto;font-size:12px;line-height:1.6;}
 .trust-strip{font-size:12px;color:var(--muted-text);margin-top:12px;line-height:1.5;}
 </style>
@@ -154,7 +166,7 @@ pre{background:var(--card-bg);border:1px solid var(--border);border-radius:8px;p
 <main>
 <div class="container">
   <h1>Favicon Generator</h1>
-  <p>Upload a square image (a logo works best) and get a complete favicon package — favicon.ico plus every standard size for browsers, iOS, and Android. Everything happens locally in your browser.</p>
+  <p>Upload a square image (a logo works best) and get a complete favicon package: favicon.ico plus every standard size for browsers, iOS, and Android. Everything happens locally in your browser.</p>
 
   <div class="box">
     <label class="dropzone" id="dropzone" for="fileInput">
@@ -173,37 +185,37 @@ pre{background:var(--card-bg);border:1px solid var(--border);border-radius:8px;p
   </div>
 
   <div class="seo-content">
-    <h2>What does this tool do?</h2>
-    <p>This tool takes one image and generates every favicon size a modern website needs: a real multi-resolution <code>favicon.ico</code> file, standalone PNGs for browser tabs, an Apple touch icon for iOS home screens, and Android Chrome icons — all packaged into a single ZIP, along with the HTML snippet to add them to your site.</p>
+    <h2>One source image, several favicon files</h2>
+    <p>Choose an image to create a multi-resolution favicon.ico, separate browser PNGs, an Apple touch icon and Android Chrome icons. The download packages those files with an HTML snippet in one ZIP. Each output is rasterized at a fixed size, so a simple source with strong contrast usually remains clearer than fine text or intricate artwork.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>Prepare icons for browsers and home screens</h2>
     <ul>
-      <li>You're launching a new website and need a favicon that works across all browsers and devices</li>
-      <li>Your current favicon only has one size and looks blurry on some devices</li>
-      <li>You want your site to show a proper icon when saved to an iOS or Android home screen</li>
-      <li>You redesigned your logo and need to regenerate all favicon sizes</li>
+      <li>Add a favicon package to a new website</li>
+      <li>Replace a single blurry icon with several appropriate sizes</li>
+      <li>Provide icons for iOS and Android home-screen shortcuts</li>
+      <li>Regenerate the package after a logo update</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">What sizes are included in the package?</div>
-      <div>favicon.ico (16×16 + 32×32 combined), favicon-16x16.png, favicon-32x32.png, apple-touch-icon.png (180×180), android-chrome-192x192.png, and android-chrome-512x512.png.</div>
+      <div>The ZIP includes favicon.ico with 16×16 and 32×32 entries, favicon-16x16.png, favicon-32x32.png, apple-touch-icon.png at 180×180, and Android Chrome PNGs at 192×192 and 512×512.</div>
     </div>
     <div class="faq-item">
       <div class="q">What if my image isn't square?</div>
-      <div>It will automatically be cropped to a centered square before generating the different sizes, so nothing looks stretched.</div>
+      <div>The source is center-cropped to a square before resizing, which avoids stretching but can remove content near the longer edges. Preview the crop and add padding to the source if the subject needs more room.</div>
     </div>
     <div class="faq-item">
       <div class="q">How do I add these to my website?</div>
-      <div>Upload the files to your site's root folder and add the HTML snippet included in the ZIP to your page's &lt;head&gt; section.</div>
+      <div>Place the files where the supplied paths can resolve, then add the included HTML snippet inside the site’s <head>. If you use another folder or framework, adjust the href paths and clear browser caches when testing.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my image uploaded anywhere?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No. JavaScript crops, resizes and packages the image inside your browser.</div>
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/how-to-make-a-favicon/" style="color:var(--accent);text-decoration:none;">How to Create a Favicon for Your Website (Free, No Design Skills)</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/how-to-make-a-favicon/" style="color:var(--accent);text-decoration:none;">How to create a favicon for your website (free, no design skills)</a></p>
 
   <h2>Related tools</h2>
   <div class="related-grid">
@@ -237,7 +249,7 @@ pre{background:var(--card-bg);border:1px solid var(--border);border-radius:8px;p
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Free, browser-based image and PDF tools. 100% local processing: your files are never uploaded anywhere.</div>
+      <div class="footer-brand-desc">Free, browser-based image and PDF tools. All image and PDF processing happens 100% locally: your files are never uploaded anywhere.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">

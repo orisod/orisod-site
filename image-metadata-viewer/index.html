@@ -20,8 +20,8 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Image Metadata Viewer – Free Online Tool | Orisod</title>
-<meta name="description" content="View the hidden EXIF metadata in a photo — camera, date, GPS location, and settings — free and online. Nothing is uploaded, everything runs in your browser.">
+<title>Image metadata viewer – Free online tool | Orisod</title>
+<meta name="description" content="View the hidden EXIF metadata in a photo (camera, date, GPS location, and settings) free and online. Nothing is uploaded, everything runs in your browser.">
 <link rel="canonical" href="https://orisod.com/image-metadata-viewer/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/image-metadata-viewer/">
 <link rel="alternate" hreflang="es" href="https://orisod.com/es/image-metadata-viewer/">
@@ -32,6 +32,17 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebApplication","name":"Image Metadata Viewer","description":"View the hidden EXIF metadata in a photo (camera, date, GPS location, and settings) free and online. Nothing is uploaded, everything runs in your browser.","url":"https://orisod.com/image-metadata-viewer/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Why does this photo show no metadata?","acceptedAnswer":{"@type":"Answer","text":"Messaging, social and editing applications often strip EXIF when they create a new copy. Some cameras also omit fields, and this viewer does not claim to expose every possible metadata container."}},
+{"@type":"Question","name":"Can I remove the metadata this tool shows?","acceptedAnswer":{"@type":"Answer","text":"Yes. The EXIF Remover can create a copy without the supported fields it detects. Review the output because other metadata or visible identifying information may remain."}},
+{"@type":"Question","name":"Is my photo uploaded to a server?","acceptedAnswer":{"@type":"Answer","text":"No. JavaScript reads supported fields locally in your browser."}},
+{"@type":"Question","name":"Does this work with PNG or WEBP files?","acceptedAnswer":{"@type":"Answer","text":"EXIF is common in JPEG, but modern PNG and WEBP files can also carry metadata. This viewer focuses on the encodings it supports, so a blank result is not a universal guarantee that the file contains none."}}
+]}
+]}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;
@@ -157,7 +168,7 @@ h2{margin-top:50px;font-size:22px;}
 <main>
 <div class="container">
   <h1>Image Metadata Viewer</h1>
-  <p>Upload a photo to see its hidden EXIF metadata — camera model, date taken, GPS location, and shooting settings. Everything happens locally in your browser.</p>
+  <p>Upload a photo to see its hidden EXIF metadata: camera model, date taken, GPS location, and shooting settings. Everything happens locally in your browser.</p>
 
   <div class="box">
     <label class="dropzone" id="dropzone" for="fileInput">
@@ -171,37 +182,37 @@ h2{margin-top:50px;font-size:22px;}
   </div>
 
   <div class="seo-content">
-    <h2>What is EXIF metadata?</h2>
-    <p>Most photos from phones and cameras embed hidden data inside the file — called EXIF metadata. This can include the camera or phone model, the exact date and time the photo was taken, GPS coordinates, and shooting settings like aperture, shutter speed, and ISO. None of it is visible when you look at the photo, but it's there in the file.</p>
+    <h2>EXIF records details about a photo and its capture</h2>
+    <p>A phone or camera may save EXIF fields alongside the visible image. Depending on its settings, the file can identify a device model, capture date, GPS coordinates, aperture, shutter speed or ISO. These fields are not visible in the picture itself, and they may be missing, altered or removed by editing and sharing software. Treat them as file metadata, not unquestionable proof of when or where a photograph was made.</p>
 
-    <h2>When should you use this tool?</h2>
+    <h2>Review hidden fields before sharing or investigating</h2>
     <ul>
-      <li>You want to check if a photo reveals a GPS location before sharing it</li>
-      <li>You're curious what camera or settings were used to take a photo</li>
-      <li>You need to verify the exact date and time a photo was taken</li>
-      <li>You're deciding whether a photo needs its metadata removed before posting</li>
+      <li>Check whether supported GPS fields remain before sharing</li>
+      <li>Inspect the recorded camera and exposure settings</li>
+      <li>Read the stored capture date while recognizing it can be edited</li>
+      <li>Decide whether to create a copy with detected metadata removed</li>
     </ul>
 
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Why does this photo show no metadata?</div>
-      <div>Many platforms (social media, messaging apps) strip EXIF data automatically when you upload or share a photo, so a re-downloaded copy often has none left.</div>
+      <div>Messaging, social and editing applications often strip EXIF when they create a new copy. Some cameras also omit fields, and this viewer does not claim to expose every possible metadata container.</div>
     </div>
     <div class="faq-item">
       <div class="q">Can I remove the metadata this tool shows?</div>
-      <div>Yes, use our EXIF Remover tool afterward to strip all detected metadata from the photo.</div>
+      <div>Yes. The EXIF Remover can create a copy without the supported fields it detects. Review the output because other metadata or visible identifying information may remain.</div>
     </div>
     <div class="faq-item">
       <div class="q">Is my photo uploaded to a server?</div>
-      <div>No, the entire process happens locally in your browser using JavaScript.</div>
+      <div>No. JavaScript reads supported fields locally in your browser.</div>
     </div>
     <div class="faq-item">
       <div class="q">Does this work with PNG or WEBP files?</div>
-      <div>This tool is built for JPEG's standard EXIF format, which is by far the most common source of this kind of metadata. PNG and WEBP rarely carry EXIF data.</div>
+      <div>EXIF is common in JPEG, but modern PNG and WEBP files can also carry metadata. This viewer focuses on the encodings it supports, so a blank result is not a universal guarantee that the file contains none.</div>
     </div>
   </div>
 
-  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/what-is-image-metadata/" style="color:var(--accent);text-decoration:none;">What Is Image Metadata and How to View It</a></p>
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 Want the full picture? Read our guide: <a href="/blog/what-is-image-metadata/" style="color:var(--accent);text-decoration:none;">What is image metadata and how to view it</a></p>
 
   <h2>Related tools</h2>
   <div class="related-grid">
@@ -235,7 +246,7 @@ h2{margin-top:50px;font-size:22px;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Free, browser-based image and PDF tools. 100% local processing: your files are never uploaded anywhere.</div>
+      <div class="footer-brand-desc">Free, browser-based image and PDF tools. All image and PDF processing happens 100% locally: your files are never uploaded anywhere.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">

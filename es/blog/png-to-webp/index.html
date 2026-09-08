@@ -21,7 +21,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PNG a WebP: ¿cuánto se reduce el tamaño de tus imágenes? | Blog de Orisod</title>
-<meta name="description" content="Convertir un PNG a WebP puede reducir su tamaño drásticamente — pero cuánto depende de si lo mantienes sin pérdida. Aquí están los números reales y cuándo PNG sigue siendo la mejor opción.">
+<meta name="description" content="Convertir un PNG a WebP puede reducir su tamaño drásticamente, pero cuánto depende de si lo mantienes sin pérdida. Aquí están los números reales y cuándo PNG sigue siendo la mejor opción.">
 <link rel="canonical" href="https://orisod.com/es/blog/png-to-webp/">
 <link rel="alternate" hreflang="en" href="https://orisod.com/blog/png-to-webp/">
 <link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/png-to-webp/">
@@ -32,6 +32,31 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "PNG a WebP: ¿cuánto se reduce el tamaño de tus imágenes?",
+  "description": "Convertir un PNG a WebP puede reducir su tamaño drásticamente, pero cuánto depende de si lo mantienes sin pérdida. Aquí están los números reales y cuándo PNG sigue siendo la mejor opción.",
+  "url": "https://orisod.com/es/blog/png-to-webp/",
+  "author": {
+    "@type": "Organization",
+    "name": "Orisod Labs"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Orisod Labs",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://orisod.com/assets/orisod-icon-detailed.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://orisod.com/es/blog/png-to-webp/"
+  }
+}
+</script>
 <style>
 :root{
   --bg:#0b0f1a;
@@ -173,7 +198,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 <text x="586.8" y="232.4" text-anchor="middle" font-size="18" font-weight="bold" fill="var(--text)">85 KB</text>
 <text x="586.8" y="304.0" text-anchor="middle" font-size="15" fill="var(--muted-text)">WebP (con pérdida)</text>
 </svg>
-<figcaption>Medido en una imagen de prueba tipo interfaz de 1600×1000, Pillow 12.3.0 (libwebp): codificación WebP sin pérdida frente a WebP con pérdida en calidad 80. Trátalo como este ejemplo concreto, no como una garantía universal — el ahorro real varía según el contenido de la imagen.</figcaption>
+<figcaption>Medido en una imagen de prueba tipo interfaz de 1600×1000, Pillow 12.3.0 (libwebp): codificación WebP sin pérdida frente a WebP con pérdida en calidad 80. Trátalo como este ejemplo concreto, no como una garantía universal. El ahorro real varía según el contenido de la imagen.</figcaption>
 </figure>
 <table class="compare-table">
   <tr><th>Formato</th><th>Tamaño</th></tr>
@@ -193,7 +218,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 </ul>
 
 <h2>Cuándo vale la pena convertir</h2>
-<p>El caso más claro es el rendimiento de sitios web — archivos de imagen más pequeños significan páginas que cargan más rápido, y eso se acumula rápidamente en un sitio con docenas de imágenes. También vale la pena cuando gestionas una gran biblioteca de recursos y el espacio de almacenamiento importa, o cuando necesitas compartir un gran lote de gráficos PNG en algún lugar con límite de tamaño. Para un único PNG que usarás una sola vez, el ahorro normalmente no vale el paso extra — es cuando la misma elección se repite cientos o miles de veces que la diferencia de tamaño realmente se nota.</p>
+<p>El caso más claro es el rendimiento de sitios web: archivos de imagen más pequeños significan páginas que cargan más rápido, y eso se acumula rápidamente en un sitio con docenas de imágenes. También vale la pena cuando gestionas una gran biblioteca de recursos y el espacio de almacenamiento importa, o cuando necesitas compartir un gran lote de gráficos PNG en algún lugar con límite de tamaño. Para un único PNG que usarás una sola vez, el ahorro normalmente no vale el paso extra. Es cuando la misma elección se repite cientos o miles de veces que la diferencia de tamaño se nota.</p>
 
 <h2>Ejemplo medido: una imagen de interfaz</h2>
 <p>La comparación ilustrada utiliza una imagen sintética de interfaz de 1600 × 1000 e indica el codificador y el ajuste empleados. Sirve para entender el contraste, no para pronosticar un sitio completo. En producción, prueba una muestra representativa y calcula el total con esos resultados medidos.</p>
@@ -244,7 +269,7 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-logo">ORISOD</div>
-      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Procesamiento 100 % local: tus archivos permanecen en tu dispositivo.</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Todo el procesamiento de imágenes y PDF es 100 % local: tus archivos permanecen en tu dispositivo.</div>
       <div class="footer-copy">© Orisod Labs</div>
     </div>
     <div class="footer-col">
