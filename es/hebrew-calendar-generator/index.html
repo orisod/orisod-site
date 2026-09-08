@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generador de calendario hebreo – Calendario PDF imprimible gratis | Orisod</title>
+<meta name="description" content="Crea un calendario PDF imprimible gratis para un año hebreo completo (de Tishrei a Elul) con horarios de encendido de velas y tzeit hakojavim para tu ubicación, la porción semanal de la Torá, y tus propias fotos y eventos. Todo se ejecuta en tu navegador.">
+<link rel="canonical" href="https://orisod.com/es/hebrew-calendar-generator/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/hebrew-calendar-generator/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/hebrew-calendar-generator/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/hebrew-calendar-generator/">
+<link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#2563eb">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/suncalc/1.9.0/suncalc.min.js"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Generador de calendario hebreo",
+      "description": "Crea un calendario PDF imprimible gratis para un año hebreo completo (de Tishrei a Elul) con horarios de encendido de velas y tzeit hakojavim para tu ubicación, la porción semanal de la Torá, y tus propias fotos y eventos. Todo se ejecuta en tu navegador.",
+      "url": "https://orisod.com/es/hebrew-calendar-generator/",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any (runs in browser)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Por qué el año del calendario va de Tishrei a Elul en lugar de enero a diciembre?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "El propio límite del año en el calendario hebreo es Rosh Hashaná, el primero de Tishrei, no el 1 de enero. Este calendario sigue esa estructura nativa: cada descarga cubre un año hebreo completo, 12 meses en un año regular o 13 en un año bisiesto, cuando Adar se divide en Adar I y Adar II."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué tan precisos son los horarios de encendido de velas y tzeit hakojavim?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Se calculan a partir de las coordenadas de la ubicación que elijas, usando fórmulas astronómicas estándar, el mismo enfoque que usan la mayoría de las apps de calendario. Son una referencia razonable, no un fallo religioso. Confirma los horarios exactos con tu rabino o la práctica de tu comunidad local, sobre todo cerca de una costa, en latitudes altas, o para una ocasión sensible a la precisión."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Por qué tengo que elegir una ubicación?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La hora de la puesta del sol depende de la latitud y la longitud exactas, y varía varios minutos incluso entre ciudades cercanas. El encendido de velas y el tzeit hakojavim se definen ambos en relación con la puesta del sol, así que no hay un horario correcto único sin una ubicación."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué es el tzeit hakojavim, y por qué hay dos formas de ajustarlo?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "El tzeit hakojavim (\"la salida de las estrellas\") marca cuándo termina el Shabat o una festividad. Distintas comunidades lo definen como un número fijo de minutos después de la puesta del sol, o como el momento en que el sol alcanza un ángulo específico bajo el horizonte. Aquí se ofrecen ambas opciones porque ninguna es universal."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Se sube mi ubicación o algún otro dato a algún sitio?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. La búsqueda de ubicación, el cálculo de la puesta del sol, los datos de fechas hebreas y festividades, las fotos, los eventos personalizados y la generación del PDF ocurren todos localmente en tu navegador. No se envía nada a un servidor."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+  --icon-alpha:.30;
+  --grid-alpha:.05;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+  --icon-alpha:.24;
+  --grid-alpha:.10;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background-color:var(--bg);background-image:linear-gradient(rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px),linear-gradient(90deg, rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px);background-size:42px 42px;color:var(--text);text-align:center;transition:background-color 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);display:inline-flex;align-items:center;gap:8px;}
+.site-nav-logo img{height:26px;width:auto;display:block;}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:5px 14px;margin:-5px 0;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:40px 20px 60px 20px;}
+.tool-hero{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:4px;}
+.tool-hero .icon-box{width:52px;height:52px;}
+.tool-hero .icon-box svg{width:28px;height:28px;}
+.tool-hero h1{margin:0;font-size:32px;}
+@media (max-width:600px){.tool-hero{flex-direction:column;gap:8px;}}
+.tool-sub{font-size:16px;max-width:640px;margin:0 auto 24px auto;opacity:.85;line-height:1.6;}
+.container{max-width:1100px;margin:0 auto;text-align:left;}
+h1{font-size:44px;margin-bottom:10px;}
+
+.workspace{display:grid;grid-template-columns:1fr 360px;gap:20px;align-items:start;}
+@media (max-width:900px){.workspace{grid-template-columns:1fr;}}
+.panel{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:18px 20px;}
+.panel + .panel{margin-top:14px;}
+.panel h3{margin:0 0 12px 0;font-size:14px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted-text);}
+.field-row{margin-bottom:14px;}
+.field-row:last-child{margin-bottom:0;}
+.field-row label{display:block;font-size:13px;color:var(--muted-text);margin-bottom:6px;}
+select, input[type="text"], input[type="date"], input[type="number"]{
+  width:100%;padding:10px 11px;border-radius:8px;border:1px solid var(--dropzone-border);background:var(--bg);color:var(--text);font-size:14px;font-family:inherit;
+}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+.mode-tabs{display:flex;gap:8px;margin-bottom:12px;}
+.mode-tabs button{flex:1;padding:9px 6px;font-size:12.5px;background:var(--bg);border:1px solid var(--dropzone-border);color:var(--text);border-radius:6px;cursor:pointer;}
+.mode-tabs button.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+
+.disclaimer-box{display:flex;gap:8px;align-items:flex-start;background:rgba(245,158,11,.12);border:1px solid #f59e0b;border-radius:8px;padding:10px 12px;margin-top:10px;font-size:12.5px;line-height:1.5;color:var(--text);}
+.info-box{display:flex;gap:8px;align-items:flex-start;background:rgba(37,99,235,.10);border:1px solid var(--accent);border-radius:8px;padding:10px 12px;margin-top:10px;font-size:12.5px;line-height:1.5;color:var(--text);}
+
+.city-search-wrap{position:relative;}
+.city-suggestions{position:absolute;left:0;right:0;top:100%;margin-top:4px;background:var(--card-bg);border:1px solid var(--border);border-radius:8px;max-height:220px;overflow-y:auto;z-index:20;display:none;text-align:left;}
+.city-suggestions.open{display:block;}
+.city-suggestion{padding:8px 11px;font-size:13px;cursor:pointer;}
+.city-suggestion:hover, .city-suggestion.active{background:var(--bg);}
+.city-suggestion .country{color:var(--muted-text);font-size:11.5px;}
+.location-status{font-size:12.5px;color:var(--muted-text);margin-top:8px;}
+.location-status strong{color:var(--text);}
+
+.manual-list{display:flex;flex-direction:column;gap:6px;margin-top:10px;}
+.manual-item{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:13px;}
+.manual-item button{padding:3px 8px;font-size:12px;background:none;border:1px solid var(--dropzone-border);color:var(--muted-text);border-radius:5px;cursor:pointer;}
+.add-row{display:flex;gap:8px;margin-top:10px;}
+.add-row input{flex:1;}
+.add-row button{flex:none;}
+
+.photo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.photo-slot{aspect-ratio:1;border:2px dashed var(--dropzone-border);border-radius:8px;position:relative;cursor:pointer;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted-text);text-align:center;}
+.photo-slot:hover{border-color:var(--accent);}
+.photo-slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.photo-slot .month-label{position:absolute;top:2px;left:4px;font-size:9px;font-weight:bold;background:rgba(0,0,0,.55);color:#fff;padding:1px 4px;border-radius:3px;z-index:2;}
+.photo-slot .remove-x{position:absolute;top:2px;right:2px;width:16px;height:16px;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;font-size:10px;line-height:16px;text-align:center;z-index:2;}
+.layout-pick{display:flex;gap:8px;margin-top:10px;}
+.layout-pick button{flex:1;padding:9px 6px;font-size:12.5px;background:var(--bg);border:1px solid var(--dropzone-border);color:var(--text);border-radius:6px;cursor:pointer;}
+.layout-pick button.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+
+.preview-wrap{display:flex;justify-content:center;}
+.month-preview{width:100%;max-width:480px;background:#ffffff;color:#111827;border-radius:8px;padding:16px;border:1px solid var(--border);}
+.month-preview .mp-header{text-align:center;font-weight:bold;font-size:16px;margin-bottom:2px;}
+.month-preview .mp-header-greg{text-align:center;font-size:11.5px;color:#6b7280;margin-bottom:10px;}
+.month-preview .mp-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+.month-preview .mp-dow{font-size:10px;font-weight:bold;text-align:center;color:#6b7280;padding-bottom:4px;}
+.month-preview .mp-cell{min-height:78px;border:1px solid #e5e7eb;border-radius:4px;padding:3px;font-size:8.5px;text-align:left;overflow:hidden;}
+.month-preview .mp-cell .num{font-weight:bold;font-size:11px;}
+.month-preview .mp-cell .greg-date{display:block;font-size:7.5px;color:#4b5563;line-height:1.1;margin-top:-1px;}
+.month-preview .mp-cell .parasha{display:block;color:#7c3aed;font-weight:bold;line-height:1.2;margin-top:1px;}
+.month-preview .mp-cell .candle{display:block;color:#d97706;line-height:1.2;margin-top:1px;}
+.month-preview .mp-cell .tzeit{display:block;color:#4338ca;line-height:1.2;margin-top:1px;}
+.month-preview .mp-cell .evt{display:block;color:#1d4ed8;line-height:1.2;margin-top:1px;}
+.month-preview .mp-cell.empty{background:#f9fafb;border-color:transparent;}
+/* Sombreado de días del calendario judío -- solo valores de tema claro; la
+   superficie del calendario imprimible siempre tiene fondo blanco/claro sin
+   importar el tema del sitio. Misma paleta que la Parte 1. */
+.month-preview .mp-cell.shade-a{background:rgba(217,119,6,.12);}
+.month-preview .mp-cell.shade-b{background:rgba(107,114,128,.12);}
+.month-preview .mp-cell.shade-c{background:rgba(37,99,235,.14);}
+.month-preview .mp-cell.shade-d{background:rgba(0,0,0,.10);}
+.month-preview .mp-cell.shade-e{background:rgba(236,72,153,.12);}
+.month-preview .mp-cell.shade-f{background:rgba(22,163,74,.12);}
+.preview-nav{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:10px;font-size:13px;}
+.preview-nav button{background:var(--card-bg);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px 10px;cursor:pointer;}
+
+button, .back{display:inline-block;padding:12px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:15px;cursor:pointer;}
+button.secondary{background:var(--card-bg);border:1px solid var(--border);color:var(--text);}
+button:disabled{opacity:0.4;cursor:not-allowed;}
+button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
+.trust-strip{font-size:12px;color:var(--muted-text);margin-top:14px;line-height:1.5;}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+.progress{font-size:14px;opacity:0.7;margin-top:10px;}
+
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:60px auto 0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related-grid{display:grid;grid-template-columns:repeat(2, 1fr);gap:12px;max-width:700px;margin:0 auto;}
+@media (max-width:600px){.related-grid{grid-template-columns:1fr;}}
+.related-card{display:flex;align-items:center;gap:14px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.icon-box{flex:none;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;border:2px solid transparent;}
+.icon-box.cat-image{background:rgba(37,99,235,var(--icon-alpha));border-color:#2563eb;color:#2563eb;}
+.icon-box.cat-pdf{background:rgba(245,158,11,var(--icon-alpha));border-color:#f59e0b;color:#f59e0b;}
+.icon-box.cat-utility{background:rgba(139,92,246,var(--icon-alpha));border-color:#8b5cf6;color:#8b5cf6;}
+.icon-box svg{width:22px;height:22px;display:block;}
+.related-card .body{flex:1 1 auto;min-width:0;}
+.related-card .title{font-size:14px;font-weight:bold;margin-bottom:2px;}
+.related-card .desc{font-size:12px;color:var(--muted-text);line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.related-card .arrow{flex:none;font-size:16px;color:var(--muted-text);transition:0.2s;}
+.related-card:hover .arrow{color:var(--accent);transform:translateX(2px);}
+.site-footer{margin-top:40px;padding:40px 24px 30px 24px;border-top:1px solid var(--border);text-align:left;}
+.footer-inner{max-width:1000px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;gap:40px;}
+.footer-brand{max-width:280px;}
+.footer-brand-logo{font-size:16px;font-weight:bold;letter-spacing:0.5px;margin-bottom:10px;}
+.footer-brand-desc{font-size:13px;color:var(--muted-text);line-height:1.5;margin-bottom:14px;}
+.footer-copy{font-size:12px;color:var(--muted-text);opacity:0.7;}
+.footer-col h3{font-size:13px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-text);margin:0 0 14px 0;}
+.footer-col a{display:block;font-size:14px;color:var(--text);text-decoration:none;opacity:0.8;margin-bottom:10px;}
+.footer-col a:hover{opacity:1;color:var(--accent);}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/es/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/es/tools/#image">Herramientas de imagen</a>
+    <a href="/es/tools/#pdf">Herramientas PDF</a>
+    <span class="active-category">Utilidades</span>
+    <a href="/es/blog/">Blog</a>
+  </nav>
+  <div class="site-nav-right">
+    <a class="lang-flag" href="/hebrew-calendar-generator/">EN</a>
+    <span class="lang-flag active">ES</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+  <div class="tool-hero">
+    <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 9h18"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 17h.01M12 17h.01"/></svg></div>
+    <h1>Generador de calendario hebreo</h1>
+  </div>
+  <p class="tool-sub" style="text-align:center;">Crea un calendario PDF imprimible para un año hebreo completo, de Tishrei a Elul, con horarios de encendido de velas y tzeit hakojavim para tu ubicación y la porción semanal de la Torá. Todo ocurre localmente en tu navegador.</p>
+
+  <div class="error" id="dataLoadError" style="display:none;max-width:600px;margin:0 auto 20px auto;text-align:center;">⚠️ No se pudieron cargar los datos del calendario, así que las fechas hebreas, los días festivos y la porción de la Torá no aparecerán abajo. Esta página necesita cargarse desde un servidor web, no abrirse directamente como archivo local. Intenta recargar, y si el problema continúa, vuelve a cargar desde la URL normal del sitio.</div>
+
+  <div class="workspace">
+    <div class="left-col">
+      <div class="panel">
+        <h3>Año hebreo</h3>
+        <div class="mode-tabs">
+          <button type="button" class="active" data-year-mode="hebrew" id="yearModeHebrewBtn">Año hebreo</button>
+          <button type="button" data-year-mode="gregorian" id="yearModeGregorianBtn">Año gregoriano</button>
+        </div>
+        <div class="field-row" id="hebrewYearField">
+          <label for="hebrewYearSelect">Año hebreo</label>
+          <select id="hebrewYearSelect"></select>
+        </div>
+        <div class="field-row" id="gregorianYearField" style="display:none;margin-bottom:0;">
+          <label for="gregorianYearSelect">Año gregoriano</label>
+          <select id="gregorianYearSelect"></select>
+        </div>
+        <div class="info-box" id="yearResultInfo"></div>
+      </div>
+
+      <div class="panel">
+        <h3>Ubicación</h3>
+        <div class="mode-tabs">
+          <button type="button" class="active" data-loc-mode="city" id="locModeCityBtn">Buscar ciudad</button>
+          <button type="button" data-loc-mode="gps" id="locModeGpsBtn">Usar mi ubicación</button>
+          <button type="button" data-loc-mode="manual" id="locModeManualBtn">Lat/long</button>
+        </div>
+        <div class="field-row" id="locCityField">
+          <label for="citySearchInput">Busca una ciudad</label>
+          <div class="city-search-wrap">
+            <input type="text" id="citySearchInput" placeholder="p. ej. Jerusalén, Nueva York, Buenos Aires" autocomplete="off">
+            <div class="city-suggestions" id="citySuggestions"></div>
+          </div>
+        </div>
+        <div class="field-row" id="locGpsField" style="display:none;">
+          <button type="button" class="secondary" id="gpsRequestBtn" style="width:100%;">📍 Usar mi ubicación actual</button>
+        </div>
+        <div class="field-row" id="locManualField" style="display:none;margin-bottom:0;">
+          <div class="two-col">
+            <div>
+              <label for="manualLat">Latitud</label>
+              <input type="number" id="manualLat" step="0.0001" placeholder="31.7767">
+            </div>
+            <div>
+              <label for="manualLng">Longitud</label>
+              <input type="number" id="manualLng" step="0.0001" placeholder="35.2345">
+            </div>
+          </div>
+          <div class="field-row" style="margin-top:10px;margin-bottom:0;">
+            <label for="manualTz">Zona horaria</label>
+            <select id="manualTz"></select>
+          </div>
+        </div>
+        <div class="location-status" id="locationStatus">Aún no hay una ubicación establecida. Los horarios de encendido de velas y tzeit hakojavim la necesitan.</div>
+      </div>
+
+      <div class="panel">
+        <h3>Encendido de velas y tzeit hakojavim</h3>
+        <div class="two-col">
+          <div class="field-row" style="margin-bottom:0;">
+            <label for="candleMinutesSelect">Encendido de velas</label>
+            <select id="candleMinutesSelect">
+              <option value="18">18 min antes de la puesta del sol</option>
+              <option value="20">20 min antes de la puesta del sol</option>
+              <option value="30">30 min antes de la puesta del sol</option>
+              <option value="40">40 min antes de la puesta del sol</option>
+            </select>
+          </div>
+          <div class="field-row" style="margin-bottom:0;">
+            <label for="tzeitModeSelect">Tzeit hakojavim</label>
+            <select id="tzeitModeSelect">
+              <option value="min-42">42 min después de la puesta del sol</option>
+              <option value="min-50">50 min después de la puesta del sol</option>
+              <option value="min-72">72 min después de la puesta del sol</option>
+              <option value="deg-3.7">3.7° bajo el horizonte</option>
+              <option value="deg-4.61">4.61° bajo el horizonte</option>
+              <option value="deg-6.5">6.5° bajo el horizonte</option>
+              <option value="deg-8.5">8.5° bajo el horizonte</option>
+            </select>
+          </div>
+        </div>
+        <div class="disclaimer-box">
+          ⚠️ Los horarios de encendido de velas y tzeit hakojavim son estimaciones calculadas solo como referencia. Confirma los horarios exactos con tu rabino o la práctica de tu comunidad local.
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Eventos personalizados</h3>
+        <div class="add-row">
+          <input type="date" id="manualDate" aria-label="Fecha del evento" style="flex:none;width:150px;">
+          <input type="text" id="manualName" placeholder="Nombre del evento" aria-label="Nombre del evento">
+          <button type="button" id="manualAddBtn" class="secondary">Añadir</button>
+        </div>
+        <div class="manual-list" id="manualList"></div>
+      </div>
+
+      <div class="panel">
+        <h3>Fotos por mes <span style="font-weight:normal;color:var(--muted-text);">(opcional)</span></h3>
+        <div class="photo-grid" id="photoGrid"></div>
+        <input type="file" id="photoInput" accept=".jpg,.jpeg,.png,.webp" style="display:none;">
+        <div class="layout-pick">
+          <button type="button" class="active" data-layout="top">Foto arriba</button>
+          <button type="button" data-layout="background">Foto de fondo</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-col">
+      <div class="panel">
+        <h3>Vista previa</h3>
+        <div class="preview-wrap"><div class="month-preview" id="monthPreview"></div></div>
+        <div class="preview-nav">
+          <button type="button" id="prevMonthBtn">← Anterior</button>
+          <span id="previewMonthLabel"></span>
+          <button type="button" id="nextMonthBtn">Siguiente →</button>
+        </div>
+      </div>
+      <div class="panel" style="text-align:center;">
+        <button id="downloadBtn" style="width:100%;">⬇ Descargar calendario PDF del año hebreo</button>
+        <div class="error" id="genError"></div>
+        <div class="progress" id="genProgress"></div>
+        <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subir archivos · Sin cuenta · Sin marca de agua</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="seo-content">
+    <h2>¿Qué hace esta herramienta?</h2>
+    <p>El Generador de Calendario Hebreo crea un calendario PDF imprimible para un año hebreo completo, de Tishrei a Elul, un mes por página (12 páginas en un año regular, 13 en un año bisiesto, cuando Adar se divide en Adar I y Adar II). Cada viernes y sábado muestra los horarios de encendido de velas y tzeit hakojavim calculados para la ubicación que elijas, cada sábado muestra la porción semanal de la Torá, y el mismo sombreado de días y las etiquetas de fecha hebrea del Generador de Calendarios general se incluyen automáticamente. Añade tus propias fotos y eventos puntuales, y descarga el calendario terminado como un único PDF.</p>
+
+    <h2>¿Cuándo deberías usar esta herramienta?</h2>
+    <ul>
+      <li>Quieres horarios de encendido de velas y tzeit hakojavim para cada semana del año, no solo para las festividades</li>
+      <li>Quieres la porción semanal de la Torá impresa junto a la fecha</li>
+      <li>Piensas en términos de año hebreo (de Tishrei a Elul) en lugar del enero a diciembre gregoriano</li>
+      <li>Ya usas el Generador de Calendarios general y quieres añadir estos extras</li>
+    </ul>
+
+    <h2>Preguntas frecuentes</h2>
+    <div class="faq-item">
+      <div class="q">¿Por qué el año del calendario va de Tishrei a Elul en lugar de enero a diciembre?</div>
+      <div>El propio límite del año en el calendario hebreo es Rosh Hashaná, el primero de Tishrei, no el 1 de enero. Este calendario sigue esa estructura nativa: cada descarga cubre un año hebreo completo, 12 meses en un año regular o 13 en un año bisiesto, cuando Adar se divide en Adar I y Adar II.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Qué tan precisos son los horarios de encendido de velas y tzeit hakojavim?</div>
+      <div>Se calculan a partir de las coordenadas de la ubicación que elijas, usando fórmulas astronómicas estándar, el mismo enfoque que usan la mayoría de las apps de calendario. Son una referencia razonable, no un fallo religioso. Confirma los horarios exactos con tu rabino o la práctica de tu comunidad local, sobre todo cerca de una costa, en latitudes altas, o para una ocasión sensible a la precisión.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Por qué tengo que elegir una ubicación?</div>
+      <div>La hora de la puesta del sol depende de la latitud y la longitud exactas, y varía varios minutos incluso entre ciudades cercanas. El encendido de velas y el tzeit hakojavim se definen ambos en relación con la puesta del sol, así que no hay un horario correcto único sin una ubicación.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Qué es el tzeit hakojavim, y por qué hay dos formas de ajustarlo?</div>
+      <div>El tzeit hakojavim ("la salida de las estrellas") marca cuándo termina el Shabat o una festividad. Distintas comunidades lo definen como un número fijo de minutos después de la puesta del sol, o como el momento en que el sol alcanza un ángulo específico bajo el horizonte. Aquí se ofrecen ambas opciones porque ninguna es universal.</div>
+    </div>
+    <div class="faq-item">
+      <div class="q">¿Se sube mi ubicación o algún otro dato a algún sitio?</div>
+      <div>No. La búsqueda de ubicación, el cálculo de la puesta del sol, los datos de fechas hebreas y festividades, las fotos, los eventos personalizados y la generación del PDF ocurren todos localmente en tu navegador. No se envía nada a un servidor.</div>
+    </div>
+  </div>
+
+  <p style="max-width:700px;margin:20px auto 0 auto;text-align:left;font-size:14px;opacity:0.85;">📖 ¿Quieres saber más? Lee nuestra guía: <a href="/es/blog/hebrew-calendar-generator-explained/" style="color:var(--accent);text-decoration:none;">Cómo calcula el generador de calendario hebreo el encendido de velas y el tzeit hakojavim</a></p>
+
+  <h2>Herramientas relacionadas</h2>
+  <div class="related-grid">
+  <a class="related-card" href="/es/calendar-generator/">
+    <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 9h18"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 17h.01M12 17h.01"/></svg></div>
+    <div class="body">
+      <div class="title">Generador de Calendarios</div>
+      <div class="desc">Crea un calendario PDF imprimible con días festivos.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+  <a class="related-card" href="/es/text-to-pdf/">
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M8 12h6M8 15h7"/><path d="M2 14h4m-4 0l2-2m-2 2l2 2"/></svg></div>
+    <div class="body">
+      <div class="title">Texto a PDF</div>
+      <div class="desc">Convierte texto plano en un PDF.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+  <a class="related-card" href="/es/handwriting-worksheets/">
+    <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+    <div class="body">
+      <div class="title">Hojas de Caligrafía</div>
+      <div class="desc">Fichas imprimibles de letras para calcar.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+  <a class="related-card" href="/es/collage-maker/">
+    <div class="icon-box cat-image"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="2.5" width="8" height="8" rx="1.5"/><rect x="13.5" y="2.5" width="8" height="8" rx="1.5"/><rect x="2.5" y="13.5" width="8" height="8" rx="1.5"/><rect x="13.5" y="13.5" width="8" height="8" rx="1.5"/></svg></div>
+    <div class="body">
+      <div class="title">Creador de Collages</div>
+      <div class="desc">Combina de 2 a 9 fotos en un collage.</div>
+    </div>
+    <div class="arrow">→</div>
+  </a>
+</div>
+
+  <footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-brand-logo">ORISOD</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Procesamiento 100% local: tus archivos nunca se suben a ningún sitio.</div>
+      <div class="footer-copy">© Orisod Labs</div>
+    </div>
+    <div class="footer-col">
+      <h3>Herramientas</h3>
+      <a href="/es/tools/#image">Herramientas de imagen</a>
+      <a href="/es/tools/#pdf">Herramientas PDF</a>
+      <a href="/es/tools/#utility">Utilidades</a>
+    </div>
+    <div class="footer-col">
+      <h3>Empresa</h3>
+      <a href="/es/about/">Acerca de</a>
+      <a href="/es/privacy/">Privacidad</a>
+      <a href="/es/blog/">Blog</a>
+    </div>
+  </div>
+</footer>
+</div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+<script>
+(function(){
+'use strict';
+
+var LANG = 'es';
+var DOW_NAMES = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+var PARASHA_PREFIX = 'Parashá ';
+
+var state = {
+  yearMode: 'hebrew',
+  hebrewYear: null,
+  location: null, // {lat, lng, tz, label}
+  candleMinutes: 18,
+  tzeitMode: 'min', // 'min' | 'deg'
+  tzeitValue: 42,
+  manual: [],
+  photos: [],
+  photoLayout: 'top',
+  previewMonthIndex: 0
+};
+
+var hebrewPerDay = null, jewishFull = null, parashaData = null, cities = null;
+var dataLoadError = document.getElementById('dataLoadError');
+function showDataLoadError(){ dataLoadError.style.display = 'block'; }
+var dr1 = fetch('/assets/data/calendar/hebrew-per-day.es.json').then(function(r){ if(!r.ok) throw new Error('bad'); return r.json(); }).then(function(d){ hebrewPerDay = d; }).catch(function(){ hebrewPerDay = {}; showDataLoadError(); });
+var dr2 = fetch('/assets/data/calendar/jewish-full.es.json').then(function(r){ if(!r.ok) throw new Error('bad'); return r.json(); }).then(function(d){ jewishFull = d; }).catch(function(){ jewishFull = {}; showDataLoadError(); });
+var dr3 = fetch('/assets/data/calendar/parasha.es.json').then(function(r){ if(!r.ok) throw new Error('bad'); return r.json(); }).then(function(d){ parashaData = d; }).catch(function(){ parashaData = {}; showDataLoadError(); });
+var dr4 = fetch('/assets/data/calendar/cities.json').then(function(r){ if(!r.ok) throw new Error('bad'); return r.json(); }).then(function(d){ cities = d; }).catch(function(){ cities = []; });
+var ALL_DATA_READY = Promise.all([dr1, dr2, dr3, dr4]);
+
+/* ===================== DOM refs ===================== */
+var yearModeHebrewBtn = document.getElementById('yearModeHebrewBtn');
+var yearModeGregorianBtn = document.getElementById('yearModeGregorianBtn');
+var hebrewYearField = document.getElementById('hebrewYearField');
+var gregorianYearField = document.getElementById('gregorianYearField');
+var hebrewYearSelect = document.getElementById('hebrewYearSelect');
+var gregorianYearSelect = document.getElementById('gregorianYearSelect');
+var yearResultInfo = document.getElementById('yearResultInfo');
+
+var locModeCityBtn = document.getElementById('locModeCityBtn');
+var locModeGpsBtn = document.getElementById('locModeGpsBtn');
+var locModeManualBtn = document.getElementById('locModeManualBtn');
+var locCityField = document.getElementById('locCityField');
+var locGpsField = document.getElementById('locGpsField');
+var locManualField = document.getElementById('locManualField');
+var citySearchInput = document.getElementById('citySearchInput');
+var citySuggestions = document.getElementById('citySuggestions');
+var gpsRequestBtn = document.getElementById('gpsRequestBtn');
+var manualLat = document.getElementById('manualLat');
+var manualLng = document.getElementById('manualLng');
+var manualTz = document.getElementById('manualTz');
+var locationStatus = document.getElementById('locationStatus');
+
+var candleMinutesSelect = document.getElementById('candleMinutesSelect');
+var tzeitModeSelect = document.getElementById('tzeitModeSelect');
+
+var manualDate = document.getElementById('manualDate');
+var manualName = document.getElementById('manualName');
+var manualAddBtn = document.getElementById('manualAddBtn');
+var manualList = document.getElementById('manualList');
+var photoGrid = document.getElementById('photoGrid');
+var photoInput = document.getElementById('photoInput');
+var monthPreview = document.getElementById('monthPreview');
+var previewMonthLabel = document.getElementById('previewMonthLabel');
+var prevMonthBtn = document.getElementById('prevMonthBtn');
+var nextMonthBtn = document.getElementById('nextMonthBtn');
+var downloadBtn = document.getElementById('downloadBtn');
+var genError = document.getElementById('genError');
+var genProgress = document.getElementById('genProgress');
+
+function pad2(n){ return n < 10 ? '0'+n : ''+n; }
+
+/* ===================== DIVISIÓN POR AÑO HEBREO (a partir del dataset
+   plano ya existente -- no hace falta recalcular nada). Un año hebreo
+   solo se puede usar aquí por completo si TANTO el día anterior a su
+   primera fecha COMO el día posterior a su última fecha existen en los
+   datos, es decir, si no está truncado en ninguno de los extremos del
+   rango subyacente 2020-01-01..2036-12-31. ===================== */
+var VALID_HEBREW_YEARS = [];
+function computeValidHebrewYears(){
+  var byYear = {};
+  Object.keys(hebrewPerDay).forEach(function(k){
+    var y = hebrewPerDay[k].y;
+    if (!byYear[y]) byYear[y] = [];
+    byYear[y].push(k);
+  });
+  var years = Object.keys(byYear).map(Number).sort(function(a,b){ return a-b; });
+  var valid = [];
+  years.forEach(function(y){
+    var dates = byYear[y].sort();
+    var first = dates[0], last = dates[dates.length-1];
+    var beforeFirst = addDaysToKey(first, -1);
+    var afterLast = addDaysToKey(last, 1);
+    var beforeOk = hebrewPerDay[beforeFirst] && hebrewPerDay[beforeFirst].y === y-1;
+    var afterOk = hebrewPerDay[afterLast] && hebrewPerDay[afterLast].y === y+1;
+    if (beforeOk && afterOk) valid.push(y);
+  });
+  return valid;
+}
+function addDaysToKey(dateKey, n){
+  var d = new Date(dateKey + 'T00:00:00');
+  d.setDate(d.getDate() + n);
+  return d.getFullYear() + '-' + pad2(d.getMonth()+1) + '-' + pad2(d.getDate());
+}
+function monthsForHebrewYear(Y){
+  var dates = Object.keys(hebrewPerDay).filter(function(k){ return hebrewPerDay[k].y === Y; }).sort();
+  var months = [];
+  var cur = null;
+  dates.forEach(function(dateKey){
+    var hd = hebrewPerDay[dateKey];
+    if (!cur || cur.name !== hd.m) {
+      cur = { name: hd.m, dates: [] };
+      months.push(cur);
+    }
+    cur.dates.push({ dateKey: dateKey, day: hd.d });
+  });
+  return months;
+}
+function hebrewYearForGregorianYear(G){
+  for (var k in hebrewPerDay) {
+    var hd = hebrewPerDay[k];
+    if (hd.m === 'Tishrei' && hd.d === 1 && k.slice(0,4) === String(G)) return hd.y;
+  }
+  return null;
+}
+function gregorianRangeLabel(Y){
+  var months = monthsForHebrewYear(Y);
+  if (!months.length) return '';
+  var first = months[0].dates[0].dateKey.slice(0,4);
+  var last = months[months.length-1].dates[months[months.length-1].dates.length-1].dateKey.slice(0,4);
+  return first === last ? first : (first + '-' + last);
+}
+
+/* ===================== SELECTOR DE AÑO ===================== */
+function populateYearSelectors(){
+  VALID_HEBREW_YEARS = computeValidHebrewYears();
+  hebrewYearSelect.innerHTML = '';
+  VALID_HEBREW_YEARS.forEach(function(y){
+    var opt = document.createElement('option');
+    opt.value = y; opt.textContent = y;
+    hebrewYearSelect.appendChild(opt);
+  });
+  gregorianYearSelect.innerHTML = '';
+  VALID_HEBREW_YEARS.forEach(function(y){
+    var g = gregorianRangeLabel(y).split('-')[0];
+    var opt = document.createElement('option');
+    opt.value = g; opt.textContent = g;
+    gregorianYearSelect.appendChild(opt);
+  });
+
+  // por defecto: el año hebreo que contiene la fecha de hoy, si es válido; si no, el centro del rango
+  var todayKey = new Date().toISOString().slice(0,10);
+  var todayHY = hebrewPerDay[todayKey] ? hebrewPerDay[todayKey].y : null;
+  var defaultY = (todayHY && VALID_HEBREW_YEARS.indexOf(todayHY) !== -1) ? todayHY : VALID_HEBREW_YEARS[Math.floor(VALID_HEBREW_YEARS.length/2)];
+  state.hebrewYear = defaultY;
+  hebrewYearSelect.value = defaultY;
+  gregorianYearSelect.value = gregorianRangeLabel(defaultY).split('-')[0];
+  updateYearResultInfo();
+}
+function updateYearResultInfo(){
+  var range = gregorianRangeLabel(state.hebrewYear);
+  if (state.yearMode === 'gregorian') {
+    var parts = range.split('-');
+    yearResultInfo.innerHTML = 'Año hebreo <strong>' + state.hebrewYear + '</strong> (gregoriano <strong>' + range + '</strong>). El calendario hebreo que comienza en ' + parts[0] + ' continúa hasta ' + (parts[1] || parts[0]) + '.';
+  } else {
+    yearResultInfo.innerHTML = 'Este calendario cubre el año hebreo <strong>' + state.hebrewYear + '</strong>, gregoriano <strong>' + range + '</strong>.';
+  }
+}
+yearModeHebrewBtn.addEventListener('click', function(){
+  state.yearMode = 'hebrew';
+  yearModeHebrewBtn.classList.add('active'); yearModeGregorianBtn.classList.remove('active');
+  hebrewYearField.style.display = ''; gregorianYearField.style.display = 'none';
+  updateYearResultInfo();
+});
+yearModeGregorianBtn.addEventListener('click', function(){
+  state.yearMode = 'gregorian';
+  yearModeGregorianBtn.classList.add('active'); yearModeHebrewBtn.classList.remove('active');
+  gregorianYearField.style.display = ''; hebrewYearField.style.display = 'none';
+  updateYearResultInfo();
+});
+hebrewYearSelect.addEventListener('change', function(){
+  state.hebrewYear = parseInt(hebrewYearSelect.value, 10);
+  gregorianYearSelect.value = gregorianRangeLabel(state.hebrewYear).split('-')[0];
+  updateYearResultInfo();
+  onYearChanged();
+});
+gregorianYearSelect.addEventListener('change', function(){
+  var g = parseInt(gregorianYearSelect.value, 10);
+  var hy = hebrewYearForGregorianYear(g);
+  if (hy && VALID_HEBREW_YEARS.indexOf(hy) !== -1) {
+    state.hebrewYear = hy;
+    hebrewYearSelect.value = hy;
+  }
+  updateYearResultInfo();
+  onYearChanged();
+});
+function onYearChanged(){
+  state.previewMonthIndex = 0;
+  resizePhotosForCurrentYear();
+  renderPhotoGrid();
+  renderPreview();
+}
+
+/* ===================== UBICACIÓN ===================== */
+function setLocMode(mode){
+  locModeCityBtn.classList.toggle('active', mode==='city');
+  locModeGpsBtn.classList.toggle('active', mode==='gps');
+  locModeManualBtn.classList.toggle('active', mode==='manual');
+  locCityField.style.display = mode==='city' ? '' : 'none';
+  locGpsField.style.display = mode==='gps' ? '' : 'none';
+  locManualField.style.display = mode==='manual' ? '' : 'none';
+}
+locModeCityBtn.addEventListener('click', function(){ setLocMode('city'); });
+locModeGpsBtn.addEventListener('click', function(){ setLocMode('gps'); });
+locModeManualBtn.addEventListener('click', function(){ setLocMode('manual'); });
+
+function updateLocationStatus(){
+  if (!state.location) {
+    locationStatus.innerHTML = 'Aún no hay una ubicación establecida. Los horarios de encendido de velas y tzeit hakojavim la necesitan.';
+  } else {
+    locationStatus.innerHTML = 'Usando <strong>' + state.location.label + '</strong> (' + state.location.tz + ').';
+  }
+}
+
+// búsqueda de ciudad
+var citySuggestIndex = -1, citySuggestList = [];
+citySearchInput.addEventListener('input', function(){
+  var q = citySearchInput.value.trim().toLowerCase();
+  citySuggestIndex = -1;
+  if (!cities || q.length < 2) { citySuggestions.classList.remove('open'); citySuggestions.innerHTML=''; return; }
+  var starts = [], contains = [];
+  for (var i = 0; i < cities.length && (starts.length + contains.length) < 300; i++) {
+    var c = cities[i];
+    var name = c.n.toLowerCase();
+    if (name.indexOf(q) === 0) starts.push(c);
+    else if (name.indexOf(q) !== -1) contains.push(c);
+  }
+  citySuggestList = starts.concat(contains).slice(0, 8);
+  renderCitySuggestions();
+});
+function renderCitySuggestions(){
+  citySuggestions.innerHTML = '';
+  if (!citySuggestList.length) { citySuggestions.classList.remove('open'); return; }
+  citySuggestList.forEach(function(c, i){
+    var row = document.createElement('div');
+    row.className = 'city-suggestion' + (i === citySuggestIndex ? ' active' : '');
+    row.innerHTML = c.n + ' <span class="country">' + c.c + '</span>';
+    row.addEventListener('click', function(){ chooseCity(c); });
+    citySuggestions.appendChild(row);
+  });
+  citySuggestions.classList.add('open');
+}
+function chooseCity(c){
+  state.location = { lat: c.lat, lng: c.lng, tz: c.tz, label: c.n + ', ' + c.c };
+  citySearchInput.value = c.n + ', ' + c.c;
+  citySuggestions.classList.remove('open');
+  updateLocationStatus();
+  renderPreview();
+}
+citySearchInput.addEventListener('keydown', function(e){
+  if (!citySuggestList.length) return;
+  if (e.key === 'ArrowDown') { e.preventDefault(); citySuggestIndex = Math.min(citySuggestIndex+1, citySuggestList.length-1); renderCitySuggestions(); }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); citySuggestIndex = Math.max(citySuggestIndex-1, 0); renderCitySuggestions(); }
+  else if (e.key === 'Enter') { e.preventDefault(); if (citySuggestIndex >= 0) chooseCity(citySuggestList[citySuggestIndex]); }
+  else if (e.key === 'Escape') { citySuggestions.classList.remove('open'); }
+});
+document.addEventListener('click', function(e){
+  if (!citySearchInput.contains(e.target) && !citySuggestions.contains(e.target)) citySuggestions.classList.remove('open');
+});
+
+// GPS
+gpsRequestBtn.addEventListener('click', function(){
+  if (!navigator.geolocation) { locationStatus.textContent = 'La geolocalización no está disponible en este navegador.'; return; }
+  gpsRequestBtn.disabled = true;
+  gpsRequestBtn.textContent = 'Solicitando ubicación…';
+  navigator.geolocation.getCurrentPosition(function(pos){
+    var tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+    state.location = { lat: pos.coords.latitude, lng: pos.coords.longitude, tz: tz, label: 'Tu ubicación actual' };
+    gpsRequestBtn.disabled = false;
+    gpsRequestBtn.textContent = '📍 Usar mi ubicación actual';
+    updateLocationStatus();
+    renderPreview();
+  }, function(){
+    gpsRequestBtn.disabled = false;
+    gpsRequestBtn.textContent = '📍 Usar mi ubicación actual';
+    locationStatus.textContent = 'No se pudo obtener tu ubicación. Revisa los permisos de tu navegador, o usa la búsqueda de ciudad o las coordenadas manuales.';
+  });
+});
+
+// lat/long manual + zona horaria
+(function populateTzSelect(){
+  var zones = [];
+  try { zones = Intl.supportedValuesOf('timeZone'); } catch(e) { zones = ['UTC']; }
+  zones.forEach(function(z){
+    var opt = document.createElement('option');
+    opt.value = z; opt.textContent = z;
+    if (z === 'UTC') opt.selected = true;
+    manualTz.appendChild(opt);
+  });
+  try {
+    var guess = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (guess && zones.indexOf(guess) !== -1) manualTz.value = guess;
+  } catch(e){}
+})();
+function applyManualLocation(){
+  var lat = parseFloat(manualLat.value), lng = parseFloat(manualLng.value);
+  if (isNaN(lat) || isNaN(lng)) return;
+  state.location = { lat: lat, lng: lng, tz: manualTz.value, label: lat.toFixed(2) + ', ' + lng.toFixed(2) };
+  updateLocationStatus();
+  renderPreview();
+}
+manualLat.addEventListener('change', applyManualLocation);
+manualLng.addEventListener('change', applyManualLocation);
+manualTz.addEventListener('change', applyManualLocation);
+
+/* ===================== ENCENDIDO DE VELAS / TZEIT (SunCalc) ===================== */
+[3.7, 4.61, 6.5, 8.5].forEach(function(deg){
+  var key = String(deg).replace('.', '_');
+  SunCalc.addTime(-deg, 'dawn' + key, 'dusk' + key);
+});
+candleMinutesSelect.addEventListener('change', function(){ state.candleMinutes = parseInt(candleMinutesSelect.value, 10); renderPreview(); });
+tzeitModeSelect.addEventListener('change', function(){
+  var v = tzeitModeSelect.value.split('-');
+  state.tzeitMode = v[0] === 'min' ? 'min' : 'deg';
+  state.tzeitValue = parseFloat(v[1]);
+  renderPreview();
+});
+
+function sunsetFor(dateKey, loc){
+  var d = new Date(dateKey + 'T12:00:00Z');
+  var times = SunCalc.getTimes(d, loc.lat, loc.lng);
+  return times.sunset;
+}
+function candleTimeFor(dateKey, loc){
+  var sunset = sunsetFor(dateKey, loc);
+  if (!sunset || isNaN(sunset.getTime())) return null;
+  return new Date(sunset.getTime() - state.candleMinutes * 60000);
+}
+function tzeitTimeFor(dateKey, loc){
+  var d = new Date(dateKey + 'T12:00:00Z');
+  var times = SunCalc.getTimes(d, loc.lat, loc.lng);
+  if (state.tzeitMode === 'min') {
+    var sunset = times.sunset;
+    if (!sunset || isNaN(sunset.getTime())) return null;
+    return new Date(sunset.getTime() + state.tzeitValue * 60000);
+  }
+  var key = 'dusk' + String(state.tzeitValue).replace('.', '_');
+  return times[key] || null;
+}
+function formatTimeInTz(date, tz){
+  if (!date || isNaN(date.getTime())) return '';
+  try {
+    return date.toLocaleTimeString('es-ES', { timeZone: tz, hour: 'numeric', minute: '2-digit' });
+  } catch(e) { return ''; }
+}
+function dowOf(dateKey){ return new Date(dateKey + 'T00:00:00').getDay(); }
+
+/* ===================== SOMBREADO DEL CALENDARIO JUDÍO (compartido con la Parte 1) ===================== */
+function shabbatCategoryFor(dateKey){
+  var dow = new Date(dateKey + 'T00:00:00').getDay();
+  return (dow === 6) ? 'A' : null;
+}
+function shadeForYear(gregYear){
+  var shade = {};
+  if (jewishFull && jewishFull[gregYear]) {
+    jewishFull[gregYear].forEach(function(h){ if (h.shade) shade[h.date] = h.shade; });
+  }
+  return shade;
+}
+var yearShadeCache = {};
+function shadeForDate(dateKey){
+  var gy = dateKey.slice(0,4);
+  if (!yearShadeCache[gy]) yearShadeCache[gy] = shadeForYear(gy);
+  var own = yearShadeCache[gy][dateKey];
+  if (own === 'none') return null;
+  return own || shabbatCategoryFor(dateKey);
+}
+function holidayNamesFor(dateKey){
+  var gy = dateKey.slice(0,4);
+  if (!jewishFull || !jewishFull[gy]) return [];
+  return jewishFull[gy].filter(function(h){ return h.date === dateKey; }).map(function(h){ return h.name; });
+}
+function parashaFor(dateKey){
+  return (parashaData && parashaData[dateKey]) || null;
+}
+
+/* ===================== EVENTOS PERSONALIZADOS ===================== */
+function renderManualList(){
+  manualList.innerHTML = '';
+  state.manual.forEach(function(m, i){
+    var row = document.createElement('div');
+    row.className = 'manual-item';
+    var span = document.createElement('span');
+    span.textContent = m.date + ': ' + m.name;
+    var rm = document.createElement('button');
+    rm.type = 'button'; rm.textContent = 'Eliminar';
+    rm.addEventListener('click', function(){ state.manual.splice(i,1); renderManualList(); renderPreview(); });
+    row.appendChild(span); row.appendChild(rm);
+    manualList.appendChild(row);
+  });
+}
+manualAddBtn.addEventListener('click', function(){
+  if (!manualDate.value || !manualName.value.trim()) return;
+  state.manual.push({ date: manualDate.value, name: manualName.value.trim() });
+  manualDate.value = ''; manualName.value = '';
+  renderManualList();
+  renderPreview();
+});
+function customEventsFor(dateKey){
+  return state.manual.filter(function(m){ return m.date === dateKey; }).map(function(m){ return m.name; });
+}
+
+/* ===================== FOTOS ===================== */
+var pendingPhotoSlot = null;
+function resizePhotosForCurrentYear(){
+  var n = monthsForHebrewYear(state.hebrewYear).length;
+  var next = new Array(n).fill(null);
+  for (var i = 0; i < Math.min(n, state.photos.length); i++) next[i] = state.photos[i];
+  state.photos = next;
+}
+function renderPhotoGrid(){
+  var months = monthsForHebrewYear(state.hebrewYear);
+  photoGrid.innerHTML = '';
+  months.forEach(function(month, i){
+    var slot = document.createElement('div');
+    slot.className = 'photo-slot';
+    var label = document.createElement('div');
+    label.className = 'month-label';
+    label.textContent = month.name.indexOf('Adar') === 0 ? month.name : month.name.slice(0, 4);
+    slot.appendChild(label);
+    if (state.photos[i]) {
+      var img = document.createElement('img');
+      img.src = state.photos[i].dataUrl;
+      slot.appendChild(img);
+      var rmX = document.createElement('div');
+      rmX.className = 'remove-x'; rmX.textContent = '✕';
+      rmX.addEventListener('click', function(e){ e.stopPropagation(); state.photos[i] = null; renderPhotoGrid(); renderPreview(); });
+      slot.appendChild(rmX);
+    } else {
+      slot.appendChild(document.createTextNode('+ Foto'));
+    }
+    slot.addEventListener('click', function(){ pendingPhotoSlot = i; photoInput.click(); });
+    photoGrid.appendChild(slot);
+  });
+}
+photoInput.addEventListener('change', function(){
+  if (pendingPhotoSlot === null || !photoInput.files.length) return;
+  var slot = pendingPhotoSlot; pendingPhotoSlot = null;
+  var file = photoInput.files[0];
+  var reader = new FileReader();
+  reader.onload = function(e){
+    var img = new Image();
+    img.onload = function(){
+      state.photos[slot] = { dataUrl: e.target.result, img: img };
+      renderPhotoGrid();
+      renderPreview();
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+  photoInput.value = '';
+});
+document.querySelectorAll('.layout-pick button').forEach(function(b){
+  b.addEventListener('click', function(){
+    document.querySelectorAll('.layout-pick button').forEach(function(x){ x.classList.remove('active'); });
+    b.classList.add('active');
+    state.photoLayout = b.dataset.layout;
+    renderPreview();
+  });
+});
+
+/* ===================== VISTA PREVIA ===================== */
+function cellContentFor(dateKey, container){
+  var greg = document.createElement('div'); greg.className = 'greg-date';
+  var d = new Date(dateKey + 'T00:00:00');
+  greg.textContent = (d.getMonth()+1) + '/' + d.getDate();
+  container.appendChild(greg);
+
+  var dow = dowOf(dateKey);
+  if (dow === 6) {
+    var par = parashaFor(dateKey);
+    if (par) {
+      var p = document.createElement('span'); p.className = 'parasha';
+      p.textContent = PARASHA_PREFIX + par;
+      container.appendChild(p);
+    }
+    if (state.location) {
+      var tz = tzeitTimeFor(dateKey, state.location);
+      if (tz) {
+        var t = document.createElement('span'); t.className = 'tzeit';
+        t.textContent = 'Havdalá ' + formatTimeInTz(tz, state.location.tz);
+        container.appendChild(t);
+      }
+    }
+  }
+  if (dow === 5 && state.location) {
+    var ct = candleTimeFor(dateKey, state.location);
+    if (ct) {
+      var c = document.createElement('span'); c.className = 'candle';
+      c.textContent = 'Velas ' + formatTimeInTz(ct, state.location.tz);
+      container.appendChild(c);
+    }
+  }
+  holidayNamesFor(dateKey).forEach(function(name){
+    var e = document.createElement('span'); e.className = 'evt';
+    e.textContent = name;
+    container.appendChild(e);
+  });
+  customEventsFor(dateKey).forEach(function(name){
+    var e = document.createElement('span'); e.className = 'evt';
+    e.textContent = name;
+    container.appendChild(e);
+  });
+}
+
+function renderPreview(){
+  if (!hebrewPerDay || !state.hebrewYear) return;
+  var months = monthsForHebrewYear(state.hebrewYear);
+  if (!months.length) return;
+  if (state.previewMonthIndex >= months.length) state.previewMonthIndex = 0;
+  var month = months[state.previewMonthIndex];
+
+  var firstKey = month.dates[0].dateKey, lastKey = month.dates[month.dates.length-1].dateKey;
+  var gregFirst = new Date(firstKey + 'T00:00:00'), gregLast = new Date(lastKey + 'T00:00:00');
+  var MONTHS_SHORT = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  var gregLabel = MONTHS_SHORT[gregFirst.getMonth()] + ' ' + gregFirst.getDate() + ' – ' + MONTHS_SHORT[gregLast.getMonth()] + ' ' + gregLast.getDate() + ', ' + gregLast.getFullYear();
+
+  previewMonthLabel.textContent = month.name + ' ' + state.hebrewYear;
+
+  monthPreview.innerHTML = '';
+  var header = document.createElement('div');
+  header.className = 'mp-header';
+  header.textContent = month.name + ' ' + state.hebrewYear;
+  monthPreview.appendChild(header);
+  var gregHeader = document.createElement('div');
+  gregHeader.className = 'mp-header-greg';
+  gregHeader.textContent = gregLabel;
+  monthPreview.appendChild(gregHeader);
+
+  var grid = document.createElement('div');
+  grid.className = 'mp-grid';
+  DOW_NAMES.forEach(function(d){
+    var el = document.createElement('div'); el.className = 'mp-dow'; el.textContent = d;
+    grid.appendChild(el);
+  });
+
+  var firstDow = dowOf(firstKey);
+  for (var i = 0; i < firstDow; i++) {
+    var empty = document.createElement('div'); empty.className = 'mp-cell empty';
+    grid.appendChild(empty);
+  }
+  month.dates.forEach(function(entry){
+    var cell = document.createElement('div'); cell.className = 'mp-cell';
+    var cat = shadeForDate(entry.dateKey);
+    if (cat) cell.classList.add('shade-' + cat.toLowerCase());
+    var num = document.createElement('div'); num.className = 'num'; num.textContent = entry.day;
+    cell.appendChild(num);
+    cellContentFor(entry.dateKey, cell);
+    grid.appendChild(cell);
+  });
+  monthPreview.appendChild(grid);
+}
+prevMonthBtn.addEventListener('click', function(){
+  var months = monthsForHebrewYear(state.hebrewYear);
+  state.previewMonthIndex = (state.previewMonthIndex + months.length - 1) % months.length;
+  renderPreview();
+});
+nextMonthBtn.addEventListener('click', function(){
+  var months = monthsForHebrewYear(state.hebrewYear);
+  state.previewMonthIndex = (state.previewMonthIndex + 1) % months.length;
+  renderPreview();
+});
+
+/* ===================== GENERACIÓN DEL PDF ===================== */
+function darkenPhotoDataUrl(img){
+  var canvas = document.createElement('canvas');
+  canvas.width = img.naturalWidth; canvas.height = img.naturalHeight;
+  var ctx = canvas.getContext('2d');
+  ctx.drawImage(img, 0, 0);
+  ctx.fillStyle = 'rgba(0,0,0,0.45)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  return canvas.toDataURL('image/jpeg', 0.88);
+}
+function dataUrlToBytes(dataUrl){
+  var base64 = dataUrl.split(',')[1];
+  var bin = atob(base64);
+  var bytes = new Uint8Array(bin.length);
+  for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return bytes;
+}
+var SHADE_COLORS_PDF = {
+  A: { r: 217/255, g: 119/255, b: 6/255, o: .12 },
+  B: { r: 107/255, g: 114/255, b: 128/255, o: .12 },
+  C: { r: 37/255, g: 99/255, b: 235/255, o: .14 },
+  D: { r: 0, g: 0, b: 0, o: .10 },
+  E: { r: 236/255, g: 72/255, b: 153/255, o: .12 },
+  F: { r: 22/255, g: 163/255, b: 74/255, o: .12 },
+};
+var MONTHS_SHORT_PDF = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+
+async function generatePdf(){
+  var { PDFDocument, rgb, StandardFonts } = PDFLib;
+  var pdfDoc = await PDFDocument.create();
+  var fontRegular = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  var fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+
+  var PAGE_W = 612, PAGE_H = 792; // Carta
+  var MARGIN = 36;
+  var isBackground = state.photoLayout === 'background';
+  var months = monthsForHebrewYear(state.hebrewYear);
+
+  for (var mi = 0; mi < months.length; mi++) {
+    var month = months[mi];
+    genProgress.textContent = 'Generando ' + month.name + '...';
+    var page = pdfDoc.addPage([PAGE_W, PAGE_H]);
+    var photo = state.photos[mi];
+    var gridTop = PAGE_H - 110;
+    var gridBottom = MARGIN + 20;
+
+    var textColor = rgb(0.1, 0.1, 0.12);
+    var lineColor = rgb(0.75, 0.75, 0.78);
+    var accentColor = rgb(0.145, 0.388, 0.922);
+    var subColor = rgb(0.42, 0.45, 0.5);
+    var parashaColor = rgb(0.486, 0.227, 0.929);
+    var candleColor = rgb(0.851, 0.467, 0.024);
+    var tzeitColor = rgb(0.263, 0.220, 0.792);
+
+    if (photo && isBackground) {
+      var darkened = darkenPhotoDataUrl(photo.img);
+      var bytes = dataUrlToBytes(darkened);
+      var embedded = darkened.indexOf('image/png') !== -1 ? await pdfDoc.embedPng(bytes) : await pdfDoc.embedJpg(bytes);
+      var scale = Math.max(PAGE_W / embedded.width, PAGE_H / embedded.height);
+      var iw = embedded.width * scale, ih = embedded.height * scale;
+      page.drawImage(embedded, { x: (PAGE_W-iw)/2, y: (PAGE_H-ih)/2, width: iw, height: ih });
+      textColor = rgb(1,1,1); lineColor = rgb(1,1,1); subColor = rgb(1,1,1);
+      parashaColor = rgb(1,1,1); candleColor = rgb(1,1,1); tzeitColor = rgb(1,1,1);
+    } else if (photo) {
+      var bytes2 = dataUrlToBytes(photo.dataUrl);
+      var embedded2 = photo.dataUrl.indexOf('image/png') !== -1 ? await pdfDoc.embedPng(bytes2) : await pdfDoc.embedJpg(bytes2);
+      var photoAreaW = PAGE_W - MARGIN*2, photoAreaH = 200;
+      var s = Math.min(photoAreaW/embedded2.width, photoAreaH/embedded2.height);
+      var pw = embedded2.width*s, ph = embedded2.height*s;
+      page.drawImage(embedded2, { x: (PAGE_W-pw)/2, y: PAGE_H - 90 - ph, width: pw, height: ph });
+      gridTop = PAGE_H - 90 - ph - 30;
+    }
+
+    page.drawText(month.name + ' ' + state.hebrewYear, {
+      x: MARGIN, y: PAGE_H - 50, size: 24, font: fontBold, color: textColor
+    });
+    var firstKey = month.dates[0].dateKey, lastKey = month.dates[month.dates.length-1].dateKey;
+    var gf = new Date(firstKey+'T00:00:00'), gl = new Date(lastKey+'T00:00:00');
+    var gregLabel = MONTHS_SHORT_PDF[gf.getMonth()] + ' ' + gf.getDate() + ' - ' + MONTHS_SHORT_PDF[gl.getMonth()] + ' ' + gl.getDate() + ', ' + gl.getFullYear();
+    page.drawText(gregLabel, { x: MARGIN, y: PAGE_H - 64, size: 10, font: fontRegular, color: subColor });
+
+    var cols = 7, rows = 6;
+    var cellW = (PAGE_W - MARGIN*2) / cols;
+    var cellH = (gridTop - gridBottom) / rows;
+
+    DOW_NAMES.forEach(function(dow, i){
+      page.drawText(dow, { x: MARGIN + i*cellW + 6, y: gridTop + 6, size: 9, font: fontBold, color: textColor });
+    });
+    page.drawLine({ start:{x:MARGIN,y:gridTop}, end:{x:PAGE_W-MARGIN,y:gridTop}, thickness:1, color:lineColor });
+
+    var firstDow = dowOf(firstKey);
+    var col = firstDow, row = 0;
+
+    month.dates.forEach(function(entry){
+      var x = MARGIN + col*cellW, y = gridTop - (row+1)*cellH;
+      var dateKey = entry.dateKey;
+      if (!isBackground) {
+        var cat = shadeForDate(dateKey);
+        if (cat && SHADE_COLORS_PDF[cat]) {
+          var sc = SHADE_COLORS_PDF[cat];
+          page.drawRectangle({ x:x, y:y, width:cellW, height:cellH, color: rgb(sc.r, sc.g, sc.b), opacity: sc.o });
+        }
+      }
+      page.drawRectangle({ x:x, y:y, width:cellW, height:cellH, borderColor:lineColor, borderWidth:0.5 });
+      page.drawText(String(entry.day), { x:x+5, y:y+cellH-14, size:10, font:fontBold, color:textColor });
+      var gd = new Date(dateKey+'T00:00:00');
+      page.drawText((gd.getMonth()+1)+'/'+gd.getDate(), { x:x+5, y:y+cellH-24, size:5.5, font:fontRegular, color:subColor });
+
+      var ty = y + cellH - 34;
+      var dow = dowOf(dateKey);
+      if (dow === 6) {
+        var par = parashaFor(dateKey);
+        if (par) {
+          var label = PARASHA_PREFIX + par;
+          page.drawText(label.length > 22 ? label.slice(0,21)+'…' : label, { x:x+5, y:ty, size:5.5, font:fontBold, color:parashaColor });
+          ty -= 8;
+        }
+        if (state.location) {
+          var tzt = tzeitTimeFor(dateKey, state.location);
+          if (tzt) { page.drawText('Havdalá ' + formatTimeInTz(tzt, state.location.tz), { x:x+5, y:ty, size:5.5, font:fontRegular, color:tzeitColor }); ty -= 8; }
+        }
+      }
+      if (dow === 5 && state.location) {
+        var ctm = candleTimeFor(dateKey, state.location);
+        if (ctm) { page.drawText('Velas ' + formatTimeInTz(ctm, state.location.tz), { x:x+5, y:ty, size:5.5, font:fontRegular, color:candleColor }); ty -= 8; }
+      }
+      var names = holidayNamesFor(dateKey).concat(customEventsFor(dateKey));
+      names.slice(0,3).forEach(function(nm){
+        page.drawText(nm.length > 22 ? nm.slice(0,21)+'…' : nm, { x:x+5, y:ty, size:5.5, font:fontRegular, color: isBackground ? rgb(1,1,1) : accentColor });
+        ty -= 7.5;
+      });
+
+      col++;
+      if (col === 7) { col = 0; row++; }
+    });
+  }
+
+  return await pdfDoc.save();
+}
+
+downloadBtn.addEventListener('click', async function(){
+  genError.textContent = ''; genProgress.textContent = '';
+  downloadBtn.disabled = true;
+  try {
+    await ALL_DATA_READY;
+    var bytes = await generatePdf();
+    var blob = new Blob([bytes], { type: 'application/pdf' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'calendario-hebreo-' + state.hebrewYear + '.pdf';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
+    genProgress.textContent = 'Listo. Para descargar.';
+  } catch(err) {
+    genError.textContent = err.message || 'No se pudo generar el calendario.';
+    genProgress.textContent = '';
+  }
+  downloadBtn.disabled = false;
+});
+
+/* ===================== INICIALIZACIÓN ===================== */
+renderManualList();
+ALL_DATA_READY.then(function(){
+  populateYearSelectors();
+  resizePhotosForCurrentYear();
+  renderPhotoGrid();
+  updateLocationStatus();
+  renderPreview();
+});
+})();
+</script>
+</body>
+</html>
