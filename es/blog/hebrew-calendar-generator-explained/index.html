@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cómo calcula el generador de calendario hebreo el encendido de velas y el tzeit hakojavim | Orisod Blog</title>
+<meta name="description" content="Por qué el año del calendario va de Tishrei a Elul, cómo se encuentra ese límite sin recalcular nada, por qué el encendido de velas y el tzeit hakojavim se calculan en vivo en lugar de precalcularse, y de dónde viene la porción semanal de la Torá.">
+<link rel="canonical" href="https://orisod.com/es/blog/hebrew-calendar-generator-explained/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/hebrew-calendar-generator-explained/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/hebrew-calendar-generator-explained/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/hebrew-calendar-generator-explained/">
+<link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Cómo calcula el generador de calendario hebreo el encendido de velas y el tzeit hakojavim",
+  "description": "Por qué el año del calendario va de Tishrei a Elul, cómo se encuentra ese límite sin recalcular nada, por qué el encendido de velas y el tzeit hakojavim se calculan en vivo en lugar de precalcularse, y de dónde viene la porción semanal de la Torá.",
+  "url": "https://orisod.com/es/blog/hebrew-calendar-generator-explained/",
+  "author": {
+    "@type": "Organization",
+    "name": "Orisod Labs"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Orisod Labs",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://orisod.com/assets/orisod-icon-detailed.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://orisod.com/es/blog/hebrew-calendar-generator-explained/"
+  }
+}
+</script>
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+  --grid-alpha:.05;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+  --grid-alpha:.10;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background-color:var(--bg);background-image:linear-gradient(rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px),linear-gradient(90deg, rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px);background-size:42px 42px;color:var(--text);text-align:center;transition:background-color 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);display:inline-flex;align-items:center;gap:8px;}
+.site-nav-logo img{height:26px;width:auto;display:block;}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:5px 14px;margin:-5px 0;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.site-footer{margin-top:40px;padding:40px 24px 30px 24px;border-top:1px solid var(--border);text-align:left;}
+.footer-inner{max-width:1000px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;gap:40px;}
+.footer-brand{max-width:280px;}
+.footer-brand-logo{font-size:16px;font-weight:bold;letter-spacing:0.5px;margin-bottom:10px;}
+.footer-brand-desc{font-size:13px;color:var(--muted-text);line-height:1.5;margin-bottom:14px;}
+.footer-copy{font-size:12px;color:var(--muted-text);opacity:0.7;}
+.footer-col h3{font-size:13px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-text);margin:0 0 14px 0;}
+.footer-col a{display:block;font-size:14px;color:var(--text);text-decoration:none;opacity:0.8;margin-bottom:10px;}
+.footer-col a:hover{opacity:1;color:var(--accent);}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+.blog-cat{display:inline-block;font-size:11px;font-weight:bold;text-transform:uppercase;letter-spacing:.3px;padding:3px 9px;border-radius:999px;margin-bottom:12px;cursor:default;}
+.blog-card .blog-cat{margin-bottom:0;}
+.blog-cat.cat-guide{background:#16213d;color:#60a5fa;}
+.blog-cat.cat-tip{background:#1f1a0f;color:#fbbf24;}
+.blog-cat.cat-comparison{background:#241c3d;color:#a78bfa;}
+:root[data-theme="light"] .blog-cat.cat-guide{background:#eff6ff;color:#1e40af;}
+:root[data-theme="light"] .blog-cat.cat-tip{background:#fffbeb;color:#92400e;}
+:root[data-theme="light"] .blog-cat.cat-comparison{background:#f5f3ff;color:#5b21b6;}
+code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/es/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/es/tools/">Todas las herramientas</a>
+    <a href="/es/tools/#image">Herramientas de imagen</a>
+    <a href="/es/tools/#pdf">Herramientas PDF</a>
+    <a href="/es/tools/#utility">Utilidades</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <a class="lang-flag" href="/blog/hebrew-calendar-generator-explained/">EN</a>
+    <span class="lang-flag active">ES</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<span class="blog-cat cat-guide">Guías</span>
+<h1>Cómo calcula el generador de calendario hebreo el encendido de velas y el tzeit hakojavim</h1>
+<p class="intro">El Generador de Calendarios general ya muestra el calendario judío completo: cada festividad, cada fecha hebrea, sombreado de días en cinco colores. Lo que no puede mostrar es nada que dependa de dónde estás, porque la hora de la puesta del sol es una función de la latitud y la longitud, no del calendario. Así reestructura el Generador de Calendario Hebreo dedicado el año en torno a Tishrei en lugar de enero, y calcula el encendido de velas, el tzeit hakojavim y la porción semanal de la Torá a partir de esos mismos datos ya existentes, más una nueva librería de astronomía.</p>
+
+<div class="article-body">
+
+<h2>Por qué el año va de Tishrei a Elul, y cómo se encuentra ese límite sin recalcular nada</h2>
+<p>El propio límite del año en el calendario hebreo es Rosh Hashaná, el primero de Tishrei, no el 1 de enero. Un calendario pensado para quienes piensan en términos de año hebreo debería seguir esa estructura de forma nativa, en lugar de forzarla en doce páginas de meses gregorianos que dividen cada mes hebreo entre dos calendarios. El conjunto de datos por día que ya usa el Generador de Calendarios general asigna cada fecha gregoriana de 2020 a 2036 a su día, mes y año hebreo correspondiente, así que encontrar "todo lo del año hebreo 5786" no necesita datos nuevos ni cálculos de fecha nuevos: es un filtro sobre fechas que ya tienen esa etiqueta de año, ordenadas cronológicamente. Al agrupar las entradas consecutivas del mismo mes, los límites de cada mes, incluido exactamente dónde se divide Adar en Adar I y Adar II en un año bisiesto, salen de la agrupación sin esfuerzo adicional. La única restricción real son los bordes de los datos: un año hebreo solo se puede usar por completo si el día anterior a su primera fecha y el día posterior a su última fecha existen ambos en el conjunto de datos, lo que descarta el primer y el último año parcial del rango y deja 16 años hebreos totalmente utilizables.</p>
+
+<h2>Por qué un año gregoriano escrito se resuelve en un rango de dos años en lugar de un solo año</h2>
+<p>Cada año hebreo abarca dos años gregorianos: Rosh Hashaná cae en algún momento de septiembre u octubre, y Elul de ese mismo año hebreo no termina hasta bien entrado el año gregoriano siguiente. Elegir en silencio uno de los dos lados de esa división sería engañoso, así que escribir un año gregoriano se resuelve al año hebreo cuyo Rosh Hashaná cae en ese año escrito, y el resultado siempre se muestra como el rango completo, "2026-2027", nunca un simple "2026", con una línea en lenguaje claro que explica que el calendario que empieza en el primer año continúa en el segundo. Por debajo, esto es el mismo tipo de búsqueda que la lógica de límites de año descrita arriba: se recorre el conjunto de datos por día buscando la entrada de Tishrei 1 que caiga en el año gregoriano escrito, y se lee su año hebreo correspondiente. Ambos puntos de entrada, escribir un año hebreo directamente o escribir un año gregoriano, alimentan la misma función única de "construir este año hebreo"; los dos selectores son solo puertas distintas hacia la misma habitación.</p>
+
+<h2>Por qué el encendido de velas y el tzeit hakojavim se calculan en vivo en lugar de precalcularse como los datos de festividades</h2>
+<p>Cualquier otra fecha de este sitio se calcula una sola vez, fuera de línea, y se entrega como un archivo estático, porque las reglas de festividades y el cálculo del calendario hebreo son lo bastante complejos como para necesitar una librería real, y no dependen de quién visita el sitio. La puesta del sol rompe ese patrón: es una función de una latitud, longitud y fecha específicas, y la ubicación solo se conoce una vez que alguien la elige en el navegador. Precalcular la hora de la puesta del sol para cada fecha y cada ubicación posible no solo es poco práctico, es el tipo de problema equivocado, ya que el cálculo real, dados una fecha y unas coordenadas, es astronomía rápida y bien entendida que se ejecuta en pocos milisegundos. Así que esta es la única pieza de cálculo de calendario en toda la línea de herramientas PDF de Orisod que ocurre en vivo en el navegador en lugar de consultarse en una tabla precalculada: una pequeña librería de posición solar calcula la puesta del sol para la ubicación elegida en cada viernes y sábado del año hebreo seleccionado, y el encendido de velas y el tzeit hakojavim son ambos desplazamientos a partir de esa misma hora de puesta del sol.</p>
+
+<h2>Por qué hay dos formas distintas de definir el tzeit hakojavim</h2>
+<p>El tzeit hakojavim, la salida de las estrellas que marca cuándo termina el Shabat o una festividad, no tiene una definición universal única. Algunas comunidades lo definen como un número fijo de minutos después de la puesta del sol, comúnmente 42, 50 o 72 según la costumbre. Otras lo definen astronómicamente, como el momento en que el sol alcanza un ángulo específico bajo el horizonte, comúnmente 3.7, 4.61, 6.5 u 8.5 grados. No son dos aproximaciones del mismo número: en una ubicación y época del año dadas pueden diferir por un margen significativo, y elegir una sobre la otra no es una simplificación de interfaz que esta herramienta deba decidir por nadie. Ambos modos se ofrecen uno junto al otro, calculados a partir del mismo cálculo de puesta del sol, así que cambiar entre ellos es un simple menú desplegable, no una función distinta.</p>
+
+<h2>Por qué la ubicación tiene tres formas de introducirse, y por qué las coordenadas manuales necesitan su propio selector de zona horaria</h2>
+<p>La hora de la puesta del sol necesita una ubicación, pero "dame tus coordenadas" es una mala primera pregunta para la mayoría de las personas. La búsqueda de ciudad cubre el caso común: elegir una ciudad busca su latitud, longitud y zona horaria guardadas en un solo paso, sin ambigüedad. La geolocalización del navegador cubre el caso de alguien que quiere su posición actual exacta: el dispositivo ya conoce su propia zona horaria, ya que la geolocalización implica presencia física ahí, así que ese valor se puede reutilizar directamente. La latitud y longitud manuales existen para el caso restante, alguien que consulta una ubicación en la que no está físicamente y que no aparece en la lista de ciudades, y ese es exactamente el caso en el que la zona horaria no se puede deducir de nada más disponible en el navegador: no hay un conjunto de datos incluido que asigne coordenadas arbitrarias a zonas horarias sin incorporar una librería de límites geográficos mucho más pesada, así que la entrada manual tiene su propio selector explícito de zona horaria en lugar de adivinar.</p>
+
+<h2>De dónde viene la porción semanal de la Torá</h2>
+<p>La Parashá semanal sigue un ciclo de lectura anual fijo, pero no es una simple aritmética de fechas: porciones combinadas como Vaiakhél-Pekudei se separan o se unen según el ciclo de años bisiestos hebreo, y cualquier sábado que caiga en una festividad importante recibe la lectura especial de esa festividad en lugar de la porción semanal habitual. Ese es exactamente el tipo de problema que este sitio ya resuelve precalculando la salida de una librería de calendario dedicada en un archivo estático: una librería perpetua de calendario hebreo calculó el nombre de la porción de cada sábado para el mismo rango 2020-2036 que el resto de los datos del calendario, una sola vez, fuera de línea, siguiendo el ciclo de lectura anual de la diáspora. Un sábado sin entrada en ese archivo es un Shabat con lectura de festividad, y el nombre de esa festividad, ya mostrado a partir de los datos generales del calendario, lo cubre en su lugar.</p>
+
+<h2>Respuestas rápidas</h2>
+<p><strong>¿Necesito elegir una ubicación solo para ver el calendario hebreo?</strong> No. Las festividades, las fechas hebreas, el sombreado de días y la porción semanal de la Torá se muestran todos sin una. La ubicación solo condiciona los horarios de encendido de velas y tzeit hakojavim.</p>
+<p><strong>¿Por qué la herramienta advierte que estos horarios son estimaciones?</strong> Porque lo son: una hora de puesta del sol calculada es una referencia razonable, no un fallo religioso, y pequeñas diferencias cerca de una costa, en latitudes altas, o entre métodos de cálculo son normales. Confirmar con un rabino o la práctica de la comunidad local es la autoridad real aquí.</p>
+<p><strong>¿Puedo seguir añadiendo mis propias fotos y eventos personalizados, como en el Generador de Calendarios general?</strong> Sí, ambos funcionan exactamente igual, solo que contra meses hebreos en lugar de gregorianos.</p>
+<p><strong>¿Se sube algo de esto a algún sitio?</strong> No. La búsqueda de ubicación, el cálculo de la puesta del sol y la generación del PDF ocurren todos localmente en el navegador, igual que en el resto de este sitio.</p>
+
+<div class="cta-box">
+  <h3>Crea tu calendario del año hebreo</h3>
+  <p>El Generador de Calendario Hebreo de Orisod crea un calendario PDF completo de Tishrei a Elul con horarios de encendido de velas y tzeit hakojavim para tu ubicación y la porción semanal de la Torá, todo en tu navegador.</p>
+  <a class="cta-button" href="/es/hebrew-calendar-generator/">Crear un calendario hebreo →</a>
+</div>
+
+<p>En resumen: el año sigue a Tishrei porque ese es el límite nativo del propio calendario, y ese límite sale gratis de datos que el sitio ya tiene; los horarios que dependen de la puesta del sol son la única pieza de cálculo de calendario que se computa en vivo en lugar de precalcularse, porque la ubicación de quien visita no se puede conocer de antemano; el tzeit hakojavim recibe dos definiciones reales en lugar de un único valor simplificado, porque ninguna es universal; y la porción semanal de la Torá recibe el mismo tratamiento de librería dedicada que cualquier otro cálculo del calendario hebreo en este sitio, porque merece una implementación real, no una aproximación.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Artículos relacionados</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/es/blog/calendar-generator-explained/">
+      <h3>Cómo funciona este generador de calendarios en el navegador</h3>
+      <p>Por qué los datos de festividades son un archivo estático, y por qué el calendario judío tiene su propio motor dedicado.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/handwriting-worksheets-explained/">
+      <h3>Cómo se construyen realmente las hojas de caligrafía imprimibles</h3>
+      <p>Por qué calcar letras necesita un contorno discontinuo, y por qué la propia tipografía es una decisión de diseño real.</p>
+    </a>
+
+    <a class="blog-card" href="/es/blog/add-page-numbers-to-pdf/">
+      <h3>Cómo añadir números de página a un PDF</h3>
+      <p>Por qué los números de página importan más de lo que parece, y cómo estamparlos en un PDF ya existente.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/es/blog/">← Volver al blog</a>
+
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-brand-logo">ORISOD</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Procesamiento 100% local: tus archivos nunca se suben a ningún sitio.</div>
+      <div class="footer-copy">© Orisod Labs</div>
+    </div>
+    <div class="footer-col">
+      <h3>Herramientas</h3>
+      <a href="/es/tools/#image">Herramientas de imagen</a>
+      <a href="/es/tools/#pdf">Herramientas PDF</a>
+      <a href="/es/tools/#utility">Utilidades</a>
+    </div>
+    <div class="footer-col">
+      <h3>Empresa</h3>
+      <a href="/es/about/">Acerca de</a>
+      <a href="/es/privacy/">Privacidad</a>
+      <a href="/es/blog/">Blog</a>
+    </div>
+  </div>
+</footer>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>

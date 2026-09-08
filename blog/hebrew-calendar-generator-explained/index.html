@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How the Hebrew calendar generator computes candle lighting and tzeit hakochavim | Orisod Blog</title>
+<meta name="description" content="Why the calendar year runs Tishrei through Elul, how that boundary is found without recalculating anything, why candle-lighting and tzeit hakochavim are computed live instead of baked, and where the weekly Torah portion comes from.">
+<link rel="canonical" href="https://orisod.com/blog/hebrew-calendar-generator-explained/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/blog/hebrew-calendar-generator-explained/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/blog/hebrew-calendar-generator-explained/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/blog/hebrew-calendar-generator-explained/">
+<link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "How the Hebrew calendar generator computes candle lighting and tzeit hakochavim",
+  "description": "Why the calendar year runs Tishrei through Elul, how that boundary is found without recalculating anything, why candle-lighting and tzeit hakochavim are computed live instead of baked, and where the weekly Torah portion comes from.",
+  "url": "https://orisod.com/blog/hebrew-calendar-generator-explained/",
+  "author": {
+    "@type": "Organization",
+    "name": "Orisod Labs"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Orisod Labs",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://orisod.com/assets/orisod-icon-detailed.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://orisod.com/blog/hebrew-calendar-generator-explained/"
+  }
+}
+</script>
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+  --grid-alpha:.05;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+  --grid-alpha:.10;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background-color:var(--bg);background-image:linear-gradient(rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px),linear-gradient(90deg, rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px);background-size:42px 42px;color:var(--text);text-align:center;transition:background-color 0.2s, color 0.2s;}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);display:inline-flex;align-items:center;gap:8px;}
+.site-nav-logo img{height:26px;width:auto;display:block;}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:5px 14px;margin:-5px 0;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;text-align:left;}
+h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
+.intro{font-size:18px;opacity:0.85;line-height:1.7;margin-bottom:10px;}
+.article-body h2{font-size:23px;margin-top:40px;margin-bottom:14px;}
+.article-body p{font-size:16px;line-height:1.75;opacity:0.9;margin-bottom:18px;}
+.article-body ul{font-size:16px;line-height:1.8;opacity:0.9;padding-left:22px;margin-bottom:18px;}
+.article-body li{margin-bottom:8px;}
+.cta-box{background:var(--card-bg);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:26px 24px;margin:40px 0;}
+.cta-box h3{margin:0 0 10px 0;font-size:19px;}
+.cta-box p{margin:0 0 18px 0;font-size:15px;opacity:0.85;line-height:1.6;}
+.cta-button{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-size:15px;font-weight:bold;}
+.cta-button:hover{filter:brightness(1.08);}
+.back-link{display:inline-block;margin-top:10px;font-size:14px;color:var(--accent);text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+.site-footer{margin-top:40px;padding:40px 24px 30px 24px;border-top:1px solid var(--border);text-align:left;}
+.footer-inner{max-width:1000px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;gap:40px;}
+.footer-brand{max-width:280px;}
+.footer-brand-logo{font-size:16px;font-weight:bold;letter-spacing:0.5px;margin-bottom:10px;}
+.footer-brand-desc{font-size:13px;color:var(--muted-text);line-height:1.5;margin-bottom:14px;}
+.footer-copy{font-size:12px;color:var(--muted-text);opacity:0.7;}
+.footer-col h3{font-size:13px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-text);margin:0 0 14px 0;}
+.footer-col a{display:block;font-size:14px;color:var(--text);text-decoration:none;opacity:0.8;margin-bottom:10px;}
+.footer-col a:hover{opacity:1;color:var(--accent);}
+.related-section{margin-top:50px;}
+.related-section h2{font-size:22px;margin:0 0 16px 0;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;}
+.related-grid a.blog-card{display:flex;flex-direction:column;gap:8px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-grid a.blog-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-grid a.blog-card h3{font-size:15px;margin:0;line-height:1.3;}
+.related-grid a.blog-card p{font-size:13px;color:var(--muted-text);line-height:1.4;margin:0;}
+.blog-cat{display:inline-block;font-size:11px;font-weight:bold;text-transform:uppercase;letter-spacing:.3px;padding:3px 9px;border-radius:999px;margin-bottom:12px;cursor:default;}
+.blog-card .blog-cat{margin-bottom:0;}
+.blog-cat.cat-guide{background:#16213d;color:#60a5fa;}
+.blog-cat.cat-tip{background:#1f1a0f;color:#fbbf24;}
+.blog-cat.cat-comparison{background:#241c3d;color:#a78bfa;}
+:root[data-theme="light"] .blog-cat.cat-guide{background:#eff6ff;color:#1e40af;}
+:root[data-theme="light"] .blog-cat.cat-tip{background:#fffbeb;color:#92400e;}
+:root[data-theme="light"] .blog-cat.cat-comparison{background:#f5f3ff;color:#5b21b6;}
+code{background:var(--card-bg);color:var(--accent);border:1px solid var(--border);padding:2px 6px;border-radius:4px;font-size:13px;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/tools/">All Tools</a>
+    <a href="/tools/#image">Image Tools</a>
+    <a href="/tools/#pdf">PDF Tools</a>
+    <a href="/tools/#utility">Utility Tools</a>
+    <span class="active-category">Blog</span>
+  </nav>
+  <div class="site-nav-right">
+    <span class="lang-flag active">EN</span>
+    <a class="lang-flag" href="/es/blog/hebrew-calendar-generator-explained/">ES</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<span class="blog-cat cat-guide">Guides</span>
+<h1>How the Hebrew calendar generator computes candle lighting and tzeit hakochavim</h1>
+<p class="intro">The general Calendar Generator already shows the full Jewish calendar: every holiday, every Hebrew date, five-color day shading. What it can't show is anything that depends on where you are, since sunset time is a function of latitude and longitude, not the calendar. Here's how the dedicated Hebrew Calendar Generator restructures the year around Tishrei instead of January, and computes candle lighting, tzeit hakochavim, and the weekly Torah portion from that same underlying data plus one new astronomy library.</p>
+
+<div class="article-body">
+
+<h2>Why the year runs Tishrei through Elul, and how that boundary is found without recalculating anything</h2>
+<p>The Hebrew calendar's own year boundary is Rosh Hashanah, the first of Tishrei, not January 1st. A calendar built for people who think in Hebrew-year terms should follow that structure natively rather than forcing it into twelve Gregorian-month pages that split every Hebrew month across two calendars. The general Calendar Generator's existing per-day dataset already maps every Gregorian date from 2020 through 2036 to its Hebrew day, month, and year, so finding "everything in Hebrew year 5786" doesn't need new data or new date math: it's a filter over dates already tagged with that year, sorted chronologically. Group consecutive same-month entries and the month boundaries, including exactly where Adar splits into Adar I and Adar II in a leap year, fall out of the grouping for free. The only real constraint is the data's edges: a Hebrew year is only fully usable if the day before its first date and the day after its last date both exist in the dataset, which rules out the very first and very last partial years in range and leaves 16 fully usable Hebrew years.</p>
+
+<h2>Why a typed Gregorian year resolves to a two-year range instead of a single year</h2>
+<p>Every Hebrew year spans two Gregorian years, Rosh Hashanah lands somewhere in September or October, and Elul of the same Hebrew year doesn't finish until deep into the following Gregorian year. Silently picking one side of that split would be actively misleading, so typing a Gregorian year resolves to the Hebrew year whose Rosh Hashanah falls in that typed year, and the result is always shown as the full range, "2026-2027," never a bare "2026," with a plain-language line explaining that the calendar starting in the first year continues into the second. Under the hood this is the same kind of lookup as the year-boundary logic above: scan the per-day dataset for the Tishrei-1 entry that falls in the typed Gregorian year and read off its Hebrew year. Both entry points, typing a Hebrew year directly or typing a Gregorian year, feed the same single "build this Hebrew year" function; the two pickers are just different doors into the same room.</p>
+
+<h2>Why candle lighting and tzeit hakochavim are computed live instead of baked like the holiday data</h2>
+<p>Every other date on this site gets computed once, offline, and shipped as a static file, because holiday rules and Hebrew-calendar math are genuinely complex enough to need a real library, and they don't depend on the visitor. Sunset breaks that pattern: it's a function of a specific latitude, longitude, and date, and the location is only known once someone picks it in the browser. Baking sunset times for every date and every possible location isn't just impractical, it's the wrong shape of problem, since the actual computation, given a date and coordinates, is fast, well-understood astronomy that runs in a few milliseconds. So this is the one piece of calendar math in the entire Orisod PDF-tool lineup that happens live in the browser rather than being looked up in a pre-built table: a small solar-position library computes sunset for the chosen location on every Friday and Saturday in the selected Hebrew year, and candle lighting and tzeit hakochavim are both offsets from that single sunset time.</p>
+
+<h2>Why there are two different ways to define tzeit hakochavim</h2>
+<p>Tzeit hakochavim, the emergence of the stars that marks when Shabbat or a holiday ends, doesn't have one universal definition. Some communities define it as a fixed number of minutes after sunset, commonly 42, 50, or 72 depending on custom. Others define it astronomically, as the moment the sun reaches a specific angle below the horizon, commonly 3.7, 4.61, 6.5, or 8.5 degrees. These aren't two approximations of the same number: at a given location and time of year they can diverge by a meaningful margin, and picking one over the other isn't a UI simplification this tool should make on anyone's behalf. Both modes are offered side by side, computed from the same sunset calculation, so switching between them is a single dropdown, not a different feature.</p>
+
+<h2>Why location has three input paths, and why manual coordinates need their own timezone picker</h2>
+<p>Sunset time needs a location, but "give me your coordinates" is a bad first ask for most people. City search covers the common case: picking a city looks up its stored latitude, longitude, and time zone in one step, no ambiguity. Browser geolocation covers the case where someone wants their exact current position: the device already knows its own time zone, since geolocation implies physical presence there, so that value can be reused directly. Manual latitude and longitude exists for the remaining case, someone checking a location they aren't physically at and that isn't in the city list, and that's exactly the case where the time zone can't be inferred from anything else available client-side: there's no bundled dataset mapping arbitrary coordinates to time zones without pulling in a much heavier geo-boundary library, so manual entry gets its own explicit time zone picker instead of guessing.</p>
+
+<h2>Where the weekly Torah portion comes from</h2>
+<p>Parashat HaShavua follows a fixed annual reading cycle, but it isn't simple date arithmetic: combined portions like Vayakhel-Pekudei split apart or merge depending on the Hebrew leap-year cycle, and any Shabbat that falls on a major holiday gets that holiday's special reading instead of the regular weekly portion. That's exactly the shape of problem the site already solves by baking a dedicated calendar library's output into a static file: a perpetual Hebrew-calendar library computed every Saturday's portion name for the same 2020-2036 range as the rest of the calendar data, once, offline, matching the Diaspora annual reading cycle. A Saturday with no entry in that file is a holiday-reading Shabbat, and the day's own holiday name, already shown from the general calendar data, covers it instead.</p>
+
+<h2>Quick answers</h2>
+<p><strong>Do I need to pick a location just to see the Hebrew calendar?</strong> No. Holidays, Hebrew dates, day shading, and the weekly Torah portion all show without one. Location only gates candle-lighting and tzeit hakochavim times.</p>
+<p><strong>Why does the tool warn that these times are estimates?</strong> Because they are: a calculated sunset time is a reasonable reference, not a religious ruling, and small differences near a coastline, at high latitude, or between calculation methods are normal. Confirming with a rabbi or local community practice is the actual authority here.</p>
+<p><strong>Can I still add my own photos and custom events, like on the general Calendar Generator?</strong> Yes, both work exactly the same way, just against Hebrew months instead of Gregorian ones.</p>
+<p><strong>Is any of this uploaded anywhere?</strong> No. Location lookup, the sunset calculation, and PDF generation all happen locally in the browser, the same as everywhere else on this site.</p>
+
+<div class="cta-box">
+  <h3>Build your Hebrew year calendar</h3>
+  <p>Orisod's Hebrew Calendar Generator builds a full Tishrei-to-Elul PDF calendar with candle-lighting and tzeit hakochavim times for your location and the weekly Torah portion, entirely in your browser.</p>
+  <a class="cta-button" href="/hebrew-calendar-generator/">Build a Hebrew calendar →</a>
+</div>
+
+<p>The short version: the year follows Tishrei because that's the calendar's own native boundary, and that boundary comes for free out of data the site already has; sunset-dependent times are the one piece of calendar math computed live instead of baked, because the visitor's location can't be known in advance; tzeit hakochavim gets two real definitions instead of one simplified default, because neither is universal; and the weekly Torah portion gets the same dedicated-library treatment as every other piece of Hebrew-calendar math on this site, because it deserves a real implementation, not an approximation.</p>
+
+</div>
+
+<div class="related-section">
+  <h2>Related articles</h2>
+  <div class="related-grid">
+    <a class="blog-card" href="/blog/calendar-generator-explained/">
+      <h3>How this browser-based calendar generator actually works</h3>
+      <p>Why holiday data is a static file, and why the Jewish calendar gets its own dedicated engine.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/handwriting-worksheets-explained/">
+      <h3>How printable handwriting worksheets are actually built</h3>
+      <p>Why tracing letters need a dashed outline, and why the font itself is a real design decision.</p>
+    </a>
+
+    <a class="blog-card" href="/blog/add-page-numbers-to-pdf/">
+      <h3>How to add page numbers to a PDF</h3>
+      <p>Why page numbers matter more than they seem, and how to stamp them onto an existing PDF.</p>
+    </a>
+  </div>
+</div>
+
+<a class="back-link" href="/blog/">← Back to Blog</a>
+
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-brand-logo">ORISOD</div>
+      <div class="footer-brand-desc">Free, browser-based image and PDF tools. 100% local processing: your files are never uploaded anywhere.</div>
+      <div class="footer-copy">© Orisod Labs</div>
+    </div>
+    <div class="footer-col">
+      <h3>Tools</h3>
+      <a href="/tools/#image">Image Tools</a>
+      <a href="/tools/#pdf">PDF Tools</a>
+      <a href="/tools/#utility">Utility Tools</a>
+    </div>
+    <div class="footer-col">
+      <h3>Company</h3>
+      <a href="/about/">About</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/blog/">Blog</a>
+    </div>
+  </div>
+</footer>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+</body>
+</html>
