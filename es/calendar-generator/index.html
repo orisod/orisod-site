@@ -59,7 +59,7 @@
           "name": "¿Por qué las fechas islámicas tienen un aviso pero las judías e hindúes no?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "El calendario islámico (hijri) depende tradicionalmente del avistamiento local de la luna, por lo que distintos países y comunidades pueden anunciar la misma fecha con hasta un día de diferencia, y cualquier fecha calculada es una aproximación bien fundamentada. El calendario hebreo moderno, en cambio, es un cálculo matemático fijo desde el siglo IV d.C., igual que se calcula la fecha de la Pascua cristiana. No hay nada que aproximar."
+            "text": "El calendario islámico (hijri) depende tradicionalmente del avistamiento local de la luna, por lo que distintos países y comunidades pueden anunciar la misma fecha con hasta un día de diferencia, y cualquier fecha calculada es una aproximación bien fundamentada. El calendario hebreo moderno utiliza reglas matemáticas fijas, por lo que sus fechas pueden calcularse de manera consistente con anticipación. El sistema se desarrolló durante siglos hasta alcanzar su forma actual."
           }
         },
         {
@@ -91,7 +91,7 @@
           "name": "¿Mis fotos o eventos personalizados se suben a algún sitio?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No. Todo, incluida la consulta de datos festivos, las fotos, los eventos personalizados y la generación del PDF, ocurre localmente en tu navegador. No se envía nada a un servidor."
+            "text": "No. Tus fotos, tus eventos personalizados y el calendario generado se procesan localmente y no se suben a Orisod."
           }
         }
       ]
@@ -150,7 +150,7 @@ h1{font-size:44px;margin-bottom:10px;}
 @media (max-width:900px){.workspace{grid-template-columns:1fr;}}
 .panel{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:18px 20px;}
 .panel + .panel{margin-top:14px;}
-.panel h3{margin:0 0 12px 0;font-size:14px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted-text);}
+.panel h2{margin:0 0 12px 0;font-size:14px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted-text);}
 .field-row{margin-bottom:14px;}
 .field-row:last-child{margin-bottom:0;}
 .field-row label{display:block;font-size:13px;color:var(--muted-text);margin-bottom:6px;}
@@ -294,7 +294,7 @@ h2{margin-top:50px;font-size:22px;}
   <div class="workspace">
     <div class="left-col">
       <div class="panel">
-        <h3>Año y país</h3>
+        <h2>Año y país</h2>
         <div class="two-col">
           <div class="field-row" style="margin-bottom:0;">
             <label for="yearSelect">Año del calendario</label>
@@ -308,7 +308,7 @@ h2{margin-top:50px;font-size:22px;}
       </div>
 
       <div class="panel">
-        <h3>Fechas religiosas</h3>
+        <h2>Fechas religiosas</h2>
         <div class="toggle-row">
           <div class="label">Cristianismo<small>Día de Reyes, Miércoles de Ceniza, Domingo de Ramos, Viernes Santo, Pascua, Pentecostés, Día de Todos los Santos, Navidad</small></div>
           <label class="switch"><input type="checkbox" id="tglChristian" aria-label="Cristianismo"><span class="slider"></span></label>
@@ -334,7 +334,7 @@ h2{margin-top:50px;font-size:22px;}
       </div>
 
       <div class="panel">
-        <h3>Eventos personalizados</h3>
+        <h2>Eventos personalizados</h2>
         <div class="add-row">
           <input type="date" id="manualDate" aria-label="Fecha del evento" style="flex:none;width:150px;">
           <input type="text" id="manualName" placeholder="Nombre del evento" aria-label="Nombre del evento">
@@ -344,7 +344,7 @@ h2{margin-top:50px;font-size:22px;}
       </div>
 
       <div class="panel">
-        <h3>Fotos por mes <span style="font-weight:normal;color:var(--muted-text);">(opcional)</span></h3>
+        <h2>Fotos por mes <span style="font-weight:normal;color:var(--muted-text);">(opcional)</span></h2>
         <div class="photo-grid" id="photoGrid"></div>
         <input type="file" id="photoInput" accept=".jpg,.jpeg,.png,.webp" style="display:none;">
         <div class="layout-pick">
@@ -356,7 +356,7 @@ h2{margin-top:50px;font-size:22px;}
 
     <div class="right-col">
       <div class="panel">
-        <h3>Vista previa</h3>
+        <h2>Vista previa</h2>
         <div class="preview-wrap"><div class="month-preview" id="monthPreview"></div></div>
         <div class="preview-nav">
           <button type="button" id="prevMonthBtn">← Ant.</button>
@@ -388,7 +388,7 @@ h2{margin-top:50px;font-size:22px;}
     <h2>Preguntas frecuentes</h2>
     <div class="faq-item">
       <div class="q">¿Por qué las fechas islámicas tienen un aviso pero las judías e hindúes no?</div>
-      <div>El calendario islámico (hijri) depende tradicionalmente del avistamiento local de la luna, por lo que distintos países y comunidades pueden anunciar la misma fecha con hasta un día de diferencia, y cualquier fecha calculada es una aproximación bien fundamentada. El calendario hebreo moderno, en cambio, es un cálculo matemático fijo desde el siglo IV d.C., igual que se calcula la fecha de la Pascua cristiana. No hay nada que aproximar.</div>
+      <div>El calendario islámico (hijri) depende tradicionalmente del avistamiento local de la luna, por lo que distintos países y comunidades pueden anunciar la misma fecha con hasta un día de diferencia, y cualquier fecha calculada es una aproximación bien fundamentada. El calendario hebreo moderno utiliza reglas matemáticas fijas, por lo que sus fechas pueden calcularse de manera consistente con anticipación. El sistema se desarrolló durante siglos hasta alcanzar su forma actual.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Puedo generar más de un año en un mismo PDF?</div>
@@ -404,7 +404,7 @@ h2{margin-top:50px;font-size:22px;}
     </div>
     <div class="faq-item">
       <div class="q">¿Mis fotos o eventos personalizados se suben a algún sitio?</div>
-      <div>No. Todo, incluida la consulta de datos festivos, las fotos, los eventos personalizados y la generación del PDF, ocurre localmente en tu navegador. No se envía nada a un servidor.</div>
+      <div>No. Tus fotos, tus eventos personalizados y el calendario generado se procesan localmente y no se suben a Orisod.</div>
     </div>
   </div>
 

@@ -92,7 +92,7 @@
           "name": "Is my location or any of my data uploaded anywhere?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No. Location lookup, sunset calculation, Hebrew date and holiday data, photos, custom events, and PDF generation all happen locally in your browser. Nothing is sent to a server."
+            "text": "No. Your photos, event details, coordinates, and generated calendar are processed locally and are not uploaded to Orisod."
           }
         }
       ]
@@ -151,7 +151,9 @@ h1{font-size:44px;margin-bottom:10px;}
 @media (max-width:900px){.workspace{grid-template-columns:1fr;}}
 .panel{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:18px 20px;}
 .panel + .panel{margin-top:14px;}
-.panel h3{margin:0 0 12px 0;font-size:14px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted-text);}
+.panel h2{margin:0 0 12px 0;font-size:14px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted-text);}
+.panel h3{margin:14px 0 8px 0;font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted-text);}
+.panel h3:first-child{margin-top:0;}
 .field-row{margin-bottom:14px;}
 .field-row:last-child{margin-bottom:0;}
 .field-row label{display:block;font-size:13px;color:var(--muted-text);margin-bottom:6px;}
@@ -203,7 +205,7 @@ select, input[type="text"], input[type="date"], input[type="number"]{
 .month-preview .mp-cell .num{font-weight:bold;font-size:11px;}
 .month-preview .mp-cell .greg-date{display:block;font-size:7.5px;color:#4b5563;line-height:1.1;margin-top:-1px;}
 .month-preview .mp-cell .parasha{display:block;color:#7c3aed;font-weight:bold;line-height:1.2;margin-top:1px;}
-.month-preview .mp-cell .candle{display:block;color:#d97706;line-height:1.2;margin-top:1px;}
+.month-preview .mp-cell .candle{display:block;color:#92400e;line-height:1.2;margin-top:1px;}
 .month-preview .mp-cell .tzeit{display:block;color:#4338ca;line-height:1.2;margin-top:1px;}
 .month-preview .mp-cell .evt{display:block;color:#1d4ed8;line-height:1.2;margin-top:1px;}
 .month-preview .mp-cell.empty{background:#f9fafb;border-color:transparent;}
@@ -288,6 +290,7 @@ h2{margin-top:50px;font-size:22px;}
   <div class="workspace">
     <div class="left-col">
       <div class="panel">
+        <h2>Year and country</h2>
         <h3>Hebrew year</h3>
         <div class="mode-tabs">
           <button type="button" class="active" data-year-mode="hebrew" id="yearModeHebrewBtn">Hebrew year</button>
@@ -302,9 +305,7 @@ h2{margin-top:50px;font-size:22px;}
           <select id="gregorianYearSelect"></select>
         </div>
         <div class="info-box" id="yearResultInfo"></div>
-      </div>
 
-      <div class="panel">
         <h3>Location</h3>
         <div class="mode-tabs">
           <button type="button" class="active" data-loc-mode="city" id="locModeCityBtn">City search</button>
@@ -341,6 +342,16 @@ h2{margin-top:50px;font-size:22px;}
       </div>
 
       <div class="panel">
+        <h2>Religious dates</h2>
+        <h3>Holiday scheme</h3>
+        <div class="mode-tabs">
+          <button type="button" class="active" data-scheme="diaspora" id="schemeDiasporaBtn">Diaspora</button>
+          <button type="button" data-scheme="israel" id="schemeIsraelBtn">Israel</button>
+        </div>
+        <div class="info-box" id="jerusalemNote" style="display:none;">
+          📍 Jerusalem custom: Many communities in Jerusalem light 40 minutes before sunset. Other communities follow 18 or 20 minutes. Select the practice you follow.
+        </div>
+
         <h3>Candle lighting &amp; tzeit hakochavim</h3>
         <div class="two-col">
           <div class="field-row" style="margin-bottom:0;">
@@ -371,7 +382,7 @@ h2{margin-top:50px;font-size:22px;}
       </div>
 
       <div class="panel">
-        <h3>Custom events</h3>
+        <h2>Custom events</h2>
         <div class="add-row">
           <input type="date" id="manualDate" aria-label="Event date" style="flex:none;width:150px;">
           <input type="text" id="manualName" placeholder="Event name" aria-label="Event name">
@@ -381,7 +392,7 @@ h2{margin-top:50px;font-size:22px;}
       </div>
 
       <div class="panel">
-        <h3>Photos per month <span style="font-weight:normal;color:var(--muted-text);">(optional)</span></h3>
+        <h2>Photos per month <span style="font-weight:normal;color:var(--muted-text);">(optional)</span></h2>
         <div class="photo-grid" id="photoGrid"></div>
         <input type="file" id="photoInput" accept=".jpg,.jpeg,.png,.webp" style="display:none;">
         <div class="layout-pick">
@@ -393,7 +404,7 @@ h2{margin-top:50px;font-size:22px;}
 
     <div class="right-col">
       <div class="panel">
-        <h3>Preview</h3>
+        <h2>Preview</h2>
         <div class="preview-wrap"><div class="month-preview" id="monthPreview"></div></div>
         <div class="preview-nav">
           <button type="button" id="prevMonthBtn">← Prev</button>
@@ -441,7 +452,7 @@ h2{margin-top:50px;font-size:22px;}
     </div>
     <div class="faq-item">
       <div class="q">Is my location or any of my data uploaded anywhere?</div>
-      <div>No. Location lookup, sunset calculation, Hebrew date and holiday data, photos, custom events, and PDF generation all happen locally in your browser. Nothing is sent to a server.</div>
+      <div>No. Your photos, event details, coordinates, and generated calendar are processed locally and are not uploaded to Orisod.</div>
     </div>
   </div>
 
@@ -539,6 +550,7 @@ var PARASHA_PREFIX = 'Parashat ';
 var state = {
   yearMode: 'hebrew',
   hebrewYear: null,
+  holidayScheme: 'diaspora', // 'diaspora' | 'israel'
   location: null, // {lat, lng, tz, label}
   candleMinutes: 18,
   tzeitMode: 'min', // 'min' | 'deg'
@@ -549,14 +561,18 @@ var state = {
   previewMonthIndex: 0
 };
 
-var hebrewPerDay = null, jewishFull = null, parashaData = null, cities = null;
+var hebrewPerDay = null, jewishFull = null, jewishFullIL = null, parashaData = null, parashaDataIL = null, yomtovDiaspora = null, yomtovIsrael = null, cities = null;
 var dataLoadError = document.getElementById('dataLoadError');
 function showDataLoadError(){ dataLoadError.style.display = 'block'; }
 var dr1 = fetch('/assets/data/calendar/hebrew-per-day.json').then(function(r){ if(!r.ok) throw new Error('bad'); return r.json(); }).then(function(d){ hebrewPerDay = d; }).catch(function(){ hebrewPerDay = {}; showDataLoadError(); });
 var dr2 = fetch('/assets/data/calendar/jewish-full.json').then(function(r){ if(!r.ok) throw new Error('bad'); return r.json(); }).then(function(d){ jewishFull = d; }).catch(function(){ jewishFull = {}; showDataLoadError(); });
+var dr2b = fetch('/assets/data/calendar/jewish-full-il.json').then(function(r){ if(!r.ok) throw new Error('bad'); return r.json(); }).then(function(d){ jewishFullIL = d; }).catch(function(){ jewishFullIL = {}; showDataLoadError(); });
 var dr3 = fetch('/assets/data/calendar/parasha.json').then(function(r){ if(!r.ok) throw new Error('bad'); return r.json(); }).then(function(d){ parashaData = d; }).catch(function(){ parashaData = {}; showDataLoadError(); });
+var dr3b = fetch('/assets/data/calendar/parasha-il.json').then(function(r){ if(!r.ok) throw new Error('bad'); return r.json(); }).then(function(d){ parashaDataIL = d; }).catch(function(){ parashaDataIL = {}; showDataLoadError(); });
 var dr4 = fetch('/assets/data/calendar/cities.json').then(function(r){ if(!r.ok) throw new Error('bad'); return r.json(); }).then(function(d){ cities = d; }).catch(function(){ cities = []; });
-var ALL_DATA_READY = Promise.all([dr1, dr2, dr3, dr4]);
+var dr5 = fetch('/assets/data/calendar/yomtov-diaspora.json').then(function(r){ if(!r.ok) throw new Error('bad'); return r.json(); }).then(function(d){ yomtovDiaspora = d; }).catch(function(){ yomtovDiaspora = {}; showDataLoadError(); });
+var dr5b = fetch('/assets/data/calendar/yomtov-israel.json').then(function(r){ if(!r.ok) throw new Error('bad'); return r.json(); }).then(function(d){ yomtovIsrael = d; }).catch(function(){ yomtovIsrael = {}; showDataLoadError(); });
+var ALL_DATA_READY = Promise.all([dr1, dr2, dr2b, dr3, dr3b, dr4, dr5, dr5b]);
 
 /* ===================== DOM refs ===================== */
 var yearModeHebrewBtn = document.getElementById('yearModeHebrewBtn');
@@ -580,6 +596,10 @@ var manualLat = document.getElementById('manualLat');
 var manualLng = document.getElementById('manualLng');
 var manualTz = document.getElementById('manualTz');
 var locationStatus = document.getElementById('locationStatus');
+
+var schemeDiasporaBtn = document.getElementById('schemeDiasporaBtn');
+var schemeIsraelBtn = document.getElementById('schemeIsraelBtn');
+var jerusalemNote = document.getElementById('jerusalemNote');
 
 var candleMinutesSelect = document.getElementById('candleMinutesSelect');
 var tzeitModeSelect = document.getElementById('tzeitModeSelect');
@@ -749,7 +769,19 @@ function updateLocationStatus(){
   } else {
     locationStatus.innerHTML = 'Using <strong>' + state.location.label + '</strong> (' + state.location.tz + ').';
   }
+  updateJerusalemNote();
 }
+function updateJerusalemNote(){
+  jerusalemNote.style.display = (state.location && state.location.tz === 'Asia/Jerusalem') ? '' : 'none';
+}
+function setHolidayScheme(scheme){
+  state.holidayScheme = scheme;
+  schemeDiasporaBtn.classList.toggle('active', scheme === 'diaspora');
+  schemeIsraelBtn.classList.toggle('active', scheme === 'israel');
+  renderPreview();
+}
+schemeDiasporaBtn.addEventListener('click', function(){ setHolidayScheme('diaspora'); });
+schemeIsraelBtn.addEventListener('click', function(){ setHolidayScheme('israel'); });
 
 // city search
 var citySuggestIndex = -1, citySuggestList = [];
@@ -885,32 +917,56 @@ function formatTimeInTz(date, tz){
 function dowOf(dateKey){ return new Date(dateKey + 'T00:00:00').getDay(); }
 
 /* ===================== JEWISH-CALENDAR SHADING (shared with Part 1) ===================== */
+function activeJewishFull(){ return state.holidayScheme === 'israel' ? jewishFullIL : jewishFull; }
+function activeParashaData(){ return state.holidayScheme === 'israel' ? parashaDataIL : parashaData; }
+function activeYomtov(){ return state.holidayScheme === 'israel' ? yomtovIsrael : yomtovDiaspora; }
 function shabbatCategoryFor(dateKey){
   var dow = new Date(dateKey + 'T00:00:00').getDay();
   return (dow === 6) ? 'A' : null;
 }
 function shadeForYear(gregYear){
   var shade = {};
-  if (jewishFull && jewishFull[gregYear]) {
-    jewishFull[gregYear].forEach(function(h){ if (h.shade) shade[h.date] = h.shade; });
+  var jf = activeJewishFull();
+  if (jf && jf[gregYear]) {
+    jf[gregYear].forEach(function(h){ if (h.shade) shade[h.date] = h.shade; });
   }
   return shade;
 }
 var yearShadeCache = {};
 function shadeForDate(dateKey){
   var gy = dateKey.slice(0,4);
-  if (!yearShadeCache[gy]) yearShadeCache[gy] = shadeForYear(gy);
-  var own = yearShadeCache[gy][dateKey];
+  var cacheKey = state.holidayScheme + '|' + gy;
+  if (!yearShadeCache[cacheKey]) yearShadeCache[cacheKey] = shadeForYear(gy);
+  var own = yearShadeCache[cacheKey][dateKey];
   if (own === 'none') return null;
   return own || shabbatCategoryFor(dateKey);
 }
 function holidayNamesFor(dateKey){
   var gy = dateKey.slice(0,4);
-  if (!jewishFull || !jewishFull[gy]) return [];
-  return jewishFull[gy].filter(function(h){ return h.date === dateKey; }).map(function(h){ return h.name; });
+  var jf = activeJewishFull();
+  if (!jf || !jf[gy]) return [];
+  return jf[gy].filter(function(h){ return h.date === dateKey; }).map(function(h){ return h.name; });
 }
 function parashaFor(dateKey){
-  return (parashaData && parashaData[dateKey]) || null;
+  var pd = activeParashaData();
+  return (pd && pd[dateKey]) || null;
+}
+function candleLinesFor(dateKey, loc){
+  var dow = dowOf(dateKey);
+  var yt = activeYomtov()[dateKey] || {};
+  var lines = [];
+  var candleTime = null;
+  if (dow === 5 || yt.lc) candleTime = candleTimeFor(dateKey, loc);
+  else if (yt.lct) candleTime = tzeitTimeFor(dateKey, loc);
+  if (candleTime) lines.push({ type: 'candle', time: candleTime });
+  if (dow === 6 || yt.hv) {
+    var hvTime = tzeitTimeFor(dateKey, loc);
+    // If Yom Tov begins right after Shabbat, candle-lighting-from-flame and Havdalah fall
+    // at the same moment; showing both is redundant (and not how it's actually observed).
+    var sameMomentAsCandle = candleTime && hvTime && candleTime.getTime() === hvTime.getTime();
+    if (hvTime && !sameMomentAsCandle) lines.push({ type: 'havdalah', time: hvTime });
+  }
+  return lines;
 }
 
 /* ===================== CUSTOM EVENTS ===================== */
@@ -1013,22 +1069,14 @@ function cellContentFor(dateKey, container){
       p.textContent = PARASHA_PREFIX + par;
       container.appendChild(p);
     }
-    if (state.location) {
-      var tz = tzeitTimeFor(dateKey, state.location);
-      if (tz) {
-        var t = document.createElement('span'); t.className = 'tzeit';
-        t.textContent = 'Havdalah ' + formatTimeInTz(tz, state.location.tz);
-        container.appendChild(t);
-      }
-    }
   }
-  if (dow === 5 && state.location) {
-    var ct = candleTimeFor(dateKey, state.location);
-    if (ct) {
-      var c = document.createElement('span'); c.className = 'candle';
-      c.textContent = 'Candles ' + formatTimeInTz(ct, state.location.tz);
-      container.appendChild(c);
-    }
+  if (state.location) {
+    candleLinesFor(dateKey, state.location).forEach(function(line){
+      var el = document.createElement('span');
+      el.className = line.type === 'candle' ? 'candle' : 'tzeit';
+      el.textContent = (line.type === 'candle' ? 'Candles ' : 'Havdalah ') + formatTimeInTz(line.time, state.location.tz);
+      container.appendChild(el);
+    });
   }
   holidayNamesFor(dateKey).forEach(function(name){
     var e = document.createElement('span'); e.className = 'evt';
@@ -1151,7 +1199,7 @@ async function generatePdf(){
     var accentColor = rgb(0.145, 0.388, 0.922);
     var subColor = rgb(0.42, 0.45, 0.5);
     var parashaColor = rgb(0.486, 0.227, 0.929);
-    var candleColor = rgb(0.851, 0.467, 0.024);
+    var candleColor = rgb(0.573, 0.251, 0.055);
     var tzeitColor = rgb(0.263, 0.220, 0.792);
 
     if (photo && isBackground) {
@@ -1217,14 +1265,14 @@ async function generatePdf(){
           page.drawText(label.length > 22 ? label.slice(0,21)+'…' : label, { x:x+5, y:ty, size:5.5, font:fontBold, color:parashaColor });
           ty -= 8;
         }
-        if (state.location) {
-          var tzt = tzeitTimeFor(dateKey, state.location);
-          if (tzt) { page.drawText('Havdalah ' + formatTimeInTz(tzt, state.location.tz), { x:x+5, y:ty, size:5.5, font:fontRegular, color:tzeitColor }); ty -= 8; }
-        }
       }
-      if (dow === 5 && state.location) {
-        var ctm = candleTimeFor(dateKey, state.location);
-        if (ctm) { page.drawText('Candles ' + formatTimeInTz(ctm, state.location.tz), { x:x+5, y:ty, size:5.5, font:fontRegular, color:candleColor }); ty -= 8; }
+      if (state.location) {
+        candleLinesFor(dateKey, state.location).forEach(function(line){
+          var txt = (line.type === 'candle' ? 'Candles ' : 'Havdalah ') + formatTimeInTz(line.time, state.location.tz);
+          var color = line.type === 'candle' ? candleColor : tzeitColor;
+          page.drawText(txt, { x:x+5, y:ty, size:5.5, font:fontRegular, color: color });
+          ty -= 8;
+        });
       }
       var names = holidayNamesFor(dateKey).concat(customEventsFor(dateKey));
       names.slice(0,3).forEach(function(nm){
