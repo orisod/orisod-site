@@ -59,7 +59,7 @@
           "name": "Why do Islamic dates have a disclaimer but Jewish and Hindu dates don't?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "The Islamic (Hijri) calendar traditionally depends on local moon sighting, so different countries and communities can announce the same date up to a day apart, and any calculated date is a well-informed approximation. The modern Hebrew calendar, by contrast, has been a fixed mathematical calculation since the 4th century CE, the same way the Christian Easter date is computed. There's nothing to approximate."
+            "text": "The Islamic (Hijri) calendar traditionally depends on local moon sighting, so different countries and communities can announce the same date up to a day apart, and any calculated date is a well-informed approximation. The modern Hebrew calendar uses fixed mathematical rules, so its dates can be calculated consistently in advance. The system developed over centuries and reached its present form during the early medieval period."
           }
         },
         {
@@ -91,7 +91,7 @@
           "name": "Are my photos or custom events uploaded anywhere?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No. Everything, including holiday data lookup, photos, custom events, and PDF generation, happens locally in your browser. Nothing is sent to a server."
+            "text": "No. Your photos, custom events, and generated calendar are processed locally and are not uploaded to Orisod."
           }
         }
       ]
@@ -150,7 +150,7 @@ h1{font-size:44px;margin-bottom:10px;}
 @media (max-width:900px){.workspace{grid-template-columns:1fr;}}
 .panel{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:18px 20px;}
 .panel + .panel{margin-top:14px;}
-.panel h3{margin:0 0 12px 0;font-size:14px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted-text);}
+.panel h2{margin:0 0 12px 0;font-size:14px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted-text);}
 .field-row{margin-bottom:14px;}
 .field-row:last-child{margin-bottom:0;}
 .field-row label{display:block;font-size:13px;color:var(--muted-text);margin-bottom:6px;}
@@ -294,7 +294,7 @@ h2{margin-top:50px;font-size:22px;}
   <div class="workspace">
     <div class="left-col">
       <div class="panel">
-        <h3>Year &amp; country</h3>
+        <h2>Year &amp; country</h2>
         <div class="two-col">
           <div class="field-row" style="margin-bottom:0;">
             <label for="yearSelect">Calendar year</label>
@@ -308,7 +308,7 @@ h2{margin-top:50px;font-size:22px;}
       </div>
 
       <div class="panel">
-        <h3>Religious dates</h3>
+        <h2>Religious dates</h2>
         <div class="toggle-row">
           <div class="label">Christianity<small>Epiphany, Ash Wednesday, Palm Sunday, Good Friday, Easter, Pentecost, All Saints' Day, Christmas</small></div>
           <label class="switch"><input type="checkbox" id="tglChristian" aria-label="Christianity"><span class="slider"></span></label>
@@ -334,7 +334,7 @@ h2{margin-top:50px;font-size:22px;}
       </div>
 
       <div class="panel">
-        <h3>Custom events</h3>
+        <h2>Custom events</h2>
         <div class="add-row">
           <input type="date" id="manualDate" aria-label="Event date" style="flex:none;width:150px;">
           <input type="text" id="manualName" placeholder="Event name" aria-label="Event name">
@@ -344,7 +344,7 @@ h2{margin-top:50px;font-size:22px;}
       </div>
 
       <div class="panel">
-        <h3>Photos per month <span style="font-weight:normal;color:var(--muted-text);">(optional)</span></h3>
+        <h2>Photos per month <span style="font-weight:normal;color:var(--muted-text);">(optional)</span></h2>
         <div class="photo-grid" id="photoGrid"></div>
         <input type="file" id="photoInput" accept=".jpg,.jpeg,.png,.webp" style="display:none;">
         <div class="layout-pick">
@@ -356,7 +356,7 @@ h2{margin-top:50px;font-size:22px;}
 
     <div class="right-col">
       <div class="panel">
-        <h3>Preview</h3>
+        <h2>Preview</h2>
         <div class="preview-wrap"><div class="month-preview" id="monthPreview"></div></div>
         <div class="preview-nav">
           <button type="button" id="prevMonthBtn">← Prev</button>
@@ -388,7 +388,7 @@ h2{margin-top:50px;font-size:22px;}
     <h2>Frequently asked questions</h2>
     <div class="faq-item">
       <div class="q">Why do Islamic dates have a disclaimer but Jewish and Hindu dates don't?</div>
-      <div>The Islamic (Hijri) calendar traditionally depends on local moon sighting, so different countries and communities can announce the same date up to a day apart, and any calculated date is a well-informed approximation. The modern Hebrew calendar, by contrast, has been a fixed mathematical calculation since the 4th century CE, the same way the Christian Easter date is computed. There's nothing to approximate.</div>
+      <div>The Islamic (Hijri) calendar traditionally depends on local moon sighting, so different countries and communities can announce the same date up to a day apart, and any calculated date is a well-informed approximation. The modern Hebrew calendar uses fixed mathematical rules, so its dates can be calculated consistently in advance. The system developed over centuries and reached its present form during the early medieval period.</div>
     </div>
     <div class="faq-item">
       <div class="q">Can I generate more than one year in a single PDF?</div>
@@ -404,7 +404,7 @@ h2{margin-top:50px;font-size:22px;}
     </div>
     <div class="faq-item">
       <div class="q">Are my photos or custom events uploaded anywhere?</div>
-      <div>No. Everything, including holiday data lookup, photos, custom events, and PDF generation, happens locally in your browser. Nothing is sent to a server.</div>
+      <div>No. Your photos, custom events, and generated calendar are processed locally and are not uploaded to Orisod.</div>
     </div>
   </div>
 
