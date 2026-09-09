@@ -293,8 +293,8 @@ h2{margin-top:50px;font-size:22px;}
         <h2>Año y país</h2>
         <h3>Año hebreo</h3>
         <div class="mode-tabs">
-          <button type="button" class="active" data-year-mode="hebrew" id="yearModeHebrewBtn">Año hebreo</button>
-          <button type="button" data-year-mode="gregorian" id="yearModeGregorianBtn">Año gregoriano</button>
+          <button type="button" class="active" aria-pressed="true" data-year-mode="hebrew" id="yearModeHebrewBtn">Año hebreo</button>
+          <button type="button" aria-pressed="false" data-year-mode="gregorian" id="yearModeGregorianBtn">Año gregoriano</button>
         </div>
         <div class="field-row" id="hebrewYearField">
           <label for="hebrewYearSelect">Año hebreo</label>
@@ -308,9 +308,9 @@ h2{margin-top:50px;font-size:22px;}
 
         <h3>Ubicación</h3>
         <div class="mode-tabs">
-          <button type="button" class="active" data-loc-mode="city" id="locModeCityBtn">Buscar ciudad</button>
-          <button type="button" data-loc-mode="gps" id="locModeGpsBtn">Usar mi ubicación</button>
-          <button type="button" data-loc-mode="manual" id="locModeManualBtn">Lat/long</button>
+          <button type="button" class="active" aria-pressed="true" data-loc-mode="city" id="locModeCityBtn">Buscar ciudad</button>
+          <button type="button" aria-pressed="false" data-loc-mode="gps" id="locModeGpsBtn">Usar mi ubicación</button>
+          <button type="button" aria-pressed="false" data-loc-mode="manual" id="locModeManualBtn">Lat/long</button>
         </div>
         <div class="field-row" id="locCityField">
           <label for="citySearchInput">Busca una ciudad</label>
@@ -345,8 +345,8 @@ h2{margin-top:50px;font-size:22px;}
         <h2>Fechas religiosas</h2>
         <h3>Esquema de festividades</h3>
         <div class="mode-tabs">
-          <button type="button" class="active" data-scheme="diaspora" id="schemeDiasporaBtn">Diáspora</button>
-          <button type="button" data-scheme="israel" id="schemeIsraelBtn">Israel</button>
+          <button type="button" class="active" aria-pressed="true" data-scheme="diaspora" id="schemeDiasporaBtn">Diáspora</button>
+          <button type="button" aria-pressed="false" data-scheme="israel" id="schemeIsraelBtn">Israel</button>
         </div>
         <div class="info-box" id="jerusalemNote" style="display:none;">
           📍 Costumbre de Jerusalén: Muchas comunidades de Jerusalén encienden las velas 40 minutos antes de la puesta del sol. Otras siguen 18 o 20 minutos. Selecciona la práctica de tu comunidad.
@@ -396,8 +396,8 @@ h2{margin-top:50px;font-size:22px;}
         <div class="photo-grid" id="photoGrid"></div>
         <input type="file" id="photoInput" accept=".jpg,.jpeg,.png,.webp" style="display:none;">
         <div class="layout-pick">
-          <button type="button" class="active" data-layout="top">Foto arriba</button>
-          <button type="button" data-layout="background">Foto de fondo</button>
+          <button type="button" class="active" aria-pressed="true" data-layout="top">Foto arriba</button>
+          <button type="button" aria-pressed="false" data-layout="background">Foto de fondo</button>
         </div>
       </div>
     </div>
@@ -719,12 +719,14 @@ function updateYearResultInfo(){
 yearModeHebrewBtn.addEventListener('click', function(){
   state.yearMode = 'hebrew';
   yearModeHebrewBtn.classList.add('active'); yearModeGregorianBtn.classList.remove('active');
+  yearModeHebrewBtn.setAttribute('aria-pressed', 'true'); yearModeGregorianBtn.setAttribute('aria-pressed', 'false');
   hebrewYearField.style.display = ''; gregorianYearField.style.display = 'none';
   updateYearResultInfo();
 });
 yearModeGregorianBtn.addEventListener('click', function(){
   state.yearMode = 'gregorian';
   yearModeGregorianBtn.classList.add('active'); yearModeHebrewBtn.classList.remove('active');
+  yearModeGregorianBtn.setAttribute('aria-pressed', 'true'); yearModeHebrewBtn.setAttribute('aria-pressed', 'false');
   gregorianYearField.style.display = ''; hebrewYearField.style.display = 'none';
   updateYearResultInfo();
 });
@@ -756,6 +758,9 @@ function setLocMode(mode){
   locModeCityBtn.classList.toggle('active', mode==='city');
   locModeGpsBtn.classList.toggle('active', mode==='gps');
   locModeManualBtn.classList.toggle('active', mode==='manual');
+  locModeCityBtn.setAttribute('aria-pressed', mode==='city' ? 'true' : 'false');
+  locModeGpsBtn.setAttribute('aria-pressed', mode==='gps' ? 'true' : 'false');
+  locModeManualBtn.setAttribute('aria-pressed', mode==='manual' ? 'true' : 'false');
   locCityField.style.display = mode==='city' ? '' : 'none';
   locGpsField.style.display = mode==='gps' ? '' : 'none';
   locManualField.style.display = mode==='manual' ? '' : 'none';
@@ -779,21 +784,24 @@ function setHolidayScheme(scheme){
   state.holidayScheme = scheme;
   schemeDiasporaBtn.classList.toggle('active', scheme === 'diaspora');
   schemeIsraelBtn.classList.toggle('active', scheme === 'israel');
+  schemeDiasporaBtn.setAttribute('aria-pressed', scheme === 'diaspora' ? 'true' : 'false');
+  schemeIsraelBtn.setAttribute('aria-pressed', scheme === 'israel' ? 'true' : 'false');
   renderPreview();
 }
 schemeDiasporaBtn.addEventListener('click', function(){ setHolidayScheme('diaspora'); });
 schemeIsraelBtn.addEventListener('click', function(){ setHolidayScheme('israel'); });
 
 // búsqueda de ciudad
+function stripDiacritics(s){ return s.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
 var citySuggestIndex = -1, citySuggestList = [];
 citySearchInput.addEventListener('input', function(){
-  var q = citySearchInput.value.trim().toLowerCase();
+  var q = stripDiacritics(citySearchInput.value.trim().toLowerCase());
   citySuggestIndex = -1;
   if (!cities || q.length < 2) { citySuggestions.classList.remove('open'); citySuggestions.innerHTML=''; return; }
   var starts = [], contains = [];
   for (var i = 0; i < cities.length && (starts.length + contains.length) < 300; i++) {
     var c = cities[i];
-    var name = c.n.toLowerCase();
+    var name = stripDiacritics(c.n.toLowerCase());
     if (name.indexOf(q) === 0) starts.push(c);
     else if (name.indexOf(q) !== -1) contains.push(c);
   }
@@ -1046,8 +1054,9 @@ photoInput.addEventListener('change', function(){
 });
 document.querySelectorAll('.layout-pick button').forEach(function(b){
   b.addEventListener('click', function(){
-    document.querySelectorAll('.layout-pick button').forEach(function(x){ x.classList.remove('active'); });
+    document.querySelectorAll('.layout-pick button').forEach(function(x){ x.classList.remove('active'); x.setAttribute('aria-pressed', 'false'); });
     b.classList.add('active');
+    b.setAttribute('aria-pressed', 'true');
     state.photoLayout = b.dataset.layout;
     renderPreview();
   });
