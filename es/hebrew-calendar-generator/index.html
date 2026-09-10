@@ -793,9 +793,38 @@ schemeIsraelBtn.addEventListener('click', function(){ setHolidayScheme('israel')
 
 // búsqueda de ciudad
 function stripDiacritics(s){ return s.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
+// Traduce gentilicios/exónimos en español al nombre usado por los datos
+// geográficos (mayormente en inglés) antes de buscar, ya que la variante en
+// español a veces es una palabra distinta (no solo una tilde) -- p. ej.
+// "Jerusalén" termina en "n" y el dato es "Jerusalem", terminado en "m".
+var CITY_ALIASES = {
+  'jerusalen': 'jerusalem',
+  'nueva york': 'new york',
+  'londres': 'london',
+  'moscu': 'moscow',
+  'el cairo': 'cairo',
+  'florencia': 'florence',
+  'venecia': 'venice',
+  'munich': 'munich',
+  'colonia': 'koln',
+  'nueva orleans': 'new orleans',
+  'pekin': 'beijing',
+  'roma': 'rome',
+  'atenas': 'athens',
+  'varsovia': 'warsaw',
+  'praga': 'prague',
+  'ginebra': 'geneva',
+  'lisboa': 'lisbon',
+  'viena': 'vienna',
+  'napoles': 'naples',
+  'marsella': 'marseille',
+  'habana': 'havana',
+  'la habana': 'havana'
+};
 var citySuggestIndex = -1, citySuggestList = [];
 citySearchInput.addEventListener('input', function(){
   var q = stripDiacritics(citySearchInput.value.trim().toLowerCase());
+  if (CITY_ALIASES[q]) q = CITY_ALIASES[q];
   citySuggestIndex = -1;
   if (!cities || q.length < 2) { citySuggestions.classList.remove('open'); citySuggestions.innerHTML=''; return; }
   var starts = [], contains = [];
