@@ -824,15 +824,33 @@ var CITY_ALIASES = {
 var citySuggestIndex = -1, citySuggestList = [];
 citySearchInput.addEventListener('input', function(){
   var q = stripDiacritics(citySearchInput.value.trim().toLowerCase());
-  if (CITY_ALIASES[q]) q = CITY_ALIASES[q];
   citySuggestIndex = -1;
   if (!cities || q.length < 2) { citySuggestions.classList.remove('open'); citySuggestions.innerHTML=''; return; }
+  // Consulta(s) de nombre de ciudad a buscar en los datos. Si el texto escrito
+  // es un exónimo español completo (o el prefijo de uno o más), se resuelve al
+  // nombre usado por los datos geográficos -- p. ej. "nue" (prefijo de "nueva
+  // york" y "nueva orleans") busca "new york" y "new orleans" a la vez hasta
+  // que el usuario escribe lo suficiente para distinguir entre ambos.
+  var queries = [q];
+  if (CITY_ALIASES[q]) {
+    queries = [CITY_ALIASES[q]];
+  } else {
+    for (var key in CITY_ALIASES) {
+      if (key.length > q.length && key.indexOf(q) === 0) queries.push(CITY_ALIASES[key]);
+    }
+  }
   var starts = [], contains = [];
   for (var i = 0; i < cities.length && (starts.length + contains.length) < 300; i++) {
     var c = cities[i];
     var name = stripDiacritics(c.n.toLowerCase());
-    if (name.indexOf(q) === 0) starts.push(c);
-    else if (name.indexOf(q) !== -1) contains.push(c);
+    var isStart = false, isContain = false;
+    for (var j = 0; j < queries.length; j++) {
+      var idx = name.indexOf(queries[j]);
+      if (idx === 0) { isStart = true; break; }
+      if (idx !== -1) isContain = true;
+    }
+    if (isStart) starts.push(c);
+    else if (isContain) contains.push(c);
   }
   citySuggestList = starts.concat(contains).slice(0, 8);
   renderCitySuggestions();
