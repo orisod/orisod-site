@@ -65,10 +65,10 @@
         },
         {
           "@type": "Question",
-          "name": "¿Qué tan precisos son los horarios de encendido de velas y tzeit hakojavim?",
+          "name": "¿Qué tan precisos son los horarios de encendido de velas, Havdalah y tzeit hakojavim?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Se calculan a partir de las coordenadas de la ubicación que elijas, usando fórmulas astronómicas estándar, el mismo enfoque que usan la mayoría de las apps de calendario. Son una referencia razonable, pero no constituyen una decisión halájica. Confirma los horarios exactos con tu rabino o la práctica de tu comunidad local, sobre todo cerca de una costa, en latitudes altas, o para una ocasión sensible a la precisión."
+            "text": "Se calculan a partir de las coordenadas de la ubicación que elijas, usando fórmulas astronómicas estándar, el mismo enfoque que usan la mayoría de las apps de calendario. Son una referencia razonable, pero no constituyen un dictamen halájico. La elevación, el horizonte visible, las condiciones atmosféricas, las latitudes altas y el método seleccionado pueden afectar el resultado, así que confirma los horarios exactos con tu rabino o la práctica de tu comunidad local, sobre todo para una ocasión sensible a la precisión."
           }
         },
         {
@@ -76,7 +76,7 @@
           "name": "¿Por qué tengo que elegir una ubicación?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "La hora de la puesta del sol depende de la latitud y la longitud exactas, y varía varios minutos incluso entre ciudades cercanas. El encendido de velas y el tzeit hakojavim se definen ambos en relación con la puesta del sol, así que no hay un horario correcto único sin una ubicación."
+            "text": "La hora de la puesta del sol depende de la latitud y la longitud exactas, y varía varios minutos incluso entre ciudades cercanas. El encendido de velas, Havdalah y el tzeit hakojavim se definen todos en relación con la puesta del sol, así que no hay un horario correcto único sin una ubicación."
           }
         },
         {
@@ -283,14 +283,14 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 9h18"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 17h.01M12 17h.01"/></svg></div>
     <h1>Generador de calendario hebreo</h1>
   </div>
-  <p class="tool-sub" style="text-align:center;">Crea un calendario PDF imprimible para un año hebreo completo, de Tishrei a Elul, con horarios de encendido de velas y tzeit hakojavim para tu ubicación y la porción semanal de la Torá. Todo ocurre localmente en tu navegador.</p>
+  <p class="tool-sub" style="text-align:center;">Crea un calendario PDF imprimible para un año hebreo completo, de Tishrei a Elul, con horarios de encendido de velas, Havdalah y tzeit hakojavim para tu ubicación y la porción semanal de la Torá. Todo ocurre localmente en tu navegador.</p>
 
   <div class="error" id="dataLoadError" style="display:none;max-width:600px;margin:0 auto 20px auto;text-align:center;">⚠️ No se pudieron cargar los datos del calendario, así que las fechas hebreas, los días festivos y la porción de la Torá no aparecerán abajo. Esta página necesita cargarse desde un servidor web, no abrirse directamente como archivo local. Intenta recargar, y si el problema continúa, vuelve a cargar desde la URL normal del sitio.</div>
 
   <div class="workspace">
     <div class="left-col">
       <div class="panel">
-        <h2>Año y país</h2>
+        <h2>Año y ubicación</h2>
         <h3>Año hebreo</h3>
         <div class="mode-tabs">
           <button type="button" class="active" aria-pressed="true" data-year-mode="hebrew" id="yearModeHebrewBtn">Año hebreo</button>
@@ -338,7 +338,7 @@ h2{margin-top:50px;font-size:22px;}
             <select id="manualTz"></select>
           </div>
         </div>
-        <div class="location-status" id="locationStatus">Aún no hay una ubicación establecida. Los horarios de encendido de velas y tzeit hakojavim la necesitan.</div>
+        <div class="location-status" id="locationStatus">Aún no hay una ubicación establecida. Los horarios de encendido de velas, Havdalah y tzeit hakojavim la necesitan.</div>
       </div>
 
       <div class="panel">
@@ -352,7 +352,7 @@ h2{margin-top:50px;font-size:22px;}
           📍 Costumbre de Jerusalén: Muchas comunidades de Jerusalén encienden las velas 40 minutos antes de la puesta del sol. Otras siguen 18 o 20 minutos. Selecciona la práctica de tu comunidad.
         </div>
 
-        <h3>Encendido de velas y tzeit hakojavim</h3>
+        <h3>Encendido de velas, Havdalah y tzeit hakojavim</h3>
         <div class="two-col">
           <div class="field-row" style="margin-bottom:0;">
             <label for="candleMinutesSelect">Encendido de velas</label>
@@ -377,7 +377,7 @@ h2{margin-top:50px;font-size:22px;}
           </div>
         </div>
         <div class="disclaimer-box">
-          ⚠️ Los horarios de encendido de velas y tzeit hakojavim son estimaciones calculadas solo como referencia. Confirma los horarios exactos con tu rabino o la práctica de tu comunidad local.
+          ⚠️ Los horarios de encendido de velas, Havdalah y tzeit hakojavim son estimaciones calculadas solo como referencia. Confirma los horarios exactos con tu rabino o la práctica de tu comunidad local.
         </div>
       </div>
 
@@ -423,11 +423,11 @@ h2{margin-top:50px;font-size:22px;}
 
   <div class="seo-content">
     <h2>¿Qué hace esta herramienta?</h2>
-    <p>El Generador de Calendario Hebreo crea un calendario PDF imprimible para un año hebreo completo, de Tishrei a Elul, un mes por página (12 páginas en un año regular, 13 en un año bisiesto, cuando Adar se divide en Adar I y Adar II). Cada viernes y sábado muestra los horarios de encendido de velas y tzeit hakojavim calculados para la ubicación que elijas, cada sábado muestra la porción semanal de la Torá, y el mismo sombreado de días y las etiquetas de fecha hebrea del Generador de Calendarios general se incluyen automáticamente. Añade tus propias fotos y eventos puntuales, y descarga el calendario terminado como un único PDF.</p>
+    <p>El Generador de Calendario Hebreo crea un calendario PDF imprimible para un año hebreo completo, de Tishrei a Elul, un mes por página (12 páginas en un año regular, 13 en un año bisiesto, cuando Adar se divide en Adar I y Adar II). Cada viernes muestra un horario de encendido de velas y cada sábado un horario de Havdalah, y los días de Iom Tov muestran encendido de velas o Havdalah, según corresponda, calculados para la ubicación que elijas sin repetir un horario equivalente en días consecutivos aplicables. Cada sábado también muestra la porción semanal de la Torá, y el mismo sombreado de días y las etiquetas de fecha hebrea del Generador de Calendarios general se incluyen automáticamente. Añade tus propias fotos y eventos puntuales, y descarga el calendario terminado como un único PDF.</p>
 
     <h2>¿Cuándo deberías usar esta herramienta?</h2>
     <ul>
-      <li>Quieres horarios de encendido de velas y tzeit hakojavim para cada semana del año, no solo para las festividades</li>
+      <li>Quieres horarios de encendido de velas, Havdalah y tzeit hakojavim para cada semana del año, no solo para las festividades</li>
       <li>Quieres la porción semanal de la Torá impresa junto a la fecha</li>
       <li>Piensas en términos de año hebreo (de Tishrei a Elul) en lugar del enero a diciembre gregoriano</li>
       <li>Ya usas el Generador de Calendarios general y quieres añadir estos extras</li>
@@ -439,12 +439,12 @@ h2{margin-top:50px;font-size:22px;}
       <div>El propio límite del año en el calendario hebreo es Rosh Hashaná, el primero de Tishrei, no el 1 de enero. Este calendario sigue esa estructura nativa: cada descarga cubre un año hebreo completo, 12 meses en un año regular o 13 en un año bisiesto, cuando Adar se divide en Adar I y Adar II.</div>
     </div>
     <div class="faq-item">
-      <div class="q">¿Qué tan precisos son los horarios de encendido de velas y tzeit hakojavim?</div>
-      <div>Se calculan a partir de las coordenadas de la ubicación que elijas, usando fórmulas astronómicas estándar, el mismo enfoque que usan la mayoría de las apps de calendario. Son una referencia razonable, pero no constituyen una decisión halájica. Confirma los horarios exactos con tu rabino o la práctica de tu comunidad local, sobre todo cerca de una costa, en latitudes altas, o para una ocasión sensible a la precisión.</div>
+      <div class="q">¿Qué tan precisos son los horarios de encendido de velas, Havdalah y tzeit hakojavim?</div>
+      <div>Se calculan a partir de las coordenadas de la ubicación que elijas, usando fórmulas astronómicas estándar, el mismo enfoque que usan la mayoría de las apps de calendario. Son una referencia razonable, pero no constituyen un dictamen halájico. La elevación, el horizonte visible, las condiciones atmosféricas, las latitudes altas y el método seleccionado pueden afectar el resultado, así que confirma los horarios exactos con tu rabino o la práctica de tu comunidad local, sobre todo para una ocasión sensible a la precisión.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Por qué tengo que elegir una ubicación?</div>
-      <div>La hora de la puesta del sol depende de la latitud y la longitud exactas, y varía varios minutos incluso entre ciudades cercanas. El encendido de velas y el tzeit hakojavim se definen ambos en relación con la puesta del sol, así que no hay un horario correcto único sin una ubicación.</div>
+      <div>La hora de la puesta del sol depende de la latitud y la longitud exactas, y varía varios minutos incluso entre ciudades cercanas. El encendido de velas, Havdalah y el tzeit hakojavim se definen todos en relación con la puesta del sol, así que no hay un horario correcto único sin una ubicación.</div>
     </div>
     <div class="faq-item">
       <div class="q">¿Qué es el tzeit hakojavim, y por qué hay dos formas de ajustarlo?</div>
@@ -771,7 +771,7 @@ locModeManualBtn.addEventListener('click', function(){ setLocMode('manual'); });
 
 function updateLocationStatus(){
   if (!state.location) {
-    locationStatus.innerHTML = 'Aún no hay una ubicación establecida. Los horarios de encendido de velas y tzeit hakojavim la necesitan.';
+    locationStatus.innerHTML = 'Aún no hay una ubicación establecida. Los horarios de encendido de velas, Havdalah y tzeit hakojavim la necesitan.';
   } else {
     locationStatus.innerHTML = 'Usando <strong>' + state.location.label + '</strong> (' + state.location.tz + ').';
   }
