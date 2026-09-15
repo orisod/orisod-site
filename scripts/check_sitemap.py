@@ -12,7 +12,11 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SITE_ORIGIN = "https://orisod.com"
-EXCLUDE_TOP_LEVEL = {".git", ".github", ".claude", "assets", "docs", "scripts", "node_modules"}
+EXCLUDE_TOP_LEVEL = {
+    ".git", ".github", ".claude", "assets", "docs", "scripts", "node_modules",
+    "claude",  # design-history reference files, not real pages
+    "games",  # games.orisod.com content: a separate domain with its own sitemap.xml
+}
 
 
 def page_url(index_html: Path) -> str:
