@@ -65,10 +65,10 @@
         },
         {
           "@type": "Question",
-          "name": "How accurate are the candle-lighting and tzeit hakochavim times?",
+          "name": "How accurate are the candle-lighting, Havdalah and tzeit hakochavim times?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "They're calculated from your chosen location's coordinates using standard astronomical formulas, the same underlying approach most calendar apps use. They're a reasonable reference, not a religious ruling. Confirm exact times with your rabbi or local community practice, especially near a coastline, at high latitude, or for a stringency-sensitive occasion."
+            "text": "They're calculated from your chosen location's coordinates using standard astronomical formulas, the same underlying approach most calendar apps use. They're a reasonable reference, not a religious ruling. Elevation, the visible horizon, atmospheric conditions, high latitudes, and the selected calculation method can affect the result, so confirm exact times with your rabbi or local community practice, especially for a stringency-sensitive occasion."
           }
         },
         {
@@ -76,7 +76,7 @@
           "name": "Why do I need to pick a location at all?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Sunset time depends on exact latitude and longitude, and shifts by several minutes even between nearby cities. Candle-lighting and tzeit hakochavim are both defined relative to sunset, so there's no single correct time without a location."
+            "text": "Sunset time depends on exact latitude and longitude, and shifts by several minutes even between nearby cities. Candle-lighting, Havdalah and tzeit hakochavim are all defined relative to sunset, so there's no single correct time without a location."
           }
         },
         {
@@ -283,14 +283,14 @@ h2{margin-top:50px;font-size:22px;}
     <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 9h18"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 17h.01M12 17h.01"/></svg></div>
     <h1>Hebrew calendar generator</h1>
   </div>
-  <p class="tool-sub" style="text-align:center;">Build a printable PDF calendar for a full Hebrew year, Tishrei through Elul, with candle-lighting and tzeit hakochavim times for your location and the weekly Torah portion. Everything happens locally in your browser.</p>
+  <p class="tool-sub" style="text-align:center;">Build a printable PDF calendar for a full Hebrew year, Tishrei through Elul, with candle-lighting, Havdalah and tzeit hakochavim times for your location and the weekly Torah portion. Everything happens locally in your browser.</p>
 
   <div class="error" id="dataLoadError" style="display:none;max-width:600px;margin:0 auto 20px auto;text-align:center;">⚠️ Calendar data failed to load, so Hebrew dates, holidays and the Torah portion won't appear below. This page needs to be loaded from a web server, not opened directly as a local file. Try reloading, and if the problem continues, reload from the site's normal URL.</div>
 
   <div class="workspace">
     <div class="left-col">
       <div class="panel">
-        <h2>Year and country</h2>
+        <h2>Year and location</h2>
         <h3>Hebrew year</h3>
         <div class="mode-tabs">
           <button type="button" class="active" aria-pressed="true" data-year-mode="hebrew" id="yearModeHebrewBtn">Hebrew year</button>
@@ -338,7 +338,7 @@ h2{margin-top:50px;font-size:22px;}
             <select id="manualTz"></select>
           </div>
         </div>
-        <div class="location-status" id="locationStatus">No location set yet. Candle-lighting and tzeit hakochavim times need one.</div>
+        <div class="location-status" id="locationStatus">No location set yet. Candle-lighting, Havdalah and tzeit hakochavim times need one.</div>
       </div>
 
       <div class="panel">
@@ -352,7 +352,7 @@ h2{margin-top:50px;font-size:22px;}
           📍 Jerusalem custom: Many communities in Jerusalem light 40 minutes before sunset. Other communities follow 18 or 20 minutes. Select the practice you follow.
         </div>
 
-        <h3>Candle lighting &amp; tzeit hakochavim</h3>
+        <h3>Candle lighting, Havdalah &amp; tzeit hakochavim</h3>
         <div class="two-col">
           <div class="field-row" style="margin-bottom:0;">
             <label for="candleMinutesSelect">Candle lighting</label>
@@ -377,7 +377,7 @@ h2{margin-top:50px;font-size:22px;}
           </div>
         </div>
         <div class="disclaimer-box">
-          ⚠️ Candle-lighting and tzeit hakochavim times are calculated estimates for reference only. Confirm exact times with your rabbi or local community practice.
+          ⚠️ Candle-lighting, Havdalah and tzeit hakochavim times are calculated estimates for reference only. Confirm exact times with your rabbi or local community practice.
         </div>
       </div>
 
@@ -423,11 +423,11 @@ h2{margin-top:50px;font-size:22px;}
 
   <div class="seo-content">
     <h2>What does this tool do?</h2>
-    <p>Hebrew Calendar Generator builds a printable PDF calendar for a full Hebrew year, Tishrei through Elul, one month per page (12 pages in a regular year, 13 in a leap year, when Adar splits into Adar I and Adar II). Every Friday and Saturday shows candle-lighting and tzeit hakochavim times calculated for a location you choose, every Saturday shows the weekly Torah portion, and the same day shading and Hebrew-date labels from the general Calendar Generator carry over automatically. Add your own photos and one-off events, then download the finished calendar as a single PDF.</p>
+    <p>Hebrew Calendar Generator builds a printable PDF calendar for a full Hebrew year, Tishrei through Elul, one month per page (12 pages in a regular year, 13 in a leap year, when Adar splits into Adar I and Adar II). Each Friday shows a candle-lighting time and each Saturday a Havdalah time, with Yom Tov days showing candle-lighting or Havdalah, whichever applies, calculated for a location you choose without repeating an equivalent time across consecutive applicable days. Every Saturday also shows the weekly Torah portion, and the same day shading and Hebrew-date labels from the general Calendar Generator carry over automatically. Add your own photos and one-off events, then download the finished calendar as a single PDF.</p>
 
     <h2>When should you use this tool?</h2>
     <ul>
-      <li>You want candle-lighting and tzeit hakochavim times for every week of the year, not just holidays</li>
+      <li>You want candle-lighting, Havdalah and tzeit hakochavim times for every week of the year, not just holidays</li>
       <li>You want the weekly Torah portion printed alongside the date</li>
       <li>You think in Hebrew-year terms (Tishrei to Elul) rather than the Gregorian January to December</li>
       <li>You already use the general Calendar Generator and want these extras added on top</li>
@@ -439,12 +439,12 @@ h2{margin-top:50px;font-size:22px;}
       <div>The Hebrew calendar's own year boundary is Rosh Hashanah, the first of Tishrei, not January 1st. This calendar follows that native structure: one download covers one full Hebrew year, 12 months in a regular year or 13 in a leap year, when Adar splits into Adar I and Adar II.</div>
     </div>
     <div class="faq-item">
-      <div class="q">How accurate are the candle-lighting and tzeit hakochavim times?</div>
-      <div>They're calculated from your chosen location's coordinates using standard astronomical formulas, the same underlying approach most calendar apps use. They're a reasonable reference, not a religious ruling. Confirm exact times with your rabbi or local community practice, especially near a coastline, at high latitude, or for a stringency-sensitive occasion.</div>
+      <div class="q">How accurate are the candle-lighting, Havdalah and tzeit hakochavim times?</div>
+      <div>They're calculated from your chosen location's coordinates using standard astronomical formulas, the same underlying approach most calendar apps use. They're a reasonable reference, not a religious ruling. Elevation, the visible horizon, atmospheric conditions, high latitudes, and the selected calculation method can affect the result, so confirm exact times with your rabbi or local community practice, especially for a stringency-sensitive occasion.</div>
     </div>
     <div class="faq-item">
       <div class="q">Why do I need to pick a location at all?</div>
-      <div>Sunset time depends on exact latitude and longitude, and shifts by several minutes even between nearby cities. Candle-lighting and tzeit hakochavim are both defined relative to sunset, so there's no single correct time without a location.</div>
+      <div>Sunset time depends on exact latitude and longitude, and shifts by several minutes even between nearby cities. Candle-lighting, Havdalah and tzeit hakochavim are all defined relative to sunset, so there's no single correct time without a location.</div>
     </div>
     <div class="faq-item">
       <div class="q">What is tzeit hakochavim, and why are there two ways to set it?</div>
@@ -770,7 +770,7 @@ locModeManualBtn.addEventListener('click', function(){ setLocMode('manual'); });
 
 function updateLocationStatus(){
   if (!state.location) {
-    locationStatus.innerHTML = 'No location set yet. Candle-lighting and tzeit hakochavim times need one.';
+    locationStatus.innerHTML = 'No location set yet. Candle-lighting, Havdalah and tzeit hakochavim times need one.';
   } else {
     locationStatus.innerHTML = 'Using <strong>' + state.location.label + '</strong> (' + state.location.tz + ').';
   }
