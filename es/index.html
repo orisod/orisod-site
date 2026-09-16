@@ -300,6 +300,7 @@ h1{
 @media (max-width:820px){.category-grid{grid-template-columns:repeat(2, 1fr);}}
 @media (max-width:560px){.category-grid{grid-template-columns:1fr;}}
 .tool-card{
+  position:relative;
   display:flex;
   flex-direction:column;
   align-items:flex-start;
@@ -317,6 +318,47 @@ h1{
 .tool-card:hover{
   border-color:var(--accent);
   transform:translateY(-2px);
+}
+/* Border-beam hover/focus ring (Phase 14 exploration; homepage cards only).
+   A padding+mask-composite cutout paints only the ring itself, so no HTML
+   wrapper/inner-content restructuring is needed on top of the existing
+   .tool-card markup. Animating the conic-gradient's angle smoothly needs
+   @property below; browsers that don't support @property still render the
+   ring (conic-gradient/mask support is old and separate from @property),
+   just without smooth rotation -- and since a conic-gradient's 0deg and
+   360deg look identical, the un-animatable custom property's spec-mandated
+   discrete flip lands on two visually identical frames, so it reads as a
+   plain static accent ring, not a glitch. */
+@property --beam-angle{
+  syntax:'<angle>';
+  initial-value:0deg;
+  inherits:false;
+}
+.tool-card::before{
+  content:'';
+  position:absolute;
+  inset:-1px;
+  border-radius:inherit;
+  padding:1.5px;
+  background:conic-gradient(from var(--beam-angle), transparent 0deg, var(--accent) 20deg, transparent 55deg, transparent 360deg);
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite:exclude;
+  opacity:0;
+  transition:opacity .2s ease;
+  pointer-events:none;
+}
+.tool-card:hover::before,
+.tool-card:focus-visible::before{
+  opacity:1;
+  animation:tool-card-beam-spin 2.4s linear infinite;
+}
+@keyframes tool-card-beam-spin{
+  to{--beam-angle:360deg;}
+}
+@media (prefers-reduced-motion: reduce){
+  .tool-card::before{display:none;}
 }
 .tool-card .icon-box{
   width:38px;
