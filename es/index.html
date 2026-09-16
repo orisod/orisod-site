@@ -319,7 +319,7 @@ h1{
   border-color:var(--accent);
   transform:translateY(-2px);
 }
-/* Border-beam hover/focus ring (Phase 14 exploration; homepage cards only).
+/* Border-beam ring (Phase 14 exploration; homepage cards only).
    A padding+mask-composite cutout paints only the ring itself, so no HTML
    wrapper/inner-content restructuring is needed on top of the existing
    .tool-card markup. Animating the conic-gradient's angle smoothly needs
@@ -328,7 +328,11 @@ h1{
    just without smooth rotation -- and since a conic-gradient's 0deg and
    360deg look identical, the un-animatable custom property's spec-mandated
    discrete flip lands on two visually identical frames, so it reads as a
-   plain static accent ring, not a glitch. */
+   plain static accent ring, not a glitch.
+   All 9 cards animate continuously at the thin baseline; hover/focus only
+   thickens that one card's ring via a `padding` transition (padding is the
+   ring's thickness in this technique) -- it never starts/stops the
+   animation, which already runs on every card regardless of hover state. */
 @property --beam-angle{
   syntax:'<angle>';
   initial-value:0deg;
@@ -345,14 +349,13 @@ h1{
   -webkit-mask-composite:xor;
   mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   mask-composite:exclude;
-  opacity:0;
-  transition:opacity .2s ease;
+  transition:padding .2s ease;
   pointer-events:none;
+  animation:tool-card-beam-spin 2.4s linear infinite;
 }
 .tool-card:hover::before,
 .tool-card:focus-visible::before{
-  opacity:1;
-  animation:tool-card-beam-spin 2.4s linear infinite;
+  padding:3px;
 }
 @keyframes tool-card-beam-spin{
   to{--beam-angle:360deg;}
