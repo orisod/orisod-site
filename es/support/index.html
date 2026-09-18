@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apoya a Orisod – Mantén las herramientas gratis y sin anuncios</title>
+<meta name="description" content="Las herramientas de Orisod son gratuitas y sin anuncios gracias al apoyo voluntario. Las contribuciones son opcionales y ayudan a cubrir el desarrollo y el alojamiento.">
+<link rel="canonical" href="https://orisod.com/es/support/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/support/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/support/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/support/">
+<link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":"WebPage","name":"Apoya a Orisod","url":"https://orisod.com/es/support/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://orisod.com/es/"},{"@type":"ListItem","position":2,"name":"Apoyo","item":"https://orisod.com/es/support/"}]}]}
+</script>
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+  --grid-alpha:.05;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+  --grid-alpha:.10;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  background-color:var(--bg);
+  background-image:linear-gradient(rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px),linear-gradient(90deg, rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px);
+  background-size:42px 42px;
+  color:var(--text);
+  text-align:center;
+  transition:background-color 0.2s, color 0.2s;
+}
+.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);display:inline-flex;align-items:center;gap:8px;}
+.site-nav-logo img{height:26px;width:auto;display:block;}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:5px 14px;margin:-5px 0;}
+.nav-support-pill{color:#fff!important;opacity:1!important;background:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:5px 14px;margin:-5px 0;font-weight:bold;}
+.nav-support-pill:hover{filter:brightness(1.1);}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;}
+h1{font-size:44px;margin-bottom:10px;}
+.subtitle{color:var(--muted-text);font-size:18px;margin-bottom:40px;}
+.content{text-align:left;}
+.content h2{font-size:22px;margin-top:44px;margin-bottom:12px;}
+.content p{font-size:16px;opacity:0.85;line-height:1.7;}
+.content ul{font-size:16px;opacity:0.85;line-height:1.8;}
+.box{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:24px;margin-top:30px;text-align:left;}
+.box p{margin:0;font-size:15px;opacity:0.85;}
+.donate-box{text-align:center;}
+.donate-btn{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#ffffff;text-decoration:none;padding:14px 28px;border-radius:10px;font-size:16px;font-weight:bold;}
+.donate-btn:hover{filter:brightness(1.1);}
+.donate-microcopy{margin:14px 0 0 0;font-size:13px;color:var(--muted-text);opacity:1;}
+.legal-note{font-size:13px;color:var(--muted-text);line-height:1.6;}
+.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;}
+.site-footer{
+  margin-top:40px;
+  padding:40px 24px 30px 24px;
+  border-top:1px solid var(--border);
+  text-align:left;
+}
+.footer-inner{max-width:1000px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;gap:40px;}
+@media (min-width:700px){.footer-inner{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media (min-width:1100px){.footer-inner{grid-template-columns:minmax(0,1.6fr) repeat(3,minmax(0,1fr));}}
+.footer-brand{max-width:280px;}
+.footer-brand-logo{font-size:16px;font-weight:bold;letter-spacing:0.5px;margin-bottom:10px;}
+.footer-brand-desc{font-size:13px;color:var(--muted-text);line-height:1.5;margin-bottom:14px;}
+.footer-copy{font-size:12px;color:var(--muted-text);opacity:0.7;}
+.footer-col h3{font-size:13px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-text);margin:0 0 14px 0;}
+.footer-col a{display:block;font-size:14px;color:var(--text);text-decoration:none;opacity:0.8;margin-bottom:10px;}
+.footer-col a:hover{opacity:1;color:var(--accent);}
+.footer-support-text{font-size:13px;color:var(--muted-text);line-height:1.5;margin:0 0 10px 0;}
+.footer-support-btn{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:bold;}
+.footer-support-btn:hover{filter:brightness(1.1);}
+a.inline{color:#60a5fa;text-decoration:underline;}
+a.inline:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/es/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/es/tools/">Todas las herramientas</a>
+    <a href="/es/tools/#image">Herramientas de imagen</a>
+    <a href="/es/tools/#pdf">Herramientas PDF</a>
+    <a href="/es/tools/#utility">Utilidades</a>
+    <a href="/es/blog/">Blog</a>
+    <a class="nav-support-pill" href="/es/support/">Apoyar</a>
+  </nav>
+  <div class="site-nav-right">
+    <a class="lang-flag" href="/support/">EN</a>
+    <span class="lang-flag active">ES</span>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro">🌙</button>
+  </div>
+</header>
+
+<main>
+<div class="container">
+
+<h1>Ayúdanos a construir lo que sigue</h1>
+<p class="subtitle">Orisod es gratis, no tiene anuncios y funciona por completo en tu navegador: lo que subes nunca sale de tu dispositivo. Apoyar el proyecto es totalmente opcional, sin ninguna presión.</p>
+
+<div class="content">
+
+<h2>En qué se usa tu contribución</h2>
+<ul>
+  <li>Crear nuevas herramientas y mejorar las que ya existen</li>
+  <li>Cubrir los costos de alojamiento y mantenimiento</li>
+  <li>Mantener cada herramienta gratuita y sin anuncios para todos</li>
+</ul>
+
+<div class="box donate-box">
+  <a class="donate-btn" href="https://buy.stripe.com/aFa4gA7BmeIMflV0dB7bW01" target="_blank" rel="noopener noreferrer">
+    Mantén los engranajes en marcha
+    <span class="visually-hidden"> (abre el pago de Stripe en una pestaña nueva)</span>
+  </a>
+  <p class="donate-microcopy">↗ Pago seguro mediante Stripe. Se abre en una pestaña nueva.</p>
+</div>
+
+<p class="legal-note">Las contribuciones son voluntarias y no son deducibles de impuestos. No se ofrece ningún producto, suscripción o servicio adicional a cambio de tu apoyo.</p>
+
+<p>Gracias por usar Orisod, elijas o no contribuir.</p>
+
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-brand-logo">ORISOD</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Todo el procesamiento de imágenes y PDF es 100 % local: tus archivos permanecen en tu dispositivo.</div>
+      <div class="footer-copy">© Orisod Labs</div>
+    </div>
+    <div class="footer-col">
+      <h3>Herramientas</h3>
+      <a href="/es/tools/#image">Herramientas de imagen</a>
+      <a href="/es/tools/#pdf">Herramientas PDF</a>
+      <a href="/es/tools/#utility">Utilidades</a>
+    </div>
+    <div class="footer-col">
+      <h3>Empresa</h3>
+      <a href="/es/about/">Acerca de</a>
+      <a href="/es/privacy/">Privacidad</a>
+      <a href="/es/blog/">Blog</a>
+    </div>
+    <div class="footer-col">
+      <h3>Apoyo</h3>
+      <p class="footer-support-text">Sin presión, se agradece si quieres ayudar a mantener esto gratis.</p>
+      <a class="footer-support-btn" href="/es/support/">Mantén los engranajes en marcha</a>
+    </div>
+  </div>
+</footer>
+</div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+</body>
+</html>

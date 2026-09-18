@@ -153,14 +153,9 @@ h2{margin-top:50px;font-size:22px;}
   border-top:1px solid var(--border);
   text-align:left;
 }
-.footer-inner{
-  max-width:1000px;
-  margin:0 auto;
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:space-between;
-  gap:40px;
-}
+.footer-inner{max-width:1000px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;gap:40px;}
+@media (min-width:700px){.footer-inner{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media (min-width:1100px){.footer-inner{grid-template-columns:minmax(0,1.6fr) repeat(3,minmax(0,1fr));}}
 .footer-brand{max-width:280px;}
 .footer-brand-logo{font-size:16px;font-weight:bold;letter-spacing:0.5px;margin-bottom:10px;}
 .footer-brand-desc{font-size:13px;color:var(--muted-text);line-height:1.5;margin-bottom:14px;}
@@ -168,6 +163,11 @@ h2{margin-top:50px;font-size:22px;}
 .footer-col h3{font-size:13px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-text);margin:0 0 14px 0;}
 .footer-col a{display:block;font-size:14px;color:var(--text);text-decoration:none;opacity:0.8;margin-bottom:10px;}
 .footer-col a:hover{opacity:1;color:var(--accent);}
+.nav-support-pill{color:#fff!important;opacity:1!important;background:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:5px 14px;margin:-5px 0;font-weight:bold;}
+.nav-support-pill:hover{filter:brightness(1.1);}
+.footer-support-text{font-size:13px;color:var(--muted-text);line-height:1.5;margin:0 0 10px 0;}
+.footer-support-btn{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:bold;}
+.footer-support-btn:hover{filter:brightness(1.1);}
 </style>
 </head>
 <body>
@@ -180,6 +180,7 @@ h2{margin-top:50px;font-size:22px;}
     <a href="/tools/#pdf">PDF Tools</a>
     <span class="active-category">Utility Tools</span>
     <a href="/blog/">Blog</a>
+      <a class="nav-support-pill" href="/support/">Support</a>
   </nav>
   <div class="site-nav-right">
     <span class="lang-flag active">EN</span>
@@ -308,6 +309,11 @@ h2{margin-top:50px;font-size:22px;}
       <a href="/about/">About</a>
       <a href="/privacy/">Privacy</a>
       <a href="/blog/">Blog</a>
+    </div>
+    <div class="footer-col">
+      <h3>Support</h3>
+      <p class="footer-support-text">No pressure, just appreciated if you'd like to help keep this free.</p>
+      <a class="footer-support-btn" href="/support/">Keep the gears turning</a>
     </div>
   </div>
 </footer>
