@@ -197,6 +197,14 @@ actually written down until now; the other 3 are new standing rules.
 - **Reddit/community growth strategy** is tracked in a separate conversation, not this one — don't mix Reddit tactics into this repo's context.
 - The person building this (repo owner) is **not a developer** — explanations should stay practical and avoid unnecessary jargon. They've been pasting AI-generated code manually via GitHub's web editor until now; this Claude Code setup is meant to remove that friction.
 
+## Claude Code marketing skills (`.claude/skills/`)
+
+Added 2026-09-28: 18 marketing skills plus their shared `product-marketing` dependency (19 folders), copied from [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) (MIT licensed, commit `5b2c000`; license kept at `.claude/skills/LICENSE-marketingskills`). Skills: seo-audit, ai-seo, site-architecture, schema, programmatic-seo, content-strategy, copywriting, copy-editing, cro, competitor-profiling, competitors, analytics, marketing-ideas, marketing-plan, launch, referrals, community-marketing, directory-submissions, and product-marketing. Only a curated subset was copied because most of the source repo targets SaaS signup/pricing/sales funnels, which don't apply to Orisod's free, no-signup, donation-supported, SEO/blog-driven model.
+
+- Every one of these skills first looks for a shared product context file at `.agents/product-marketing.md` or `.claude/product-marketing.md`; the `product-marketing` skill creates it. None exists yet, so the first marketing session should run that skill so the others stop re-asking basic questions about Orisod.
+- A few files (ai-seo, analytics, launch, referrals, and reference docs in content-strategy/referrals) link to `../../tools/...` in the source repo's third-party tool registry, which was intentionally not copied. Those links are dead here; the skills work without them.
+- These are dev tooling only: `.claude/` has no `index.html`, so it is not part of the live site and the sitemap check ignores it.
+
 ## Working conventions for this repo
 
 - New tool → new folder `tool-name/` with `index.html` inside (self-contained: CSS and JS in the same file, no external site JS files)
