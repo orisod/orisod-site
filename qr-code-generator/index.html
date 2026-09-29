@@ -130,8 +130,8 @@ h2{margin-top:50px;font-size:22px;}
 .seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
 .faq-item{margin-bottom:18px;}
 .faq-item .q{font-weight:bold;margin-bottom:4px;}
-.related-grid{display:grid;grid-template-columns:repeat(2, 1fr);gap:12px;}
-@media (max-width:600px){.related-grid{grid-template-columns:1fr;}}
+.related-grid{display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:12px;}
+@media (max-width:600px){.related-grid{grid-template-columns:minmax(0,1fr);}}
 .related-card{display:flex;align-items:center;gap:14px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;color:var(--text);transition:0.2s;}
 .related-card:hover{border-color:var(--accent);transform:translateY(-2px);}
 .related-card .icon-box{flex:none;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;border:2px solid transparent;}
