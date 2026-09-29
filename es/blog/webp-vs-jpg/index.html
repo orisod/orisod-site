@@ -152,6 +152,9 @@ h1{font-size:38px;line-height:1.25;margin:0 0 18px 0;text-align:left;}
 .footer-support-btn:hover{filter:brightness(1.1);}
 /* Sticky nav (Phase 11.5): stays pinned while scrolling. --site-nav-h is kept in sync by the small script right after </header>. */
 html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
+:root{--nav-active-text:#60a5fa;}
+:root[data-theme="light"]{--nav-active-text:#1d4ed8;}
+.site-nav-links span.active-category{color:var(--nav-active-text);} /* AA contrast on the capsule: 6.7:1 dark, 5.3:1 light (plain --accent was 3.3:1 / 4.1:1) */
 @media (max-width:900px){
   .site-nav{padding:10px 16px;row-gap:4px;}
   .site-nav-links{order:3;flex:1 0 100%;flex-wrap:nowrap;justify-content:flex-start;gap:18px;overflow-x:auto;padding:7px 2px;scrollbar-width:none;}
