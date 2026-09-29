@@ -130,7 +130,7 @@
 .result-card .result-filename{font-size:14px;font-weight:bold;margin-bottom:4px;word-break:break-all;}
 .result-stat{font-size:15px;opacity:0.9;}
 .result-stat .saved{color:#4ade80;font-weight:bold;}
-.site-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav{position:sticky;top:0;z-index:50;background-color:var(--bg);transition:background-color 0.2s;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
 .site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);display:inline-flex;align-items:center;gap:8px;}
 .site-nav-logo img{height:26px;width:auto;display:block;}
 .site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
@@ -201,6 +201,16 @@ h2{margin-top:50px;}
 .footer-support-text{font-size:13px;color:var(--muted-text);line-height:1.5;margin:0 0 10px 0;}
 .footer-support-btn{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:8px 14px;border-radius:999px;font-size:13px;font-weight:bold;}
 .footer-support-btn:hover{filter:brightness(1.1);}
+/* Sticky nav (Phase 11.5): stays pinned while scrolling. --site-nav-h is kept in sync by the small script right after </header>. */
+html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
+@media (max-width:900px){
+  .site-nav{padding:10px 16px;row-gap:4px;}
+  .site-nav-links{order:3;flex:1 0 100%;flex-wrap:nowrap;justify-content:flex-start;gap:18px;overflow-x:auto;padding:7px 2px;scrollbar-width:none;}
+  .site-nav-links::-webkit-scrollbar{display:none;}
+  .site-nav-links > *{flex:none;white-space:nowrap;}
+  .site-nav-links > :first-child{margin-left:auto;}
+  .site-nav-links > :last-child{margin-right:auto;}
+}
 </style>
 </head>
 <body>
@@ -210,7 +220,7 @@ h2{margin-top:50px;}
   <nav class="site-nav-links">
     <a href="/tools/">All Tools</a>
     <a href="/tools/#image">Image Tools</a>
-    <span class="active-category">PDF Tools</span>
+    <a href="/tools/#pdf">PDF Tools</a>
     <a href="/tools/#utility">Utility Tools</a>
     <a href="/blog/">Blog</a>
       <a class="nav-support-pill" href="/support/">Support</a>
@@ -221,6 +231,7 @@ h2{margin-top:50px;}
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
   </div>
 </header>
+<script>(function(){var n=document.querySelector('.site-nav');if(!n)return;var r=document.documentElement;function s(){r.style.setProperty('--site-nav-h',n.offsetHeight+'px');}s();if(window.ResizeObserver){new ResizeObserver(s).observe(n);}else{window.addEventListener('resize',s);}var l=n.querySelector('.site-nav-links'),a=l&&l.querySelector('.active-category');if(a&&l.scrollWidth>l.clientWidth){l.scrollLeft=a.offsetLeft-l.offsetLeft-16;}})();</script>
 
 <main>
 <div class="container">

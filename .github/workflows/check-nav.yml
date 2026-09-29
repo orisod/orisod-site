@@ -1,0 +1,19 @@
+name: Verify nav behavior
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check-nav:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check every page's nav is sticky and highlights correctly
+        run: python3 scripts/check_nav.py
