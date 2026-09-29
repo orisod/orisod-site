@@ -7,11 +7,13 @@ check is the guardrail that keeps every copy consistent:
 
 1. Sticky nav: the `.site-nav` CSS rule is `position:sticky`, and the page has
    the small script after </header> that keeps `--site-nav-h` in sync.
-2. Blog: every page under /blog/ or /es/blog/ (index and posts) highlights
-   "Blog" in the nav, and nothing else.
-3. Categories: no page outside the blog statically highlights a nav item.
-   Tool pages show every category as a normal link back to /tools/#<category>;
-   only /tools itself highlights a category, at runtime, from its filter JS.
+2. Blog: only the blog index pages (/blog/ and /es/blog/) highlight "Blog"
+   in the nav, and nothing else. Individual posts highlight nothing: "Blog" is
+   a normal link back to the index, the same way tool pages treat their
+   category.
+3. Categories: no other page statically highlights a nav item. Tool pages
+   show every category as a normal link back to /tools/#<category>; only
+   /tools itself highlights a category, at runtime, from its filter JS.
 
 Run in CI on every push/PR to main, same as check_sitemap.py.
 """
@@ -28,8 +30,8 @@ ACTIVE = re.compile(r'class="active-category"[^>]*>([^<]*)<')
 HEIGHT_SCRIPT = "r.style.setProperty('--site-nav-h'"
 
 
-def is_blog(parts: tuple) -> bool:
-    return parts[:1] == ("blog",) or parts[:2] == ("es", "blog")
+def is_blog_index(parts: tuple) -> bool:
+    return parts in (("blog",), ("es", "blog"))
 
 
 def main() -> int:
@@ -53,11 +55,11 @@ def main() -> int:
             problems.append(f"{rel}: no <nav class=\"site-nav-links\"> found")
             continue
         active = [a.strip() for a in ACTIVE.findall(nav.group(1))]
-        if is_blog(rel.parts[:-1]):
+        if is_blog_index(rel.parts[:-1]):
             if active != ["Blog"]:
-                problems.append(f"{rel}: blog page must highlight only \"Blog\" in the nav (found {active})")
+                problems.append(f"{rel}: the blog index must highlight only \"Blog\" in the nav (found {active})")
         elif active:
-            problems.append(f"{rel}: nav item(s) {active} are highlighted in the markup; outside the blog, the nav must not statically highlight anything")
+            problems.append(f"{rel}: nav item(s) {active} are highlighted in the markup; only the blog index may statically highlight a nav item (\"Blog\")")
 
     if problems:
         print("Nav-behavior problems found:")
@@ -66,7 +68,7 @@ def main() -> int:
         print(f"\n{len(problems)} problem(s) across {len(pages)} pages checked")
         return 1
 
-    print(f"OK: all {len(pages)} pages follow the nav-behavior rules (sticky nav, Blog highlight, no static category highlight).")
+    print(f"OK: all {len(pages)} pages follow the nav-behavior rules (sticky nav, Blog highlighted on the blog index only, no other static highlight).")
     return 0
 
 
