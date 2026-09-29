@@ -221,7 +221,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 </figure>
 
 <h2>Why a table needs a heading row to convert at all</h2>
-<p>Pipe-table syntax belongs to popular Markdown extensions, not the original core specification. A converter may infer the first row as a header, preserve a headerless table as raw HTML or use a dialect-specific representation. There is no universal requirement that makes conversion impossible without <th> cells.</p>
+<p>Pipe-table syntax belongs to popular Markdown extensions, not the original core specification. A converter may infer the first row as a header, preserve a headerless table as raw HTML or use a dialect-specific representation. There is no universal requirement that makes conversion impossible without &lt;th&gt; cells.</p>
 
 <h2>What never survives the trip</h2>
 <p>Colors, fonts, scripts, complex layout and many attributes lack portable Markdown equivalents. A converter may discard them, preserve raw HTML or use extensions according to its policy. Sanitization is a separate security concern, especially when untrusted HTML is involved.</p>
