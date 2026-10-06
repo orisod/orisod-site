@@ -40,6 +40,9 @@ def main() -> int:
         f for f in sorted(REPO_ROOT.rglob("index.html"))
         if f.relative_to(REPO_ROOT).parts[0] not in EXCLUDE_TOP_LEVEL
     ]
+    # The custom 404 page is a root-level file, not a folder/index.html, but it
+    # carries the same nav and must follow the same rules (no highlighted item).
+    pages.append(REPO_ROOT / "404.html")
     for f in pages:
         rel = f.relative_to(REPO_ROOT)
         text = f.read_text(encoding="utf-8")
