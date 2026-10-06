@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V2GMNDCVMK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-V2GMNDCVMK");
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page not found – Orisod</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="This page could not be found. Browse all of Orisod's free image, PDF and utility tools instead.">
+<link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#2563eb">
+<!--
+  Custom 404 page. GitHub Pages serves this root-level file, with a real 404
+  status, for every unmatched path in both languages (/foo and /es/foo alike),
+  so every URL in it must be root-absolute (/assets/..., /tools/), never relative.
+
+  Structure rule: the page resolves first, plays second. The 404 heading, the
+  message and both buttons are plain HTML that work with zero interaction and
+  with JavaScript disabled. The gear easter egg below them is optional and
+  purely cosmetic; it is hidden entirely unless its script runs.
+  See the "Custom 404 page" section in CLAUDE.md.
+-->
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+  --grid-alpha:.05;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+  --grid-alpha:.10;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  background-color:var(--bg);
+  background-image:linear-gradient(rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px),linear-gradient(90deg, rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px);
+  background-size:42px 42px;
+  color:var(--text);
+  text-align:center;
+  transition:background-color 0.2s, color 0.2s;
+}
+.site-nav{position:sticky;top:0;z-index:50;background-color:var(--bg);transition:background-color 0.2s;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);display:inline-flex;align-items:center;gap:8px;}
+.site-nav-logo img{height:26px;width:auto;display:block;}
+.site-nav-links{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;}
+.site-nav-links a, .site-nav-links span{font-size:14px;text-decoration:none;color:var(--text);opacity:0.75;}
+.site-nav-links a:hover{opacity:1;}
+.site-nav-links span.active-category{color:var(--accent);opacity:1;font-weight:bold;cursor:default;background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:5px 14px;margin:-5px 0;}
+.site-nav-right{display:flex;align-items:center;gap:8px;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:50px 20px 60px 20px;}
+.container{max-width:700px;margin:0 auto;}
+.error-code{display:inline-block;margin:0 0 14px 0;padding:5px 14px;border:1px solid var(--accent);border-radius:999px;background:rgba(37,99,235,.14);color:var(--nav-active-text);font-size:14px;font-weight:bold;letter-spacing:0.5px;}
+h1{font-size:44px;margin:0 0 14px 0;}
+.message{color:var(--muted-text);font-size:18px;line-height:1.6;min-height:3.2em;margin:0 auto 30px auto;max-width:520px;}
+.actions{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;}
+.btn{display:inline-block;padding:14px 20px;border:1px solid var(--accent);border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;}
+.btn:hover{filter:brightness(1.08);}
+.btn-secondary{background:var(--card-bg);border-color:var(--border);color:var(--text);}
+.btn-secondary:hover{filter:none;border-color:var(--accent);}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
+
+/* Gear easter egg: optional, cosmetic, never a gate. Reuses the Phase 13
+   gear graphic (/assets/gear-base.png) and its CW/CCW spin pairing. Hidden
+   (the `hidden` attribute) until its script runs, so no-JS visitors never
+   see a control that does nothing. */
+.egg{margin:44px auto 0 auto;}
+.gear-btn{display:block;margin:0 auto;padding:10px;background:none;border:1px dashed transparent;border-radius:14px;color:inherit;font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.gear-btn:hover{border-color:var(--border);}
+.gear-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.gear-btn[aria-disabled="true"]{cursor:default;border-color:transparent;}
+.egg-hint{font-size:14px;color:var(--muted-text);margin:6px 0 0 0;min-height:1.4em;}
+.stage{display:block;position:relative;width:170px;height:170px;}
+.g{display:block;position:absolute;transform:translate(-50%,-50%);}
+.g img, .g .rot{display:block;width:100%;height:auto;}
+.g-big{left:42%;top:44%;width:60%;}
+.g-small{left:67%;top:65%;width:39%;}
+.g-solo{left:50%;top:50%;width:72%;}
+.rot{position:relative;}
+.rot img{position:relative;}
+.rot .tooth{position:absolute;inset:0;}
+.spin-cw{animation:gSpinCW 8s linear infinite;}
+.spin-ccw{animation:gSpinCCW 5.6s linear infinite;} /* 8s * (7/10) teeth ratio, opposite direction, same as the homepage hero pair */
+@keyframes gSpinCW{to{transform:rotate(360deg);}}
+@keyframes gSpinCCW{to{transform:rotate(-360deg);}}
+
+/* a. Loose gear: the small gear sits apart from the big one, bobbing. */
+.v-loose .g-small{left:86%;top:86%;transition:left .6s cubic-bezier(.3,1.4,.5,1), top .6s cubic-bezier(.3,1.4,.5,1);touch-action:none;}
+.v-loose .g-small img{transform:rotate(17deg);animation:gBob 2.6s ease-in-out infinite;}
+.v-loose.fixed .g-small{left:67%;top:65%;}
+.v-loose.fixed .g-small img{transform:none;animation:none;}
+.v-loose.spinning .g-big img{animation:gSpinCW 8s linear infinite;}
+.v-loose.spinning .g-small img{animation:gSpinCCW 5.6s linear infinite;}
+@keyframes gBob{0%,100%{transform:translateY(0) rotate(17deg);}50%{transform:translateY(-5px) rotate(11deg);}}
+
+/* b. Stuck gear: rigid, with an occasional strained twitch. Each click
+   nudges it a little (--nudge); after a few it frees up and spins. */
+.v-stuck .g-solo{transform:translate(-50%,-50%) rotate(var(--nudge, 0deg));transition:transform .25s cubic-bezier(.3,1.6,.5,1);}
+.v-stuck .g-solo img{animation:gJam 3s ease-in-out infinite;}
+.v-stuck.fixed .g-solo img{animation:gSpinCW 8s linear infinite;}
+@keyframes gJam{0%,78%,100%{transform:rotate(0);}82%{transform:rotate(3deg);}86%{transform:rotate(-2deg);}90%{transform:rotate(1.5deg);}94%{transform:rotate(0);}}
+
+/* c. Missing tooth: the top tooth is masked off the gear and kept as a
+   separate layer, floated away. The gear hiccups round unevenly; clicks
+   bring the tooth back, then the spin goes smooth. */
+.v-tooth .rot{animation:gHiccup 3.2s linear infinite;}
+.v-tooth .body{
+  -webkit-mask:radial-gradient(circle closest-side at 50% 49%, #000 64%, transparent 64.5%), conic-gradient(from 18deg at 50% 49%, #000 0deg 324deg, transparent 324deg);
+  mask:radial-gradient(circle closest-side at 50% 49%, #000 64%, transparent 64.5%), conic-gradient(from 18deg at 50% 49%, #000 0deg 324deg, transparent 324deg);
+}
+.v-tooth .tooth{
+  -webkit-mask:radial-gradient(circle closest-side at 50% 49%, transparent 64%, #000 64.5%), conic-gradient(from -18deg at 50% 49%, #000 0deg 36deg, transparent 36deg);
+  -webkit-mask-composite:source-in;
+  mask:radial-gradient(circle closest-side at 50% 49%, transparent 64%, #000 64.5%), conic-gradient(from -18deg at 50% 49%, #000 0deg 36deg, transparent 36deg);
+  mask-composite:intersect;
+  opacity:0;transform:translateY(-28%);transition:opacity .45s ease, transform .45s cubic-bezier(.3,1.5,.5,1);
+}
+.v-tooth.step1 .tooth{opacity:.55;transform:translateY(-12%);}
+.v-tooth.fixed .tooth{opacity:1;transform:none;}
+.v-tooth.fixed .rot{animation:gSpinCW 8s linear infinite;}
+@keyframes gHiccup{0%{transform:rotate(0deg);}28%{transform:rotate(120deg);}34%{transform:rotate(112deg) translateX(2px);}62%{transform:rotate(235deg);}68%{transform:rotate(228deg) translateY(2px);}100%{transform:rotate(360deg);}}
+
+/* d. Out of sync: both gears turn the same way, so they grind and shudder.
+   A click reverses the small one and they mesh. */
+.v-sync .g-big img{animation:gSpinCW 8s linear infinite;}
+.v-sync .g-small{animation:gShudder .35s linear infinite;}
+.v-sync .g-small img{animation:gSpinCW 5.6s linear infinite;}
+.v-sync.fixed .g-small{animation:none;}
+.v-sync.fixed .g-small img{animation:gSpinCCW 5.6s linear infinite;}
+@keyframes gShudder{0%,100%{transform:translate(-50%,-50%);}25%{transform:translate(-48%,-52%);}50%{transform:translate(-51%,-49%);}75%{transform:translate(-49%,-51%);}}
+
+/* Reduced motion: no entrance, no spin. The script also starts every
+   variant in its finished, static state when this is set. */
+@media (prefers-reduced-motion: reduce){
+  .egg *, .egg *::before, .egg *::after{animation:none !important;transition:none !important;}
+}
+
+.site-footer{
+  margin-top:70px;
+  padding:40px 24px 30px 24px;
+  border-top:1px solid var(--border);
+  text-align:left;
+}
+.footer-inner{max-width:1000px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;gap:40px;}
+@media (min-width:700px){.footer-inner{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media (min-width:1100px){.footer-inner{grid-template-columns:minmax(0,1.6fr) repeat(3,minmax(0,1fr));}}
+.footer-brand{max-width:280px;}
+.footer-brand-logo{font-size:16px;font-weight:bold;letter-spacing:0.5px;margin-bottom:10px;}
+.footer-brand-desc{font-size:13px;color:var(--muted-text);line-height:1.5;margin-bottom:14px;}
+.footer-copy{font-size:12px;color:var(--muted-text);opacity:0.7;}
+/* footer column titles are h2 here (not h3 as on content pages) so the heading order stays h1 then h2 on this short page */
+.footer-col h2{font-size:13px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-text);margin:0 0 14px 0;}
+.footer-col a{display:block;font-size:14px;color:var(--text);text-decoration:none;opacity:0.8;margin-bottom:10px;}
+.footer-col a:hover{opacity:1;color:var(--accent);}
+.nav-support-pill{color:#fff!important;opacity:1!important;background:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:5px 14px;margin:-5px 0;font-weight:bold;}
+.nav-support-pill:hover{filter:brightness(1.1);}
+.footer-support-text{font-size:13px;color:var(--muted-text);line-height:1.5;margin:0 0 10px 0;}
+.footer-support-btn{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:8px 14px;border-radius:999px;font-size:13px;font-weight:bold;}
+.footer-support-btn:hover{filter:brightness(1.1);}
+@media (max-width:600px){
+  main{padding-top:36px;}
+  h1{font-size:34px;}
+  .message{font-size:17px;}
+  .actions .btn{flex:1 1 100%;}
+}
+/* Sticky nav (Phase 11.5): stays pinned while scrolling. --site-nav-h is kept in sync by the small script right after </header>. */
+html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
+:root{--nav-active-text:#60a5fa;}
+:root[data-theme="light"]{--nav-active-text:#1d4ed8;}
+.site-nav-links span.active-category{color:var(--nav-active-text);} /* AA contrast on the capsule: 6.7:1 dark, 5.3:1 light (plain --accent was 3.3:1 / 4.1:1) */
+@media (max-width:900px){
+  .site-nav{padding:10px 16px;row-gap:4px;}
+  .site-nav-links{order:3;flex:1 0 100%;flex-wrap:nowrap;justify-content:flex-start;gap:18px;overflow-x:auto;padding:7px 2px;scrollbar-width:none;}
+  .site-nav-links::-webkit-scrollbar{display:none;}
+  .site-nav-links > *{flex:none;white-space:nowrap;}
+  .site-nav-links > :first-child{margin-left:auto;}
+  .site-nav-links > :last-child{margin-right:auto;}
+}
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
+  <nav class="site-nav-links">
+    <a href="/tools/">All Tools</a>
+    <a href="/tools/#image">Image Tools</a>
+    <a href="/tools/#pdf">PDF Tools</a>
+    <a href="/tools/#utility">Utility Tools</a>
+    <a href="/blog/">Blog</a>
+      <a class="nav-support-pill" href="/support/">Support</a>
+  </nav>
+  <div class="site-nav-right">
+    <span class="lang-flag active">EN</span>
+    <a class="lang-flag" href="/es/">ES</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
+  </div>
+</header>
+<script>(function(){var n=document.querySelector('.site-nav');if(!n)return;var r=document.documentElement;function s(){r.style.setProperty('--site-nav-h',n.offsetHeight+'px');}s();if(window.ResizeObserver){new ResizeObserver(s).observe(n);}else{window.addEventListener('resize',s);}var l=n.querySelector('.site-nav-links'),a=l&&l.querySelector('.active-category');if(a&&l.scrollWidth>l.clientWidth){l.scrollLeft=a.offsetLeft-l.offsetLeft-16;}})();</script>
+
+<main>
+<div class="container">
+
+<p class="error-code">Error 404</p>
+<h1>Page not found</h1>
+<p class="message" id="msg" aria-live="polite">Looks like something slipped out of place. Let's get the gears turning again.</p>
+
+<div class="actions">
+  <a class="btn" href="/tools/">Browse all tools</a>
+  <!-- Works without JS: points at a fixed real tool. The script below swaps
+       in a random tool from the live /tools/ catalog once it loads. -->
+  <a class="btn btn-secondary" id="randomTool" href="/compress-image/">Let the gears choose</a>
+</div>
+
+<div class="egg" id="egg" hidden>
+  <button class="gear-btn" id="gearBtn" type="button" aria-describedby="eggHint">
+    <span class="stage" id="stage"></span>
+  </button>
+  <p class="egg-hint" id="eggHint"></p>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-brand-logo">ORISOD</div>
+      <div class="footer-brand-desc">Free, browser-based image and PDF tools. All image and PDF processing happens 100% locally: your files are never uploaded anywhere.</div>
+      <div class="footer-copy">© Orisod Labs</div>
+    </div>
+    <div class="footer-col">
+      <h2>Tools</h2>
+      <a href="/tools/#image">Image Tools</a>
+      <a href="/tools/#pdf">PDF Tools</a>
+      <a href="/tools/#utility">Utility Tools</a>
+    </div>
+    <div class="footer-col">
+      <h2>Company</h2>
+      <a href="/about/">About</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/blog/">Blog</a>
+    </div>
+    <div class="footer-col">
+      <h2>Support</h2>
+      <p class="footer-support-text">No pressure, just appreciated if you'd like to help keep this free.</p>
+      <a class="footer-support-btn" href="/support/">Support</a>
+    </div>
+  </div>
+</footer>
+</div>
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+<script>
+// Page copy. Only COPY.en is wired up today: this one root-level file is
+// served for every broken URL, English and Spanish alike. COPY.es is the
+// drafted translation, ready if we later branch the 404 copy by language
+// (e.g. by checking location.pathname.indexOf('/es/') === 0).
+var COPY = {
+  en: {
+    message: "Looks like something slipped out of place. Let's get the gears turning again.",
+    fixedMessage: "The gears are turning again, but this page is still missing.",
+    browseTools: "Browse all tools",
+    gearsChoose: "Let the gears choose"
+  },
+  es: {
+    message: "Parece que algo se salió de lugar. Hagamos que los engranajes vuelvan a girar.",
+    fixedMessage: "Los engranajes vuelven a girar, pero esta página sigue sin aparecer.",
+    browseTools: "Ver todas las herramientas",
+    gearsChoose: "Que elijan los engranajes"
+  }
+};
+
+// "Let the gears choose": pick a random tool from the live /tools/ page, the
+// same catalog everything else is kept in sync with, so there's no extra
+// list to maintain here. If the fetch fails, the link keeps its fixed href.
+(function(){
+  var link = document.getElementById('randomTool');
+  var pool = [];
+  function pick(){
+    var current = link.getAttribute('href');
+    var options = pool.filter(function(h){ return h !== current && h !== location.pathname; });
+    if(options.length){ link.setAttribute('href', options[Math.floor(Math.random() * options.length)]); }
+  }
+  if(!window.fetch || !window.DOMParser) return;
+  fetch('/tools/').then(function(r){ if(!r.ok) throw new Error('bad status'); return r.text(); }).then(function(html){
+    var doc = new DOMParser().parseFromString(html, 'text/html');
+    var seen = {};
+    Array.prototype.forEach.call(doc.querySelectorAll('a.tool-card[href]'), function(a){
+      var h = a.getAttribute('href');
+      if(h.charAt(0) === '/' && !seen[h]){ seen[h] = true; pool.push(h); }
+    });
+    pick();
+  }).catch(function(){});
+  // Coming back via the back button restores the old page from cache; give it a fresh pick.
+  window.addEventListener('pageshow', function(e){ if(e.persisted) pick(); });
+})();
+
+// Gear easter egg. One of 4 variants per load, equal odds (append ?gear=loose|stuck|tooth|sync
+// to any broken URL to force one). Every variant ends the same way: the gears
+// spin properly and the message swaps to COPY.en.fixedMessage. Nothing else changes.
+(function(){
+  var GEAR = '<img src="/assets/gear-base.png" width="1254" height="1254" alt="" draggable="false">';
+  var VARIANTS = {
+    loose: {
+      clicks: 1,
+      label: 'Snap the loose gear back into place (optional)',
+      hint: 'This little gear came loose. Want to put it back?',
+      html: '<span class="g g-big">' + GEAR + '</span><span class="g g-small">' + GEAR + '</span>'
+    },
+    stuck: {
+      clicks: 3,
+      label: 'Nudge the stuck gear (optional)',
+      hint: 'This gear seems a bit stuck. A nudge or two might help.',
+      html: '<span class="g g-solo">' + GEAR + '</span>'
+    },
+    tooth: {
+      clicks: 2,
+      label: 'Put the missing tooth back on the gear (optional)',
+      hint: 'This gear lost a tooth. Care to fix it?',
+      html: '<span class="g g-solo"><span class="rot">' + GEAR.replace('<img', '<img class="body"') + GEAR.replace('<img', '<img class="tooth"') + '</span></span>'
+    },
+    sync: {
+      clicks: 1,
+      label: 'Flip the small gear so the gears mesh (optional)',
+      hint: 'These gears are turning the same way. Maybe flip one?',
+      html: '<span class="g g-big">' + GEAR + '</span><span class="g g-small">' + GEAR + '</span>'
+    }
+  };
+
+  var egg = document.getElementById('egg');
+  var btn = document.getElementById('gearBtn');
+  var stage = document.getElementById('stage');
+  var hint = document.getElementById('eggHint');
+  var msg = document.getElementById('msg');
+
+  var names = ['loose', 'stuck', 'tooth', 'sync'];
+  var forced = (location.search.match(/[?&]gear=([a-z]+)/) || [])[1];
+  var name = VARIANTS[forced] ? forced : names[Math.floor(Math.random() * names.length)];
+  var v = VARIANTS[name];
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var count = 0, done = false;
+
+  stage.className = 'stage v-' + name;
+  stage.innerHTML = v.html;
+
+  if(reduced){
+    // No motion, no interaction to wait for: show the already-fixed gears as a
+    // static picture, and leave the page message as it is.
+    stage.className += ' fixed';
+    btn.removeAttribute('aria-describedby');
+    btn.disabled = true;
+    btn.setAttribute('aria-hidden', 'true');
+    btn.setAttribute('aria-disabled', 'true');
+    hint.hidden = true;
+    egg.hidden = false;
+    return;
+  }
+
+  btn.setAttribute('aria-label', v.label);
+  hint.textContent = v.hint;
+  egg.hidden = false;
+
+  function fix(){
+    if(done) return;
+    done = true;
+    stage.className += ' fixed';
+    if(name === 'loose'){
+      // let the snap-into-place transition land before the spin starts
+      setTimeout(function(){ stage.className += ' spinning'; }, 600);
+    }
+    msg.textContent = COPY.en.fixedMessage;
+    hint.textContent = '';
+    btn.setAttribute('aria-disabled', 'true');
+    btn.setAttribute('aria-label', 'Gears fixed');
+  }
+
+  btn.addEventListener('click', function(){
+    if(done) return;
+    count++;
+    if(name === 'stuck' && count < v.clicks){
+      stage.firstChild.style.setProperty('--nudge', (count * 7) + 'deg');
+    }
+    if(name === 'tooth' && count < v.clicks){
+      stage.className += ' step1';
+    }
+    if(count >= v.clicks) fix();
+  });
+
+  // Loose gear can also be dragged toward the big one; letting go snaps it in.
+  // A plain click/tap/Enter/Space still works on its own via the click handler.
+  if(name === 'loose'){
+    var small = stage.querySelector('.g-small');
+    var start = null;
+    small.addEventListener('pointerdown', function(e){
+      if(done) return;
+      start = { x: e.clientX, y: e.clientY };
+      try{ small.setPointerCapture(e.pointerId); }catch(err){}
+    });
+    small.addEventListener('pointermove', function(e){
+      if(!start) return;
+      var dx = Math.max(-80, Math.min(20, e.clientX - start.x));
+      var dy = Math.max(-80, Math.min(20, e.clientY - start.y));
+      small.style.transition = 'none';
+      small.style.transform = 'translate(calc(-50% + ' + dx + 'px), calc(-50% + ' + dy + 'px))';
+    });
+    function release(){
+      if(!start) return;
+      start = null;
+      small.style.transition = '';
+      small.style.transform = '';
+      fix();
+    }
+    small.addEventListener('pointerup', release);
+    small.addEventListener('pointercancel', release);
+  }
+})();
+</script>
+</body>
+</html>

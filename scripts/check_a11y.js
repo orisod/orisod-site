@@ -64,6 +64,11 @@ function startStaticServer() {
   });
 }
 
+// Pages that exist but are deliberately not in sitemap.xml. 404.html is
+// noindex and served by GitHub Pages for any unmatched path; it is scanned once
+// per gear easter-egg variant, since each variant renders different markup.
+const EXTRA_PATHS = ["loose", "stuck", "tooth", "sync"].map((g) => `/404.html?gear=${g}`);
+
 function sitemapPaths() {
   const xml = readFileSync(join(REPO_ROOT, "sitemap.xml"), "utf-8");
   const urls = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
@@ -90,7 +95,7 @@ async function scanPath(context, urlPath) {
 }
 
 async function main() {
-  const paths = sitemapPaths();
+  const paths = [...sitemapPaths(), ...EXTRA_PATHS];
   const server = await startStaticServer();
   const browser = await chromium.launch();
 
