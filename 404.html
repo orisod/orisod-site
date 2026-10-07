@@ -86,8 +86,7 @@ body{
 .theme-toggle:hover{border-color:var(--accent);}
 main{padding:50px 20px 60px 20px;}
 .container{max-width:700px;margin:0 auto;}
-.error-code{display:inline-block;margin:0 0 14px 0;padding:5px 14px;border:1px solid var(--accent);border-radius:999px;background:rgba(37,99,235,.14);color:var(--nav-active-text);font-size:14px;font-weight:bold;letter-spacing:0.5px;}
-h1{font-size:44px;margin:0 0 14px 0;}
+h1{font-size:38px;line-height:1.2;margin:0 0 14px 0;}
 .message{color:var(--muted-text);font-size:18px;line-height:1.6;min-height:3.2em;margin:0 auto 30px auto;max-width:520px;}
 .actions{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;}
 .btn{display:inline-block;padding:14px 20px;border:1px solid var(--accent);border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;}
@@ -95,6 +94,9 @@ h1{font-size:44px;margin:0 0 14px 0;}
 .btn-secondary{background:var(--card-bg);border-color:var(--border);color:var(--text);}
 .btn-secondary:hover{filter:none;border-color:var(--accent);}
 .btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
+.home-link{margin:18px 0 0 0;font-size:15px;}
+.home-link a{color:var(--muted-text);text-decoration:underline;text-underline-offset:3px;}
+.home-link a:hover{color:var(--text);}
 
 /* Gear easter egg: optional, cosmetic, never a gate. Reuses the Phase 13
    gear graphic (/assets/gear-base.png) and its CW/CCW spin pairing. Hidden
@@ -108,6 +110,7 @@ h1{font-size:44px;margin:0 0 14px 0;}
 .egg-hint{font-size:14px;color:var(--muted-text);margin:6px 0 0 0;min-height:1.4em;}
 .stage{display:block;position:relative;width:170px;height:170px;}
 .g{display:block;position:absolute;transform:translate(-50%,-50%);}
+.ph{display:block;} /* phase wrapper: holds the angle a gear had when it was fixed, so the spin picks up from there instead of snapping */
 .g img, .g .rot{display:block;width:100%;height:auto;}
 .g-big{left:42%;top:44%;width:60%;}
 .g-small{left:67%;top:65%;width:39%;}
@@ -115,25 +118,36 @@ h1{font-size:44px;margin:0 0 14px 0;}
 .rot{position:relative;}
 .rot img{position:relative;}
 .rot .tooth{position:absolute;inset:0;}
-.spin-cw{animation:gSpinCW 8s linear infinite;}
-.spin-ccw{animation:gSpinCCW 5.6s linear infinite;} /* 8s * (7/10) teeth ratio, opposite direction, same as the homepage hero pair */
 @keyframes gSpinCW{to{transform:rotate(360deg);}}
 @keyframes gSpinCCW{to{transform:rotate(-360deg);}}
 
+/* Fixed state, shared by every variant: the gear eases up to speed (ease-in
+   over 1.2s), then hands off to a steady loop at the same speed. The 31deg
+   and 45deg offsets are where each ease-in run ends, so the loop starts
+   exactly there. 8s vs 5.6s is the homepage hero's 10:7 teeth ratio. */
+.stage.fixed [data-dir="cw"]{animation:gUpCW 1.2s ease-in, gLoopCW 8s linear 1.2s infinite;}
+.stage.fixed [data-dir="ccw"]{animation:gUpCCW 1.2s ease-in, gLoopCCW 5.6s linear 1.2s infinite;}
+@keyframes gUpCW{from{transform:rotate(0);}to{transform:rotate(31deg);}}
+@keyframes gLoopCW{from{transform:rotate(31deg);}to{transform:rotate(391deg);}}
+@keyframes gUpCCW{from{transform:rotate(0);}to{transform:rotate(-45deg);}}
+@keyframes gLoopCCW{from{transform:rotate(-45deg);}to{transform:rotate(-405deg);}}
+
+/* Shine cue when fixed: one soft accent-colored glow pulse behind the gears. */
+.stage::before{content:"";position:absolute;left:-6%;top:-6%;width:112%;height:112%;border-radius:50%;opacity:0;background:radial-gradient(circle closest-side, rgba(37,99,235,.5), rgba(37,99,235,0));pointer-events:none;}
+.stage.fixed::before{animation:gGlow 1.6s ease-out;}
+@keyframes gGlow{0%{opacity:0;transform:scale(.8);}30%{opacity:.9;}100%{opacity:0;transform:scale(1.15);}}
+
 /* a. Loose gear: the small gear sits apart from the big one, bobbing. */
 .v-loose .g-small{left:86%;top:86%;transition:left .6s cubic-bezier(.3,1.4,.5,1), top .6s cubic-bezier(.3,1.4,.5,1);touch-action:none;}
-.v-loose .g-small img{transform:rotate(17deg);animation:gBob 2.6s ease-in-out infinite;}
+.v-loose .g-small img{transform:rotate(17deg);animation:gBob 2.6s ease-in-out infinite;transition:transform .5s ease;}
 .v-loose.fixed .g-small{left:67%;top:65%;}
-.v-loose.fixed .g-small img{transform:none;animation:none;}
-.v-loose.spinning .g-big img{animation:gSpinCW 8s linear infinite;}
-.v-loose.spinning .g-small img{animation:gSpinCCW 5.6s linear infinite;}
+.v-loose.fixed:not(.spinning) .g-small img{transform:none;animation:none;}
 @keyframes gBob{0%,100%{transform:translateY(0) rotate(17deg);}50%{transform:translateY(-5px) rotate(11deg);}}
 
 /* b. Stuck gear: rigid, with an occasional strained twitch. Each click
    nudges it a little (--nudge); after a few it frees up and spins. */
 .v-stuck .g-solo{transform:translate(-50%,-50%) rotate(var(--nudge, 0deg));transition:transform .25s cubic-bezier(.3,1.6,.5,1);}
 .v-stuck .g-solo img{animation:gJam 3s ease-in-out infinite;}
-.v-stuck.fixed .g-solo img{animation:gSpinCW 8s linear infinite;}
 @keyframes gJam{0%,78%,100%{transform:rotate(0);}82%{transform:rotate(3deg);}86%{transform:rotate(-2deg);}90%{transform:rotate(1.5deg);}94%{transform:rotate(0);}}
 
 /* c. Missing tooth: the top tooth is masked off the gear and kept as a
@@ -153,7 +167,6 @@ h1{font-size:44px;margin:0 0 14px 0;}
 }
 .v-tooth.step1 .tooth{opacity:.55;transform:translateY(-12%);}
 .v-tooth.fixed .tooth{opacity:1;transform:none;}
-.v-tooth.fixed .rot{animation:gSpinCW 8s linear infinite;}
 @keyframes gHiccup{0%{transform:rotate(0deg);}28%{transform:rotate(120deg);}34%{transform:rotate(112deg) translateX(2px);}62%{transform:rotate(235deg);}68%{transform:rotate(228deg) translateY(2px);}100%{transform:rotate(360deg);}}
 
 /* d. Out of sync: both gears turn the same way, so they grind and shudder.
@@ -162,11 +175,23 @@ h1{font-size:44px;margin:0 0 14px 0;}
 .v-sync .g-small{animation:gShudder .35s linear infinite;}
 .v-sync .g-small img{animation:gSpinCW 5.6s linear infinite;}
 .v-sync.fixed .g-small{animation:none;}
-.v-sync.fixed .g-small img{animation:gSpinCCW 5.6s linear infinite;}
 @keyframes gShudder{0%,100%{transform:translate(-50%,-50%);}25%{transform:translate(-48%,-52%);}50%{transform:translate(-51%,-49%);}75%{transform:translate(-49%,-51%);}}
 
-/* Reduced motion: no entrance, no spin. The script also starts every
-   variant in its finished, static state when this is set. */
+/* e. Rusty gear: dull and dark (a filter on the same accent-blue gear, no new
+   colors), creaking without turning. Each click sets --rust lower, easing
+   the filter back toward the clean gear; the last click frees it. */
+.v-rusty .g-solo img{filter:grayscale(calc(var(--rust, 1) * .75)) sepia(calc(var(--rust, 1) * .45)) brightness(calc(1 - var(--rust, 1) * .3));transition:filter .6s ease;animation:gJam 3.4s ease-in-out infinite;}
+.v-rusty.fixed .g-solo img{filter:none;}
+
+/* f. Off-center gear: it turns around a point away from its own middle, so
+   it orbits and wobbles. Each click or drag pulls --off toward 0 (the pivot
+   eases toward the middle); the last one centers it. */
+.v-offcenter .g-solo{touch-action:none;}
+.v-offcenter .g-solo img{transform-origin:calc(50% + var(--off, 1) * 16%) calc(49% + var(--off, 1) * 11%);transition:transform-origin .6s ease;animation:gSpinCW 4.5s linear infinite;}
+.v-offcenter.fixed .g-solo img{transform-origin:50% 49%;}
+
+/* Reduced motion: no entrance, no spin, no glow. The script also starts
+   every variant in its finished, static state when this is set. */
 @media (prefers-reduced-motion: reduce){
   .egg *, .egg *::before, .egg *::after{animation:none !important;transition:none !important;}
 }
@@ -195,7 +220,8 @@ h1{font-size:44px;margin:0 0 14px 0;}
 .footer-support-btn:hover{filter:brightness(1.1);}
 @media (max-width:600px){
   main{padding-top:36px;}
-  h1{font-size:34px;}
+  h1{font-size:28px;}
+  .message{min-height:4.8em;}
   .message{font-size:17px;}
   .actions .btn{flex:1 1 100%;}
 }
@@ -237,16 +263,19 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 <main>
 <div class="container">
 
-<p class="error-code">Error 404</p>
-<h1>Page not found</h1>
-<p class="message" id="msg" aria-live="polite">Looks like something slipped out of place. Let's get the gears turning again.</p>
+<h1>404: This page slipped out of gear.</h1>
+<!-- Default text is pre-fix message 3 from COPY.en.preFix: it doesn't ask the
+     visitor to fix anything, so it reads right when JS is off and no gear shows.
+     The script picks a random one of the 6 on load. -->
+<p class="message" id="msg">This page took a wrong turn, and the gears followed.</p>
 
 <div class="actions">
   <a class="btn" href="/tools/">Browse all tools</a>
   <!-- Works without JS: points at a fixed real tool. The script below swaps
        in a random tool from the live /tools/ catalog once it loads. -->
-  <a class="btn btn-secondary" id="randomTool" href="/compress-image/">Let the gears choose</a>
+  <a class="btn btn-secondary" id="randomTool" href="/compress-image/">Spin into another tool</a>
 </div>
+<p class="home-link"><a href="/">Return home</a></p>
 
 <div class="egg" id="egg" hidden>
   <button class="gear-btn" id="gearBtn" type="button" aria-describedby="eggHint">
@@ -309,23 +338,58 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 // Page copy. Only COPY.en is wired up today: this one root-level file is
 // served for every broken URL, English and Spanish alike. COPY.es is the
 // drafted translation, ready if we later branch the 404 copy by language
-// (e.g. by checking location.pathname.indexOf('/es/') === 0).
+// (e.g. by checking location.pathname.indexOf('/es/') === 0). The heading and
+// button labels live in the HTML; preFix/postFix are picked from here.
+// preFix and postFix are two independent random picks, and neither is tied to
+// which gear variant is showing.
 var COPY = {
   en: {
-    message: "Looks like something slipped out of place. Let's get the gears turning again.",
-    fixedMessage: "The gears are turning again, but this page is still missing.",
+    heading: "404: This page slipped out of gear.",
+    preFix: [
+      "Something slipped out of place. Help us get the gears moving again.",
+      "These gears have seen better moments. Think you can fix them?",
+      "This page took a wrong turn, and the gears followed.",
+      "The page is missing, but the mechanism may still be repairable.",
+      "A small mechanical disagreement is underway. Care to settle it?",
+      "The gears stopped exactly where this page should be. Suspicious."
+    ],
+    postFix: [
+      "Back in motion. The page is still missing, but the gears are working again.",
+      "Nicely done. You repaired the mechanism, even if the page remains lost.",
+      "The gears agree again. Now let's get you somewhere useful.",
+      "Mechanism restored. Missing page not included.",
+      "Smoothly turning again. Your repair skills are officially noted.",
+      "You fixed it, or at least the part we could fix."
+    ],
     browseTools: "Browse all tools",
-    gearsChoose: "Let the gears choose"
+    randomTool: "Spin into another tool",
+    returnHome: "Return home"
   },
   es: {
-    message: "Parece que algo se salió de lugar. Hagamos que los engranajes vuelvan a girar.",
-    fixedMessage: "Los engranajes vuelven a girar, pero esta página sigue sin aparecer.",
+    heading: "404: Esta página se salió del engranaje.",
+    preFix: [
+      "Algo se salió de lugar. Ayúdanos a poner los engranajes en marcha.",
+      "Estos engranajes han tenido mejores momentos. ¿Crees que puedes arreglarlos?",
+      "Esta página tomó un camino equivocado y los engranajes la siguieron.",
+      "La página no aparece, pero quizá todavía podamos reparar el mecanismo.",
+      "Hay un pequeño desacuerdo mecánico. ¿Nos ayudas a resolverlo?",
+      "Los engranajes se detuvieron justo donde debería estar esta página. Sospechoso."
+    ],
+    postFix: [
+      "Todo vuelve a girar. La página sigue sin aparecer, pero los engranajes ya funcionan.",
+      "Bien hecho. Reparaste el mecanismo, aunque la página siga perdida.",
+      "Los engranajes vuelven a estar de acuerdo. Ahora llevémosle a algo útil.",
+      "Mecanismo restaurado. Página perdida no incluida.",
+      "Todo gira suavemente otra vez. Tus habilidades de reparación quedan oficialmente registradas.",
+      "Lo arreglaste, o al menos la parte que sí tenía arreglo."
+    ],
     browseTools: "Ver todas las herramientas",
-    gearsChoose: "Que elijan los engranajes"
+    randomTool: "Girar hacia otra herramienta",
+    returnHome: "Volver al inicio"
   }
 };
 
-// "Let the gears choose": pick a random tool from the live /tools/ page, the
+// "Spin into another tool": pick a random tool from the live /tools/ page, the
 // same catalog everything else is kept in sync with, so there's no extra
 // list to maintain here. If the fetch fails, the link keeps its fixed href.
 (function(){
@@ -350,35 +414,53 @@ var COPY = {
   window.addEventListener('pageshow', function(e){ if(e.persisted) pick(); });
 })();
 
-// Gear easter egg. One of 4 variants per load, equal odds (append ?gear=loose|stuck|tooth|sync
-// to any broken URL to force one). Every variant ends the same way: the gears
-// spin properly and the message swaps to COPY.en.fixedMessage. Nothing else changes.
+// Gear easter egg. One of 6 variants per load, equal odds (append
+// ?gear=loose|stuck|tooth|sync|rusty|offcenter to any broken URL to force one).
+// Every variant ends the same way: the gears ease up to a proper spin, a soft
+// glow pulses once, and the message swaps to a random COPY.en.postFix line.
+// Nothing else changes.
 (function(){
-  var GEAR = '<img src="/assets/gear-base.png" width="1254" height="1254" alt="" draggable="false">';
+  function gear(dir, cls){
+    return '<span class="ph"><img' + (cls ? ' class="' + cls + '"' : '') + (dir ? ' data-dir="' + dir + '"' : '') + ' src="/assets/gear-base.png" width="1254" height="1254" alt="" draggable="false"></span>';
+  }
+  var PAIR = '<span class="g g-big">' + gear('cw') + '</span><span class="g g-small">' + gear('ccw') + '</span>';
+  var SOLO = '<span class="g g-solo">' + gear('cw') + '</span>';
   var VARIANTS = {
     loose: {
       clicks: 1,
       label: 'Snap the loose gear back into place (optional)',
       hint: 'This little gear came loose. Want to put it back?',
-      html: '<span class="g g-big">' + GEAR + '</span><span class="g g-small">' + GEAR + '</span>'
+      html: PAIR
     },
     stuck: {
       clicks: 3,
       label: 'Nudge the stuck gear (optional)',
       hint: 'This gear seems a bit stuck. A nudge or two might help.',
-      html: '<span class="g g-solo">' + GEAR + '</span>'
+      html: SOLO
     },
     tooth: {
       clicks: 2,
       label: 'Put the missing tooth back on the gear (optional)',
       hint: 'This gear lost a tooth. Care to fix it?',
-      html: '<span class="g g-solo"><span class="rot">' + GEAR.replace('<img', '<img class="body"') + GEAR.replace('<img', '<img class="tooth"') + '</span></span>'
+      html: '<span class="g g-solo"><span class="ph"><span class="rot" data-dir="cw">' + gear('', 'body').replace(/^<span class="ph">|<\/span>$/g, '') + gear('', 'tooth').replace(/^<span class="ph">|<\/span>$/g, '') + '</span></span></span>'
     },
     sync: {
       clicks: 1,
       label: 'Flip the small gear so the gears mesh (optional)',
       hint: 'These gears are turning the same way. Maybe flip one?',
-      html: '<span class="g g-big">' + GEAR + '</span><span class="g g-small">' + GEAR + '</span>'
+      html: PAIR
+    },
+    rusty: {
+      clicks: 3,
+      label: 'Polish the rusty gear (optional)',
+      hint: 'This gear has gone a bit rusty. A little polish might help.',
+      html: SOLO
+    },
+    offcenter: {
+      clicks: 3,
+      label: 'Nudge the off-center gear back to the middle (optional)',
+      hint: 'This gear is spinning off-center. Nudge it back into line?',
+      html: SOLO
     }
   };
 
@@ -388,12 +470,22 @@ var COPY = {
   var hint = document.getElementById('eggHint');
   var msg = document.getElementById('msg');
 
-  var names = ['loose', 'stuck', 'tooth', 'sync'];
+  function rand(n){ return Math.floor(Math.random() * n); }
+  var names = ['loose', 'stuck', 'tooth', 'sync', 'rusty', 'offcenter'];
   var forced = (location.search.match(/[?&]gear=([a-z]+)/) || [])[1];
-  var name = VARIANTS[forced] ? forced : names[Math.floor(Math.random() * names.length)];
+  var name = VARIANTS[forced] ? forced : names[rand(names.length)];
   var v = VARIANTS[name];
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var count = 0, done = false;
+  var count = 0, done = false, lastDrag = 0;
+
+  // Pre-fix message. Under reduced motion the gears are shown already fixed and
+  // can't be clicked, so only the lines that don't ask for a repair (3 and 6)
+  // are used there.
+  var pre = reduced ? [2, 5][rand(2)] : rand(COPY.en.preFix.length);
+  msg.textContent = COPY.en.preFix[pre];
+  // Live region switched on only after the initial text is set, so only the
+  // later post-fix swap is announced.
+  msg.setAttribute('aria-live', 'polite');
 
   stage.className = 'stage v-' + name;
   stage.innerHTML = v.html;
@@ -415,58 +507,77 @@ var COPY = {
   hint.textContent = v.hint;
   egg.hidden = false;
 
+  function angleOf(el){
+    var t = getComputedStyle(el).transform;
+    var m = t && t.match(/^matrix\(([^,]+),\s*([^,]+)/);
+    return m ? Math.atan2(parseFloat(m[2]), parseFloat(m[1])) * 180 / Math.PI : 0;
+  }
+
   function fix(){
     if(done) return;
     done = true;
+    // Freeze each gear's current angle on its wrapper so the fixed spin
+    // continues from where the broken motion left it, without a jump.
+    Array.prototype.forEach.call(stage.querySelectorAll('[data-dir]'), function(el){
+      el.parentNode.style.transform = 'rotate(' + angleOf(el).toFixed(1) + 'deg)';
+    });
     stage.className += ' fixed';
     if(name === 'loose'){
       // let the snap-into-place transition land before the spin starts
       setTimeout(function(){ stage.className += ' spinning'; }, 600);
     }
-    msg.textContent = COPY.en.fixedMessage;
+    msg.textContent = COPY.en.postFix[rand(COPY.en.postFix.length)];
     hint.textContent = '';
     btn.setAttribute('aria-disabled', 'true');
     btn.setAttribute('aria-label', 'Gears fixed');
   }
 
-  btn.addEventListener('click', function(){
+  function advance(){
     if(done) return;
     count++;
-    if(name === 'stuck' && count < v.clicks){
-      stage.firstChild.style.setProperty('--nudge', (count * 7) + 'deg');
-    }
-    if(name === 'tooth' && count < v.clicks){
-      stage.className += ' step1';
-    }
+    var left = 1 - count / v.clicks; // 1 = fully broken, 0 = fixed
+    if(name === 'stuck' && count < v.clicks) stage.firstChild.style.setProperty('--nudge', (count * 7) + 'deg');
+    if(name === 'tooth' && count < v.clicks) stage.className += ' step1';
+    if(name === 'rusty') stage.style.setProperty('--rust', left.toFixed(2));
+    if(name === 'offcenter') stage.style.setProperty('--off', left.toFixed(2));
     if(count >= v.clicks) fix();
+  }
+
+  btn.addEventListener('click', function(){
+    if(Date.now() - lastDrag < 400) return; // this click is the tail end of a drag already counted
+    advance();
   });
 
-  // Loose gear can also be dragged toward the big one; letting go snaps it in.
-  // A plain click/tap/Enter/Space still works on its own via the click handler.
-  if(name === 'loose'){
-    var small = stage.querySelector('.g-small');
-    var start = null;
-    small.addEventListener('pointerdown', function(e){
+  // Loose and off-center gears can also be dragged; letting go counts as one
+  // step (for the loose gear, that snaps it in). A plain click/tap/Enter/Space
+  // still works on its own via the click handler.
+  if(name === 'loose' || name === 'offcenter'){
+    var target = stage.querySelector(name === 'loose' ? '.g-small' : '.g-solo');
+    var start = null, moved = false;
+    target.addEventListener('pointerdown', function(e){
       if(done) return;
       start = { x: e.clientX, y: e.clientY };
-      try{ small.setPointerCapture(e.pointerId); }catch(err){}
+      moved = false;
+      try{ target.setPointerCapture(e.pointerId); }catch(err){}
     });
-    small.addEventListener('pointermove', function(e){
+    target.addEventListener('pointermove', function(e){
       if(!start) return;
-      var dx = Math.max(-80, Math.min(20, e.clientX - start.x));
-      var dy = Math.max(-80, Math.min(20, e.clientY - start.y));
-      small.style.transition = 'none';
-      small.style.transform = 'translate(calc(-50% + ' + dx + 'px), calc(-50% + ' + dy + 'px))';
+      var lo = name === 'loose' ? -80 : -24, hi = name === 'loose' ? 20 : 24;
+      var dx = Math.max(lo, Math.min(hi, e.clientX - start.x));
+      var dy = Math.max(lo, Math.min(hi, e.clientY - start.y));
+      if(Math.abs(dx) + Math.abs(dy) > 5) moved = true;
+      target.style.transition = 'none';
+      target.style.transform = 'translate(calc(-50% + ' + dx + 'px), calc(-50% + ' + dy + 'px))';
     });
     function release(){
       if(!start) return;
       start = null;
-      small.style.transition = '';
-      small.style.transform = '';
-      fix();
+      target.style.transition = '';
+      target.style.transform = '';
+      if(moved){ lastDrag = Date.now(); advance(); }
     }
-    small.addEventListener('pointerup', release);
-    small.addEventListener('pointercancel', release);
+    target.addEventListener('pointerup', release);
+    target.addEventListener('pointercancel', release);
   }
 })();
 </script>
