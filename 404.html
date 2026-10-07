@@ -273,7 +273,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
   <a class="btn" href="/tools/">Browse all tools</a>
   <!-- Works without JS: points at a fixed real tool. The script below swaps
        in a random tool from the live /tools/ catalog once it loads. -->
-  <a class="btn btn-secondary" id="randomTool" href="/compress-image/">Spin into another tool</a>
+  <a class="btn btn-secondary" id="randomTool" href="/compress-image/">Let the gears choose</a>
 </div>
 <p class="home-link"><a href="/">Return home</a></p>
 
@@ -362,7 +362,7 @@ var COPY = {
       "You fixed it, or at least the part we could fix."
     ],
     browseTools: "Browse all tools",
-    randomTool: "Spin into another tool",
+    randomTool: "Let the gears choose",
     returnHome: "Return home"
   },
   es: {
@@ -384,12 +384,12 @@ var COPY = {
       "Lo arreglaste, o al menos la parte que sí tenía arreglo."
     ],
     browseTools: "Ver todas las herramientas",
-    randomTool: "Girar hacia otra herramienta",
+    randomTool: "Que elijan los engranajes",
     returnHome: "Volver al inicio"
   }
 };
 
-// "Spin into another tool": pick a random tool from the live /tools/ page, the
+// "Let the gears choose": pick a random tool from the live /tools/ page, the
 // same catalog everything else is kept in sync with, so there's no extra
 // list to maintain here. If the fetch fails, the link keeps its fixed href.
 (function(){
