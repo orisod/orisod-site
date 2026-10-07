@@ -6,7 +6,8 @@
  * hand-maintained source of truth check_sitemap.py already treats as
  * authoritative, so this script reuses it instead of a second, separately
  * hand-maintained list of pages to scan. Every URL in sitemap.xml gets a
- * real headless-Chromium render + a full axe-core scan. Run in CI on every
+ * real headless-Chromium render + a full axe-core scan, once in the default
+ * dark theme and once in light theme. Run in CI on every
  * push/PR to main, same as check_sitemap.py.
  */
 import { readFileSync } from "node:fs";
@@ -82,11 +83,26 @@ async function scanPath(context, urlPath) {
   try {
     await page.goto(`http://127.0.0.1:${PORT}${urlPath}`, { waitUntil: "load", timeout: 30000 });
     await page.addScriptTag({ content: axeSource.source });
-    const results = await page.evaluate(
-      (tags) => window.axe.run(document, { runOnly: { type: "tag", values: tags } }),
-      AXE_TAGS
-    );
-    return { urlPath, violations: results.violations, consoleErrors };
+    const run = (theme) =>
+      page.evaluate(
+        async ({ tags, theme }) => {
+          if (theme === "light") {
+            // Same switch the nav's theme toggle makes. Transitions are turned off
+            // first so axe reads the final light colors, not a mid-fade blend.
+            const s = document.createElement("style");
+            s.textContent = "*,*::before,*::after{transition:none!important}";
+            document.head.appendChild(s);
+            document.documentElement.setAttribute("data-theme", "light");
+            await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+          }
+          const res = await window.axe.run(document, { runOnly: { type: "tag", values: tags } });
+          return res.violations.map((v) => ({ ...v, theme }));
+        },
+        { tags: AXE_TAGS, theme }
+      );
+    // Every page is scanned in both themes: dark (the default) and light.
+    const violations = [...(await run("dark")), ...(await run("light"))];
+    return { urlPath, violations, consoleErrors };
   } catch (err) {
     return { urlPath, violations: [], consoleErrors: [...consoleErrors, `navigation/scan failed: ${err}`] };
   } finally {
@@ -129,7 +145,7 @@ async function main() {
       console.log(`${SITE_ORIGIN}${r.urlPath}`);
       for (const v of r.violations) {
         const targets = v.nodes.map((n) => n.target.join(" ")).slice(0, 3).join(", ");
-        console.log(`  [${v.impact}] ${v.id}: ${v.help} (${v.nodes.length} node(s): ${targets}${v.nodes.length > 3 ? ", ..." : ""})`);
+        console.log(`  [${v.impact}] (${v.theme} theme) ${v.id}: ${v.help} (${v.nodes.length} node(s): ${targets}${v.nodes.length > 3 ? ", ..." : ""})`);
       }
       console.log("");
     }
@@ -137,7 +153,7 @@ async function main() {
     process.exit(1);
   }
 
-  console.log(`OK: all ${results.length} pages passed axe-core (${AXE_TAGS.join(", ")}).`);
+  console.log(`OK: all ${results.length} pages passed axe-core in dark and light themes (${AXE_TAGS.join(", ")}).`);
   process.exit(0);
 }
 
