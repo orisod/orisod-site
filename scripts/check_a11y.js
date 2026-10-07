@@ -56,7 +56,12 @@ function startStaticServer() {
       const type = MIME[extname(filePath).toLowerCase()] || "application/octet-stream";
       res.writeHead(200, { "Content-Type": type }).end(body);
     } catch {
-      res.writeHead(404).end("Not found");
+      // Like GitHub Pages: any unmatched path gets the custom 404.html, with a 404 status.
+      try {
+        res.writeHead(404, { "Content-Type": MIME[".html"] }).end(await fsReadFile(join(REPO_ROOT, "404.html")));
+      } catch {
+        res.writeHead(404).end("Not found");
+      }
     }
   });
   return new Promise((resolve) => {
@@ -66,8 +71,13 @@ function startStaticServer() {
 
 // Pages that exist but are deliberately not in sitemap.xml. 404.html is
 // noindex and served by GitHub Pages for any unmatched path; it is scanned once
-// per gear easter-egg variant, since each variant renders different markup.
-const EXTRA_PATHS = ["loose", "stuck", "tooth", "sync", "rusty", "offcenter"].map((g) => `/404.html?gear=${g}`);
+// per gear easter-egg variant, since each variant renders different markup, and
+// again on a broken /es/ URL, where its script translates the page to Spanish.
+const GEAR_VARIANTS = ["loose", "stuck", "tooth", "sync", "rusty", "offcenter"];
+const EXTRA_PATHS = [
+  ...GEAR_VARIANTS.map((g) => `/404.html?gear=${g}`),
+  ...GEAR_VARIANTS.map((g) => `/es/a11y-check-missing-page/?gear=${g}`),
+];
 
 function sitemapPaths() {
   const xml = readFileSync(join(REPO_ROOT, "sitemap.xml"), "utf-8");

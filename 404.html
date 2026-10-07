@@ -335,15 +335,15 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 </script>
 
 <script>
-// Page copy. Only COPY.en is wired up today: this one root-level file is
-// served for every broken URL, English and Spanish alike. COPY.es is the
-// drafted translation, ready if we later branch the 404 copy by language
-// (e.g. by checking location.pathname.indexOf('/es/') === 0). The heading and
-// button labels live in the HTML; preFix/postFix are picked from here.
+// Page copy. This one root-level file is served for every broken URL, English
+// and Spanish alike. The HTML is English (so that's what no-JS visitors get);
+// when the broken URL starts with /es/, localizeToSpanish() below swaps in
+// COPY.es and points every site link at its /es/ version.
 // preFix and postFix are two independent random picks, and neither is tied to
 // which gear variant is showing.
 var COPY = {
   en: {
+    title: "Page not found – Orisod",
     heading: "404: This page slipped out of gear.",
     preFix: [
       "Something slipped out of place. Help us get the gears moving again.",
@@ -363,9 +363,19 @@ var COPY = {
     ],
     browseTools: "Browse all tools",
     randomTool: "Let the gears choose",
-    returnHome: "Return home"
+    returnHome: "Return home",
+    gears: {
+      loose: { label: "Snap the loose gear back into place (optional)", hint: "This little gear came loose. Want to put it back?" },
+      stuck: { label: "Nudge the stuck gear (optional)", hint: "This gear seems a bit stuck. A nudge or two might help." },
+      tooth: { label: "Put the missing tooth back on the gear (optional)", hint: "This gear lost a tooth. Care to fix it?" },
+      sync: { label: "Flip the small gear so the gears mesh (optional)", hint: "These gears are turning the same way. Maybe flip one?" },
+      rusty: { label: "Polish the rusty gear (optional)", hint: "This gear has gone a bit rusty. A little polish might help." },
+      offcenter: { label: "Nudge the off-center gear back to the middle (optional)", hint: "This gear is spinning off-center. Nudge it back into line?" }
+    },
+    gearsFixed: "Gears fixed"
   },
   es: {
+    title: "Página no encontrada – Orisod",
     heading: "404: Esta página se salió del engranaje.",
     preFix: [
       "Algo se salió de lugar. Ayúdanos a poner los engranajes en marcha.",
@@ -385,13 +395,79 @@ var COPY = {
     ],
     browseTools: "Ver todas las herramientas",
     randomTool: "Que elijan los engranajes",
-    returnHome: "Volver al inicio"
+    returnHome: "Volver al inicio",
+    gears: {
+      loose: { label: "Vuelve a colocar el engranaje suelto (opcional)", hint: "Este engranaje pequeño se soltó. ¿Lo pones en su sitio?" },
+      stuck: { label: "Empuja el engranaje atascado (opcional)", hint: "Este engranaje parece algo atascado. Un empujoncito o dos podrían ayudar." },
+      tooth: { label: "Devuelve al engranaje el diente que le falta (opcional)", hint: "A este engranaje se le cayó un diente. ¿Lo arreglas?" },
+      sync: { label: "Invierte el engranaje pequeño para que encajen (opcional)", hint: "Estos engranajes giran en el mismo sentido. ¿Y si inviertes uno?" },
+      rusty: { label: "Pule el engranaje oxidado (opcional)", hint: "Este engranaje se ha oxidado un poco. Un buen pulido podría ayudar." },
+      offcenter: { label: "Lleva el engranaje descentrado de vuelta al centro (opcional)", hint: "Este engranaje gira descentrado. ¿Lo devuelves a su sitio?" }
+    },
+    gearsFixed: "Engranajes arreglados",
+    // Shared nav/footer text, copied from the live /es/ pages (e.g. es/about/index.html).
+    // Keyed by the English text in this page's HTML; footer column titles are separate
+    // because "Support" is "Apoyo" as a heading but "Apoyar" as a link.
+    chrome: {
+      "All Tools": "Todas las herramientas",
+      "Image Tools": "Herramientas de imagen",
+      "PDF Tools": "Herramientas PDF",
+      "Utility Tools": "Utilidades",
+      "Support": "Apoyar",
+      "About": "Acerca de",
+      "Privacy": "Privacidad"
+    },
+    footerHeadings: { "Tools": "Herramientas", "Company": "Empresa", "Support": "Apoyo" },
+    footerBrandDesc: "Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Todo el procesamiento de imágenes y PDF es 100 % local: tus archivos permanecen en tu dispositivo.",
+    footerSupportText: "Sin presión, se agradece si quieres ayudar a mantener esto gratis.",
+    themeToggleLabel: "Cambiar entre tema claro y oscuro"
   }
 };
 
-// "Let the gears choose": pick a random tool from the live /tools/ page, the
-// same catalog everything else is kept in sync with, so there's no extra
-// list to maintain here. If the fetch fails, the link keeps its fixed href.
+var LANG = location.pathname.indexOf('/es/') === 0 ? 'es' : 'en';
+var T = COPY[LANG];
+
+// Spanish broken URL: translate the page in place and send every site link to
+// its /es/ counterpart, so the visitor stays in Spanish whatever they click.
+(function localizeToSpanish(){
+  if(LANG !== 'es') return;
+  document.documentElement.lang = 'es';
+  document.title = T.title;
+  document.querySelector('h1').textContent = T.heading;
+  document.querySelector('.actions .btn').textContent = T.browseTools;
+  var random = document.getElementById('randomTool');
+  random.textContent = T.randomTool;
+  random.setAttribute('href', '/compress-image/'); // gets the /es prefix in the loop below
+  document.querySelector('.home-link a').textContent = T.returnHome;
+  Array.prototype.forEach.call(document.querySelectorAll('.site-nav a:not(.lang-flag), .site-footer a, .actions a, .home-link a'), function(a){
+    var h = a.getAttribute('href');
+    if(h.charAt(0) === '/' && h.indexOf('/es/') !== 0) a.setAttribute('href', '/es' + h);
+    var t = a.textContent.trim();
+    if(T.chrome[t]) a.textContent = T.chrome[t];
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('.footer-col h2'), function(h){
+    var t = h.textContent.trim();
+    if(T.footerHeadings[t]) h.textContent = T.footerHeadings[t];
+  });
+  document.querySelector('.footer-brand-desc').textContent = T.footerBrandDesc;
+  document.querySelector('.footer-support-text').textContent = T.footerSupportText;
+  document.getElementById('themeToggle').setAttribute('aria-label', T.themeToggleLabel);
+  // Language switch: ES becomes the current (non-clickable) one; EN goes to the
+  // English home, since a missing page has no English counterpart to link to.
+  var flags = document.querySelector('.site-nav-right');
+  var enLink = document.createElement('a');
+  enLink.className = 'lang-flag'; enLink.href = '/'; enLink.textContent = 'EN';
+  var esSpan = document.createElement('span');
+  esSpan.className = 'lang-flag active'; esSpan.textContent = 'ES';
+  var oldEn = flags.querySelector('.lang-flag.active'), oldEs = flags.querySelector('a.lang-flag');
+  flags.replaceChild(enLink, oldEn);
+  flags.replaceChild(esSpan, oldEs);
+})();
+
+// "Let the gears choose": pick a random tool from the live /tools/ page (or
+// /es/tools/ on a Spanish URL), the same catalog everything else is kept in
+// sync with, so there's no extra list to maintain here. If the fetch fails,
+// the link keeps its fixed href.
 (function(){
   var link = document.getElementById('randomTool');
   var pool = [];
@@ -401,7 +477,7 @@ var COPY = {
     if(options.length){ link.setAttribute('href', options[Math.floor(Math.random() * options.length)]); }
   }
   if(!window.fetch || !window.DOMParser) return;
-  fetch('/tools/').then(function(r){ if(!r.ok) throw new Error('bad status'); return r.text(); }).then(function(html){
+  fetch(LANG === 'es' ? '/es/tools/' : '/tools/').then(function(r){ if(!r.ok) throw new Error('bad status'); return r.text(); }).then(function(html){
     var doc = new DOMParser().parseFromString(html, 'text/html');
     var seen = {};
     Array.prototype.forEach.call(doc.querySelectorAll('a.tool-card[href]'), function(a){
@@ -417,7 +493,7 @@ var COPY = {
 // Gear easter egg. One of 6 variants per load, equal odds (append
 // ?gear=loose|stuck|tooth|sync|rusty|offcenter to any broken URL to force one).
 // Every variant ends the same way: the gears ease up to a proper spin, a soft
-// glow pulses once, and the message swaps to a random COPY.en.postFix line.
+// glow pulses once, and the message swaps to a random postFix line.
 // Nothing else changes.
 (function(){
   function gear(dir, cls){
@@ -428,38 +504,26 @@ var COPY = {
   var VARIANTS = {
     loose: {
       clicks: 1,
-      label: 'Snap the loose gear back into place (optional)',
-      hint: 'This little gear came loose. Want to put it back?',
       html: PAIR
     },
     stuck: {
       clicks: 3,
-      label: 'Nudge the stuck gear (optional)',
-      hint: 'This gear seems a bit stuck. A nudge or two might help.',
       html: SOLO
     },
     tooth: {
       clicks: 2,
-      label: 'Put the missing tooth back on the gear (optional)',
-      hint: 'This gear lost a tooth. Care to fix it?',
       html: '<span class="g g-solo"><span class="ph"><span class="rot" data-dir="cw">' + gear('', 'body').replace(/^<span class="ph">|<\/span>$/g, '') + gear('', 'tooth').replace(/^<span class="ph">|<\/span>$/g, '') + '</span></span></span>'
     },
     sync: {
       clicks: 1,
-      label: 'Flip the small gear so the gears mesh (optional)',
-      hint: 'These gears are turning the same way. Maybe flip one?',
       html: PAIR
     },
     rusty: {
       clicks: 3,
-      label: 'Polish the rusty gear (optional)',
-      hint: 'This gear has gone a bit rusty. A little polish might help.',
       html: SOLO
     },
     offcenter: {
       clicks: 3,
-      label: 'Nudge the off-center gear back to the middle (optional)',
-      hint: 'This gear is spinning off-center. Nudge it back into line?',
       html: SOLO
     }
   };
@@ -481,8 +545,8 @@ var COPY = {
   // Pre-fix message. Under reduced motion the gears are shown already fixed and
   // can't be clicked, so only the lines that don't ask for a repair (3 and 6)
   // are used there.
-  var pre = reduced ? [2, 5][rand(2)] : rand(COPY.en.preFix.length);
-  msg.textContent = COPY.en.preFix[pre];
+  var pre = reduced ? [2, 5][rand(2)] : rand(T.preFix.length);
+  msg.textContent = T.preFix[pre];
   // Live region switched on only after the initial text is set, so only the
   // later post-fix swap is announced.
   msg.setAttribute('aria-live', 'polite');
@@ -503,8 +567,8 @@ var COPY = {
     return;
   }
 
-  btn.setAttribute('aria-label', v.label);
-  hint.textContent = v.hint;
+  btn.setAttribute('aria-label', T.gears[name].label);
+  hint.textContent = T.gears[name].hint;
   egg.hidden = false;
 
   function angleOf(el){
@@ -526,10 +590,10 @@ var COPY = {
       // let the snap-into-place transition land before the spin starts
       setTimeout(function(){ stage.className += ' spinning'; }, 600);
     }
-    msg.textContent = COPY.en.postFix[rand(COPY.en.postFix.length)];
+    msg.textContent = T.postFix[rand(T.postFix.length)];
     hint.textContent = '';
     btn.setAttribute('aria-disabled', 'true');
-    btn.setAttribute('aria-label', 'Gears fixed');
+    btn.setAttribute('aria-label', T.gearsFixed);
   }
 
   function advance(){
