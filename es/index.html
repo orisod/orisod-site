@@ -522,11 +522,6 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
   .tool-card-desc{display:none;}
   .see-all{margin-top:12px;}
 }
-/* Narrowest phones: 2 compact columns leave too little room for titles,
-   so the 6 cards stack as a single list. */
-@media (max-width:379px){
-  .category-grid{grid-template-columns:minmax(0,1fr);}
-}
 /* ==========================================================================
    Homepage minimal nav (Initiative 1 redesign; homepage only for now, the
    rest of the site still uses the .site-nav-links bar).
@@ -700,6 +695,9 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 @media (max-width:600px){
   .menu-flyout{display:none !important;}
 }
+/* Fit-span (reusable): inside a grid marked data-fit-span, a card whose
+   title doesn't fit its line clamp takes the full row; see the script. */
+[data-fit-span] > .fit-span{grid-column:1 / -1;}
 </style>
 </head>
 <body>
@@ -757,7 +755,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 
 <section class="tool-category" id="cat-image">
   <h2 class="category-heading"><svg class="cat-image" xmlns="http://www.w3.org/2000/svg" viewBox="0 2 18 17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="14" height="13" rx="1.5"/><circle cx="6" cy="8" r="1.2"/><path d="M2 15l3.5-3.5 2.5 2.5 3.5-4 3 3"/></svg>Herramientas de imagen</h2>
-  <div class="category-grid" id="imgCategoryGrid">
+  <div class="category-grid" id="imgCategoryGrid" data-fit-span=".tool-card-title" data-fit-span-media="(max-width:600px)" data-fit-span-order="free">
     <a class="tool-card" href="/es/compress-image/">
       <div class="icon-box cat-image"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v7M9 6l3 3 3-3"/><path d="M12 22v-7M9 18l3-3 3 3"/></svg></div>
       <div class="tool-card-title">Comprimir imagen</div>
@@ -779,7 +777,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 
 <section class="tool-category" id="cat-pdf">
   <h2 class="category-heading"><svg class="cat-pdf" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/></svg>Herramientas PDF</h2>
-  <div class="category-grid" id="pdfCategoryGrid">
+  <div class="category-grid" id="pdfCategoryGrid" data-fit-span=".tool-card-title" data-fit-span-media="(max-width:600px)" data-fit-span-order="free">
     <a class="tool-card" href="/es/merge-pdf/">
       <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v12M8 6l4-4 4 4"/><path d="M6 22l6-6 6 6"/></svg></div>
       <div class="tool-card-title">Unir PDF</div>
@@ -801,7 +799,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 
 <section class="tool-category" id="cat-utility">
   <h2 class="category-heading"><svg class="cat-utility" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3L5 8L11 8L11 3"/><path d="M8 8L17 19"/><path d="M15.5 20.5L18.5 17.5"/></svg>Utilidades</h2>
-  <div class="category-grid" id="utilCategoryGrid">
+  <div class="category-grid" id="utilCategoryGrid" data-fit-span=".tool-card-title" data-fit-span-media="(max-width:600px)" data-fit-span-order="free">
     <a class="tool-card" href="/es/exif-remover/">
       <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
       <div class="tool-card-title">Eliminar EXIF</div>
@@ -1348,6 +1346,99 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
   function onModeChange(){ closeAll(); syncAria(); }
   if(desktop.addEventListener) desktop.addEventListener('change', onModeChange); else desktop.addListener(onModeChange);
   syncAria();
+})();
+</script>
+<script>
+/* Fit-span (reusable, not tied to the homepage). Any grid can opt in:
+     <div class="my-grid" data-fit-span=".title-selector"
+          data-fit-span-media="(max-width:600px)"  optional: only act while this matches
+          data-fit-span-order="free">               optional: see below
+   Each child card is checked with its title clamped as the page's CSS sets it
+   (e.g. -webkit-line-clamp:2). If the title is cut off, the card gets the
+   .fit-span class, which makes it take the full row (CSS above). Nothing is
+   guessed from character counts, so new or renamed cards just work.
+   data-fit-span-order="free" means the order of the cards doesn't matter
+   (e.g. randomly picked cards): the cards are then moved in the page so a
+   full-row card never leaves an empty half-row behind it, and keyboard
+   order still matches what's on screen. Leave it off where order matters
+   (e.g. an alphabetical list): cards keep their order and a gap may show.
+   Call window.fitSpan.refresh() after changing a grid's cards from script. */
+(function(){
+  var grids = [].slice.call(document.querySelectorAll('[data-fit-span]'));
+  if(!grids.length || !window.ResizeObserver) return;
+
+  function cards(grid){ return [].slice.call(grid.children); }
+  function sameSet(a, b){
+    return a.length === b.length && a.every(function(el){ return b.indexOf(el) > -1; });
+  }
+  function setOrder(grid, order){
+    var now = cards(grid);
+    if(order.every(function(el, i){ return now[i] === el; })) return;
+    var active = document.activeElement;
+    order.forEach(function(el){ grid.appendChild(el); });
+    if(active && grid.contains(active) && document.activeElement !== active){
+      active.focus({preventScroll: true});
+    }
+  }
+  // Keep the original order, but pair up regular cards: a full-row card that
+  // would land next to a lone regular card waits until that row is filled.
+  // A regular card left without a partner goes last, so any half-empty row
+  // is at the bottom.
+  function packed(order, wide){
+    var out = [], lone = null, waiting = [];
+    order.forEach(function(el, i){
+      if(wide[i]){
+        if(lone) waiting.push(el); else out.push(el);
+      } else if(lone){
+        out.push(lone, el); lone = null;
+        out = out.concat(waiting); waiting = [];
+      } else {
+        lone = el;
+      }
+    });
+    out = out.concat(waiting);
+    if(lone) out.push(lone);
+    return out;
+  }
+
+  function fit(grid){
+    var now = cards(grid);
+    // Cards replaced from script since last time: their current order is the original.
+    if(!grid._fitSpanOrder || !sameSet(grid._fitSpanOrder, now)) grid._fitSpanOrder = now;
+    var order = grid._fitSpanOrder;
+    setOrder(grid, order);
+    order.forEach(function(el){ el.classList.remove('fit-span'); });
+    var media = grid.getAttribute('data-fit-span-media');
+    if(media && !window.matchMedia(media).matches) return;
+
+    // Read every title first (one layout pass), then write.
+    var sel = grid.getAttribute('data-fit-span');
+    var wide = order.map(function(el){
+      var t = el.querySelector(sel);
+      return !!t && t.offsetParent !== null &&
+        (t.scrollHeight > t.clientHeight + 1 || t.scrollWidth > t.clientWidth + 1);
+    });
+    order.forEach(function(el, i){ if(wide[i]) el.classList.add('fit-span'); });
+    if(grid.getAttribute('data-fit-span-order') === 'free' && wide.indexOf(true) > -1){
+      setOrder(grid, packed(order, wide));
+    }
+  }
+
+  // Re-check whenever a grid changes width (rotation, resize, breakpoints).
+  var ro = new ResizeObserver(function(entries){
+    entries.forEach(function(e){
+      var w = Math.round(e.contentRect.width);
+      if(e.target._fitSpanWidth === w) return;
+      e.target._fitSpanWidth = w;
+      fit(e.target);
+    });
+  });
+  function refresh(){ grids.forEach(fit); }
+  grids.forEach(function(g){ ro.observe(g); });
+  refresh();
+  // Title widths change once web fonts finish loading.
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(refresh);
+  window.fitSpan = {refresh: refresh};
 })();
 </script>
 </body>
