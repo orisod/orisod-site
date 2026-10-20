@@ -9,8 +9,10 @@ This check is the guardrail that keeps every copy consistent:
    the small script after </header> that keeps `--site-nav-h` in sync.
 2. Minimal nav everywhere: logo plus icon buttons (Support, Search, the theme
    toggle, Menu), with the category links, Blog and EN/ES inside the menu panel
-   (<nav class="nav-menu">). The old .site-nav-links bar and its capsule
-   highlight (.active-category) are gone from every page.
+   (<nav class="nav-menu">). The old .site-nav-links bar, its capsule
+   highlight (.active-category), its .site-nav-right group and Support pill
+   (.nav-support-pill) are gone from every page, markup, CSS and script alike,
+   so a page copied from a pre-2026-10-20 template fails here.
 3. Menu panel: links to all four /tools destinations and the blog, with the
    page's language prefix, plus a language row with exactly one current
    language.
@@ -39,6 +41,7 @@ HEIGHT_SCRIPT = "r.style.setProperty('--site-nav-h'"
 HEADER = re.compile(r'<header class="site-nav">(.*?)</header>', re.S)
 MENU_BLOCK = re.compile(r'<nav class="nav-menu"[^>]*>(.*?)</nav>', re.S)
 MENU_TARGETS = ["tools/", "tools/#image", "tools/#pdf", "tools/#utility", "blog/"]
+OLD_NAV = re.compile(r"site-nav-links|site-nav-right|nav-support-pill|active-category")
 ICONS = ['class="nav-icon-btn support"', 'id="navSearchBtn"', 'id="themeToggle"', 'id="navMenuBtn"']
 
 # Pages whose menu may carry the category flyouts (built from their inline TOOLS catalog).
@@ -68,6 +71,9 @@ def check_page(rel, text, problems):
         problems.append(f"{rel}: still has the old .site-nav-links bar")
     if 'class="active-category"' in text:
         problems.append(f"{rel}: has a capsule-highlighted nav item (.active-category); use aria-current=\"page\" in the menu instead")
+    old = sorted(set(OLD_NAV.findall(text)))
+    if old:
+        problems.append(f"{rel}: still has old-nav CSS/script ({', '.join(old)}); the minimal nav doesn't use it")
     for icon in ICONS:
         if icon not in header:
             problems.append(f"{rel}: nav is missing {icon}")
