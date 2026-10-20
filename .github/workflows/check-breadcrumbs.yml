@@ -1,0 +1,19 @@
+name: Verify breadcrumbs
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check-breadcrumbs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check every tool page and blog post has a correct breadcrumb trail
+        run: python3 scripts/check_breadcrumbs.py

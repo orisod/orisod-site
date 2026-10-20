@@ -307,7 +307,24 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
   .site-nav{padding:10px 16px;}
   .nav-menu, .nav-search{left:12px;right:12px;width:auto;}
 }
+/* Breadcrumbs (Initiative 2): Home / Category / Tool on tool pages,
+   Home / Blog / short label on blog posts. The separators are drawn with
+   CSS, so screen readers don't read out a "/" between levels. */
+.breadcrumbs{margin:0 0 12px 0;padding:0;text-align:left;font-size:13px;line-height:1.4;}
+.breadcrumbs ol{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;align-items:center;row-gap:2px;}
+.breadcrumbs li{display:inline-flex;align-items:center;margin:0;padding:0;color:var(--muted-text);}
+.breadcrumbs li + li::before{content:"";display:inline-block;width:0;height:.85em;margin:0 9px;border-right:1px solid var(--muted-text);transform:rotate(18deg);}
+.breadcrumbs a{color:var(--muted-text);text-decoration:none;}
+.breadcrumbs a:hover{color:var(--text);text-decoration:underline;}
+.breadcrumbs a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px;}
+.breadcrumbs [aria-current="page"]{color:var(--text);}
+/* Phones: tuck the trail into the top padding of <main> (40px on tool pages, 50px on
+   posts), so it doesn't push the tool's dropzone further down the screen. */
+@media (max-width:600px){.breadcrumbs{margin:-26px 0 8px 0;}}
 </style>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://orisod.com/"}, {"@type": "ListItem", "position": 2, "name": "Utility Tools", "item": "https://orisod.com/tools/#utility"}, {"@type": "ListItem", "position": 3, "name": "Convert to Markdown", "item": "https://orisod.com/convert-to-markdown/"}]}
+</script>
 </head>
 <body>
 
@@ -336,6 +353,13 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 
 <main>
 <div class="container">
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <ol>
+      <li><a href="/">Home</a></li>
+      <li><a href="/tools/#utility">Utility Tools</a></li>
+      <li><span aria-current="page">Convert to Markdown</span></li>
+    </ol>
+  </nav>
   <div class="tool-hero">
     <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M6 15V9l3 3 3-3v6"/><path d="M15 9v4"/><path d="M13 11l2 2 2-2"/></svg></div>
     <h1>Convert to Markdown</h1>

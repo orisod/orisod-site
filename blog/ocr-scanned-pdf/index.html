@@ -266,6 +266,20 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
   .site-nav{padding:10px 16px;}
   .nav-menu, .nav-search{left:12px;right:12px;width:auto;}
 }
+/* Breadcrumbs (Initiative 2): Home / Category / Tool on tool pages,
+   Home / Blog / short label on blog posts. The separators are drawn with
+   CSS, so screen readers don't read out a "/" between levels. */
+.breadcrumbs{margin:0 0 12px 0;padding:0;text-align:left;font-size:13px;line-height:1.4;}
+.breadcrumbs ol{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;align-items:center;row-gap:2px;}
+.breadcrumbs li{display:inline-flex;align-items:center;margin:0;padding:0;color:var(--muted-text);}
+.breadcrumbs li + li::before{content:"";display:inline-block;width:0;height:.85em;margin:0 9px;border-right:1px solid var(--muted-text);transform:rotate(18deg);}
+.breadcrumbs a{color:var(--muted-text);text-decoration:none;}
+.breadcrumbs a:hover{color:var(--text);text-decoration:underline;}
+.breadcrumbs a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px;}
+.breadcrumbs [aria-current="page"]{color:var(--text);}
+/* Phones: tuck the trail into the top padding of <main> (40px on tool pages, 50px on
+   posts), so it doesn't push the tool's dropzone further down the screen. */
+@media (max-width:600px){.breadcrumbs{margin:-26px 0 8px 0;}}
 </style>
 <script type="application/ld+json">
 {
@@ -291,6 +305,9 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
     "@id": "https://orisod.com/blog/ocr-scanned-pdf/"
   }
 }
+</script>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://orisod.com/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://orisod.com/blog/"}, {"@type": "ListItem", "position": 3, "name": "Make scanned PDFs searchable", "item": "https://orisod.com/blog/ocr-scanned-pdf/"}]}
 </script>
 </head>
 <body>
@@ -321,6 +338,13 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 <main>
 <div class="container">
 
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/blog/">Blog</a></li>
+    <li><span aria-current="page">Make scanned PDFs searchable</span></li>
+  </ol>
+</nav>
 <span class="blog-cat cat-guide">Guides</span>
 <h1>How to make a scanned PDF searchable with OCR</h1>
 <p class="intro">Many scanned PDFs contain page images without a usable text layer, so search and copy return nothing. OCR can recognize characters and create searchable text, but the result is an interpretation of the scan rather than a guaranteed transcript.</p>

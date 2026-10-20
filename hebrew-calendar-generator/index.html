@@ -410,7 +410,24 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
   .site-nav{padding:10px 16px;}
   .nav-menu, .nav-search{left:12px;right:12px;width:auto;}
 }
+/* Breadcrumbs (Initiative 2): Home / Category / Tool on tool pages,
+   Home / Blog / short label on blog posts. The separators are drawn with
+   CSS, so screen readers don't read out a "/" between levels. */
+.breadcrumbs{margin:0 0 12px 0;padding:0;text-align:left;font-size:13px;line-height:1.4;}
+.breadcrumbs ol{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;align-items:center;row-gap:2px;}
+.breadcrumbs li{display:inline-flex;align-items:center;margin:0;padding:0;color:var(--muted-text);}
+.breadcrumbs li + li::before{content:"";display:inline-block;width:0;height:.85em;margin:0 9px;border-right:1px solid var(--muted-text);transform:rotate(18deg);}
+.breadcrumbs a{color:var(--muted-text);text-decoration:none;}
+.breadcrumbs a:hover{color:var(--text);text-decoration:underline;}
+.breadcrumbs a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px;}
+.breadcrumbs [aria-current="page"]{color:var(--text);}
+/* Phones: tuck the trail into the top padding of <main> (40px on tool pages, 50px on
+   posts), so it doesn't push the tool's dropzone further down the screen. */
+@media (max-width:600px){.breadcrumbs{margin:-26px 0 8px 0;}}
 </style>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://orisod.com/"}, {"@type": "ListItem", "position": 2, "name": "Utility Tools", "item": "https://orisod.com/tools/#utility"}, {"@type": "ListItem", "position": 3, "name": "Calendar generator", "item": "https://orisod.com/calendar-generator/"}, {"@type": "ListItem", "position": 4, "name": "Hebrew calendar generator", "item": "https://orisod.com/hebrew-calendar-generator/"}]}
+</script>
 </head>
 <body>
 
@@ -439,6 +456,14 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 
 <main>
 <div class="container">
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <ol>
+      <li><a href="/">Home</a></li>
+      <li><a href="/tools/#utility">Utility Tools</a></li>
+      <li><a href="/calendar-generator/">Calendar generator</a></li>
+      <li><span aria-current="page">Hebrew calendar generator</span></li>
+    </ol>
+  </nav>
   <div class="tool-hero">
     <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 9h18"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 17h.01M12 17h.01"/></svg></div>
     <h1>Hebrew calendar generator</h1>
