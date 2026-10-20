@@ -296,7 +296,21 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
   .site-nav{padding:10px 16px;}
   .nav-menu, .nav-search{left:12px;right:12px;width:auto;}
 }
+/* Breadcrumbs (Initiative 2): Home / Category / Tool on tool pages,
+   Home / Blog / short label on blog posts. The separators are drawn with
+   CSS, so screen readers don't read out a "/" between levels. */
+.breadcrumbs{margin:0 0 12px 0;padding:0;text-align:left;font-size:13px;line-height:1.4;}
+.breadcrumbs ol{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;align-items:center;row-gap:2px;}
+.breadcrumbs li{display:inline-flex;align-items:center;margin:0;padding:0;color:var(--muted-text);}
+.breadcrumbs li + li::before{content:"";display:inline-block;width:0;height:.85em;margin:0 9px;border-right:1px solid var(--muted-text);transform:rotate(18deg);}
+.breadcrumbs a{color:var(--muted-text);text-decoration:none;}
+.breadcrumbs a:hover{color:var(--text);text-decoration:underline;}
+.breadcrumbs a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px;}
+.breadcrumbs [aria-current="page"]{color:var(--text);}
 </style>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://orisod.com/es/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://orisod.com/es/blog/"}, {"@type": "ListItem", "position": 3, "name": "Un borde cambia la foto", "item": "https://orisod.com/es/blog/add-photo-border-online/"}]}
+</script>
 </head>
 <body>
 
@@ -326,6 +340,13 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 <main>
 <div class="container">
 
+<nav class="breadcrumbs" aria-label="Ruta de navegación">
+  <ol>
+    <li><a href="/es/">Inicio</a></li>
+    <li><a href="/es/blog/">Blog</a></li>
+    <li><span aria-current="page">Un borde cambia la foto</span></li>
+  </ol>
+</nav>
 <span class="blog-cat cat-guide">Guías</span>
 <h1>Cómo añadir un marco o borde a tus fotos en línea</h1>
 <p class="intro">Un borde separa una fotografía de la superficie que la rodea y puede dar coherencia a un conjunto de imágenes. Las decisiones útiles son concretas: color, grosor, dimensiones finales y si el borde debe formar parte del archivo exportado.</p>
