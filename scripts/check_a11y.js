@@ -7,7 +7,9 @@
  * authoritative, so this script reuses it instead of a second, separately
  * hand-maintained list of pages to scan. Every URL in sitemap.xml gets a
  * real headless-Chromium render + a full axe-core scan, once in the default
- * dark theme and once in light theme. Run in CI on every
+ * dark theme and once in light theme. A few representative pages are scanned
+ * again with the nav's menu panel or search box open (see OPEN_STATES), since
+ * those are hidden in a plain scan. Run in CI on every
  * push/PR to main, same as check_sitemap.py.
  */
 import { readFileSync } from "node:fs";
@@ -80,19 +82,40 @@ const EXTRA_PATHS = [
   ...GEAR_VARIANTS.map((g) => `/es/a11y-check-missing-page/?gear=${g}`),
 ];
 
+// The nav's menu panel and search box are hidden until opened, so a plain scan
+// never sees them. One page per template is scanned again with each open.
+// /tools has no nav search box (its icon focuses the page's own search).
+const MENU_OPEN_PATHS = [
+  "/", "/es/", "/compress-pdf/", "/es/compress-pdf/", "/qr-code-generator/", "/es/qr-code-generator/",
+  "/blog/add-page-numbers-to-pdf/", "/es/blog/add-page-numbers-to-pdf/", "/about/", "/es/about/",
+  "/blog/", "/es/blog/", "/tools/", "/es/tools/", "/404.html", "/es/a11y-check-missing-page/",
+];
+const OPEN_STATES = [
+  ...MENU_OPEN_PATHS.map((path) => ({ path, open: "menu" })),
+  ...MENU_OPEN_PATHS.filter((p) => !["/", "/es/", "/tools/", "/es/tools/"].includes(p)).map((path) => ({ path, open: "search" })),
+];
+
 function sitemapPaths() {
   const xml = readFileSync(join(REPO_ROOT, "sitemap.xml"), "utf-8");
   const urls = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
   return urls.map((u) => u.replace(SITE_ORIGIN, ""));
 }
 
-async function scanPath(context, urlPath) {
+async function scanPath(context, item) {
+  // item is a path, or {path, open} to scan with the nav menu or search box open.
+  const urlPath = typeof item === "string" ? item : item.path;
+  const label = typeof item === "string" ? urlPath : `${urlPath} [${item.open} open]`;
   const page = await context.newPage();
   const consoleErrors = [];
   page.on("pageerror", (err) => consoleErrors.push(String(err)));
   try {
     await page.goto(`http://127.0.0.1:${PORT}${urlPath}`, { waitUntil: "load", timeout: 30000 });
     await page.addScriptTag({ content: axeSource.source });
+    if (typeof item !== "string") {
+      await page.click(item.open === "menu" ? "#navMenuBtn" : "#navSearchBtn");
+      const panel = item.open === "menu" ? "#navMenu" : "#navSearch";
+      if (await page.locator(panel).isHidden()) throw new Error(`the ${item.open} did not open`);
+    }
     const run = (theme) =>
       page.evaluate(
         async ({ tags, theme }) => {
@@ -112,16 +135,20 @@ async function scanPath(context, urlPath) {
       );
     // Every page is scanned in both themes: dark (the default) and light.
     const violations = [...(await run("dark")), ...(await run("light"))];
-    return { urlPath, violations, consoleErrors };
+    return { urlPath: label, violations, consoleErrors };
   } catch (err) {
-    return { urlPath, violations: [], consoleErrors: [...consoleErrors, `navigation/scan failed: ${err}`] };
+    // A menu/search box that won't open is a real failure, not just a scan note.
+    if (typeof item !== "string") {
+      return { urlPath: label, violations: [{ id: "nav-open-failed", impact: "critical", help: String(err), nodes: [], theme: "dark" }], consoleErrors };
+    }
+    return { urlPath: label, violations: [], consoleErrors: [...consoleErrors, `navigation/scan failed: ${err}`] };
   } finally {
     await page.close();
   }
 }
 
 async function main() {
-  const paths = [...sitemapPaths(), ...EXTRA_PATHS];
+  const paths = [...sitemapPaths(), ...EXTRA_PATHS, ...OPEN_STATES];
   const server = await startStaticServer();
   const browser = await chromium.launch();
 
@@ -163,7 +190,7 @@ async function main() {
     process.exit(1);
   }
 
-  console.log(`OK: all ${results.length} pages passed axe-core in dark and light themes (${AXE_TAGS.join(", ")}).`);
+  console.log(`OK: all ${results.length} pages passed axe-core in dark and light themes (${AXE_TAGS.join(", ")}), including ${OPEN_STATES.length} scans with the nav menu or search box open.`);
   process.exit(0);
 }
 

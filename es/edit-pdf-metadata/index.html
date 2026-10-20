@@ -220,25 +220,162 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
   .site-nav-links > :first-child{margin-left:auto;}
   .site-nav-links > :last-child{margin-right:auto;}
 }
+/* ==========================================================================
+   Minimal nav (Initiative 2): logo left; Support, Search, the theme toggle
+   and Menu on the right. Same look as the homepage nav, without the menu's
+   category flyouts. Blog, the category links and EN/ES live in the menu.
+   Rules here set their own margin, padding, opacity, filter and line-height
+   on purpose: many pages have page-wide button{} and p{} rules that would
+   otherwise leak into the nav (the same trap as the old .theme-toggle
+   margin bug). The menu's category icon colors use their own alpha token
+   because not every page defines --icon-alpha.
+   ========================================================================== */
+:root{--nav-icon-alpha:.30;}
+:root[data-theme="light"]{--nav-icon-alpha:.24;}
+.site-nav{flex-wrap:nowrap;}
+.nav-icons{display:flex;align-items:center;gap:6px;}
+.site-nav .nav-icon-btn{
+  box-sizing:border-box;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:36px;
+  height:36px;
+  margin:0;
+  padding:0;
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:8px;
+  color:var(--text);
+  font:inherit;
+  line-height:1;
+  cursor:pointer;
+  text-decoration:none;
+  filter:none;
+  transition:border-color .2s, color .2s;
+}
+.site-nav .nav-icon-btn:hover{border-color:var(--accent);filter:none;}
+.site-nav .nav-icon-btn:focus-visible, .site-nav .theme-toggle:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.site-nav .nav-icon-btn svg{width:18px;height:18px;display:block;}
+.site-nav .nav-icon-btn.support{color:#f472b6;}
+:root[data-theme="light"] .site-nav .nav-icon-btn.support{color:#be185d;}
+/* same 36px box as the icon buttons so the row lines up */
+.site-nav .nav-icons .theme-toggle{width:36px;height:36px;padding:0;border-radius:8px;filter:none;}
+.site-nav .nav-icon-btn[aria-expanded="true"]{border-color:var(--accent);background:rgba(37,99,235,.14);}
+.site-nav .nav-icon-btn .menu-icon-close{display:none;}
+.site-nav .nav-icon-btn[aria-expanded="true"] .menu-icon-open{display:none;}
+.site-nav .nav-icon-btn[aria-expanded="true"] .menu-icon-close{display:block;}
+
+/* --- Menu panel and search box: both drop down under the nav --- */
+.nav-menu, .nav-search{
+  position:absolute;
+  top:calc(100% + 8px);
+  right:16px;
+  margin:0;
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:12px;
+  box-shadow:0 18px 48px rgba(0,0,0,.45);
+  padding:8px;
+  text-align:left;
+  z-index:60;
+}
+:root[data-theme="light"] .nav-menu, :root[data-theme="light"] .nav-search{box-shadow:0 18px 48px rgba(15,23,42,.16);}
+.nav-menu[hidden], .nav-search[hidden]{display:none;}
+.nav-menu{
+  width:300px;
+  max-height:calc(100vh - var(--site-nav-h, 60px) - 24px);
+  overflow-y:auto;
+}
+.nav-menu .nav-menu-label{
+  font-size:11px;
+  font-weight:bold;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  line-height:normal;
+  color:var(--muted-text);
+  opacity:1;
+  max-width:none;
+  padding:10px 10px 6px 10px;
+  margin:0;
+}
+.nav-menu a.menu-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px;
+  min-height:44px;
+  border-radius:8px;
+  color:var(--text);
+  text-decoration:none;
+  font-size:15px;
+  line-height:normal;
+}
+.nav-menu a.menu-item:hover, .nav-menu a.menu-item:focus-visible{background:rgba(37,99,235,.14);outline:none;}
+/* The page you're on: marked for screen readers, with only a quiet visual cue. */
+.nav-menu a.menu-item[aria-current="page"]{font-weight:bold;box-shadow:inset 3px 0 0 var(--accent);}
+.nav-menu .menu-item .icon-box{
+  width:30px;height:30px;border-radius:7px;flex:none;margin:0;
+  display:flex;align-items:center;justify-content:center;
+  border:1.5px solid transparent;font-size:inherit;
+}
+.nav-menu .menu-item .icon-box svg{width:16px;height:16px;display:block;}
+.nav-menu .menu-item .icon-box.cat-all{background:rgba(148,163,184,.18);border-color:var(--muted-text);color:var(--text);}
+.nav-menu .menu-item .icon-box.cat-image{background:rgba(37,99,235,var(--nav-icon-alpha));border-color:#2563eb;color:#2563eb;}
+.nav-menu .menu-item .icon-box.cat-pdf{background:rgba(245,158,11,var(--nav-icon-alpha));border-color:#f59e0b;color:#f59e0b;}
+.nav-menu .menu-item .icon-box.cat-utility{background:rgba(139,92,246,var(--nav-icon-alpha));border-color:#8b5cf6;color:#8b5cf6;}
+.nav-menu hr{border:none;border-top:1px solid var(--border);margin:6px 4px;}
+.menu-lang{display:flex;align-items:center;gap:8px;padding:8px 10px 6px 10px;font-size:13px;color:var(--muted-text);}
+.menu-lang .lang-flag{margin-left:0;}
+.menu-lang-label{margin-right:auto;}
+
+.nav-search{width:340px;display:flex;gap:6px;}
+.nav-search-label{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;}
+.nav-search input{
+  flex:1 1 auto;
+  min-width:0;
+  height:40px;
+  margin:0;
+  padding:0 12px;
+  font-family:inherit;
+  font-size:16px; /* 16px stops iPhones from zooming in on focus */
+  color:var(--text);
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:8px;
+}
+.nav-search input::placeholder{color:var(--muted-text);opacity:1;}
+.nav-search input:focus{outline:2px solid var(--accent);outline-offset:0;border-color:var(--accent);}
+.site-nav .nav-search .nav-icon-btn{width:40px;height:40px;flex:none;background:var(--accent);border-color:var(--accent);color:#fff;}
+
+@media (max-width:600px){
+  .site-nav{padding:10px 16px;}
+  .nav-menu, .nav-search{left:12px;right:12px;width:auto;}
+}
 </style>
 </head>
 <body>
 
 <header class="site-nav">
   <a class="site-nav-logo" href="/es/"><img src="/assets/orisod-icon-detailed.png" alt="" width="26" height="26">Orisod</a>
-  <nav class="site-nav-links">
-    <a href="/es/tools/">Todas las herramientas</a>
-    <a href="/es/tools/#image">Herramientas de imagen</a>
-    <a href="/es/tools/#pdf">Herramientas PDF</a>
-    <a href="/es/tools/#utility">Utilidades</a>
-    <a href="/es/blog/">Blog</a>
-      <a class="nav-support-pill" href="/es/support/">Apoyar</a>
-  </nav>
-  <div class="site-nav-right">
-    <a class="lang-flag" href="/edit-pdf-metadata/">EN</a>
-    <span class="lang-flag active">ES</span>
+  <div class="nav-icons">
+    <a class="nav-icon-btn support" href="/es/support/" aria-label="Apoyar a Orisod" title="Apoyar a Orisod"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg></a>
+    <button class="nav-icon-btn" id="navSearchBtn" type="button" aria-expanded="false" aria-controls="navSearch" aria-label="Buscar herramientas" title="Buscar herramientas"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
+    <form class="nav-search" id="navSearch" role="search" action="/es/tools/" method="get" hidden><label class="nav-search-label" for="navSearchInput">Buscar herramientas</label><input type="search" id="navSearchInput" name="search" placeholder="Buscar herramientas…" autocomplete="off" enterkeyhint="search"><button class="nav-icon-btn" type="submit" aria-label="Buscar"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button></form>
     <button class="theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro">🌙</button>
+    <button class="nav-icon-btn" id="navMenuBtn" type="button" aria-label="Menú" title="Menú" aria-expanded="false" aria-controls="navMenu" data-label-open="Menú" data-label-close="Cerrar menú"><svg class="menu-icon-open" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><svg class="menu-icon-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
   </div>
+  <nav class="nav-menu" id="navMenu" aria-label="Menú del sitio" hidden>
+    <p class="nav-menu-label">Herramientas</p>
+    <a class="menu-item" href="/es/tools/"><span class="icon-box cat-all"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>Todas las herramientas</a>
+    <a class="menu-item" href="/es/tools/#image"><span class="icon-box cat-image"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 2 18 17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="14" height="13" rx="1.5"/><circle cx="6" cy="8" r="1.2"/><path d="M2 15l3.5-3.5 2.5 2.5 3.5-4 3 3"/></svg></span>Herramientas de imagen</a>
+    <a class="menu-item" href="/es/tools/#pdf"><span class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/></svg></span>Herramientas PDF</a>
+    <a class="menu-item" href="/es/tools/#utility"><span class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3L5 8L11 8L11 3"/><path d="M8 8L17 19"/><path d="M15.5 20.5L18.5 17.5"/></svg></span>Utilidades</a>
+    <hr>
+    <a class="menu-item" href="/es/blog/"><span class="icon-box cat-all"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span>Blog</a>
+    <hr>
+    <div class="menu-lang"><span class="menu-lang-label">Idioma</span><a class="lang-flag" href="/edit-pdf-metadata/">EN</a><span class="lang-flag active">ES</span></div>
+  </nav>
 </header>
 <script>(function(){var n=document.querySelector('.site-nav');if(!n)return;var r=document.documentElement;function s(){r.style.setProperty('--site-nav-h',n.offsetHeight+'px');}s();if(window.ResizeObserver){new ResizeObserver(s).observe(n);}else{window.addEventListener('resize',s);}var l=n.querySelector('.site-nav-links'),a=l&&l.querySelector('.active-category');if(a&&l.scrollWidth>l.clientWidth){l.scrollLeft=a.offsetLeft-l.offsetLeft-16;}})();</script>
 
@@ -534,6 +671,92 @@ saveBtn.addEventListener('click', async () => {
   saveBtn.disabled = false;
   saveBtn.textContent = 'Guardar y descargar';
 });
+</script>
+<script>
+// Minimal nav (Initiative 2): the Menu panel and the Search icon.
+// Button labels come from data attributes, so the same script works in every
+// language. The Search icon opens a small search box under the nav; only
+// submitting it leaves the page (to /tools/?search=...). On a page that has
+// its own search box, the icon's data-search-target names it and the icon
+// just scrolls to it and focuses it instead.
+(function(){
+  var menuBtn = document.getElementById('navMenuBtn');
+  var menu = document.getElementById('navMenu');
+  var searchBtn = document.getElementById('navSearchBtn');
+  var form = document.getElementById('navSearch');
+  var input = form && form.querySelector('input');
+  if(!menuBtn || !menu || !searchBtn) return;
+
+  function openMenu(){
+    closeSearch(false);
+    menu.hidden = false;
+    menuBtn.setAttribute('aria-expanded', 'true');
+    menuBtn.setAttribute('aria-label', menuBtn.getAttribute('data-label-close'));
+    var first = menu.querySelector('a'); if(first) first.focus();
+  }
+  function closeMenu(returnFocus){
+    if(menu.hidden) return;
+    menu.hidden = true;
+    menuBtn.setAttribute('aria-expanded', 'false');
+    menuBtn.setAttribute('aria-label', menuBtn.getAttribute('data-label-open'));
+    if(returnFocus) menuBtn.focus();
+  }
+  menuBtn.addEventListener('click', function(){
+    if(menu.hidden) openMenu(); else closeMenu(true);
+  });
+  // Picking a link closes the menu (matters where a link acts in place, like /tools filters).
+  menu.addEventListener('click', function(e){
+    if(e.target.closest('a')) closeMenu(false);
+  });
+  // Tabbing past the last menu link closes the menu.
+  menu.addEventListener('focusout', function(e){
+    if(e.relatedTarget && !menu.contains(e.relatedTarget) && e.relatedTarget !== menuBtn) closeMenu(false);
+  });
+
+  function openSearch(){
+    closeMenu(false);
+    form.hidden = false;
+    searchBtn.setAttribute('aria-expanded', 'true');
+    input.focus();
+  }
+  function closeSearch(returnFocus){
+    if(!form || form.hidden) return;
+    form.hidden = true;
+    input.value = '';
+    searchBtn.setAttribute('aria-expanded', 'false');
+    if(returnFocus) searchBtn.focus();
+  }
+  searchBtn.addEventListener('click', function(){
+    var target = document.getElementById(searchBtn.getAttribute('data-search-target'));
+    if(target){
+      closeMenu(false);
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      target.scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block: 'center'});
+      target.focus({preventScroll: true});
+      return;
+    }
+    if(!form) return;
+    if(form.hidden) openSearch(); else closeSearch(true);
+  });
+  if(form){
+    // An empty search goes nowhere; the box just stays open.
+    form.addEventListener('submit', function(e){
+      if(!input.value.trim()){ e.preventDefault(); input.focus(); }
+    });
+    form.addEventListener('focusout', function(e){
+      if(e.relatedTarget && !form.contains(e.relatedTarget) && e.relatedTarget !== searchBtn) closeSearch(false);
+    });
+  }
+
+  document.addEventListener('click', function(e){
+    if(!menu.contains(e.target) && !menuBtn.contains(e.target)) closeMenu(false);
+    if(form && !form.contains(e.target) && !searchBtn.contains(e.target)) closeSearch(false);
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key !== 'Escape') return;
+    if(form && !form.hidden) closeSearch(true); else closeMenu(true);
+  });
+})();
 </script>
 </body>
 </html>
