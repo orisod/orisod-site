@@ -309,6 +309,29 @@ h1{font-size:44px;margin-bottom:10px;}
   .tool-card-desc{display:none;}
 }
 [data-fit-span] > .fit-span{grid-column:1 / -1;}
+/* The nav search icon only appears once the page's own search box (the one
+   its data-search-target names) has scrolled up behind the nav, so the two are never on screen together. While
+   hidden it collapses to zero width (the other icons slide over) and is
+   visibility:hidden, which also takes it out of the tab order and away from
+   screen readers. */
+#navSearchBtn{
+  transition:opacity .2s ease, transform .2s ease, width .2s ease, margin .2s ease, border-width .2s ease, visibility 0s linear 0s;
+}
+#navSearchBtn.search-reveal-hidden{
+  opacity:0;
+  transform:scale(.85);
+  width:0;
+  margin-left:-6px; /* cancels the 6px flex gap so no empty slot is left */
+  border-width:0;
+  overflow:hidden;
+  visibility:hidden;
+  pointer-events:none;
+  transition:opacity .2s ease, transform .2s ease, width .2s ease, margin .2s ease, border-width .2s ease, visibility 0s linear .2s;
+}
+@media (prefers-reduced-motion: reduce){
+  #navSearchBtn, #navSearchBtn.search-reveal-hidden{transition:none;}
+}
+
 /* Category flyouts in the menu panel (desktop only).
    Hovering or focusing Image / PDF / Utility Tools opens a list of every tool
    in that category to the LEFT of the panel. The flyout lives inside the
@@ -1304,6 +1327,38 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
     if(e.key !== 'Escape') return;
     if(form && !form.hidden) closeSearch(true); else closeMenu(true);
   });
+})();
+</script>
+<script>
+// Reveal the nav search icon only after the page's own search box (the one
+// the icon's data-search-target names) has scrolled up past the bottom of the
+// sticky nav, same as the homepage. Without IntersectionObserver the icon
+// simply stays visible.
+(function(){
+  var btn = document.getElementById('navSearchBtn');
+  var box = btn && document.getElementById(btn.getAttribute('data-search-target'));
+  var nav = document.querySelector('.site-nav');
+  if(!btn || !box || !nav || !('IntersectionObserver' in window)) return;
+  function update(){
+    var past = box.getBoundingClientRect().bottom <= nav.getBoundingClientRect().bottom;
+    btn.classList.toggle('search-reveal-hidden', !past);
+  }
+  // First check happens with transitions off, so the icon doesn't visibly
+  // animate away right after the page loads.
+  btn.style.transition = 'none';
+  update();
+  void btn.offsetWidth;
+  btn.style.transition = '';
+  var io;
+  function observe(){
+    if(io) io.disconnect();
+    // Shrink the observed area from the top by the nav's height, so "out of
+    // view" means "hidden behind the nav", not just "off the top of the screen".
+    io = new IntersectionObserver(update, {rootMargin: '-' + nav.offsetHeight + 'px 0px 0px 0px', threshold: [0, 1]});
+    io.observe(box);
+  }
+  observe();
+  window.addEventListener('resize', function(){ observe(); update(); });
 })();
 </script>
 <script>

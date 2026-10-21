@@ -21,7 +21,8 @@ This check is the guardrail that keeps every copy consistent:
    link (statically "All Tools"; its filter pills move the mark). Every other
    page marks nothing.
 5. Search icon: on the homepages it scrolls to the hero search, on /tools it
-   focuses that page's search box (data-search-target="toolSearch"), and on
+   focuses that page's search box (data-search-target="toolSearch"); on both
+   it stays hidden until that box scrolls behind the nav. On
    every other page it opens the nav search box, a form that submits to
    /tools/?search=... in the page's language.
 6. Flyouts: the category flyouts (which need the full tool catalog) are only
@@ -48,6 +49,8 @@ HEADER = re.compile(r'<header class="site-nav">(.*?)</header>', re.S)
 MENU_BLOCK = re.compile(r'<nav class="nav-menu"[^>]*>(.*?)</nav>', re.S)
 MENU_TARGETS = ["tools/", "tools/#image", "tools/#pdf", "tools/#utility", "blog/"]
 OLD_NAV = re.compile(r"site-nav-links|site-nav-right|nav-support-pill|active-category")
+# The script that hides the nav search icon while the page's own search box is on screen.
+REVEAL = ["#navSearchBtn.search-reveal-hidden{", "classList.toggle('search-reveal-hidden'", "new IntersectionObserver(update"]
 ICONS = ['class="nav-icon-btn support"', 'id="navSearchBtn"', 'id="themeToggle"', 'id="navMenuBtn"']
 
 HOME_PAGES = {("index.html",), ("es", "index.html")}
@@ -114,10 +117,15 @@ def check_page(rel, text, problems):
         problems.append(f"{rel}: menu aria-current is {current or 'none'}; expected {want or 'none'} on this page")
 
     if is_home:
-        pass  # the homepage search icon scrolls to the hero search box
+        # The homepage search icon scrolls to the hero search box, and is hidden while that box shows.
+        if not all(r in text for r in REVEAL):
+            problems.append(f"{rel}: the nav search icon must stay hidden while the hero search box is visible")
     elif is_tools:
         if 'data-search-target="toolSearch"' not in header:
             problems.append(f"{rel}: /tools search icon must focus the page's own box (data-search-target=\"toolSearch\")")
+        if not all(r in text for r in REVEAL):
+            problems.append(f"{rel}: the nav search icon must stay hidden while the page's own search box is "
+                            f"visible (the search-reveal CSS and script, copied from the homepage)")
         # The menu's /tools/#category links jump to these sections, and its
         # flyouts list each section's cards in page order, which is by name.
         for cat in ("image", "pdf", "utility"):
