@@ -90,8 +90,6 @@
   ]
 }
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root{
   --bg:#0b0f1a;
@@ -547,6 +545,9 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 })();
 </script>
 
+<!-- Tool libraries load here, after the page content, so they don't hold up the first paint. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 const fileInput = document.getElementById('fileInput');
 const dropzone = document.getElementById('dropzone');
