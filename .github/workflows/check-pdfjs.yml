@@ -1,0 +1,19 @@
+name: Verify PDF.js security setting
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check-pdfjs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check every PDF.js getDocument() call disables eval (CVE-2024-4367)
+        run: python3 scripts/check_pdfjs.py

@@ -19,7 +19,7 @@ Orisod (orisod.com) is a free, browser-based toolkit for images and PDFs — thi
 - Plain HTML/CSS/JS, no build step, no framework
 - Google Analytics 4 installed site-wide (measurement ID `G-V2GMNDCVMK`) — same snippet must be in `<head>` of every page
 - CDN libraries used depending on the tool:
-  - **PDF.js** (`pdf.js/3.11.174/pdf.min.js`) — rendering/rasterizing PDF pages
+  - **PDF.js** (`pdf.js/3.11.174/pdf.min.js`) — rendering/rasterizing PDF pages. **Every `pdfjsLib.getDocument()` call must pass `isEvalSupported: false`** (e.g. `getDocument({ data: arrayBuffer.slice(0), isEvalSupported: false })`). 3.11.174 is affected by CVE-2024-4367: with the default setting, a crafted PDF a visitor opens could run its own JavaScript on orisod.com while PDF.js draws its fonts. Turning it off is upstream's workaround for versions before 4.2.67 and changes nothing visible (rendering checked byte-identical). All 52 calls on the 42 PDF pages got it on 2026-10-21; `scripts/check_pdfjs.py` (CI: `check-pdfjs`) fails any call without it. If PDF.js is ever upgraded to 4.2.67 or later, keep the setting anyway; it's harmless.
   - **jsPDF** (`jspdf/2.5.1/jspdf.umd.min.js`) — building PDFs from images
   - **pdf-lib** (`pdf-lib/1.17.1/pdf-lib.min.js`) — real PDF manipulation (merge, split, rotate, reorder, page numbers) that preserves text/vector content instead of rasterizing
   - **heic2any** (`heic2any/0.0.4/heic2any.min.js`) — real HEIC decoding

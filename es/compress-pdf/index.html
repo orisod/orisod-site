@@ -688,7 +688,7 @@ compressBtn.addEventListener('click', async () => {
       const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer, { updateMetadata: false });
       outBytes = await pdfDoc.save({ useObjectStreams: true });
     } else {
-      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0), isEvalSupported: false }).promise;
       const { jsPDF } = window.jspdf;
       let outPdf = null;
 
