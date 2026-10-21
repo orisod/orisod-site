@@ -9,7 +9,8 @@
  * real headless-Chromium render + a full axe-core scan, once in the default
  * dark theme and once in light theme. A few representative pages are scanned
  * again with the nav's menu panel, search box or a category flyout open (see
- * OPEN_STATES), since those are hidden in a plain scan. Run in CI on every
+ * OPEN_STATES), since those are hidden in a plain scan. Each page is also
+ * checked for uploads a keyboard can't reach, which axe misses. Run in CI on every
  * push/PR to main, same as check_sitemap.py.
  */
 import { readFileSync } from "node:fs";
@@ -138,6 +139,23 @@ async function scanPath(context, item) {
       );
     // Every page is scanned in both themes: dark (the default) and light.
     const violations = [...(await run("dark")), ...(await run("light"))];
+    // axe doesn't notice an upload a keyboard can't reach: a file input hidden
+    // with display:none behind its <label> dropzone. Any file input with a
+    // visible label must stay focusable (visually hidden instead).
+    const unreachable = await page.evaluate(() =>
+      [...document.querySelectorAll('input[type="file"]')]
+        .filter((i) => [...i.labels].some((l) => l.getClientRects().length > 0))
+        .filter((i) => {
+          const s = getComputedStyle(i);
+          return i.disabled || i.tabIndex < 0 || s.display === "none" || s.visibility === "hidden" || !i.getClientRects().length;
+        })
+        .map((i) => "#" + (i.id || "(no id)"))
+    );
+    if (unreachable.length) {
+      violations.push({ id: "file-input-unreachable", impact: "serious", theme: "dark",
+        help: "Upload can't be reached with the keyboard: file input is display:none (or otherwise unfocusable) behind its label; hide it visually instead",
+        nodes: unreachable.map((t) => ({ target: [t] })) });
+    }
     return { urlPath: label, violations, consoleErrors };
   } catch (err) {
     // A menu/search box that won't open is a real failure, not just a scan note.
