@@ -8,8 +8,8 @@
  * hand-maintained list of pages to scan. Every URL in sitemap.xml gets a
  * real headless-Chromium render + a full axe-core scan, once in the default
  * dark theme and once in light theme. A few representative pages are scanned
- * again with the nav's menu panel or search box open (see OPEN_STATES), since
- * those are hidden in a plain scan. Run in CI on every
+ * again with the nav's menu panel, search box or a category flyout open (see
+ * OPEN_STATES), since those are hidden in a plain scan. Run in CI on every
  * push/PR to main, same as check_sitemap.py.
  */
 import { readFileSync } from "node:fs";
@@ -93,6 +93,8 @@ const MENU_OPEN_PATHS = [
 const OPEN_STATES = [
   ...MENU_OPEN_PATHS.map((path) => ({ path, open: "menu" })),
   ...MENU_OPEN_PATHS.filter((p) => !["/", "/es/", "/tools/", "/es/tools/"].includes(p)).map((path) => ({ path, open: "search" })),
+  // The desktop category flyouts (homepages and /tools), opened with the PDF one showing.
+  ...["/", "/es/", "/tools/", "/es/tools/"].map((path) => ({ path, open: "flyout" })),
 ];
 
 function sitemapPaths() {
@@ -102,7 +104,7 @@ function sitemapPaths() {
 }
 
 async function scanPath(context, item) {
-  // item is a path, or {path, open} to scan with the nav menu or search box open.
+  // item is a path, or {path, open} to scan with the nav menu, search box or a flyout open.
   const urlPath = typeof item === "string" ? item : item.path;
   const label = typeof item === "string" ? urlPath : `${urlPath} [${item.open} open]`;
   const page = await context.newPage();
@@ -112,8 +114,9 @@ async function scanPath(context, item) {
     await page.goto(`http://127.0.0.1:${PORT}${urlPath}`, { waitUntil: "load", timeout: 30000 });
     await page.addScriptTag({ content: axeSource.source });
     if (typeof item !== "string") {
-      await page.click(item.open === "menu" ? "#navMenuBtn" : "#navSearchBtn");
-      const panel = item.open === "menu" ? "#navMenu" : "#navSearch";
+      await page.click(item.open === "search" ? "#navSearchBtn" : "#navMenuBtn");
+      if (item.open === "flyout") await page.focus('#navMenu a.menu-item[data-flyout$="-pdf"]');
+      const panel = { menu: "#navMenu", search: "#navSearch", flyout: "#menuFlyout-pdf" }[item.open];
       if (await page.locator(panel).isHidden()) throw new Error(`the ${item.open} did not open`);
     }
     const run = (theme) =>
@@ -190,7 +193,7 @@ async function main() {
     process.exit(1);
   }
 
-  console.log(`OK: all ${results.length} pages passed axe-core in dark and light themes (${AXE_TAGS.join(", ")}), including ${OPEN_STATES.length} scans with the nav menu or search box open.`);
+  console.log(`OK: all ${results.length} pages passed axe-core in dark and light themes (${AXE_TAGS.join(", ")}), including ${OPEN_STATES.length} scans with the nav menu, search box or a category flyout open.`);
   process.exit(0);
 }
 

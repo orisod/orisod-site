@@ -57,7 +57,7 @@ def body_h1(t):
 def catalog(lang):
     t = (REPO_ROOT / ("tools/index.html" if lang == "en" else "es/tools/index.html")).read_text(encoding="utf-8")
     out = {}
-    for sec in re.finditer(r'<section class="category-section" data-category="(\w+)">(.*?)</section>', t, re.S):
+    for sec in re.finditer(r'<section class="category-section"[^>]*data-category="(\w+)">(.*?)</section>', t, re.S):
         for h in re.findall(r'<a class="card tool-card" href="([^"]+)"', sec.group(2)):
             out[h.strip("/").split("/")[-1]] = sec.group(1)
     return out

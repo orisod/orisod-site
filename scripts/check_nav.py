@@ -18,19 +18,25 @@ This check is the guardrail that keeps every copy consistent:
    language.
 4. Current page: marked with aria-current="page" in the menu, never with a
    capsule. Only the blog index marks "Blog", and only /tools marks a tools
-   link (statically "All Tools"; its filter JS moves the mark). Every other
+   link (statically "All Tools"; its filter pills move the mark). Every other
    page marks nothing.
 5. Search icon: on the homepages it scrolls to the hero search, on /tools it
    focuses that page's search box (data-search-target="toolSearch"), and on
    every other page it opens the nav search box, a form that submits to
    /tools/?search=... in the page's language.
 6. Flyouts: the category flyouts (which need the full tool catalog) are only
-   allowed on the homepages, in FLYOUT_PAGES.
+   allowed on the pages in FLYOUT_PAGES: the homepages (built from their inline
+   TOOLS catalog) and /tools (built from its own cards).
+7. /tools: each category section has id="image|pdf|utility" (what the menu's
+   /tools/#category links jump to), and its cards are sorted by name, since
+   the flyouts list them in page order.
 
 Run in CI on every push/PR to main, same as check_sitemap.py.
 """
+import html
 import re
 import sys
+import unicodedata
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -44,15 +50,23 @@ MENU_TARGETS = ["tools/", "tools/#image", "tools/#pdf", "tools/#utility", "blog/
 OLD_NAV = re.compile(r"site-nav-links|site-nav-right|nav-support-pill|active-category")
 ICONS = ['class="nav-icon-btn support"', 'id="navSearchBtn"', 'id="themeToggle"', 'id="navMenuBtn"']
 
-# Pages whose menu may carry the category flyouts (built from their inline TOOLS catalog).
-FLYOUT_PAGES = {("index.html",), ("es", "index.html")}
+HOME_PAGES = {("index.html",), ("es", "index.html")}
+# Pages whose menu may carry the category flyouts: the homepages (built from their
+# inline TOOLS catalog) and /tools (built from its own cards).
+FLYOUT_PAGES = HOME_PAGES | {("tools", "index.html"), ("es", "tools", "index.html")}
+
+
+def sort_key(name):
+    """How /tools orders its cards: by name, ignoring accents and case."""
+    plain = "".join(c for c in unicodedata.normalize("NFD", name) if not unicodedata.combining(c))
+    return (plain.casefold(), name)
 
 
 def check_page(rel, text, problems):
     parts = rel.parts
     lang_prefix = "/es/" if parts[0] == "es" else "/"
     page = parts[1:] if parts[0] == "es" else parts  # path within its language
-    is_home = parts in FLYOUT_PAGES
+    is_home = parts in HOME_PAGES
     is_tools = page == ("tools", "index.html")
     is_blog_index = page == ("blog", "index.html")
 
@@ -104,12 +118,23 @@ def check_page(rel, text, problems):
     elif is_tools:
         if 'data-search-target="toolSearch"' not in header:
             problems.append(f"{rel}: /tools search icon must focus the page's own box (data-search-target=\"toolSearch\")")
+        # The menu's /tools/#category links jump to these sections, and its
+        # flyouts list each section's cards in page order, which is by name.
+        for cat in ("image", "pdf", "utility"):
+            sec = re.search(rf'<section class="category-section" id="{cat}" data-category="{cat}">(.*?)</section>', text, re.S)
+            if not sec:
+                problems.append(f"{rel}: missing <section class=\"category-section\" id=\"{cat}\" data-category=\"{cat}\"> (the jump target for {lang_prefix}tools/#{cat})")
+                continue
+            names = [html.unescape(n) for n in re.findall(r'class="name tool-card-title">([^<]+)<', sec.group(1))]
+            if names != sorted(names, key=sort_key):
+                problems.append(f"{rel}: the {cat} cards aren't sorted by name (accents and case ignored); "
+                                f"put each new tool in its alphabetical place")
     else:
         form = re.search(r'<form class="nav-search"[^>]*>', header)
         if not form or f'action="{lang_prefix}tools/"' not in form.group(0) or 'name="search"' not in header:
             problems.append(f"{rel}: nav search box missing, or it doesn't submit ?search= to {lang_prefix}tools/")
 
-    if not is_home and "menu-flyout" in text:
+    if parts not in FLYOUT_PAGES and "menu-flyout" in text:
         problems.append(f"{rel}: has menu flyouts, which are only allowed on the pages in FLYOUT_PAGES")
 
 
@@ -133,7 +158,7 @@ def main() -> int:
         return 1
 
     print(f"OK: all {len(pages)} pages use the minimal nav (sticky, menu links and language row present, "
-          f"aria-current only on the blog index and /tools, nav search wired up, flyouts only on {len(FLYOUT_PAGES)} homepages).")
+          f"aria-current only on the blog index and /tools, nav search wired up, flyouts only on the {len(FLYOUT_PAGES)} homepage and /tools pages).")
     return 0
 
 
