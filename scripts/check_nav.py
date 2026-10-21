@@ -31,6 +31,8 @@ This check is the guardrail that keeps every copy consistent:
 7. /tools: each category section has id="image|pdf|utility" (what the menu's
    /tools/#category links jump to), and its cards are sorted by name, since
    the flyouts list them in page order.
+8. Logo: no <img> shows the full-size logo files (they're only for structured
+   data); the nav and hero use the small copies made for display.
 
 Run in CI on every push/PR to main, same as check_sitemap.py.
 """
@@ -51,6 +53,8 @@ MENU_TARGETS = ["tools/", "tools/#image", "tools/#pdf", "tools/#utility", "blog/
 OLD_NAV = re.compile(r"site-nav-links|site-nav-right|nav-support-pill|active-category")
 # The script that hides the nav search icon while the page's own search box is on screen.
 REVEAL = ["#navSearchBtn.search-reveal-hidden{", "classList.toggle('search-reveal-hidden'", "new IntersectionObserver(update"]
+# The original logo files (868 KB / 652 KB) are only for structured data; pages show small copies.
+BIG_LOGO = re.compile(r'<img[^>]*orisod-(?:icon-detailed|logo-full)\.png')
 ICONS = ['class="nav-icon-btn support"', 'id="navSearchBtn"', 'id="themeToggle"', 'id="navMenuBtn"']
 
 HOME_PAGES = {("index.html",), ("es", "index.html")}
@@ -141,6 +145,10 @@ def check_page(rel, text, problems):
         form = re.search(r'<form class="nav-search"[^>]*>', header)
         if not form or f'action="{lang_prefix}tools/"' not in form.group(0) or 'name="search"' not in header:
             problems.append(f"{rel}: nav search box missing, or it doesn't submit ?search= to {lang_prefix}tools/")
+
+    if BIG_LOGO.search(text):
+        problems.append(f"{rel}: an <img> shows the full-size logo file; use /assets/orisod-icon-nav.png "
+                        f"(nav) or /assets/orisod-logo-hero.png (hero), the small copies made for display")
 
     if parts not in FLYOUT_PAGES and "menu-flyout" in text:
         problems.append(f"{rel}: has menu flyouts, which are only allowed on the pages in FLYOUT_PAGES")
