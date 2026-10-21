@@ -598,7 +598,7 @@ async function handleFile(file) {
 
   try {
     const arrayBuffer = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0), isEvalSupported: false }).promise;
     selectedFile = file;
 
     pageCount.textContent = `Loaded: ${pdf.numPages} page${pdf.numPages === 1 ? '' : 's'}`;
@@ -623,7 +623,7 @@ ocrBtn.addEventListener('click', async () => {
 
   try {
     const arrayBuffer = await selectedFile.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0), isEvalSupported: false }).promise;
     const worker = await Tesseract.createWorker(OCR_LANG);
     const outDoc = await PDFLib.PDFDocument.create();
     const font = await outDoc.embedFont(PDFLib.StandardFonts.Helvetica);

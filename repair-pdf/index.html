@@ -629,7 +629,7 @@ repairBtn.addEventListener('click', async () => {
     progressMsg.textContent = 'Verifying with a second PDF engine...';
     let verifiedPageCount = null;
     try {
-      const verifyDoc = await pdfjsLib.getDocument({ data: repairedBytes.slice(0) }).promise;
+      const verifyDoc = await pdfjsLib.getDocument({ data: repairedBytes.slice(0), isEvalSupported: false }).promise;
       verifiedPageCount = verifyDoc.numPages;
     } catch (verifyErr) {
       verifiedPageCount = null;

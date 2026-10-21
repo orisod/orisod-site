@@ -667,7 +667,7 @@ async function handleFile(file) {
 
   try {
     const arrayBuffer = await file.arrayBuffer();
-    pdfJsDoc = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
+    pdfJsDoc = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0), isEvalSupported: false }).promise;
     selectedFile = file;
 
     pageCount.textContent = `Cargado: ${pdfJsDoc.numPages} página${pdfJsDoc.numPages === 1? '': 's'}`;

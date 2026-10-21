@@ -603,7 +603,7 @@ async function handleFile(file, slot) {
 
   try {
     const arrayBuffer = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0) }).promise;
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0), isEvalSupported: false }).promise;
     if (slot === 'A') { fileA = file; numPagesA = pdf.numPages; }
     else { fileB = file; numPagesB = pdf.numPages; }
     textEl.textContent = `✅ ${file.name} (${pdf.numPages} page${pdf.numPages === 1 ? '' : 's'})`;

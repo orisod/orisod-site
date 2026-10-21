@@ -766,7 +766,7 @@ convertBtn.addEventListener('click', async () => {
 
   try {
     const arrayBuffer = await selectedFile.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer, isEvalSupported: false }).promise;
     const baseName = selectedFile.name.replace(/\.pdf$/i, '');
 
     for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
