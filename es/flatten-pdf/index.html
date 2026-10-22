@@ -560,7 +560,7 @@ async function handleFile(file) {
 
     if (fieldCount === 0) {
       progressMsg.textContent = '';
-      infoMsg.textContent = 'Este PDF no tiene campos de formulario rellenables — no hay nada que aplanar.';
+      infoMsg.textContent = 'Este PDF no tiene campos de formulario rellenables, así que no hay nada que aplanar.';
       return;
     }
 
@@ -573,7 +573,7 @@ async function handleFile(file) {
     const baseName = file.name.replace(/\.pdf$/i, '');
     const outName = `${baseName}-aplanado.pdf`;
 
-    progressMsg.textContent = 'Listo — preparado para descargar.';
+    progressMsg.textContent = 'Listo para descargar.';
 
     const card = document.createElement('div');
     card.className = 'result-card';

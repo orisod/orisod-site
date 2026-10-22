@@ -691,7 +691,7 @@ async function buildOverlay(fields) {
 
   if (hasSignatureField) {
     disclaimer.style.display = 'block';
-    disclaimer.innerHTML = '✍️ Este formulario incluye un campo de firma digital, mostrado en gris más abajo — la firma digital no es compatible aquí. Usa <a href="/es/sign-pdf/" style="color:inherit;text-decoration:underline;">Firmar PDF</a> para colocar una imagen de firma dibujada.';
+    disclaimer.innerHTML = '✍️ Este formulario incluye un campo de firma digital, mostrado en gris más abajo. La firma digital no es compatible aquí. Usa <a href="/es/sign-pdf/" style="color:inherit;text-decoration:underline;">Firmar PDF</a> para colocar una imagen de firma dibujada.';
   }
 
   const sortedPageIndexes = Array.from(byPage.keys()).sort((a, b) => a - b);
@@ -863,7 +863,7 @@ downloadBtn.addEventListener('click', async () => {
     const baseName = selectedFile.name.replace(/\.pdf$/i, '');
     const outName = flattened ? `${baseName}-rellenado.pdf` : `${baseName}-rellenado-sin-aplanar.pdf`;
 
-    progressMsg.textContent = flattened ? 'Listo — para descargar.' : 'Listo, pero la estructura de este PDF no se pudo aplanar — tus valores siguen rellenados y el formulario continúa editable.';
+    progressMsg.textContent = flattened ? 'Listo para descargar.' : 'Listo, pero la estructura de este PDF no se pudo aplanar. Tus valores siguen rellenados y el formulario continúa editable.';
 
     const card = document.createElement('div');
     card.className = 'result-card';

@@ -157,7 +157,7 @@ h1{font-size:44px;margin-bottom:10px;}
   max-width:1200px;
   margin:0 auto;
   font-size:20px;
-  color:#60a5fa;
+  color:var(--text); /* same as the homepage's category headings; the old light blue failed contrast in light theme */
   margin-top:50px;
   margin-bottom:16px;
   padding-left:4px;
@@ -172,21 +172,37 @@ h1{font-size:44px;margin-bottom:10px;}
 .category-title svg.cat-image{color:#2563eb;}
 .category-title svg.cat-pdf{color:#f59e0b;}
 .category-title svg.cat-utility{color:#8b5cf6;}
+/* Same search box as the homepage (rounded rectangle, magnifier, soft shadow),
+   minus its keyboard-shortcut hint. */
 .search-box{
-  max-width:420px;
+  position:relative;
+  max-width:480px;
   margin:0 auto 26px auto;
 }
 .search-box input{
   width:100%;
   font-family:inherit;
-  font-size:14px;
-  padding:11px 16px;
-  border-radius:20px;
+  font-size:15px;
+  padding:16px 16px 16px 46px;
+  border-radius:12px;
   background:var(--card-bg);
   border:1px solid var(--border);
   color:var(--text);
   outline:none;
+  box-shadow:var(--card-shadow);
   transition:0.2s;
+}
+.search-icon{
+  position:absolute;
+  left:17px;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:16px;
+  opacity:0.6;
+  pointer-events:none;
+}
+@media (max-width:600px){
+  .search-box input{font-size:16px;padding:15px 16px 15px 44px;} /* 16px+ stops iOS Safari zooming the page on focus */
 }
 .search-box input::placeholder{
   color:var(--muted-text);
@@ -582,6 +598,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 <p class="subtitle">Choose a tool for images, PDFs and other common file tasks. Each one opens directly in your browser.</p>
 
 <div class="search-box">
+  <span class="search-icon" aria-hidden="true">🔍</span>
   <input type="text" id="toolSearch" placeholder='Try &quot;resize&quot;, &quot;PDF&quot;, &quot;metadata&quot;, &quot;WEBP&quot;' aria-label="Search tools">
 </div>
 

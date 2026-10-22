@@ -641,7 +641,7 @@ convertBtn.addEventListener('click', async () => {
   try {
     const frameDoc = previewFrame.contentDocument;
     if (!frameDoc || !frameDoc.body) {
-      throw new Error('Nothing to convert yet — check your HTML.');
+      throw new Error('Nothing to convert yet. Check your HTML.');
     }
 
     const canvas = await html2canvas(frameDoc.body, {

@@ -623,7 +623,7 @@ extractBtn.addEventListener('click', async () => {
     outputMeta.textContent = `${pdf.numPages} page${pdf.numPages === 1 ? '' : 's'} · ${plainCharCount.toLocaleString()} characters extracted`;
 
     if (plainCharCount === 0) {
-      warnNote.innerHTML = '⚠️ No selectable text was found. This PDF may be a scanned image without a text layer — try <a href="/ocr-pdf/" style="color:inherit;text-decoration:underline;">OCR PDF</a> to make it searchable first.';
+      warnNote.innerHTML = '⚠️ No selectable text was found. This PDF may be a scanned image without a text layer. Try <a href="/ocr-pdf/" style="color:inherit;text-decoration:underline;">OCR PDF</a> to make it searchable first.';
       warnNote.style.display = 'block';
     }
 

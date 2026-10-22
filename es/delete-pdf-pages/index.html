@@ -599,7 +599,7 @@ function updatePreview() {
   }
 
   if (keepIndices.length === 0) {
-    rangePreview.textContent = `Esto eliminaría las ${totalPages} páginas — al menos una página debe permanecer.`;
+    rangePreview.textContent = `Esto eliminaría las ${totalPages} páginas. Al menos una página debe permanecer.`;
     rangePreview.classList.add('warn');
     saveBtn.disabled = true;
     return;

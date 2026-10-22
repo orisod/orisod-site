@@ -670,7 +670,7 @@ async function updatePreview() {
     (numBlanks > 0 ? ` (includes ${numBlanks} blank padding page${numBlanks === 1 ? '' : 's'})` : '');
 
   if (numSheets > LONG_DOC_SHEET_WARNING) {
-    warnNote.textContent = `⚠️ This booklet is ${numSheets} sheets thick — a booklet this size may not fold or staple neatly by hand.`;
+    warnNote.textContent = `⚠️ This booklet is ${numSheets} sheets thick. A booklet this size may not fold or staple neatly by hand.`;
     warnNote.style.display = 'block';
   } else {
     warnNote.style.display = 'none';

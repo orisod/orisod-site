@@ -605,7 +605,7 @@ async function handleFile(file) {
     pageCount.textContent = `Cargado: ${pdf.numPages} página${pdf.numPages === 1 ? '' : 's'}`;
     dropzoneText.textContent = `✅ ${file.name} cargado`;
     if (pdf.numPages > LONG_DOC_THRESHOLD) {
-      longDocNote.textContent = `Este archivo tiene ${pdf.numPages} páginas — el OCR procesa una página a la vez y puede tardar varios minutos. Mantén esta pestaña abierta mientras se ejecuta.`;
+      longDocNote.textContent = `Este archivo tiene ${pdf.numPages} páginas. El OCR procesa una página a la vez y puede tardar varios minutos. Mantén esta pestaña abierta mientras se ejecuta.`;
       longDocNote.style.display = 'block';
     }
     ocrBtn.style.display = 'inline-block';
@@ -730,11 +730,11 @@ ocrBtn.addEventListener('click', async () => {
     resultEl.appendChild(actions);
 
     if (avgConfidence !== null && avgConfidence < 70) {
-      warnNote.textContent = '⚠️ La confianza de reconocimiento fue baja para este documento — espera más errores de OCR de lo habitual. Esto puede ocurrir con escaneos borrosos, fuentes poco comunes o escritura a mano.';
+      warnNote.textContent = '⚠️ La confianza de reconocimiento fue baja para este documento. Espera más errores de OCR de lo habitual. Esto puede ocurrir con escaneos borrosos, fuentes poco comunes o escritura a mano.';
       warnNote.style.display = 'block';
     }
 
-    progressMsg.textContent = 'Listo — para descargar.';
+    progressMsg.textContent = 'Listo para descargar.';
   } catch (err) {
     errorMsg.textContent = err.message || 'No se pudo aplicar OCR a este PDF.';
     progressMsg.textContent = '';

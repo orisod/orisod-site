@@ -670,7 +670,7 @@ async function updatePreview() {
     (numBlanks > 0 ? ` (incluye ${numBlanks} página${numBlanks === 1 ? '' : 's'} en blanco de relleno)` : '');
 
   if (numSheets > LONG_DOC_SHEET_WARNING) {
-    warnNote.textContent = `⚠️ Este folleto tiene ${numSheets} hojas de grosor — un folleto de este tamaño puede no doblarse ni grapar bien a mano.`;
+    warnNote.textContent = `⚠️ Este folleto tiene ${numSheets} hojas de grosor. Un folleto de este tamaño puede no doblarse ni grapar bien a mano.`;
     warnNote.style.display = 'block';
   } else {
     warnNote.style.display = 'none';
@@ -746,7 +746,7 @@ createBtn.addEventListener('click', async () => {
     const baseName = selectedFile.name.replace(/\.pdf$/i, '');
     const outName = `${baseName}-folleto.pdf`;
 
-    progressMsg.textContent = 'Listo — preparado para descargar.';
+    progressMsg.textContent = 'Listo para descargar.';
 
     const card = document.createElement('div');
     card.className = 'result-card';

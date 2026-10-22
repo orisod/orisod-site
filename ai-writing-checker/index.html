@@ -677,7 +677,7 @@ function analyze() {
     const emdashCard = document.createElement('div');
     emdashCard.className = 'summary-card';
     emdashCard.innerHTML = `<h3>Em-dashes: <span class="count">${emdash.count}</span></h3>` +
-      `<div class="examples">${emdash.count ? `Rate: ${emdash.rate.toFixed(1)} per 100 words` + (emdash.flagged ? ' — above typical prose' : '') : 'None found.'}</div>`;
+      `<div class="examples">${emdash.count ? `Rate: ${emdash.rate.toFixed(1)} per 100 words` + (emdash.flagged ? ' (above typical prose)' : '') : 'None found.'}</div>`;
     summaryCards.appendChild(emdashCard);
 
     const uniformCard = document.createElement('div');
@@ -686,7 +686,7 @@ function analyze() {
       uniformCard.innerHTML = `<h3>Sentence length uniformity: <span class="count">${uniform.flagged ? 'Flagged' : 'Normal'}</span></h3>` +
         `<div class="examples">Average ${uniform.mean.toFixed(1)} words/sentence, std. dev. ${uniform.stdDev.toFixed(1)}</div>`;
     } else {
-      uniformCard.innerHTML = `<h3>Sentence length uniformity: <span class="count">—</span></h3><div class="examples">Needs at least 8 sentences to check.</div>`;
+      uniformCard.innerHTML = `<h3>Sentence length uniformity: <span class="count">n/a</span></h3><div class="examples">Needs at least 8 sentences to check.</div>`;
     }
     summaryCards.appendChild(uniformCard);
 

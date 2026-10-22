@@ -596,7 +596,7 @@ async function handleFile(file) {
   } catch (strictErr) {
     if (strictErr instanceof EncryptedPDFError) {
       diagnosisState = 'encrypted';
-      showDiagnosis('encrypted', '<strong>This PDF is password-protected.</strong> Repair works on structural corruption, not encryption, and can\'t run on a file it can\'t open in the first place — this isn\'t something an automatic repair can fix.');
+      showDiagnosis('encrypted', '<strong>This PDF is password-protected.</strong> Repair works on structural corruption, not encryption, and can\'t run on a file it can\'t open in the first place. This isn\'t something an automatic repair can fix.');
       return;
     }
   }
@@ -604,13 +604,13 @@ async function handleFile(file) {
   try {
     await PDFDocument.load(arrayBuffer.slice(0));
     diagnosisState = 'repairable';
-    showDiagnosis('repairable', '<strong>Structural problems detected.</strong> Part of this PDF couldn\'t be read normally, but enough of it parsed successfully that a repair attempt is worth trying. Repair will rebuild the file\'s structure from what can be recovered — any specific page content that was itself damaged, rather than just the file\'s structure, may still be missing afterward.');
+    showDiagnosis('repairable', '<strong>Structural problems detected.</strong> Part of this PDF couldn\'t be read normally, but enough of it parsed successfully that a repair attempt is worth trying. Repair will rebuild the file\'s structure from what can be recovered. Any specific page content that was itself damaged, rather than just the file\'s structure, may still be missing afterward.');
     repairBtn.textContent = 'Repair & Download';
     repairBtn.className = '';
     workspaceControls.style.display = 'block';
   } catch (lenientErr) {
     diagnosisState = 'unrepairable';
-    showDiagnosis('unrepairable', '<strong>This file is too damaged to repair automatically.</strong> Even the most permissive parsing couldn\'t make sense of it — it may not be a valid PDF at all, or the damage may be too severe for this kind of automatic fix.');
+    showDiagnosis('unrepairable', '<strong>This file is too damaged to repair automatically.</strong> Even the most permissive parsing couldn\'t make sense of it. It may not be a valid PDF at all, or the damage may be too severe for this kind of automatic fix.');
   }
 }
 

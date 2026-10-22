@@ -691,7 +691,7 @@ async function buildOverlay(fields) {
 
   if (hasSignatureField) {
     disclaimer.style.display = 'block';
-    disclaimer.innerHTML = '✍️ This form includes a digital signature field, shown grayed out below — digital signing isn\'t supported here. Use <a href="/sign-pdf/" style="color:inherit;text-decoration:underline;">Sign PDF</a> to place a drawn signature image instead.';
+    disclaimer.innerHTML = '✍️ This form includes a digital signature field, shown grayed out below. Digital signing isn\'t supported here. Use <a href="/sign-pdf/" style="color:inherit;text-decoration:underline;">Sign PDF</a> to place a drawn signature image instead.';
   }
 
   const sortedPageIndexes = Array.from(byPage.keys()).sort((a, b) => a - b);
@@ -863,7 +863,7 @@ downloadBtn.addEventListener('click', async () => {
     const baseName = selectedFile.name.replace(/\.pdf$/i, '');
     const outName = flattened ? `${baseName}-filled.pdf` : `${baseName}-filled-unflattened.pdf`;
 
-    progressMsg.textContent = flattened ? 'Done. Ready to download.' : 'Done, but this PDF\'s form structure could not be flattened — your values are still filled in and the form stays editable.';
+    progressMsg.textContent = flattened ? 'Done. Ready to download.' : 'Done, but this PDF\'s form structure could not be flattened. Your values are still filled in and the form stays editable.';
 
     const card = document.createElement('div');
     card.className = 'result-card';

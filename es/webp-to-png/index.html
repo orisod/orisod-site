@@ -555,7 +555,7 @@ function handleFiles(fileList) {
     return;
   }
   selectedFiles = valid;
-  dropzoneText.textContent = `✅ ${valid.length} ${valid.length === 1 ? 'archivo seleccionado' : 'archivos seleccionados'} — ${valid.map(f => f.name).join(', ')}`;
+  dropzoneText.textContent = `✅ ${valid.length} ${valid.length === 1 ? 'archivo seleccionado' : 'archivos seleccionados'}: ${valid.map(f => f.name).join(', ')}`;
   convertBtn.disabled = false;
   results.innerHTML = '';
   downloadAllWrap.style.display = 'none';

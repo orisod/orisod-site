@@ -792,7 +792,7 @@ convertBtn.addEventListener('click', async () => {
       addResultCard(item);
     }
 
-    progressMsg.textContent = `Done — ${pdf.numPages} page(s) converted.`;
+    progressMsg.textContent = `Done: ${pdf.numPages} ${pdf.numPages === 1 ? 'page' : 'pages'} converted.`;
     if (convertedImages.length > 1) {
       downloadAllWrap.style.display = 'block';
       selectionControls.style.display = 'flex';

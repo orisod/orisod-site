@@ -752,7 +752,7 @@ rotateBtn.addEventListener('click', async () => {
     a.click();
     document.body.removeChild(a);
 
-    progressMsg.textContent = `Done — ${pagesToRotate.length} page(s) rotated.`;
+    progressMsg.textContent = `Done: ${pagesToRotate.length} ${pagesToRotate.length === 1 ? 'page' : 'pages'} rotated.`;
   } catch (err) {
     errorMsg.textContent = err.message || 'Could not rotate this PDF.';
   }

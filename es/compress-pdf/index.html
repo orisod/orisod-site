@@ -736,19 +736,19 @@ compressBtn.addEventListener('click', async () => {
     if (keptOriginal) {
       const suggestion = mode === 'quick'
         ? 'Este PDF ya tiene una estructura eficiente, así que Limpieza rápida no pudo reducirlo más. Si contiene páginas escaneadas o fotos, prueba con Compresión fuerte.'
-        : 'Compresión fuerte habría hecho este archivo más grande — probablemente ya es un PDF basado en texto en lugar de un escaneo. Prueba con Limpieza rápida.';
-      progressMsg.textContent = 'Listo — no fue posible reducir el tamaño, se mantuvo el original.';
+        : 'Compresión fuerte habría hecho este archivo más grande. Probablemente ya es un PDF basado en texto en lugar de un escaneo. Prueba con Limpieza rápida.';
+      progressMsg.textContent = 'Listo: no fue posible reducir el tamaño, se mantuvo el original.';
       card.innerHTML = `
         <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M9 13l3 2 3-2M9 17l3-2 3 2"/></svg></div>
         <div class="result-body">
           <div class="result-filename">${outName}</div>
-          <div class="result-stat">${(originalSize / 1024).toFixed(1)} KB — ya optimizado, se mantuvo el original</div>
+          <div class="result-stat">${(originalSize / 1024).toFixed(1)} KB (ya optimizado, se mantuvo el original)</div>
           <div class="note" style="margin-top:6px;font-size:13px;">${suggestion}</div>
         </div>
       `;
     } else {
       const savedPct = Math.max(0, Math.round((1 - newSize / originalSize) * 100));
-      progressMsg.textContent = 'Listo — descarga disponible.';
+      progressMsg.textContent = 'Listo: descarga disponible.';
       card.innerHTML = `
         <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M9 13l3 2 3-2M9 17l3-2 3 2"/></svg></div>
         <div class="result-body">

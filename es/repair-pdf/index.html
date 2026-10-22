@@ -596,7 +596,7 @@ async function handleFile(file) {
   } catch (strictErr) {
     if (strictErr instanceof EncryptedPDFError) {
       diagnosisState = 'encrypted';
-      showDiagnosis('encrypted', '<strong>Este PDF está protegido con contraseña.</strong> La reparación funciona con corrupción estructural, no con cifrado, y no puede ejecutarse en un archivo que ni siquiera puede abrir — esto no es algo que una reparación automática pueda arreglar.');
+      showDiagnosis('encrypted', '<strong>Este PDF está protegido con contraseña.</strong> La reparación funciona con corrupción estructural, no con cifrado, y no puede ejecutarse en un archivo que ni siquiera puede abrir. Esto no es algo que una reparación automática pueda arreglar.');
       return;
     }
   }
@@ -604,13 +604,13 @@ async function handleFile(file) {
   try {
     await PDFDocument.load(arrayBuffer.slice(0));
     diagnosisState = 'repairable';
-    showDiagnosis('repairable', '<strong>Se detectaron problemas estructurales.</strong> Parte de este PDF no se pudo leer normalmente, pero suficiente de él se analizó correctamente como para que valga la pena intentar una reparación. La reparación reconstruirá la estructura del archivo a partir de lo que se pueda recuperar — cualquier contenido de página que estuviera dañado en sí mismo, y no solo la estructura del archivo, puede seguir faltando después.');
+    showDiagnosis('repairable', '<strong>Se detectaron problemas estructurales.</strong> Parte de este PDF no se pudo leer normalmente, pero suficiente de él se analizó correctamente como para que valga la pena intentar una reparación. La reparación reconstruirá la estructura del archivo a partir de lo que se pueda recuperar. Cualquier contenido de página que estuviera dañado en sí mismo, y no solo la estructura del archivo, puede seguir faltando después.');
     repairBtn.textContent = 'Reparar y Descargar';
     repairBtn.className = '';
     workspaceControls.style.display = 'block';
   } catch (lenientErr) {
     diagnosisState = 'unrepairable';
-    showDiagnosis('unrepairable', '<strong>Este archivo está demasiado dañado para repararse automáticamente.</strong> Ni siquiera el análisis más permisivo pudo darle sentido — puede que no sea un PDF válido, o que el daño sea demasiado severo para este tipo de reparación automática.');
+    showDiagnosis('unrepairable', '<strong>Este archivo está demasiado dañado para repararse automáticamente.</strong> Ni siquiera el análisis más permisivo pudo darle sentido. Puede que no sea un PDF válido, o que el daño sea demasiado severo para este tipo de reparación automática.');
   }
 }
 

@@ -752,13 +752,13 @@ async function runCompare() {
     const { added, removed } = renderDiff(lastOps);
 
     diffSummary.innerHTML = `<span class="added-count">+${added} añadidas</span> · <span class="removed-count">−${removed} eliminadas</span>` +
-      (added === 0 && removed === 0 ? ' — no se encontraron diferencias en el texto extraído.' : '');
+      (added === 0 && removed === 0 ? '. No se encontraron diferencias en el texto extraído.' : '');
 
     if (noTextA || noTextB) {
-      warnNote.innerHTML = '⚠️ Uno o ambos PDF no tienen texto seleccionable — pueden ser imágenes escaneadas. Prueba primero <a href="/es/ocr-pdf/" style="color:inherit;text-decoration:underline;">OCR de PDF</a>.';
+      warnNote.innerHTML = '⚠️ Uno o ambos PDF no tienen texto seleccionable. Pueden ser imágenes escaneadas. Prueba primero <a href="/es/ocr-pdf/" style="color:inherit;text-decoration:underline;">OCR de PDF</a>.';
       warnNote.style.display = 'block';
     } else if (truncated) {
-      warnNote.textContent = `⚠️ Estos PDF son largos — la comparación se limitó a las primeras ${MAX_LINES.toLocaleString()} líneas de cada archivo.`;
+      warnNote.textContent = `⚠️ Estos PDF son largos, así que la comparación se limitó a las primeras ${MAX_LINES.toLocaleString()} líneas de cada archivo.`;
       warnNote.style.display = 'block';
     }
 

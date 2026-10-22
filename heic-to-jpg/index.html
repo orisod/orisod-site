@@ -664,7 +664,7 @@ function handleFiles(fileList) {
     return;
   }
   selectedFiles = valid;
-  dropzoneText.textContent = `✅ ${valid.length} file(s) selected — ${valid.map(f => f.name).join(', ')}`;
+  dropzoneText.textContent = `✅ ${valid.length} ${valid.length === 1 ? 'file' : 'files'} selected: ${valid.map(f => f.name).join(', ')}`;
   convertBtn.disabled = false;
   results.innerHTML = '';
   downloadAllWrap.style.display = 'none';
@@ -702,7 +702,7 @@ convertBtn.addEventListener('click', async () => {
     }
   }
 
-  progressMsg.textContent = convertedBlobs.length > 0 ? `Done — ${convertedBlobs.length} file(s) converted.` : '';
+  progressMsg.textContent = convertedBlobs.length > 0 ? `Done: ${convertedBlobs.length} ${convertedBlobs.length === 1 ? 'file' : 'files'} converted.` : '';
   convertBtn.disabled = false;
   convertBtn.textContent = 'Convert to JPG';
 
