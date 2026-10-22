@@ -366,6 +366,10 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 /* Phones: tuck the trail into the top padding of <main> (40px on tool pages, 50px on
    posts), so it doesn't push the tool's dropzone further down the screen. */
 @media (max-width:600px){.breadcrumbs{margin:-26px 0 8px 0;}}
+/* Option buttons are real <button>s so they work by keyboard (Tab, then Enter or Space).
+   These rules keep them looking as they did before, when they were <div>s. */
+.angle-btn{margin:0;font-family:inherit;line-height:inherit;}
+.angle-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
 </style>
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://orisod.com/es/"}, {"@type": "ListItem", "position": 2, "name": "Herramientas PDF", "item": "https://orisod.com/es/tools/#pdf"}, {"@type": "ListItem", "position": 3, "name": "Rotar páginas de PDF", "item": "https://orisod.com/es/rotate-pdf/"}]}
@@ -438,9 +442,9 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
           <div class="option-card">
             <h3>Ángulo de rotación</h3>
             <div class="angle-row">
-              <div class="angle-btn active" data-angle="90">90° derecha</div>
-              <div class="angle-btn" data-angle="-90">90° izquierda</div>
-              <div class="angle-btn" data-angle="180">180°</div>
+              <button type="button" class="angle-btn active" data-angle="90" aria-pressed="true">90° derecha</button>
+              <button type="button" class="angle-btn" data-angle="-90" aria-pressed="false">90° izquierda</button>
+              <button type="button" class="angle-btn" data-angle="180" aria-pressed="false">180°</button>
             </div>
           </div>
 
@@ -613,8 +617,8 @@ let firstPageImg = null;
 
 document.querySelectorAll('.angle-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.angle-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+    document.querySelectorAll('.angle-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
+    btn.classList.add('active'); btn.setAttribute('aria-pressed', 'true');
     selectedAngle = parseInt(btn.dataset.angle, 10);
     renderPreview();
   });
@@ -652,8 +656,8 @@ async function handleFile(file) {
     firstPageImg.onload = () => {
       originalDisplay.src = thumbDataUrl;
       selectedAngle = 90;
-      document.querySelectorAll('.angle-btn').forEach(b => b.classList.remove('active'));
-      document.querySelector('.angle-btn[data-angle="90"]').classList.add('active');
+      document.querySelectorAll('.angle-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
+      const rightBtn = document.querySelector('.angle-btn[data-angle="90"]'); rightBtn.classList.add('active'); rightBtn.setAttribute('aria-pressed', 'true');
       editor.style.display = 'block';
       renderPreview();
     };

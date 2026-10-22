@@ -360,6 +360,10 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 /* Phones: tuck the trail into the top padding of <main> (40px on tool pages, 50px on
    posts), so it doesn't push the tool's dropzone further down the screen. */
 @media (max-width:600px){.breadcrumbs{margin:-26px 0 8px 0;}}
+/* Option buttons are real <button>s so they work by keyboard (Tab, then Enter or Space).
+   These rules keep them looking as they did before, when they were <div>s. */
+.position-btn{margin:0;font-family:inherit;line-height:inherit;}
+.position-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
 </style>
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://orisod.com/es/"}, {"@type": "ListItem", "position": 2, "name": "Herramientas PDF", "item": "https://orisod.com/es/tools/#pdf"}, {"@type": "ListItem", "position": 3, "name": "Añadir números de página", "item": "https://orisod.com/es/add-page-numbers/"}]}
@@ -420,12 +424,12 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
         <div class="option-card">
           <h3>Posición</h3>
           <div class="position-grid">
-            <div class="position-btn" data-pos="top-left">Arriba izquierda</div>
-            <div class="position-btn" data-pos="top-center">Arriba centro</div>
-            <div class="position-btn" data-pos="top-right">Arriba derecha</div>
-            <div class="position-btn" data-pos="bottom-left">Abajo izquierda</div>
-            <div class="position-btn active" data-pos="bottom-center">Abajo centro</div>
-            <div class="position-btn" data-pos="bottom-right">Abajo derecha</div>
+            <button type="button" class="position-btn" data-pos="top-left" aria-pressed="false">Arriba izquierda</button>
+            <button type="button" class="position-btn" data-pos="top-center" aria-pressed="false">Arriba centro</button>
+            <button type="button" class="position-btn" data-pos="top-right" aria-pressed="false">Arriba derecha</button>
+            <button type="button" class="position-btn" data-pos="bottom-left" aria-pressed="false">Abajo izquierda</button>
+            <button type="button" class="position-btn active" data-pos="bottom-center" aria-pressed="true">Abajo centro</button>
+            <button type="button" class="position-btn" data-pos="bottom-right" aria-pressed="false">Abajo derecha</button>
           </div>
         </div>
 
@@ -601,8 +605,8 @@ let selectedPosition = 'bottom-center';
 
 document.querySelectorAll('.position-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.position-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+    document.querySelectorAll('.position-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
+    btn.classList.add('active'); btn.setAttribute('aria-pressed', 'true');
     selectedPosition = btn.dataset.pos;
   });
 });

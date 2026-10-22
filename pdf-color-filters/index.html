@@ -293,6 +293,10 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 /* Phones: tuck the trail into the top padding of <main> (40px on tool pages, 50px on
    posts), so it doesn't push the tool's dropzone further down the screen. */
 @media (max-width:600px){.breadcrumbs{margin:-26px 0 8px 0;}}
+/* Option buttons are real <button>s so they work by keyboard (Tab, then Enter or Space).
+   These rules keep them looking as they did before, when they were <div>s. */
+.filter-btn{margin:0;font-family:inherit;line-height:inherit;}
+.filter-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
 </style>
 <script type="application/ld+json">
 {
@@ -408,9 +412,9 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 
       <div id="editor" style="display:none;">
         <div class="filter-row" id="filterRow">
-          <div class="filter-btn active" data-filter="grayscale">Black & White</div>
-          <div class="filter-btn" data-filter="sepia">Sepia</div>
-          <div class="filter-btn" data-filter="invert">Invert Colors</div>
+          <button type="button" class="filter-btn active" data-filter="grayscale" aria-pressed="true">Black & White</button>
+          <button type="button" class="filter-btn" data-filter="sepia" aria-pressed="false">Sepia</button>
+          <button type="button" class="filter-btn" data-filter="invert" aria-pressed="false">Invert Colors</button>
         </div>
 
         <div class="workspace-stage">
@@ -619,8 +623,8 @@ async function updatePreview() {
 
 filterRow.querySelectorAll('.filter-btn').forEach((btn) => {
   btn.addEventListener('click', () => {
-    filterRow.querySelectorAll('.filter-btn').forEach((b) => b.classList.remove('active'));
-    btn.classList.add('active');
+    filterRow.querySelectorAll('.filter-btn').forEach((b) => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
+    btn.classList.add('active'); btn.setAttribute('aria-pressed', 'true');
     currentFilter = btn.dataset.filter;
     updatePreview();
   });

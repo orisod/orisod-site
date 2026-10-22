@@ -156,6 +156,22 @@ async function scanPath(context, item) {
         help: "Upload can't be reached with the keyboard: file input is display:none (or otherwise unfocusable) behind its label; hide it visually instead",
         nodes: unreachable.map((t) => ({ target: [t] })) });
     }
+    // Nor does it notice a <div> or <span> made clickable with a script (an
+    // option like "JPG/PNG" or a watermark position): it shows a pointer cursor
+    // but can't be reached by Tab. Anything clickable must be a real <button>
+    // or link. Hidden panels count too, since they appear after an upload.
+    const mouseOnly = await page.evaluate(() => {
+      const NATIVE = 'a[href],button,input,select,textarea,summary,label,[tabindex]:not([tabindex="-1"]),[contenteditable="true"]';
+      const pointer = (el) => getComputedStyle(el).cursor === "pointer" && !el.closest(NATIVE);
+      return [...document.querySelectorAll("main *")]
+        .filter((el) => pointer(el) && !(el.parentElement && pointer(el.parentElement)))
+        .map((el) => el.tagName.toLowerCase() + (el.id ? "#" + el.id : "") + (typeof el.className === "string" && el.className.trim() ? "." + el.className.trim().split(/\s+/)[0] : ""));
+    });
+    if (mouseOnly.length) {
+      violations.push({ id: "mouse-only-control", impact: "serious", theme: "dark",
+        help: "Clickable element can't be reached with the keyboard: make it a <button type=\"button\"> (or a link with an href)",
+        nodes: [...new Set(mouseOnly)].map((t) => ({ target: [t] })) });
+    }
     return { urlPath: label, violations, consoleErrors };
   } catch (err) {
     // A menu/search box that won't open is a real failure, not just a scan note.
