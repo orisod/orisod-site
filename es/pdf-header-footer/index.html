@@ -309,6 +309,10 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 /* Phones: tuck the trail into the top padding of <main> (40px on tool pages, 50px on
    posts), so it doesn't push the tool's dropzone further down the screen. */
 @media (max-width:600px){.breadcrumbs{margin:-26px 0 8px 0;}}
+/* Option buttons are real <button>s so they work by keyboard (Tab, then Enter or Space).
+   These rules keep them looking as they did before, when they were <div>s. */
+.align-btn{margin:0;font-family:inherit;line-height:inherit;}
+.align-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
 </style>
 <script type="application/ld+json">
 {
@@ -429,9 +433,9 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
           <div class="hf-body disabled" id="headerBody">
             <input type="text" class="hf-text-input" id="headerText" placeholder="ej. Nombre de la Empresa" aria-label="Texto del encabezado">
             <div class="align-grid">
-              <div class="align-btn" data-target="header" data-align="left">Izquierda</div>
-              <div class="align-btn active" data-target="header" data-align="center">Centro</div>
-              <div class="align-btn" data-target="header" data-align="right">Derecha</div>
+              <button type="button" class="align-btn" data-target="header" data-align="left" aria-pressed="false">Izquierda</button>
+              <button type="button" class="align-btn active" data-target="header" data-align="center" aria-pressed="true">Centro</button>
+              <button type="button" class="align-btn" data-target="header" data-align="right" aria-pressed="false">Derecha</button>
             </div>
             <div class="token-btns">
               <button type="button" class="token-btn" data-target="header" data-token="{page}">Insertar Nº Página</button>
@@ -446,9 +450,9 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
           <div class="hf-body" id="footerBody">
             <input type="text" class="hf-text-input" id="footerText" placeholder="ej. Página {page} de {pages}" value="Página {page} de {pages}" aria-label="Texto del pie de página">
             <div class="align-grid">
-              <div class="align-btn" data-target="footer" data-align="left">Izquierda</div>
-              <div class="align-btn active" data-target="footer" data-align="center">Centro</div>
-              <div class="align-btn" data-target="footer" data-align="right">Derecha</div>
+              <button type="button" class="align-btn" data-target="footer" data-align="left" aria-pressed="false">Izquierda</button>
+              <button type="button" class="align-btn active" data-target="footer" data-align="center" aria-pressed="true">Centro</button>
+              <button type="button" class="align-btn" data-target="footer" data-align="right" aria-pressed="false">Derecha</button>
             </div>
             <div class="token-btns">
               <button type="button" class="token-btn" data-target="footer" data-token="{page}">Insertar Nº Página</button>
@@ -620,8 +624,8 @@ footerEnable.addEventListener('change', () => {
 document.querySelectorAll('.align-btn').forEach((btn) => {
   btn.addEventListener('click', () => {
     const target = btn.dataset.target;
-    document.querySelectorAll(`.align-btn[data-target="${target}"]`).forEach((b) => b.classList.remove('active'));
-    btn.classList.add('active');
+    document.querySelectorAll(`.align-btn[data-target="${target}"]`).forEach((b) => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
+    btn.classList.add('active'); btn.setAttribute('aria-pressed', 'true');
     if (target === 'header') headerAlign = btn.dataset.align;
     else footerAlign = btn.dataset.align;
   });

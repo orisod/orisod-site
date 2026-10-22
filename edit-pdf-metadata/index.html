@@ -155,7 +155,8 @@ label:has(+ input[type="file"]:focus-visible), label:has(input[type="file"]:focu
 .field-row input[type="text"]{
   width:100%;padding:10px 12px;border-radius:6px;border:1px solid var(--dropzone-border);background:var(--card-bg);color:var(--text);font-size:14px;
 }
-.clear-link{display:inline-block;margin-top:2px;font-size:13px;color:var(--muted-text);cursor:pointer;text-decoration:underline;}
+.clear-link{display:inline-block;padding:0;border:0;border-radius:0;background:none;font-family:inherit;line-height:inherit;margin-top:2px;font-size:13px;color:var(--muted-text);cursor:pointer;text-decoration:underline;}
+.clear-link:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
 .clear-link:hover{color:var(--accent);}
 button, .back{display:inline-block;margin-top:16px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
 button:disabled{opacity:0.4;cursor:not-allowed;}
@@ -426,7 +427,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
           <label for="keywordsField">Keywords <span style="font-weight:normal;opacity:0.6;">(comma separated)</span></label>
           <input type="text" id="keywordsField" placeholder="(none)">
         </div>
-        <span class="clear-link" id="clearLink">Clear all fields</span>
+        <button type="button" class="clear-link" id="clearLink">Clear all fields</button>
 
         <div class="workspace-controls">
           <button id="saveBtn">Save & Download</button>

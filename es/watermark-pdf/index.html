@@ -308,6 +308,10 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 /* Phones: tuck the trail into the top padding of <main> (40px on tool pages, 50px on
    posts), so it doesn't push the tool's dropzone further down the screen. */
 @media (max-width:600px){.breadcrumbs{margin:-26px 0 8px 0;}}
+/* Option buttons are real <button>s so they work by keyboard (Tab, then Enter or Space).
+   These rules keep them looking as they did before, when they were <div>s. */
+.pos-btn{margin:0;font-family:inherit;line-height:inherit;}
+.pos-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
 </style>
 <script type="application/ld+json">
 {
@@ -442,15 +446,15 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
           <div class="opt-row">
             <label>Posición:</label>
             <div class="position-grid">
-              <div class="pos-btn" data-pos="top-left">↖</div>
-              <div class="pos-btn" data-pos="top-center">↑</div>
-              <div class="pos-btn" data-pos="top-right">↗</div>
-              <div class="pos-btn" data-pos="middle-left">←</div>
-              <div class="pos-btn active" data-pos="middle-center">●</div>
-              <div class="pos-btn" data-pos="middle-right">→</div>
-              <div class="pos-btn" data-pos="bottom-left">↙</div>
-              <div class="pos-btn" data-pos="bottom-center">↓</div>
-              <div class="pos-btn" data-pos="bottom-right">↘</div>
+              <button type="button" class="pos-btn" data-pos="top-left" aria-pressed="false" aria-label="Arriba a la izquierda">↖</button>
+              <button type="button" class="pos-btn" data-pos="top-center" aria-pressed="false" aria-label="Arriba al centro">↑</button>
+              <button type="button" class="pos-btn" data-pos="top-right" aria-pressed="false" aria-label="Arriba a la derecha">↗</button>
+              <button type="button" class="pos-btn" data-pos="middle-left" aria-pressed="false" aria-label="Centro a la izquierda">←</button>
+              <button type="button" class="pos-btn active" data-pos="middle-center" aria-pressed="true" aria-label="Centro">●</button>
+              <button type="button" class="pos-btn" data-pos="middle-right" aria-pressed="false" aria-label="Centro a la derecha">→</button>
+              <button type="button" class="pos-btn" data-pos="bottom-left" aria-pressed="false" aria-label="Abajo a la izquierda">↙</button>
+              <button type="button" class="pos-btn" data-pos="bottom-center" aria-pressed="false" aria-label="Abajo al centro">↓</button>
+              <button type="button" class="pos-btn" data-pos="bottom-right" aria-pressed="false" aria-label="Abajo a la derecha">↘</button>
             </div>
           </div>
           <div class="opt-row">
@@ -683,8 +687,8 @@ async function handleFile(file) {
 
 document.querySelectorAll('.pos-btn').forEach((btn) => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.pos-btn').forEach((b) => b.classList.remove('active'));
-    btn.classList.add('active');
+    document.querySelectorAll('.pos-btn').forEach((b) => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
+    btn.classList.add('active'); btn.setAttribute('aria-pressed', 'true');
     currentPosition = btn.dataset.pos;
     renderPreview();
   });

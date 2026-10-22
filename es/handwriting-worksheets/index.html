@@ -303,6 +303,10 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 /* Phones: tuck the trail into the top padding of <main> (40px on tool pages, 50px on
    posts), so it doesn't push the tool's dropzone further down the screen. */
 @media (max-width:600px){.breadcrumbs{margin:-26px 0 8px 0;}}
+/* Option buttons are real <button>s so they work by keyboard (Tab, then Enter or Space).
+   These rules keep them looking as they did before, when they were <div>s. */
+.paper-btn, .preset-btn{margin:0;font-family:inherit;line-height:inherit;}
+.paper-btn:focus-visible, .preset-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
 </style>
 <script type="application/ld+json">
 {
@@ -431,9 +435,9 @@ sol</textarea>
       <div class="option-card">
         <h3>Tamaño de letra</h3>
         <div class="preset-grid">
-          <div class="preset-btn" data-preset="preschool">Preescolar</div>
-          <div class="preset-btn active" data-preset="kindergarten">Kínder</div>
-          <div class="preset-btn" data-preset="grade">1º–2º Grado</div>
+          <button type="button" class="preset-btn" data-preset="preschool" aria-pressed="false">Preescolar</button>
+          <button type="button" class="preset-btn active" data-preset="kindergarten" aria-pressed="true">Kínder</button>
+          <button type="button" class="preset-btn" data-preset="grade" aria-pressed="false">1º–2º Grado</button>
         </div>
       </div>
 
@@ -446,8 +450,8 @@ sol</textarea>
       <div class="option-card">
         <h3>Tamaño de papel</h3>
         <div class="paper-grid">
-          <div class="paper-btn active" data-paper="a4">A4</div>
-          <div class="paper-btn" data-paper="letter">Carta</div>
+          <button type="button" class="paper-btn active" data-paper="a4" aria-pressed="true">A4</button>
+          <button type="button" class="paper-btn" data-paper="letter" aria-pressed="false">Carta</button>
         </div>
       </div>
 
@@ -615,15 +619,15 @@ const CANVAS_SCALE = 3;
 
 document.querySelectorAll('.preset-btn').forEach((btn) => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.preset-btn').forEach((b) => b.classList.remove('active'));
-    btn.classList.add('active');
+    document.querySelectorAll('.preset-btn').forEach((b) => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
+    btn.classList.add('active'); btn.setAttribute('aria-pressed', 'true');
     selectedPreset = btn.dataset.preset;
   });
 });
 document.querySelectorAll('.paper-btn').forEach((btn) => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.paper-btn').forEach((b) => b.classList.remove('active'));
-    btn.classList.add('active');
+    document.querySelectorAll('.paper-btn').forEach((b) => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
+    btn.classList.add('active'); btn.setAttribute('aria-pressed', 'true');
     selectedPaper = btn.dataset.paper;
   });
 });
