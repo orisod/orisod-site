@@ -485,7 +485,10 @@ async function loadFile(file) {
   dropzoneText.textContent = `✅ ${file.name} cargado`;
 
   const arrayBuffer = await file.arrayBuffer();
-  const metadata = parseExif(arrayBuffer);
+  // A damaged or cut-off file can end in the middle of a header, and reading
+  // past its end throws. Treat that as "no metadata found" rather than crash.
+  let metadata = null;
+  try { metadata = parseExif(arrayBuffer); } catch (e) {}
   renderMetadata(metadata, file);
 }
 

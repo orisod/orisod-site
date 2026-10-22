@@ -505,10 +505,14 @@ async function loadFile(file) {
   }
 
   currentFile = file;
+  removeBtn.disabled = true; // until this file's image has loaded
   dropzoneText.textContent = `✅ ${file.name} cargado`;
 
   const arrayBuffer = await file.arrayBuffer();
-  const metadata = parseExif(arrayBuffer);
+  // A damaged or cut-off file can end in the middle of a header, and reading
+  // past its end throws. Treat that as "no metadata found" rather than crash.
+  let metadata = null;
+  try { metadata = parseExif(arrayBuffer); } catch (e) {}
   currentOrientation = (metadata && metadata.orientation) || 1;
   showMetadata(metadata);
 
@@ -517,6 +521,10 @@ async function loadFile(file) {
     currentImg = new Image();
     currentImg.onload = () => {
       removeBtn.disabled = false;
+    };
+    currentImg.onerror = () => {
+      metadataBox.style.display = 'none';
+      errorMsg.textContent = 'No se pudo cargar esta imagen.';
     };
     currentImg.src = e.target.result;
   };
