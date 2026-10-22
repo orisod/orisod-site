@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Fail if any page opens a PDF with PDF.js without turning off its eval path.
+"""Fail if any page opens a PDF with PDF.js without turning off its eval path,
+or loads a PDF library in its <head>.
 
 The site loads PDF.js 3.11.174, which is affected by CVE-2024-4367: with the
 default isEvalSupported: true, a crafted PDF can make PDF.js run arbitrary
@@ -8,6 +9,11 @@ for versions before 4.2.67 is to pass isEvalSupported: false to every
 pdfjsLib.getDocument() call, which costs nothing visible. Every page carries its
 own copy of the tool code, so this check keeps every copy (and every new PDF
 tool copied from one) safe.
+
+PDF libraries (PDF.js, pdf-lib, jsPDF) are big, and a <script> in <head> holds
+up the page's first paint until it has downloaded, which made PDF pages take 3
+to 5 seconds to show anything on mobile. Pages that use one load all their
+library <script>s right before the tool's own script, after the content.
 
 Run in CI on every push/PR to main, same as check_sitemap.py.
 """
@@ -19,6 +25,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 EXCLUDE_TOP_LEVEL = {".git", ".github", ".claude", "assets", "docs", "scripts", "node_modules", "prototypes", "audit", "claude"}
 
 # The argument of each getDocument(...) call, up to the closing "})".
+PDF_LIB = re.compile(r'<script[^>]*src="[^"]*(?:/pdf\.js/|/pdf-lib/|/jspdf/)[^"]*"')
 CALL = re.compile(r"getDocument\((.*?)\)\s*\.promise", re.S)
 
 
@@ -30,6 +37,9 @@ def main() -> int:
         if rel.parts[0] in EXCLUDE_TOP_LEVEL:
             continue
         text = f.read_text(encoding="utf-8")
+        head = text.split("</head>", 1)[0]
+        if PDF_LIB.search(head):
+            problems.append(f"{rel}: a PDF library <script> is in <head>; load the page's libraries right before its tool script instead")
         if "getDocument(" not in text:
             continue
         pages += 1
@@ -45,9 +55,9 @@ def main() -> int:
         print("PDF.js problems found:")
         for p in problems:
             print(f"  - {p}")
-        print(f"\n{len(problems)} problem(s) across {pages} pages that open PDFs")
+        print(f"\n{len(problems)} problem(s); {pages} pages open PDFs with PDF.js")
         return 1
-    print(f"OK: all {calls} PDF.js getDocument() calls on {pages} pages pass isEvalSupported: false.")
+    print(f"OK: all {calls} PDF.js getDocument() calls on {pages} pages pass isEvalSupported: false, and no page loads a PDF library in its <head>.")
     return 0
 
 
