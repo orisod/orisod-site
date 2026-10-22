@@ -32,7 +32,6 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
 {"@type":"WebApplication","name":"Favicon Generator","description":"Generate a complete favicon package (favicon.ico plus all standard sizes) from any image, free and online. Everything runs in your browser, no uploads.","url":"https://orisod.com/favicon-generator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
@@ -462,6 +461,8 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 })();
 </script>
 
+<!-- Tool libraries load here, after the page content, so they don't hold up the first paint. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 const fileInput = document.getElementById('fileInput');
 const dropzone = document.getElementById('dropzone');

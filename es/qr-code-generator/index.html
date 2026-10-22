@@ -32,7 +32,6 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
 {"@type":"WebApplication","name":"Generador de códigos QR","description":"Genera un código QR a partir de cualquier texto o URL, gratis e instantáneo. Funciona directamente en tu navegador: no se envían datos a ningún lugar.","url":"https://orisod.com/es/qr-code-generator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
@@ -472,6 +471,8 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 })();
 </script>
 
+<!-- Tool libraries load here, after the page content, so they don't hold up the first paint. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
 const textInput = document.getElementById('textInput');
 const sizeSelect = document.getElementById('sizeSelect');

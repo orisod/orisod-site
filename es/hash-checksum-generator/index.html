@@ -32,7 +32,6 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/spark-md5/3.0.2/spark-md5.min.js"></script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
 {"@type":"WebApplication","name":"Generador de Hash y Checksum","description":"Calcula hashes MD5, SHA-1, SHA-256, SHA-384 y SHA-512 de texto o un archivo, y verifícalos contra un checksum esperado, gratis y en línea. Funciona directamente en tu navegador: no se sube ningún archivo.","url":"https://orisod.com/es/hash-checksum-generator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
@@ -501,6 +500,8 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 })();
 </script>
 
+<!-- Tool libraries load here, after the page content, so they don't hold up the first paint. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/spark-md5/3.0.2/spark-md5.min.js"></script>
 <script>
 const modeRow = document.getElementById('modeRow');
 const textPanel = document.getElementById('textPanel');
