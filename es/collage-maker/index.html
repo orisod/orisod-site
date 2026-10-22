@@ -205,10 +205,23 @@ label:has(+ input[type="file"]:focus-visible), label:has(input[type="file"]:focu
 }
 .collage-cell.drag-over{outline:2px dashed var(--accent);outline-offset:-2px;}
 .collage-cell.dragging{opacity:.35;}
-.collage-cell.selected{outline:2px solid var(--accent);outline-offset:-2px;}
+/* The selected ring and the keyboard focus ring are drawn on a layer above the
+   photo; a plain outline was hidden under it (the photo is positioned). */
+.collage-cell::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:2;}
+.collage-cell.selected::after{box-shadow:inset 0 0 0 2px var(--accent);}
 .collage-cell.empty{display:flex;align-items:center;justify-content:center;color:var(--muted-text);font-size:12px;cursor:pointer;}
 .cell-photo{position:absolute;top:50%;left:50%;max-width:none;pointer-events:none;user-select:none;}
 .cell-remove{position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:50%;border:none;background:rgba(0,0,0,.55);color:#fff;font-size:12px;line-height:20px;text-align:center;cursor:pointer;z-index:3;}
+/* Grid cells are <button>s so a keyboard can reach them (Tab, then Enter or Space).
+   This undoes the page-wide button{} look so they still look like plain cells. */
+button.collage-cell{display:block;margin:0;padding:0;border:0;border-radius:0;font-family:inherit;line-height:inherit;color:inherit;}
+button.collage-cell:hover{filter:none;}
+.collage-cell:focus-visible{outline:none;}
+.collage-cell:focus-visible::after{box-shadow:inset 0 0 0 3px var(--accent), inset 0 0 0 5px #fff;}
+.cell-remove{padding:0;}
+.cell-remove:focus-visible, .count-btn:focus-visible, .layout-btn:focus-visible, .aspect-btn:focus-visible, .filter-thumb:focus-visible, .pos-row button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.swap-row{display:flex;flex-direction:column;gap:6px;margin-top:12px;}
+.swap-row button{margin:0;padding:8px 6px;font-size:12px;background:var(--bg);border:1px solid var(--dropzone-border);color:var(--text);}
 .text-overlay-layer{position:absolute;inset:0;pointer-events:none;display:flex;padding:3%;}
 .text-overlay-box{pointer-events:auto;cursor:move;white-space:pre-wrap;word-break:break-word;max-width:94%;}
 
@@ -222,7 +235,9 @@ label:has(+ input[type="file"]:focus-visible), label:has(input[type="file"]:focu
 .filter-thumb.active{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset;}
 .filter-thumb canvas{display:block;width:100%;aspect-ratio:1;}
 .filter-thumb span{display:block;font-size:9.5px;padding:3px 2px;color:var(--muted-text);line-height:1.2;}
-.filter-thumb.active span{color:var(--accent);}
+/* plain --accent was too faint for this 9.5px label (3.7:1); the site's light-blue text pair passes */
+.filter-thumb.active span{color:#60a5fa;}
+:root[data-theme="light"] .filter-thumb.active span{color:#1d4ed8;}
 
 button, .back{display:inline-block;padding:12px 18px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:15px;cursor:pointer;}
 button.secondary{background:var(--card-bg);border:1px solid var(--border);color:var(--text);}
@@ -489,10 +504,10 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
       <div class="panel">
         <h3>Forma del lienzo</h3>
         <div class="aspect-grid" id="aspectGrid">
-          <button type="button" class="aspect-btn active" data-aspect="square">Cuadrado</button>
-          <button type="button" class="aspect-btn" data-aspect="story">Historia 9:16</button>
-          <button type="button" class="aspect-btn" data-aspect="a4">A4</button>
-          <button type="button" class="aspect-btn" data-aspect="custom">Personalizado</button>
+          <button type="button" class="aspect-btn active" data-aspect="square" aria-pressed="true">Cuadrado</button>
+          <button type="button" class="aspect-btn" data-aspect="story" aria-pressed="false">Historia 9:16</button>
+          <button type="button" class="aspect-btn" data-aspect="a4" aria-pressed="false">A4</button>
+          <button type="button" class="aspect-btn" data-aspect="custom" aria-pressed="false">Personalizado</button>
         </div>
         <div class="custom-dims" id="customDims">
           <input type="number" id="customW" placeholder="Ancho" aria-label="Ancho" min="100" max="6000" value="1080">
@@ -524,7 +539,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
       <div class="collage-stage-wrap">
         <div class="collage-canvas" id="collageCanvas"></div>
       </div>
-      <div class="tool-sub" style="margin:0;font-size:13px;" id="selectedHint">Haz clic en una foto de la cuadrícula para acercarla, desplazarla o girarla.</div>
+      <div class="tool-sub" style="margin:0;font-size:13px;" id="selectedHint">Selecciona una foto de la cuadrícula para acercarla, moverla o girarla.</div>
       <div class="stage-actions">
         <select id="formatSelect" aria-label="Formato de exportación" style="width:auto;">
           <option value="png">PNG</option>
@@ -550,11 +565,23 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
           <label for="zoomSlider"><span>Zoom</span><span id="zoomVal">100%</span></label>
           <input type="range" id="zoomSlider" min="100" max="300" step="1" value="100">
         </div>
-        <div class="field-row" style="margin-bottom:0;">
+        <div class="field-row">
           <label for="rotateSlider"><span>Girar</span><span id="rotateVal">0°</span></label>
           <input type="range" id="rotateSlider" min="-180" max="180" step="1" value="0">
         </div>
-        <p class="tool-sub" style="text-align:left;font-size:12px;margin:8px 0 0 0;">Arrastra la foto dentro de su celda para desplazarla.</p>
+        <div class="field-row">
+          <label for="panXSlider"><span>Posición horizontal</span><span id="panXVal">0</span></label>
+          <input type="range" id="panXSlider" min="-50" max="50" step="1" value="0">
+        </div>
+        <div class="field-row" style="margin-bottom:0;">
+          <label for="panYSlider"><span>Posición vertical</span><span id="panYVal">0</span></label>
+          <input type="range" id="panYSlider" min="-50" max="50" step="1" value="0">
+        </div>
+        <div class="swap-row" role="group" aria-label="Mover esta foto">
+          <button type="button" id="swapPrevBtn"><span aria-hidden="true">← </span>Intercambiar con la anterior</button>
+          <button type="button" id="swapNextBtn">Intercambiar con la siguiente<span aria-hidden="true"> →</span></button>
+        </div>
+        <p class="tool-sub" style="text-align:left;font-size:12px;margin:8px 0 0 0;">También puedes arrastrar una foto a otra celda para intercambiarlas.</p>
       </div>
 
       <div class="panel">
@@ -601,9 +628,9 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
         </div>
         <label style="display:block;font-size:12.5px;color:var(--muted-text);margin-bottom:0;">Posición</label>
         <div class="pos-row">
-          <button type="button" class="pos-btn" data-pos="top">Arriba</button>
-          <button type="button" class="pos-btn active" data-pos="center">Centro</button>
-          <button type="button" class="pos-btn" data-pos="bottom">Abajo</button>
+          <button type="button" class="pos-btn" data-pos="top" aria-pressed="false">Arriba</button>
+          <button type="button" class="pos-btn active" data-pos="center" aria-pressed="true">Centro</button>
+          <button type="button" class="pos-btn" data-pos="bottom" aria-pressed="false">Abajo</button>
         </div>
         <p class="tool-sub" style="text-align:left;font-size:12px;margin:8px 0 0 0;">Arrastra el texto sobre el lienzo para ajustar su posición.</p>
       </div>
@@ -993,6 +1020,25 @@ var zoomSlider = document.getElementById('zoomSlider');
 var zoomVal = document.getElementById('zoomVal');
 var rotateSlider = document.getElementById('rotateSlider');
 var rotateVal = document.getElementById('rotateVal');
+var panXSlider = document.getElementById('panXSlider');
+var panXVal = document.getElementById('panXVal');
+var panYSlider = document.getElementById('panYSlider');
+var panYVal = document.getElementById('panYVal');
+var swapPrevBtn = document.getElementById('swapPrevBtn');
+var swapNextBtn = document.getElementById('swapNextBtn');
+
+// Several button groups here are rebuilt from scratch on every change, which
+// would drop keyboard focus to the top of the page. Each rebuilt button gets a
+// data-focus-key; these put focus back on the same button afterwards.
+function focusedKey(container){
+  var a = document.activeElement;
+  return (a && container.contains(a) && a.dataset.focusKey) || null;
+}
+function restoreFocus(container, key, fallbackKey){
+  if(!key) return;
+  var el = container.querySelector('[data-focus-key="'+key+'"]') || (fallbackKey && container.querySelector('[data-focus-key="'+fallbackKey+'"]'));
+  if(el) el.focus();
+}
 var filterCats = document.getElementById('filterCats');
 var mBrightness = document.getElementById('mBrightness');
 var mContrast = document.getElementById('mContrast');
@@ -1085,23 +1131,28 @@ function setPhotoCount(n, keepAssignments){
 }
 
 function renderCountGrid(){
+  var refocus = focusedKey(countGrid);
   countGrid.innerHTML = '';
   for(var n=2;n<=9;n++){
     (function(n){
       var b = document.createElement('button');
       b.type='button'; b.className='count-btn'+(n===photoCount?' active':''); b.textContent=n;
+      b.setAttribute('aria-pressed', n===photoCount ? 'true' : 'false'); b.dataset.focusKey = n;
       b.addEventListener('click', function(){ setPhotoCount(n, true); renderAll(); });
       countGrid.appendChild(b);
     })(n);
   }
+  restoreFocus(countGrid, refocus);
 }
 
 function renderLayoutGrid(){
+  var refocus = focusedKey(layoutGrid);
   layoutGrid.innerHTML = '';
   LAYOUTS[photoCount].forEach(function(layout){
     var b = document.createElement('button');
     b.type='button';
     b.className='layout-btn'+(layout.id===layoutId?' active':'');
+    b.setAttribute('aria-pressed', layout.id===layoutId ? 'true' : 'false'); b.dataset.focusKey = layout.id;
     b.title = layout.name;
     b.style.gridTemplateColumns = 'repeat('+layout.cols+',1fr)';
     b.style.gridTemplateRows = 'repeat('+layout.rows+',1fr)';
@@ -1123,13 +1174,14 @@ function renderLayoutGrid(){
     });
     layoutGrid.appendChild(b);
   });
+  restoreFocus(layoutGrid, refocus);
 }
 
 /* ===================== ASPECT / STYLE CONTROLS ===================== */
 aspectGrid.querySelectorAll('.aspect-btn').forEach(function(b){
   b.addEventListener('click', function(){
-    aspectGrid.querySelectorAll('.aspect-btn').forEach(function(x){ x.classList.remove('active'); });
-    b.classList.add('active');
+    aspectGrid.querySelectorAll('.aspect-btn').forEach(function(x){ x.classList.remove('active'); x.setAttribute('aria-pressed', 'false'); });
+    b.classList.add('active'); b.setAttribute('aria-pressed', 'true');
     aspect = b.dataset.aspect;
     customDims.classList.toggle('active', aspect==='custom');
     renderAll();
@@ -1154,6 +1206,7 @@ function renderStage(){
   collageCanvas.style.aspectRatio = ar[0]+' / '+ar[1];
   collageCanvas.style.background = bgColor;
   collageCanvas.style.borderRadius = '0px';
+  var refocus = focusedKey(collageCanvas);
   collageCanvas.innerHTML = '';
 
   var layout = currentLayout();
@@ -1163,8 +1216,10 @@ function renderStage(){
   var rects = computeCellRects(layout, stageW, stageH, gapPx);
 
   rects.forEach(function(r, i){
-    var cell = document.createElement('div');
+    var cell = document.createElement('button');
+    cell.type = 'button';
     cell.className = 'collage-cell'+(i===selectedCell?' selected':'');
+    cell.dataset.focusKey = 'cell-'+i;
     cell.style.left = r.x+'px'; cell.style.top = r.y+'px';
     cell.style.width = r.w+'px'; cell.style.height = r.h+'px';
     cell.style.position = 'absolute';
@@ -1178,6 +1233,7 @@ function renderStage(){
       cell.draggable = true;
       var img = document.createElement('img');
       img.className = 'cell-photo';
+      img.alt = ''; // the cell button carries the label
       img.src = photo.img.src;
       img.draggable = false;
       layoutPhotoImg(img, photo, r);
@@ -1186,23 +1242,29 @@ function renderStage(){
       var preset = filterById(photo.filterId);
       cell.style.filter = buildFilterString(preset, photo.mB, photo.mC, photo.mS);
 
-      var rm = document.createElement('button');
-      rm.className='cell-remove'; rm.type='button'; rm.textContent='✕'; rm.title='Quitar foto';
-      rm.addEventListener('click', function(ev){ ev.stopPropagation(); cellAssign[i]=null; if(selectedCell===i) selectedCell=null; renderAll(); });
-      cell.appendChild(rm);
-
-      wirePan(cell, img, photo, r);
-      cell.addEventListener('click', function(ev){
-        if(ev.target===rm) return;
-        selectedCell = i; renderAll();
-      });
+      cell.setAttribute('aria-label', 'Foto en la celda '+(i+1)+' de '+rects.length);
+      cell.setAttribute('aria-pressed', i===selectedCell ? 'true' : 'false');
+      cell.addEventListener('click', function(){ selectedCell = i; renderAll(); });
       wireDrag(cell, i);
     } else {
       cell.classList.add('empty');
       cell.textContent = '+ Añadir foto';
+      cell.setAttribute('aria-label', 'Añadir foto a la celda '+(i+1)+' de '+rects.length);
       cell.addEventListener('click', function(){ pendingCellIndex = i; fileInput.click(); });
     }
     collageCanvas.appendChild(cell);
+
+    // The remove button sits next to its cell rather than inside it (a button
+    // can't contain another button), placed over the cell's top-right corner.
+    if(photo){
+      var rm = document.createElement('button');
+      rm.className='cell-remove'; rm.type='button'; rm.textContent='✕'; rm.title='Quitar foto';
+      rm.setAttribute('aria-label', 'Quitar la foto de la celda '+(i+1));
+      rm.dataset.focusKey = 'rm-'+i;
+      rm.style.left = (r.x+r.w-24)+'px'; rm.style.top = (r.y+4)+'px'; rm.style.right = 'auto';
+      rm.addEventListener('click', function(){ cellAssign[i]=null; if(selectedCell===i) selectedCell=null; renderAll(); });
+      collageCanvas.appendChild(rm);
+    }
   });
 
   // text overlay
@@ -1226,6 +1288,8 @@ function renderStage(){
   }
 
   collageCanvas.style.position = 'relative';
+  var m = refocus && refocus.match(/^rm-(\d+)$/);
+  restoreFocus(collageCanvas, refocus, m ? 'cell-'+m[1] : null);
 }
 
 var pendingCellIndex = null;
@@ -1253,24 +1317,6 @@ function layoutPhotoImg(img, photo, rect){
   img.style.width = w+'px'; img.style.height = h+'px';
   var tx = photo.offX * rect.w, ty = photo.offY * rect.h;
   img.style.transform = 'translate(-50%,-50%) translate('+tx+'px,'+ty+'px) rotate('+photo.rot+'deg)';
-}
-
-function wirePan(cell, img, photo, rect){
-  var dragging=false, startX=0, startY=0, startOffX=0, startOffY=0;
-  img.addEventListener('pointerdown', function(e){
-    dragging=true; startX=e.clientX; startY=e.clientY; startOffX=photo.offX; startOffY=photo.offY;
-    img.setPointerCapture(e.pointerId);
-    e.stopPropagation();
-  });
-  img.addEventListener('pointermove', function(e){
-    if(!dragging) return;
-    var dx=(e.clientX-startX)/rect.w, dy=(e.clientY-startY)/rect.h;
-    photo.offX = startOffX + dx; photo.offY = startOffY + dy;
-    layoutPhotoImg(img, photo, rect);
-  });
-  function end(e){ if(dragging){ dragging=false; } }
-  img.addEventListener('pointerup', end);
-  img.addEventListener('pointercancel', end);
 }
 
 var draggedCellIndex = null;
@@ -1314,7 +1360,7 @@ function wireTextDrag(box){
 function renderAdjustPanel(){
   if(selectedCell===null || !cellAssign[selectedCell]){
     photoAdjustPanel.style.display = 'none';
-    selectedHint.textContent = 'Haz clic en una foto de la cuadrícula para acercarla, desplazarla o girarla.';
+    selectedHint.textContent = 'Selecciona una foto de la cuadrícula para acercarla, moverla o girarla.';
     return;
   }
   var photo = getPhoto(cellAssign[selectedCell]);
@@ -1324,6 +1370,10 @@ function renderAdjustPanel(){
   zoomVal.textContent = Math.round(photo.zoom*100)+'%';
   rotateSlider.value = photo.rot;
   rotateVal.textContent = Math.round(photo.rot)+'°';
+  panXSlider.value = Math.round(photo.offX*100); panXVal.textContent = panXSlider.value;
+  panYSlider.value = Math.round(photo.offY*100); panYVal.textContent = panYSlider.value;
+  swapPrevBtn.disabled = selectedCell===0;
+  swapNextBtn.disabled = selectedCell===cellAssign.length-1;
   mBrightness.value = photo.mB; mBrightnessVal.textContent = photo.mB;
   mContrast.value = photo.mC; mContrastVal.textContent = photo.mC;
   mSaturation.value = photo.mS; mSaturationVal.textContent = photo.mS;
@@ -1345,6 +1395,29 @@ rotateSlider.addEventListener('input', function(){
   rotateVal.textContent = photo.rot+'°';
   renderStage();
 });
+[[panXSlider,panXVal,'offX'],[panYSlider,panYVal,'offY']].forEach(function(t){
+  t[0].addEventListener('input', function(){
+    if(selectedCell===null) return;
+    var photo = getPhoto(cellAssign[selectedCell]);
+    if(!photo) return;
+    photo[t[2]] = parseInt(t[0].value,10)/100;
+    t[1].textContent = t[0].value;
+    renderStage();
+  });
+});
+function swapSelected(step){
+  var to = selectedCell + step;
+  if(selectedCell===null || to<0 || to>=cellAssign.length) return;
+  var from = step<0 ? swapPrevBtn : swapNextBtn, hadFocus = document.activeElement===from;
+  var tmp = cellAssign[to]; cellAssign[to] = cellAssign[selectedCell]; cellAssign[selectedCell] = tmp;
+  selectedCell = to;
+  renderAll();
+  // At the first or last cell this button turns disabled, which drops focus;
+  // move it to the other swap button instead.
+  if(hadFocus && from.disabled) (step<0 ? swapNextBtn : swapPrevBtn).focus();
+}
+swapPrevBtn.addEventListener('click', function(){ swapSelected(-1); });
+swapNextBtn.addEventListener('click', function(){ swapSelected(1); });
 [['mBrightness',mBrightness,mBrightnessVal,'mB'],['mContrast',mContrast,mContrastVal,'mC'],['mSaturation',mSaturation,mSaturationVal,'mS']].forEach(function(t){
   t[1].addEventListener('input', function(){
     if(selectedCell===null) return;
@@ -1383,6 +1456,7 @@ function renderFilterPicker(){
   if(selectedCell!==null && cellAssign[selectedCell]){ var p = getPhoto(cellAssign[selectedCell]); if(p) sourceImg = p.img; }
   else if(photos.length){ sourceImg = photos[0].img; }
 
+  var refocus = focusedKey(filterCats);
   filterCats.innerHTML = '';
   var activeId = (selectedCell!==null && cellAssign[selectedCell]) ? getPhoto(cellAssign[selectedCell]).filterId : null;
 
@@ -1407,12 +1481,15 @@ function renderFilterPicker(){
   origGrid.appendChild(makeFilterThumb(FILTERS[0], sourceImg, activeId));
   origWrap.appendChild(origGrid);
   filterCats.insertBefore(origWrap, filterCats.firstChild);
+  restoreFocus(filterCats, refocus);
 }
 
 function makeFilterThumb(preset, sourceImg, activeId){
   var btn = document.createElement('button');
   btn.type='button';
   btn.className='filter-thumb'+(preset.id===activeId?' active':'');
+  btn.setAttribute('aria-pressed', preset.id===activeId ? 'true' : 'false');
+  btn.dataset.focusKey = preset.id;
   var canvas = document.createElement('canvas');
   canvas.width=90; canvas.height=90;
   btn.appendChild(canvas);
@@ -1435,8 +1512,8 @@ textSizeSlider.addEventListener('input', function(){ text.sizePct = parseFloat(t
 textColorInput.addEventListener('input', function(){ text.color = textColorInput.value; renderStage(); });
 document.querySelectorAll('.pos-btn').forEach(function(b){
   b.addEventListener('click', function(){
-    document.querySelectorAll('.pos-btn').forEach(function(x){ x.classList.remove('active'); });
-    b.classList.add('active');
+    document.querySelectorAll('.pos-btn').forEach(function(x){ x.classList.remove('active'); x.setAttribute('aria-pressed', 'false'); });
+    b.classList.add('active'); b.setAttribute('aria-pressed', 'true');
     var pos = b.dataset.pos;
     text.yPct = pos==='top' ? 12 : pos==='bottom' ? 88 : 50;
     renderStage();
