@@ -712,7 +712,7 @@ convertBtn.addEventListener('click', async () => {
     link.textContent = '⬇️ Descargar .docx';
     resultEl.appendChild(link);
 
-    progressMsg.textContent = 'Listo — para descargar.';
+    progressMsg.textContent = 'Listo para descargar.';
   } catch (err) {
     errorMsg.textContent = err.message || 'No se pudo convertir este PDF.';
     progressMsg.textContent = '';

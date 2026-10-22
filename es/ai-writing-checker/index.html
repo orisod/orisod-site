@@ -677,7 +677,7 @@ function analyze() {
     const emdashCard = document.createElement('div');
     emdashCard.className = 'summary-card';
     emdashCard.innerHTML = `<h3>Rayas: <span class="count">${emdash.count}</span></h3>` +
-      `<div class="examples">${emdash.count ? `Tasa: ${emdash.rate.toFixed(1)} por 100 palabras` + (emdash.flagged ? ' — por encima de lo habitual' : '') : 'Ninguna encontrada.'}</div>`;
+      `<div class="examples">${emdash.count ? `Tasa: ${emdash.rate.toFixed(1)} por 100 palabras` + (emdash.flagged ? ' (por encima de lo habitual)' : '') : 'Ninguna encontrada.'}</div>`;
     summaryCards.appendChild(emdashCard);
 
     const uniformCard = document.createElement('div');
@@ -686,7 +686,7 @@ function analyze() {
       uniformCard.innerHTML = `<h3>Uniformidad de longitud de oración: <span class="count">${uniform.flagged ? 'Señalado' : 'Normal'}</span></h3>` +
         `<div class="examples">Media de ${uniform.mean.toFixed(1)} palabras/oración, desv. est. ${uniform.stdDev.toFixed(1)}</div>`;
     } else {
-      uniformCard.innerHTML = `<h3>Uniformidad de longitud de oración: <span class="count">—</span></h3><div class="examples">Se necesitan al menos 8 oraciones para comprobarlo.</div>`;
+      uniformCard.innerHTML = `<h3>Uniformidad de longitud de oración: <span class="count">n/d</span></h3><div class="examples">Se necesitan al menos 8 oraciones para comprobarlo.</div>`;
     }
     summaryCards.appendChild(uniformCard);
 

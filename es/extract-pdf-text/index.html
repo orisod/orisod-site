@@ -630,7 +630,7 @@ extractBtn.addEventListener('click', async () => {
     outputMeta.textContent = `${pdf.numPages} página${pdf.numPages === 1? '': 's'} · ${plainCharCount.toLocaleString()} caracteres extraídos`;
 
     if (plainCharCount === 0) {
-      warnNote.innerHTML = '⚠️ No se encontró texto seleccionable. Este PDF puede ser una imagen escaneada sin capa de texto — prueba <a href="/es/ocr-pdf/" style="color:inherit;text-decoration:underline;">OCR de PDF</a> para hacerlo buscable primero.';
+      warnNote.innerHTML = '⚠️ No se encontró texto seleccionable. Este PDF puede ser una imagen escaneada sin capa de texto. Prueba <a href="/es/ocr-pdf/" style="color:inherit;text-decoration:underline;">OCR de PDF</a> para hacerlo buscable primero.';
       warnNote.style.display = 'block';
     }
 

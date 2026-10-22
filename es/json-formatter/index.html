@@ -510,7 +510,7 @@ function describeError(err, raw) {
   const msg = err.message || 'JSON inválido';
   const lineColMatch = msg.match(/line (\d+) column (\d+)/i);
   if (lineColMatch) {
-    return `JSON inválido — línea ${lineColMatch[1]}, columna ${lineColMatch[2]}. (${msg})`;
+    return `JSON inválido: línea ${lineColMatch[1]}, columna ${lineColMatch[2]}. (${msg})`;
   }
   const posMatch = msg.match(/position (\d+)/i);
   if (posMatch) {
@@ -518,7 +518,7 @@ function describeError(err, raw) {
     const before = raw.slice(0, pos).split('\n');
     const line = before.length;
     const col = before[before.length - 1].length + 1;
-    return `JSON inválido — línea ${line}, columna ${col}. (${msg})`;
+    return `JSON inválido: línea ${line}, columna ${col}. (${msg})`;
   }
   return `JSON inválido. (${msg})`;
 }
@@ -554,7 +554,7 @@ copyBtn.addEventListener('click', async () => {
     copyBtn.textContent = '✅ ¡Copiado!';
     setTimeout(() => { copyBtn.textContent = original; }, 1200);
   } catch (err) {
-    errorMsg.textContent = 'No se pudo copiar automáticamente — selecciona y copia manualmente.';
+    errorMsg.textContent = 'No se pudo copiar automáticamente. Selecciona y copia manualmente.';
   }
 });
 

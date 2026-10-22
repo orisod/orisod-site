@@ -599,7 +599,7 @@ function updatePreview() {
   }
 
   if (keepIndices.length === 0) {
-    rangePreview.textContent = `This would delete all ${totalPages} pages — at least one page must remain.`;
+    rangePreview.textContent = `This would delete all ${totalPages} pages. At least one page must remain.`;
     rangePreview.classList.add('warn');
     saveBtn.disabled = true;
     return;

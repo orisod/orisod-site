@@ -123,9 +123,12 @@ main{padding:60px 20px 0 20px;}
 /* Real block-level spacer, not padding-bottom on the wrapper: Chromium does not
    count a containing block's own padding-bottom toward how long a top:0 sticky
    child can stay stuck, so padding here silently cut the pin to ~50px instead
-   of the intended ~22vh — confirmed by swapping this in and remeasuring. */
+   of the intended ~22vh — confirmed by swapping this in and remeasuring.
+   Cut from 22vh to 10vh on 2026-10-22: at 22vh a 1280x800 laptop showed no
+   tools at all above the fold; 10vh keeps the pin and lets the first category
+   start on screen. */
 .hero-pin-spacer{
-  height:22vh;
+  height:10vh;
 }
 .hero-gear-bg{
   position:absolute;
@@ -186,6 +189,9 @@ h1{
   margin:0 auto 34px auto;
   line-height:1.6;
 }
+/* In light theme the hero gear sits right behind the subtitle, and the usual
+   muted gray dropped to 3:1 over it; this darker slate keeps 4.8:1 there. */
+:root[data-theme="light"] .hero .sub{color:#475569;}
 .search-box{
   position:relative;
   max-width:480px;
@@ -215,6 +221,9 @@ h1{
   opacity:0.6;
   pointer-events:none;
 }
+/* No keyboard shortcut hint on touch screens (tablets wider than the phone
+   breakpoint included). */
+@media (hover:none){ .kbd-hint{display:none;} }
 .kbd-hint{
   position:absolute;
   right:12px;
@@ -755,8 +764,9 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
       <div class="search-box">
         <span class="search-icon" aria-hidden="true">🔍</span>
         <input type="text" id="homeSearch" placeholder="Search tools…" aria-label="Search tools" autocomplete="off">
-        <span class="kbd-hint">⌘K</span>
+        <span class="kbd-hint" id="kbdHint">⌘K</span>
       </div>
+      <script>(function(){var h=document.getElementById('kbdHint');if(h&&!/Mac|iPhone|iPad/.test(navigator.platform||navigator.userAgent))h.textContent='Ctrl K';})();</script>
       <nav class="jump-links" aria-label="Jump to a tool category">
         <a class="jump-link cat-pdf" href="#cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/></svg>PDF</a>
         <a class="jump-link cat-image" href="#cat-image"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 2 18 17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="14" height="13" rx="1.5"/><circle cx="6" cy="8" r="1.2"/><path d="M2 15l3.5-3.5 2.5 2.5 3.5-4 3 3"/></svg>Image</a>

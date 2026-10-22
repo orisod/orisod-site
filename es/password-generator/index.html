@@ -605,7 +605,7 @@ copyBtn.addEventListener('click', async () => {
     copyBtn.textContent = '✅ ¡Copiada!';
     setTimeout(() => { copyBtn.textContent = original; }, 1500);
   } catch (err) {
-    errorMsg.textContent = 'No se pudo copiar automáticamente — selecciona y copia manualmente.';
+    errorMsg.textContent = 'No se pudo copiar automáticamente. Selecciona y copia manualmente.';
   }
 });
 

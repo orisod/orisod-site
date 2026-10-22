@@ -736,13 +736,13 @@ compressBtn.addEventListener('click', async () => {
     if (keptOriginal) {
       const suggestion = mode === 'quick'
         ? 'This PDF is already efficiently structured, so Quick clean couldn’t shrink it further. If it contains scanned pages or photos, try Strong compression instead.'
-        : 'Strong compression would have made this file bigger — it’s likely already text-based rather than scanned. Try Quick clean instead.';
-      progressMsg.textContent = 'Done — no size reduction possible, original kept.';
+        : 'Strong compression would have made this file bigger. It’s likely already text-based rather than scanned. Try Quick clean instead.';
+      progressMsg.textContent = 'Done: no size reduction possible, original kept.';
       card.innerHTML = `
         <div class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/><path d="M9 13l3 2 3-2M9 17l3-2 3 2"/></svg></div>
         <div class="result-body">
           <div class="result-filename">${outName}</div>
-          <div class="result-stat">${(originalSize / 1024).toFixed(1)} KB — already optimized, original kept</div>
+          <div class="result-stat">${(originalSize / 1024).toFixed(1)} KB (already optimized, original kept)</div>
           <div class="note" style="margin-top:6px;font-size:13px;">${suggestion}</div>
         </div>
       `;

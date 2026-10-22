@@ -605,7 +605,7 @@ async function handleFile(file) {
     pageCount.textContent = `Loaded: ${pdf.numPages} page${pdf.numPages === 1 ? '' : 's'}`;
     dropzoneText.textContent = `✅ ${file.name} loaded`;
     if (pdf.numPages > LONG_DOC_THRESHOLD) {
-      longDocNote.textContent = `This file has ${pdf.numPages} pages — OCR runs one page at a time and may take a few minutes. Keep this tab open while it runs.`;
+      longDocNote.textContent = `This file has ${pdf.numPages} pages. OCR runs one page at a time and may take a few minutes. Keep this tab open while it runs.`;
       longDocNote.style.display = 'block';
     }
     ocrBtn.style.display = 'inline-block';
@@ -730,7 +730,7 @@ ocrBtn.addEventListener('click', async () => {
     resultEl.appendChild(actions);
 
     if (avgConfidence !== null && avgConfidence < 70) {
-      warnNote.textContent = '⚠️ Recognition confidence was low for this document — expect more OCR errors than usual. This can happen with blurry scans, unusual fonts, or handwriting.';
+      warnNote.textContent = '⚠️ Recognition confidence was low for this document. Expect more OCR errors than usual. This can happen with blurry scans, unusual fonts, or handwriting.';
       warnNote.style.display = 'block';
     }
 

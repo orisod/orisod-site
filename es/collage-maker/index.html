@@ -1077,7 +1077,7 @@ function addPhotos(fileList){
   if(!files.length) return;
   if(photos.length + files.length > 9){
     files = files.slice(0, Math.max(0, 9 - photos.length));
-    uploadError.textContent = 'Solo se admiten hasta 9 fotos — se omitieron los archivos adicionales.';
+    uploadError.textContent = 'Solo se admiten hasta 9 fotos, así que se omitieron los archivos adicionales.';
   }
   Promise.all(files.map(loadImageFile)).then(function(imgs){
     imgs.forEach(function(img){

@@ -649,7 +649,7 @@ function updatePreview() {
     const row = document.createElement('div');
     row.className = 'order-line';
     const tagClass = entry.src === 'A' ? 'tag-a' : 'tag-b';
-    row.innerHTML = `${i + 1}. <span class="${tagClass}">Archivo ${entry.src}</span> — página ${entry.pageIndex + 1}`;
+    row.innerHTML = `${i + 1}. <span class="${tagClass}">Archivo ${entry.src}</span>, página ${entry.pageIndex + 1}`;
     frag.appendChild(row);
   });
   orderLines.appendChild(frag);
@@ -657,7 +657,7 @@ function updatePreview() {
   if (numPagesA !== numPagesB) {
     const longer = numPagesA > numPagesB ? 'el Archivo A' : 'el Archivo B';
     const extra = Math.abs(numPagesA - numPagesB);
-    warnNote.textContent = `⚠️ El Archivo A tiene ${numPagesA} página${numPagesA === 1 ? '' : 's'} y el Archivo B tiene ${numPagesB} página${numPagesB === 1 ? '' : 's'} — ${extra} página${extra === 1 ? '' : 's'} extra de ${longer} se añadirá${extra === 1 ? '' : 'n'} al final.`;
+    warnNote.textContent = `⚠️ El Archivo A tiene ${numPagesA} página${numPagesA === 1 ? '' : 's'} y el Archivo B tiene ${numPagesB} página${numPagesB === 1 ? '' : 's'}. ${extra} página${extra === 1 ? '' : 's'} extra de ${longer} se añadirá${extra === 1 ? '' : 'n'} al final.`;
     warnNote.style.display = 'block';
   } else {
     warnNote.style.display = 'none';
@@ -696,7 +696,7 @@ interleaveBtn.addEventListener('click', async () => {
     const url = URL.createObjectURL(blob);
     const outName = 'intercalado.pdf';
 
-    progressMsg.textContent = 'Listo — preparado para descargar.';
+    progressMsg.textContent = 'Listo para descargar.';
 
     const card = document.createElement('div');
     card.className = 'result-card';

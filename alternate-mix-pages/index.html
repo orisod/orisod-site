@@ -649,7 +649,7 @@ function updatePreview() {
     const row = document.createElement('div');
     row.className = 'order-line';
     const tagClass = entry.src === 'A' ? 'tag-a' : 'tag-b';
-    row.innerHTML = `${i + 1}. <span class="${tagClass}">File ${entry.src}</span> — page ${entry.pageIndex + 1}`;
+    row.innerHTML = `${i + 1}. <span class="${tagClass}">File ${entry.src}</span>, page ${entry.pageIndex + 1}`;
     frag.appendChild(row);
   });
   orderLines.appendChild(frag);
@@ -657,7 +657,7 @@ function updatePreview() {
   if (numPagesA !== numPagesB) {
     const longer = numPagesA > numPagesB ? 'File A' : 'File B';
     const extra = Math.abs(numPagesA - numPagesB);
-    warnNote.textContent = `⚠️ File A has ${numPagesA} page${numPagesA === 1 ? '' : 's'} and File B has ${numPagesB} page${numPagesB === 1 ? '' : 's'} — the ${extra} extra page${extra === 1 ? '' : 's'} from ${longer} will be appended at the end.`;
+    warnNote.textContent = `⚠️ File A has ${numPagesA} page${numPagesA === 1 ? '' : 's'} and File B has ${numPagesB} page${numPagesB === 1 ? '' : 's'}. The ${extra} extra page${extra === 1 ? '' : 's'} from ${longer} will be appended at the end.`;
     warnNote.style.display = 'block';
   } else {
     warnNote.style.display = 'none';
