@@ -18,12 +18,30 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
 
       - name: Install CI tooling dependencies
         run: npm install
 
+      # Playwright's Chromium is saved between runs, keyed on the pinned
+      # Playwright version in package-lock.json, so it downloads only when
+      # that version changes.
+      - name: Cache Chromium for Playwright
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
       - name: Install Chromium for Playwright
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install chromium
+
+      # This used to be "playwright install --with-deps", which also apt-installs
+      # ~25 MB of extra fonts and a virtual display every run; on a slow Ubuntu
+      # mirror that alone took 10-13 minutes. GitHub's runner image already has
+      # the libraries headless Chromium needs, so they're installed only if
+      # Chromium can't start without them.
+      - name: Install Chromium's system libraries if they're missing
+        run: node -e "require('playwright').chromium.launch().then((b) => b.close())" || npx playwright install-deps chromium
 
       - name: Run axe-core against every page in sitemap.xml
         run: node scripts/check_a11y.js
