@@ -32,8 +32,6 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#2563eb">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/turndown/7.2.4/turndown.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/turndown-plugin-gfm@1.0.2/dist/turndown-plugin-gfm.js"></script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
 {"@type":"WebApplication","name":"Convertir a Markdown","description":"Pega texto enriquecido o HTML y conviértelo a sintaxis Markdown, incluidas tablas y formato, gratis y en línea. Funciona directamente en tu navegador: no se sube ningún archivo.","url":"https://orisod.com/es/convert-to-markdown/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (runs in browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"isAccessibleForFree":true},
@@ -496,6 +494,9 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 })();
 </script>
 
+<!-- Tool libraries load here, after the page content, so they don't hold up the first paint. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/turndown/7.2.4/turndown.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/turndown-plugin-gfm@1.0.2/dist/turndown-plugin-gfm.js"></script>
 <script>
 const modeRow = document.getElementById('modeRow');
 const inputLabel = document.getElementById('inputLabel');
