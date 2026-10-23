@@ -45,7 +45,43 @@
 <meta property="og:image:alt" content="Orisod: herramientas gratis de imagen y PDF en tu navegador">
 <meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@graph":[{"@type":"Organization","name":"Orisod","url":"https://orisod.com/es/","logo":"https://orisod.com/assets/orisod-icon-detailed.png"},{"@type":"WebSite","name":"Orisod","url":"https://orisod.com/es/","potentialAction":{"@type":"SearchAction","target":"https://orisod.com/es/tools/?q={search_term_string}","query-input":"required name=search_term_string"}}]}
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://orisod.com/#organization",
+      "name": "Orisod",
+      "alternateName": "Orisod Labs",
+      "url": "https://orisod.com/",
+      "logo": "https://orisod.com/assets/orisod-icon-detailed.png",
+      "sameAs": [
+        "https://github.com/orisod/orisod-site",
+        "https://www.saashub.com/orisod"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://orisod.com/#website",
+      "name": "Orisod",
+      "url": "https://orisod.com/",
+      "inLanguage": [
+        "en",
+        "es"
+      ],
+      "publisher": {
+        "@type": "Organization",
+        "@id": "https://orisod.com/#organization",
+        "name": "Orisod"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://orisod.com/tools/?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+  ]
+}
 </script>
 <style>
 :root{

@@ -321,14 +321,21 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
       "name": "HTML a PDF",
       "description": "Pega o sube código HTML, previsualiza cómo se renderiza y conviértelo en un PDF paginado, gratis y en línea. Funciona directamente en tu navegador, sin subir archivos.",
       "url": "https://orisod.com/es/html-to-pdf/",
-      "applicationCategory": "MultimediaApplication",
-      "operatingSystem": "Any (runs in browser)",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requiere JavaScript. Funciona en un navegador web moderno.",
+      "inLanguage": "es",
+      "isAccessibleForFree": true,
       "offers": {
         "@type": "Offer",
         "price": "0",
         "priceCurrency": "USD"
       },
-      "isAccessibleForFree": true
+      "publisher": {
+        "@type": "Organization",
+        "@id": "https://orisod.com/#organization",
+        "name": "Orisod"
+      }
     },
     {
       "@type": "FAQPage",
@@ -359,10 +366,10 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
         },
         {
           "@type": "Question",
-          "name": "¿Se ejecutan las etiquetas <script> de mi HTML?",
+          "name": "¿Se ejecutan las etiquetas \u003cscript> de mi HTML?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No. El contenido de no se ejecuta. La herramienta solo representa la estructura HTML y el CSS compatible."
+            "text": "No. El contenido de \u003cscript> no se ejecuta. La herramienta solo representa la estructura HTML y el CSS compatible."
           }
         },
         {

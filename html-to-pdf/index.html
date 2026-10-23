@@ -321,14 +321,21 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
       "name": "HTML to PDF",
       "description": "Paste or upload HTML code, preview how it renders, and convert it to a paginated PDF, free and online. Works directly in your browser: no files are uploaded.",
       "url": "https://orisod.com/html-to-pdf/",
-      "applicationCategory": "MultimediaApplication",
-      "operatingSystem": "Any (runs in browser)",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript. Runs in a modern web browser.",
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
       "offers": {
         "@type": "Offer",
         "price": "0",
         "priceCurrency": "USD"
       },
-      "isAccessibleForFree": true
+      "publisher": {
+        "@type": "Organization",
+        "@id": "https://orisod.com/#organization",
+        "name": "Orisod"
+      }
     },
     {
       "@type": "FAQPage",
@@ -359,10 +366,10 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
         },
         {
           "@type": "Question",
-          "name": "Do <script> tags in my HTML run?",
+          "name": "Do \u003cscript> tags in my HTML run?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No. content is not executed. The tool renders the supplied HTML structure and supported CSS only."
+            "text": "No. \u003cscript> content is not executed. The tool renders the supplied HTML structure and supported CSS only."
           }
         },
         {
