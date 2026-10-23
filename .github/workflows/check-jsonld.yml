@@ -1,0 +1,19 @@
+name: Verify structured data (JSON-LD)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check-jsonld:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check every page's JSON-LD is valid and matches the page
+        run: python3 scripts/check_jsonld.py
