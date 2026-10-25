@@ -89,9 +89,9 @@ def resolve_files(pages, blocks):
     return out
 
 
-def check_replacement(rec, live, new):
-    """None if the replacement is safe to write, else the reason it isn't."""
-    old = live["source_html"]
+def check_replacement(live, new):
+    """None if the replacement is safe to write over the live block, else the reason it isn't."""
+    rec, old = live, live["source_html"]
     if "—" in new:
         return "contains an em dash"
     if rec["field_type"] in ATTRIBUTE_FIELDS or rec["field_type"] in ("title", "svg_text"):
@@ -201,7 +201,7 @@ def main():
             note("mismatched", "block no longer exists on the page")
             continue
         if sha(rec.get("source_html", "")) != rec.get("html_sha256"):
-            note("mismatched", "source_html was edited: it no longer matches its html_sha256")
+            note("mismatched", "source_html doesn't match its html_sha256 (one of them was edited)")
             continue
         if rec["html_sha256"] != cur["html_sha256"] or rec.get("expected_html_sha256", cur["html_sha256"]) != cur["html_sha256"]:
             note("mismatched", "the page changed since extraction (hash differs): extract again")
@@ -215,7 +215,7 @@ def main():
         if cur["field_type"] in WORDING_LOCKED and words(new) != words(cur["source_html"]):
             note("excluded", "title/meta wording is locked: only capitalization and punctuation may change")
             continue
-        why = check_replacement(cur, cur, new)
+        why = check_replacement(cur, new)
         if why:
             note("rejected", why)
             continue
