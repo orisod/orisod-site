@@ -170,7 +170,10 @@ def main():
     pages, blocks = load(args.review)
     files = resolve_files(pages, blocks)
     page_files = sorted({f for f in files.values() if f})
-    hrefs = {page_info(f)["page_path"] for f in page_files if f not in LISTING}
+    # Listing pages are re-extracted for the same cards as at extraction time: the ones linking to
+    # any page in the batch (its "pages" list), not only to pages that have reviewed blocks.
+    batch_files = {p["source_file"] for p in pages if "source_file" in p} | set(page_files)
+    hrefs = {page_info(f)["page_path"] for f in batch_files if f not in LISTING}
     include_ui = any(b.get("field_type") == "ui_text" for b in blocks)
 
     counts = {"changed": 0, "unchanged": 0, "excluded": 0, "rejected": 0, "mismatched": 0}
