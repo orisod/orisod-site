@@ -14,7 +14,8 @@ Page checks (on the selected pages):
                  <meta name="description"> are exempt; script strings are check_copy.py's job)
   tag-balance    every element opened is closed, no stray closing tags
   links          every internal href/src points to a file that exists; for a page that
-                 already exists on --base, no link was removed
+                 already exists on --base, no link was removed (name a deliberate removal with
+                 --allow-removed-link URL)
   why-orisod     no "Why Orisod" / "Por qué Orisod" section on a tool page
   guide-link     a new tool page links to its guide (the "Want the full picture?" line) and
                  the guide links back; an existing tool page doesn't lose that link
@@ -182,7 +183,8 @@ def check_page(rel, base, res, names, new_pages, catalogs):
         old = git("show", f"{base}:{rel}").stdout
         lost = sorted(set(re.findall(r'(?:href|src)="([^"]+)"', old)) - set(re.findall(r'(?:href|src)="([^"]+)"', text)))
         for h in lost:
-            res.fail("links", rel, f"link removed vs {base}: {h}")
+            if h not in catalogs["allow_removed"]:
+                res.fail("links", rel, f"link removed vs {base}: {h}")
 
     # why-orisod
     if ptype == "tool" and WHY.search(text):
@@ -290,6 +292,8 @@ def main():
     ap.add_argument("--all", action="store_true", help="check every page on the site")
     ap.add_argument("--a11y", action="store_true", help="also run scripts/check_a11y.js (several minutes)")
     ap.add_argument("--no-site", action="store_true", help="skip the site-wide check scripts")
+    ap.add_argument("--allow-removed-link", action="append", default=[], metavar="URL",
+                    help="a link the change removes on purpose (repeat for several)")
     args = ap.parse_args()
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
@@ -303,7 +307,8 @@ def main():
         print(f"Checking {len(files)} page(s) ({len(new_pages)} new vs {args.base})")
         names = tool_names()
         catalogs = {"en": (tools_cards("en"), blog_cards("en")), "es": (tools_cards("es"), blog_cards("es")),
-                    "scope": set(files), "sync": {"en": sync_catalog("en"), "es": sync_catalog("es")}}
+                    "scope": set(files), "sync": {"en": sync_catalog("en"), "es": sync_catalog("es")},
+                    "allow_removed": set(args.allow_removed_link)}
         for rel in files:
             check_page(rel, args.base, res, names, new_pages, catalogs)
         checks = ["em-dash", "tag-balance", "links", "why-orisod", "guide-link", "parity", "sentence-case",
