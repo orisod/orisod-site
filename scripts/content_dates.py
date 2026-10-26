@@ -36,7 +36,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SITE_ORIGIN = "https://orisod.com/"
-END = re.compile(r'<div class="cta-box"|<div class="related-section"|<footer|</main>')
+END = re.compile(r'<div class="cta-box"|<div class="related-section"|<h2>[^<]*</h2>\s*<div class="related-grid"|<footer|</main>')
 LOC = re.compile(r"(<url><loc>([^<]+)</loc>)(?:<lastmod>([^<]*)</lastmod>)?")
 BLOGPOSTING = re.compile(r'<script type="application/ld\+json">\s*\{\s*"@context": "https://schema.org",\s*"@type": "BlogPosting".*?</script>', re.S)
 
