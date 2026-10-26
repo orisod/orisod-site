@@ -22,8 +22,8 @@ Page checks (on the selected pages):
                  items, FAQ items, figures, images, related cards, CTA box, guide link)
   sentence-case  <title>, meta description, H1 (not tool names), blog card titles and all
                  card blurbs use sentence case; acronyms, product names and tool names are exempt
-  card-sync      a related-tools card matches its /tools card word for word (CLAUDE.md:
-                 "Related tools card grid")
+  card-sync      a related-tools card's icon, title and description match its /tools card exactly
+                 (CLAUDE.md: "Related tools card grid"); scripts/sync_related_cards.py --write fixes it
   catalog        a new tool is on /tools and in the homepage TOOLS list; a new post is on the blog index
 Site checks: check_sitemap, check_jsonld, check_breadcrumbs, check_nav, check_copy, check_social,
 and content_dates (fails if a sitemap or post date still needs `content_dates.py --write`).
@@ -38,6 +38,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from audit_extract import NOT_PAGES, REPO_ROOT, changed_pages, extract_file, page_info, plain, read  # noqa: E402
+from sync_related_cards import card_diffs, catalog as sync_catalog  # noqa: E402
 
 SITE_CHECKS = ["check_sitemap.py", "check_jsonld.py", "check_breadcrumbs.py", "check_nav.py",
                "check_copy.py", "check_social.py"]
@@ -224,12 +225,11 @@ def check_page(rel, base, res, names, new_pages, catalogs):
 
     # card-sync
     tcards, bcards = catalogs[info["lang"]]
-    for m in re.finditer(r'<a class="related-card" href="([^"]+)">.*?<div class="title">(.*?)</div>\s*'
-                         r'<div class="desc">(.*?)</div>', text, re.S):
-        want = tcards.get(m.group(1))
-        if want and (plain(m.group(2)), plain(m.group(3))) != (plain(want[0]), plain(want[1])):
-            res.fail("card-sync", rel, f"related card {m.group(1)} is \"{m.group(2).strip()} / {m.group(3).strip()}\", "
-                                       f"/tools has \"{want[0]} / {want[1]}\"")
+    for href, diffs in card_diffs(text, catalogs["sync"][info["lang"]]):
+        for field, (_, _, live, want) in (diffs or {}).items():
+            shown = "" if field == "icon" else f": \"{live}\", /tools has \"{want}\""
+            res.fail("card-sync", rel, f"related card {href} {field} differs from /tools{shown} "
+                                       "(fix: python scripts/sync_related_cards.py --write)")
 
     # catalog
     if is_new and ptype == "tool":
@@ -303,7 +303,7 @@ def main():
         print(f"Checking {len(files)} page(s) ({len(new_pages)} new vs {args.base})")
         names = tool_names()
         catalogs = {"en": (tools_cards("en"), blog_cards("en")), "es": (tools_cards("es"), blog_cards("es")),
-                    "scope": set(files)}
+                    "scope": set(files), "sync": {"en": sync_catalog("en"), "es": sync_catalog("es")}}
         for rel in files:
             check_page(rel, args.base, res, names, new_pages, catalogs)
         checks = ["em-dash", "tag-balance", "links", "why-orisod", "guide-link", "parity", "sentence-case",
