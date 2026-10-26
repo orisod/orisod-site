@@ -2,13 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url><loc>https://orisod.com/</loc><lastmod>2026-10-18</lastmod><priority>1.0</priority></url>
-<url><loc>https://orisod.com/tools/</loc><lastmod>2026-10-25</lastmod><priority>0.9</priority></url>
+<url><loc>https://orisod.com/tools/</loc><lastmod>2026-10-26</lastmod><priority>0.9</priority></url>
 <url><loc>https://orisod.com/about/</loc><lastmod>2026-09-17</lastmod><priority>0.5</priority></url>
 <url><loc>https://orisod.com/privacy/</loc><lastmod>2026-10-26</lastmod><priority>0.3</priority></url>
 <url><loc>https://orisod.com/support/</loc><lastmod>2026-09-17</lastmod><priority>0.4</priority></url>
 
 <url><loc>https://orisod.com/es/</loc><lastmod>2026-10-18</lastmod><priority>1.0</priority></url>
-<url><loc>https://orisod.com/es/tools/</loc><lastmod>2026-10-25</lastmod><priority>0.9</priority></url>
+<url><loc>https://orisod.com/es/tools/</loc><lastmod>2026-10-26</lastmod><priority>0.9</priority></url>
 <url><loc>https://orisod.com/es/about/</loc><lastmod>2026-09-17</lastmod><priority>0.5</priority></url>
 <url><loc>https://orisod.com/es/privacy/</loc><lastmod>2026-10-26</lastmod><priority>0.3</priority></url>
 <url><loc>https://orisod.com/es/support/</loc><lastmod>2026-09-17</lastmod><priority>0.4</priority></url>
@@ -124,31 +124,31 @@
 <url><loc>https://orisod.com/es/ocr-pdf/</loc><lastmod>2026-09-06</lastmod><priority>0.7</priority></url>
 <url><loc>https://orisod.com/es/fill-pdf-forms/</loc><lastmod>2026-09-04</lastmod><priority>0.7</priority></url>
 <url><loc>https://orisod.com/es/pdf-editor/</loc><lastmod>2026-09-04</lastmod><priority>0.7</priority></url>
-<url><loc>https://orisod.com/es/password-generator/</loc><lastmod>2026-09-04</lastmod><priority>0.6</priority></url>
+<url><loc>https://orisod.com/es/password-generator/</loc><lastmod>2026-10-26</lastmod><priority>0.6</priority></url>
 <url><loc>https://orisod.com/es/uuid-generator/</loc><lastmod>2026-09-04</lastmod><priority>0.6</priority></url>
 <url><loc>https://orisod.com/es/json-formatter/</loc><lastmod>2026-09-06</lastmod><priority>0.6</priority></url>
-<url><loc>https://orisod.com/es/case-converter/</loc><lastmod>2026-09-06</lastmod><priority>0.6</priority></url>
-<url><loc>https://orisod.com/es/word-character-counter/</loc><lastmod>2026-09-06</lastmod><priority>0.6</priority></url>
-<url><loc>https://orisod.com/es/color-picker-converter/</loc><lastmod>2026-09-06</lastmod><priority>0.6</priority></url>
+<url><loc>https://orisod.com/es/case-converter/</loc><lastmod>2026-10-26</lastmod><priority>0.6</priority></url>
+<url><loc>https://orisod.com/es/word-character-counter/</loc><lastmod>2026-10-26</lastmod><priority>0.6</priority></url>
+<url><loc>https://orisod.com/es/color-picker-converter/</loc><lastmod>2026-10-26</lastmod><priority>0.6</priority></url>
 <url><loc>https://orisod.com/es/flatten-pdf/</loc><lastmod>2026-09-04</lastmod><priority>0.7</priority></url>
 <url><loc>https://orisod.com/es/text-to-pdf/</loc><lastmod>2026-09-04</lastmod><priority>0.7</priority></url>
-<url><loc>https://orisod.com/es/add-stamps/</loc><lastmod>2026-09-04</lastmod><priority>0.7</priority></url>
+<url><loc>https://orisod.com/es/add-stamps/</loc><lastmod>2026-10-26</lastmod><priority>0.7</priority></url>
 <url><loc>https://orisod.com/es/compare-pdfs/</loc><lastmod>2026-09-04</lastmod><priority>0.7</priority></url>
-<url><loc>https://orisod.com/es/pdf-color-filters/</loc><lastmod>2026-09-06</lastmod><priority>0.7</priority></url>
-<url><loc>https://orisod.com/es/n-up-pdf/</loc><lastmod>2026-09-04</lastmod><priority>0.7</priority></url>
-<url><loc>https://orisod.com/es/alternate-mix-pages/</loc><lastmod>2026-09-04</lastmod><priority>0.7</priority></url>
-<url><loc>https://orisod.com/es/pdf-booklet-maker/</loc><lastmod>2026-09-06</lastmod><priority>0.7</priority></url>
-<url><loc>https://orisod.com/es/hash-checksum-generator/</loc><lastmod>2026-09-04</lastmod><priority>0.6</priority></url>
+<url><loc>https://orisod.com/es/pdf-color-filters/</loc><lastmod>2026-10-26</lastmod><priority>0.7</priority></url>
+<url><loc>https://orisod.com/es/n-up-pdf/</loc><lastmod>2026-10-26</lastmod><priority>0.7</priority></url>
+<url><loc>https://orisod.com/es/alternate-mix-pages/</loc><lastmod>2026-10-26</lastmod><priority>0.7</priority></url>
+<url><loc>https://orisod.com/es/pdf-booklet-maker/</loc><lastmod>2026-10-26</lastmod><priority>0.7</priority></url>
+<url><loc>https://orisod.com/es/hash-checksum-generator/</loc><lastmod>2026-10-26</lastmod><priority>0.6</priority></url>
 <url><loc>https://orisod.com/es/convert-to-markdown/</loc><lastmod>2026-09-04</lastmod><priority>0.6</priority></url>
-<url><loc>https://orisod.com/es/ai-writing-checker/</loc><lastmod>2026-09-06</lastmod><priority>0.6</priority></url>
-<url><loc>https://orisod.com/es/read-aloud/</loc><lastmod>2026-09-07</lastmod><priority>0.6</priority></url>
-<url><loc>https://orisod.com/es/extract-images-from-pdf/</loc><lastmod>2026-09-07</lastmod><priority>0.7</priority></url>
-<url><loc>https://orisod.com/es/pdf-header-footer/</loc><lastmod>2026-09-07</lastmod><priority>0.7</priority></url>
+<url><loc>https://orisod.com/es/ai-writing-checker/</loc><lastmod>2026-10-26</lastmod><priority>0.6</priority></url>
+<url><loc>https://orisod.com/es/read-aloud/</loc><lastmod>2026-10-26</lastmod><priority>0.6</priority></url>
+<url><loc>https://orisod.com/es/extract-images-from-pdf/</loc><lastmod>2026-10-26</lastmod><priority>0.7</priority></url>
+<url><loc>https://orisod.com/es/pdf-header-footer/</loc><lastmod>2026-10-26</lastmod><priority>0.7</priority></url>
 <url><loc>https://orisod.com/es/repair-pdf/</loc><lastmod>2026-09-06</lastmod><priority>0.7</priority></url>
-<url><loc>https://orisod.com/es/handwriting-worksheets/</loc><lastmod>2026-09-06</lastmod><priority>0.7</priority></url>
-<url><loc>https://orisod.com/es/collage-maker/</loc><lastmod>2026-10-22</lastmod><priority>0.7</priority></url>
-<url><loc>https://orisod.com/es/calendar-generator/</loc><lastmod>2026-09-15</lastmod><priority>0.7</priority></url>
-<url><loc>https://orisod.com/es/hebrew-calendar-generator/</loc><lastmod>2026-09-15</lastmod><priority>0.7</priority></url>
+<url><loc>https://orisod.com/es/handwriting-worksheets/</loc><lastmod>2026-10-26</lastmod><priority>0.7</priority></url>
+<url><loc>https://orisod.com/es/collage-maker/</loc><lastmod>2026-10-26</lastmod><priority>0.7</priority></url>
+<url><loc>https://orisod.com/es/calendar-generator/</loc><lastmod>2026-10-26</lastmod><priority>0.7</priority></url>
+<url><loc>https://orisod.com/es/hebrew-calendar-generator/</loc><lastmod>2026-10-26</lastmod><priority>0.7</priority></url>
 <url><loc>https://orisod.com/es/split-pdf/</loc><lastmod>2026-09-06</lastmod><priority>0.8</priority></url>
 <url><loc>https://orisod.com/es/compress-pdf/</loc><lastmod>2026-09-06</lastmod><priority>0.7</priority></url>
 <url><loc>https://orisod.com/es/rotate-pdf/</loc><lastmod>2026-09-06</lastmod><priority>0.7</priority></url>
@@ -318,8 +318,8 @@
 <url><loc>https://orisod.com/es/blog/how-pdf-repair-actually-works/</loc><lastmod>2026-09-06</lastmod><priority>0.5</priority></url>
 <url><loc>https://orisod.com/es/blog/handwriting-worksheets-explained/</loc><lastmod>2026-09-07</lastmod><priority>0.5</priority></url>
 <url><loc>https://orisod.com/es/blog/collage-maker-explained/</loc><lastmod>2026-09-04</lastmod><priority>0.5</priority></url>
-<url><loc>https://orisod.com/es/blog/calendar-generator-explained/</loc><lastmod>2026-09-15</lastmod><priority>0.5</priority></url>
-<url><loc>https://orisod.com/es/blog/hebrew-calendar-generator-explained/</loc><lastmod>2026-09-15</lastmod><priority>0.5</priority></url>
+<url><loc>https://orisod.com/es/blog/calendar-generator-explained/</loc><lastmod>2026-10-26</lastmod><priority>0.5</priority></url>
+<url><loc>https://orisod.com/es/blog/hebrew-calendar-generator-explained/</loc><lastmod>2026-10-26</lastmod><priority>0.5</priority></url>
 <url><loc>https://orisod.com/es/blog/what-is-image-metadata/</loc><lastmod>2026-09-06</lastmod><priority>0.6</priority></url>
 <url><loc>https://orisod.com/es/blog/base64-encoding-explained/</loc><lastmod>2026-09-05</lastmod><priority>0.6</priority></url>
 
