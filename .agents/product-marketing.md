@@ -67,7 +67,7 @@ B2C, so no buying-committee personas. Informal user types:
 | Objection | Response |
 |-----------|----------|
 | "Free sites always have a catch. What's the business model?" | No ads (ever: the site is permanently ad-free), no data sale, no paid tier. It's funded by optional donations. Files can't be monetized because they never reach us. |
-| "Is it really not uploading my file?" | Processing happens in your browser. Only Google Analytics page-visit data is collected, never file contents (see Privacy Policy). |
+| "Is it really not uploading my file?" | Processing happens in your browser. Only cookie-free GoatCounter page-visit counts are collected, never file contents (see Privacy Policy). |
 | "Will it handle big or complex files?" | It depends on the device's memory and browser. Very large files can be slow on older phones. (Honest limitation: don't overclaim.) |
 
 **Anti-persona:** Teams needing collaboration, cloud storage, API access, or batch automation at scale; users who want a desktop app or guaranteed enterprise support/SLAs.
@@ -111,8 +111,9 @@ B2C, so no buying-committee personas. Informal user types:
 ## Goals
 **Business goal:** Grow organic search traffic (tool pages + guides) and make the site sustainable through voluntary donations. Orisod is permanently ad-free: Google AdSense was considered early on and explicitly dropped, and it is not a future option. (Affiliate links were also floated as an idea; not active.)
 **Conversion action:** Primary: a visitor completes a tool task (and returns/bookmarks). Secondary: a voluntary donation via the Support page.
-**Current metrics:** Tracked in Google Analytics 4 (G-V2GMNDCVMK); not recorded here yet.
+**Current metrics:** Tracked in GoatCounter (dashboard https://orisod.goatcounter.com, aggregate counts only; replaced Google Analytics 4 on 2026-10-26); not recorded here yet.
 
 ## Changelog
 *Newest first. One line per revision: what changed and why.*
+- v2 (2026-10-26): analytics moved from Google Analytics 4 to GoatCounter (cookie-free, aggregate counts).
 - v1 (2026-09-28) — Initial context, auto-drafted from the site's home, About and Support pages and CLAUDE.md; ads stated as permanently off; tool count checked against live /tools (75).

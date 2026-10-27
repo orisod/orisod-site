@@ -1,0 +1,19 @@
+name: Verify analytics (GoatCounter only)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check-analytics:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check every page loads GoatCounter once and no other analytics
+        run: python3 scripts/check_analytics.py

@@ -1,0 +1,20 @@
+count.js in this folder is GoatCounter's integration script, copied unmodified from
+https://gc.zgo.at/count.js (identical to public/count.js in
+https://github.com/arp242/goatcounter at commit 478f026eb9, 2026-04-07).
+
+GoatCounter itself is EUPL 1.2 licensed, but its LICENSE file puts
+public/count.js under the ISC license, reproduced here as that license requires:
+
+Copyright © Martin Tournoij <martin@arp242.net>
+
+Permission to use, copy, modify, and/or distribute this software for any purpose
+with or without fee is hereby granted, provided that the above copyright notice
+and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
+THIS SOFTWARE.
