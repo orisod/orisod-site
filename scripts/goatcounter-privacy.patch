@@ -1,0 +1,66 @@
+--- a/assets/goatcounter/count.js
++++ b/assets/goatcounter/count.js
+@@ -1,5 +1,12 @@
+ // GoatCounter: https://www.goatcounter.com
+ // This file is released under the ISC license: https://opensource.org/licenses/ISC
++//
++// Pinned local copy with an Orisod privacy patch. Upstream: public/count.js in
++// https://github.com/arp242/goatcounter at commit 478f026eb9; the copyright and
++// ISC notice are in LICENSE.txt next to this file. The patch (marked "Orisod
++// privacy patch" below) keeps URL parameters in the browser: the query string
++// sent is rebuilt from GoatCounter's campaign parameters only, and the page path
++// and referrer are sent without their query string.
+ ;(function() {
+ 	'use strict';
+ 
+@@ -17,6 +24,23 @@
+ 
+ 	var enc = encodeURIComponent
+ 
++	// Orisod privacy patch: the only URL parameters that may be sent are the ones
++	// GoatCounter reads as a campaign or source. Everything else (such as the site
++	// search's ?search= words) is dropped before sending.
++	var ORISOD_ALLOWED_PARAMS = ['utm_campaign', 'campaign', 'utm_source', 'ref', 'src', 'source']
++	var orisod_query = function() {
++		var keep = [], parts = location.search.substr(1).split('&')
++		for (var i = 0; i < parts.length; i++) {
++			var name = parts[i].split('=')[0]
++			try { name = decodeURIComponent(name.replace(/\+/g, ' ')) } catch (err) { continue }
++			if (ORISOD_ALLOWED_PARAMS.indexOf(name) > -1)
++				keep.push(parts[i])
++		}
++		return keep.length ? '?' + keep.join('&') : ''
++	}
++	// Orisod privacy patch: a URL without its query string and fragment.
++	var orisod_strip_query = function(u) { return (u || '').split('#')[0].split('?')[0] }
++
+ 	// Get all data we're going to send off to the counter endpoint.
+ 	window.goatcounter.get_data = function(vars) {
+ 		vars = vars || {}
+@@ -27,7 +51,7 @@
+ 			e: !!(vars.event || goatcounter.event),
+ 			s: window.screen.width,
+ 			b: is_bot(),
+-			q: location.search,
++			q: orisod_query(),  // Orisod privacy patch (was: location.search)
+ 		}
+ 
+ 		var rcb, pcb, tcb  // Save callbacks to apply later.
+@@ -35,7 +59,7 @@
+ 		if (typeof(data.t) === 'function') tcb = data.t
+ 		if (typeof(data.p) === 'function') pcb = data.p
+ 
+-		if (is_empty(data.r)) data.r = document.referrer
++		if (is_empty(data.r)) data.r = orisod_strip_query(document.referrer)  // Orisod privacy patch (was: document.referrer)
+ 		if (is_empty(data.t)) data.t = document.title
+ 		if (is_empty(data.p)) data.p = get_path()
+ 		if (vars.no_session) data.ns = (typeof(vars.no_session) === 'function' ? vars.no_session(false) : vars.no_session)
+@@ -96,7 +120,7 @@
+ 			if (a.hostname.replace(/^www\./, '') === location.hostname.replace(/^www\./, ''))
+ 				loc = a
+ 		}
+-		return (loc.pathname + loc.search) || '/'
++		return loc.pathname || '/'  // Orisod privacy patch (was: loc.pathname + loc.search)
+ 	}
+ 
+ 	// Run function after DOM is loaded.

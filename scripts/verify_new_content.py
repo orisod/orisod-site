@@ -27,7 +27,7 @@ Page checks (on the selected pages):
                  (CLAUDE.md: "Related tools card grid"); scripts/sync_related_cards.py --write fixes it
   catalog        a new tool is on /tools and in the homepage TOOLS list; a new post is on the blog index
 Site checks: check_sitemap, check_jsonld, check_breadcrumbs, check_nav, check_copy, check_social,
-and content_dates (fails if a sitemap or post date still needs `content_dates.py --write`).
+check_analytics, and content_dates (fails if a sitemap or post date still needs `content_dates.py --write`).
 """
 
 import argparse
@@ -42,7 +42,7 @@ from audit_extract import NOT_PAGES, REPO_ROOT, changed_pages, extract_file, pag
 from sync_related_cards import card_diffs, catalog as sync_catalog  # noqa: E402
 
 SITE_CHECKS = ["check_sitemap.py", "check_jsonld.py", "check_breadcrumbs.py", "check_nav.py",
-               "check_copy.py", "check_social.py"]
+               "check_copy.py", "check_social.py", "check_analytics.py"]
 GUIDE_LINK = re.compile(r"📖[^<]*(Want the full picture\?|¿Quieres saber más\?|Lee nuestra guía)[^<]*<a href=\"([^\"]+)\"")
 WHY = re.compile(r"<h[23][^>]*>\s*(why (use )?orisod|por qu[ée] (usar )?orisod)", re.I)
 

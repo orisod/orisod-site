@@ -13,8 +13,10 @@ How a page's dates are measured:
   collapsed. The nav, breadcrumb, footer, JSON-LD, CSS, JS and markup-only
   edits (site-wide rollouts) don't change that text, so they don't count.
 - dateModified / lastmod: the day of the newest commit whose content differs
-  from the revision before it. If the working copy's content differs from the
-  last commit (or the file isn't committed yet), it's today.
+  from its parent's (from every parent's, for a merge commit: a merge that
+  only brings in one side's content, like updating a branch from main,
+  didn't change it). If the working copy's content differs from the last
+  commit (or the file isn't committed yet), it's today.
 - datePublished: the day of the file's first commit (today if not committed yet).
 - If the content can't be read in a revision the walk has to compare (no H1
   inside <main>, or no end marker), the date isn't measurable. The page then
@@ -62,9 +64,9 @@ class Git:
                                     stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 
     def log(self, rel):
-        out = subprocess.run(["git", "-C", str(self.root), "log", "--format=%H %as", "--", rel],
+        out = subprocess.run(["git", "-C", str(self.root), "log", "--format=%H %as %P", "--", rel],
                              capture_output=True, encoding="utf-8").stdout
-        return [line.split(" ", 1) for line in out.splitlines()]  # newest first
+        return [line.split(" ", 2) for line in out.splitlines()]  # newest first: [hash, date, parents]
 
     def show(self, commit, rel):
         self.cat.stdin.write(f"{commit}:{rel}\n".encode())
@@ -84,19 +86,28 @@ def content_dates(git, rel, today):
         return today, today
     published = log[-1][1]
     current = article_text((git.root / rel).read_text(encoding="utf-8"))
-    texts = [article_text(git.show(h, rel) or "") for h, _ in log]
-    if current is None or texts[0] is None:
+    texts = {h: article_text(git.show(h, rel) or "") for h, _, _ in log}
+    if current is None or texts[log[0][0]] is None:
         return published, None
-    if current != texts[0]:
+    if current != texts[log[0][0]]:
         return published, today
-    for i in range(len(log) - 1):
-        if texts[i + 1] is None:
+    modified = published
+    for h, day, parents in log:
+        if texts[h] is None:
             return published, None
-        if texts[i] != texts[i + 1]:
-            modified = log[i][1]
+        if texts[h] != current:
+            continue
+        parent_texts = []
+        for p in parents.split():
+            if p not in texts:
+                src = git.show(p, rel)
+                texts[p] = "" if src is None else article_text(src)  # "" = the page didn't exist yet
+            if texts[p] is None:
+                return published, None
+            parent_texts.append(texts[p])
+        if current not in parent_texts:
+            modified = day
             break
-    else:
-        modified = published
     if not (published <= modified <= today):
         return published, None
     return published, modified
