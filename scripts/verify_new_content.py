@@ -25,6 +25,8 @@ Page checks (on the selected pages):
                  card blurbs use sentence case; acronyms, product names and tool names are exempt
   card-sync      a related-tools card's icon, title and description match its /tools card exactly
                  (CLAUDE.md: "Related tools card grid"); scripts/sync_related_cards.py --write fixes it
+  guide-sync     a tool page's "Read our guide" link text equals its guide's H1;
+                 scripts/sync_guide_links.py --write fixes it
   catalog        a new tool is on /tools and in the homepage TOOLS list; a new post is on the blog index
 Site checks: check_sitemap, check_jsonld, check_breadcrumbs, check_nav, check_copy, check_social,
 check_analytics, and content_dates (fails if a sitemap or post date still needs `content_dates.py --write`).
@@ -40,6 +42,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from audit_extract import NOT_PAGES, REPO_ROOT, changed_pages, extract_file, page_info, plain, read  # noqa: E402
 from sync_related_cards import card_diffs, catalog as sync_catalog  # noqa: E402
+from sync_guide_links import link_diffs  # noqa: E402
 
 SITE_CHECKS = ["check_sitemap.py", "check_jsonld.py", "check_breadcrumbs.py", "check_nav.py",
                "check_copy.py", "check_social.py", "check_analytics.py"]
@@ -233,6 +236,12 @@ def check_page(rel, base, res, names, new_pages, catalogs):
             res.fail("card-sync", rel, f"related card {href} {field} differs from /tools{shown} "
                                        "(fix: python scripts/sync_related_cards.py --write)")
 
+    # guide-sync
+    for href, _, _, live, want in link_diffs(text):
+        if live != want:
+            res.fail("guide-sync", rel, f"guide link {href} text \"{live}\" differs from the guide's H1 \"{want}\" "
+                                        "(fix: python scripts/sync_guide_links.py --write)")
+
     # catalog
     if is_new and ptype == "tool":
         if info["page_path"] not in tcards:
@@ -312,7 +321,7 @@ def main():
         for rel in files:
             check_page(rel, args.base, res, names, new_pages, catalogs)
         checks = ["em-dash", "tag-balance", "links", "why-orisod", "guide-link", "parity", "sentence-case",
-                  "card-sync", "catalog"]
+                  "card-sync", "guide-sync", "catalog"]
         for c in checks:
             items = res.fails.get(c, [])
             print(f"  {'ok  ' if not items else 'FAIL'} {c:<14} {'' if not items else f'{len(items)} problem(s)'}")
