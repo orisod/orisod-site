@@ -1,6 +1,13 @@
-count.js in this folder is GoatCounter's integration script, copied unmodified from
-https://gc.zgo.at/count.js (identical to public/count.js in
-https://github.com/arp242/goatcounter at commit 478f026eb9, 2026-04-07).
+count.js in this folder is a pinned local copy of GoatCounter's integration script
+with an Orisod privacy patch. Upstream: https://gc.zgo.at/count.js as served on
+2026-10-26 (identical to public/count.js in https://github.com/arp242/goatcounter
+at commit 478f026eb9, 2026-04-07; sha256
+792b7abd26c1fb6ae62906833e09a301251e2641816e69e4f95aba518f3fe3f0). Orisod changed
+it so that only GoatCounter's campaign parameters (utm_campaign, campaign,
+utm_source, ref, src, source) are sent from the URL, and the page path and
+referrer are sent without their query string. The exact change is
+scripts/goatcounter-privacy.patch in the repository; the patched file's sha256 is
+2dbc3b65c7cb08f562a8cf87e17f99cf6a640b2760fb919b43eb34844120ab32.
 
 GoatCounter itself is EUPL 1.2 licensed, but its LICENSE file puts
 public/count.js under the ISC license, reproduced here as that license requires:

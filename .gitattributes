@@ -1,0 +1,4 @@
+# Keep these byte-for-byte as committed (LF): check_analytics.py checks the
+# checksum of count.js, and the patch must apply to the upstream LF file.
+assets/goatcounter/count.js -text
+scripts/goatcounter-privacy.patch -text
