@@ -2,3 +2,6 @@
 # checksum of count.js, and the patch must apply to the upstream LF file.
 assets/goatcounter/count.js -text
 scripts/goatcounter-privacy.patch -text
+# Self-hosted libraries: keep every byte as downloaded (check_vendor.py compares
+# each file's sha256 with assets/vendor/manifest.json).
+assets/vendor/** -text

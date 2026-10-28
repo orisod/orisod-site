@@ -1,0 +1,116 @@
+{
+  "about": "Third-party libraries self-hosted under assets/vendor/<name>/<version>/. Every file is byte-identical to its source URL; scripts/check_vendor.py (CI: check-vendor) checks each sha256 and size. See 'Self-hosted libraries' in CLAUDE.md for the update procedure.",
+  "libraries": [
+    {
+      "name": "spark-md5",
+      "version": "3.0.2",
+      "license": "MIT",
+      "license_note": "Dual-licensed (WTFPL OR MIT); Orisod uses the MIT option, whose text is upstream's LICENSE2.",
+      "used_by": [
+        "hash-checksum-generator"
+      ],
+      "files": [
+        {
+          "path": "assets/vendor/spark-md5/3.0.2/spark-md5.min.js",
+          "source": "https://cdnjs.cloudflare.com/ajax/libs/spark-md5/3.0.2/spark-md5.min.js",
+          "sha256": "d80e84c820cc5587a0ba3c8a20652099ea3fa7fc43944e812e56d449c1d9f1c9",
+          "bytes": 10166
+        }
+      ],
+      "license_file": {
+        "path": "assets/vendor/spark-md5/3.0.2/LICENSE",
+        "source": "https://raw.githubusercontent.com/satazor/js-spark-md5/v3.0.2/LICENSE2",
+        "sha256": "6e7abbd885f650c938cf377a6edcad56c7dcb61de092853af6141d806f8c9f04",
+        "bytes": 1076
+      }
+    },
+    {
+      "name": "qrcodejs",
+      "version": "1.0.0",
+      "license": "MIT",
+      "used_by": [
+        "qr-code-generator"
+      ],
+      "files": [
+        {
+          "path": "assets/vendor/qrcodejs/1.0.0/qrcode.min.js",
+          "source": "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js",
+          "sha256": "c541ef06327885a8415bca8df6071e14189b4855336def4f36db54bde8484f36",
+          "bytes": 19927
+        }
+      ],
+      "license_file": {
+        "path": "assets/vendor/qrcodejs/1.0.0/LICENSE",
+        "source": "https://raw.githubusercontent.com/davidshimjs/qrcodejs/04f46c6a0708418cb7b96fc563eacae0fbf77674/LICENSE",
+        "sha256": "aaa1f349028a59432eb00222b8ddfe4d2ccebdce04cf8348dcb8d41b7068107b",
+        "bytes": 1098
+      }
+    },
+    {
+      "name": "suncalc",
+      "version": "1.9.0",
+      "license": "BSD-2-Clause",
+      "used_by": [
+        "hebrew-calendar-generator"
+      ],
+      "files": [
+        {
+          "path": "assets/vendor/suncalc/1.9.0/suncalc.min.js",
+          "source": "https://cdnjs.cloudflare.com/ajax/libs/suncalc/1.9.0/suncalc.min.js",
+          "sha256": "e2fb13a92012f51a55bcdede7a774dd40afec7929c7ac062c3276159b7ab7d63",
+          "bytes": 3088
+        }
+      ],
+      "license_file": {
+        "path": "assets/vendor/suncalc/1.9.0/LICENSE",
+        "source": "https://raw.githubusercontent.com/mourner/suncalc/v1.9.0/LICENSE",
+        "sha256": "9010b843aad8e450890fc18dae2dfec00e68c10da775515801c42878afbb0da1",
+        "bytes": 1321
+      }
+    },
+    {
+      "name": "turndown",
+      "version": "7.2.4",
+      "license": "MIT",
+      "used_by": [
+        "convert-to-markdown"
+      ],
+      "files": [
+        {
+          "path": "assets/vendor/turndown/7.2.4/turndown.js",
+          "source": "https://cdnjs.cloudflare.com/ajax/libs/turndown/7.2.4/turndown.js",
+          "sha256": "c97187f436d41638bf7acf346a39d9d42f2f2c02af18245a297c09e796f8e46f",
+          "bytes": 26659
+        }
+      ],
+      "license_file": {
+        "path": "assets/vendor/turndown/7.2.4/LICENSE",
+        "source": "https://raw.githubusercontent.com/mixmark-io/turndown/v7.2.4/LICENSE",
+        "sha256": "a055e3a15db4b4cbb5af381230eba085603126d7d5d8c4dae45ee85b877a9729",
+        "bytes": 1069
+      }
+    },
+    {
+      "name": "turndown-plugin-gfm",
+      "version": "1.0.2",
+      "license": "MIT",
+      "used_by": [
+        "convert-to-markdown"
+      ],
+      "files": [
+        {
+          "path": "assets/vendor/turndown-plugin-gfm/1.0.2/turndown-plugin-gfm.js",
+          "source": "https://cdn.jsdelivr.net/npm/turndown-plugin-gfm@1.0.2/dist/turndown-plugin-gfm.js",
+          "sha256": "cf744cc1b7580f06d64ce236a4ff2630a53d389eccf2133a09d71ca443511912",
+          "bytes": 4191
+        }
+      ],
+      "license_file": {
+        "path": "assets/vendor/turndown-plugin-gfm/1.0.2/LICENSE",
+        "source": "https://cdn.jsdelivr.net/npm/turndown-plugin-gfm@1.0.2/LICENSE",
+        "sha256": "a055e3a15db4b4cbb5af381230eba085603126d7d5d8c4dae45ee85b877a9729",
+        "bytes": 1069
+      }
+    }
+  ]
+}
