@@ -321,5 +321,6 @@ Rules the scripts enforce:
 - **`<title>` and `<meta name="description">` wording never changes** in an audit: only capitalization and punctuation may (`audit_apply.py` refuses anything else).
 - **JSON-LD** must match the page (see **Structured data (JSON-LD)**); `verify_new_content.py` runs `check_jsonld.py` with the other CI checks.
 - **Sitemap and post dates come from `python scripts/content_dates.py --write`**, never typed by hand; `verify_new_content.py` fails while a date is out of date.
+- **"Read our guide" / "Lee nuestra guía" link text equals the guide's H1** (since 2026-10-27): change the post's H1, then run `python scripts/sync_guide_links.py --write` (`--check` exits 1 on any mismatch); `verify_new_content.py`'s guide-sync check fails otherwise.
 
 `verify_new_content.py` stays a manual, local runner and is deliberately not in CI (decision confirmed 2026-09-07). `--all` runs its page checks on every page; `--a11y` adds the axe scan.

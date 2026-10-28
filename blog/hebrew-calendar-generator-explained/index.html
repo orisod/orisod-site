@@ -47,7 +47,7 @@
   "url": "https://orisod.com/blog/hebrew-calendar-generator-explained/",
   "inLanguage": "en",
   "datePublished": "2026-09-07",
-  "dateModified": "2026-09-15",
+  "dateModified": "2026-10-27",
   "author": {
     "@type": "Organization",
     "@id": "https://orisod.com/#organization",
@@ -333,7 +333,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 </nav>
 <span class="blog-cat cat-guide">Guides</span>
 <h1>How the Hebrew calendar generator computes candle lighting and tzeit hakochavim</h1>
-<p class="intro">The Hebrew Calendar Generator arranges pages by Hebrew month, from Tishrei through Elul. It adds location-based candle-lighting and Havdalah times, a choice of tzeit hakochavim methods, and the weekly Torah portion for the Israel/Diaspora mode you select. The general Calendar Generator already supplies Hebrew dates, holidays, and five-color day shading; the dedicated tool builds on that data for a full Hebrew-year calendar.</p>
+<p class="intro">The Hebrew calendar generator arranges pages by Hebrew month, from Tishrei through Elul. It adds location-based candle-lighting and Havdalah times, a choice of tzeit hakochavim methods, and the weekly Torah portion for the Israel/Diaspora mode you select. The general Calendar generator already supplies Hebrew dates, holidays, and five-color day shading; the dedicated tool builds on that data for a full Hebrew-year calendar.</p>
 
 <div class="article-body">
 
@@ -344,7 +344,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 <p>A Hebrew year spans parts of two Gregorian years: it begins with Rosh Hashanah in September or October and ends with Elul in the following year. If you enter 2026, the tool finds the Hebrew year whose Rosh Hashanah falls in 2026 and displays the range "2026-2027", with an explanation that the calendar continues into the second year. It does this by finding the Tishrei 1 entry in the daily dataset and reading its Hebrew year. Entering a Hebrew year directly leads to the same calendar-building function.</p>
 
 <h2>Calculating candle-lighting, Havdalah, and tzeit hakochavim times</h2>
-<p>Sunset depends on the date, latitude, and longitude, so its calculation waits until you choose a location. The Hebrew Calendar Generator from Orisod runs a solar-position library in the browser to calculate the times used in the PDF. These live calculations cover weekly Shabbat and the relevant Yom Tov dates, including weekdays, for candle-lighting and Havdalah. The tool uses the applicable timing rules and the selected tzeit hakochavim method: fixed minutes after sunset or a solar-depression angle. A single fixed offset from sunset does not describe both methods. The holiday and Hebrew-date tables can be prepared in advance, but the solar calculations need your chosen coordinates.</p>
+<p>Sunset depends on the date, latitude, and longitude, so its calculation waits until you choose a location. The Hebrew calendar generator from Orisod runs a solar-position library in the browser to calculate the times used in the PDF. These live calculations cover weekly Shabbat and the relevant Yom Tov dates, including weekdays, for candle-lighting and Havdalah. The tool uses the applicable timing rules and the selected tzeit hakochavim method: fixed minutes after sunset or a solar-depression angle. A single fixed offset from sunset does not describe both methods. The holiday and Hebrew-date tables can be prepared in advance, but the solar calculations need your chosen coordinates.</p>
 
 <h2>Two methods for tzeit hakochavim</h2>
 <p>Tzeit hakochavim, the emergence of the stars that marks the end of Shabbat or a holiday, is defined differently across communities. One method uses a fixed interval after sunset, commonly 42, 50, or 72 minutes. The other calculates when the sun reaches a specified angle below the horizon, commonly 3.7, 4.61, 6.5, or 8.5 degrees. The results can differ substantially with location and season. Both methods are available in the dropdown so you can select the one used by your community.</p>
@@ -358,12 +358,12 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 <h2>Preparing and checking your calendar</h2>
 <p><strong>You can view the calendar before choosing a location.</strong> Hebrew dates, holidays, day colors, and the weekly Torah portion are available without coordinates. Choose a location when you want candle-lighting, Havdalah, and tzeit hakochavim times.</p>
 <p><strong>Use the calculated times as a reference.</strong> Sunset, candle-lighting, Havdalah, and tzeit hakochavim calculations are estimates, not a religious ruling. Elevation, the visible horizon, atmospheric conditions, high latitudes, and differences between calculation methods can affect the results. Confirm the times and method with your rabbi or local community before relying on them for observance.</p>
-<p><strong>Add photos and custom events to the Hebrew months.</strong> These features work as they do in the general Calendar Generator, with your content arranged on Hebrew-month pages.</p>
-<p><strong>The calendar is generated locally in your browser.</strong> The Hebrew Calendar Generator performs its stored-city lookup, sunset calculations, and PDF generation there. Your calendar photos and custom events are not uploaded to a server for that processing.</p>
+<p><strong>Add photos and custom events to the Hebrew months.</strong> These features work as they do in the general Calendar generator, with your content arranged on Hebrew-month pages.</p>
+<p><strong>The calendar is generated locally in your browser.</strong> The Hebrew calendar generator performs its stored-city lookup, sunset calculations, and PDF generation there. Your calendar photos and custom events are not uploaded to a server for that processing.</p>
 
 <div class="cta-box">
   <h3>Build your Hebrew year calendar</h3>
-  <p>Orisod's Hebrew Calendar Generator creates a PDF from Tishrei through Elul, with the weekly Torah portion and location-based candle-lighting, Havdalah, and tzeit hakochavim times. The calendar is assembled in your browser.</p>
+  <p>Orisod's Hebrew calendar generator creates a PDF from Tishrei through Elul, with the weekly Torah portion and location-based candle-lighting, Havdalah, and tzeit hakochavim times. The calendar is assembled in your browser.</p>
   <a class="cta-button" href="/hebrew-calendar-generator/">Build a Hebrew calendar →</a>
 </div>
 

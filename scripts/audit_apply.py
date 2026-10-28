@@ -18,7 +18,9 @@ when all of these hold, otherwise it is reported and left alone:
   - for <title> and <meta name="description">, the words are the same: only
     capitalization and punctuation may change;
   - the replacement keeps every tag, attribute and link of the original in the
-    same order, keeps <code> contents and protected tokens, and has no em dash.
+    same order, keeps <code> contents and protected tokens, and has no em dash
+    (the brand "Orisod" also counts as kept when it becomes the domain
+    "orisod.com").
 
 Counts: changed, unchanged, excluded (not editable, or title/meta wording
 changed), rejected (failed a safety check) and mismatched (block missing or
@@ -44,6 +46,7 @@ from audit_extract import LISTING, REPO_ROOT, extract_file, page_info, plain, re
 WORDING_LOCKED = {"title", "meta_description"}
 ATTRIBUTE_FIELDS = {"meta_description", "alt_text", "svg_label"}
 TAG = re.compile(r"<(/?)([a-zA-Z][a-zA-Z0-9]*)([^>]*)>")
+DOMAIN = re.compile(r"\borisod\.com\b", re.I)  # the domain keeps the protected brand word "Orisod"
 
 
 def sha(s):
@@ -106,7 +109,8 @@ def check_replacement(live, new):
     old_code = re.findall(r"<code[^>]*>(.*?)</code>", old, re.S)
     if re.findall(r"<code[^>]*>(.*?)</code>", new, re.S) != old_code:
         return "text inside <code> changed"
-    lost = [t for t in live["protected_tokens"] if t not in plain(new) and t not in old_code]
+    lost = [t for t in live["protected_tokens"] if t not in plain(new) and t not in old_code
+            and not (t == "Orisod" and DOMAIN.search(plain(new)))]
     if lost:
         return "drops protected term(s): " + ", ".join(lost)
     if not plain(new):
