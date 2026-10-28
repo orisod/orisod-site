@@ -1,0 +1,19 @@
+name: Verify self-hosted libraries
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check-vendor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check no page loads scripts from an outside host and assets/vendor matches its manifest
+        run: python3 scripts/check_vendor.py
