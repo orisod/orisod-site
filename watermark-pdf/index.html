@@ -619,10 +619,10 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 </script>
 
 <!-- Tool libraries load here, after the page content, so they don't hold up the first paint. -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="/assets/vendor/pdfjs/3.11.174/pdf.min.js"></script>
 <script src="/assets/vendor/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <script>
-pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+pdfjsLib.GlobalWorkerOptions.workerSrc = "/assets/vendor/pdfjs/3.11.174/pdf.worker.min.js";
 
 const fileInput = document.getElementById('fileInput');
 const dropzone = document.getElementById('dropzone');
