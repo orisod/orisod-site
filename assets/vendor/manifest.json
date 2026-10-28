@@ -336,6 +336,75 @@
           "bytes": 1103
         }
       ]
+    },
+    {
+      "name": "docx",
+      "version": "9.7.1",
+      "license": "MIT",
+      "license_note": "Not on cdnjs; this copy is the jsDelivr file, identical to dist/index.iife.js in the npm package. It exposes the global docx.",
+      "used_by": [
+        "pdf-to-word"
+      ],
+      "files": [
+        {
+          "path": "assets/vendor/docx/9.7.1/index.iife.js",
+          "source": "https://cdn.jsdelivr.net/npm/docx@9.7.1/dist/index.iife.js",
+          "sha256": "d5ec4f5a8b99740845974f5f6f020d6e5b1b6c27026195befc67eb37035c84c7",
+          "bytes": 1123332
+        }
+      ],
+      "license_file": {
+        "path": "assets/vendor/docx/9.7.1/LICENSE",
+        "source": "https://raw.githubusercontent.com/dolanmiu/docx/9.7.1/LICENSE",
+        "sha256": "b5b2364c0c95a26b2a2399d7e706a61acac680be1d5b180b00592ee85830bffb",
+        "bytes": 1072
+      }
+    },
+    {
+      "name": "mammoth",
+      "version": "1.12.1",
+      "license": "BSD-2-Clause",
+      "license_note": "Not on cdnjs; this copy is the jsDelivr file, identical to mammoth.browser.min.js in the npm package. It exposes the global mammoth.",
+      "used_by": [
+        "word-to-pdf"
+      ],
+      "files": [
+        {
+          "path": "assets/vendor/mammoth/1.12.1/mammoth.browser.min.js",
+          "source": "https://cdn.jsdelivr.net/npm/mammoth@1.12.1/mammoth.browser.min.js",
+          "sha256": "0180991546a6dab1e03e387e8273cd7e8a74957dfb6b3eae7c66a7d8de7f5926",
+          "bytes": 636199
+        }
+      ],
+      "license_file": {
+        "path": "assets/vendor/mammoth/1.12.1/LICENSE",
+        "source": "https://raw.githubusercontent.com/mwilliamson/mammoth.js/1.12.1/LICENSE",
+        "sha256": "6663bbd049205d38a496ccacb412a151980b444627d38de218b3b809aef330f1",
+        "bytes": 1307
+      }
+    },
+    {
+      "name": "xlsx",
+      "version": "0.20.3",
+      "license": "Apache-2.0",
+      "license_note": "SheetJS Community Edition, from SheetJS's own CDN (current releases aren't on npm, cdnjs or jsDelivr); identical to dist/xlsx.full.min.js in the official xlsx-0.20.3.tgz. Its attribution header (\"xlsx.js (C) 2013-present SheetJS -- http://sheetjs.com\") is kept unchanged in the file; the package ships no NOTICE file. It exposes the global XLSX.",
+      "used_by": [
+        "excel-to-pdf"
+      ],
+      "files": [
+        {
+          "path": "assets/vendor/xlsx/0.20.3/xlsx.full.min.js",
+          "source": "https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js",
+          "sha256": "cc015130aa8521e7f088f88898eba949ccdcbfb38df0bd129b44b7273c3a6f41",
+          "bytes": 951904
+        }
+      ],
+      "license_file": {
+        "path": "assets/vendor/xlsx/0.20.3/LICENSE",
+        "source": "https://cdn.sheetjs.com/xlsx-0.20.3/package/LICENSE",
+        "sha256": "4d2a38ac35cda06a555c84074a819d413339cd3691b822cae50f8f322fe01f64",
+        "bytes": 11355
+      }
     }
   ]
 }
