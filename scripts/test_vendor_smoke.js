@@ -14,8 +14,8 @@
  * request is answered locally too, so nothing is counted. Every other request is
  * blocked and fails the case, except the CDN URLs still allowed in
  * scripts/check_vendor.py (REMAINING_CDN), which are let through and listed, so a
- * page that still needs a library that hasn't moved yet (like heic2any on HEIC
- * to JPG) can finish its job. Once REMAINING_CDN is empty,
+ * page that still needs a library that hasn't moved yet (like tesseract.js on
+ * OCR PDF) can finish its job. Once REMAINING_CDN is empty,
  * every outside request fails.
  *
  * Each case runs one real operation with its library and checks the result, then
@@ -241,6 +241,20 @@ function darkPixels(page, jpeg) {
     return { dark, total: c.width * c.height };
   }, Buffer.from(jpeg).toString("base64"));
 }
+
+// A 64x48 HEIC image (598 bytes): white, with a black block over its left half.
+// No HEIC encoder runs in a browser, so it was made once from that synthetic image
+// (no photo, no metadata) with pillow-heif 1.8.1 (libheif 1.23.6 and x265), 8-bit
+// 4:2:0, quality 90, by a different libheif than the one heic2any bundles.
+const HEIC_FIXTURE = Buffer.from(
+  "AAAAHGZ0eXBoZWljAAAAAG1pZjFoZWljbWlhZgAAAX1tZXRhAAAAAAAAACFoZGxyAAAAAAAAAABwaWN0AAAAAAAAAAAAAAAAAAAAACJpbG9jAAAA" +
+  "AERAAAEAAQAAAAABoQABAAAAAAAAALUAAAAjaWluZgAAAAAAAQAAABVpbmZlAgAAAAABAABodmMxAAAAAA5waXRtAAAAAAABAAAA/WlwcnAAAADd" +
+  "aXBjbwAAAHZodmNDAQNwAAAAkAAAAAAAHvAA/P34+AAADwNgAAEAGEABDAH//wNwAAADAJAAAAMAAAMAHroCQGEAAQAqQgEBA3AAAAMAkAAAAwAA" +
+  "AwAeoCCBBZbq5Ka5uAhoMCAAAAMDIAAAAwAhYgABAAZEAcFzwIkAAAATY29scm5jbHgAAQANAAaAAAAAFGlzcGUAAAAAAAAAQAAAAEAAAAAoY2xh" +
+  "cAAAAEAAAAABAAAAMAAAAAEAAAAAAAAAAv////AAAAACAAAAEHBpeGkAAAAAAwgICAAAABhpcG1hAAAAAAAAAAEAAQWBAgMFhAAAAL1tZGF0AAAA" +
+  "sSgBrwY4ifLD6b/q/AjYYlf9/+mW+U1Ii2LDQ1tbz6scPu8/4B/d3+xWre8WfmoHqozNLJqzIW3gWW4J8EcNtWpPQanXPnujUGpIdep75z/5oIw6" +
+  "Hoz33Guyje/f0MWfWW6NT3nUkOxMq82DMSiLdAZ++gXripNMqlTzbV5RR5wYJ9M8ZXE2l4+p31PCGXIaini47s9/1/zUbXyP5l5lxn/3oADvjc8X" +
+  "8JWeMSxX1o+Dlg==", "base64");
 
 // A JPEG drawn by the browser: white, with a black block over its left half.
 async function fixtureJpeg(page, w, h) {
@@ -616,6 +630,40 @@ const CASES = [
       return `words.docx: a valid Word file (${files.length} parts) whose document.xml has "Fixture alpha" and "Fixture bravo" in order`;
     },
   },
+  {
+    name: "heic2any (HEIC to JPG)",
+    page: "/heic-to-jpg/",
+    vendor: ["/assets/vendor/heic2any/0.0.4/heic2any.min.js"],
+    // heic2any starts its decoder as a Web Worker from a blob: URL holding code inside
+    // heic2any.min.js (libheif and libde265 included), so it fetches no file of its own.
+    blobWorker: true,
+    async run(page) {
+      await page.setInputFiles("#fileInput", { name: "smoke.heic", mimeType: "image/heic", buffer: HEIC_FIXTURE });
+      await page.locator("#convertBtn:not([disabled])").waitFor({ timeout: 30000 });
+      await page.click("#convertBtn");
+      const link = page.locator('#results a[download="smoke.jpg"]');
+      await link.waitFor({ timeout: 60000 });
+      const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
+      const bytes = await readFile(await download.path());
+      const size = jpegSize(bytes);
+      expect(size, "smoke.jpg isn't a JPEG");
+      expect(size.w === 64 && size.h === 48, `smoke.jpg is ${size.w}x${size.h}, not 64x48`);
+      // libheif's decoded picture: the left half must come out black and the right half white.
+      const halves = await page.evaluate(async (b64) => {
+        const img = new Image();
+        img.src = "data:image/jpeg;base64," + b64;
+        await img.decode();
+        const c = document.createElement("canvas");
+        c.width = img.naturalWidth; c.height = img.naturalHeight;
+        const ctx = c.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        const mean = (x, w) => { const d = ctx.getImageData(x, 0, w, c.height).data; let t = 0; for (let i = 0; i < d.length; i += 4) t += d[i] + d[i + 1] + d[i + 2]; return t / (d.length / 4) / 3; };
+        return [mean(0, 28), mean(36, 28)];
+      }, bytes.toString("base64"));
+      expect(halves[0] < 40 && halves[1] > 215, `smoke.jpg halves average ${halves.map(Math.round).join(" and ")}, not black and white`);
+      return `smoke.jpg: a 64x48 JPEG, left half black and right half white (averages ${halves.map(Math.round).join(" / ")}), decoded by heic2any's libheif`;
+    },
+  },
 ];
 
 async function runCase(browser, c, lang) {
@@ -651,6 +699,7 @@ async function runCase(browser, c, lang) {
     // A real Web Worker started straight from the vendored file (not a blob: wrapper,
     // and not PDF.js's main-thread fallback, which starts no worker at all).
     if (c.worker) expect(seen.workers.includes(SITE + c.worker), `no worker started from ${c.worker} (workers: ${seen.workers.join(", ") || "none"})`);
+    if (c.blobWorker) expect(seen.workers.some((u) => u.startsWith(`blob:${SITE}/`)), `no blob: worker started on ${SITE} (workers: ${seen.workers.join(", ") || "none"})`);
     expect(!seen.blocked.length, `requests to outside hosts: ${seen.blocked.join(", ")}`);
     expect(!seen.errors.length, seen.errors.join("; "));
   } catch (e) {
