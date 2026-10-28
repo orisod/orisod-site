@@ -14,8 +14,8 @@
  * request is answered locally too, so nothing is counted. Every other request is
  * blocked and fails the case, except the CDN URLs still allowed in
  * scripts/check_vendor.py (REMAINING_CDN), which are let through and listed, so a
- * page that still needs a library that hasn't moved yet (like JSZip on PDF to
- * JPG) can finish its job. Once REMAINING_CDN is empty,
+ * page that still needs a library that hasn't moved yet (like SheetJS on Excel
+ * to PDF) can finish its job. Once REMAINING_CDN is empty,
  * every outside request fails.
  *
  * Each case runs one real operation with its library and checks the result, then
@@ -28,7 +28,7 @@ import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import { extname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
-import { inflateSync } from "node:zlib";
+import { inflateRawSync, inflateSync } from "node:zlib";
 import { chromium } from "playwright";
 
 const REPO_ROOT = fileURLToPath(new URL("..", import.meta.url));
@@ -119,12 +119,91 @@ function fixturePdf(label, pages) {
   return Buffer.from(out, "latin1");
 }
 
+// The JPEG images inside a PDF (its /DCTDecode image streams), in file order.
+function pdfJpegs(bytes) {
+  const raw = bytes.toString("latin1");
+  const out = [];
+  for (const m of raw.matchAll(/<<((?:(?!>>\s*stream)[\s\S])*)>>\s*stream\r?\n/g)) {
+    if (!/\/Subtype\s*\/Image/.test(m[1]) || !/\/DCTDecode/.test(m[1])) continue;
+    const start = m.index + m[0].length;
+    const len = +(m[1].match(/\/Length\s+(\d+)(?!\s+\d+\s+R)/) || [])[1];
+    out.push(bytes.subarray(start, len ? start + len : raw.indexOf("endstream", start)));
+  }
+  return out;
+}
+
+// Width and height from a JPEG's SOF marker, or null if it isn't a JPEG.
+function jpegSize(buf) {
+  if (buf[0] !== 0xff || buf[1] !== 0xd8) return null;
+  for (let i = 2; i + 9 < buf.length;) {
+    if (buf[i] !== 0xff) return null;
+    const marker = buf[i + 1];
+    if (marker >= 0xc0 && marker <= 0xcf && ![0xc4, 0xc8, 0xcc].includes(marker))
+      return { w: buf.readUInt16BE(i + 7), h: buf.readUInt16BE(i + 5) };
+    i += 2 + buf.readUInt16BE(i + 2);
+  }
+  return null;
+}
+
+// The files in a ZIP, read from its central directory without any ZIP library.
+function zipEntries(bytes) {
+  const eocd = bytes.lastIndexOf(Buffer.from([0x50, 0x4b, 0x05, 0x06]));
+  expect(eocd >= 0, "the download isn't a ZIP");
+  const count = bytes.readUInt16LE(eocd + 10);
+  let at = bytes.readUInt32LE(eocd + 16);
+  const out = [];
+  for (let n = 0; n < count; n++) {
+    expect(bytes.readUInt32LE(at) === 0x02014b50, "broken ZIP central directory");
+    const method = bytes.readUInt16LE(at + 10), size = bytes.readUInt32LE(at + 20);
+    const nameLen = bytes.readUInt16LE(at + 28), extraLen = bytes.readUInt16LE(at + 30), commentLen = bytes.readUInt16LE(at + 32);
+    const local = bytes.readUInt32LE(at + 42);
+    const name = bytes.subarray(at + 46, at + 46 + nameLen).toString("utf-8");
+    const dataAt = local + 30 + bytes.readUInt16LE(local + 26) + bytes.readUInt16LE(local + 28);
+    const stored = bytes.subarray(dataAt, dataAt + size);
+    out.push({ name, data: method === 8 ? inflateRawSync(stored) : stored });
+    at += 46 + nameLen + extraLen + commentLen;
+  }
+  return out;
+}
+
+// How many of a JPEG's pixels are dark, decoded by the browser.
+function darkPixels(page, jpeg) {
+  return page.evaluate(async (b64) => {
+    const img = new Image();
+    img.src = "data:image/jpeg;base64," + b64;
+    await img.decode();
+    const c = document.createElement("canvas");
+    c.width = img.naturalWidth; c.height = img.naturalHeight;
+    const ctx = c.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+    const { data } = ctx.getImageData(0, 0, c.width, c.height);
+    let dark = 0;
+    for (let i = 0; i < data.length; i += 4) if (data[i] + data[i + 1] + data[i + 2] < 300) dark++;
+    return { dark, total: c.width * c.height };
+  }, Buffer.from(jpeg).toString("base64"));
+}
+
+// A JPEG drawn by the browser: white, with a black block over its left half.
+async function fixtureJpeg(page, w, h) {
+  const b64 = await page.evaluate(([w, h]) => {
+    const c = document.createElement("canvas");
+    c.width = w; c.height = h;
+    const ctx = c.getContext("2d");
+    ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = "#000"; ctx.fillRect(0, 0, w / 2, h);
+    return c.toDataURL("image/jpeg", 0.9).split(",")[1];
+  }, [w, h]);
+  return Buffer.from(b64, "base64");
+}
+
 function expect(ok, message) {
   if (!ok) throw new Error(message);
 }
 
 const PDFJS = "/assets/vendor/pdfjs/3.11.174/pdf.min.js";
 const PDFJS_WORKER = "/assets/vendor/pdfjs/3.11.174/pdf.worker.min.js";
+const JSPDF = "/assets/vendor/jspdf/2.5.1/jspdf.umd.min.js";
+const JSZIP = "/assets/vendor/jszip/3.10.1/jszip.min.js";
 
 // One entry per library (or library pair) that has moved to assets/vendor.
 const CASES = [
@@ -312,6 +391,100 @@ const CASES = [
       const text = pdfText(bytes).trim().split("\n");
       expect(pages === 2 && text.join("|") === "Fixture page 1|Fixture page 3", `saved PDF: ${pages} pages, ${JSON.stringify(text)}`);
       return `3 thumbnails drawn by PDF.js (${thumbs.join("/")} text pixels); page 2 removed, saved PDF has pages 1 and 3`;
+    },
+  },
+  {
+    name: "jsPDF (JPG to PDF)",
+    page: "/jpg-to-pdf/",
+    vendor: [JSPDF],
+    async run(page) {
+      const a = await fixtureJpeg(page, 400, 300);
+      const b = await fixtureJpeg(page, 300, 500);
+      await page.setInputFiles("#fileInput", [
+        { name: "a.jpg", mimeType: "image/jpeg", buffer: a },
+        { name: "b.jpg", mimeType: "image/jpeg", buffer: b },
+      ]);
+      await page.click("#convertBtn");
+      const link = page.locator('#result a[download="converted.pdf"]');
+      await link.waitFor({ timeout: 30000 });
+      const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
+      const bytes = await readFile(await download.path());
+      expect(bytes.subarray(0, 5).toString() === "%PDF-", "the download isn't a PDF");
+      const pages = pdfPageCount(bytes);
+      expect(pages === 2, `converted.pdf has ${pages} pages, not 2`);
+      const boxes = [...bytes.toString("latin1").matchAll(/\/MediaBox\s*\[\s*0\s+0\s+([\d.]+)\s+([\d.]+)\s*\]/g)].map((m) => `${+m[1]}x${+m[2]}`);
+      expect(boxes.join("|") === "400x300|300x500", `page sizes ${JSON.stringify(boxes)}, not 400x300 and 300x500`);
+      const jpegs = pdfJpegs(bytes);
+      expect(jpegs.length === 2 && jpegs[0].equals(a) && jpegs[1].equals(b), `the PDF's ${jpegs.length} images aren't the two uploaded JPEGs, in order`);
+      return `2 JPEGs became a 2-page PDF (400x300 and 300x500 pt pages, both images embedded unchanged, ${bytes.length} bytes)`;
+    },
+  },
+  {
+    name: "html2canvas + jsPDF (HTML to PDF)",
+    page: "/html-to-pdf/",
+    vendor: ["/assets/vendor/html2canvas/1.4.1/html2canvas.min.js", JSPDF],
+    async run(page, lang) {
+      await page.fill("#htmlInput", '<div id="smoke" style="width:300px;height:200px;background:#000"></div><p>Smoke test</p>');
+      await page.waitForFunction(() => !!document.getElementById("previewFrame").contentDocument.getElementById("smoke"), null, { timeout: 10000 });
+      await page.click("#convertBtn");
+      const name = lang === "es" ? "html-a-pdf.pdf" : "html-to-pdf.pdf";
+      const link = page.locator(`#result a[download="${name}"]`);
+      await link.waitFor({ timeout: 30000 });
+      const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
+      const bytes = await readFile(await download.path());
+      expect(bytes.subarray(0, 5).toString() === "%PDF-", "the download isn't a PDF");
+      const pages = pdfPageCount(bytes);
+      expect(pages === 1, `${name} has ${pages} pages, not 1`);
+      const jpegs = pdfJpegs(bytes);
+      expect(jpegs.length === 1, `${name} has ${jpegs.length} images, not 1`);
+      const size = jpegSize(jpegs[0]);
+      const { dark, total } = await darkPixels(page, jpegs[0]);
+      // The black 300x200 block, drawn at html2canvas's scale 2, is 240,000 pixels.
+      expect(dark > 200000 && dark < total / 2, `the rendered page has ${dark} dark pixels of ${total}; the black block isn't there`);
+      return `${name}: 1 page, html2canvas drew a ${size.w}x${size.h} image with the black block (${dark} dark pixels)`;
+    },
+  },
+  {
+    name: "PDF.js + JSZip (PDF to JPG)",
+    page: "/pdf-to-jpg/",
+    vendor: [PDFJS, PDFJS_WORKER, JSZIP],
+    worker: PDFJS_WORKER,
+    async run(page) {
+      const pdf = fixturePdf("Fixture", ["page 1", "page 2", "page 3"]);
+      await page.setInputFiles("#fileInput", { name: "three.pdf", mimeType: "application/pdf", buffer: pdf });
+      await page.locator("#convertBtn:not([disabled])").waitFor({ timeout: 30000 });
+      await page.click("#convertBtn");
+      await page.locator("#downloadAllWrap").waitFor({ state: "visible", timeout: 60000 });
+      const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), page.click("#downloadAllBtn")]);
+      expect(download.suggestedFilename() === "three.zip", `the ZIP is called ${download.suggestedFilename()}`);
+      const files = zipEntries(await readFile(await download.path()));
+      expect(files.length === 3, `the ZIP has ${files.length} files, not 3`);
+      for (const f of files) {
+        const size = jpegSize(f.data);
+        expect(/\.jpg$/.test(f.name) && size && size.w === 1224 && size.h === 1584, `${f.name} isn't a 1224x1584 JPEG`);
+        const { dark } = await darkPixels(page, f.data);
+        expect(dark > 50, `${f.name} is blank (${dark} dark pixels)`);
+      }
+      return `three.zip: ${files.map((f) => f.name).join(", ")}, each a 1224x1584 JPEG with its page's text`;
+    },
+  },
+  {
+    name: "pdf-lib + JSZip (Split PDF)",
+    page: "/split-pdf/",
+    vendor: ["/assets/vendor/pdf-lib/1.17.1/pdf-lib.min.js", JSZIP],
+    async run(page) {
+      const pdf = fixturePdf("Fixture", ["page 1", "page 2", "page 3"]);
+      await page.setInputFiles("#fileInput", { name: "three.pdf", mimeType: "application/pdf", buffer: pdf });
+      await page.locator("#splitAllBtn").waitFor({ state: "visible", timeout: 30000 });
+      await page.click("#splitAllBtn");
+      const link = page.locator('#result a[download="three-split.zip"]');
+      await link.waitFor({ timeout: 30000 });
+      const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
+      const files = zipEntries(await readFile(await download.path()));
+      const got = files.map((f) => `${f.name}: ${pdfPageCount(f.data)} page, ${pdfText(f.data).trim()}`);
+      const want = [1, 2, 3].map((n) => `three-page-${n}.pdf: 1 page, Fixture page ${n}`);
+      expect(got.join("|") === want.join("|"), `three-split.zip holds ${JSON.stringify(got)}`);
+      return `three-split.zip: three-page-1.pdf to three-page-3.pdf, one page each, with the right text`;
     },
   },
 ];

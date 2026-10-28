@@ -35,7 +35,7 @@ And for assets/vendor:
   each source an https URL
 - every file's sha256 and size match the manifest, every file on disk is in the
   manifest (and nothing in the manifest is missing), and every library has its
-  LICENSE file
+  LICENSE file (plus any notice_files, e.g. the licenses of code it bundles)
 - .gitattributes keeps assets/vendor byte-for-byte (assets/vendor/** -text)
 
 Links (<a href>), the GoatCounter endpoint (data-goatcounter) and the Stripe
@@ -67,10 +67,6 @@ GITATTRIBUTES_RULE = "assets/vendor/** -text"
 # Every CDN URL still in use, and how many times it appears (script tags plus
 # strings in inline scripts). Shrinks as each library moves to assets/vendor.
 REMAINING_CDN = {
-    "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js": 16,
-    "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.4/jspdf.plugin.autotable.min.js": 2,
-    "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js": 4,
-    "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js": 10,
     "https://cdn.jsdelivr.net/npm/docx@9.7.1/dist/index.iife.js": 2,
     "https://cdn.jsdelivr.net/npm/mammoth@1.12.1/mammoth.browser.min.js": 2,
     "https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js": 2,
@@ -136,6 +132,11 @@ def check_manifest(root, problems):
             problems.append(f"{where}: needs a license_file (the library's LICENSE, shipped next to it)")
         else:
             entries.append((lib["license_file"], True))
+        notices = lib.get("notice_files", [])
+        if not isinstance(notices, list) or not all(isinstance(e, dict) for e in notices):
+            problems.append(f"{where}: notice_files must be a list of files like license_file")
+        else:
+            entries += [(e, True) for e in notices]
         for entry, is_license in entries:
             path = str(entry.get("path", ""))
             listed[path] += 1
