@@ -14,8 +14,8 @@
  * request is answered locally too, so nothing is counted. Every other request is
  * blocked and fails the case, except the CDN URLs still allowed in
  * scripts/check_vendor.py (REMAINING_CDN), which are let through and listed, so a
- * page that still needs a library that hasn't moved yet (like pdf-lib on the
- * Hebrew calendar generator) can finish its job. Once REMAINING_CDN is empty,
+ * page that still needs a library that hasn't moved yet (like PDF.js on the
+ * PDF tools) can finish its job. Once REMAINING_CDN is empty,
  * every outside request fails.
  *
  * Each case runs one real operation with its library and checks the result, then
@@ -73,6 +73,50 @@ function pdfText(bytes) {
       out += (t[1] !== undefined ? Buffer.from(t[1].replace(/\s/g, ""), "hex").toString("latin1") : t[2].replace(/\\(.)/g, "$1")) + "\n";
   }
   return out;
+}
+
+// How many pages a PDF has, read from its page tree without any PDF library: the
+// largest /Count of a /Type /Pages node (the root), looking inside compressed
+// object streams too, since pdf-lib saves its objects in them.
+function pdfPageCount(bytes) {
+  const raw = bytes.toString("latin1");
+  const parts = [raw];
+  for (const m of raw.matchAll(/<<((?:(?!>>\s*stream)[\s\S])*)>>\s*stream\r?\n/g)) {
+    if (!/\/FlateDecode/.test(m[1])) continue;
+    const start = m.index + m[0].length;
+    try { parts.push(inflateSync(bytes.subarray(start, raw.indexOf("endstream", start))).toString("latin1")); } catch {}
+  }
+  let count = 0;
+  for (const s of parts)
+    for (const m of s.matchAll(/<<(?:(?!<<|>>)[\s\S])*\/Type\s*\/Pages\b(?:(?!<<|>>)[\s\S])*>>/g)) {
+      const c = m[0].match(/\/Count\s+(\d+)/);
+      if (c) count = Math.max(count, +c[1]);
+    }
+  return count;
+}
+
+// A small, valid PDF written by hand (not by pdf-lib), with one line of text per page.
+function fixturePdf(label, pages) {
+  const objs = [];
+  const kids = pages.map((_, i) => `${4 + i * 2} 0 R`).join(" ");
+  objs.push("<< /Type /Catalog /Pages 2 0 R >>");
+  objs.push(`<< /Type /Pages /Kids [${kids}] /Count ${pages.length} >>`);
+  objs.push("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>");
+  pages.forEach((text, i) => {
+    const content = `BT /F1 24 Tf 72 700 Td (${label} ${text}) Tj ET`;
+    objs.push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents ${5 + i * 2} 0 R >>`);
+    objs.push(`<< /Length ${content.length} >>\nstream\n${content}\nendstream`);
+  });
+  let out = "%PDF-1.4\n";
+  const offsets = objs.map((o, i) => {
+    const at = out.length;
+    out += `${i + 1} 0 obj\n${o}\nendobj\n`;
+    return at;
+  });
+  const xref = out.length;
+  out += `xref\n0 ${objs.length + 1}\n0000000000 65535 f \n` + offsets.map((o) => `${String(o).padStart(10, "0")} 00000 n \n`).join("");
+  out += `trailer\n<< /Size ${objs.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`;
+  return Buffer.from(out, "latin1");
 }
 
 function expect(ok, message) {
@@ -150,6 +194,48 @@ const CASES = [
       const want = "## Fruit\n\n| Name | Qty |\n| --- | --- |\n| Apple | 3 |\n| Pear | 5 |";
       expect(md === want, `Markdown was:\n${md}`);
       return "HTML table became a pipe table (## Fruit | Name | Qty | ...)";
+    },
+  },
+  {
+    name: "pdf-lib (Merge PDF)",
+    page: "/merge-pdf/",
+    vendor: ["/assets/vendor/pdf-lib/1.17.1/pdf-lib.min.js"],
+    async run(page) {
+      const a = { name: "a.pdf", mimeType: "application/pdf", buffer: fixturePdf("Fixture A", ["page 1", "page 2"]) };
+      const b = { name: "b.pdf", mimeType: "application/pdf", buffer: fixturePdf("Fixture B", ["page 1", "page 2", "page 3"]) };
+      const want = pdfPageCount(a.buffer) + pdfPageCount(b.buffer);
+      expect(want === 5, `the fixtures have ${want} pages, not 2 + 3`);
+      await page.setInputFiles("#fileInput", [a, b]);
+      await page.click("#mergeBtn");
+      const link = page.locator('#result a[download="merged.pdf"]');
+      await link.waitFor({ timeout: 30000 });
+      const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
+      const bytes = await readFile(await download.path());
+      expect(bytes.subarray(0, 5).toString() === "%PDF-", "the download isn't a PDF");
+      const pages = pdfPageCount(bytes);
+      expect(pages === want, `merged.pdf has ${pages} pages, not ${want}`);
+      const order = pdfText(bytes).trim().split("\n");
+      const wantOrder = ["Fixture A page 1", "Fixture A page 2", "Fixture B page 1", "Fixture B page 2", "Fixture B page 3"];
+      expect(order.join("|") === wantOrder.join("|"), `merged pages read ${JSON.stringify(order)}`);
+      return `2-page + 3-page PDF merged into ${pages} pages, in order (${bytes.length} bytes)`;
+    },
+  },
+  {
+    name: "pdf-lib (Calendar generator)",
+    page: "/calendar-generator/",
+    vendor: ["/assets/vendor/pdf-lib/1.17.1/pdf-lib.min.js"],
+    async run(page, lang) {
+      const [download] = await Promise.all([page.waitForEvent("download", { timeout: 60000 }), page.click("#downloadBtn")]);
+      const year = (download.suggestedFilename().match(/^calendar(?:io)?-(\d{4})\.pdf$/) || [])[1];
+      expect(year, `the download is called ${download.suggestedFilename()}`);
+      const bytes = await readFile(await download.path());
+      expect(bytes.subarray(0, 5).toString() === "%PDF-", "the download isn't a PDF");
+      const pages = pdfPageCount(bytes);
+      expect(pages === 12, `the calendar PDF has ${pages} pages, not 12`);
+      const months = lang === "es" ? ["Enero", "Diciembre"] : ["January", "December"];
+      const text = pdfText(bytes);
+      for (const m of months) expect(text.includes(`${m} ${year}`), `the PDF has no "${m} ${year}" heading`);
+      return `${download.suggestedFilename()}: ${pages} pages, "${months[0]} ${year}" to "${months[1]} ${year}" (${bytes.length} bytes)`;
     },
   },
 ];

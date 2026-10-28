@@ -63,7 +63,6 @@ GITATTRIBUTES_RULE = "assets/vendor/** -text"
 # Every CDN URL still in use, and how many times it appears (script tags plus
 # strings in inline scripts). Shrinks as each library moves to assets/vendor.
 REMAINING_CDN = {
-    "https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js": 52,
     "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js": 42,
     "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js": 38,
     "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js": 16,
