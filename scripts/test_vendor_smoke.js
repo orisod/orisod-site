@@ -14,8 +14,8 @@
  * request is answered locally too, so nothing is counted. Every other request is
  * blocked and fails the case, except the CDN URLs still allowed in
  * scripts/check_vendor.py (REMAINING_CDN), which are let through and listed, so a
- * page that still needs a library that hasn't moved yet (like SheetJS on Excel
- * to PDF) can finish its job. Once REMAINING_CDN is empty,
+ * page that still needs a library that hasn't moved yet (like heic2any on HEIC
+ * to JPG) can finish its job. Once REMAINING_CDN is empty,
  * every outside request fails.
  *
  * Each case runs one real operation with its library and checks the result, then
@@ -28,7 +28,7 @@ import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import { extname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
-import { inflateRawSync, inflateSync } from "node:zlib";
+import { crc32, inflateRawSync, inflateSync } from "node:zlib";
 import { chromium } from "playwright";
 
 const REPO_ROOT = fileURLToPath(new URL("..", import.meta.url));
@@ -164,6 +164,65 @@ function zipEntries(bytes) {
     at += 46 + nameLen + extraLen + commentLen;
   }
   return out;
+}
+
+// A ZIP written by hand (stored, not compressed), from { name: text } entries.
+function zipStore(files) {
+  const local = [], central = [];
+  let offset = 0;
+  for (const [name, text] of Object.entries(files)) {
+    const nameBuf = Buffer.from(name, "utf-8"), data = Buffer.from(text, "utf-8");
+    const head = Buffer.alloc(30);
+    head.writeUInt32LE(0x04034b50, 0); head.writeUInt16LE(20, 4); head.writeUInt32LE(crc32(data), 14);
+    head.writeUInt32LE(data.length, 18); head.writeUInt32LE(data.length, 22); head.writeUInt16LE(nameBuf.length, 26);
+    const dir = Buffer.alloc(46);
+    dir.writeUInt32LE(0x02014b50, 0); dir.writeUInt16LE(20, 4); dir.writeUInt16LE(20, 6); dir.writeUInt32LE(crc32(data), 16);
+    dir.writeUInt32LE(data.length, 20); dir.writeUInt32LE(data.length, 24); dir.writeUInt16LE(nameBuf.length, 28); dir.writeUInt32LE(offset, 42);
+    local.push(head, nameBuf, data);
+    central.push(dir, nameBuf);
+    offset += 30 + nameBuf.length + data.length;
+  }
+  const dirBytes = Buffer.concat(central), end = Buffer.alloc(22);
+  const count = Object.keys(files).length;
+  end.writeUInt32LE(0x06054b50, 0); end.writeUInt16LE(count, 8); end.writeUInt16LE(count, 10);
+  end.writeUInt32LE(dirBytes.length, 12); end.writeUInt32LE(offset, 16);
+  return Buffer.concat([...local, dirBytes, end]);
+}
+
+const OOXML_RELS = (type, target) => '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+  '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+  `<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/${type}" Target="${target}"/></Relationships>`;
+
+// A minimal .xlsx written by hand (not by SheetJS): one sheet, "Fruit", with these rows.
+function fixtureXlsx(rows) {
+  const cell = (v, r, c) => {
+    const ref = String.fromCharCode(65 + c) + (r + 1);
+    return typeof v === "number" ? `<c r="${ref}"><v>${v}</v></c>` : `<c r="${ref}" t="inlineStr"><is><t>${v}</t></is></c>`;
+  };
+  return zipStore({
+    "[Content_Types].xml": '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">' +
+      '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/>' +
+      '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>' +
+      '<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/></Types>',
+    "_rels/.rels": OOXML_RELS("officeDocument", "xl/workbook.xml"),
+    "xl/workbook.xml": '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" ' +
+      'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Fruit" sheetId="1" r:id="rId1"/></sheets></workbook>',
+    "xl/_rels/workbook.xml.rels": OOXML_RELS("worksheet", "worksheets/sheet1.xml"),
+    "xl/worksheets/sheet1.xml": '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>' +
+      rows.map((row, r) => `<row r="${r + 1}">${row.map((v, c) => cell(v, r, c)).join("")}</row>`).join("") + "</sheetData></worksheet>",
+  });
+}
+
+// A minimal .docx written by hand (not by docx or mammoth): one paragraph per line.
+function fixtureDocx(lines) {
+  return zipStore({
+    "[Content_Types].xml": '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">' +
+      '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/>' +
+      '<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>',
+    "_rels/.rels": OOXML_RELS("officeDocument", "word/document.xml"),
+    "word/document.xml": '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>' +
+      lines.map((t) => `<w:p><w:r><w:t>${t}</w:t></w:r></w:p>`).join("") + "</w:body></w:document>",
+  });
 }
 
 // How many of a JPEG's pixels are dark, decoded by the browser.
@@ -485,6 +544,76 @@ const CASES = [
       const want = [1, 2, 3].map((n) => `three-page-${n}.pdf: 1 page, Fixture page ${n}`);
       expect(got.join("|") === want.join("|"), `three-split.zip holds ${JSON.stringify(got)}`);
       return `three-split.zip: three-page-1.pdf to three-page-3.pdf, one page each, with the right text`;
+    },
+  },
+  {
+    name: "SheetJS + jspdf-autotable + jsPDF (Excel to PDF)",
+    page: "/excel-to-pdf/",
+    vendor: ["/assets/vendor/xlsx/0.20.3/xlsx.full.min.js", JSPDF, "/assets/vendor/jspdf-autotable/3.8.4/jspdf.plugin.autotable.min.js"],
+    async run(page) {
+      const rows = [["Name", "Qty"], ["Apple", 3], ["Pear", 5], ["Smokeberry", 7]];
+      await page.setInputFiles("#fileInput", { name: "fruit.xlsx", mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", buffer: fixtureXlsx(rows) });
+      await page.locator("#convertBtn").waitFor({ state: "visible", timeout: 30000 });
+      await page.click("#convertBtn");
+      const link = page.locator('#result a[download="fruit.pdf"]');
+      await link.waitFor({ timeout: 30000 });
+      const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
+      const bytes = await readFile(await download.path());
+      expect(bytes.subarray(0, 5).toString() === "%PDF-", "the download isn't a PDF");
+      // autotable draws each cell as its own text, so the rows read in order, cell by cell.
+      const text = pdfText(bytes).split("\n").map((s) => s.trim()).filter(Boolean).join(" ");
+      const want = rows.flat().join(" ");
+      expect(text.includes(want), `fruit.pdf text is "${text}", without "${want}"`);
+      return `fruit.pdf: ${pdfPageCount(bytes)} page, table text "${want}"`;
+    },
+  },
+  {
+    name: "mammoth + html2canvas + jsPDF (Word to PDF)",
+    page: "/word-to-pdf/",
+    vendor: ["/assets/vendor/mammoth/1.12.1/mammoth.browser.min.js", "/assets/vendor/html2canvas/1.4.1/html2canvas.min.js", JSPDF],
+    async run(page) {
+      const docx = fixtureDocx(["Smoke heading for Word to PDF", "Fixture paragraph one", "Fixture paragraph two"]);
+      await page.setInputFiles("#fileInput", { name: "smoke.docx", mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document", buffer: docx });
+      await page.locator("#convertBtn").waitFor({ state: "visible", timeout: 30000 });
+      await page.click("#convertBtn");
+      const link = page.locator('#result a[download="smoke.pdf"]');
+      await link.waitFor({ timeout: 60000 });
+      const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
+      const bytes = await readFile(await download.path());
+      expect(bytes.subarray(0, 5).toString() === "%PDF-", "the download isn't a PDF");
+      const html = await page.$eval("#renderTarget .docx-content", (el) => el.innerHTML);
+      expect(html.includes("<p>Fixture paragraph two</p>"), `mammoth's HTML was: ${html.slice(0, 200)}`);
+      const pages = pdfPageCount(bytes);
+      expect(pages === 1, `smoke.pdf has ${pages} pages, not 1`);
+      const jpegs = pdfJpegs(bytes);
+      expect(jpegs.length === 1, `smoke.pdf has ${jpegs.length} images, not 1`);
+      const size = jpegSize(jpegs[0]);
+      const { dark } = await darkPixels(page, jpegs[0]);
+      expect(dark > 1000, `the rendered page has only ${dark} dark pixels; mammoth's text isn't on it`);
+      return `smoke.pdf: 1 page; mammoth turned the 3 paragraphs into <p>s, drawn as a ${size.w}x${size.h} page image (${dark} dark pixels)`;
+    },
+  },
+  {
+    name: "PDF.js + docx (PDF to Word)",
+    page: "/pdf-to-word/",
+    vendor: [PDFJS, PDFJS_WORKER, "/assets/vendor/docx/9.7.1/index.iife.js"],
+    worker: PDFJS_WORKER,
+    async run(page) {
+      const pdf = fixturePdf("Fixture", ["alpha", "bravo"]);
+      await page.setInputFiles("#fileInput", { name: "words.pdf", mimeType: "application/pdf", buffer: pdf });
+      await page.locator("#convertBtn").waitFor({ state: "visible", timeout: 30000 });
+      await page.click("#convertBtn");
+      const link = page.locator('#result a[download="words.docx"]');
+      await link.waitFor({ timeout: 60000 });
+      const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
+      const files = zipEntries(await readFile(await download.path()));
+      const names = files.map((f) => f.name);
+      for (const part of ["[Content_Types].xml", "_rels/.rels", "word/document.xml"])
+        expect(names.includes(part), `words.docx has no ${part} (files: ${names.join(", ")})`);
+      const xml = files.find((f) => f.name === "word/document.xml").data.toString("utf-8");
+      const found = ["Fixture alpha", "Fixture bravo"].map((s) => xml.indexOf(s));
+      expect(found[0] >= 0 && found[1] > found[0], `word/document.xml doesn't have "Fixture alpha" then "Fixture bravo"`);
+      return `words.docx: a valid Word file (${files.length} parts) whose document.xml has "Fixture alpha" and "Fixture bravo" in order`;
     },
   },
 ];
