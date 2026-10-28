@@ -14,8 +14,8 @@
  * request is answered locally too, so nothing is counted. Every other request is
  * blocked and fails the case, except the CDN URLs still allowed in
  * scripts/check_vendor.py (REMAINING_CDN), which are let through and listed, so a
- * page that still needs a library that hasn't moved yet (like PDF.js on the
- * PDF tools) can finish its job. Once REMAINING_CDN is empty,
+ * page that still needs a library that hasn't moved yet (like JSZip on PDF to
+ * JPG) can finish its job. Once REMAINING_CDN is empty,
  * every outside request fails.
  *
  * Each case runs one real operation with its library and checks the result, then
@@ -122,6 +122,9 @@ function fixturePdf(label, pages) {
 function expect(ok, message) {
   if (!ok) throw new Error(message);
 }
+
+const PDFJS = "/assets/vendor/pdfjs/3.11.174/pdf.min.js";
+const PDFJS_WORKER = "/assets/vendor/pdfjs/3.11.174/pdf.worker.min.js";
 
 // One entry per library (or library pair) that has moved to assets/vendor.
 const CASES = [
@@ -238,11 +241,84 @@ const CASES = [
       return `${download.suggestedFilename()}: ${pages} pages, "${months[0]} ${year}" to "${months[1]} ${year}" (${bytes.length} bytes)`;
     },
   },
+  {
+    name: "PDF.js (Extract PDF Text)",
+    page: "/extract-pdf-text/",
+    vendor: [PDFJS, PDFJS_WORKER],
+    worker: PDFJS_WORKER,
+    async run(page) {
+      const pdf = fixturePdf("Fixture", ["alpha", "bravo", "charlie"]);
+      await page.setInputFiles("#fileInput", { name: "text.pdf", mimeType: "application/pdf", buffer: pdf });
+      await page.click("#extractBtn");
+      await page.waitForFunction(() => document.getElementById("textArea").value.includes("charlie"), null, { timeout: 30000 });
+      const text = await page.inputValue("#textArea");
+      const found = ["Fixture alpha", "Fixture bravo", "Fixture charlie"].map((s) => text.indexOf(s));
+      expect(found.every((at, i) => at >= 0 && (i === 0 || at > found[i - 1])), `extracted text was:\n${text}`);
+      return `3-page PDF: "Fixture alpha", "Fixture bravo", "Fixture charlie" extracted in order`;
+    },
+  },
+  {
+    name: "PDF.js (Compare PDFs)",
+    page: "/compare-pdfs/",
+    vendor: [PDFJS, PDFJS_WORKER],
+    worker: PDFJS_WORKER,
+    async run(page) {
+      const a = fixturePdf("Line", ["one", "two"]);
+      const b = fixturePdf("Line", ["one", "three"]);
+      await page.setInputFiles("#fileInputA", { name: "a.pdf", mimeType: "application/pdf", buffer: a });
+      await page.setInputFiles("#fileInputB", { name: "b.pdf", mimeType: "application/pdf", buffer: b });
+      await page.click("#compareBtn");
+      await page.locator("#diffLines .diff-line").first().waitFor({ timeout: 30000 });
+      const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), page.click("#downloadDiffBtn")]);
+      const lines = (await readFile(await download.path(), "utf-8")).split("\n");
+      for (const want of ["  Line one", "- Line two", "+ Line three"])
+        expect(lines.includes(want), `the diff has no "${want}" line:\n${lines.join("\n")}`);
+      return `diff of two 2-page PDFs: "Line one" unchanged, "- Line two", "+ Line three"`;
+    },
+  },
+  {
+    name: "PDF.js + pdf-lib (PDF Page Organizer)",
+    page: "/pdf-page-organizer/",
+    vendor: [PDFJS, PDFJS_WORKER, "/assets/vendor/pdf-lib/1.17.1/pdf-lib.min.js"],
+    worker: PDFJS_WORKER,
+    async run(page) {
+      const pdf = fixturePdf("Fixture", ["page 1", "page 2", "page 3"]);
+      await page.setInputFiles("#fileInput", { name: "three.pdf", mimeType: "application/pdf", buffer: pdf });
+      await page.locator("#saveBtn").waitFor({ state: "visible", timeout: 30000 });
+      const thumbs = await page.evaluate(async () => {
+        const out = [];
+        for (const img of document.querySelectorAll("#pagesGrid .page-card img")) {
+          await img.decode();
+          const c = document.createElement("canvas");
+          c.width = img.naturalWidth; c.height = img.naturalHeight;
+          const ctx = c.getContext("2d");
+          ctx.drawImage(img, 0, 0);
+          const { data } = ctx.getImageData(0, 0, c.width, c.height);
+          let dark = 0;
+          for (let i = 0; i < data.length; i += 4) if (data[i] + data[i + 1] + data[i + 2] < 300) dark++;
+          out.push(dark);
+        }
+        return out;
+      });
+      expect(thumbs.length === 3, `${thumbs.length} thumbnails, not 3`);
+      expect(thumbs.every((d) => d > 5), `a thumbnail is blank (dark pixels: ${thumbs.join(", ")})`);
+      await page.locator("#pagesGrid .page-card").nth(1).locator(".delete-btn").click();
+      await page.click("#saveBtn");
+      const link = page.locator('#result a[download="three-organized.pdf"]');
+      await link.waitFor({ timeout: 30000 });
+      const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
+      const bytes = await readFile(await download.path());
+      const pages = pdfPageCount(bytes);
+      const text = pdfText(bytes).trim().split("\n");
+      expect(pages === 2 && text.join("|") === "Fixture page 1|Fixture page 3", `saved PDF: ${pages} pages, ${JSON.stringify(text)}`);
+      return `3 thumbnails drawn by PDF.js (${thumbs.join("/")} text pixels); page 2 removed, saved PDF has pages 1 and 3`;
+    },
+  },
 ];
 
 async function runCase(browser, c, lang) {
   const context = await browser.newContext({ locale: lang === "es" ? "es-ES" : "en-US", acceptDownloads: true });
-  const seen = { vendor: new Map(), cdn: [], blocked: [], errors: [] };
+  const seen = { vendor: new Map(), cdn: [], blocked: [], errors: [], workers: [] };
   await context.route("**/*", async (route) => {
     const url = route.request().url();
     if (url.startsWith(GOATCOUNTER)) return route.fulfill({ status: 204, body: "" });
@@ -261,6 +337,7 @@ async function runCase(browser, c, lang) {
     return route.abort();
   });
   const page = await context.newPage();
+  page.on("worker", (w) => seen.workers.push(w.url()));
   page.on("pageerror", (e) => seen.errors.push("page error: " + e.message));
   page.on("console", (m) => { if (m.type() === "error") seen.errors.push("console error: " + m.text()); });
   const path = (lang === "es" ? "/es" : "") + c.page;
@@ -269,6 +346,9 @@ async function runCase(browser, c, lang) {
     await page.goto(SITE + path, { waitUntil: "load", timeout: 60000 });
     detail = await c.run(page, lang);
     for (const v of c.vendor) expect(seen.vendor.get(v) === 200, `${v} wasn't loaded from /assets/vendor (status ${seen.vendor.get(v)})`);
+    // A real Web Worker started straight from the vendored file (not a blob: wrapper,
+    // and not PDF.js's main-thread fallback, which starts no worker at all).
+    if (c.worker) expect(seen.workers.includes(SITE + c.worker), `no worker started from ${c.worker} (workers: ${seen.workers.join(", ") || "none"})`);
     expect(!seen.blocked.length, `requests to outside hosts: ${seen.blocked.join(", ")}`);
     expect(!seen.errors.length, seen.errors.join("; "));
   } catch (e) {
