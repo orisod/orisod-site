@@ -1,0 +1,69 @@
+heic2any 0.0.4 in Orisod: notice for the code bundled inside heic2any.min.js
+
+This file was written by Orisod. Every other file in this folder is an
+unmodified copy of its upstream source (see assets/vendor/manifest.json).
+
+heic2any.min.js is the unmodified file published at
+https://cdnjs.cloudflare.com/ajax/libs/heic2any/0.0.4/heic2any.min.js
+(identical to dist/heic2any.min.js in the npm package heic2any@0.0.4;
+sha256 0963cfa50e9e1e7e6af929a40a81e3e898a673f1270eafa6917dd137e4968164).
+heic2any itself is MIT licensed (see LICENSE). Its source is at
+https://github.com/alexcorvi/heic2any/tree/0.0.4
+
+The file bundles three other libraries:
+
+1. libheif 1.10.0, GNU Lesser General Public License, version 3 or any
+   later version (LGPL-3.0-or-later)
+   Reads the HEIF/HEIC container.
+   Source code: https://github.com/strukturag/libheif/tree/v1.10.0
+   License: COPYING-libheif (libheif's COPYING file at v1.10.0, with the
+   full LGPL-3.0 and GPL-3.0 texts)
+
+2. libde265 1.0.2, GNU Lesser General Public License, version 3 or any
+   later version (LGPL-3.0-or-later)
+   Decodes the HEVC (H.265) image data.
+   Source code: https://github.com/strukturag/libde265/tree/v1.0.2
+   Release archive: https://github.com/strukturag/libde265/releases/download/v1.0.2/libde265-1.0.2.tar.gz
+   License: COPYING-libde265 (libde265's COPYING file at v1.0.2, with the
+   full LGPL-3.0 and GPL-3.0 texts)
+
+   libheif and libde265 are C/C++ libraries. Here they are compiled to
+   JavaScript with Emscripten (an asm.js build; the file contains no
+   WebAssembly), with libheif's Emscripten bindings (build-emscripten.sh,
+   pre.js, post.js and libheif/heif_emscripten.h in its repository), and
+   that build runs inside the Web Worker heic2any starts from a blob: URL.
+   heic2any's copy of that build is src/libheif.js in its repository at
+   tag 0.0.4; its embedded program data is byte-identical to the one inside
+   heic2any.min.js.
+
+3. gifshot, MIT License, Copyright 2017 Yahoo Inc.
+   Builds animated GIFs; heic2any only uses it for GIF output, which
+   Orisod's HEIC to JPG tool never asks for.
+   License: LICENSE-gifshot (LICENSE.txt from the npm package gifshot@0.4.5;
+   gifshot's GitHub repository, github.com/yahoo/gifshot, is no longer online)
+   heic2any.min.js doesn't state which gifshot version it holds. It is a
+   re-minified copy of gifshot's minified build, closest to gifshot 0.4.5
+   (the latest release on npm); the exact version can't be confirmed.
+
+How the versions were found:
+- libheif 1.10.0: called inside heic2any's worker in a browser,
+  heif_get_version() returns "1.10.0" and heif_get_version_number() gives
+  1.10.0 as well. The string "1.10.0" is also stored in the library's program
+  data inside heic2any.min.js, next to libheif's own messages.
+- libde265 1.0.2: libheif names its decoder "libde265 HEVC decoder, version "
+  followed by de265_get_version(), and the program data holds
+  "libde265 HEVC decoder", ", version " and "1.0.2" in that order.
+  libheif's build-emscripten.sh at v1.10.0 also downloads and builds exactly
+  libde265 1.0.2 (LIBDE265_VERSION=1.0.2). The functions this build exposes to
+  JavaScript (heif_get_version, heif_context_alloc, heif_js_decode_image and
+  a few more) don't include one that returns libde265's version, so this
+  one comes from the file's contents and that build script, not from
+  running it.
+
+Replacing it: Orisod uses heic2any.min.js unmodified and loads it as its own
+file, /assets/vendor/heic2any/0.0.4/heic2any.min.js, at the end of the HEIC to
+JPG page (/heic-to-jpg/ and /es/heic-to-jpg/). Nothing else on the site
+depends on its contents. You can build libheif, libde265 and heic2any
+yourself from the sources above (with your own changes, if you like) and use
+your build in its place, for example with your browser's local overrides
+feature, which serves your own file at that address.
