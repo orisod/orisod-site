@@ -159,6 +159,55 @@
         "sha256": "f2c9fc00fdb66eb99ac156ba52d734af66d8d309f65753ae809ad34ee2883bcb",
         "bytes": 1070
       }
+    },
+    {
+      "name": "pdfjs",
+      "version": "3.11.174",
+      "license": "Apache-2.0",
+      "license_note": "Mozilla's PDF.js (npm package pdfjs-dist); both files are identical to build/ in pdfjs-dist 3.11.174. Every getDocument() call must pass isEvalSupported: false (CVE-2024-4367; scripts/check_pdfjs.py). Pages set GlobalWorkerOptions.workerSrc to the vendored worker, so PDF.js starts it as a same-origin Worker.",
+      "used_by": [
+        "add-stamps",
+        "alternate-mix-pages",
+        "compare-pdfs",
+        "compress-pdf",
+        "crop-pdf-pages",
+        "extract-images-from-pdf",
+        "extract-pdf-text",
+        "fill-pdf-forms",
+        "n-up-pdf",
+        "ocr-pdf",
+        "pdf-booklet-maker",
+        "pdf-color-filters",
+        "pdf-editor",
+        "pdf-page-organizer",
+        "pdf-to-jpg",
+        "pdf-to-word",
+        "repair-pdf",
+        "resize-pdf-pages",
+        "rotate-pdf",
+        "sign-pdf",
+        "watermark-pdf"
+      ],
+      "files": [
+        {
+          "path": "assets/vendor/pdfjs/3.11.174/pdf.min.js",
+          "source": "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js",
+          "sha256": "5b5799e6f8c680663207ac5b42ee14eed2a406fa7af48f50c154f0c0b1566946",
+          "bytes": 320004
+        },
+        {
+          "path": "assets/vendor/pdfjs/3.11.174/pdf.worker.min.js",
+          "source": "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js",
+          "sha256": "feabdf309770ed24bba31a5467836cdc8cf639c705af27d52b585b041bb8527b",
+          "bytes": 1087212
+        }
+      ],
+      "license_file": {
+        "path": "assets/vendor/pdfjs/3.11.174/LICENSE",
+        "source": "https://raw.githubusercontent.com/mozilla/pdf.js/v3.11.174/LICENSE",
+        "sha256": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594",
+        "bytes": 10174
+      }
     }
   ]
 }
