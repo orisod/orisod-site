@@ -20,6 +20,10 @@ Rules, for every page (every .html outside the folders below, including 404.html
 - a page that starts Tesseract must give it workerPath, corePath and langPath, or
   Tesseract downloads its worker, engine and language data from jsDelivr by
   itself (pages in TESSERACT_DEFAULTS are still allowed to)
+- a page that loads the vendored PDF.js (/assets/vendor/pdfjs/<version>/pdf.min.js)
+  must set pdfjsLib.GlobalWorkerOptions.workerSrc to the worker in the same folder,
+  or PDF.js guesses the worker's address from its own; and any workerSrc that
+  isn't an outside URL (those are covered above) must be a file in the manifest
 - every /assets/vendor/ script a page loads is a file listed in the manifest, and
   no vendor script is in <head> (libraries load after the content, before the
   tool's own script)
@@ -63,8 +67,6 @@ GITATTRIBUTES_RULE = "assets/vendor/** -text"
 # Every CDN URL still in use, and how many times it appears (script tags plus
 # strings in inline scripts). Shrinks as each library moves to assets/vendor.
 REMAINING_CDN = {
-    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js": 42,
-    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js": 38,
     "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js": 16,
     "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.4/jspdf.plugin.autotable.min.js": 2,
     "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js": 4,
@@ -92,6 +94,8 @@ STYLE_EXTERNAL = re.compile(r"@import|url\(\s*[\"']?(?:https?:)?//", re.I)
 LOADER = re.compile(
     r"""(?:\b(?:workerSrc|workerPath|corePath|langPath)\s*[:=]\s*|\b(?:importScripts|fetch|import)\s*\(\s*|"""
     r"""\bnew\s+Worker\s*\(\s*)["'`]((?:https?:)?//[^"'`]+)""")
+WORKER_SRC = re.compile(r"""\bworkerSrc\s*[:=]\s*["'`]([^"'`]*)["'`]""")
+PDFJS_SCRIPT = re.compile(r"^/assets/vendor/pdfjs/([^/]+)/pdf\.min\.js$")
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
 SPDX = re.compile(r"^[A-Za-z0-9.+-]+(?: (?:OR|AND|WITH) [A-Za-z0-9.+-]+)*$")
 
@@ -180,11 +184,13 @@ def main() -> int:
 
     cdn_uses = Counter()
     loads = {}  # page -> list of vendor/CDN script srcs, in order
+    worker_srcs = {}  # page -> every workerSrc string its inline scripts set
     vendor_refs = 0
     for rel in pages(root):
         text = (root / rel).read_text(encoding="utf-8")
         head_end = text.find("</head>")
         loads[rel] = []
+        worker_srcs[rel] = []
         for m in SCRIPT.finditer(text):
             attrs, body = m.group(1), m.group(2)
             src = SRC.search(attrs)
@@ -226,6 +232,17 @@ def main() -> int:
                 if missing:
                     problems.append(f"{rel}: Tesseract.createWorker() needs {', '.join(missing)} pointing at {VENDOR}, "
                                     f"or Tesseract downloads them from jsDelivr")
+            for wm in WORKER_SRC.finditer(body):
+                worker = wm.group(1)
+                worker_srcs[rel].append(worker)
+                if not external(worker) and worker not in vendor_scripts:
+                    problems.append(f"{rel}: workerSrc is {worker or '(empty)'}, which isn't a library file in {MANIFEST}")
+        for url in loads[rel]:
+            pm = PDFJS_SCRIPT.match(url)
+            want = f"/assets/vendor/pdfjs/{pm.group(1)}/pdf.worker.min.js" if pm else None
+            if want and want not in worker_srcs[rel]:
+                problems.append(f"{rel}: loads {url} but doesn't set pdfjsLib.GlobalWorkerOptions.workerSrc = \"{want}\"; "
+                                f"without it PDF.js guesses the worker's address from its own")
         for lm in LINK.finditer(text):
             tag = lm.group(0)
             href = re.search(r"""\bhref\s*=\s*["']([^"']+)["']""", tag, re.I)
