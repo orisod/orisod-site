@@ -417,7 +417,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
       <div id="dropzoneText">📁 Click to select an image or drag and drop it here</div>
     </label>
     <input type="file" id="fileInput" accept="image/*">
-    <div class="error" id="encodeError"></div>
+    <div class="error" id="encodeError" role="alert"></div>
     <div class="trust-strip">🔒 Processed on your device · No upload · No account · No watermark</div>
 
     <textarea id="base64Output" readonly placeholder="Your Base64 output will appear here..." aria-label="Base64 output"></textarea>
@@ -431,7 +431,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
     <textarea id="base64Input" placeholder="Paste a Base64 string here (with or without the data:image/...;base64, prefix)..." aria-label="Base64 input"></textarea>
     <br>
     <button id="decodeBtn">Decode to Image</button>
-    <div class="error" id="decodeError"></div>
+    <div class="error" id="decodeError" role="alert"></div>
     <div class="result" id="decodeResult"></div>
   </div>
 

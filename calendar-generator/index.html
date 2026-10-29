@@ -476,7 +476,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
   </div>
   <p class="tool-sub" style="text-align:center;">Build a printable 12-month PDF calendar: automatic public holidays for 50+ countries, religious dates, your own photos, and custom events. Everything happens locally in your browser.</p>
 
-  <div class="error" id="dataLoadError" style="display:none;max-width:600px;margin:0 auto 20px auto;text-align:center;">⚠️ Holiday data failed to load, so public holidays and religious dates won't appear below. This page needs to be loaded from a web server, not opened directly as a local file. Try reloading, and if the problem continues, reload from the site's normal URL.</div>
+  <div class="error" id="dataLoadError" style="display:none;max-width:600px;margin:0 auto 20px auto;text-align:center;" role="alert">⚠️ Holiday data failed to load, so public holidays and religious dates won't appear below. This page needs to be loaded from a web server, not opened directly as a local file. Try reloading, and if the problem continues, reload from the site's normal URL.</div>
 
   <div class="workspace">
     <div class="left-col">
@@ -553,7 +553,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
       </div>
       <div class="panel" style="text-align:center;">
         <button id="downloadBtn" style="width:100%;">⬇ Download 12-Month PDF Calendar</button>
-        <div class="error" id="genError"></div>
+        <div class="error" id="genError" role="alert"></div>
         <div class="progress" id="genProgress"></div>
         <div class="trust-strip">🔒 Processed on your device · No upload · No account · No watermark</div>
       </div>

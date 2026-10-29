@@ -472,7 +472,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
   </div>
   <p class="tool-sub" style="text-align:center;">Crea un calendario PDF imprimible para un año hebreo completo, de Tishrei a Elul, con horarios de encendido de velas, Havdalah y tzeit hakojavim para tu ubicación y la porción semanal de la Torá. Todo ocurre localmente en tu navegador.</p>
 
-  <div class="error" id="dataLoadError" style="display:none;max-width:600px;margin:0 auto 20px auto;text-align:center;">⚠️ No se pudieron cargar los datos del calendario, así que las fechas hebreas, los días festivos y la porción de la Torá no aparecerán abajo. Esta página necesita cargarse desde un servidor web, no abrirse directamente como archivo local. Intenta recargar, y si el problema continúa, vuelve a cargar desde la URL normal del sitio.</div>
+  <div class="error" id="dataLoadError" style="display:none;max-width:600px;margin:0 auto 20px auto;text-align:center;" role="alert">⚠️ No se pudieron cargar los datos del calendario, así que las fechas hebreas, los días festivos y la porción de la Torá no aparecerán abajo. Esta página necesita cargarse desde un servidor web, no abrirse directamente como archivo local. Intenta recargar, y si el problema continúa, vuelve a cargar desde la URL normal del sitio.</div>
 
   <div class="workspace">
     <div class="left-col">
@@ -601,7 +601,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
       </div>
       <div class="panel" style="text-align:center;">
         <button id="downloadBtn" style="width:100%;">⬇ Descargar calendario PDF del año hebreo</button>
-        <div class="error" id="genError"></div>
+        <div class="error" id="genError" role="alert"></div>
         <div class="progress" id="genProgress"></div>
         <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subir archivos · Sin cuenta · Sin marca de agua</div>
       </div>
