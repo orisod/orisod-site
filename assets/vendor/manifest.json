@@ -454,6 +454,175 @@
           "bytes": 1141
         }
       ]
+    },
+    {
+      "name": "tesseract",
+      "version": "7.0.0",
+      "license": "Apache-2.0 AND MIT AND BSD-2-Clause AND BSD-3-Clause AND IJG AND libpng-2.0 AND libtiff AND Zlib AND ISC",
+      "license_note": "tesseract.js 7.0.0 (Apache-2.0): tesseract.min.js (the cdnjs file, identical to the npm package's dist/ copy; sha512 equals cdnjs's SRI) and worker.min.js, each with the .LICENSE.txt published next to it (worker.min.js bundles buffer MIT, ieee754 BSD-3-Clause, regenerator-runtime MIT, zlib.js MIT). core/ holds the 3 LSTM-only builds of tesseract.js-core 7.0.0 (Apache-2.0) the worker picks from by browser support (relaxed SIMD, SIMD, neither); each .wasm.js embeds its WebAssembly. The core is built from Tesseract (Balearica's fork, Apache-2.0), Leptonica 1.83.0, libjpeg 9a (IJG), libpng 1.6.38, libtiff 4.3.0, giflib 5.1.4 (MIT), libwebp 1.2.2 (BSD-3-Clause), zlib 1.2.12 and openlibm 0.8.0, whose license files (at the commits tesseract.js-core v7.0.0 pins) are in core/. lang/ holds the 4.0.0_best_int eng and spa data of @tesseract.js-data/eng@1.0.0 and spa@1.0.0 (byte-identical to the unversioned jsDelivr URLs tesseract.js uses by default): integer LSTM models made by naptha/tessdata (Apache-2.0) from tesseract-ocr/tessdata_best (Apache-2.0); the npm packages declare MIT in package.json without a license text, so those package.json files are kept as the record. NOTICE (written by Orisod) lists every part, version, source and license file.",
+      "used_by": [
+        "ocr-pdf"
+      ],
+      "files": [
+        {
+          "path": "assets/vendor/tesseract/7.0.0/tesseract.min.js",
+          "source": "https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/7.0.0/tesseract.min.js",
+          "sha256": "000c27d9cd0def655f77b36c72a389c0ab13793aa31cb4d7aab56d09c0afbc7e",
+          "bytes": 62961
+        },
+        {
+          "path": "assets/vendor/tesseract/7.0.0/worker.min.js",
+          "source": "https://cdn.jsdelivr.net/npm/tesseract.js@v7.0.0/dist/worker.min.js",
+          "sha256": "576b7df7e3393e137e51849357c9adb53fe7ac1bb69bfa06cf3d61520f182c6d",
+          "bytes": 111307
+        },
+        {
+          "path": "assets/vendor/tesseract/7.0.0/core/tesseract-core-relaxedsimd-lstm.wasm.js",
+          "source": "https://cdn.jsdelivr.net/npm/tesseract.js-core@7.0.0/tesseract-core-relaxedsimd-lstm.wasm.js",
+          "sha256": "861a536cf9ef8e63cb644d57bab39c388f37f7d6b6f60024b741c5f6b39a59b3",
+          "bytes": 3905767
+        },
+        {
+          "path": "assets/vendor/tesseract/7.0.0/core/tesseract-core-simd-lstm.wasm.js",
+          "source": "https://cdn.jsdelivr.net/npm/tesseract.js-core@7.0.0/tesseract-core-simd-lstm.wasm.js",
+          "sha256": "c58b46a4c796c0b8afccf77591d5b875b6896b45d402bbce8caa6f5362447b38",
+          "bytes": 3899472
+        },
+        {
+          "path": "assets/vendor/tesseract/7.0.0/core/tesseract-core-lstm.wasm.js",
+          "source": "https://cdn.jsdelivr.net/npm/tesseract.js-core@7.0.0/tesseract-core-lstm.wasm.js",
+          "sha256": "eef5f8b2f8e20e150680b20adaec4a60babafee3adbe8a94583c81fee46e8680",
+          "bytes": 3896484
+        },
+        {
+          "path": "assets/vendor/tesseract/7.0.0/lang/eng.traineddata.gz",
+          "source": "https://cdn.jsdelivr.net/npm/@tesseract.js-data/eng@1.0.0/4.0.0_best_int/eng.traineddata.gz",
+          "sha256": "45b4cb346724ac1774f1c36f42f182b887bcdb28ebe63e6fff90ac41f3fcff91",
+          "bytes": 2952873
+        },
+        {
+          "path": "assets/vendor/tesseract/7.0.0/lang/spa.traineddata.gz",
+          "source": "https://cdn.jsdelivr.net/npm/@tesseract.js-data/spa@1.0.0/4.0.0_best_int/spa.traineddata.gz",
+          "sha256": "40be52f97b5d4eb7460073dc1f94cd546b27150333c0bf854ed7e7132db6bceb",
+          "bytes": 2100190
+        }
+      ],
+      "license_file": {
+        "path": "assets/vendor/tesseract/7.0.0/LICENSE",
+        "source": "https://cdn.jsdelivr.net/npm/tesseract.js@v7.0.0/LICENSE.md",
+        "sha256": "b40930bbcf80744c86c46a12bc9da056641d722716c378f5659b9e555ef833e1",
+        "bytes": 11357
+      },
+      "notice_files": [
+        {
+          "path": "assets/vendor/tesseract/7.0.0/NOTICE",
+          "written_by": "Orisod",
+          "sha256": "bb59158a992fb30560067adbddd644d9543cfdec387962019dd31eb88fd8a794",
+          "bytes": 5446
+        },
+        {
+          "path": "assets/vendor/tesseract/7.0.0/tesseract.min.js.LICENSE.txt",
+          "source": "https://cdn.jsdelivr.net/npm/tesseract.js@v7.0.0/dist/tesseract.min.js.LICENSE.txt",
+          "sha256": "cdf963ced7d25a0f98901a547647b4d6e2dbe0197fd78c87a059a87b0e542fe2",
+          "bytes": 149
+        },
+        {
+          "path": "assets/vendor/tesseract/7.0.0/worker.min.js.LICENSE.txt",
+          "source": "https://cdn.jsdelivr.net/npm/tesseract.js@v7.0.0/dist/worker.min.js.LICENSE.txt",
+          "sha256": "45f54171aeaa1d10c0c1a66f374b7bba1f02472b1487fbe892eec04f840002ac",
+          "bytes": 466
+        },
+        {
+          "path": "assets/vendor/tesseract/7.0.0/core/LICENSE",
+          "source": "https://cdn.jsdelivr.net/npm/tesseract.js-core@7.0.0/LICENSE",
+          "sha256": "c6596eb7be8581c18be736c846fb9173b69eccf6ef94c5135893ec56bd92ba08",
+          "bytes": 11358
+        },
+        {
+          "path": "assets/vendor/tesseract/7.0.0/core/LICENSE-tesseract",
+          "source": "https://raw.githubusercontent.com/Balearica/tesseract/2a9c1c49c360462733c386d2a44fcd22c4e21411/LICENSE",
+          "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+          "bytes": 11358
+        },
+        {
+          "path": "assets/vendor/tesseract/7.0.0/core/LICENSE-leptonica",
+          "source": "https://raw.githubusercontent.com/DanBloomberg/leptonica/4af068b56a9674da915debea4ed7e1b9885b17e8/leptonica-license.txt",
+          "sha256": "87829abb5bbb00b55a107365da89e9a33f86c4250169e5a1e5588505be7d5806",
+          "bytes": 1521
+        },
+        {
+          "path": "assets/vendor/tesseract/7.0.0/core/README-libjpeg",
+          "source": "https://raw.githubusercontent.com/LuaDist/libjpeg/6c0fcb8ddee365e7abc4d332662b06900612e923/README",
+          "sha256": "c791da525733040e622ed257c7b096b8f5191b332604ead0c6bc2b54cbd8e0d1",
+          "bytes": 19110
+        },
+        {
+          "path": "assets/vendor/tesseract/7.0.0/core/LICENSE-libpng",
+          "source": "https://raw.githubusercontent.com/glennrp/libpng/a37d4836519517bdce6cb9d956092321eca3e73b/LICENSE",
+          "sha256": "33ba4e187d8b0c8d7ab2bc2e522bb095219e03089e9aa0122b4fb9eb2b7de82b",
+          "bytes": 5345
+        },
+        {
+          "path": "assets/vendor/tesseract/7.0.0/core/COPYRIGHT-libtiff",
+          "source": "https://gitlab.com/libtiff/libtiff/-/raw/b51bb157123264e26d34c09cc673d213aea61fc7/COPYRIGHT",
+          "sha256": "fbd6fed7938541d2c809c0826225fc85e551fdbfa8732b10f0c87e0847acafd7",
+          "bytes": 1146
+        },
+        {
+          "path": "assets/vendor/tesseract/7.0.0/core/COPYING-giflib",
+          "source": "https://raw.githubusercontent.com/mirrorer/giflib/fa37672085ce4b3d62c51627ab3c8cf2dda8009a/COPYING",
+          "sha256": "0c9b7990ecdca88b676db232c226548ac408b279f550d424d996f0d83591dd8e",
+          "bytes": 1088
+        },
+        {
+          "path": "assets/vendor/tesseract/7.0.0/core/COPYING-libwebp",
+          "source": "https://raw.githubusercontent.com/webmproject/libwebp/20ef03ee351d4ff03fc5ff3ec4804a879d1b9d5c/COPYING",
+          "sha256": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf",
+          "bytes": 1496
+        },
+        {
+          "path": "assets/vendor/tesseract/7.0.0/core/PATENTS-libwebp",
+          "source": "https://raw.githubusercontent.com/webmproject/libwebp/20ef03ee351d4ff03fc5ff3ec4804a879d1b9d5c/PATENTS",
+          "sha256": "cc3273e0694ea5896145e0677699b53471b03ea43021ddc50e7923fbb9f5023c",
+          "bytes": 1436
+        },
+        {
+          "path": "assets/vendor/tesseract/7.0.0/core/README-zlib",
+          "source": "https://raw.githubusercontent.com/madler/zlib/21767c654d31d2dccdde4330529775c6c5fd5389/README",
+          "sha256": "fc2c3368901700f0acdeb1d8afeaca5923296768ec6824ecdf627aac396001fd",
+          "bytes": 5368
+        },
+        {
+          "path": "assets/vendor/tesseract/7.0.0/core/LICENSE-openlibm.md",
+          "source": "https://raw.githubusercontent.com/JuliaMath/openlibm/ae2d91698508701c83cab83714d42a1146dccf85/LICENSE.md",
+          "sha256": "b1843fbf5b03f519a5f0a44fce751bdd1022ae7148614923f9d6293e17a18b17",
+          "bytes": 5857
+        },
+        {
+          "path": "assets/vendor/tesseract/7.0.0/lang/LICENSE-tessdata_best",
+          "source": "https://raw.githubusercontent.com/tesseract-ocr/tessdata_best/e12c65a915945e4c28e237a9b52bc4a8f39a0cec/LICENSE",
+          "sha256": "a6cba85bc92e0cff7a450b1d873c0eaa2e9fc96bf472df0247a26bec77bf3ff9",
+          "bytes": 10173
+        },
+        {
+          "path": "assets/vendor/tesseract/7.0.0/lang/LICENSE-naptha-tessdata",
+          "source": "https://raw.githubusercontent.com/naptha/tessdata/806cd9adc8c6e8abc11c782db1818c990576bebc/LICENSE",
+          "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+          "bytes": 11357
+        },
+        {
+          "path": "assets/vendor/tesseract/7.0.0/lang/package-eng.json",
+          "source": "https://cdn.jsdelivr.net/npm/@tesseract.js-data/eng@1.0.0/package.json",
+          "sha256": "b603509212196b5d09e10519bf252c1e344b79704d065e0d62886846f8554c80",
+          "bytes": 530
+        },
+        {
+          "path": "assets/vendor/tesseract/7.0.0/lang/package-spa.json",
+          "source": "https://cdn.jsdelivr.net/npm/@tesseract.js-data/spa@1.0.0/package.json",
+          "sha256": "a9ccbacb85fb63951e1746f32318ee01114acf9f4c26f222082b1de942501171",
+          "bytes": 530
+        }
+      ]
     }
   ]
 }

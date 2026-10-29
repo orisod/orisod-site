@@ -12,17 +12,17 @@
  * and every orisod.com request is answered from the local files, so root-absolute
  * /assets/vendor/ paths resolve exactly as on GitHub Pages. GoatCounter's counting
  * request is answered locally too, so nothing is counted. Every other request is
- * blocked and fails the case, except the CDN URLs still allowed in
- * scripts/check_vendor.py (REMAINING_CDN), which are let through and listed, so a
- * page that still needs a library that hasn't moved yet (like tesseract.js on
- * OCR PDF) can finish its job. Once REMAINING_CDN is empty,
- * every outside request fails.
+ * blocked and fails the case (any CDN URL left in scripts/check_vendor.py's
+ * REMAINING_CDN would be let through and listed; that list has been empty since
+ * Tesseract moved, so every outside request fails).
  *
  * Each case runs one real operation with its library and checks the result, then
  * checks that the page fetched the case's vendor files from /assets/vendor (status
  * 200) and logged no errors. To cover a library moved in a later PR, add an entry
- * to CASES: the vendor files it needs, the page, and a run(page, lang) that does
- * the operation and throws if the result is wrong.
+ * to CASES: the vendor files it needs (a list, or a function of the language), the
+ * page, and a run(page, lang) that does the operation and throws if the result is
+ * wrong. vendorOneOf lists files of which exactly one must load (Tesseract's three
+ * core builds, of which the browser picks one); the result names the one it got.
  */
 import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
@@ -96,14 +96,15 @@ function pdfPageCount(bytes) {
 }
 
 // A small, valid PDF written by hand (not by pdf-lib), with one line of text per page.
-function fixturePdf(label, pages) {
+function fixturePdf(label, pages, { size = 24, winAnsi = false } = {}) {
   const objs = [];
   const kids = pages.map((_, i) => `${4 + i * 2} 0 R`).join(" ");
   objs.push("<< /Type /Catalog /Pages 2 0 R >>");
   objs.push(`<< /Type /Pages /Kids [${kids}] /Count ${pages.length} >>`);
-  objs.push("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>");
+  // WinAnsiEncoding maps latin1 bytes to their letters (á, ñ, ó...); Helvetica's default encoding doesn't.
+  objs.push(`<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica${winAnsi ? " /Encoding /WinAnsiEncoding" : ""} >>`);
   pages.forEach((text, i) => {
-    const content = `BT /F1 24 Tf 72 700 Td (${label} ${text}) Tj ET`;
+    const content = `BT /F1 ${size} Tf 72 700 Td (${label} ${text}) Tj ET`;
     objs.push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents ${5 + i * 2} 0 R >>`);
     objs.push(`<< /Length ${content.length} >>\nstream\n${content}\nendstream`);
   });
@@ -664,6 +665,39 @@ const CASES = [
       return `smoke.jpg: a 64x48 JPEG, left half black and right half white (averages ${halves.map(Math.round).join(" / ")}), decoded by heic2any's libheif`;
     },
   },
+  {
+    name: "Tesseract (OCR PDF)",
+    page: "/ocr-pdf/",
+    // Its worker, one of the three LSTM core builds (the browser's pick) and the page's language data.
+    vendor: (lang) => [
+      "/assets/vendor/tesseract/7.0.0/tesseract.min.js",
+      "/assets/vendor/tesseract/7.0.0/worker.min.js",
+      `/assets/vendor/tesseract/7.0.0/lang/${lang === "es" ? "spa" : "eng"}.traineddata.gz`,
+    ],
+    vendorOneOf: ["relaxedsimd-lstm", "simd-lstm", "lstm"].map((b) => `/assets/vendor/tesseract/7.0.0/core/tesseract-core-${b}.wasm.js`),
+    // Tesseract starts its worker from a blob: URL that importScripts() the vendored worker.min.js.
+    blobWorker: true,
+    async run(page, lang) {
+      // Large, clean Helvetica, so the words come out exactly. The Spanish line has á, ñ and ó,
+      // which the English data doesn't read, so passing on /es/ shows the Spanish data ran.
+      const words = lang === "es" ? ["Orisod prueba", "Canción de mañana"] : ["Orisod smoke", "Quick brown fox"];
+      const pdf = fixturePdf("", words, { size: 40, winAnsi: true });
+      await page.setInputFiles("#fileInput", { name: "words.pdf", mimeType: "application/pdf", buffer: pdf });
+      await page.locator("#ocrBtn").waitFor({ state: "visible", timeout: 30000 });
+      await page.click("#ocrBtn");
+      const link = page.locator('#result a[download="words-ocr.txt"]');
+      try {
+        await link.waitFor({ timeout: 120000 });
+      } catch (e) {
+        throw new Error(`no .txt download (page says: ${await page.textContent("#errorMsg") || "nothing"})`);
+      }
+      const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
+      const text = await readFile(await download.path(), "utf-8");
+      const at = words.map((w) => text.indexOf(w));
+      expect(at.every((i) => i >= 0) && at[0] < at[1], `words-ocr.txt doesn't have ${words.map((w) => `"${w}"`).join(" then ")}: ${JSON.stringify(text.slice(0, 200))}`);
+      return `words-ocr.txt has ${words.map((w) => `"${w}"`).join(" and ")} on pages 1 and 2, read with the ${lang === "es" ? "Spanish" : "English"} data`;
+    },
+  },
 ];
 
 async function runCase(browser, c, lang) {
@@ -695,7 +729,14 @@ async function runCase(browser, c, lang) {
   try {
     await page.goto(SITE + path, { waitUntil: "load", timeout: 60000 });
     detail = await c.run(page, lang);
-    for (const v of c.vendor) expect(seen.vendor.get(v) === 200, `${v} wasn't loaded from /assets/vendor (status ${seen.vendor.get(v)})`);
+    for (const v of typeof c.vendor === "function" ? c.vendor(lang) : c.vendor)
+      expect(seen.vendor.get(v) === 200, `${v} wasn't loaded from /assets/vendor (status ${seen.vendor.get(v)})`);
+    if (c.vendorOneOf) {
+      const got = c.vendorOneOf.filter((v) => seen.vendor.has(v));
+      expect(got.length === 1 && seen.vendor.get(got[0]) === 200,
+        `expected exactly one of ${c.vendorOneOf.join(", ")} from /assets/vendor, got ${got.map((v) => `${v} (${seen.vendor.get(v)})`).join(", ") || "none"}`);
+      detail += `; picked ${got[0].split("/").pop()}`;
+    }
     // A real Web Worker started straight from the vendored file (not a blob: wrapper,
     // and not PDF.js's main-thread fallback, which starts no worker at all).
     if (c.worker) expect(seen.workers.includes(SITE + c.worker), `no worker started from ${c.worker} (workers: ${seen.workers.join(", ") || "none"})`);
