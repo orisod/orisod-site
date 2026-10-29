@@ -23,6 +23,11 @@
  * page, and a run(page, lang) that does the operation and throws if the result is
  * wrong. vendorOneOf lists files of which exactly one must load (Tesseract's three
  * core builds, of which the browser picks one); the result names the one it got.
+ * A case can also break one vendor file with broken(lang): { path, mode }, where mode
+ * "404" answers it with a 404 and "stall" never answers it (with the page's clock
+ * under the test's control, so a timeout can be run forward). Its run() gets a third
+ * argument with repair(), which serves the file normally from then on (and answers a
+ * stalled request late), and held, which resolves once a stalled request arrives.
  */
 import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
@@ -280,6 +285,58 @@ const JSPDF = "/assets/vendor/jspdf/2.5.1/jspdf.umd.min.js";
 const JSZIP = "/assets/vendor/jszip/3.10.1/jszip.min.js";
 
 // One entry per library (or library pair) that has moved to assets/vendor.
+// OCR PDF: upload a 2-page fixture of large, clean Helvetica and run OCR; returns once the .txt is checked.
+// The Spanish line has á, ñ and ó, which the English data doesn't read, so passing on /es/ shows the Spanish data ran.
+const OCR_WORDS = { en: ["Orisod smoke", "Quick brown fox"], es: ["Orisod prueba", "Canción de mañana"] };
+async function ocrUpload(page, lang) {
+  const pdf = fixturePdf("", OCR_WORDS[lang], { size: 40, winAnsi: true });
+  await page.setInputFiles("#fileInput", { name: "words.pdf", mimeType: "application/pdf", buffer: pdf });
+  await page.locator("#ocrBtn").waitFor({ state: "visible", timeout: 30000 });
+}
+async function ocrRun(page, lang) {
+  const words = OCR_WORDS[lang];
+  await page.click("#ocrBtn");
+  const link = page.locator('#result a[download="words-ocr.txt"]');
+  try {
+    await link.waitFor({ timeout: 120000 });
+  } catch (e) {
+    throw new Error(`no .txt download (page says: ${await page.textContent("#errorMsg") || "nothing"})`);
+  }
+  const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
+  const text = await readFile(await download.path(), "utf-8");
+  const at = words.map((w) => text.indexOf(w));
+  expect(at.every((i) => i >= 0) && at[0] < at[1], `words-ocr.txt doesn't have ${words.map((w) => `"${w}"`).join(" then ")}: ${JSON.stringify(text.slice(0, 200))}`);
+  return `words-ocr.txt has ${words.map((w) => `"${w}"`).join(" and ")} on pages 1 and 2, read with the ${lang === "es" ? "Spanish" : "English"} data`;
+}
+// The message OCR PDF shows when its engine or language data can't load, and the loading text it replaces.
+const OCR_ENGINE_ERROR = {
+  en: "The OCR engine could not load. Check your connection and reload the page to try again.",
+  es: "No se pudo cargar el motor de OCR. Revisa tu conexión y recarga la página para intentarlo de nuevo.",
+};
+const OCR_LOADING = { en: "Loading OCR engine...", es: "Cargando el motor de OCR..." };
+async function ocrExpectEngineError(page, lang, timeout) {
+  try {
+    await page.waitForFunction((m) => document.getElementById("errorMsg").textContent === m, OCR_ENGINE_ERROR[lang], { timeout });
+  } catch (e) {
+    throw new Error(`no engine error (page still says: ${await page.textContent("#progressMsg") || "nothing"}; error line: ${await page.textContent("#errorMsg") || "nothing"})`);
+  }
+  const state = await page.evaluate(() => ({
+    progress: document.getElementById("progressMsg").textContent,
+    role: document.getElementById("errorMsg").getAttribute("role"),
+    disabled: document.getElementById("ocrBtn").disabled,
+    shown: getComputedStyle(document.getElementById("ocrBtn")).display !== "none",
+  }));
+  expect(state.progress !== OCR_LOADING[lang], `the page still says "${state.progress}" next to the error`);
+  expect(state.role === "alert", `the error line has role="${state.role}", not "alert", so it isn't announced`);
+  expect(!state.disabled && state.shown, "the Run OCR button isn't available again to retry");
+}
+const TESSERACT_VENDOR = (lang) => [
+  "/assets/vendor/tesseract/7.0.0/tesseract.min.js",
+  "/assets/vendor/tesseract/7.0.0/worker.min.js",
+  `/assets/vendor/tesseract/7.0.0/lang/${lang === "es" ? "spa" : "eng"}.traineddata.gz`,
+];
+const TESSERACT_CORES = ["relaxedsimd-lstm", "simd-lstm", "lstm"].map((b) => `/assets/vendor/tesseract/7.0.0/core/tesseract-core-${b}.wasm.js`);
+
 const CASES = [
   {
     name: "spark-md5",
@@ -669,33 +726,58 @@ const CASES = [
     name: "Tesseract (OCR PDF)",
     page: "/ocr-pdf/",
     // Its worker, one of the three LSTM core builds (the browser's pick) and the page's language data.
-    vendor: (lang) => [
-      "/assets/vendor/tesseract/7.0.0/tesseract.min.js",
-      "/assets/vendor/tesseract/7.0.0/worker.min.js",
-      `/assets/vendor/tesseract/7.0.0/lang/${lang === "es" ? "spa" : "eng"}.traineddata.gz`,
-    ],
-    vendorOneOf: ["relaxedsimd-lstm", "simd-lstm", "lstm"].map((b) => `/assets/vendor/tesseract/7.0.0/core/tesseract-core-${b}.wasm.js`),
+    vendor: TESSERACT_VENDOR,
+    vendorOneOf: TESSERACT_CORES,
     // Tesseract starts its worker from a blob: URL that importScripts() the vendored worker.min.js.
     blobWorker: true,
     async run(page, lang) {
-      // Large, clean Helvetica, so the words come out exactly. The Spanish line has á, ñ and ó,
-      // which the English data doesn't read, so passing on /es/ shows the Spanish data ran.
-      const words = lang === "es" ? ["Orisod prueba", "Canción de mañana"] : ["Orisod smoke", "Quick brown fox"];
-      const pdf = fixturePdf("", words, { size: 40, winAnsi: true });
-      await page.setInputFiles("#fileInput", { name: "words.pdf", mimeType: "application/pdf", buffer: pdf });
-      await page.locator("#ocrBtn").waitFor({ state: "visible", timeout: 30000 });
+      await ocrUpload(page, lang);
+      return ocrRun(page, lang);
+    },
+  },
+  {
+    // The language data answers 404: the page must show its engine error, not stay on the loading text,
+    // and pressing Run OCR again once the file is back must work.
+    name: "OCR PDF language data 404",
+    page: "/ocr-pdf/",
+    broken: (lang) => ({ path: TESSERACT_VENDOR(lang)[2], mode: "404" }),
+    vendor: TESSERACT_VENDOR,
+    vendorOneOf: TESSERACT_CORES,
+    blobWorker: true,
+    async run(page, lang, ctl) {
+      await ocrUpload(page, lang);
       await page.click("#ocrBtn");
-      const link = page.locator('#result a[download="words-ocr.txt"]');
-      try {
-        await link.waitFor({ timeout: 120000 });
-      } catch (e) {
-        throw new Error(`no .txt download (page says: ${await page.textContent("#errorMsg") || "nothing"})`);
-      }
-      const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
-      const text = await readFile(await download.path(), "utf-8");
-      const at = words.map((w) => text.indexOf(w));
-      expect(at.every((i) => i >= 0) && at[0] < at[1], `words-ocr.txt doesn't have ${words.map((w) => `"${w}"`).join(" then ")}: ${JSON.stringify(text.slice(0, 200))}`);
-      return `words-ocr.txt has ${words.map((w) => `"${w}"`).join(" and ")} on pages 1 and 2, read with the ${lang === "es" ? "Spanish" : "English"} data`;
+      await ocrExpectEngineError(page, lang, 60000);
+      ctl.repair();
+      const done = await ocrRun(page, lang);
+      expect(!(await page.textContent("#errorMsg")), "the engine error is still shown after a successful retry");
+      return `engine error shown and announced (role="alert") after a 404 on the language data; retry: ${done}`;
+    },
+  },
+  {
+    // The language data never arrives: the engine error must appear once the page's timeout has passed
+    // (not before), and a retry must work. The stalled request is answered late, after the timeout.
+    name: "OCR PDF language data stalls",
+    page: "/ocr-pdf/",
+    broken: (lang) => ({ path: TESSERACT_VENDOR(lang)[2], mode: "stall" }),
+    vendor: TESSERACT_VENDOR,
+    vendorOneOf: TESSERACT_CORES,
+    blobWorker: true,
+    async run(page, lang, ctl) {
+      await ocrUpload(page, lang);
+      const timeout = await page.evaluate(() => ENGINE_TIMEOUT_MS);
+      await page.click("#ocrBtn");
+      await ctl.held;
+      await page.clock.fastForward(timeout - 5000);
+      await page.waitForTimeout(1000);
+      const early = await page.evaluate(() => [document.getElementById("progressMsg").textContent, document.getElementById("errorMsg").textContent]);
+      expect(early[0] === OCR_LOADING[lang] && !early[1], `5 seconds before the timeout the page says "${early[0]}" / "${early[1]}", not still loading`);
+      await page.clock.fastForward(10000);
+      await ocrExpectEngineError(page, lang, 10000);
+      ctl.repair();
+      const done = await ocrRun(page, lang);
+      expect(!(await page.textContent("#errorMsg")), "the engine error is still shown after a successful retry");
+      return `still loading 5 s before the ${timeout / 1000} s timeout, engine error shown after it; retry: ${done}`;
     },
   },
 ];
@@ -703,14 +785,31 @@ const CASES = [
 async function runCase(browser, c, lang) {
   const context = await browser.newContext({ locale: lang === "es" ? "es-ES" : "en-US", acceptDownloads: true });
   const seen = { vendor: new Map(), cdn: [], blocked: [], errors: [], workers: [] };
+  let broken = c.broken ? c.broken(lang) : null;
+  const stalled = [];
+  let heldNow;
+  const ctl = {
+    held: new Promise((resolve) => { heldNow = resolve; }),
+    repair() {
+      broken = null;
+      for (const answer of stalled.splice(0)) answer();
+    },
+  };
   await context.route("**/*", async (route) => {
     const url = route.request().url();
     if (url.startsWith(GOATCOUNTER)) return route.fulfill({ status: 204, body: "" });
     if (url.startsWith(SITE + "/")) {
-      const res = await localFile(url);
       const path = new URL(url).pathname;
+      if (broken && path === broken.path) {
+        if (broken.mode === "404") {
+          seen.vendor.set(path, 404);
+          return route.fulfill({ status: 404, body: "not found", contentType: "text/plain" });
+        }
+        await new Promise((resolve) => { stalled.push(resolve); heldNow(); });
+      }
+      const res = await localFile(url);
       if (path.startsWith("/assets/vendor/")) seen.vendor.set(path, res.status);
-      return route.fulfill(res);
+      return route.fulfill(res).catch(() => {});
     }
     if (url.startsWith("data:") || url.startsWith("blob:")) return route.continue();
     if (Object.hasOwn(REMAINING_CDN, url)) {
@@ -723,12 +822,18 @@ async function runCase(browser, c, lang) {
   const page = await context.newPage();
   page.on("worker", (w) => seen.workers.push(w.url()));
   page.on("pageerror", (e) => seen.errors.push("page error: " + e.message));
-  page.on("console", (m) => { if (m.type() === "error") seen.errors.push("console error: " + m.text()); });
+  page.on("console", (m) => {
+    if (m.type() !== "error") return;
+    // The browser's own line for the file a case answers with a 404 on purpose.
+    if (c.broken && m.location().url === SITE + c.broken(lang).path && /\b404\b/.test(m.text())) return;
+    seen.errors.push("console error: " + m.text());
+  });
   const path = (lang === "es" ? "/es" : "") + c.page;
   let detail, failure;
   try {
+    if (c.broken && c.broken(lang).mode === "stall") await page.clock.install();
     await page.goto(SITE + path, { waitUntil: "load", timeout: 60000 });
-    detail = await c.run(page, lang);
+    detail = await c.run(page, lang, ctl);
     for (const v of typeof c.vendor === "function" ? c.vendor(lang) : c.vendor)
       expect(seen.vendor.get(v) === 200, `${v} wasn't loaded from /assets/vendor (status ${seen.vendor.get(v)})`);
     if (c.vendorOneOf) {
