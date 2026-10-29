@@ -32,7 +32,8 @@ Rules, for every page (every .html outside the folders below, including 404.html
 And for assets/vendor:
 - the manifest is valid and complete: name, version, SPDX license, files and a
   license file for every library, each path inside assets/vendor/<name>/<version>/,
-  each source an https URL
+  each source an https URL (only a notice file may instead be marked
+  "written_by": "Orisod", for a notice Orisod wrote; never a script)
 - every file's sha256 and size match the manifest, every file on disk is in the
   manifest (and nothing in the manifest is missing), and every library has its
   LICENSE file (plus any notice_files, e.g. the licenses of code it bundles)
@@ -67,7 +68,6 @@ GITATTRIBUTES_RULE = "assets/vendor/** -text"
 # Every CDN URL still in use, and how many times it appears (script tags plus
 # strings in inline scripts). Shrinks as each library moves to assets/vendor.
 REMAINING_CDN = {
-    "https://cdnjs.cloudflare.com/ajax/libs/heic2any/0.0.4/heic2any.min.js": 2,
     "https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/7.0.0/tesseract.min.js": 2,
 }
 # Pages still letting Tesseract fetch its worker, engine and language data from jsDelivr.
@@ -90,6 +90,7 @@ LOADER = re.compile(
 WORKER_SRC = re.compile(r"""\bworkerSrc\s*[:=]\s*["'`]([^"'`]*)["'`]""")
 PDFJS_SCRIPT = re.compile(r"^/assets/vendor/pdfjs/([^/]+)/pdf\.min\.js$")
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
+WRITTEN_BY_NOT_ALLOWED = re.compile(r"\.(?:m?js|cjs|wasm|html?|css|json)$", re.I)
 SPDX = re.compile(r"^[A-Za-z0-9.+-]+(?: (?:OR|AND|WITH) [A-Za-z0-9.+-]+)*$")
 
 
@@ -133,15 +134,20 @@ def check_manifest(root, problems):
         if not isinstance(notices, list) or not all(isinstance(e, dict) for e in notices):
             problems.append(f"{where}: notice_files must be a list of files like license_file")
         else:
-            entries += [(e, True) for e in notices]
+            entries += [(e, "notice") for e in notices]
         for entry, is_license in entries:
             path = str(entry.get("path", ""))
             listed[path] += 1
             if not path.startswith(folder) or ".." in path:
                 problems.append(f"{where}: {path or '(no path)'} must be inside {folder}")
                 continue
-            if not str(entry.get("source", "")).startswith("https://"):
-                problems.append(f"{where}: {path} needs its https source URL")
+            if is_license == "notice" and "source" not in entry and entry.get("written_by") == "Orisod":
+                # A notice Orisod wrote (e.g. which versions a library bundles): text, never code.
+                if WRITTEN_BY_NOT_ALLOWED.search(path):
+                    problems.append(f"{where}: {path} is code, so it must be an upstream file with its https source URL")
+            elif not str(entry.get("source", "")).startswith("https://"):
+                problems.append(f"{where}: {path} needs its https source URL"
+                                + (" (or, for a notice Orisod wrote, \"written_by\": \"Orisod\")" if is_license == "notice" else ""))
             if not SHA256.match(str(entry.get("sha256", ""))) or not isinstance(entry.get("bytes"), int):
                 problems.append(f"{where}: {path} needs its sha256 (64 lowercase hex) and bytes")
             f = root / path
