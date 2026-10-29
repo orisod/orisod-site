@@ -410,7 +410,7 @@
       "name": "heic2any",
       "version": "0.0.4",
       "license": "MIT AND LGPL-3.0-or-later",
-      "license_note": "heic2any is MIT. heic2any.min.js is unmodified (identical to dist/heic2any.min.js in the npm package; its sha512 equals cdnjs's SRI) and bundles libheif 1.10.0 and libde265 1.0.2 (both LGPL-3.0-or-later, compiled to JavaScript with Emscripten as an asm.js build, no WebAssembly) and gifshot (MIT, Yahoo; closest to 0.4.5, used only for GIF output). COPYING-libheif and COPYING-libde265 are those projects' COPYING files at the bundled tags, with the full LGPL-3.0 and GPL-3.0 texts; LICENSE-gifshot is gifshot's MIT license. NOTICE (written by Orisod) names the bundled versions, how they were found, links to their source and says how to use your own build instead. The worker heic2any starts is a blob: URL built from code inside the file; it fetches nothing.",
+      "license_note": "heic2any is MIT. heic2any.min.js is unmodified (identical to dist/heic2any.min.js in the npm package; its sha512 equals cdnjs's SRI) and bundles libheif 1.10.0 and libde265 1.0.2 (both LGPL-3.0-or-later, compiled to JavaScript with Emscripten as an asm.js build, no WebAssembly) and gifshot (MIT, Yahoo; closest to 0.4.5, used only for GIF output). COPYING-libheif.txt and COPYING-libde265.txt are those projects' COPYING files at the bundled tags, with the full LGPL-3.0 and GPL-3.0 texts; LICENSE-gifshot.txt is gifshot's MIT license. NOTICE.txt (written by Orisod) names the bundled versions, how they were found, links to their source and says how to use your own build instead. The worker heic2any starts is a blob: URL built from code inside the file; it fetches nothing. The text files end in .txt so GitHub Pages serves them as text (an extensionless file is sent as application/octet-stream and downloads); their bytes are the upstream files'. source_archives are the libheif 1.10.0 and libde265 1.0.2 release archives from their GitHub releases, byte-identical (sha256 also in Homebrew's libheif 1.10.0 formula and meta-openembedded's libde265_1.0.2 recipe), hosted so the LGPL source is available from orisod.com; nothing loads them.",
       "used_by": [
         "heic-to-jpg"
       ],
@@ -423,35 +423,53 @@
         }
       ],
       "license_file": {
-        "path": "assets/vendor/heic2any/0.0.4/LICENSE",
+        "path": "assets/vendor/heic2any/0.0.4/LICENSE.txt",
         "source": "https://raw.githubusercontent.com/alexcorvi/heic2any/0.0.4/LICENSE.md",
         "sha256": "17e4c847dac6cf3ba1f6846464160a749e020accf7dd9f412c6c55bc96285009",
         "bytes": 1088
       },
       "notice_files": [
         {
-          "path": "assets/vendor/heic2any/0.0.4/NOTICE",
+          "path": "assets/vendor/heic2any/0.0.4/NOTICE.txt",
           "written_by": "Orisod",
-          "sha256": "0dbe8808d6791c1952677c14cd4bcdb1c37e0974a8b8a7d5a2700f96057573bf",
-          "bytes": 3872
+          "sha256": "2b08afc4442dd42747511694765c0a8c7d53c0f647382587064ae1aac0677bcb",
+          "bytes": 4493
         },
         {
-          "path": "assets/vendor/heic2any/0.0.4/COPYING-libheif",
+          "path": "assets/vendor/heic2any/0.0.4/COPYING-libheif.txt",
           "source": "https://raw.githubusercontent.com/strukturag/libheif/v1.10.0/COPYING",
           "sha256": "b2eb4f6588b005bebac44cfb2dfd23f6a16c5ca9b8a619a315158b0215a917a3",
           "bytes": 44338
         },
         {
-          "path": "assets/vendor/heic2any/0.0.4/COPYING-libde265",
+          "path": "assets/vendor/heic2any/0.0.4/COPYING-libde265.txt",
           "source": "https://raw.githubusercontent.com/strukturag/libde265/v1.0.2/COPYING",
           "sha256": "f286b0832b81e06777c2a6bb4b895dc87608df4870d0fb14abe142ebbccf02e3",
           "bytes": 43284
         },
         {
-          "path": "assets/vendor/heic2any/0.0.4/LICENSE-gifshot",
+          "path": "assets/vendor/heic2any/0.0.4/LICENSE-gifshot.txt",
           "source": "https://cdn.jsdelivr.net/npm/gifshot@0.4.5/LICENSE.txt",
           "sha256": "69d5b0a674cccb315bb04f798d66c7cd551ebe8c7f5fd5af6ce977fa73b410e1",
           "bytes": 1141
+        }
+      ],
+      "source_archives": [
+        {
+          "path": "assets/vendor/heic2any/0.0.4/source/libheif-1.10.0.tar.gz",
+          "source": "https://github.com/strukturag/libheif/releases/download/v1.10.0/libheif-1.10.0.tar.gz",
+          "license": "LGPL-3.0-or-later",
+          "of": "libheif 1.10.0",
+          "sha256": "ad5af1276f341277dc537b0d19a4193e0833c247b2aacb936e0c5494141533ae",
+          "bytes": 1681115
+        },
+        {
+          "path": "assets/vendor/heic2any/0.0.4/source/libde265-1.0.2.tar.gz",
+          "source": "https://github.com/strukturag/libde265/releases/download/v1.0.2/libde265-1.0.2.tar.gz",
+          "license": "LGPL-3.0-or-later",
+          "of": "libde265 1.0.2",
+          "sha256": "eaa0348839c2935dd90647d72c6dd4a043e36361cb3c33d2b04df10fbcebd3cb",
+          "bytes": 806562
         }
       ]
     },
