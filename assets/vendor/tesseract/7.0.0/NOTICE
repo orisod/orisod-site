@@ -1,0 +1,87 @@
+tesseract.js 7.0.0 in Orisod: notice for its engine, the code it bundles and its language data
+
+This file was written by Orisod. Every other file in this folder is an
+unmodified copy of its upstream source (see assets/vendor/manifest.json).
+
+Orisod's OCR PDF tool (/ocr-pdf/ and /es/ocr-pdf/) loads these files from this
+folder instead of from cdnjs and jsDelivr. The page passes Tesseract the full
+addresses of the worker (workerPath), of the core folder (corePath) and of the
+lang folder (langPath), so nothing is downloaded from another server.
+
+1. tesseract.js 7.0.0, Apache License 2.0 (LICENSE)
+   tesseract.min.js and worker.min.js, identical to dist/ in the npm package
+   tesseract.js@7.0.0 (tesseract.min.js is also the file on cdnjs).
+   Source code: https://github.com/naptha/tesseract.js/tree/v7.0.0
+   worker.min.js bundles buffer (MIT), ieee754 (BSD-3-Clause), regenerator-runtime
+   (MIT) and zlib.js (MIT); their notices are in worker.min.js.LICENSE.txt, as
+   published next to it. tesseract.min.js.LICENSE.txt is the one published next
+   to tesseract.min.js.
+
+2. tesseract.js-core 7.0.0, Apache License 2.0 (core/LICENSE)
+   The OCR engine, compiled to WebAssembly with Emscripten. Each .wasm.js file
+   holds its WebAssembly inside it, so it fetches no other file. tesseract.js
+   7.0.0 runs the LSTM-only engine by default, and its worker picks one of these
+   three builds by what the browser supports:
+     core/tesseract-core-relaxedsimd-lstm.wasm.js  (relaxed SIMD)
+     core/tesseract-core-simd-lstm.wasm.js         (SIMD)
+     core/tesseract-core-lstm.wasm.js              (neither)
+   The package's other builds (with the legacy engine, or as separate .wasm
+   files) are never loaded by the OCR PDF tool and aren't included.
+   Source code: https://github.com/naptha/tesseract.js-core/tree/v7.0.0
+   It is built from these libraries, at the commits tesseract.js-core v7.0.0
+   pins in its third_party folder (versions read from each library's own
+   version files at that commit; the version strings marked * were also found
+   inside the WebAssembly):
+   - Tesseract, Balearica's fork, 5.1.0-288-g2a9c * (Apache-2.0)
+     https://github.com/Balearica/tesseract/tree/2a9c1c49c360462733c386d2a44fcd22c4e21411
+     License: core/LICENSE-tesseract
+   - Leptonica 1.83.0 (BSD 2-clause style)
+     https://github.com/DanBloomberg/leptonica/tree/4af068b56a9674da915debea4ed7e1b9885b17e8
+     License: core/LICENSE-leptonica (leptonica-license.txt)
+   - libjpeg 9a, the Independent JPEG Group's software (IJG license)
+     https://github.com/LuaDist/libjpeg/tree/6c0fcb8ddee365e7abc4d332662b06900612e923
+     License: core/README-libjpeg (its README; the terms are under LEGAL ISSUES).
+     This software is based in part on the work of the Independent JPEG Group.
+   - libpng 1.6.38.git * (PNG Reference Library License version 2)
+     https://github.com/glennrp/libpng/tree/a37d4836519517bdce6cb9d956092321eca3e73b
+     License: core/LICENSE-libpng
+   - libtiff 4.3.0 (libtiff license)
+     https://gitlab.com/libtiff/libtiff/-/tree/b51bb157123264e26d34c09cc673d213aea61fc7
+     License: core/COPYRIGHT-libtiff
+   - giflib 5.1.4 (MIT)
+     https://github.com/mirrorer/giflib/tree/fa37672085ce4b3d62c51627ab3c8cf2dda8009a
+     License: core/COPYING-giflib
+   - libwebp 1.2.2 (BSD-3-Clause, with Google's patent grant)
+     https://github.com/webmproject/libwebp/tree/20ef03ee351d4ff03fc5ff3ec4804a879d1b9d5c
+     License: core/COPYING-libwebp and core/PATENTS-libwebp
+   - zlib 1.2.12 * (zlib license)
+     https://github.com/madler/zlib/tree/21767c654d31d2dccdde4330529775c6c5fd5389
+     License: core/README-zlib (its README, which holds the license at 1.2.12)
+   - openlibm 0.8.0 (MIT, BSD and ISC terms for different parts)
+     https://github.com/JuliaMath/openlibm/tree/ae2d91698508701c83cab83714d42a1146dccf85
+     License: core/LICENSE-openlibm.md
+
+3. Language data: lang/eng.traineddata.gz (English page) and
+   lang/spa.traineddata.gz (Spanish page)
+   These are the 4.0.0_best_int files of the npm packages
+   @tesseract.js-data/eng@1.0.0 and @tesseract.js-data/spa@1.0.0, the same files
+   tesseract.js 7.0.0 downloads by default from
+   https://cdn.jsdelivr.net/npm/@tesseract.js-data/<lang>/4.0.0_best_int/
+   They come from the project https://github.com/naptha/tessdata, which takes
+   the models of Tesseract's tessdata_best (https://github.com/tesseract-ocr/tessdata_best),
+   turns them into LSTM-only integer models with Tesseract's combine_tessdata
+   tool and compresses them with gzip (its gzip-integerize-traineddata.sh).
+   - tessdata_best is licensed under the Apache License 2.0:
+     lang/LICENSE-tessdata_best is its LICENSE at commit
+     e12c65a915945e4c28e237a9b52bc4a8f39a0cec.
+   - naptha/tessdata is licensed under the Apache License 2.0:
+     lang/LICENSE-naptha-tessdata is its LICENSE at commit
+     806cd9adc8c6e8abc11c782db1818c990576bebc.
+   - The npm packages @tesseract.js-data/eng and @tesseract.js-data/spa declare
+     the MIT license in their package.json ("license": "MIT", author Balearica)
+     but contain no license text. lang/package-eng.json and lang/package-spa.json
+     are those package.json files, unmodified, as the record of that
+     declaration.
+   tesseract.js decompresses the .gz file itself (it checks for the gzip
+   header), and caches the result in the browser's IndexedDB under the same
+   name as before ("./eng.traineddata" or "./spa.traineddata").
