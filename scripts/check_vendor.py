@@ -13,13 +13,20 @@ Rules, for every page (every .html outside the folders below, including 404.html
 - no <link> stylesheet, preload, preconnect, icon or other resource on another
   host (only rel="canonical" and rel="alternate" may point elsewhere), and no
   @import or url(http...) in an inline <style>
-- no CDN host (CDN_HOSTS) in any inline <script> (JSON-LD aside) or in the site's
-  own JS files (assets/**/*.js outside assets/vendor), and no absolute outside URL
-  given to workerSrc, workerPath, corePath, langPath, importScripts(), fetch(),
-  import() or new Worker(), unless the exact URL is in REMAINING_CDN
-- a page that starts Tesseract must give it workerPath, corePath and langPath, or
-  Tesseract downloads its worker, engine and language data from jsDelivr by
-  itself (pages in TESSERACT_DEFAULTS are still allowed to)
+- no address on another host in any inline <script> (JSON-LD aside) or in the
+  site's own JS files (assets/**/*.js outside assets/vendor): not a CDN (CDN_HOSTS),
+  not an absolute URL given to workerSrc, workerPath, corePath, langPath,
+  importScripts(), fetch(), import() or new Worker(), and no other outside URL
+  either, except the few in NOT_LOADED that nothing loads (an XML namespace, a
+  link the visitor can click, a comment in GoatCounter's count.js)
+- a page that starts Tesseract must load the vendored tesseract.min.js and give
+  Tesseract.createWorker() workerPath, corePath and langPath, each once, as a full
+  same-origin URL (`${location.origin}/assets/vendor/tesseract/<version>/...`,
+  because its worker starts from a blob: address): workerPath the worker.min.js
+  next to that tesseract.min.js, corePath a folder there holding the three LSTM
+  core builds, and langPath a folder there holding <lang>.traineddata.gz for the
+  page's language, all files in the manifest. Without them, Tesseract downloads
+  its worker, engine and language data from jsDelivr by itself
 - a page that loads the vendored PDF.js (/assets/vendor/pdfjs/<version>/pdf.min.js)
   must set pdfjsLib.GlobalWorkerOptions.workerSrc to the worker in the same folder,
   or PDF.js guesses the worker's address from its own; and any workerSrc that
@@ -41,13 +48,12 @@ And for assets/vendor:
 
 Links (<a href>), the GoatCounter endpoint (data-goatcounter) and the Stripe
 donation links on /support aren't resources the page loads, so they're allowed.
-Files inside assets/vendor are exempt from the CDN rules: Tesseract, for one,
-carries its own default jsDelivr addresses, which the pages override instead.
+Files inside assets/vendor are exempt from these address rules: Tesseract, for
+one, carries its own default jsDelivr addresses, which the OCR pages override.
 
-REMAINING_CDN lists every CDN URL still in use, with exactly how many times it
-appears on the site. More than that fails (a new CDN dependency); fewer also
-fails, with a reminder to lower or remove the entry, so the list shrinks with
-each library that moves and ends empty.
+REMAINING_CDN listed every CDN URL still in use while the libraries moved, with
+exactly how many times it appeared; it shrank with each library and has been
+empty since Tesseract moved (2026-10-28), so any CDN address now fails.
 
 Usage: python scripts/check_vendor.py [--root DIR]   (CI: check-vendor)
        python scripts/check_vendor.py --allowlist    (print REMAINING_CDN as JSON, for test_vendor_smoke.js)
@@ -58,6 +64,7 @@ import json
 import re
 import sys
 from collections import Counter
+from fnmatch import fnmatch
 from pathlib import Path
 
 EXCLUDE_TOP_LEVEL = {".git", ".github", ".claude", "assets", "docs", "scripts", "node_modules", "prototypes", "audit", "claude"}
@@ -66,12 +73,21 @@ MANIFEST = f"{VENDOR}/manifest.json"
 GITATTRIBUTES_RULE = "assets/vendor/** -text"
 
 # Every CDN URL still in use, and how many times it appears (script tags plus
-# strings in inline scripts). Shrinks as each library moves to assets/vendor.
-REMAINING_CDN = {
-    "https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/7.0.0/tesseract.min.js": 2,
-}
-# Pages still letting Tesseract fetch its worker, engine and language data from jsDelivr.
-TESSERACT_DEFAULTS = {"ocr-pdf/index.html", "es/ocr-pdf/index.html"}
+# strings in inline scripts). Empty since every library moved to assets/vendor:
+# don't add an entry, self-host the library instead.
+REMAINING_CDN = {}
+
+# Outside addresses an inline script or the site's own JS may mention, because
+# nothing loads them: (file pattern, URL prefix). Anything else on another host fails.
+NOT_LOADED = (
+    ("*", "http://www.w3.org/"),  # XML namespace names (SVG's), which browsers never fetch
+    ("image-metadata-viewer/index.html", "https://www.google.com/maps?q="),  # the "Open in Google Maps" link
+    ("es/image-metadata-viewer/index.html", "https://www.google.com/maps?q="),
+    ("assets/goatcounter/count.js", "https://www.goatcounter.com"),  # comments in the pinned count.js
+    ("assets/goatcounter/count.js", "https://opensource.org/licenses/ISC"),
+    ("assets/goatcounter/count.js", "https://github.com/arp242/goatcounter"),
+)
+SITE_HOSTS = {"orisod.com", "www.orisod.com"}
 
 CDN_HOSTS = re.compile(
     r"(?:cdnjs\.cloudflare\.com|cdn\.jsdelivr\.net|fastly\.jsdelivr\.net|cdn\.sheetjs\.com|unpkg\.com|esm\.sh|"
@@ -89,6 +105,12 @@ LOADER = re.compile(
     r"""\bnew\s+Worker\s*\(\s*)["'`]((?:https?:)?//[^"'`]+)""")
 WORKER_SRC = re.compile(r"""\bworkerSrc\s*[:=]\s*["'`]([^"'`]*)["'`]""")
 PDFJS_SCRIPT = re.compile(r"^/assets/vendor/pdfjs/([^/]+)/pdf\.min\.js$")
+TESSERACT_SCRIPT = re.compile(r"^(/assets/vendor/tesseract/[^/]+)/tesseract\.min\.js$")
+TESSERACT_KEYS = ("workerPath", "corePath", "langPath")
+TESSERACT_KEY = re.compile(r"\b(workerPath|corePath|langPath)\s*:")
+TESSERACT_PATH = re.compile(r"\b(workerPath|corePath|langPath)\s*:\s*`\$\{location\.origin\}(/assets/vendor/[^`$]*)`")
+TESSERACT_LANG = re.compile(r"""Tesseract\.createWorker\(\s*(?:["'](\w+(?:\+\w+)*)["']|(\w+))""")
+TESSERACT_CORE_BUILDS = ("relaxedsimd-lstm", "simd-lstm", "lstm")  # the LSTM-only builds its worker picks from
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
 WRITTEN_BY_NOT_ALLOWED = re.compile(r"\.(?:m?js|cjs|wasm|html?|css|json)$", re.I)
 SPDX = re.compile(r"^[A-Za-z0-9.+-]+(?: (?:OR|AND|WITH) [A-Za-z0-9.+-]+)*$")
@@ -96,6 +118,54 @@ SPDX = re.compile(r"^[A-Za-z0-9.+-]+(?: (?:OR|AND|WITH) [A-Za-z0-9.+-]+)*$")
 
 def external(url):
     return url.startswith(("http://", "https://", "//"))
+
+
+def on_other_host(url):
+    host = re.split(r"[/?#:]", re.sub(r"^(?:https?:)?//", "", url), maxsplit=1)[0].lower()
+    return host not in SITE_HOSTS
+
+
+def not_loaded(rel, url):
+    return any(fnmatch(rel, where) and url.startswith(prefix) for where, prefix in NOT_LOADED)
+
+
+def check_tesseract(rel, body, loads, vendor_files, problems):
+    """A page that starts Tesseract must point its worker, engine and language data at its vendored copy."""
+    folders = [m.group(1) for m in (TESSERACT_SCRIPT.match(u) for u in loads) if m]
+    if len(folders) != 1:
+        problems.append(f"{rel}: starts Tesseract but doesn't load one /assets/vendor/tesseract/<version>/tesseract.min.js")
+        return
+    folder = folders[0]
+    paths = {}
+    for m in TESSERACT_PATH.finditer(body):
+        paths.setdefault(m.group(1), []).append(m.group(2).rstrip("/"))
+    named = Counter(m.group(1) for m in TESSERACT_KEY.finditer(body))
+    for key in TESSERACT_KEYS:
+        if named[key] != 1 or len(paths.get(key, [])) != 1:
+            problems.append(f"{rel}: Tesseract.createWorker() must set {key} once, to `${{location.origin}}{folder}/...` "
+                            f"(a full URL on this site, since its worker starts from a blob: address); "
+                            f"otherwise Tesseract downloads it from jsDelivr")
+    if any(len(paths.get(key, [])) != 1 for key in TESSERACT_KEYS):
+        return
+    worker, core, lang = (paths[key][0] for key in TESSERACT_KEYS)
+    if worker != f"{folder}/worker.min.js" or worker not in vendor_files:
+        problems.append(f"{rel}: workerPath is {worker}, not {folder}/worker.min.js from {MANIFEST}")
+    for build in TESSERACT_CORE_BUILDS:
+        want = f"{core}/tesseract-core-{build}.wasm.js"
+        if not core.startswith(folder + "/") or want not in vendor_files:
+            problems.append(f"{rel}: corePath is {core}, which doesn't hold {want.rsplit('/', 1)[1]} next to {folder}/tesseract.min.js in {MANIFEST}")
+    m = TESSERACT_LANG.search(body)
+    codes = m and m.group(1)
+    if m and not codes:
+        const = re.search(rf"""\b(?:const|let|var)\s+{re.escape(m.group(2))}\s*=\s*["'](\w+(?:\+\w+)*)["']""", body)
+        codes = const and const.group(1)
+    if not codes:
+        problems.append(f"{rel}: can't tell which language Tesseract.createWorker() loads (give it a string, or a const set to one)")
+        return
+    for code in codes.split("+"):
+        want = f"{lang}/{code}.traineddata.gz"
+        if not lang.startswith(folder + "/") or want not in vendor_files:
+            problems.append(f"{rel}: langPath is {lang}, which doesn't hold {code}.traineddata.gz next to {folder}/tesseract.min.js in {MANIFEST}")
 
 
 def pages(root):
@@ -224,18 +294,19 @@ def main() -> int:
                 else:
                     problems.append(f"{rel}: inline script loads {url} from another host; point it at {VENDOR}")
             for um in URL.finditer(body):
-                if um.start() in seen or not CDN_HOSTS.search(um.group(0)):
+                if um.start() in seen:
                     continue
                 url = um.group(0)
-                if url in REMAINING_CDN:
-                    cdn_uses[url] += 1
-                else:
-                    problems.append(f"{rel}: inline script refers to the CDN address {url}; self-host it in {VENDOR}")
-            if "Tesseract.createWorker(" in body and rel not in TESSERACT_DEFAULTS:
-                missing = [k for k in ("workerPath", "corePath", "langPath") if k not in body]
-                if missing:
-                    problems.append(f"{rel}: Tesseract.createWorker() needs {', '.join(missing)} pointing at {VENDOR}, "
-                                    f"or Tesseract downloads them from jsDelivr")
+                if CDN_HOSTS.search(url):
+                    if url in REMAINING_CDN:
+                        cdn_uses[url] += 1
+                    else:
+                        problems.append(f"{rel}: inline script refers to the CDN address {url}; self-host it in {VENDOR}")
+                elif on_other_host(url) and not not_loaded(rel, url):
+                    problems.append(f"{rel}: inline script refers to {url} on another host; pages only load files from "
+                                    f"this site (if nothing loads that address, like a link, add it to NOT_LOADED)")
+            if "Tesseract.createWorker(" in body:
+                check_tesseract(rel, body, loads[rel], vendor_scripts, problems)
             for wm in WORKER_SRC.finditer(body):
                 worker = wm.group(1)
                 worker_srcs[rel].append(worker)
@@ -263,8 +334,11 @@ def main() -> int:
         if rel.startswith(VENDOR + "/"):
             continue
         for um in URL.finditer(f.read_text(encoding="utf-8")):
-            if CDN_HOSTS.search(um.group(0)):
-                problems.append(f"{rel}: refers to the CDN address {um.group(0)}")
+            url = um.group(0)
+            if CDN_HOSTS.search(url):
+                problems.append(f"{rel}: refers to the CDN address {url}")
+            elif on_other_host(url) and not not_loaded(rel, url):
+                problems.append(f"{rel}: refers to {url} on another host (if nothing loads that address, add it to NOT_LOADED)")
 
     for url, allowed in REMAINING_CDN.items():
         used = cdn_uses[url]
@@ -274,10 +348,6 @@ def main() -> int:
         elif used < allowed:
             problems.append(f"{url} appears {used} times, not {allowed}: lower its REMAINING_CDN entry in "
                             f"scripts/check_vendor.py" + (" (remove it)" if used == 0 else ""))
-    for rel in sorted(TESSERACT_DEFAULTS):
-        text = (root / rel).read_text(encoding="utf-8") if (root / rel).is_file() else ""
-        if "Tesseract.createWorker(" not in text or all(k in text for k in ("workerPath", "corePath", "langPath")):
-            problems.append(f"{rel}: no longer uses Tesseract's jsDelivr defaults; remove it from TESSERACT_DEFAULTS")
 
     for rel, srcs in loads.items():
         if rel.startswith("es/") and rel[3:] in loads and loads[rel[3:]] != srcs:
@@ -290,8 +360,9 @@ def main() -> int:
         print(f"\n{len(problems)} problem(s)")
         return 1
     print(f"OK: {len(loads)} pages checked. {vendor_refs} script tags load {len(vendor_scripts)} self-hosted files, "
-          f"all matching {MANIFEST}. {sum(cdn_uses.values())} CDN references remain, all in REMAINING_CDN "
-          f"({len(REMAINING_CDN)} URLs).")
+          f"all matching {MANIFEST}. "
+          + (f"{sum(cdn_uses.values())} CDN references remain, all in REMAINING_CDN ({len(REMAINING_CDN)} URLs)."
+             if REMAINING_CDN else "No page or site script uses a CDN or any other outside host."))
     return 0
 
 
