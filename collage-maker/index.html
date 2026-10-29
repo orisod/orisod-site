@@ -500,7 +500,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
     <div id="dropzoneText">📁 Click to select photos or drag and drop them here (2–9 images)</div>
     <input type="file" id="fileInput" accept=".jpg,.jpeg,.png,.webp" multiple>
   </label>
-  <div class="error" id="uploadError"></div>
+  <div class="error" id="uploadError" role="alert"></div>
 
   <h2 class="workspace-title" id="workspaceTitle">Customize your collage</h2>
   <div class="workspace" id="workspace">
@@ -566,7 +566,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
         </select>
         <button id="downloadBtn">⬇ Download Collage</button>
       </div>
-      <div class="error" id="exportError"></div>
+      <div class="error" id="exportError" role="alert"></div>
       <div class="trust-strip">🔒 Processed on your device · No upload · No account · No watermark</div>
     </div>
 

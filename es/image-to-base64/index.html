@@ -417,7 +417,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
       <div id="dropzoneText">📁 Haz clic para seleccionar una imagen o arrástrala y suéltala aquí</div>
     </label>
     <input type="file" id="fileInput" accept="image/*">
-    <div class="error" id="encodeError"></div>
+    <div class="error" id="encodeError" role="alert"></div>
     <div class="trust-strip">🔒 Procesamiento local · Archivos siempre en tu dispositivo · Sin cuenta · Sin marca de agua</div>
 
     <textarea id="base64Output" readonly placeholder="El resultado en Base64 aparecerá aquí…" aria-label="Resultado en Base64"></textarea>
@@ -431,7 +431,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
     <textarea id="base64Input" placeholder="Pega aquí una cadena Base64 (con o sin el prefijo data:image/...;base64,)..." aria-label="Entrada en Base64"></textarea>
     <br>
     <button id="decodeBtn">Decodificar a imagen</button>
-    <div class="error" id="decodeError"></div>
+    <div class="error" id="decodeError" role="alert"></div>
     <div class="result" id="decodeResult"></div>
   </div>
 

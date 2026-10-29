@@ -476,7 +476,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
   </div>
   <p class="tool-sub" style="text-align:center;">Crea un calendario PDF imprimible de 12 meses: días festivos automáticos de más de 50 países, fechas religiosas, tus propias fotos y eventos personalizados. Todo ocurre localmente en tu navegador.</p>
 
-  <div class="error" id="dataLoadError" style="display:none;max-width:600px;margin:0 auto 20px auto;text-align:center;">⚠️ No se pudieron cargar los datos festivos, así que los días festivos y las fechas religiosas no aparecerán abajo. Esta página necesita cargarse desde un servidor web, no abrirse directamente como archivo local. Intenta recargar, y si el problema continúa, vuelve a cargar desde la URL normal del sitio.</div>
+  <div class="error" id="dataLoadError" style="display:none;max-width:600px;margin:0 auto 20px auto;text-align:center;" role="alert">⚠️ No se pudieron cargar los datos festivos, así que los días festivos y las fechas religiosas no aparecerán abajo. Esta página necesita cargarse desde un servidor web, no abrirse directamente como archivo local. Intenta recargar, y si el problema continúa, vuelve a cargar desde la URL normal del sitio.</div>
 
   <div class="workspace">
     <div class="left-col">
@@ -553,7 +553,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
       </div>
       <div class="panel" style="text-align:center;">
         <button id="downloadBtn" style="width:100%;">⬇ Descargar Calendario PDF de 12 Meses</button>
-        <div class="error" id="genError"></div>
+        <div class="error" id="genError" role="alert"></div>
         <div class="progress" id="genProgress"></div>
         <div class="trust-strip">🔒 Procesado en tu dispositivo · Sin subida · Sin cuenta · Sin marca de agua</div>
       </div>
