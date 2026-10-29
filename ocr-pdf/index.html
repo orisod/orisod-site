@@ -436,7 +436,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
         <div id="dropzoneText">📁 Click to select a scanned PDF or drag and drop it here</div>
       </label>
       <input type="file" id="fileInput" accept=".pdf">
-      <div class="error" id="errorMsg"></div>
+      <div class="error" id="errorMsg" role="alert"></div>
       <div class="trust-strip">🔒 Processed on your device · No upload · No account · No watermark</div>
       <div class="page-count" id="pageCount"></div>
       <div class="long-doc-note" id="longDocNote" style="display:none;"></div>
@@ -627,6 +627,39 @@ async function handleFile(file) {
   }
 }
 
+// tesseract.js never settles createWorker() when the language data fails to download (it only calls
+// errorHandler), so the page would stay on the loading message. Any failure, or no engine after
+// ENGINE_TIMEOUT_MS (3 minutes: the engine and language data are about 4.5 MB to download, which is
+// about 2 minutes at 300 kbit/s), shows ENGINE_ERROR instead and lets the button be pressed again.
+const ENGINE_TIMEOUT_MS = 180000;
+const ENGINE_ERROR = 'The OCR engine could not load. Check your connection and reload the page to try again.';
+
+function createOcrWorker() {
+  return new Promise((resolve, reject) => {
+    let settled = false;
+    const fail = () => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      reject(new Error(ENGINE_ERROR));
+    };
+    const timer = setTimeout(fail, ENGINE_TIMEOUT_MS);
+    // Tesseract's worker starts from a blob: address, so its files are given as full URLs on this site.
+    Tesseract.createWorker(OCR_LANG, Tesseract.OEM.LSTM_ONLY, {
+      workerPath: `${location.origin}/assets/vendor/tesseract/7.0.0/worker.min.js`,
+      corePath: `${location.origin}/assets/vendor/tesseract/7.0.0/core`,
+      langPath: `${location.origin}/assets/vendor/tesseract/7.0.0/lang`,
+      errorHandler: fail,
+    }).then((worker) => {
+      // An engine that finishes loading after the timeout isn't used.
+      if (settled) { worker.terminate(); return; }
+      settled = true;
+      clearTimeout(timer);
+      resolve(worker);
+    }, fail);
+  });
+}
+
 ocrBtn.addEventListener('click', async () => {
   if (!selectedFile) return;
   errorMsg.textContent = '';
@@ -638,12 +671,7 @@ ocrBtn.addEventListener('click', async () => {
   try {
     const arrayBuffer = await selectedFile.arrayBuffer();
     const pdf = await pdfjsLib.getDocument({ data: arrayBuffer.slice(0), isEvalSupported: false }).promise;
-    // Tesseract's worker starts from a blob: address, so its files are given as full URLs on this site.
-    const worker = await Tesseract.createWorker(OCR_LANG, Tesseract.OEM.LSTM_ONLY, {
-      workerPath: `${location.origin}/assets/vendor/tesseract/7.0.0/worker.min.js`,
-      corePath: `${location.origin}/assets/vendor/tesseract/7.0.0/core`,
-      langPath: `${location.origin}/assets/vendor/tesseract/7.0.0/lang`,
-    });
+    const worker = await createOcrWorker();
     const outDoc = await PDFLib.PDFDocument.create();
     const font = await outDoc.embedFont(PDFLib.StandardFonts.Helvetica);
 
