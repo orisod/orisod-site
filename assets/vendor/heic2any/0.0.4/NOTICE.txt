@@ -2,12 +2,14 @@ heic2any 0.0.4 in Orisod: notice for the code bundled inside heic2any.min.js
 
 This file was written by Orisod. Every other file in this folder is an
 unmodified copy of its upstream source (see assets/vendor/manifest.json).
+All the files named below are in this folder,
+https://orisod.com/assets/vendor/heic2any/0.0.4/
 
 heic2any.min.js is the unmodified file published at
 https://cdnjs.cloudflare.com/ajax/libs/heic2any/0.0.4/heic2any.min.js
 (identical to dist/heic2any.min.js in the npm package heic2any@0.0.4;
 sha256 0963cfa50e9e1e7e6af929a40a81e3e898a673f1270eafa6917dd137e4968164).
-heic2any itself is MIT licensed (see LICENSE). Its source is at
+heic2any itself is MIT licensed (see LICENSE.txt). Its source is at
 https://github.com/alexcorvi/heic2any/tree/0.0.4
 
 The file bundles three other libraries:
@@ -16,7 +18,9 @@ The file bundles three other libraries:
    later version (LGPL-3.0-or-later)
    Reads the HEIF/HEIC container.
    Source code: https://github.com/strukturag/libheif/tree/v1.10.0
-   License: COPYING-libheif (libheif's COPYING file at v1.10.0, with the
+   Release archive: https://github.com/strukturag/libheif/releases/download/v1.10.0/libheif-1.10.0.tar.gz
+   Copy of that archive on orisod.com: source/libheif-1.10.0.tar.gz
+   License: COPYING-libheif.txt (libheif's COPYING file at v1.10.0, with the
    full LGPL-3.0 and GPL-3.0 texts)
 
 2. libde265 1.0.2, GNU Lesser General Public License, version 3 or any
@@ -24,7 +28,8 @@ The file bundles three other libraries:
    Decodes the HEVC (H.265) image data.
    Source code: https://github.com/strukturag/libde265/tree/v1.0.2
    Release archive: https://github.com/strukturag/libde265/releases/download/v1.0.2/libde265-1.0.2.tar.gz
-   License: COPYING-libde265 (libde265's COPYING file at v1.0.2, with the
+   Copy of that archive on orisod.com: source/libde265-1.0.2.tar.gz
+   License: COPYING-libde265.txt (libde265's COPYING file at v1.0.2, with the
    full LGPL-3.0 and GPL-3.0 texts)
 
    libheif and libde265 are C/C++ libraries. Here they are compiled to
@@ -35,11 +40,15 @@ The file bundles three other libraries:
    heic2any's copy of that build is src/libheif.js in its repository at
    tag 0.0.4; its embedded program data is byte-identical to the one inside
    heic2any.min.js.
+   The two copies in source/ are byte-identical to the release archives
+   above (same sha256 as in assets/vendor/manifest.json). libheif's
+   archive includes those Emscripten bindings and build-emscripten.sh,
+   which builds libde265 1.0.2 from its release archive.
 
 3. gifshot, MIT License, Copyright 2017 Yahoo Inc.
    Builds animated GIFs; heic2any only uses it for GIF output, which
    Orisod's HEIC to JPG tool never asks for.
-   License: LICENSE-gifshot (LICENSE.txt from the npm package gifshot@0.4.5;
+   License: LICENSE-gifshot.txt (LICENSE.txt from the npm package gifshot@0.4.5;
    gifshot's GitHub repository, github.com/yahoo/gifshot, is no longer online)
    heic2any.min.js doesn't state which gifshot version it holds. It is a
    re-minified copy of gifshot's minified build, closest to gifshot 0.4.5

@@ -44,7 +44,15 @@ And for assets/vendor:
 - every file's sha256 and size match the manifest, every file on disk is in the
   manifest (and nothing in the manifest is missing), and every library has its
   LICENSE file (plus any notice_files, e.g. the licenses of code it bundles)
+- source_archives (the release source of LGPL code a library bundles, like
+  heic2any's libheif and libde265) sit in a source/ folder next to the library,
+  are .tar.gz/.tar.xz/.zip files with their https source URL, sha256, size, SPDX
+  license and what they're the source "of", and are never loaded as a script
 - .gitattributes keeps assets/vendor byte-for-byte (assets/vendor/** -text)
+- a page's <a href> into assets/vendor (like About's open-source links) points to
+  the manifest, a source archive, or a license/notice file whose name ends in
+  .txt: GitHub Pages sends a file with no extension as application/octet-stream,
+  so the link would download it instead of showing the text
 
 Links (<a href>), the GoatCounter endpoint (data-goatcounter) and the Stripe
 donation links on /support aren't resources the page loads, so they're allowed.
@@ -113,6 +121,8 @@ TESSERACT_LANG = re.compile(r"""Tesseract\.createWorker\(\s*(?:["'](\w+(?:\+\w+)
 TESSERACT_CORE_BUILDS = ("relaxedsimd-lstm", "simd-lstm", "lstm")  # the LSTM-only builds its worker picks from
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
 WRITTEN_BY_NOT_ALLOWED = re.compile(r"\.(?:m?js|cjs|wasm|html?|css|json)$", re.I)
+ARCHIVE = re.compile(r"\.(?:tar\.gz|tar\.xz|zip)$")
+VENDOR_LINK = re.compile(r"""<a\b[^>]*\bhref\s*=\s*["'](?:https://(?:www\.)?orisod\.com)?(/assets/vendor/[^"'#?]*)["']""", re.I)
 SPDX = re.compile(r"^[A-Za-z0-9.+-]+(?: (?:OR|AND|WITH) [A-Za-z0-9.+-]+)*$")
 
 
@@ -176,14 +186,15 @@ def pages(root):
 
 
 def check_manifest(root, problems):
-    """Check assets/vendor against the manifest; return the set of listed library files."""
-    listed, scripts = Counter(), set()
+    """Check assets/vendor against the manifest; return the set of listed library files and
+    {path: kind} for every file listed (kind: True for a license, "notice", "archive" or False)."""
+    listed, scripts, kinds = Counter(), set(), {}
     try:
         manifest = json.loads((root / MANIFEST).read_text(encoding="utf-8"))
         libs = manifest["libraries"]
     except (OSError, ValueError, KeyError, TypeError) as e:
         problems.append(f"{MANIFEST}: can't read the manifest ({e})")
-        return scripts
+        return scripts, kinds
     for i, lib in enumerate(libs):
         name, version = lib.get("name"), lib.get("version")
         where = f"{MANIFEST}: library {name or i}@{version}"
@@ -205,12 +216,24 @@ def check_manifest(root, problems):
             problems.append(f"{where}: notice_files must be a list of files like license_file")
         else:
             entries += [(e, "notice") for e in notices]
+        archives = lib.get("source_archives", [])
+        if not isinstance(archives, list) or not all(isinstance(e, dict) for e in archives):
+            problems.append(f"{where}: source_archives must be a list of files like license_file")
+        else:
+            entries += [(e, "archive") for e in archives]
         for entry, is_license in entries:
             path = str(entry.get("path", ""))
             listed[path] += 1
+            kinds[path] = is_license
             if not path.startswith(folder) or ".." in path:
                 problems.append(f"{where}: {path or '(no path)'} must be inside {folder}")
                 continue
+            if is_license == "archive":
+                # The release source of code a library bundles, hosted for its license (LGPL); never loaded.
+                if not path.startswith(folder + "source/") or not ARCHIVE.search(path):
+                    problems.append(f"{where}: source archive {path} must be a .tar.gz, .tar.xz or .zip in {folder}source/")
+                if not SPDX.match(str(entry.get("license", ""))) or not str(entry.get("of", "")).strip():
+                    problems.append(f"{where}: source archive {path} needs its SPDX license and what it's the source \"of\"")
             if is_license == "notice" and "source" not in entry and entry.get("written_by") == "Orisod":
                 # A notice Orisod wrote (e.g. which versions a library bundles): text, never code.
                 if WRITTEN_BY_NOT_ALLOWED.search(path):
@@ -222,7 +245,7 @@ def check_manifest(root, problems):
                 problems.append(f"{where}: {path} needs its sha256 (64 lowercase hex) and bytes")
             f = root / path
             if not f.is_file():
-                problems.append(f"{where}: {path} is in the manifest but missing" + (" (every library needs its LICENSE)" if is_license else ""))
+                problems.append(f"{where}: {path} is in the manifest but missing" + (" (every library needs its LICENSE)" if is_license is True else ""))
                 continue
             data = f.read_bytes()
             digest = hashlib.sha256(data).hexdigest()
@@ -240,7 +263,22 @@ def check_manifest(root, problems):
     attrs = root / ".gitattributes"
     if GITATTRIBUTES_RULE not in (attrs.read_text(encoding="utf-8").splitlines() if attrs.is_file() else []):
         problems.append(f".gitattributes: needs the line '{GITATTRIBUTES_RULE}' so line endings never change a vendored file")
-    return scripts
+    return scripts, kinds
+
+
+def check_vendor_link(rel, href, kinds, problems):
+    """An <a href> into assets/vendor must open something readable (or be a source archive)."""
+    path = href.lstrip("/")
+    if path == MANIFEST:
+        return
+    kind = kinds.get(path)
+    if kind is None:
+        problems.append(f"{rel}: links to {href}, which isn't a file in {MANIFEST}")
+    elif kind is False:
+        problems.append(f"{rel}: links to the library file {href}; link its license, notice or source instead")
+    elif kind != "archive" and not path.endswith(".txt"):
+        problems.append(f"{rel}: links to {href}, which has no .txt extension, so GitHub Pages sends it as "
+                        f"application/octet-stream and the link downloads it; give the file a .txt name in {MANIFEST}")
 
 
 def main() -> int:
@@ -254,7 +292,8 @@ def main() -> int:
     root = Path(args.root)
     sys.stdout.reconfigure(encoding="utf-8")
     problems = []
-    vendor_scripts = check_manifest(root, problems)
+    vendor_scripts, vendor_kinds = check_manifest(root, problems)
+    vendor_links = 0
 
     cdn_uses = Counter()
     loads = {}  # page -> list of vendor/CDN script srcs, in order
@@ -328,6 +367,9 @@ def main() -> int:
         for sm in STYLE.finditer(text):
             if STYLE_EXTERNAL.search(sm.group(1)):
                 problems.append(f"{rel}: an inline <style> imports or loads something from another host")
+        for am in VENDOR_LINK.finditer(text):
+            vendor_links += 1
+            check_vendor_link(rel, am.group(1), vendor_kinds, problems)
 
     for f in sorted((root / "assets").rglob("*.js")):
         rel = f.relative_to(root).as_posix()
@@ -360,7 +402,7 @@ def main() -> int:
         print(f"\n{len(problems)} problem(s)")
         return 1
     print(f"OK: {len(loads)} pages checked. {vendor_refs} script tags load {len(vendor_scripts)} self-hosted files, "
-          f"all matching {MANIFEST}. "
+          f"all matching {MANIFEST}; {vendor_links} links to its license, notice and source files open as text or an archive. "
           + (f"{sum(cdn_uses.values())} CDN references remain, all in REMAINING_CDN ({len(REMAINING_CDN)} URLs)."
              if REMAINING_CDN else "No page or site script uses a CDN or any other outside host."))
     return 0
