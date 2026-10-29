@@ -10,18 +10,20 @@
  * dark theme and once in light theme. A few representative pages are scanned
  * again with the nav's menu panel, search box or a category flyout open (see
  * OPEN_STATES), since those are hidden in a plain scan. Each page is also
- * checked for uploads a keyboard can't reach, which axe misses. Run in CI on every
- * push/PR to main, same as check_sitemap.py.
+ * checked for uploads a keyboard can't reach, and for error lines a screen reader
+ * wouldn't announce, which axe misses. Run in CI on every push/PR to main, same as
+ * check_sitemap.py. Takes --root DIR to scan a test copy of the site.
  */
 import { readFileSync } from "node:fs";
 import { createServer } from "node:http";
 import { readFile as fsReadFile } from "node:fs/promises";
-import { extname, join, normalize } from "node:path";
+import { extname, join, normalize, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
 import axeSource from "axe-core";
 
-const REPO_ROOT = fileURLToPath(new URL("..", import.meta.url));
+const rootArg = process.argv.indexOf("--root");
+const REPO_ROOT = rootArg > -1 ? resolve(process.argv[rootArg + 1]) + sep : fileURLToPath(new URL("..", import.meta.url));
 const SITE_ORIGIN = "https://orisod.com";
 const PORT = 8931;
 const CONCURRENCY = 8; // parallel browser contexts — keeps a ~300-page scan under a few minutes on a 2-core CI runner without overwhelming it
@@ -172,6 +174,20 @@ async function scanPath(context, item) {
         help: "Clickable element can't be reached with the keyboard: make it a <button type=\"button\"> (or a link with an href)",
         nodes: [...new Set(mouseOnly)].map((t) => ({ target: [t] })) });
     }
+    // An error line (class "error" or "field-error") gets its message from a
+    // script after the page loads, so a screen reader only reads it out if the
+    // element is a live region: role="alert" (or an aria-live value) must be on
+    // it in the HTML, not added with the message.
+    const silentErrors = await page.evaluate(() =>
+      [...document.querySelectorAll(".error, .field-error")]
+        .filter((el) => el.getAttribute("role") !== "alert" && !["assertive", "polite"].includes(el.getAttribute("aria-live")))
+        .map((el) => el.tagName.toLowerCase() + (el.id ? "#" + el.id : "") + "." + el.className.trim().split(/\s+/)[0])
+    );
+    if (silentErrors.length) {
+      violations.push({ id: "error-not-announced", impact: "serious", theme: "dark",
+        help: "Error line isn't announced by screen readers: add role=\"alert\" to the element in the HTML",
+        nodes: silentErrors.map((t) => ({ target: [t] })) });
+    }
     return { urlPath: label, violations, consoleErrors };
   } catch (err) {
     // A menu/search box that won't open is a real failure, not just a scan note.
@@ -227,7 +243,7 @@ async function main() {
     process.exit(1);
   }
 
-  console.log(`OK: all ${results.length} pages passed axe-core in dark and light themes (${AXE_TAGS.join(", ")}), including ${OPEN_STATES.length} scans with the nav menu, search box or a category flyout open.`);
+  console.log(`OK: all ${results.length} pages passed axe-core in dark and light themes (${AXE_TAGS.join(", ")}), including ${OPEN_STATES.length} scans with the nav menu, search box or a category flyout open; every error line is announced (role="alert").`);
   process.exit(0);
 }
 
