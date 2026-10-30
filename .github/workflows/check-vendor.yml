@@ -11,9 +11,9 @@ permissions:
 
 jobs:
   check-vendor:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Check no page loads scripts from an outside host and assets/vendor matches its manifest
         run: python3 scripts/check_vendor.py
