@@ -336,6 +336,7 @@ Known items that are deliberately not being fixed now. None of them blocks a mer
 - **Games lobby mockup served publicly (decided 2026-10-29).** The reference mockup `claude/reference/games-lobby-mockup.html` loads a script from cdn.tailwindcss.com and is served publicly by GitHub Pages although not in the sitemap: block it in robots.txt, add noindex, and decide whether it should stay in the published site.
 - **Error announcements: warning notes and a real screen-reader check (decided 2026-10-29).** Consider aria-live=polite (not alert) on the .warn-note boxes; a real screen-reader check (NVDA / iPhone VoiceOver) of the calendar tools' hidden dataLoadError alert is still pending.
 - **Firefox and WebKit browser checks (optional idea, 2026-10-29).** `check-smoke` runs in Chromium only. A scheduled (for example weekly) or manually started run of both scripts in Firefox and WebKit could catch browser-specific breakage, for instance before a library upgrade. Not planned yet.
+- **Update GitHub Actions versions (decided 2026-10-29).** Update GitHub Actions versions (the workflows still run on Node 20, deprecated, and ubuntu-latest is moving to Ubuntu 26); one dedicated PR, re-run every workflow.
 
 ## Claude Code marketing skills (`.claude/skills/`)
 
