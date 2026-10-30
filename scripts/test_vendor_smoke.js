@@ -3,10 +3,11 @@
  * Smoke-test the self-hosted libraries in assets/vendor: each one really works
  * on its tool page, in English and Spanish, with no outside script host.
  *
- * Local only (not in CI). Run it after adding or updating a library in
- * assets/vendor, or after changing how a page loads one:
+ * CI: the "smoke" job of check-smoke.yml, on every PR and push to main. Run it
+ * locally too after adding or updating a library in assets/vendor, or after
+ * changing how a page loads one:
  *
- *   node scripts/test_vendor_smoke.js [case name ...]
+ *   node scripts/test_vendor_smoke.js [--root DIR] [case name ...]
  *
  * How it works: a headless Chromium loads each tool page as https://orisod.com/...,
  * and every orisod.com request is answered from the local files, so root-absolute
@@ -28,38 +29,27 @@
  * under the test's control, so a timeout can be run forward). Its run() gets a third
  * argument with repair(), which serves the file normally from then on (and answers a
  * stalled request late), and held, which resolves once a stalled request arrives.
+ *
+ * A case that fails is run once more. If it passes then, it's reported as flaky (a
+ * FLAKY line, a warning annotation and a row in the job summary) and doesn't fail
+ * the run; if it fails twice, the run fails. Console warnings are listed (WARN
+ * lines and the job summary) but don't fail a case: PDF color filters logs Chrome's
+ * willReadFrequently hint (see Phase 14 in CLAUDE.md). In GitHub Actions each
+ * failure is also an error annotation pointing at the page file, or at the file and
+ * line the browser named for an exception or console error. --root DIR tests a copy
+ * of the site instead of the repo.
  */
 import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
-import { extname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
 import { crc32, inflateRawSync, inflateSync } from "node:zlib";
 import { chromium } from "playwright";
+import { GOATCOUNTER, SITE, annotate, cell, localSite, siteRoot, sourceOf, stackLocation, summary, where } from "./browser_check_lib.js";
 
-const REPO_ROOT = fileURLToPath(new URL("..", import.meta.url));
-const SITE = "https://orisod.com";
-const GOATCOUNTER = "https://orisod.goatcounter.com/count";
-const MIME = {
-  ".html": "text/html; charset=utf-8", ".css": "text/css; charset=utf-8", ".js": "text/javascript; charset=utf-8",
-  ".json": "application/json; charset=utf-8", ".xml": "application/xml; charset=utf-8", ".png": "image/png",
-  ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".svg": "image/svg+xml", ".ico": "image/x-icon", ".webp": "image/webp",
-  ".woff2": "font/woff2", ".woff": "font/woff", ".ttf": "font/ttf", ".webmanifest": "application/manifest+json",
-  ".txt": "text/plain; charset=utf-8", ".wasm": "application/wasm", ".gz": "application/gzip", ".pdf": "application/pdf",
-};
+const REPO_ROOT = siteRoot(import.meta.url);
+const localFile = localSite(REPO_ROOT);
 const python = process.platform === "win32" ? "python" : "python3";
-const REMAINING_CDN = JSON.parse(execFileSync(python, [join(REPO_ROOT, "scripts", "check_vendor.py"), "--allowlist"], { encoding: "utf-8" }));
-
-async function localFile(url) {
-  let path = decodeURIComponent(new URL(url).pathname);
-  if (path.endsWith("/")) path += "index.html";
-  const file = normalize(join(REPO_ROOT, path));
-  if (!file.startsWith(REPO_ROOT)) return { status: 403, body: "" };
-  try {
-    return { status: 200, body: await readFile(file), contentType: MIME[extname(file).toLowerCase()] || "application/octet-stream" };
-  } catch {
-    return { status: 404, body: await readFile(join(REPO_ROOT, "404.html")), contentType: MIME[".html"] };
-  }
-}
+const REMAINING_CDN = JSON.parse(execFileSync(python, [fileURLToPath(new URL("check_vendor.py", import.meta.url)), "--allowlist"], { encoding: "utf-8" }));
 
 // Text drawn on a PDF's pages: every content stream (inflated when compressed),
 // with its <hex> and (literal) strings decoded. Enough for pdf-lib's standard fonts.
@@ -784,7 +774,7 @@ const CASES = [
 
 async function runCase(browser, c, lang) {
   const context = await browser.newContext({ locale: lang === "es" ? "es-ES" : "en-US", acceptDownloads: true });
-  const seen = { vendor: new Map(), cdn: [], blocked: [], errors: [], workers: [] };
+  const seen = { vendor: new Map(), cdn: [], blocked: [], errors: [], warnings: [], workers: [] };
   let broken = c.broken ? c.broken(lang) : null;
   const stalled = [];
   let heldNow;
@@ -821,15 +811,22 @@ async function runCase(browser, c, lang) {
   });
   const page = await context.newPage();
   page.on("worker", (w) => seen.workers.push(w.url()));
-  page.on("pageerror", (e) => seen.errors.push("page error: " + e.message));
+  page.on("pageerror", (e) => {
+    const at = stackLocation(e.stack);
+    seen.errors.push({ message: "page error: " + e.message, src: sourceOf(REPO_ROOT, at.url, at.line) });
+  });
   page.on("console", (m) => {
-    if (m.type() !== "error") return;
+    if (m.type() !== "error" && m.type() !== "warning") return;
+    const loc = m.location();
+    // Playwright's console line numbers are 0-based.
+    const src = sourceOf(REPO_ROOT, loc.url, loc.url ? loc.lineNumber + 1 : 0);
+    if (m.type() === "warning") return seen.warnings.push(m.text() + where(src));
     // The browser's own line for the file a case answers with a 404 on purpose.
-    if (c.broken && m.location().url === SITE + c.broken(lang).path && /\b404\b/.test(m.text())) return;
-    seen.errors.push("console error: " + m.text());
+    if (c.broken && loc.url === SITE + c.broken(lang).path && /\b404\b/.test(m.text())) return;
+    seen.errors.push({ message: "console error: " + m.text() + (src || !loc.url ? "" : ` (${loc.url})`), src });
   });
   const path = (lang === "es" ? "/es" : "") + c.page;
-  let detail, failure;
+  let detail, failure, src = sourceOf(REPO_ROOT, SITE + path);
   try {
     if (c.broken && c.broken(lang).mode === "stall") await page.clock.install();
     await page.goto(SITE + path, { waitUntil: "load", timeout: 60000 });
@@ -847,12 +844,13 @@ async function runCase(browser, c, lang) {
     if (c.worker) expect(seen.workers.includes(SITE + c.worker), `no worker started from ${c.worker} (workers: ${seen.workers.join(", ") || "none"})`);
     if (c.blobWorker) expect(seen.workers.some((u) => u.startsWith(`blob:${SITE}/`)), `no blob: worker started on ${SITE} (workers: ${seen.workers.join(", ") || "none"})`);
     expect(!seen.blocked.length, `requests to outside hosts: ${seen.blocked.join(", ")}`);
-    expect(!seen.errors.length, seen.errors.join("; "));
+    if (seen.errors.length) src = seen.errors.find((e) => e.src?.line)?.src || src;
+    expect(!seen.errors.length, seen.errors.map((e) => e.message + where(e.src)).join("; "));
   } catch (e) {
     failure = e.message.split("\n").slice(0, 6).join("\n        ");
   }
   await context.close();
-  return { path, detail, failure, cdn: [...new Set(seen.cdn)] };
+  return { path, detail, failure, src, warnings: seen.warnings, cdn: [...new Set(seen.cdn)] };
 }
 
 const only = process.argv.slice(2);
@@ -862,17 +860,46 @@ if (!cases.length) {
   process.exit(2);
 }
 const browser = await chromium.launch();
+const t0 = Date.now();
 let failed = 0, cdnPages = 0;
+const rows = [], flaky = [], warned = [];
 for (const c of cases) {
   for (const lang of ["en", "es"]) {
-    const r = await runCase(browser, c, lang);
+    const start = Date.now();
+    let r = await runCase(browser, c, lang);
+    const first = r.failure;
+    if (first) {
+      console.log(`  RETRY ${c.name} on ${r.path}: ${first}`);
+      r = await runCase(browser, c, lang);
+    }
+    const took = ((Date.now() - start) / 1000).toFixed(1);
     failed += !!r.failure;
     cdnPages += r.cdn.length > 0;
-    console.log(`  ${r.failure ? "FAIL" : "PASS"}  ${c.name} on ${r.path}: ${r.failure || r.detail}`);
+    if (r.failure) {
+      console.log(`  FAIL  ${c.name} on ${r.path} (failed twice): ${r.failure}`);
+      annotate("error", `Smoke test failed twice: ${c.name} on ${r.path}`, r.failure, r.src);
+    } else if (first) {
+      flaky.push({ name: c.name, path: r.path, first });
+      console.log(`  FLAKY ${c.name} on ${r.path}: passed on the retry after failing with: ${first}`);
+      annotate("warning", `Flaky smoke test: ${c.name} on ${r.path}`, `Passed on the retry. First run failed with: ${first}`, r.src);
+    } else console.log(`  PASS  ${c.name} on ${r.path}: ${r.detail}`);
+    for (const w of r.warnings) console.log(`        WARN console warning (doesn't fail the case): ${w}`);
+    if (r.warnings.length) warned.push({ name: c.name, path: r.path, warnings: r.warnings });
     for (const u of r.cdn) console.log(`        still from a CDN (allowed for now in REMAINING_CDN): ${u}`);
+    rows.push(`| ${cell(c.name)} | ${r.path} | ${r.failure ? "**failed twice**" : first ? "flaky (passed on the retry)" : "pass"} | ${took} s | ${cell((r.failure || first || "").slice(0, 200))} |`);
   }
 }
 await browser.close();
+const seconds = ((Date.now() - t0) / 1000).toFixed(0);
+summary([
+  `### Smoke tests: ${cases.length * 2} pages in ${seconds} s, ${failed} failed, ${flaky.length} flaky`,
+  "",
+  "| Case | Page | Result | Time | Failure |",
+  "|---|---|---|---|---|",
+  ...rows,
+  ...(flaky.length ? ["", "**Flaky (failed once, passed on the retry):**", "", ...flaky.map((f) => `- ${cell(f.name)} on ${f.path}: ${cell(f.first.slice(0, 300))}`)] : []),
+  ...(warned.length ? ["", "**Console warnings (listed, don't fail the run):**", "", ...warned.flatMap((x) => x.warnings.map((w) => `- ${cell(x.name)} on ${x.path}: ${cell(w.slice(0, 300))}`))] : []),
+].join("\n"));
 console.log(failed ? `${failed} case(s) failed.`
-  : `All vendor smoke tests passed (${cases.length * 2} pages; ${cdnPages} still load a library from a CDN that hasn't moved yet).`);
+  : `All vendor smoke tests passed (${cases.length * 2} pages in ${seconds} s; ${flaky.length} flaky; ${cdnPages} still load a library from a CDN that hasn't moved yet).`);
 process.exit(failed ? 1 : 0);
