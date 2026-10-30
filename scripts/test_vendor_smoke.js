@@ -44,7 +44,7 @@ import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { crc32, inflateRawSync, inflateSync } from "node:zlib";
 import { chromium } from "playwright";
-import { GOATCOUNTER, SITE, annotate, cell, localSite, siteRoot, sourceOf, stackLocation, summary, where } from "./browser_check_lib.js";
+import { GOATCOUNTER, SITE, annotate, cell, localSite, referenceIn, siteRoot, sourceOf, stackLocation, summary, where } from "./browser_check_lib.js";
 
 const REPO_ROOT = siteRoot(import.meta.url);
 const localFile = localSite(REPO_ROOT);
@@ -823,7 +823,9 @@ async function runCase(browser, c, lang) {
     if (m.type() === "warning") return seen.warnings.push(m.text() + where(src));
     // The browser's own line for the file a case answers with a 404 on purpose.
     if (c.broken && loc.url === SITE + c.broken(lang).path && /\b404\b/.test(m.text())) return;
-    seen.errors.push({ message: "console error: " + m.text() + (src || !loc.url ? "" : ` (${loc.url})`), src });
+    // A resource that failed to load is named, at the line of the page that asked for it.
+    const named = !src && loc.url ? ` (${loc.url})` : "";
+    seen.errors.push({ message: "console error: " + m.text() + named, src: named ? referenceIn(REPO_ROOT, SITE + path, loc.url) : src });
   });
   const path = (lang === "es" ? "/es" : "") + c.page;
   let detail, failure, src = sourceOf(REPO_ROOT, SITE + path);
@@ -843,11 +845,21 @@ async function runCase(browser, c, lang) {
     // and not PDF.js's main-thread fallback, which starts no worker at all).
     if (c.worker) expect(seen.workers.includes(SITE + c.worker), `no worker started from ${c.worker} (workers: ${seen.workers.join(", ") || "none"})`);
     if (c.blobWorker) expect(seen.workers.some((u) => u.startsWith(`blob:${SITE}/`)), `no blob: worker started on ${SITE} (workers: ${seen.workers.join(", ") || "none"})`);
+    if (seen.blocked.length) src = referenceIn(REPO_ROOT, SITE + path, seen.blocked[0]);
     expect(!seen.blocked.length, `requests to outside hosts: ${seen.blocked.join(", ")}`);
     if (seen.errors.length) src = seen.errors.find((e) => e.src?.line)?.src || src;
     expect(!seen.errors.length, seen.errors.map((e) => e.message + where(e.src)).join("; "));
   } catch (e) {
-    failure = e.message.split("\n").slice(0, 6).join("\n        ");
+    failure = e.message.replace(/\x1b\[[0-9;]*m/g, "").split("\n").map((l) => l.trimEnd()).filter(Boolean).slice(0, 6).join("\n        ");
+    // When the operation itself failed (a timeout, say), name what the page saw too:
+    // its errors, vendor files that didn't load and blocked requests.
+    const seenToo = [
+      ...seen.errors.map((x) => x.message + where(x.src)),
+      ...[...seen.vendor].filter(([p, status]) => status !== 200 && p !== c.broken?.(lang).path).map(([p, status]) => `${p} answered ${status}`),
+      ...(seen.blocked.length ? [`requests to outside hosts: ${seen.blocked.join(", ")}`] : []),
+    ].filter((x) => !failure.includes(x));
+    if (seenToo.length) failure += "\n        also seen: " + seenToo.join("; ");
+    if (seen.errors.length) src = seen.errors.find((x) => x.src?.line)?.src || src;
   }
   await context.close();
   return { path, detail, failure, src, warnings: seen.warnings, cdn: [...new Set(seen.cdn)] };
@@ -886,7 +898,7 @@ for (const c of cases) {
     for (const w of r.warnings) console.log(`        WARN console warning (doesn't fail the case): ${w}`);
     if (r.warnings.length) warned.push({ name: c.name, path: r.path, warnings: r.warnings });
     for (const u of r.cdn) console.log(`        still from a CDN (allowed for now in REMAINING_CDN): ${u}`);
-    rows.push(`| ${cell(c.name)} | ${r.path} | ${r.failure ? "**failed twice**" : first ? "flaky (passed on the retry)" : "pass"} | ${took} s | ${cell((r.failure || first || "").slice(0, 200))} |`);
+    rows.push(`| ${cell(c.name)} | ${r.path} | ${r.failure ? "**failed twice**" : first ? "flaky (passed on the retry)" : "pass"} | ${took} s | ${cell((r.failure || first || "").slice(0, 400))} |`);
   }
 }
 await browser.close();

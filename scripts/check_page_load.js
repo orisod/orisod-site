@@ -30,7 +30,7 @@ import { readFile } from "node:fs/promises";
 import { cpus } from "node:os";
 import { join } from "node:path";
 import { chromium } from "playwright";
-import { GOATCOUNTER, SITE, annotate, cell, localSite, siteRoot, sourceOf, stackLocation, summary, where } from "./browser_check_lib.js";
+import { GOATCOUNTER, SITE, annotate, cell, localSite, referenceIn, siteRoot, sourceOf, stackLocation, summary, where } from "./browser_check_lib.js";
 
 const ROOT = siteRoot(import.meta.url);
 const w = process.argv.indexOf("--workers");
@@ -70,17 +70,21 @@ async function worker() {
       if (type !== "error" && type !== "warning") return;
       const loc = m.location();
       if (own404 && type === "error" && loc.url === pageUrl && /\b404\b/.test(m.text())) return;
-      // Playwright's console line numbers are 0-based.
-      const src = sourceOf(ROOT, loc.url, loc.url ? loc.lineNumber + 1 : 0);
-      add(type === "error" ? "console error" : "console warning", m.text() + (src ? "" : loc.url ? ` (${loc.url})` : ""), src);
+      // Playwright's console line numbers are 0-based. A location that isn't a site file
+      // (a resource that failed to load) is named in the message, and the annotation
+      // points at the line of the page that asked for it.
+      let src = sourceOf(ROOT, loc.url, loc.url ? loc.lineNumber + 1 : 0);
+      const named = !src && loc.url ? ` (${loc.url})` : "";
+      if (named) src = referenceIn(ROOT, pageUrl, loc.url);
+      add(type === "error" ? "console error" : "console warning", m.text() + named, src);
     });
     page.on("requestfailed", (r) => {
-      const blocked = r.failure()?.errorText === "net::ERR_BLOCKED_BY_CLIENT" && !r.url().startsWith(SITE + "/");
-      add(blocked ? "blocked request" : "failed request", `${r.failure()?.errorText} ${r.url()}`, sourceOf(ROOT, pageUrl));
+      const blocked = /ERR_BLOCKED_BY_CLIENT/.test(r.failure()?.errorText) && !r.url().startsWith(SITE + "/");
+      add(blocked ? "blocked request" : "failed request", `${r.failure()?.errorText} ${r.url()}`, referenceIn(ROOT, pageUrl, r.url()));
     });
     page.on("response", (r) => {
       if (r.status() < 400 || (own404 && r.status() === 404 && r.url() === pageUrl)) return;
-      add("HTTP " + r.status(), `${r.status()} ${r.url()}`, sourceOf(ROOT, pageUrl));
+      add("HTTP " + r.status(), `${r.status()} ${r.url()}`, referenceIn(ROOT, pageUrl, r.url()));
     });
     try {
       await page.goto(pageUrl, { waitUntil: "load", timeout: 30000 });

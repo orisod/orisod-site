@@ -12,7 +12,7 @@
  *   job summary. Outside GitHub Actions they do nothing, so local runs print only
  *   the scripts' own lines.
  */
-import { appendFileSync, existsSync, statSync } from "node:fs";
+import { appendFileSync, existsSync, readFileSync, statSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { extname, join, normalize, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -61,12 +61,28 @@ export function localSite(root) {
   };
 }
 
-// { file, line } in the repo for a browser location, or null when it isn't a site file.
+// { file, line } in the repo for a browser location, or null when it isn't a site file
+// (an outside URL, or a file that doesn't exist; a missing page maps to 404.html).
 export function sourceOf(root, url, line) {
   if (!url || !url.startsWith(SITE + "/")) return null;
   const file = fileFor(root, url);
-  if (!file) return null;
+  if (!file || (file === join(root, "404.html") && extname(new URL(url).pathname))) return null;
   return { file: relative(root, file).split(sep).join("/"), line: line > 0 ? line : undefined };
+}
+
+// The page's file and the first line of it that names resourceUrl (its full URL, or its
+// path for an orisod.com file), so a failed request points at the tag that asked for it.
+export function referenceIn(root, pageUrl, resourceUrl) {
+  const src = sourceOf(root, pageUrl);
+  if (!src) return null;
+  const u = new URL(resourceUrl);
+  const needles = [resourceUrl, u.origin + u.pathname, ...(u.origin === SITE ? [u.pathname + u.search, u.pathname] : [])];
+  const lines = readFileSync(join(root, src.file), "utf-8").split(/\r?\n/);
+  for (const n of needles) {
+    const i = lines.findIndex((l) => l.includes(n));
+    if (i > -1) return { ...src, line: i + 1 };
+  }
+  return src;
 }
 
 export const where = (src) => (src ? ` (${src.file}${src.line ? ":" + src.line : ""})` : "");
