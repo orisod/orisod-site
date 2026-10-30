@@ -11,9 +11,9 @@ permissions:
 
 jobs:
   check-nav:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Check every page's nav is sticky and highlights correctly
         run: python3 scripts/check_nav.py

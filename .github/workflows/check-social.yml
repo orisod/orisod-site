@@ -11,9 +11,9 @@ permissions:
 
 jobs:
   check-social:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Check every page has link-preview tags matching the page
         run: python3 scripts/check_social.py
