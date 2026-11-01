@@ -215,7 +215,7 @@ function jspdfPages(bytes) {
         else if (op[0] === "T*") y -= lead;
         else if (op[6] !== undefined && font) {
           const codes = op[6].match(/.{4}/g) || [];
-          runs.push({ x, y, size, text: codes.map((c) => font.unicode.get(c) ?? "?").join(""),
+          runs.push({ x, y, size, bbox: font.bbox, text: codes.map((c) => font.unicode.get(c) ?? "?").join(""),
             width: codes.reduce((w, c) => w + (font.widths.get(parseInt(c, 16)) ?? font.dw), 0) * size / 1000 });
         }
       }
@@ -240,7 +240,9 @@ function jspdfPages(bytes) {
     const widths = new Map();
     const w = (descendant.dict.match(/\/W\s*\[([\s\S]*?)\]\s*\//) || [])[1] || "";
     for (const m of w.matchAll(/(\d+)\s*\[([^\]]*)\]/g)) m[2].trim().split(/\s+/).forEach((v, i) => widths.set(+m[1] + i, +v));
-    return { unicode, widths, dw: +((descendant.dict.match(/\/DW\s+([\d.]+)/) || [])[1] || 1000) };
+    const descriptor = ref(descendant.dict, "FontDescriptor");
+    const bbox = ((descriptor?.dict.match(/\/FontBBox\s*\[([^\]]*)\]/) || [])[1] || "").trim().split(/\s+/).map(Number);
+    return { unicode, widths, bbox, dw: +((descendant.dict.match(/\/DW\s+([\d.]+)/) || [])[1] || 1000) };
   }
 }
 
@@ -326,8 +328,8 @@ const OOXML_RELS = (type, target) => '<?xml version="1.0" encoding="UTF-8" stand
   '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
   `<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/${type}" Target="${target}"/></Relationships>`;
 
-// A minimal .xlsx written by hand (not by SheetJS): one sheet, "Fruit", with these rows.
-function fixtureXlsx(rows) {
+// A minimal .xlsx written by hand (not by SheetJS): one sheet, "Fruit" unless named, with these rows.
+function fixtureXlsx(rows, sheet = "Fruit") {
   const cell = (v, r, c) => {
     const ref = String.fromCharCode(65 + c) + (r + 1);
     return typeof v === "number" ? `<c r="${ref}"><v>${v}</v></c>` : `<c r="${ref}" t="inlineStr"><is><t>${v}</t></is></c>`;
@@ -339,7 +341,7 @@ function fixtureXlsx(rows) {
       '<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/></Types>',
     "_rels/.rels": OOXML_RELS("officeDocument", "xl/workbook.xml"),
     "xl/workbook.xml": '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" ' +
-      'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Fruit" sheetId="1" r:id="rId1"/></sheets></workbook>',
+      'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="' + sheet + '" sheetId="1" r:id="rId1"/></sheets></workbook>',
     "xl/_rels/workbook.xml.rels": OOXML_RELS("worksheet", "worksheets/sheet1.xml"),
     "xl/worksheets/sheet1.xml": '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>' +
       rows.map((row, r) => `<row r="${r + 1}">${row.map((v, c) => cell(v, r, c)).join("")}</row>`).join("") + "</sheetData></worksheet>",
@@ -771,6 +773,47 @@ const REAL_SLIDE_XML = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
   '<a:p><a:r><a:rPr lang="en-US" dirty="0"/><a:t>Make sure to </a:t></a:r><a:r><a:rPr lang="en-US" b="1" dirty="0"/><a:t>always</a:t></a:r>' +
   '<a:r><a:rPr lang="en-US" dirty="0"/><a:t> check</a:t></a:r></a:p><a:p><a:endParaRPr lang="he-IL" dirty="0"/></a:p>' +
   '</p:txBody></p:sp></p:spTree></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>';
+
+// Excel to PDF and Liberation Sans: the warning (worded for spreadsheets), the font error, a workbook
+// upload and conversion, and the shared font-loader block every page carrying it must keep identical.
+const XLSX_WARNING = {
+  en: (names, short = false) => names ? `⚠️ Some cells use ${names} characters, which this converter can't show yet. They'll come out as unreadable symbols in the PDF.${short ? "" : " The rest of the text converts normally."}`
+    : "⚠️ Some characters in this spreadsheet can't be shown in the PDF yet and will come out as unreadable symbols.",
+  es: (names, short = false) => names ? `⚠️ Algunas celdas usan caracteres ${names}, que este conversor todavía no puede mostrar. Saldrán como símbolos ilegibles en el PDF.${short ? "" : " El resto del texto se convierte con normalidad."}`
+    : "⚠️ Algunos caracteres de esta hoja de cálculo todavía no se pueden mostrar en el PDF y saldrán como símbolos ilegibles.",
+};
+const XLSX_FONT_ERROR = {
+  en: "The font for this spreadsheet could not load. Check your connection and try again.",
+  es: "No se pudo cargar la fuente de esta hoja de cálculo. Revisa tu conexión e inténtalo de nuevo.",
+};
+const XLSX_MIME = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+async function convertWorkbook(page, name, rows, sheet, { expectPdf = true } = {}) {
+  await page.setInputFiles("#fileInput", { name: `${name}.xlsx`, mimeType: XLSX_MIME, buffer: fixtureXlsx(rows, sheet) });
+  await page.locator("#convertBtn").waitFor({ state: "visible", timeout: 30000 });
+  await page.click("#convertBtn");
+  if (!expectPdf) return null;
+  const link = page.locator(`#result a[download="${name}.pdf"]`);
+  await link.waitFor({ timeout: 60000 });
+  const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
+  return readFile(await download.path());
+}
+const SHARED_FONT_PAGES = ["powerpoint-to-pdf/index.html", "es/powerpoint-to-pdf/index.html", "excel-to-pdf/index.html", "es/excel-to-pdf/index.html"];
+const sharedBlock = (text) => {
+  const s = text.replace(/\r\n/g, "\n");
+  const a = s.indexOf("// --- Shared font loader: start"), b = s.indexOf("// --- Shared font loader: end.");
+  return a < 0 || b < 0 ? null : s.slice(a, b);
+};
+function expectSameSharedBlock(texts) {
+  const blocks = texts.map(sharedBlock);
+  expect(blocks.every((x) => x !== null), "a page lost its shared font loader block");
+  expect(new Set(blocks).size === 1, `the shared font loader block differs between ${SHARED_FONT_PAGES.join(", ")}`);
+}
+// What main produced (42d7d1b8 and later; Excel to PDF unchanged since #200) for the Windows-1252
+// workbook below, stamp and date removed.
+const XLSX_LATIN_SHA = { en: "b94d439598db413e97d5351bb64f6c691f13003739fadcec83584a92c4dd8633", es: "8744b9797f4a86613f47a6c99f0e104b4165caeaa3318add5061e015b1c11528" };
+const XLSX_LATIN_ROWS = [["Año", "Región", "Precio €", "Nota"], ["2026", "Señora Muñoz", "1.250,50 €", "Café “crème”"], ["2027", "Œuvre", "5 € • 10 £", "— fin —"]];
+const XLSX_LGC_ROWS = [["Γλώσσα", "Пример", "Przykład"], ["Καλημέρα κόσμε", "Привет, мир", "Zażółć gęślą jaźń"], ["Ελληνικά", "Українська", "Việt Nam"]];
+const XLSX_SQUARE = '□';
 
 const CASES = [
   {
@@ -1540,6 +1583,170 @@ const CASES = [
         mustFail("a page without the header row", () => check(pages.map((p, i) => (i === 1 ? { ...p, blocks: p.blocks.filter((b) => !b.includes("Region")) } : p)))),
       ];
       return `long.pdf: 120 rows over ${pages.length} landscape pages, header repeated on each, Row 1 to Row 120 in order, "Last row" on the last page; ${negatives.join("; ")}`;
+    },
+  },
+  {
+    // Greek, Cyrillic and Latin Extended cells and sheet name: Liberation Sans is fetched and every
+    // text is drawn with it (header row in Bold), read back exactly through the font's ToUnicode map.
+    name: "SheetJS + jspdf-autotable + jsPDF + Liberation Sans (Excel to PDF, Greek, Cyrillic, Latin Extended)",
+    page: "/excel-to-pdf/",
+    vendor: [XLSX, JSPDF, AUTOTABLE, FONT_REGULAR, FONT_BOLD],
+    async run(page, lang, ctl) {
+      const served = {};
+      page.on("response", async (r) => {
+        const path = new URL(r.url()).pathname;
+        if (path === FONT_REGULAR || path === FONT_BOLD) served[path] = { status: r.status(), sha: sha256(await r.body()) };
+      });
+      const pagesText = await Promise.all(SHARED_FONT_PAGES.map((f) => readFile(`${REPO_ROOT}/${f}`, "utf-8")));
+      expectSameSharedBlock(pagesText);
+      const bytes = await convertWorkbook(page, "scripts", XLSX_LGC_ROWS, "Ελληνικά");
+      for (const f of [FONT_REGULAR, FONT_BOLD])
+        expect(served[f]?.status === 200 && served[f].sha === MANIFEST_SHA[f], `${f} was served with ${JSON.stringify(served[f])}, not HTTP 200 and the manifest's sha256`);
+      expect(ctl.requests.filter((u) => u.includes("/liberation-sans/")).length === 2, "the two font files weren't fetched exactly once each");
+      expect((await warnState(page)).text === null, "a workbook the font covers shows the unsupported-characters warning");
+      await loadFontBBoxes();
+      const heading = `${lang === "es" ? "Hoja" : "Sheet"}: Ελληνικά`;
+      const check = (pages) => {
+        const runs = pages.flatMap((p) => p.runs);
+        const find = (t) => runs.find((r) => r.text === t);
+        expect(find(heading), `no "${heading}" heading drawn with Liberation Sans: ${JSON.stringify(runs.map((r) => r.text))}`);
+        for (const [i, row] of XLSX_LGC_ROWS.entries()) for (const cell of row) {
+          const run = find(cell);
+          expect(run, `the cell "${cell}" isn't drawn exactly (read through ToUnicode): ${JSON.stringify(runs.map((r) => r.text))}`);
+          const want = i === 0 ? "bold" : "regular";
+          expect(run.bbox.join() === FONT_BBOX[want].join(), `"${cell}" is drawn with the font box [${run.bbox}], not Liberation Sans ${want === "bold" ? "Bold" : "Regular"}`);
+        }
+        expect(pages.every((p) => p.fonts.every((f) => f && f.encoding === "Identity-H" && f.fontFile2)), "a text block doesn't use the embedded Identity-H Liberation Sans");
+      };
+      const pages = jspdfPages(bytes);
+      check(pages);
+      const edit = (fn) => pages.map((p) => ({ ...p, runs: p.runs.map((r) => fn({ ...r })) }));
+      const negatives = [
+        mustFail("a cell in the old garbled text", () => check(edit((r) => (r.text === "Привет, мир" ? { ...r, text: "@825B, <8@!" } : r)))),
+        mustFail("the font program removed", () => check(jspdfPages(tamper(bytes, "/FontFile2", "/FontFileX")))),
+        mustFail("the header row in Regular", () => check(edit((r) => (r.text === "Γλώσσα" ? { ...r, bbox: FONT_BBOX.regular } : r)))),
+        mustFail("a shared font loader block that differs", () => expectSameSharedBlock([...pagesText.slice(0, 3), pagesText[3].replace("const FONT_TIMEOUT_MS = 60000;", "const FONT_TIMEOUT_MS = 30000;")])),
+      ];
+      return `scripts.pdf: heading and all 9 cells drawn with embedded Liberation Sans and read back exactly through ToUnicode, header row Bold, both fonts HTTP 200 with the manifest sha256, no warning; the shared font loader block is identical on the four pages; ${negatives.join("; ")}`;
+    },
+  },
+  {
+    // A Windows-1252 workbook: no font fetched, and the PDF is exactly what main produced.
+    name: "SheetJS + jspdf-autotable + jsPDF (Excel to PDF, Windows-1252 workbook unchanged)",
+    page: "/excel-to-pdf/",
+    vendor: [XLSX, JSPDF, AUTOTABLE],
+    async run(page, lang, ctl) {
+      const bytes = await convertWorkbook(page, "latin", XLSX_LATIN_ROWS, "Ventas");
+      const noFont = (requests) => expect(!requests.some((u) => u.includes("/liberation-sans/")), "the page fetched Liberation Sans for a Windows-1252 workbook");
+      const same = (b) => expect(stableSha(b) === XLSX_LATIN_SHA[lang], `latin.pdf (stamp and date removed) has sha256 ${stableSha(b)}, not main's ${XLSX_LATIN_SHA[lang]}`);
+      noFont(ctl.requests);
+      same(bytes);
+      expect((await warnState(page)).text === null, "a Windows-1252 workbook shows the unsupported-characters warning");
+      const negatives = [
+        mustFail("a font request", () => noFont([...ctl.requests, SITE + FONT_REGULAR])),
+        mustFail("a PDF one byte off main's", () => same(tamper(bytes, "Ventas", "Ventaz"))),
+      ];
+      return `latin.pdf: no font fetched, no warning, identical to main's PDF apart from stamp and date; ${negatives.join("; ")}`;
+    },
+  },
+  {
+    // Hebrew isn't laid out right to left in this tool: it's named in the warning and never drawn as Hebrew letters
+    // (with the built-in font it's unreadable as before; with Liberation Sans each letter becomes a white square).
+    name: "SheetJS + jspdf-autotable + jsPDF (Excel to PDF, Hebrew cells)",
+    page: "/excel-to-pdf/",
+    vendor: [XLSX, JSPDF, AUTOTABLE],
+    async run(page, lang) {
+      const es = lang === "es";
+      const hebrewDrawn = (pages) => pages.flatMap((p) => p.runs.map((r) => r.text)).filter((t) => /[א-ת]/.test(t));
+      const noHebrew = (pages) => expect(!hebrewDrawn(pages).length, `Hebrew letters were drawn: ${JSON.stringify(hebrewDrawn(pages))}`);
+      // Hebrew only: no font (nothing else needs it), the warning names Hebrew, no Hebrew glyphs.
+      await page.setInputFiles("#fileInput", { name: "hebrew.xlsx", mimeType: XLSX_MIME, buffer: fixtureXlsx([["שם", "עיר"], ["שלום עולם", "תל אביב"]]) });
+      await page.waitForFunction(() => getComputedStyle(document.getElementById("warnNote")).display !== "none", null, { timeout: 15000 }).catch(() => {});
+      const only = await warnState(page);
+      expectWarning(only, XLSX_WARNING[lang](es ? "hebreos" : "Hebrew"));
+      const onlyPdf = jspdfPages(await convertWorkbook(page, "hebrew", [["שם", "עיר"], ["שלום עולם", "תל אביב"]]));
+      noHebrew(onlyPdf);
+      // Hebrew next to Greek: Liberation Sans is loaded for the Greek, and the Hebrew is drawn as squares.
+      const rows = [["Ελληνικά", "עברית"], ["Καλημέρα", "שלום"]];
+      await page.setInputFiles("#fileInput", { name: "mixed.xlsx", mimeType: XLSX_MIME, buffer: fixtureXlsx(rows) });
+      await page.waitForFunction(() => getComputedStyle(document.getElementById("warnNote")).display !== "none", null, { timeout: 15000 }).catch(() => {});
+      expectWarning(await warnState(page), XLSX_WARNING[lang](es ? "hebreos" : "Hebrew"));
+      const mixed = jspdfPages(await convertWorkbook(page, "mixed", rows));
+      noHebrew(mixed);
+      const squares = mixed.flatMap((p) => p.runs.map((r) => r.text)).filter((t) => t.includes(XLSX_SQUARE));
+      expect(squares.includes(XLSX_SQUARE.repeat(4)) && squares.includes(XLSX_SQUARE.repeat(5)), `the Hebrew cells aren't drawn as white squares: ${JSON.stringify(squares)}`);
+      expect(mixed.flatMap((p) => p.runs.map((r) => r.text)).includes("Καλημέρα"), "the Greek cell isn't drawn");
+      const negatives = [
+        mustFail("Hebrew drawn reversed", () => noHebrew([{ runs: [{ text: "םולש" }] }])),
+        mustFail("a warning without Hebrew", () => expectWarning({ ...only, text: null }, XLSX_WARNING[lang](es ? "hebreos" : "Hebrew"))),
+      ];
+      return `Hebrew-only workbook: warning names ${es ? "hebreos" : "Hebrew"}, no font, no Hebrew glyph drawn; Hebrew + Greek: font loaded, Greek drawn, Hebrew cells drawn as white squares, warning names ${es ? "hebreos" : "Hebrew"}; ${negatives.join("; ")}`;
+    },
+  },
+  {
+    // Scripts Liberation Sans doesn't cover: the warning names them, short when no text converts normally.
+    name: "SheetJS + jspdf-autotable + jsPDF (Excel to PDF, warnings for unsupported characters)",
+    page: "/excel-to-pdf/",
+    vendor: [XLSX, JSPDF, AUTOTABLE],
+    async run(page, lang, ctl) {
+      const es = lang === "es";
+      const books = [
+        ["Arabic and Korean", [["Name", "Note"], ["مرحبا", "안녕하세요"]], "Fruit", es ? "árabes y coreanos" : "Arabic and Korean", false],
+        ["only Arabic", [["مرحبا"], ["بالعالم"]], "عربي", es ? "árabes" : "Arabic", true],
+        ["Japanese", [["Name"], ["こんにちは世界"]], "Fruit", es ? "japoneses" : "Japanese", false],
+        ["symbols", [["Status"], ["Done ✓"]], "Fruit", "", false],
+        ["Greek", [["Name"], ["Καλημέρα"]], "Fruit", null],
+      ];
+      const seen = [];
+      for (const [label, rows, sheet, names, short] of books) {
+        await page.setInputFiles("#fileInput", { name: "book.xlsx", mimeType: XLSX_MIME, buffer: fixtureXlsx(rows, sheet) });
+        if (names === null) {
+          await page.waitForTimeout(1000);
+          const state = await warnState(page);
+          expect(state.text === null && state.convert, `the ${label} workbook shows ${JSON.stringify(state.text)}; it needs no warning`);
+          continue;
+        }
+        await page.waitForFunction(() => getComputedStyle(document.getElementById("warnNote")).display !== "none", null, { timeout: 15000 }).catch(() => {});
+        const state = await warnState(page);
+        expectWarning(state, XLSX_WARNING[lang](names, short));
+        seen.push({ label, state, names, short });
+      }
+      expect(!ctl.requests.some((u) => u.includes("/liberation-sans/")), "choosing a file fetched Liberation Sans");
+      const both = seen[0], arabic = seen[1];
+      const negatives = [
+        mustFail("the short form when a text converts", () => expectWarning({ ...both.state, text: XLSX_WARNING[lang](both.names, true) }, XLSX_WARNING[lang](both.names, false))),
+        mustFail("the full form when nothing converts", () => expectWarning({ ...arabic.state, text: XLSX_WARNING[lang](arabic.names, false) }, XLSX_WARNING[lang](arabic.names, true))),
+        mustFail("a warning with role=alert", () => expectWarning({ ...both.state, role: "alert" }, XLSX_WARNING[lang](both.names, false))),
+      ];
+      return `warnings on selection: ${seen.map((x) => (x.names || "(generic)") + (x.short ? " (short)" : x.names ? " (full)" : "")).join(" / ")}; none for Greek; Convert stays available; ${negatives.join("; ")}`;
+    },
+  },
+  {
+    // The font answers 404: the spreadsheet font error in the alert line, and no PDF.
+    name: "Excel to PDF font 404",
+    page: "/excel-to-pdf/",
+    broken: () => ({ path: FONT_REGULAR, mode: "404" }),
+    vendor: [XLSX, JSPDF, AUTOTABLE],
+    async run(page, lang) {
+      await convertWorkbook(page, "scripts", XLSX_LGC_ROWS, "Ελληνικά", { expectPdf: false });
+      await page.waitForFunction((m) => document.getElementById("errorMsg").textContent === m, XLSX_FONT_ERROR[lang], { timeout: 30000 }).catch(() => {});
+      const state = await page.evaluate(() => ({
+        error: document.getElementById("errorMsg").textContent, role: document.getElementById("errorMsg").getAttribute("role"),
+        links: document.querySelectorAll("#result a").length, progress: document.getElementById("progressMsg").textContent,
+        convert: !document.getElementById("convertBtn").disabled,
+      }));
+      const check = (st) => {
+        expect(st.error === XLSX_FONT_ERROR[lang], `the error line says ${JSON.stringify(st.error)}, not the font error`);
+        expect(st.role === "alert", `the error line has role="${st.role}", not "alert"`);
+        expect(st.links === 0, `a download link appeared (${st.links}) although the font didn't load`);
+        expect(!st.progress && st.convert, "the page still shows progress, or Convert isn't available again to retry");
+      };
+      check(state);
+      const negatives = [
+        mustFail("a PDF made without the font", () => check({ ...state, links: 1 })),
+        mustFail("the presentation wording", () => check({ ...state, error: PPTX_FONT_ERROR[lang] })),
+      ];
+      return `font 404: error line says "${state.error}" (role="alert"), no PDF offered, Convert available again; ${negatives.join("; ")}`;
     },
   },
   {
