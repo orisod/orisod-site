@@ -211,7 +211,7 @@
     },
     {
       "name": "jspdf",
-      "version": "2.5.1",
+      "version": "4.2.1",
       "license": "MIT",
       "used_by": [
         "compress-pdf",
@@ -225,38 +225,38 @@
       ],
       "files": [
         {
-          "path": "assets/vendor/jspdf/2.5.1/jspdf.umd.min.js",
-          "source": "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js",
-          "sha256": "98ccf17aa10c20bb1301762618fcc9b6ab3a4e7f26b6071d64d0b41154df3875",
-          "bytes": 364463
+          "path": "assets/vendor/jspdf/4.2.1/jspdf.umd.min.js",
+          "source": "https://cdnjs.cloudflare.com/ajax/libs/jspdf/4.2.1/jspdf.umd.min.js",
+          "sha256": "e6551fcdc32f09d6853b2c5126d18d01d9447e0da618a41a11ebeee0f6c20d54",
+          "bytes": 420165
         }
       ],
       "license_file": {
-        "path": "assets/vendor/jspdf/2.5.1/LICENSE",
-        "source": "https://raw.githubusercontent.com/parallax/jsPDF/v2.5.1/LICENSE",
-        "sha256": "2d26bfab8a36d2250602c7a7597237e180c5cd3517acc108126e3cb399f483c8",
+        "path": "assets/vendor/jspdf/4.2.1/LICENSE",
+        "source": "https://raw.githubusercontent.com/parallax/jsPDF/v4.2.1/LICENSE",
+        "sha256": "dc388ec35ff463288cdde3588a36fd4ed12a45deff053243b37309acc9ef583b",
         "bytes": 1142
       }
     },
     {
       "name": "jspdf-autotable",
-      "version": "3.8.4",
+      "version": "5.0.9",
       "license": "MIT",
-      "license_note": "Pinned to 3.8.4 because it is the last major version whose peer dependency (jspdf ^2.5.1) matches the vendored jsPDF; it loads after jspdf.umd.min.js.",
+      "license_note": "A jsPDF plugin, loaded right after jspdf.umd.min.js; 5.0.9 supports jsPDF 2, 3 and 4 (peer dependency jspdf ^2 || ^3 || ^4) and attaches doc.autoTable to window.jspdf.jsPDF on its own in the browser.",
       "used_by": [
         "excel-to-pdf"
       ],
       "files": [
         {
-          "path": "assets/vendor/jspdf-autotable/3.8.4/jspdf.plugin.autotable.min.js",
-          "source": "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.4/jspdf.plugin.autotable.min.js",
-          "sha256": "2223830cf9a1ec85af014cc71b37c1b1eb566f3d18b2ab8071e96af822c58bdb",
-          "bytes": 38960
+          "path": "assets/vendor/jspdf-autotable/5.0.9/jspdf.plugin.autotable.min.js",
+          "source": "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/5.0.9/jspdf.plugin.autotable.min.js",
+          "sha256": "83dd8e5ae29436bd3d3ef4f4a915125b3951264994c25de0359d3fbd105abe15",
+          "bytes": 32791
         }
       ],
       "license_file": {
-        "path": "assets/vendor/jspdf-autotable/3.8.4/LICENSE",
-        "source": "https://raw.githubusercontent.com/simonbengtsson/jsPDF-AutoTable/v3.8.4/LICENSE.txt",
+        "path": "assets/vendor/jspdf-autotable/5.0.9/LICENSE",
+        "source": "https://raw.githubusercontent.com/simonbengtsson/jsPDF-AutoTable/v5.0.9/LICENSE.txt",
         "sha256": "99a374e0385cf714d2faae5f6e02ec79217c6bcecec39bdb9e102091471b960a",
         "bytes": 1133
       }
