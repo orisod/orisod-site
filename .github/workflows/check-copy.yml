@@ -17,3 +17,9 @@ jobs:
 
       - name: Check script messages have no em dashes or "(s)" plurals
         run: python3 scripts/check_copy.py
+
+      - name: Check no literal bidi control characters in our code (scripts, site JS, inline page scripts)
+        run: python3 scripts/check_bidi_chars.py
+
+      - name: Check check_bidi_chars.py still catches them
+        run: python3 scripts/test_check_bidi_chars.py

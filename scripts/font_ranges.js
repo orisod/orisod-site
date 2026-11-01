@@ -51,7 +51,7 @@ export function cmapCodepoints(buf) {
   return out;
 }
 
-const RIGHT_TO_LEFT = /[\p{Script=Hebrew}\p{Script=Arabic}\p{Script=Syriac}\p{Script=Thaana}\p{Script=Nko}؜‏‪-‮⁦-⁩]/u;
+const RIGHT_TO_LEFT = /[\p{Script=Hebrew}\p{Script=Arabic}\p{Script=Syriac}\p{Script=Thaana}\p{Script=Nko}\u061C\u200F\u202A-\u202E\u2066-\u2069]/u;
 const CONTROL = /\p{Cc}/u;
 
 // [[first, last], ...] code point ranges the fonts at `root` cover, under the rule above.
