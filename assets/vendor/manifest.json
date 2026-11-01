@@ -641,6 +641,60 @@
           "bytes": 530
         }
       ]
+    },
+    {
+      "name": "liberation-sans",
+      "version": "2.1.5",
+      "license": "OFL-1.1",
+      "license_note": "Liberation Sans Regular and Bold, unmodified: byte-identical to the TTFs in the release tarball (release_archive), served as-is. The OFL's Reserved Font Name \"Liberation\" only restricts modified versions, so the files must never be subset, converted or re-saved. Loaded with fetch() only when a presentation has characters outside Windows-1252 that the font covers (see FONT_RANGES on the PowerPoint to PDF pages).",
+      "used_by": [
+        "powerpoint-to-pdf"
+      ],
+      "release_archive": {
+        "url": "https://github.com/liberationfonts/liberation-fonts/files/7261482/liberation-fonts-ttf-2.1.5.tar.gz",
+        "sha256": "7191c669bf38899f73a2094ed00f7b800553364f90e2637010a69c0e268f25d0",
+        "bytes": 2385008,
+        "checksum_from": "Homebrew cask font-liberation (Casks/font/font-l/font-liberation.rb, version 2.1.5,7261482); the GitHub release publishes no checksum"
+      },
+      "files": [
+        {
+          "path": "assets/vendor/liberation-sans/2.1.5/LiberationSans-Regular.ttf",
+          "source": "https://github.com/liberationfonts/liberation-fonts/files/7261482/liberation-fonts-ttf-2.1.5.tar.gz",
+          "member": "liberation-fonts-ttf-2.1.5/LiberationSans-Regular.ttf",
+          "sha256": "76d04c18ea243f426b7de1f3ad208e927008f961dc5945e5aad352d0dfde8ee8",
+          "bytes": 410712
+        },
+        {
+          "path": "assets/vendor/liberation-sans/2.1.5/LiberationSans-Bold.ttf",
+          "source": "https://github.com/liberationfonts/liberation-fonts/files/7261482/liberation-fonts-ttf-2.1.5.tar.gz",
+          "member": "liberation-fonts-ttf-2.1.5/LiberationSans-Bold.ttf",
+          "sha256": "788abee4c806d660e8aee46689dd8540cd4bb98da03dcc9d171ce3efd99a9173",
+          "bytes": 414456
+        }
+      ],
+      "license_file": {
+        "path": "assets/vendor/liberation-sans/2.1.5/LICENSE",
+        "source": "https://github.com/liberationfonts/liberation-fonts/files/7261482/liberation-fonts-ttf-2.1.5.tar.gz",
+        "member": "liberation-fonts-ttf-2.1.5/LICENSE",
+        "sha256": "93fed46019c38bbe566b479d22148e2e8a1e85ada614accb0211c37b2c61c19b",
+        "bytes": 4414
+      },
+      "notice_files": [
+        {
+          "path": "assets/vendor/liberation-sans/2.1.5/AUTHORS",
+          "source": "https://github.com/liberationfonts/liberation-fonts/files/7261482/liberation-fonts-ttf-2.1.5.tar.gz",
+          "member": "liberation-fonts-ttf-2.1.5/AUTHORS",
+          "sha256": "b627404917ef824675cb24c32e2facd0b57650627955f3fc3d8a8863c5d0adfc",
+          "bytes": 379
+        },
+        {
+          "path": "assets/vendor/liberation-sans/2.1.5/README.md",
+          "source": "https://github.com/liberationfonts/liberation-fonts/files/7261482/liberation-fonts-ttf-2.1.5.tar.gz",
+          "member": "liberation-fonts-ttf-2.1.5/README.md",
+          "sha256": "625a61d7e161cde3b1e9dd1ff8b7a86c251be536c34266bf1f1a9bd1c15c19e8",
+          "bytes": 2406
+        }
+      ]
     }
   ]
 }

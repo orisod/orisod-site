@@ -34,6 +34,10 @@ Rules, for every page (every .html outside the folders below, including 404.html
 - every /assets/vendor/ script a page loads is a file listed in the manifest, and
   no vendor script is in <head> (libraries load after the content, before the
   tool's own script)
+- every /assets/vendor/ file path written in an inline script or the site's own JS
+  (what fetch(), workerSrc and the like are given, directly or through a constant)
+  is a library file in the manifest, not a license or notice and not a missing
+  file: a font PowerPoint to PDF fetches only when needed is checked like a script
 - an English page and its /es/ twin load the same vendor and CDN scripts, in the
   same order
 And for assets/vendor:
@@ -44,6 +48,11 @@ And for assets/vendor:
 - every file's sha256 and size match the manifest, every file on disk is in the
   manifest (and nothing in the manifest is missing), and every library has its
   LICENSE file (plus any notice_files, e.g. the licenses of code it bundles)
+- a file taken from a release tarball (Liberation Sans' fonts, license and
+  notices) names that tarball as its source and its path inside it as "member"
+  (same file name, no ".." or leading "/"), and the library has a release_archive
+  with that https URL, the tarball's sha256 and size, and where the checksum came
+  from; a release_archive no file uses fails too
 - source_archives (the release source of LGPL code a library bundles, like
   heic2any's libheif and libde265) sit in a source/ folder next to the library,
   are .tar.gz/.tar.xz/.zip files with their https source URL, sha256, size, SPDX
@@ -122,6 +131,8 @@ TESSERACT_CORE_BUILDS = ("relaxedsimd-lstm", "simd-lstm", "lstm")  # the LSTM-on
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
 WRITTEN_BY_NOT_ALLOWED = re.compile(r"\.(?:m?js|cjs|wasm|html?|css|json)$", re.I)
 ARCHIVE = re.compile(r"\.(?:tar\.gz|tar\.xz|zip)$")
+# A /assets/vendor/ path in a script string ("..." '...' `...`, optionally after ${location.origin} or the site's URL).
+VENDOR_PATH = re.compile(r"""["'`](?:\$\{location\.origin\}|https://(?:www\.)?orisod\.com)?(/assets/vendor/[^"'`$?#\s]*)""")
 VENDOR_LINK = re.compile(r"""<a\b[^>]*\bhref\s*=\s*["'](?:https://(?:www\.)?orisod\.com)?(/assets/vendor/[^"'#?]*)["']""", re.I)
 SPDX = re.compile(r"^[A-Za-z0-9.+-]+(?: (?:OR|AND|WITH) [A-Za-z0-9.+-]+)*$")
 
@@ -216,13 +227,32 @@ def check_manifest(root, problems):
             problems.append(f"{where}: notice_files must be a list of files like license_file")
         else:
             entries += [(e, "notice") for e in notices]
+        release = lib.get("release_archive")
+        if release is not None and not (isinstance(release, dict) and str(release.get("url", "")).startswith("https://")
+                                        and ARCHIVE.search(str(release.get("url", ""))) and SHA256.match(str(release.get("sha256", "")))
+                                        and isinstance(release.get("bytes"), int) and str(release.get("checksum_from", "")).strip()):
+            problems.append(f"{where}: release_archive needs its https .tar.gz/.tar.xz/.zip url, sha256, bytes and checksum_from "
+                            f"(where the published checksum it was verified against came from)")
+            release = None
         archives = lib.get("source_archives", [])
         if not isinstance(archives, list) or not all(isinstance(e, dict) for e in archives):
             problems.append(f"{where}: source_archives must be a list of files like license_file")
         else:
             entries += [(e, "archive") for e in archives]
+        members = 0
         for entry, is_license in entries:
             path = str(entry.get("path", ""))
+            if "member" in entry:
+                # A file extracted from a release tarball, unmodified: the tarball is its source.
+                members += 1
+                member = str(entry["member"])
+                if release is None:
+                    problems.append(f"{where}: {path} names a member of a tarball, so the library needs a release_archive")
+                elif entry.get("source") != release.get("url"):
+                    problems.append(f"{where}: {path} is a member of a tarball, so its source must be the release_archive url")
+                if not member or member.startswith("/") or ".." in member.split("/") or member.split("/")[-1] != path.split("/")[-1]:
+                    problems.append(f"{where}: {path} has member {member or '(empty)'}; it must be the same file name, "
+                                    f"at a relative path inside the tarball")
             listed[path] += 1
             kinds[path] = is_license
             if not path.startswith(folder) or ".." in path:
@@ -254,6 +284,8 @@ def check_manifest(root, problems):
                                 f"manifest says {entry.get('sha256')}, {entry.get('bytes')} bytes)")
             if not is_license:
                 scripts.add("/" + path)
+        if lib.get("release_archive") is not None and not members:
+            problems.append(f"{where}: has a release_archive but no file names a member of it")
     on_disk = {p.relative_to(root).as_posix() for p in (root / VENDOR).rglob("*") if p.is_file()} - {MANIFEST}
     for path in sorted(on_disk - set(listed)):
         problems.append(f"{path}: file in {VENDOR} that isn't in the manifest")
@@ -281,6 +313,15 @@ def check_vendor_link(rel, href, kinds, problems):
                         f"application/octet-stream and the link downloads it; give the file a .txt name in {MANIFEST}")
 
 
+def check_vendor_path(rel, path, vendor_files, problems):
+    """A /assets/vendor/ file path in a script (for fetch() and the like) must be a library file in the manifest."""
+    if "." not in path.rsplit("/", 1)[-1]:
+        return  # a folder (Tesseract's corePath and langPath, checked in check_tesseract)
+    if path not in vendor_files:
+        problems.append(f"{rel}: a script names {path}, which isn't a library file in {MANIFEST}; "
+                        f"fetch() and other loaders may only get vendored files listed there")
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--root", default=str(Path(__file__).resolve().parent.parent), help="site folder to check")
@@ -299,6 +340,7 @@ def main() -> int:
     loads = {}  # page -> list of vendor/CDN script srcs, in order
     worker_srcs = {}  # page -> every workerSrc string its inline scripts set
     vendor_refs = 0
+    vendor_paths = 0
     for rel in pages(root):
         text = (root / rel).read_text(encoding="utf-8")
         head_end = text.find("</head>")
@@ -344,6 +386,9 @@ def main() -> int:
                 elif on_other_host(url) and not not_loaded(rel, url):
                     problems.append(f"{rel}: inline script refers to {url} on another host; pages only load files from "
                                     f"this site (if nothing loads that address, like a link, add it to NOT_LOADED)")
+            for vm in VENDOR_PATH.finditer(body):
+                vendor_paths += 1
+                check_vendor_path(rel, vm.group(1), vendor_scripts, problems)
             if "Tesseract.createWorker(" in body:
                 check_tesseract(rel, body, loads[rel], vendor_scripts, problems)
             for wm in WORKER_SRC.finditer(body):
@@ -375,7 +420,11 @@ def main() -> int:
         rel = f.relative_to(root).as_posix()
         if rel.startswith(VENDOR + "/"):
             continue
-        for um in URL.finditer(f.read_text(encoding="utf-8")):
+        js = f.read_text(encoding="utf-8")
+        for vm in VENDOR_PATH.finditer(js):
+            vendor_paths += 1
+            check_vendor_path(rel, vm.group(1), vendor_scripts, problems)
+        for um in URL.finditer(js):
             url = um.group(0)
             if CDN_HOSTS.search(url):
                 problems.append(f"{rel}: refers to the CDN address {url}")
@@ -402,7 +451,7 @@ def main() -> int:
         print(f"\n{len(problems)} problem(s)")
         return 1
     print(f"OK: {len(loads)} pages checked. {vendor_refs} script tags load {len(vendor_scripts)} self-hosted files, "
-          f"all matching {MANIFEST}; {vendor_links} links to its license, notice and source files open as text or an archive. "
+          f"all matching {MANIFEST}; {vendor_paths} vendor paths in scripts name files in it; {vendor_links} links to its license, notice and source files open as text or an archive. "
           + (f"{sum(cdn_uses.values())} CDN references remain, all in REMAINING_CDN ({len(REMAINING_CDN)} URLs)."
              if REMAINING_CDN else "No page or site script uses a CDN or any other outside host."))
     return 0

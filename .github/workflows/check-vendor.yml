@@ -17,3 +17,6 @@ jobs:
 
       - name: Check no page loads scripts from an outside host and assets/vendor matches its manifest
         run: python3 scripts/check_vendor.py
+
+      - name: Check check_vendor.py still catches a bad tarball entry and a vendor path missing from the manifest
+        run: python3 scripts/test_check_vendor.py
