@@ -635,30 +635,36 @@ function inFont(cp) {
   return false;
 }
 
-// Whether the text needs Liberation Sans, and which characters neither font can draw.
+// Whether the text needs Liberation Sans, which characters neither font can draw, and
+// whether every text run has one of those (then no text converts normally).
 function checkCharacters(texts) {
-  let needsFont = false, missing = '';
+  let needsFont = false, missing = '', runsMissing = 0;
   for (const text of texts) {
+    let runMissing = false;
     for (const ch of text) {
       const cp = ch.codePointAt(0);
       if (cp === 9 || cp === 10 || cp === 13 || (cp >= 0x20 && cp <= 0x7e) || (cp >= 0xa0 && cp <= 0xff) || BUILTIN_EXTRA.includes(ch)) continue;
       if (inFont(cp)) needsFont = true;
-      else missing += ch;
+      else {
+        missing += ch;
+        runMissing = true;
+      }
     }
+    if (runMissing) runsMissing++;
   }
-  return { needsFont, missing };
+  return { needsFont, missing, allMissing: texts.length > 0 && runsMissing === texts.length };
 }
 
 function listNames(names) {
   return names.length < 2 ? names.join('') : `${names.slice(0, -1).join(', ')} y ${names[names.length - 1]}`;
 }
 
-function unsupportedNote({ missing }) {
+function unsupportedNote({ missing, allMissing }) {
   if (!missing) return '';
   let found = SCRIPT_TESTS.map((re) => re.test(missing));
   if (found[3]) found[2] = false;
   const names = SCRIPT_NAMES.filter((name, i) => found[i]);
-  return names.length ? `⚠️ Algunas diapositivas usan caracteres ${listNames(names)}, que este conversor todavía no puede mostrar. Saldrán como símbolos ilegibles en el PDF. El resto del texto se convierte con normalidad.` : '⚠️ Algunos caracteres de esta presentación todavía no se pueden mostrar en el PDF y saldrán como símbolos ilegibles.';
+  return names.length ? `⚠️ Algunas diapositivas usan caracteres ${listNames(names)}, que este conversor todavía no puede mostrar. Saldrán como símbolos ilegibles en el PDF.${allMissing ? '' : ' El resto del texto se convierte con normalidad.'}` : '⚠️ Algunos caracteres de esta presentación todavía no se pueden mostrar en el PDF y saldrán como símbolos ilegibles.';
 }
 
 // Liberation Sans Regular and Bold as binary strings for jsPDF, fetched once and only when needed.

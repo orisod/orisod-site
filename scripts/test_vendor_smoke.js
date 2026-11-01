@@ -541,11 +541,12 @@ async function convertDeck(page, name, slides, { expectPdf = true } = {}) {
   return readFile(await download.path());
 }
 
-// The warning PowerPoint to PDF shows for characters it can't draw yet (null: no warning).
+// The warning PowerPoint to PDF shows for characters it can't draw yet. With named scripts it ends
+// "The rest of the text converts normally." unless every text run has such a character (short).
 const PPTX_WARNING = {
-  en: (names) => names ? `⚠️ Some slides use ${names} characters, which this converter can't show yet. They'll come out as unreadable symbols in the PDF. The rest of the text converts normally.`
+  en: (names, short = false) => names ? `⚠️ Some slides use ${names} characters, which this converter can't show yet. They'll come out as unreadable symbols in the PDF.${short ? "" : " The rest of the text converts normally."}`
     : "⚠️ Some characters in this presentation can't be shown in the PDF yet and will come out as unreadable symbols.",
-  es: (names) => names ? `⚠️ Algunas diapositivas usan caracteres ${names}, que este conversor todavía no puede mostrar. Saldrán como símbolos ilegibles en el PDF. El resto del texto se convierte con normalidad.`
+  es: (names, short = false) => names ? `⚠️ Algunas diapositivas usan caracteres ${names}, que este conversor todavía no puede mostrar. Saldrán como símbolos ilegibles en el PDF.${short ? "" : " El resto del texto se convierte con normalidad."}`
     : "⚠️ Algunos caracteres de esta presentación todavía no se pueden mostrar en el PDF y saldrán como símbolos ilegibles.",
 };
 const PPTX_FONT_ERROR = {
@@ -1108,20 +1109,22 @@ const CASES = [
     vendor: [JSZIP, JSPDF],
     async run(page, lang, ctl) {
       const es = lang === "es";
+      // [label, text runs, script names (null: no warning, "": generic), short: every run has an unsupported character]
       const decks = [
-        ["Hebrew", ["שלום עולם"], es ? "hebreos" : "Hebrew"],
-        ["Arabic", ["مرحبا بالعالم"], es ? "árabes" : "Arabic"],
-        ["Chinese", ["你好，世界"], es ? "chinos" : "Chinese"],
-        ["Japanese", ["こんにちは、世界"], es ? "japoneses" : "Japanese"],
-        ["Korean", ["안녕하세요"], es ? "coreanos" : "Korean"],
-        ["several", ["שלום", "مرحبا", "안녕하세요"], es ? "hebreos, árabes y coreanos" : "Hebrew, Arabic and Korean"],
+        ["Hebrew", ["שלום עולם"], es ? "hebreos" : "Hebrew", true],
+        ["Arabic", ["مرحبا بالعالم"], es ? "árabes" : "Arabic", true],
+        ["Chinese", ["你好，世界"], es ? "chinos" : "Chinese", true],
+        ["Japanese", ["こんにちは、世界"], es ? "japoneses" : "Japanese", true],
+        ["Korean", ["안녕하세요"], es ? "coreanos" : "Korean", true],
+        ["several", ["שלום", "مرحبا", "안녕하세요"], es ? "hebreos, árabes y coreanos" : "Hebrew, Arabic and Korean", true],
+        ["Hebrew and Latin", ["שלום עולם", "Hello world"], es ? "hebreos" : "Hebrew", false],
         ["symbols", ["Done ✓"], ""],
         ["Latin", ["Café crème, 5 €"], null],
         ["Greek", ["Καλημέρα κόσμε"], null],
       ];
       const noWarning = (state, label) => expect(state.text === null && state.convert, `the ${label} deck shows ${JSON.stringify(state.text)}; it needs no warning`);
       const seen = [];
-      for (const [label, texts, names] of decks) {
+      for (const [label, texts, names, short] of decks) {
         await page.setInputFiles("#fileInput", { name: `${label}.pptx`, mimeType: "application/vnd.openxmlformats-officedocument.presentationml.presentation", buffer: fixturePptx([texts]) });
         if (names === null) {
           // No signal for "scan finished, nothing found": give the (tiny) deck's scan time to run.
@@ -1132,19 +1135,22 @@ const CASES = [
         } else {
           await page.waitForFunction(() => getComputedStyle(document.getElementById("warnNote")).display !== "none", null, { timeout: 15000 }).catch(() => {});
           const state = await warnState(page);
-          expectWarning(state, PPTX_WARNING[lang](names));
-          seen.push({ label, state, names });
+          expectWarning(state, PPTX_WARNING[lang](names, short));
+          seen.push({ label, state, names, short });
         }
       }
       // Choosing a file only reads it: the font is fetched when converting, and only if needed.
       expect(!ctl.requests.some((u) => u.includes("/liberation-sans/")), "choosing a file fetched Liberation Sans");
       const named = seen.find((x) => x.label === "several");
+      const hebrew = seen.find((x) => x.label === "Hebrew"), withLatin = seen.find((x) => x.label === "Hebrew and Latin");
       const negatives = [
-        mustFail("a warning missing a script name", () => expectWarning({ ...named.state, text: named.state.text.replace(es ? "árabes y " : "Arabic and ", "") }, PPTX_WARNING[lang](named.names))),
-        mustFail("a warning with role=alert", () => expectWarning({ ...named.state, role: "alert" }, PPTX_WARNING[lang](named.names))),
+        mustFail("the full warning on a Hebrew-only deck", () => expectWarning({ ...hebrew.state, text: PPTX_WARNING[lang](hebrew.names, false) }, PPTX_WARNING[lang](hebrew.names, true))),
+        mustFail("the short warning on a Hebrew + Latin deck", () => expectWarning({ ...withLatin.state, text: PPTX_WARNING[lang](withLatin.names, true) }, PPTX_WARNING[lang](withLatin.names, false))),
+        mustFail("a warning missing a script name", () => expectWarning({ ...named.state, text: named.state.text.replace(es ? "árabes y " : "Arabic and ", "") }, PPTX_WARNING[lang](named.names, true))),
+        mustFail("a warning with role=alert", () => expectWarning({ ...named.state, role: "alert" }, PPTX_WARNING[lang](named.names, true))),
         mustFail("a warning on the Greek deck", () => noWarning({ ...seen.find((x) => x.label === "Greek").state, text: PPTX_WARNING[lang]("") }, "Greek")),
       ];
-      return `warnings on selection: ${seen.filter((x) => x.names !== undefined).map((x) => x.names || "(generic)").join(" / ")}; none for the Latin and Greek decks; Convert stays available; ${negatives.join("; ")}`;
+      return `warnings on selection: ${seen.filter((x) => x.names !== undefined).map((x) => (x.names || "(generic)") + (x.short ? " (short)" : x.names ? " (full)" : "")).join(" / ")}; none for the Latin and Greek decks; Convert stays available; ${negatives.join("; ")}`;
     },
   },
   {

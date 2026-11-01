@@ -635,30 +635,36 @@ function inFont(cp) {
   return false;
 }
 
-// Whether the text needs Liberation Sans, and which characters neither font can draw.
+// Whether the text needs Liberation Sans, which characters neither font can draw, and
+// whether every text run has one of those (then no text converts normally).
 function checkCharacters(texts) {
-  let needsFont = false, missing = '';
+  let needsFont = false, missing = '', runsMissing = 0;
   for (const text of texts) {
+    let runMissing = false;
     for (const ch of text) {
       const cp = ch.codePointAt(0);
       if (cp === 9 || cp === 10 || cp === 13 || (cp >= 0x20 && cp <= 0x7e) || (cp >= 0xa0 && cp <= 0xff) || BUILTIN_EXTRA.includes(ch)) continue;
       if (inFont(cp)) needsFont = true;
-      else missing += ch;
+      else {
+        missing += ch;
+        runMissing = true;
+      }
     }
+    if (runMissing) runsMissing++;
   }
-  return { needsFont, missing };
+  return { needsFont, missing, allMissing: texts.length > 0 && runsMissing === texts.length };
 }
 
 function listNames(names) {
   return names.length < 2 ? names.join('') : `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`;
 }
 
-function unsupportedNote({ missing }) {
+function unsupportedNote({ missing, allMissing }) {
   if (!missing) return '';
   let found = SCRIPT_TESTS.map((re) => re.test(missing));
   if (found[3]) found[2] = false;
   const names = SCRIPT_NAMES.filter((name, i) => found[i]);
-  return names.length ? `⚠️ Some slides use ${listNames(names)} characters, which this converter can't show yet. They'll come out as unreadable symbols in the PDF. The rest of the text converts normally.` : "⚠️ Some characters in this presentation can't be shown in the PDF yet and will come out as unreadable symbols.";
+  return names.length ? `⚠️ Some slides use ${listNames(names)} characters, which this converter can't show yet. They'll come out as unreadable symbols in the PDF.${allMissing ? '' : ' The rest of the text converts normally.'}` : "⚠️ Some characters in this presentation can't be shown in the PDF yet and will come out as unreadable symbols.";
 }
 
 // Liberation Sans Regular and Bold as binary strings for jsPDF, fetched once and only when needed.
