@@ -48,10 +48,12 @@
  * of the site instead of the repo.
  */
 import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { crc32, inflateRawSync, inflateSync } from "node:zlib";
 import { chromium } from "playwright";
+import { FONT_DIR, FONT_FILES, rangesLiteral, supportedRanges } from "./font_ranges.js";
 import { GOATCOUNTER, SITE, annotate, cell, localSite, referenceIn, siteRoot, sourceOf, stackLocation, summary, where } from "./browser_check_lib.js";
 
 const REPO_ROOT = siteRoot(import.meta.url);
@@ -176,13 +178,29 @@ function jspdfPages(bytes) {
     const resources = ref(p.dict, "Resources")?.dict ?? p.dict;
     const content = ref(p.dict, "Contents");
     const ops = (/\/FlateDecode/.test(content.dict) ? inflateSync(content.data) : content.data).toString("latin1");
-    const blocks = [...ops.matchAll(/\bBT\b([\s\S]*?)\bET\b/g)].map((b) => [...b[1].matchAll(/\(((?:\\[\s\S]|[^\\)])*)\)\s*Tj/g)].map((t) => unescape(t[1])));
+    const bts = [...ops.matchAll(/\bBT\b([\s\S]*?)\bET\b/g)];
+    const blocks = bts.map((b) => [...b[1].matchAll(/\(((?:\\[\s\S]|[^\\)])*)\)\s*Tj/g)].map((t) => unescape(t[1])));
+    // The font each text block sets: its BaseFont, encoding, and for an embedded TrueType
+    // font whether the program is there (/FontFile2) and its /FontBBox.
+    const fonts = bts.map((b) => {
+      const key = [...b[1].matchAll(/\/(\w+)\s+[\d.]+\s+Tf/g)].at(-1)?.[1];
+      const font = key && ref(resources, key);
+      if (!font) return null;
+      const descendant = (font.dict.match(/\/DescendantFonts\s*\[\s*(\d+)\s+0\s+R/) || [])[1];
+      const descriptor = descendant && ref(objs.get(+descendant).dict, "FontDescriptor");
+      return {
+        base: (font.dict.match(/\/BaseFont\s*\/([^\s/<>\[\]]+)/) || [])[1],
+        encoding: (font.dict.match(/\/Encoding\s*\/([^\s/<>\[\]]+)/) || [])[1],
+        fontFile2: !!descriptor && /\/FontFile2\s+\d+\s+0\s+R/.test(descriptor.dict),
+        bbox: descriptor ? ((descriptor.dict.match(/\/FontBBox\s*\[([^\]]*)\]/) || [])[1] || "").trim().split(/\s+/).map(Number) : null,
+      };
+    });
     const images = [...ops.matchAll(/\/([A-Za-z0-9]+)\s+Do\b/g)].map((d) => {
       const img = ref(resources, d[1]);
       expect(img && /\/Subtype\s*\/Image/.test(img.dict), `/${d[1]} isn't an image`);
       return { w: +img.dict.match(/\/Width\s+(\d+)/)[1], h: +img.dict.match(/\/Height\s+(\d+)/)[1], filter: (img.dict.match(/\/Filter\s*\/(\w+)/) || [])[1] || "none", data: img.data };
     });
-    return { w: +box[1], h: +box[2], blocks, images };
+    return { w: +box[1], h: +box[2], blocks, fonts, images };
   });
 }
 
@@ -456,6 +474,118 @@ function expectImagePages(pages, want) {
   }
 }
 const JSZIP = "/assets/vendor/jszip/3.10.1/jszip.min.js";
+
+// Liberation Sans, which PowerPoint to PDF fetches only for text outside Windows-1252.
+const [FONT_REGULAR, FONT_BOLD] = FONT_FILES.map((f) => `/${FONT_DIR}/${f}`);
+const MANIFEST_SHA = Object.fromEntries(JSON.parse(await readFile(`${REPO_ROOT}/assets/vendor/manifest.json`, "utf-8"))
+  .libraries.flatMap((lib) => lib.files.map((f) => ["/" + f.path, f.sha256])));
+const sha256 = (buf) => createHash("sha256").update(buf).digest("hex");
+
+// A PDF's sha256 without what changes on every run (creation and modification dates, file ID).
+const stableSha = (bytes) => sha256(Buffer.from(bytes.toString("latin1")
+  .replace(/\/(CreationDate|ModDate) \(D:[^)]*\)/g, "").replace(/\/ID \[[^\]]*\]/g, ""), "latin1"));
+// What main produced for the Latin-only deck below (before the Liberation Sans change), stamp and date removed:
+// PowerPoint to PDF must keep drawing Windows-1252 decks exactly as it did, with the built-in fonts.
+const LATIN_DECK_SHA = {
+  en: "8392021d08c4a992d155d89cb1af1e232cf311bef4188c0537d85f39dabbfe81",
+  es: "cd24a4bcd7138429cc8ff150d4e96d73a8afeb29e1f44187d267dba6817676ae",
+};
+
+// A TrueType font's bounding box from its head table, in PDF units (1000 per em), as jsPDF writes /FontBBox.
+function headBBox(buf) {
+  const tables = buf.readUInt16BE(4);
+  for (let i = 0; i < tables; i++) {
+    if (buf.toString("latin1", 12 + i * 16, 16 + i * 16) !== "head") continue;
+    const at = buf.readUInt32BE(12 + i * 16 + 8), em = buf.readUInt16BE(at + 18);
+    return [36, 38, 40, 42].map((o) => Math.round((buf.readInt16BE(at + o) * 1000) / em));
+  }
+  throw new Error("no head table");
+}
+// Read when a font check first needs them, so the other cases still run on a copy of the site without the fonts.
+const FONT_BBOX = {};
+async function loadFontBBoxes() {
+  if (!FONT_BBOX.regular) for (const [i, f] of FONT_FILES.entries()) FONT_BBOX[i ? "bold" : "regular"] = headBBox(await readFile(`${REPO_ROOT}/${FONT_DIR}/${f}`));
+}
+
+// The text the site's PDF.js reads from a PDF, one entry per line (whitespace runs collapsed),
+// with PDF.js loaded into the tool page after its own work is done.
+async function pdfjsLines(page, bytes) {
+  if (!(await page.evaluate(() => typeof window.pdfjsLib === "object"))) await page.addScriptTag({ url: PDFJS });
+  return page.evaluate(async ([b64, worker]) => {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = worker;
+    const data = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+    const pdf = await pdfjsLib.getDocument({ data, isEvalSupported: false }).promise;
+    const out = [];
+    for (let n = 1; n <= pdf.numPages; n++) {
+      let y = null, line = "";
+      for (const it of (await (await pdf.getPage(n)).getTextContent()).items) {
+        const iy = Math.round(it.transform[5]);
+        if (y !== null && iy !== y) { out.push(line); line = ""; }
+        line += it.str; y = iy;
+      }
+      out.push(line);
+    }
+    return out.map((l) => l.replace(/\s+/g, " ").trim()).filter(Boolean);
+  }, [Buffer.from(bytes).toString("base64"), PDFJS_WORKER]);
+}
+
+// Upload a deck to PowerPoint to PDF, convert it and return the PDF (or null if no download appeared).
+async function convertDeck(page, name, slides, { expectPdf = true } = {}) {
+  await page.setInputFiles("#fileInput", { name: `${name}.pptx`, mimeType: "application/vnd.openxmlformats-officedocument.presentationml.presentation", buffer: fixturePptx(slides) });
+  await page.locator("#convertBtn").waitFor({ state: "visible", timeout: 30000 });
+  await page.click("#convertBtn");
+  if (!expectPdf) return null;
+  const link = page.locator(`#result a[download="${name}.pdf"]`);
+  await link.waitFor({ timeout: 60000 });
+  const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
+  return readFile(await download.path());
+}
+
+// The warning PowerPoint to PDF shows for characters it can't draw yet. With named scripts it ends
+// "The rest of the text converts normally." unless every text run has such a character (short).
+const PPTX_WARNING = {
+  en: (names, short = false) => names ? `⚠️ Some slides use ${names} characters, which this converter can't show yet. They'll come out as unreadable symbols in the PDF.${short ? "" : " The rest of the text converts normally."}`
+    : "⚠️ Some characters in this presentation can't be shown in the PDF yet and will come out as unreadable symbols.",
+  es: (names, short = false) => names ? `⚠️ Algunas diapositivas usan caracteres ${names}, que este conversor todavía no puede mostrar. Saldrán como símbolos ilegibles en el PDF.${short ? "" : " El resto del texto se convierte con normalidad."}`
+    : "⚠️ Algunos caracteres de esta presentación todavía no se pueden mostrar en el PDF y saldrán como símbolos ilegibles.",
+};
+const PPTX_FONT_ERROR = {
+  en: "The font for this presentation could not load. Check your connection and try again.",
+  es: "No se pudo cargar la fuente de esta presentación. Revisa tu conexión e inténtalo de nuevo.",
+};
+// The warning box's state: shown text (or null when hidden), its role, and the Convert button.
+const warnState = (page) => page.evaluate(() => {
+  const note = document.getElementById("warnNote"), btn = document.getElementById("convertBtn");
+  return { text: getComputedStyle(note).display === "none" ? null : note.textContent, role: note.getAttribute("role"),
+    convert: getComputedStyle(btn).display !== "none" && !btn.disabled };
+});
+function expectWarning(state, want) {
+  expect(state.text === want, `the warning box says ${JSON.stringify(state.text)}, not ${JSON.stringify(want)}`);
+  expect(state.role === null, `the warning box has role="${state.role}"; warnings aren't alerts`);
+  expect(state.convert, "the Convert button isn't available next to the warning");
+}
+
+// The Greek, Cyrillic and Latin Extended deck, and the lines PDF.js must read back from it.
+const LONG_RU = "Съешь же ещё этих мягких французских булок да выпей чаю, а потом прочитай длинное предложение, которое переносится на новую строку.";
+const LGC_DECK = [["Καλημέρα κόσμε", "Привет, мир", "Zażółć gęślą jaźń", "Việt Nam", LONG_RU], ["Ελληνικά και Кириллица", "Українська мова"]];
+function expectLgcText(lines, lang) {
+  const slide = lang === "es" ? "Diapositiva" : "Slide";
+  for (const want of ["Καλημέρα κόσμε", "• Привет, мир", "• Zażółć gęślą jaźń", "• Việt Nam", `${slide} 1`, "Ελληνικά και Кириллица", "• Українська мова", `${slide} 2`])
+    expect(lines.includes(want), `PDF.js doesn't read "${want}" back from the PDF: ${JSON.stringify(lines)}`);
+  const at = lines.findIndex((l) => l.startsWith("• Съешь"));
+  const end = lines.findIndex((l, i) => i >= at && l.endsWith("новую строку."));
+  expect(at >= 0 && end > at && lines.slice(at, end + 1).join(" ") === "• " + LONG_RU,
+    `the long Cyrillic bullet isn't wrapped into consecutive lines that read back exactly: ${JSON.stringify(lines.slice(Math.max(at, 0), at + 4))}`);
+  return end - at + 1;
+}
+// Every text block draws with embedded Liberation Sans (Identity-H, /FontFile2): titles Bold, the rest Regular.
+function expectLiberationFonts(pages) {
+  pages.forEach((p, i) => p.fonts.forEach((f, j) => {
+    const want = j === 0 ? "bold" : "regular";
+    expect(f && f.encoding === "Identity-H" && f.fontFile2, `page ${i + 1}, text block ${j + 1} doesn't use an embedded Identity-H font: ${JSON.stringify(f)}`);
+    expect(f.bbox.join() === FONT_BBOX[want].join(), `page ${i + 1}, text block ${j + 1} uses the font with box [${f.bbox}], not Liberation Sans ${want === "bold" ? "Bold" : "Regular"} [${FONT_BBOX[want]}]`);
+  }));
+}
 
 // The pages Compress PDF (Strong) and PDF color filters redraw: portrait Letter, landscape
 // Letter, and portrait Letter turned with /Rotate 90, which viewers show as 792x612 pt.
@@ -872,7 +1002,7 @@ const CASES = [
     name: "JSZip + jsPDF (PowerPoint to PDF)",
     page: "/powerpoint-to-pdf/",
     vendor: [JSZIP, JSPDF],
-    async run(page, lang) {
+    async run(page, lang, ctl) {
       const long = "A long bullet that has to wrap onto more than one line of the PDF page, because its words run far past the width that the slide text is allowed to use.";
       const pptx = fixturePptx([["Smoke deck: Canción de mañana", "Precio: 5 € por día", long], ["Second slide", "Last point"]]);
       await page.setInputFiles("#fileInput", { name: "deck.pptx", mimeType: "application/vnd.openxmlformats-officedocument.presentationml.presentation", buffer: pptx });
@@ -900,7 +1030,156 @@ const CASES = [
         mustFail("€ not written as \\x80", () => check(jspdfPages(tamper(bytes, "5 \x80 por", "5 E por")))),
         mustFail("the long bullet on one line", () => check(unwrapped)),
       ];
-      return `deck.pdf: 2 Letter pages, "Canci\\xf3n de ma\\xf1ana" and "5 \\x80" in WinAnsi, the long bullet wrapped into ${wrappedLines} lines, "${slide} 1/2" footers; ${negatives.join("; ")}`;
+      // Windows-1252 only: no font file is fetched and the PDF is exactly what main produced.
+      const noFont = (requests) => expect(!requests.some((u) => u.includes("/assets/vendor/liberation-sans/")), `the page fetched Liberation Sans for a Windows-1252 deck: ${requests.filter((u) => u.includes("liberation")).join(", ")}`);
+      const sameAsMain = (b) => expect(stableSha(b) === LATIN_DECK_SHA[lang], `deck.pdf (stamp and date removed) has sha256 ${stableSha(b)}, not main's ${LATIN_DECK_SHA[lang]}`);
+      noFont(ctl.requests);
+      sameAsMain(bytes);
+      expect((await warnState(page)).text === null, "a Windows-1252 deck shows the unsupported-characters warning");
+      negatives.push(
+        mustFail("a font request", () => noFont([...ctl.requests, SITE + FONT_REGULAR])),
+        mustFail("a PDF one byte off main's", () => sameAsMain(tamper(bytes, "Smoke deck", "Smoke deck".replace("S", "Z")))),
+      );
+      return `deck.pdf: 2 Letter pages, "Canci\\xf3n de ma\\xf1ana" and "5 \\x80" in WinAnsi, the long bullet wrapped into ${wrappedLines} lines, "${slide} 1/2" footers; no font fetched, identical to main's PDF apart from stamp and date; ${negatives.join("; ")}`;
+    },
+  },
+  {
+    // Greek, Cyrillic and Latin Extended (with Vietnamese): the page fetches Liberation Sans and draws
+    // the whole deck with it, titles in Bold. FONT_RANGES must be what the vendored fonts' cmaps give.
+    name: "JSZip + jsPDF + Liberation Sans (PowerPoint to PDF, Greek, Cyrillic, Latin Extended)",
+    page: "/powerpoint-to-pdf/",
+    vendor: [JSZIP, JSPDF, FONT_REGULAR, FONT_BOLD],
+    async run(page, lang, ctl) {
+      const served = {};
+      page.on("response", async (r) => {
+        const path = new URL(r.url()).pathname;
+        if (path === FONT_REGULAR || path === FONT_BOLD) served[path] = { status: r.status(), sha: sha256(await r.body()) };
+      });
+      const ranges = await page.evaluate(() => FONT_RANGES);
+      const sameRanges = (got) => expect(rangesLiteral(got) === rangesLiteral(supportedRanges(REPO_ROOT)),
+        `the page's FONT_RANGES (${got.length} ranges) isn't what the vendored Liberation Sans cmaps give; run node scripts/font_ranges.js and paste its output into both pages`);
+      sameRanges(ranges);
+      const bytes = await convertDeck(page, "greek", LGC_DECK);
+      for (const f of [FONT_REGULAR, FONT_BOLD])
+        expect(served[f]?.status === 200 && served[f].sha === MANIFEST_SHA[f], `${f} was served with ${JSON.stringify(served[f])}, not HTTP 200 and the manifest's sha256`);
+      expect(ctl.requests.filter((u) => u.includes("/liberation-sans/")).length === 2, "the two font files weren't fetched exactly once each");
+      const pages = jspdfPages(bytes);
+      await loadFontBBoxes();
+      expectLiberationFonts(pages);
+      const lines = await pdfjsLines(page, bytes);
+      const wrapped = expectLgcText(lines, lang);
+      expect((await warnState(page)).text === null, "a deck the font covers shows the unsupported-characters warning");
+      const garbled = lines.map((l) => (l === "• Привет, мир" ? "•    @ 8 2 5 B ,   < 8 @ !" : l));
+      const negatives = [
+        mustFail("a line in the old garbled text", () => expectLgcText(garbled, lang)),
+        mustFail("the font program removed", () => expectLiberationFonts(jspdfPages(tamper(bytes, "/FontFile2", "/FontFileX")))),
+        mustFail("titles in Regular", () => expectLiberationFonts(pages.map((p) => ({ ...p, fonts: p.fonts.map((f) => ({ ...f, bbox: FONT_BBOX.regular })) })))),
+        mustFail("FONT_RANGES missing a range", () => sameRanges(ranges.slice(1))),
+      ];
+      return `greek.pdf: ${pages.length} pages drawn with embedded Liberation Sans (titles Bold, text Regular, Identity-H), both fonts HTTP 200 with the manifest sha256, PDF.js reads every Greek, Cyrillic, Polish and Vietnamese line back exactly, the long Cyrillic bullet wraps into ${wrapped} lines; FONT_RANGES (${ranges.length} ranges) matches the fonts' cmaps; ${bytes.length} bytes; ${negatives.join("; ")}`;
+    },
+  },
+  {
+    // Greek with Arabic: the font is fetched for the Greek, and the Arabic gets the warning.
+    name: "JSZip + jsPDF + Liberation Sans (PowerPoint to PDF, Greek and Arabic)",
+    page: "/powerpoint-to-pdf/",
+    vendor: [JSZIP, JSPDF, FONT_REGULAR, FONT_BOLD],
+    async run(page, lang) {
+      const want = PPTX_WARNING[lang](lang === "es" ? "árabes" : "Arabic");
+      await page.setInputFiles("#fileInput", { name: "mixed.pptx", mimeType: "application/vnd.openxmlformats-officedocument.presentationml.presentation", buffer: fixturePptx([["Καλημέρα κόσμε", "مرحبا بالعالم", "Ελληνικά"]]) });
+      await page.waitForFunction(() => getComputedStyle(document.getElementById("warnNote")).display !== "none", null, { timeout: 15000 }).catch(() => {});
+      expectWarning(await warnState(page), want);
+      const bytes = await convertDeck(page, "mixed", [["Καλημέρα κόσμε", "مرحبا بالعالم", "Ελληνικά"]]);
+      const lines = await pdfjsLines(page, bytes);
+      const greek = (l) => expect(l.includes("Καλημέρα κόσμε") && l.includes("• Ελληνικά"), `PDF.js doesn't read the Greek back: ${JSON.stringify(l)}`);
+      greek(lines);
+      const after = await warnState(page);
+      expectWarning(after, want);
+      const negatives = [
+        mustFail("the warning without the script name", () => expectWarning({ ...after, text: after.text.replace(lang === "es" ? "árabes" : "Arabic", "") }, want)),
+        mustFail("the Greek garbled", () => greek(lines.map((l) => l.replace("Καλημέρα", "š±»·¼-Á±")))),
+      ];
+      return `mixed.pdf: Greek drawn with Liberation Sans and read back exactly; the warning names ${lang === "es" ? "árabes" : "Arabic"} on selection and after converting; ${negatives.join("; ")}`;
+    },
+  },
+  {
+    // The warning on file selection, for each script the converter can't draw yet, and none for decks it can.
+    name: "PowerPoint to PDF warnings for unsupported characters",
+    page: "/powerpoint-to-pdf/",
+    vendor: [JSZIP, JSPDF],
+    async run(page, lang, ctl) {
+      const es = lang === "es";
+      // [label, text runs, script names (null: no warning, "": generic), short: every run has an unsupported character]
+      const decks = [
+        ["Hebrew", ["שלום עולם"], es ? "hebreos" : "Hebrew", true],
+        ["Arabic", ["مرحبا بالعالم"], es ? "árabes" : "Arabic", true],
+        ["Chinese", ["你好，世界"], es ? "chinos" : "Chinese", true],
+        ["Japanese", ["こんにちは、世界"], es ? "japoneses" : "Japanese", true],
+        ["Korean", ["안녕하세요"], es ? "coreanos" : "Korean", true],
+        ["several", ["שלום", "مرحبا", "안녕하세요"], es ? "hebreos, árabes y coreanos" : "Hebrew, Arabic and Korean", true],
+        ["Hebrew and Latin", ["שלום עולם", "Hello world"], es ? "hebreos" : "Hebrew", false],
+        ["symbols", ["Done ✓"], ""],
+        ["Latin", ["Café crème, 5 €"], null],
+        ["Greek", ["Καλημέρα κόσμε"], null],
+      ];
+      const noWarning = (state, label) => expect(state.text === null && state.convert, `the ${label} deck shows ${JSON.stringify(state.text)}; it needs no warning`);
+      const seen = [];
+      for (const [label, texts, names, short] of decks) {
+        await page.setInputFiles("#fileInput", { name: `${label}.pptx`, mimeType: "application/vnd.openxmlformats-officedocument.presentationml.presentation", buffer: fixturePptx([texts]) });
+        if (names === null) {
+          // No signal for "scan finished, nothing found": give the (tiny) deck's scan time to run.
+          await page.waitForTimeout(1000);
+          const state = await warnState(page);
+          noWarning(state, label);
+          seen.push({ label, state });
+        } else {
+          await page.waitForFunction(() => getComputedStyle(document.getElementById("warnNote")).display !== "none", null, { timeout: 15000 }).catch(() => {});
+          const state = await warnState(page);
+          expectWarning(state, PPTX_WARNING[lang](names, short));
+          seen.push({ label, state, names, short });
+        }
+      }
+      // Choosing a file only reads it: the font is fetched when converting, and only if needed.
+      expect(!ctl.requests.some((u) => u.includes("/liberation-sans/")), "choosing a file fetched Liberation Sans");
+      const named = seen.find((x) => x.label === "several");
+      const hebrew = seen.find((x) => x.label === "Hebrew"), withLatin = seen.find((x) => x.label === "Hebrew and Latin");
+      const negatives = [
+        mustFail("the full warning on a Hebrew-only deck", () => expectWarning({ ...hebrew.state, text: PPTX_WARNING[lang](hebrew.names, false) }, PPTX_WARNING[lang](hebrew.names, true))),
+        mustFail("the short warning on a Hebrew + Latin deck", () => expectWarning({ ...withLatin.state, text: PPTX_WARNING[lang](withLatin.names, true) }, PPTX_WARNING[lang](withLatin.names, false))),
+        mustFail("a warning missing a script name", () => expectWarning({ ...named.state, text: named.state.text.replace(es ? "árabes y " : "Arabic and ", "") }, PPTX_WARNING[lang](named.names, true))),
+        mustFail("a warning with role=alert", () => expectWarning({ ...named.state, role: "alert" }, PPTX_WARNING[lang](named.names, true))),
+        mustFail("a warning on the Greek deck", () => noWarning({ ...seen.find((x) => x.label === "Greek").state, text: PPTX_WARNING[lang]("") }, "Greek")),
+      ];
+      return `warnings on selection: ${seen.filter((x) => x.names !== undefined).map((x) => (x.names || "(generic)") + (x.short ? " (short)" : x.names ? " (full)" : "")).join(" / ")}; none for the Latin and Greek decks; Convert stays available; ${negatives.join("; ")}`;
+    },
+  },
+  {
+    // The font answers 404: the page must say so in its error line and make no PDF at all.
+    name: "PowerPoint to PDF font 404",
+    page: "/powerpoint-to-pdf/",
+    broken: () => ({ path: FONT_REGULAR, mode: "404" }),
+    vendor: [JSZIP, JSPDF],
+    async run(page, lang) {
+      await convertDeck(page, "greek", LGC_DECK, { expectPdf: false });
+      await page.waitForFunction((m) => document.getElementById("errorMsg").textContent === m, PPTX_FONT_ERROR[lang], { timeout: 30000 })
+        .catch(() => {});
+      const state = await page.evaluate(() => ({
+        error: document.getElementById("errorMsg").textContent, role: document.getElementById("errorMsg").getAttribute("role"),
+        links: document.querySelectorAll("#result a").length, progress: document.getElementById("progressMsg").textContent,
+        convert: !document.getElementById("convertBtn").disabled,
+      }));
+      const check = (st) => {
+        expect(st.error === PPTX_FONT_ERROR[lang], `the error line says ${JSON.stringify(st.error)}, not the font error`);
+        expect(st.role === "alert", `the error line has role="${st.role}", not "alert"`);
+        expect(st.links === 0, `a download link appeared (${st.links}) although the font didn't load`);
+        expect(!st.progress && st.convert, "the page still shows progress, or Convert isn't available again to retry");
+      };
+      check(state);
+      const negatives = [
+        mustFail("a PDF made without the font", () => check({ ...state, links: 1 })),
+        mustFail("no error shown", () => check({ ...state, error: "" })),
+      ];
+      return `font 404: error line says "${state.error}" (role="alert"), no PDF offered, Convert available again; ${negatives.join("; ")}`;
     },
   },
   {
@@ -1182,6 +1461,7 @@ async function runCase(browser, c, lang) {
   const stalled = [];
   let heldNow;
   const ctl = {
+    requests: seen.requests,
     held: new Promise((resolve) => { heldNow = resolve; }),
     repair() {
       broken = null;
