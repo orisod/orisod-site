@@ -6,9 +6,10 @@
  *   node scripts/font_ranges.js   prints the FONT_RANGES constant for the PowerPoint to PDF pages
  *
  * A code point counts when both Regular (body text) and Bold (titles) map it to a
- * glyph, and it isn't right-to-left: Hebrew is in the font but needs its own
- * right-to-left layout first (a later PR), so it stays a warning for now, like
- * Arabic, and the bidi control characters go with it. Control characters are left out.
+ * glyph, except Arabic and the other right-to-left scripts the converter can't lay
+ * out (they get the warning), the Arabic letter mark and the bidi embedding and
+ * isolate controls. Hebrew and the right-to-left mark are in: the pages draw Hebrew
+ * paragraphs right to left. Control characters are left out.
  * test_vendor_smoke.js imports supportedRanges() and fails if a page's FONT_RANGES
  * differs from what the vendored fonts give, so after changing the font or this
  * rule, run this script and paste its output into both pages (EN and ES).
@@ -51,7 +52,7 @@ export function cmapCodepoints(buf) {
   return out;
 }
 
-const RIGHT_TO_LEFT = /[\p{Script=Hebrew}\p{Script=Arabic}\p{Script=Syriac}\p{Script=Thaana}\p{Script=Nko}\u061C\u200F\u202A-\u202E\u2066-\u2069]/u;
+const RIGHT_TO_LEFT = /[\p{Script=Arabic}\p{Script=Syriac}\p{Script=Thaana}\p{Script=Nko}\u061C\u202A-\u202E\u2066-\u2069]/u;
 const CONTROL = /\p{Cc}/u;
 
 // [[first, last], ...] code point ranges the fonts at `root` cover, under the rule above.
