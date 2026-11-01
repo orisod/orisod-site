@@ -573,6 +573,71 @@ const warnNote = document.getElementById('warnNote');
 const resultEl = document.getElementById('result');
 
 let selectedFile = null;
+let scanToken = 0;
+
+// --- Shared font loader: start. This block is the same, byte for byte, in PowerPoint to PDF and
+// Excel to PDF (EN and ES); test_vendor_smoke.js fails if the four copies differ.
+// jsPDF's built-in fonts draw Windows-1252: ASCII, Latin-1 and these 27 characters (euro sign, curly quotes, dashes, bullet...).
+const BUILTIN_EXTRA = '\u20AC\u201A\u0192\u201E\u2026\u2020\u2021\u02C6\u2030\u0160\u2039\u0152\u017D\u2018\u2019\u201C\u201D\u2022\u2013\u2014\u02DC\u2122\u0161\u203A\u0153\u017E\u0178';
+// Everything else Liberation Sans (Regular and Bold) has a glyph for, read from its cmap by
+// scripts/font_ranges.js, which test_vendor_smoke.js checks against the vendored fonts.
+// Arabic and the other right-to-left scripts it can't lay out are left out: they get the warning.
+const FONT_RANGES = [[0x20,0x7E],[0xA0,0x36F],[0x374,0x375],[0x37A,0x37E],[0x384,0x38A],[0x38C,0x38C],[0x38E,0x3A1],[0x3A3,0x3CE],[0x3D0,0x513],[0x51A,0x51D],[0x591,0x5C7],[0x5D0,0x5EA],[0x5F0,0x5F4],[0x1D00,0x1DCA],[0x1DFE,0x1E9B],[0x1E9E,0x1E9E],[0x1EA0,0x1EF9],[0x1F00,0x1F15],[0x1F18,0x1F1D],[0x1F20,0x1F45],[0x1F48,0x1F4D],[0x1F50,0x1F57],[0x1F59,0x1F59],[0x1F5B,0x1F5B],[0x1F5D,0x1F5D],[0x1F5F,0x1F7D],[0x1F80,0x1FB4],[0x1FB6,0x1FC4],[0x1FC6,0x1FD3],[0x1FD6,0x1FDB],[0x1FDD,0x1FEF],[0x1FF2,0x1FF4],[0x1FF6,0x1FFE],[0x2000,0x2010],[0x2012,0x2022],[0x2026,0x2026],[0x202F,0x2030],[0x2032,0x2034],[0x2039,0x203A],[0x203C,0x203C],[0x203E,0x203E],[0x2044,0x2044],[0x205E,0x205E],[0x206A,0x206F],[0x2074,0x2079],[0x207F,0x2089],[0x2090,0x2094],[0x20A0,0x20B5],[0x20BF,0x20BF],[0x20F0,0x20F0],[0x2105,0x2105],[0x2113,0x2113],[0x2116,0x2117],[0x2122,0x2122],[0x2126,0x2126],[0x212E,0x212E],[0x214D,0x214E],[0x2153,0x2154],[0x215B,0x215E],[0x2184,0x2184],[0x2190,0x2195],[0x21A8,0x21A8],[0x21D4,0x21D4],[0x2202,0x2202],[0x2206,0x2206],[0x220F,0x220F],[0x2211,0x2212],[0x2215,0x2215],[0x2219,0x221A],[0x221E,0x221F],[0x2229,0x2229],[0x222B,0x222B],[0x2248,0x2248],[0x2260,0x2262],[0x2264,0x2265],[0x2302,0x2302],[0x2310,0x2310],[0x2320,0x2321],[0x2500,0x2500],[0x2502,0x2502],[0x250C,0x250C],[0x2510,0x2510],[0x2514,0x2514],[0x2518,0x2518],[0x251C,0x251C],[0x2524,0x2524],[0x252C,0x252C],[0x2534,0x2534],[0x253C,0x253C],[0x2550,0x256C],[0x2580,0x2580],[0x2584,0x2584],[0x2588,0x2588],[0x258C,0x258C],[0x2590,0x2593],[0x25A0,0x25A1],[0x25AA,0x25AC],[0x25B2,0x25B2],[0x25BA,0x25BA],[0x25BC,0x25BC],[0x25C4,0x25C4],[0x25CA,0x25CC],[0x25CF,0x25D9],[0x25E6,0x25E6],[0x263A,0x263C],[0x263F,0x2647],[0x2660,0x2660],[0x2663,0x2663],[0x2665,0x2666],[0x2669,0x266C],[0x266F,0x266F],[0x2C60,0x2C6D],[0x2C71,0x2C77],[0x2E17,0x2E17],[0xA717,0xA721],[0xA788,0xA78C],[0xFB01,0xFB02],[0xFB1D,0xFB36],[0xFB38,0xFB3C],[0xFB3E,0xFB3E],[0xFB40,0xFB41],[0xFB43,0xFB44],[0xFB46,0xFB4F],[0xFE20,0xFE23],[0xFFFC,0xFFFC]];
+const FONT_FILES = ['/assets/vendor/liberation-sans/2.1.5/LiberationSans-Regular.ttf', '/assets/vendor/liberation-sans/2.1.5/LiberationSans-Bold.ttf'];
+// Regular + Bold are about 425 KB gzipped: 60 s is enough even at about 60 kbit/s.
+const FONT_TIMEOUT_MS = 60000;
+
+class FontLoadError extends Error {}
+let fontPromise = null;
+
+function inFont(cp) {
+  let lo = 0, hi = FONT_RANGES.length - 1;
+  while (lo <= hi) {
+    const mid = (lo + hi) >> 1;
+    if (cp < FONT_RANGES[mid][0]) hi = mid - 1;
+    else if (cp > FONT_RANGES[mid][1]) lo = mid + 1;
+    else return true;
+  }
+  return false;
+}
+
+// Liberation Sans Regular and Bold as binary strings for jsPDF, fetched once and only when needed.
+function loadFontFiles() {
+  if (!fontPromise) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), FONT_TIMEOUT_MS);
+    fontPromise = Promise.all(FONT_FILES.map(async (url) => {
+      const res = await fetch(url, { signal: controller.signal });
+      if (!res.ok) throw new Error(`${url}: ${res.status}`);
+      const bytes = new Uint8Array(await res.arrayBuffer());
+      let binary = '';
+      for (let i = 0; i < bytes.length; i += 0x8000) binary += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+      return binary;
+    })).finally(() => clearTimeout(timer)).catch(() => {
+      fontPromise = null;
+      throw new FontLoadError();
+    });
+  }
+  return fontPromise;
+}
+
+function useLiberationSans(pdf, [regular, bold]) {
+  pdf.addFileToVFS('LiberationSans-Regular.ttf', regular);
+  pdf.addFont('LiberationSans-Regular.ttf', 'LiberationSans', 'normal', 'normal', 'Identity-H');
+  pdf.addFileToVFS('LiberationSans-Bold.ttf', bold);
+  pdf.addFont('LiberationSans-Bold.ttf', 'LiberationSans', 'normal', 'bold', 'Identity-H');
+}
+// --- Shared font loader: end.
+
+// Scripts the warning names, in this order (Han counts as Japanese when kana are there too).
+// Hebrew is one of them: this converter doesn't lay out right-to-left text, so it never draws Hebrew.
+const SCRIPT_NAMES = ['hebreos', 'árabes', 'chinos', 'japoneses', 'coreanos'];
+const SCRIPT_TESTS = [/\p{Script=Hebrew}/u, /\p{Script=Arabic}/u, /\p{Script=Han}/u, /[\p{Script=Hiragana}\p{Script=Katakana}]/u, /\p{Script=Hangul}/u];
+const HEBREW = /\p{Script=Hebrew}/u;
+const HEBREW_ALL = /\p{Script=Hebrew}/gu;
+// What a Hebrew letter becomes when the document is drawn with Liberation Sans (a white square):
+// the font has Hebrew glyphs, but drawn left to right they would read reversed.
+const NOT_DRAWN = '\u25A1';
 
 fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
 dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
@@ -596,8 +661,62 @@ function handleFile(file) {
   }
 
   selectedFile = file;
+  const token = ++scanToken;
+  file.arrayBuffer().then((buffer) => {
+    const note = unsupportedNote(checkCharacters(sheetTexts(readSheets(buffer))));
+    if (token === scanToken && note) {
+      warnNote.textContent = note;
+      warnNote.style.display = 'block';
+    }
+  }).catch(() => {});
   dropzoneText.textContent = `✅ ${file.name} cargado`;
   convertBtn.style.display = 'inline-block';
+}
+
+// Whether the text needs Liberation Sans, which characters this converter can't draw (Hebrew
+// included, see SCRIPT_NAMES), and whether every text has one of those (then none converts normally).
+function checkCharacters(texts) {
+  let needsFont = false, missing = '', textsMissing = 0;
+  for (const text of texts) {
+    let textMissing = false;
+    for (const ch of text) {
+      const cp = ch.codePointAt(0);
+      if (cp === 9 || cp === 10 || cp === 13 || (cp >= 0x20 && cp <= 0x7e) || (cp >= 0xa0 && cp <= 0xff) || BUILTIN_EXTRA.includes(ch)) continue;
+      if (inFont(cp) && !HEBREW.test(ch)) needsFont = true;
+      else {
+        missing += ch;
+        textMissing = true;
+      }
+    }
+    if (textMissing) textsMissing++;
+  }
+  return { needsFont, missing, allMissing: texts.length > 0 && textsMissing === texts.length };
+}
+
+function listNames(names) {
+  return names.length < 2 ? names.join('') : `${names.slice(0, -1).join(', ')} y ${names[names.length - 1]}`;
+}
+
+function unsupportedNote({ missing, allMissing }) {
+  if (!missing) return '';
+  let found = SCRIPT_TESTS.map((re) => re.test(missing));
+  if (found[3]) found[2] = false;
+  const names = SCRIPT_NAMES.filter((name, i) => found[i]);
+  return names.length ? `⚠️ Algunas celdas usan caracteres ${listNames(names)}, que este conversor todavía no puede mostrar. Saldrán como símbolos ilegibles en el PDF.${allMissing ? '' : ' El resto del texto se convierte con normalidad.'}` : '⚠️ Algunos caracteres de esta hoja de cálculo todavía no se pueden mostrar en el PDF y saldrán como símbolos ilegibles.';
+}
+
+// Each sheet's name and its rows that have any text.
+function readSheets(buffer) {
+  const wb = XLSX.read(buffer, { type: 'array', cellText: true });
+  return (wb.SheetNames || []).map((name) => {
+    const data = XLSX.utils.sheet_to_json(wb.Sheets[name], { header: 1, raw: false, defval: '' });
+    return { name, rows: data.filter((row) => row.some((cell) => String(cell).trim() !== '')) };
+  });
+}
+
+// The texts the PDF draws: each sheet's name (in its heading) and every non-empty cell.
+function sheetTexts(sheets) {
+  return sheets.filter((sheet) => sheet.rows.length).flatMap((sheet) => [sheet.name, ...sheet.rows.flat().map(String).filter((t) => t.trim() !== '')]);
 }
 
 convertBtn.addEventListener('click', async () => {
@@ -610,10 +729,9 @@ convertBtn.addEventListener('click', async () => {
 
   try {
     const arrayBuffer = await selectedFile.arrayBuffer();
-    const wb = XLSX.read(arrayBuffer, { type: 'array', cellText: true });
-    const sheetNames = wb.SheetNames;
+    const sheets = readSheets(arrayBuffer);
 
-    if (!sheetNames || sheetNames.length === 0) {
+    if (sheets.length === 0) {
       warnNote.textContent = '⚠️ No se encontraron hojas en este libro.';
       warnNote.style.display = 'block';
       progressMsg.textContent = '';
@@ -621,22 +739,35 @@ convertBtn.addEventListener('click', async () => {
       return;
     }
 
+    // Text outside Windows-1252 that Liberation Sans covers: draw the whole document with it.
+    const chars = checkCharacters(sheetTexts(sheets));
+    const fontFiles = chars.needsFont ? await loadFontFiles() : null;
+    const shown = (text) => (fontFiles ? String(text).replace(HEBREW_ALL, NOT_DRAWN) : text);
+
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'letter' });
+    if (fontFiles) useLiberationSans(pdf, fontFiles);
     let pageCount = 0;
     let anyRows = false;
 
-    sheetNames.forEach((name) => {
-      const sheet = wb.Sheets[name];
-      const data = XLSX.utils.sheet_to_json(sheet, { header: 1, raw: false, defval: '' });
-      const rows = data.filter((row) => row.some((cell) => String(cell).trim() !== ''));
+    sheets.forEach(({ name, rows }) => {
       if (rows.length === 0) return;
       anyRows = true;
       if (pageCount > 0) pdf.addPage();
       pageCount++;
+      if (fontFiles) pdf.setFont('LiberationSans', 'normal');
       pdf.setFontSize(13);
-      pdf.text(`Hoja: ${name}`, 30, 30);
-      pdf.autoTable({
+      pdf.text(`Hoja: ${shown(name)}`, 30, 30);
+      // Windows-1252 workbooks keep exactly the options they always had; with Liberation Sans, every
+      // cell uses it and the header row its Bold.
+      pdf.autoTable(fontFiles ? {
+        head: [rows[0].map(shown)],
+        body: rows.slice(1).map((row) => row.map(shown)),
+        startY: 40,
+        margin: { left: 30, right: 30 },
+        styles: { fontSize: 9, cellPadding: 5, font: 'LiberationSans' },
+        headStyles: { fillColor: [37, 99, 235], fontStyle: 'bold' },
+      } : {
         head: [rows[0]],
         body: rows.slice(1),
         startY: 40,
@@ -677,8 +808,15 @@ convertBtn.addEventListener('click', async () => {
     resultEl.appendChild(link);
 
     progressMsg.textContent = 'Listo para descargar.';
+    const note = unsupportedNote(chars);
+    if (note) {
+      warnNote.textContent = note;
+      warnNote.style.display = 'block';
+    }
   } catch (err) {
-    errorMsg.textContent = 'No se pudo convertir este archivo. Asegúrate de que sea una hoja de cálculo Excel válida.';
+    errorMsg.textContent = err instanceof FontLoadError
+      ? 'No se pudo cargar la fuente de esta hoja de cálculo. Revisa tu conexión e inténtalo de nuevo.'
+      : 'No se pudo convertir este archivo. Asegúrate de que sea una hoja de cálculo Excel válida.';
     progressMsg.textContent = '';
   }
 

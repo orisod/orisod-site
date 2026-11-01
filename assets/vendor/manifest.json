@@ -646,8 +646,9 @@
       "name": "liberation-sans",
       "version": "2.1.5",
       "license": "OFL-1.1",
-      "license_note": "Liberation Sans Regular and Bold, unmodified: byte-identical to the TTFs in the release tarball (release_archive), served as-is. The OFL's Reserved Font Name \"Liberation\" only restricts modified versions, so the files must never be subset, converted or re-saved. Loaded with fetch() only when a presentation has characters outside Windows-1252 that the font covers (see FONT_RANGES on the PowerPoint to PDF pages).",
+      "license_note": "Liberation Sans Regular and Bold, unmodified: byte-identical to the TTFs in the release tarball (release_archive), served as-is. The OFL's Reserved Font Name \"Liberation\" only restricts modified versions, so the files must never be subset, converted or re-saved. Loaded with fetch() only when a presentation or spreadsheet has characters outside Windows-1252 that the font covers (see the shared FONT_RANGES on the PowerPoint to PDF and Excel to PDF pages).",
       "used_by": [
+        "excel-to-pdf",
         "powerpoint-to-pdf"
       ],
       "release_archive": {
