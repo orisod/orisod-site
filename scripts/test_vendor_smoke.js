@@ -315,20 +315,21 @@ function fixturePptx(slides) {
   return zipStore(files);
 }
 
-// A Letter-size PDF written by hand whose pages are each one uncompressed w x h RGB
-// image filling the page: the left half in `left` ([r, g, b]), the right half white.
-// Large on purpose, so Compress PDF's Strong mode really makes it smaller.
-function fixtureImagePdf(pageCount, w, h, left) {
-  const pixels = Buffer.alloc(w * h * 3, 255);
-  for (let y = 0; y < h; y++) for (let x = 0; x < w / 2; x++) pixels.set(left, (y * w + x) * 3);
+// A PDF written by hand whose pages are each one uncompressed iw x ih RGB image filling
+// a w x h pt MediaBox (with /Rotate when rotate is set): the left half in `left`
+// ([r, g, b]), the right half white. Large on purpose, so Compress PDF's Strong mode
+// really makes it smaller.
+function fixtureImagePdf(pages, left) {
   const objs = ["<< /Type /Catalog /Pages 2 0 R >>",
-    `<< /Type /Pages /Kids [${Array.from({ length: pageCount }, (_, i) => `${3 + i * 3} 0 R`).join(" ")}] /Count ${pageCount} >>`];
-  for (let i = 0; i < pageCount; i++) {
-    const content = "q 612 0 0 792 0 0 cm /Im0 Do Q";
-    objs.push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /XObject << /Im0 ${5 + i * 3} 0 R >> >> /Contents ${4 + i * 3} 0 R >>`);
+    `<< /Type /Pages /Kids [${pages.map((_, i) => `${3 + i * 3} 0 R`).join(" ")}] /Count ${pages.length} >>`];
+  pages.forEach(({ w, h, iw, ih, rotate }, i) => {
+    const pixels = Buffer.alloc(iw * ih * 3, 255);
+    for (let y = 0; y < ih; y++) for (let x = 0; x < iw / 2; x++) pixels.set(left, (y * iw + x) * 3);
+    const content = `q ${w} 0 0 ${h} 0 0 cm /Im0 Do Q`;
+    objs.push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${w} ${h}]${rotate ? ` /Rotate ${rotate}` : ""} /Resources << /XObject << /Im0 ${5 + i * 3} 0 R >> >> /Contents ${4 + i * 3} 0 R >>`);
     objs.push(`<< /Length ${content.length} >>\nstream\n${content}\nendstream`);
-    objs.push([`<< /Type /XObject /Subtype /Image /Width ${w} /Height ${h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Length ${pixels.length} >>\nstream\n`, pixels, "\nendstream"]);
-  }
+    objs.push([`<< /Type /XObject /Subtype /Image /Width ${iw} /Height ${ih} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Length ${pixels.length} >>\nstream\n`, pixels, "\nendstream"]);
+  });
   const parts = [Buffer.from("%PDF-1.4\n", "latin1")];
   let length = parts[0].length;
   const add = (x) => { const b = Buffer.isBuffer(x) ? x : Buffer.from(x, "latin1"); parts.push(b); length += b.length; };
@@ -455,6 +456,25 @@ function expectImagePages(pages, want) {
   }
 }
 const JSZIP = "/assets/vendor/jszip/3.10.1/jszip.min.js";
+
+// The pages Compress PDF (Strong) and PDF color filters redraw: portrait Letter, landscape
+// Letter, and portrait Letter turned with /Rotate 90, which viewers show as 792x612 pt.
+const RASTER_PAGES = [{ w: 612, h: 792, iw: 300, ih: 388 }, { w: 792, h: 612, iw: 388, ih: 300 }, { w: 612, h: 792, iw: 300, ih: 388, rotate: 90 }];
+const RASTER_SHOWN = [[612, 792], [792, 612], [792, 612]];
+
+// A redrawn page keeps its original size in points (within 0.5 pt) and draws one JPEG
+// of the render's pixel size: want lists each page's original size and that JPEG's size.
+function expectRasterPages(pages, want) {
+  const got = pages.map((p) => `${p.w}x${p.h} pt: ${p.images.map((i) => `${i.w}x${i.h} ${i.filter}`).join(", ") || "no image"}`);
+  const wanted = want.map((x) => `${x.pw}x${x.ph} pt: ${x.w}x${x.h} DCTDecode`);
+  const ok = pages.length === want.length && pages.every((p, i) => Math.abs(p.w - want[i].pw) <= 0.5 && Math.abs(p.h - want[i].ph) <= 0.5 &&
+    p.images.length === 1 && p.images[0].w === want[i].w && p.images[0].h === want[i].h && p.images[0].filter === "DCTDecode");
+  expect(ok, `pages ${JSON.stringify(got)}, not ${JSON.stringify(wanted)} (page sizes within 0.5 pt of the original)`);
+  for (const p of pages) {
+    const size = jpegSize(p.images[0].data);
+    expect(size && size.w === p.images[0].w && size.h === p.images[0].h, `an image says ${p.images[0].w}x${p.images[0].h} but its JPEG is ${size ? `${size.w}x${size.h}` : "unreadable"}`);
+  }
+}
 
 // One entry per library (or library pair) that has moved to assets/vendor.
 // OCR PDF: upload a 2-page fixture of large, clean Helvetica and run OCR; returns once the .txt is checked.
@@ -780,15 +800,14 @@ const CASES = [
     },
   },
   {
-    // Strong mode redraws each page with PDF.js at 1.5x and stores it as a JPEG through jsPDF.
-    // The page size in points is that canvas's pixel size (612x792 becomes 918x1188), today's
-    // behaviour, listed in Phase 14 of CLAUDE.md: a fix there changes the sizes expected here.
+    // Strong mode redraws each page with PDF.js at 1.5x and stores it as a JPEG through jsPDF,
+    // drawn into a page of the original's size (the 1.5x only sets the image's resolution).
     name: "PDF.js + jsPDF (Compress PDF, Strong)",
     page: "/compress-pdf/",
     vendor: [PDFJS, PDFJS_WORKER, JSPDF],
     worker: PDFJS_WORKER,
     async run(page) {
-      const pdf = fixtureImagePdf(2, 300, 388, [0, 0, 0]);
+      const pdf = fixtureImagePdf(RASTER_PAGES, [0, 0, 0]);
       await page.setInputFiles("#fileInput", { name: "scan.pdf", mimeType: "application/pdf", buffer: pdf });
       await page.check('input[name="compressMode"][value="strong"]', { force: true });
       await page.locator("#compressBtn:not([disabled])").waitFor({ timeout: 30000 });
@@ -798,15 +817,18 @@ const CASES = [
       const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
       const bytes = await readFile(await download.path());
       expect(bytes.length < pdf.length, `scan-compressed.pdf is ${bytes.length} bytes, not smaller than the ${pdf.length}-byte original`);
-      const want = [0, 1].map(() => ({ pw: 918, ph: 1188, w: 918, h: 1188, filter: "DCTDecode" }));
+      const want = RASTER_SHOWN.map(([pw, ph]) => ({ pw, ph, w: pw * 1.5, h: ph * 1.5 }));
       const pages = jspdfPages(bytes);
-      expectImagePages(pages, want);
+      expectRasterPages(pages, want);
       for (const [i, p] of pages.entries()) {
         const { dark, total } = await jpegStats(page, p.images[0].data);
         expect(dark / total > 0.4 && dark / total < 0.6, `page ${i + 1} is ${Math.round((100 * dark) / total)}% dark, not the scan's black left half`);
       }
-      const negative = mustFail("a page without its image", () => expectImagePages(jspdfPages(tamper(bytes, "/I1 Do", "/I1 Dx")), want));
-      return `2-page scan (${pdf.length} bytes) became scan-compressed.pdf (${bytes.length} bytes): 2 pages, each one 918x1188 JPEG, half dark; ${negative}`;
+      const negatives = [
+        mustFail("a page without its image", () => expectRasterPages(jspdfPages(tamper(bytes, "/I1 Do", "/I1 Dx")), want)),
+        mustFail("pages at the 1.5x render size", () => expectRasterPages(pages.map((p) => ({ ...p, w: p.w * 1.5, h: p.h * 1.5 })), want)),
+      ];
+      return `3-page scan (${pdf.length} bytes) became scan-compressed.pdf (${bytes.length} bytes): pages 612x792, 792x612 and the /Rotate 90 page 792x612 pt like the original, each one 1.5x JPEG, half dark; ${negatives.join("; ")}`;
     },
   },
   {
@@ -815,7 +837,7 @@ const CASES = [
     vendor: [PDFJS, PDFJS_WORKER, JSPDF],
     worker: PDFJS_WORKER,
     async run(page, lang) {
-      const pdf = fixtureImagePdf(1, 200, 259, [220, 30, 30]);
+      const pdf = fixtureImagePdf(RASTER_PAGES, [220, 30, 30]);
       await page.setInputFiles("#fileInput", { name: "red.pdf", mimeType: "application/pdf", buffer: pdf });
       await page.locator('[data-filter="grayscale"]').waitFor({ state: "visible", timeout: 30000 });
       await page.click('[data-filter="grayscale"]');
@@ -826,16 +848,21 @@ const CASES = [
       await link.waitFor({ timeout: 60000 });
       const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
       const bytes = await readFile(await download.path());
-      // Pages are redrawn at 2x (RENDER_SCALE), and that pixel size is the page size in points (Phase 14).
+      // Pages are redrawn at 2x (RENDER_SCALE) and drawn into a page of the original's size.
+      const want = RASTER_SHOWN.map(([pw, ph]) => ({ pw, ph, w: pw * 2, h: ph * 2 }));
       const pages = jspdfPages(bytes);
-      expectImagePages(pages, [{ pw: 1224, ph: 1584, w: 1224, h: 1584, filter: "DCTDecode" }]);
+      expectRasterPages(pages, want);
       // Black & White: the red half must come out a dark gray, with no channel far from the others.
       const gray = ({ dark, total, spread }) => expect(spread <= 12 && dark / total > 0.4 && dark / total < 0.6, `the page is ${Math.round((100 * dark) / total)}% dark with channels up to ${spread} apart, not a gray version of the red half`);
-      const stats = await jpegStats(page, pages[0].images[0].data);
-      gray(stats);
+      const stats = [];
+      for (const p of pages) stats.push(await jpegStats(page, p.images[0].data));
+      stats.forEach(gray);
       const red = await jpegStats(page, await fixtureImage(page, 200, 259, "image/jpeg", { left: "rgb(220,30,30)" }));
-      const negative = mustFail("the red page left in color", () => gray(red));
-      return `${name}: 1 page, one 1224x1584 JPEG, the red half now gray (channels at most ${stats.spread} apart, ${Math.round((100 * stats.dark) / stats.total)}% dark); ${negative}`;
+      const negatives = [
+        mustFail("the red page left in color", () => gray(red)),
+        mustFail("pages at the 2x render size", () => expectRasterPages(pages.map((p) => ({ ...p, w: p.w * 2, h: p.h * 2 })), want)),
+      ];
+      return `${name}: pages 612x792, 792x612 and the /Rotate 90 page 792x612 pt like the original, each one 2x JPEG, the red half now gray (channels at most ${Math.max(...stats.map((x) => x.spread))} apart); ${negatives.join("; ")}`;
     },
   },
   {

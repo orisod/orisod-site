@@ -694,7 +694,7 @@ applyBtn.addEventListener('click', async () => {
     for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
       progressMsg.textContent = `Procesando página ${pageNum} de ${pdfDoc.numPages}...`;
       const page = await pdfDoc.getPage(pageNum);
-      const viewport = await renderPageToCanvas(page, RENDER_SCALE, workCanvas);
+      await renderPageToCanvas(page, RENDER_SCALE, workCanvas);
 
       const ctx = workCanvas.getContext('2d');
       const imageData = ctx.getImageData(0, 0, workCanvas.width, workCanvas.height);
@@ -702,14 +702,17 @@ applyBtn.addEventListener('click', async () => {
       ctx.putImageData(imageData, 0, 0);
 
       const dataUrl = workCanvas.toDataURL('image/jpeg', JPEG_QUALITY);
-      const orientation = viewport.width > viewport.height ? 'landscape' : 'portrait';
+      // The output page keeps the original page's size in points (scale 1, rotation applied);
+      // RENDER_SCALE only sets the image's resolution.
+      const pageSize = page.getViewport({ scale: 1 });
+      const orientation = pageSize.width > pageSize.height ? 'landscape' : 'portrait';
 
       if (pageNum === 1) {
-        outPdf = new jsPDF({ orientation, unit: 'pt', format: [viewport.width, viewport.height] });
+        outPdf = new jsPDF({ orientation, unit: 'pt', format: [pageSize.width, pageSize.height] });
       } else {
-        outPdf.addPage([viewport.width, viewport.height], orientation);
+        outPdf.addPage([pageSize.width, pageSize.height], orientation);
       }
-      outPdf.addImage(dataUrl, 'JPEG', 0, 0, viewport.width, viewport.height);
+      outPdf.addImage(dataUrl, 'JPEG', 0, 0, pageSize.width, pageSize.height);
     }
 
     const outBytes = outPdf.output('arraybuffer');
