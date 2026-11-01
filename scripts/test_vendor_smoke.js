@@ -30,6 +30,14 @@
  * argument with repair(), which serves the file normally from then on (and answers a
  * stalled request late), and held, which resolves once a stalled request arrives.
  *
+ * Every case whose vendor files include jsPDF also checks that the page runs exactly
+ * JSPDF_VERSION (window.jspdf.jsPDF.version), and autotable's cases that the plugin
+ * attached doc.autoTable. A case with noJspdf (the two calendars, which use pdf-lib)
+ * fails if the page requests any jsPDF or autotable file or defines window.jspdf.
+ * The jsPDF checks also prove they can fail: mustFail(label, fn) runs the same check
+ * on a broken copy of the result (an image dropped, an accent lost, a page cut off,
+ * another version) and fails the case unless that check throws.
+ *
  * A case that fails is run once more. If it passes then, it's reported as flaky (a
  * FLAKY line, a warning annotation and a row in the job summary) and doesn't fail
  * the run; if it fails twice, the run fails. Console warnings are listed (WARN
@@ -128,6 +136,77 @@ function pdfJpegs(bytes) {
   return out;
 }
 
+// Every object of a PDF written with plain objects (no object streams), as jsPDF writes
+// them: its number, its dictionary and, for a stream, its raw (still compressed) bytes.
+function pdfObjects(bytes) {
+  const raw = bytes.toString("latin1");
+  const out = [];
+  const re = /(\d+) 0 obj\s*/g;
+  for (let m; (m = re.exec(raw));) {
+    const start = re.lastIndex;
+    const end = raw.indexOf("endobj", start);
+    const s = raw.indexOf("stream", start);
+    if (s >= 0 && s < end) {
+      const dict = raw.slice(start, s);
+      const len = +(dict.match(/\/Length\s+(\d+)(?!\s+\d+\s+R)/) || [])[1];
+      const at = s + 6 + (raw[s + 6] === "\r" ? 2 : 1);
+      out.push({ num: +m[1], dict, data: bytes.subarray(at, at + len) });
+      re.lastIndex = raw.indexOf("endobj", at + len) + 6;
+    } else {
+      out.push({ num: +m[1], dict: raw.slice(start, end) });
+      re.lastIndex = end + 6;
+    }
+  }
+  return out;
+}
+
+// The pages of a PDF made by jsPDF, in order: size in points, the strings each text
+// block shows (latin1, so WinAnsi bytes like \xf3 for ó and \x80 for € stay as written;
+// one inner list per BT...ET block, so a wrapped paragraph is one list of lines) and the
+// images it draws (pixel size, filter and raw bytes; SMask alpha layers aren't drawn).
+function jspdfPages(bytes) {
+  const objs = new Map(pdfObjects(bytes).map((o) => [o.num, o]));
+  const ref = (dict, key) => objs.get(+(dict.match(new RegExp(`/${key}\\s+(\\d+)\\s+0\\s+R`)) || [])[1]);
+  const tree = [...objs.values()].find((o) => /\/Type\s*\/Pages\b/.test(o.dict));
+  expect(tree, "the PDF has no page tree");
+  const kids = [...tree.dict.match(/\/Kids\s*\[([^\]]*)\]/)[1].matchAll(/(\d+)\s+0\s+R/g)].map((k) => objs.get(+k[1]));
+  const unescape = (s) => s.replace(/\\([0-7]{1,3}|[\s\S])/g, (_, e) => /^[0-7]/.test(e) ? String.fromCharCode(parseInt(e, 8)) : ({ n: "\n", r: "\r", t: "\t" })[e] ?? e);
+  return kids.map((p) => {
+    const box = p.dict.match(/\/MediaBox\s*\[\s*0\s+0\s+([\d.]+)\s+([\d.]+)\s*\]/);
+    const resources = ref(p.dict, "Resources")?.dict ?? p.dict;
+    const content = ref(p.dict, "Contents");
+    const ops = (/\/FlateDecode/.test(content.dict) ? inflateSync(content.data) : content.data).toString("latin1");
+    const blocks = [...ops.matchAll(/\bBT\b([\s\S]*?)\bET\b/g)].map((b) => [...b[1].matchAll(/\(((?:\\[\s\S]|[^\\)])*)\)\s*Tj/g)].map((t) => unescape(t[1])));
+    const images = [...ops.matchAll(/\/([A-Za-z0-9]+)\s+Do\b/g)].map((d) => {
+      const img = ref(resources, d[1]);
+      expect(img && /\/Subtype\s*\/Image/.test(img.dict), `/${d[1]} isn't an image`);
+      return { w: +img.dict.match(/\/Width\s+(\d+)/)[1], h: +img.dict.match(/\/Height\s+(\d+)/)[1], filter: (img.dict.match(/\/Filter\s*\/(\w+)/) || [])[1] || "none", data: img.data };
+    });
+    return { w: +box[1], h: +box[2], blocks, images };
+  });
+}
+
+// Copy of a PDF with one latin1 string replaced by another of the same length, so the
+// stream lengths stay right: how a negative check breaks a real result.
+function tamper(bytes, from, to) {
+  expect(from.length === to.length, "tamper() needs strings of the same length");
+  const raw = bytes.toString("latin1");
+  const at = raw.indexOf(from);
+  expect(at >= 0, `tamper(): "${from}" isn't in the PDF`);
+  return Buffer.from(raw.slice(0, at) + to + raw.slice(at + from.length), "latin1");
+}
+
+// A negative check: fn runs a real check on a broken result and must throw. Returns a
+// line for the case's report; fails the case if the check let the broken result pass.
+function mustFail(label, fn) {
+  try {
+    fn();
+  } catch {
+    return `negative check "${label}" failed as it should`;
+  }
+  throw new Error(`negative check "${label}" passed: this check can't catch that regression`);
+}
+
 // Width and height from a JPEG's SOF marker, or null if it isn't a JPEG.
 function jpegSize(buf) {
   if (buf[0] !== 0xff || buf[1] !== 0xd8) return null;
@@ -221,6 +300,72 @@ function fixtureDocx(lines) {
   });
 }
 
+// A minimal .pptx written by hand: one slide file per entry, one text run per string.
+// PowerPoint to PDF only reads ppt/slides/slideN.xml and its <a:t> runs.
+function fixturePptx(slides) {
+  const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  const files = {
+    "[Content_Types].xml": '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="xml" ContentType="application/xml"/></Types>',
+  };
+  slides.forEach((texts, i) => {
+    files[`ppt/slides/slide${i + 1}.xml`] = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" ' +
+      'xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main"><p:cSld><p:spTree>' +
+      texts.map((t) => `<p:sp><p:txBody><a:p><a:r><a:t>${esc(t)}</a:t></a:r></a:p></p:txBody></p:sp>`).join("") + "</p:spTree></p:cSld></p:sld>";
+  });
+  return zipStore(files);
+}
+
+// A Letter-size PDF written by hand whose pages are each one uncompressed w x h RGB
+// image filling the page: the left half in `left` ([r, g, b]), the right half white.
+// Large on purpose, so Compress PDF's Strong mode really makes it smaller.
+function fixtureImagePdf(pageCount, w, h, left) {
+  const pixels = Buffer.alloc(w * h * 3, 255);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w / 2; x++) pixels.set(left, (y * w + x) * 3);
+  const objs = ["<< /Type /Catalog /Pages 2 0 R >>",
+    `<< /Type /Pages /Kids [${Array.from({ length: pageCount }, (_, i) => `${3 + i * 3} 0 R`).join(" ")}] /Count ${pageCount} >>`];
+  for (let i = 0; i < pageCount; i++) {
+    const content = "q 612 0 0 792 0 0 cm /Im0 Do Q";
+    objs.push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /XObject << /Im0 ${5 + i * 3} 0 R >> >> /Contents ${4 + i * 3} 0 R >>`);
+    objs.push(`<< /Length ${content.length} >>\nstream\n${content}\nendstream`);
+    objs.push([`<< /Type /XObject /Subtype /Image /Width ${w} /Height ${h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Length ${pixels.length} >>\nstream\n`, pixels, "\nendstream"]);
+  }
+  const parts = [Buffer.from("%PDF-1.4\n", "latin1")];
+  let length = parts[0].length;
+  const add = (x) => { const b = Buffer.isBuffer(x) ? x : Buffer.from(x, "latin1"); parts.push(b); length += b.length; };
+  const offsets = objs.map((o, i) => {
+    const at = length;
+    add(`${i + 1} 0 obj\n`);
+    (Array.isArray(o) ? o : [o]).forEach(add);
+    add("\nendobj\n");
+    return at;
+  });
+  const xref = length;
+  add(`xref\n0 ${objs.length + 1}\n0000000000 65535 f \n` + offsets.map((o) => `${String(o).padStart(10, "0")} 00000 n \n`).join(""));
+  add(`trailer\n<< /Size ${objs.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`);
+  return Buffer.concat(parts);
+}
+
+// How dark a JPEG is and how far from gray its pixels get (the largest gap between
+// two of a pixel's channels), decoded by the browser.
+function jpegStats(page, jpeg) {
+  return page.evaluate(async (b64) => {
+    const img = new Image();
+    img.src = "data:image/jpeg;base64," + b64;
+    await img.decode();
+    const c = document.createElement("canvas");
+    c.width = img.naturalWidth; c.height = img.naturalHeight;
+    const ctx = c.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+    const { data } = ctx.getImageData(0, 0, c.width, c.height);
+    let dark = 0, spread = 0;
+    for (let i = 0; i < data.length; i += 4) {
+      if (data[i] + data[i + 1] + data[i + 2] < 300) dark++;
+      spread = Math.max(spread, Math.abs(data[i] - data[i + 1]), Math.abs(data[i + 1] - data[i + 2]), Math.abs(data[i] - data[i + 2]));
+    }
+    return { dark, total: c.width * c.height, spread };
+  }, Buffer.from(jpeg).toString("base64"));
+}
+
 // How many of a JPEG's pixels are dark, decoded by the browser.
 function darkPixels(page, jpeg) {
   return page.evaluate(async (b64) => {
@@ -253,16 +398,26 @@ const HEIC_FIXTURE = Buffer.from(
   "8JWeMSxX1o+Dlg==", "base64");
 
 // A JPEG drawn by the browser: white, with a black block over its left half.
-async function fixtureJpeg(page, w, h) {
-  const b64 = await page.evaluate(([w, h]) => {
+function fixtureJpeg(page, w, h) {
+  return fixtureImage(page, w, h, "image/jpeg");
+}
+
+// The same picture in another format the browser encodes (image/png, image/webp).
+// With transparent, the right half is left transparent instead of white. With left,
+// the left block is that CSS color instead of black.
+async function fixtureImage(page, w, h, mime, { transparent = false, left = "#000" } = {}) {
+  const b64 = await page.evaluate(([w, h, mime, transparent, left]) => {
     const c = document.createElement("canvas");
     c.width = w; c.height = h;
     const ctx = c.getContext("2d");
-    ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, w, h);
-    ctx.fillStyle = "#000"; ctx.fillRect(0, 0, w / 2, h);
-    return c.toDataURL("image/jpeg", 0.9).split(",")[1];
-  }, [w, h]);
-  return Buffer.from(b64, "base64");
+    if (!transparent) { ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, w, h); }
+    ctx.fillStyle = left; ctx.fillRect(0, 0, w / 2, h);
+    return c.toDataURL(mime, 0.9).split(",")[1];
+  }, [w, h, mime, transparent, left]);
+  const bytes = Buffer.from(b64, "base64");
+  const magic = { "image/jpeg": "ffd8", "image/png": "89504e47", "image/webp": "52494646" }[mime];
+  expect(bytes.toString("hex").startsWith(magic), `the browser didn't encode a ${mime}`);
+  return bytes;
 }
 
 function expect(ok, message) {
@@ -271,7 +426,34 @@ function expect(ok, message) {
 
 const PDFJS = "/assets/vendor/pdfjs/3.11.174/pdf.min.js";
 const PDFJS_WORKER = "/assets/vendor/pdfjs/3.11.174/pdf.worker.min.js";
-const JSPDF = "/assets/vendor/jspdf/2.5.1/jspdf.umd.min.js";
+const JSPDF_VERSION = "4.2.1";
+const JSPDF = `/assets/vendor/jspdf/${JSPDF_VERSION}/jspdf.umd.min.js`;
+const AUTOTABLE = "/assets/vendor/jspdf-autotable/5.0.9/jspdf.plugin.autotable.min.js";
+const XLSX = "/assets/vendor/xlsx/0.20.3/xlsx.full.min.js";
+
+// The page must run exactly the jsPDF the vendor folder holds.
+function expectJspdfVersion(version) {
+  expect(version === JSPDF_VERSION, `the page runs jsPDF ${version}, not ${JSPDF_VERSION}`);
+}
+
+// A calendar page must never ask for jsPDF or autotable (they make their PDFs with pdf-lib).
+function expectNoJspdf(requests, global) {
+  const asked = requests.filter((u) => /jspdf|autotable/i.test(u));
+  expect(!asked.length && global === "undefined", `the page loaded jsPDF (${asked.join(", ") || `window.jspdf is ${global}`})`);
+}
+
+// Each page of a jsPDF image PDF draws exactly one image, filling the page: want lists
+// each page's size in points and its image's pixel size and filter.
+function expectImagePages(pages, want) {
+  const got = pages.map((p) => `${p.w}x${p.h} pt: ${p.images.map((i) => `${i.w}x${i.h} ${i.filter}`).join(", ") || "no image"}`);
+  const wanted = want.map((x) => `${x.pw}x${x.ph} pt: ${x.w}x${x.h} ${x.filter}`);
+  expect(got.join(" | ") === wanted.join(" | "), `pages ${JSON.stringify(got)}, not ${JSON.stringify(wanted)}`);
+  for (const p of pages) for (const img of p.images) {
+    if (img.filter !== "DCTDecode") continue;
+    const size = jpegSize(img.data);
+    expect(size && size.w === img.w && size.h === img.h, `an image says ${img.w}x${img.h} but its JPEG is ${size ? `${size.w}x${size.h}` : "unreadable"}`);
+  }
+}
 const JSZIP = "/assets/vendor/jszip/3.10.1/jszip.min.js";
 
 // One entry per library (or library pair) that has moved to assets/vendor.
@@ -368,6 +550,7 @@ const CASES = [
     name: "suncalc",
     page: "/hebrew-calendar-generator/",
     vendor: ["/assets/vendor/suncalc/1.9.0/suncalc.min.js"],
+    noJspdf: true,
     async run(page, lang) {
       await page.fill("#citySearchInput", "Jerus");
       const city = page.locator("#citySuggestions .city-suggestion").first();
@@ -427,6 +610,7 @@ const CASES = [
     name: "pdf-lib (Calendar generator)",
     page: "/calendar-generator/",
     vendor: ["/assets/vendor/pdf-lib/1.17.1/pdf-lib.min.js"],
+    noJspdf: true,
     async run(page, lang) {
       const [download] = await Promise.all([page.waitForEvent("download", { timeout: 60000 }), page.click("#downloadBtn")]);
       const year = (download.suggestedFilename().match(/^calendar(?:io)?-(\d{4})\.pdf$/) || [])[1];
@@ -541,6 +725,158 @@ const CASES = [
     },
   },
   {
+    // JPG to PDF hands jsPDF the file's own bytes, and jsPDF reads their real format:
+    // a PNG named .jpg must still become one page with the whole picture.
+    name: "jsPDF (JPG to PDF, a PNG named .jpg)",
+    page: "/jpg-to-pdf/",
+    vendor: [JSPDF],
+    async run(page) {
+      const png = await fixtureImage(page, 160, 120, "image/png");
+      await page.setInputFiles("#fileInput", { name: "really-a-png.jpg", mimeType: "image/jpeg", buffer: png });
+      await page.click("#convertBtn");
+      const link = page.locator('#result a[download="converted.pdf"]');
+      await link.waitFor({ timeout: 30000 });
+      const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
+      const bytes = await readFile(await download.path());
+      const check = (b) => {
+        const pages = jspdfPages(b);
+        // jsPDF stores PNG pixels as plain RGB (no filter): check the left edge is black and the right edge white.
+        expectImagePages(pages, [{ pw: 160, ph: 120, w: 160, h: 120, filter: "none" }]);
+        const px = pages[0].images[0].data;
+        expect(px.length === 160 * 120 * 3, `the image holds ${px.length} bytes, not 160x120 RGB`);
+        expect(px[0] + px[1] + px[2] === 0 && px[159 * 3] + px[159 * 3 + 1] + px[159 * 3 + 2] === 765, "the image isn't black on the left and white on the right");
+      };
+      check(bytes);
+      const negative = mustFail("an image of the wrong width", () => check(tamper(bytes, "/Width 160", "/Width 161")));
+      return `really-a-png.jpg became a 1-page 160x120 pt PDF drawing its 160x120 RGB pixels; ${negative}`;
+    },
+  },
+  {
+    name: "jsPDF (Image to PDF)",
+    page: "/image-to-pdf/",
+    vendor: [JSPDF],
+    async run(page) {
+      const files = [
+        { name: "a.jpg", mimeType: "image/jpeg", buffer: await fixtureJpeg(page, 400, 300) },
+        { name: "b.png", mimeType: "image/png", buffer: await fixtureImage(page, 200, 150, "image/png", { transparent: true }) },
+        { name: "c.webp", mimeType: "image/webp", buffer: await fixtureImage(page, 120, 160, "image/webp") },
+      ];
+      await page.setInputFiles("#fileInput", files);
+      await page.click("#convertBtn");
+      const link = page.locator('#result a[download="converted.pdf"]');
+      await link.waitFor({ timeout: 30000 });
+      const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
+      const bytes = await readFile(await download.path());
+      // Every format is redrawn on white and stored as a JPEG of the picture's own size, on a page of that size.
+      const want = [[400, 300], [200, 150], [120, 160]].map(([w, h]) => ({ pw: w, ph: h, w, h, filter: "DCTDecode" }));
+      const pages = jspdfPages(bytes);
+      expectImagePages(pages, want);
+      for (const [i, p] of pages.entries()) {
+        const { dark, total } = await jpegStats(page, p.images[0].data);
+        expect(dark / total > 0.4 && dark / total < 0.6, `page ${i + 1}'s image is ${Math.round((100 * dark) / total)}% dark, not its black left half`);
+      }
+      const negative = mustFail("a page without its image", () => expectImagePages(jspdfPages(tamper(bytes, "/I2 Do", "/I2 Dx")), want));
+      return `JPG, transparent PNG and WebP became 3 pages (400x300, 200x150, 120x160 pt), each one JPEG of that size, half dark; ${negative}`;
+    },
+  },
+  {
+    // Strong mode redraws each page with PDF.js at 1.5x and stores it as a JPEG through jsPDF.
+    // The page size in points is that canvas's pixel size (612x792 becomes 918x1188), today's
+    // behaviour, listed in Phase 14 of CLAUDE.md: a fix there changes the sizes expected here.
+    name: "PDF.js + jsPDF (Compress PDF, Strong)",
+    page: "/compress-pdf/",
+    vendor: [PDFJS, PDFJS_WORKER, JSPDF],
+    worker: PDFJS_WORKER,
+    async run(page) {
+      const pdf = fixtureImagePdf(2, 300, 388, [0, 0, 0]);
+      await page.setInputFiles("#fileInput", { name: "scan.pdf", mimeType: "application/pdf", buffer: pdf });
+      await page.check('input[name="compressMode"][value="strong"]', { force: true });
+      await page.locator("#compressBtn:not([disabled])").waitFor({ timeout: 30000 });
+      await page.click("#compressBtn");
+      const link = page.locator('#result a[download="scan-compressed.pdf"]');
+      await link.waitFor({ timeout: 60000 });
+      const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
+      const bytes = await readFile(await download.path());
+      expect(bytes.length < pdf.length, `scan-compressed.pdf is ${bytes.length} bytes, not smaller than the ${pdf.length}-byte original`);
+      const want = [0, 1].map(() => ({ pw: 918, ph: 1188, w: 918, h: 1188, filter: "DCTDecode" }));
+      const pages = jspdfPages(bytes);
+      expectImagePages(pages, want);
+      for (const [i, p] of pages.entries()) {
+        const { dark, total } = await jpegStats(page, p.images[0].data);
+        expect(dark / total > 0.4 && dark / total < 0.6, `page ${i + 1} is ${Math.round((100 * dark) / total)}% dark, not the scan's black left half`);
+      }
+      const negative = mustFail("a page without its image", () => expectImagePages(jspdfPages(tamper(bytes, "/I1 Do", "/I1 Dx")), want));
+      return `2-page scan (${pdf.length} bytes) became scan-compressed.pdf (${bytes.length} bytes): 2 pages, each one 918x1188 JPEG, half dark; ${negative}`;
+    },
+  },
+  {
+    name: "PDF.js + jsPDF (PDF color filters)",
+    page: "/pdf-color-filters/",
+    vendor: [PDFJS, PDFJS_WORKER, JSPDF],
+    worker: PDFJS_WORKER,
+    async run(page, lang) {
+      const pdf = fixtureImagePdf(1, 200, 259, [220, 30, 30]);
+      await page.setInputFiles("#fileInput", { name: "red.pdf", mimeType: "application/pdf", buffer: pdf });
+      await page.locator('[data-filter="grayscale"]').waitFor({ state: "visible", timeout: 30000 });
+      await page.click('[data-filter="grayscale"]');
+      await page.locator("#applyBtn:not([disabled])").waitFor({ timeout: 30000 });
+      await page.click("#applyBtn");
+      const name = lang === "es" ? "red-filtrado.pdf" : "red-filtered.pdf";
+      const link = page.locator(`#result a[download="${name}"]`);
+      await link.waitFor({ timeout: 60000 });
+      const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
+      const bytes = await readFile(await download.path());
+      // Pages are redrawn at 2x (RENDER_SCALE), and that pixel size is the page size in points (Phase 14).
+      const pages = jspdfPages(bytes);
+      expectImagePages(pages, [{ pw: 1224, ph: 1584, w: 1224, h: 1584, filter: "DCTDecode" }]);
+      // Black & White: the red half must come out a dark gray, with no channel far from the others.
+      const gray = ({ dark, total, spread }) => expect(spread <= 12 && dark / total > 0.4 && dark / total < 0.6, `the page is ${Math.round((100 * dark) / total)}% dark with channels up to ${spread} apart, not a gray version of the red half`);
+      const stats = await jpegStats(page, pages[0].images[0].data);
+      gray(stats);
+      const red = await jpegStats(page, await fixtureImage(page, 200, 259, "image/jpeg", { left: "rgb(220,30,30)" }));
+      const negative = mustFail("the red page left in color", () => gray(red));
+      return `${name}: 1 page, one 1224x1584 JPEG, the red half now gray (channels at most ${stats.spread} apart, ${Math.round((100 * stats.dark) / stats.total)}% dark); ${negative}`;
+    },
+  },
+  {
+    // Text drawn with jsPDF's built-in Helvetica: accents and € must be written as their
+    // WinAnsi bytes (ó \xf3, ñ \xf1, í \xed, € \x80, • \x95), and a long bullet wrapped
+    // into several lines of one paragraph.
+    name: "JSZip + jsPDF (PowerPoint to PDF)",
+    page: "/powerpoint-to-pdf/",
+    vendor: [JSZIP, JSPDF],
+    async run(page, lang) {
+      const long = "A long bullet that has to wrap onto more than one line of the PDF page, because its words run far past the width that the slide text is allowed to use.";
+      const pptx = fixturePptx([["Smoke deck: Canción de mañana", "Precio: 5 € por día", long], ["Second slide", "Last point"]]);
+      await page.setInputFiles("#fileInput", { name: "deck.pptx", mimeType: "application/vnd.openxmlformats-officedocument.presentationml.presentation", buffer: pptx });
+      await page.locator("#convertBtn").waitFor({ state: "visible", timeout: 30000 });
+      await page.click("#convertBtn");
+      const link = page.locator('#result a[download="deck.pdf"]');
+      await link.waitFor({ timeout: 30000 });
+      const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
+      const bytes = await readFile(await download.path());
+      const slide = lang === "es" ? "Diapositiva" : "Slide";
+      const check = (pages) => {
+        expect(pages.map((p) => `${p.w}x${p.h}`).join("|") === "612x792|612x792", `pages are ${pages.map((p) => `${p.w}x${p.h}`).join(", ")}, not two Letter pages`);
+        const lines = pages[0].blocks.flat();
+        expect(lines.includes("Smoke deck: Canci\xf3n de ma\xf1ana"), `page 1 has no "Canci\\xf3n de ma\\xf1ana" title: ${JSON.stringify(lines)}`);
+        expect(lines.includes("\x95  Precio: 5 \x80 por d\xeda"), `page 1 has no "\\x95  Precio: 5 \\x80 por d\\xeda" bullet: ${JSON.stringify(lines)}`);
+        const wrapped = pages[0].blocks.find((b) => b[0].startsWith("\x95  A long bullet"));
+        expect(wrapped && wrapped.length >= 2 && wrapped.join(" ") === "\x95  " + long, `the long bullet isn't wrapped into lines of one paragraph: ${JSON.stringify(wrapped)}`);
+        pages.forEach((p, i) => expect(p.blocks.at(-1).join() === `${slide} ${i + 1}`, `page ${i + 1} doesn't end with "${slide} ${i + 1}"`));
+        return wrapped.length;
+      };
+      const wrappedLines = check(jspdfPages(bytes));
+      const unwrapped = jspdfPages(bytes).map((p) => ({ ...p, blocks: p.blocks.map((b) => [b.join(" ")]) }));
+      const negatives = [
+        mustFail("ó written as a plain o", () => check(jspdfPages(tamper(bytes, "Canci\xf3n", "Cancion")))),
+        mustFail("€ not written as \\x80", () => check(jspdfPages(tamper(bytes, "5 \x80 por", "5 E por")))),
+        mustFail("the long bullet on one line", () => check(unwrapped)),
+      ];
+      return `deck.pdf: 2 Letter pages, "Canci\\xf3n de ma\\xf1ana" and "5 \\x80" in WinAnsi, the long bullet wrapped into ${wrappedLines} lines, "${slide} 1/2" footers; ${negatives.join("; ")}`;
+    },
+  },
+  {
     name: "html2canvas + jsPDF (HTML to PDF)",
     page: "/html-to-pdf/",
     vendor: ["/assets/vendor/html2canvas/1.4.1/html2canvas.min.js", JSPDF],
@@ -611,7 +947,7 @@ const CASES = [
   {
     name: "SheetJS + jspdf-autotable + jsPDF (Excel to PDF)",
     page: "/excel-to-pdf/",
-    vendor: ["/assets/vendor/xlsx/0.20.3/xlsx.full.min.js", JSPDF, "/assets/vendor/jspdf-autotable/3.8.4/jspdf.plugin.autotable.min.js"],
+    vendor: [XLSX, JSPDF, AUTOTABLE],
     async run(page) {
       const rows = [["Name", "Qty"], ["Apple", 3], ["Pear", 5], ["Smokeberry", 7]];
       await page.setInputFiles("#fileInput", { name: "fruit.xlsx", mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", buffer: fixtureXlsx(rows) });
@@ -627,6 +963,46 @@ const CASES = [
       const want = rows.flat().join(" ");
       expect(text.includes(want), `fruit.pdf text is "${text}", without "${want}"`);
       return `fruit.pdf: ${pdfPageCount(bytes)} page, table text "${want}"`;
+    },
+  },
+  {
+    // A table too long for one page: autotable must carry it over several pages, repeat
+    // the header row on each, and keep every row (the last one included) in order.
+    name: "SheetJS + jspdf-autotable + jsPDF (Excel to PDF, multi-page table)",
+    page: "/excel-to-pdf/",
+    vendor: [XLSX, JSPDF, AUTOTABLE],
+    async run(page, lang) {
+      const head = ["Row", "Item", "Region", "Qty", "Note"];
+      const rows = Array.from({ length: 120 }, (_, i) => [`Row ${i + 1}`, `Item ${i + 1}`, ["North", "South", "East", "West"][i % 4], (i + 1) * 3, i === 119 ? "Last row" : "ok"]);
+      await page.setInputFiles("#fileInput", { name: "long.xlsx", mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", buffer: fixtureXlsx([head, ...rows]) });
+      await page.locator("#convertBtn").waitFor({ state: "visible", timeout: 30000 });
+      await page.click("#convertBtn");
+      const link = page.locator('#result a[download="long.pdf"]');
+      await link.waitFor({ timeout: 30000 });
+      const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
+      const bytes = await readFile(await download.path());
+      const title = `${lang === "es" ? "Hoja" : "Sheet"}: Fruit`;
+      const check = (pages) => {
+        expect(pages.length >= 3, `the table fills ${pages.length} pages, not several`);
+        expect(pages.every((p) => p.w === 792 && p.h === 612), "the pages aren't landscape Letter");
+        expect(pages[0].blocks.flat().includes(title), `page 1 has no "${title}" heading`);
+        pages.forEach((p, i) => {
+          const cells = p.blocks.flat();
+          expect(head.every((h) => cells.includes(h)), `page ${i + 1} doesn't repeat the header row`);
+        });
+        const ids = pages.flatMap((p) => p.blocks.flat().filter((s) => /^Row \d+$/.test(s)));
+        expect(ids.join("|") === rows.map((r) => r[0]).join("|"), `the table's rows read ${ids.length ? `${ids[0]} ... ${ids.at(-1)} (${ids.length})` : "nothing"}, not Row 1 to Row 120 in order`);
+        const last = pages.at(-1).blocks.flat();
+        expect(last.includes("Row 120") && last.includes("Last row") && last.includes("360"), "the last page doesn't hold the last row");
+      };
+      const pages = jspdfPages(bytes);
+      check(pages);
+      expect(pages.length === pdfPageCount(bytes), "the page tree and the pages read disagree");
+      const negatives = [
+        mustFail("the last page cut off", () => check(pages.slice(0, -1))),
+        mustFail("a page without the header row", () => check(pages.map((p, i) => (i === 1 ? { ...p, blocks: p.blocks.filter((b) => !b.includes("Region")) } : p)))),
+      ];
+      return `long.pdf: 120 rows over ${pages.length} landscape pages, header repeated on each, Row 1 to Row 120 in order, "Last row" on the last page; ${negatives.join("; ")}`;
     },
   },
   {
@@ -774,7 +1150,7 @@ const CASES = [
 
 async function runCase(browser, c, lang) {
   const context = await browser.newContext({ locale: lang === "es" ? "es-ES" : "en-US", acceptDownloads: true });
-  const seen = { vendor: new Map(), cdn: [], blocked: [], errors: [], warnings: [], workers: [] };
+  const seen = { vendor: new Map(), requests: [], cdn: [], blocked: [], errors: [], warnings: [], workers: [] };
   let broken = c.broken ? c.broken(lang) : null;
   const stalled = [];
   let heldNow;
@@ -787,6 +1163,7 @@ async function runCase(browser, c, lang) {
   };
   await context.route("**/*", async (route) => {
     const url = route.request().url();
+    seen.requests.push(url);
     if (url.startsWith(GOATCOUNTER)) return route.fulfill({ status: 204, body: "" });
     if (url.startsWith(SITE + "/")) {
       const path = new URL(url).pathname;
@@ -833,8 +1210,21 @@ async function runCase(browser, c, lang) {
     if (c.broken && c.broken(lang).mode === "stall") await page.clock.install();
     await page.goto(SITE + path, { waitUntil: "load", timeout: 60000 });
     detail = await c.run(page, lang, ctl);
-    for (const v of typeof c.vendor === "function" ? c.vendor(lang) : c.vendor)
+    const vendor = typeof c.vendor === "function" ? c.vendor(lang) : c.vendor;
+    for (const v of vendor)
       expect(seen.vendor.get(v) === 200, `${v} wasn't loaded from /assets/vendor (status ${seen.vendor.get(v)})`);
+    if (vendor.includes(JSPDF)) {
+      const version = await page.evaluate(() => window.jspdf?.jsPDF?.version);
+      expectJspdfVersion(version);
+      detail += `; jsPDF ${version}, ${mustFail("another jsPDF version", () => expectJspdfVersion("2.5.1"))}`;
+    }
+    if (vendor.includes(AUTOTABLE))
+      expect(await page.evaluate(() => typeof window.jspdf.jsPDF.API.autoTable === "function"), "autotable didn't attach doc.autoTable to jsPDF");
+    if (c.noJspdf) {
+      const global = await page.evaluate(() => typeof window.jspdf);
+      expectNoJspdf(seen.requests, global);
+      detail += `; no jsPDF or autotable requested, ${mustFail("a jsPDF request", () => expectNoJspdf([...seen.requests, SITE + JSPDF], global))}`;
+    }
     if (c.vendorOneOf) {
       const got = c.vendorOneOf.filter((v) => seen.vendor.has(v));
       expect(got.length === 1 && seen.vendor.get(got[0]) === 200,
