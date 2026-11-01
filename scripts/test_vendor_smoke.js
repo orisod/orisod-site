@@ -173,9 +173,11 @@ function jspdfPages(bytes) {
   expect(tree, "the PDF has no page tree");
   const kids = [...tree.dict.match(/\/Kids\s*\[([^\]]*)\]/)[1].matchAll(/(\d+)\s+0\s+R/g)].map((k) => objs.get(+k[1]));
   const unescape = (s) => s.replace(/\\([0-7]{1,3}|[\s\S])/g, (_, e) => /^[0-7]/.test(e) ? String.fromCharCode(parseInt(e, 8)) : ({ n: "\n", r: "\r", t: "\t" })[e] ?? e);
+  let pageResources = "";
   return kids.map((p) => {
     const box = p.dict.match(/\/MediaBox\s*\[\s*0\s+0\s+([\d.]+)\s+([\d.]+)\s*\]/);
     const resources = ref(p.dict, "Resources")?.dict ?? p.dict;
+    pageResources = resources;
     const content = ref(p.dict, "Contents");
     const ops = (/\/FlateDecode/.test(content.dict) ? inflateSync(content.data) : content.data).toString("latin1");
     const bts = [...ops.matchAll(/\bBT\b([\s\S]*?)\bET\b/g)];
@@ -200,8 +202,46 @@ function jspdfPages(bytes) {
       expect(img && /\/Subtype\s*\/Image/.test(img.dict), `/${d[1]} isn't an image`);
       return { w: +img.dict.match(/\/Width\s+(\d+)/)[1], h: +img.dict.match(/\/Height\s+(\d+)/)[1], filter: (img.dict.match(/\/Filter\s*\/(\w+)/) || [])[1] || "none", data: img.data };
     });
-    return { w: +box[1], h: +box[2], blocks, fonts, images };
+    // Every text string as drawn, in drawing order: where it starts (x, y), its font size, its text
+    // read through the font's ToUnicode map (so a right-to-left line reads in visual order, left
+    // to right) and its width from the font's /W widths. Only for embedded (Identity-H) fonts.
+    const runs = [];
+    for (const b of bts) {
+      let x = 0, y = 0, lead = 0, size = 0, font = null, started = false;
+      for (const op of b[1].matchAll(/\/(\w+)\s+([\d.]+)\s+Tf|([-\d.]+)\s+TL|([-\d.]+)\s+([-\d.]+)\s+Td|T\*|<([0-9a-fA-F]*)>\s*Tj/g)) {
+        if (op[1]) { size = +op[2]; font = cidFont(op[1]); }
+        else if (op[3] !== undefined) lead = +op[3];
+        else if (op[4] !== undefined) { x = started ? x + +op[4] : +op[4]; y = started ? y + +op[5] : +op[5]; started = true; }
+        else if (op[0] === "T*") y -= lead;
+        else if (op[6] !== undefined && font) {
+          const codes = op[6].match(/.{4}/g) || [];
+          runs.push({ x, y, size, text: codes.map((c) => font.unicode.get(c) ?? "?").join(""),
+            width: codes.reduce((w, c) => w + (font.widths.get(parseInt(c, 16)) ?? font.dw), 0) * size / 1000 });
+        }
+      }
+    }
+    return { w: +box[1], h: +box[2], blocks, fonts, images, runs };
   });
+
+  // An embedded Type0 font's ToUnicode map (glyph code as 4 hex digits -> text) and glyph widths.
+  function cidFont(key) {
+    const font = ref(pageResources, key);
+    if (!font || !/\/Subtype\s*\/Type0/.test(font.dict)) return null;
+    const cmap = ref(font.dict, "ToUnicode");
+    const text = (/\/FlateDecode/.test(cmap.dict) ? inflateSync(cmap.data) : cmap.data).toString("latin1");
+    const unicode = new Map();
+    const hexText = (h) => String.fromCodePoint(...(h.match(/.{4}/g) || []).map((u) => parseInt(u, 16)));
+    for (const section of text.matchAll(/beginbfchar([\s\S]*?)endbfchar/g))
+      for (const m of section[1].matchAll(/<([0-9a-fA-F]+)>\s*<([0-9a-fA-F]+)>/g)) unicode.set(m[1].toLowerCase(), hexText(m[2]));
+    for (const section of text.matchAll(/beginbfrange([\s\S]*?)endbfrange/g))
+      for (const m of section[1].matchAll(/<([0-9a-fA-F]+)>\s*<([0-9a-fA-F]+)>\s*<([0-9a-fA-F]+)>/g))
+        for (let c = parseInt(m[1], 16), u = parseInt(m[3], 16); c <= parseInt(m[2], 16); c++, u++) unicode.set(c.toString(16).padStart(4, "0"), String.fromCodePoint(u));
+    const descendant = objs.get(+(font.dict.match(/\/DescendantFonts\s*\[\s*(\d+)\s+0\s+R/) || [])[1]);
+    const widths = new Map();
+    const w = (descendant.dict.match(/\/W\s*\[([\s\S]*?)\]\s*\//) || [])[1] || "";
+    for (const m of w.matchAll(/(\d+)\s*\[([^\]]*)\]/g)) m[2].trim().split(/\s+/).forEach((v, i) => widths.set(+m[1] + i, +v));
+    return { unicode, widths, dw: +((descendant.dict.match(/\/DW\s+([\d.]+)/) || [])[1] || 1000) };
+  }
 }
 
 // Copy of a PDF with one latin1 string replaced by another of the same length, so the
@@ -318,17 +358,23 @@ function fixtureDocx(lines) {
   });
 }
 
-// A minimal .pptx written by hand: one slide file per entry, one text run per string.
-// PowerPoint to PDF only reads ppt/slides/slideN.xml and its <a:t> runs.
+// A minimal .pptx written by hand: one slide file per entry. A slide is a list of paragraphs, each
+// a string (one text run) or { runs: [...], rtl: "1" | "0" } (several runs, PowerPoint's direction
+// flag), or { xml } for a slide file written out in full. PowerPoint to PDF only reads
+// ppt/slides/slideN.xml.
 function fixturePptx(slides) {
   const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
   const files = {
     "[Content_Types].xml": '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="xml" ContentType="application/xml"/></Types>',
   };
+  const paragraph = (t) => {
+    const { runs, rtl } = typeof t === "string" ? { runs: [t] } : t;
+    return `<a:p>${rtl === undefined ? "" : `<a:pPr rtl="${rtl}"/>`}${runs.map((r) => `<a:r><a:t>${esc(r)}</a:t></a:r>`).join("")}</a:p>`;
+  };
   slides.forEach((texts, i) => {
-    files[`ppt/slides/slide${i + 1}.xml`] = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" ' +
+    files[`ppt/slides/slide${i + 1}.xml`] = texts.xml ?? '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" ' +
       'xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main"><p:cSld><p:spTree>' +
-      texts.map((t) => `<p:sp><p:txBody><a:p><a:r><a:t>${esc(t)}</a:t></a:r></a:p></p:txBody></p:sp>`).join("") + "</p:spTree></p:cSld></p:sld>";
+      texts.map((t) => `<p:sp><p:txBody>${paragraph(t)}</p:txBody></p:sp>`).join("") + "</p:spTree></p:cSld></p:sld>";
   });
   return zipStore(files);
 }
@@ -486,6 +532,16 @@ const stableSha = (bytes) => sha256(Buffer.from(bytes.toString("latin1")
   .replace(/\/(CreationDate|ModDate) \(D:[^)]*\)/g, "").replace(/\/ID \[[^\]]*\]/g, ""), "latin1"));
 // What main produced for the Latin-only deck below (before the Liberation Sans change), stamp and date removed:
 // PowerPoint to PDF must keep drawing Windows-1252 decks exactly as it did, with the built-in fonts.
+// The same for decks without Hebrew that must stay exactly as they were before Hebrew support:
+// runs split inside paragraphs (Latin, and Greek/Cyrillic) and the Greek/Cyrillic deck, from main
+// after #202 (42d7d1b8). Only paragraphs with Hebrew are grouped and laid out right to left.
+const MAIN_SHA = {
+  latinSplit: { en: "fbb6a757a33d4f458d2c6f2c780789e3fab0886e5334d8f5ca34448c553c8322", es: "7250a708e3b0b506d6d1f5139dbdba921cb24e8ed32733dce8deed0b1f83258a" },
+  lgc: { en: "f2ec0b07b90a031194af765b4b9a43b98c7980eb80030c6daafec951f868dc82", es: "e300be844e2d5967b6757f37c22f8e75f64fa0635717010b101d9f76deb27124" },
+  lgcSplit: { en: "cbc88fb932453c55bf1d7d041850e72dc4d2f6f5f7ac4c1b4d944cb0904edd76", es: "2d239fbc06038c1e5e7457d6dfc0fe8cb05bb6688d7d62912b31ef6b9c88ed4b" },
+};
+const LATIN_SPLIT_DECK = [["Quarterly review", { runs: ["Make sure to ", "always", " check the output"] }, { runs: ["Price: ", "5 €", " per month"] }], ["Second slide", { runs: ["Bold ", "word", " here"] }]];
+const LGC_SPLIT_DECK = [["Καλημέρα", { runs: ["Привет, ", "мир", "!"] }, { runs: ["Za", "żółć"] }]];
 const LATIN_DECK_SHA = {
   en: "8392021d08c4a992d155d89cb1af1e232cf311bef4188c0537d85f39dabbfe81",
   es: "cd24a4bcd7138429cc8ff150d4e96d73a8afeb29e1f44187d267dba6817676ae",
@@ -658,6 +714,63 @@ const TESSERACT_VENDOR = (lang) => [
   `/assets/vendor/tesseract/7.0.0/lang/${lang === "es" ? "spa" : "eng"}.traineddata.gz`,
 ];
 const TESSERACT_CORES = ["relaxedsimd-lstm", "simd-lstm", "lstm"].map((b) => `/assets/vendor/tesseract/7.0.0/core/tesseract-core-${b}.wasm.js`);
+
+// The Hebrew deck: pure Hebrew, Hebrew with Latin and numbers, shekel amounts, brackets, a long
+// wrapped bullet, niqqud, a sentence split into 3 runs and an rtl="1" paragraph starting in Latin.
+const LONG_HE = "זהו משפט ארוך בעברית שצריך לעבור לשורה הבאה כי הוא ארוך יותר מרוחב העמוד, ולכן הכלי חייב לחלק אותו לכמה שורות בצורה נכונה ובסדר הנכון.";
+const SPLIT_HE = ["זהו ", "משפט", " שמחולק לשלושה חלקים"];
+const HEBREW_DECK = [
+  ["מצגת לדוגמה", "שלום עולם", "גרסה 2.0 של Orisod זמינה עכשיו", "המחיר הוא 1,250.50 ₪ לשנה או 100 ₪ לחודש", "המחיר (כולל מע״מ) מופיע [בנספח]", LONG_HE],
+  ["ניקוד", "שָׁלוֹם עוֹלָם", { runs: SPLIT_HE }, { runs: ["Orisod היא ערכת כלים חינמית"], rtl: "1" }],
+];
+const HEBREW_READ_BACK = ["מצגת לדוגמה", "• שלום עולם", "• גרסה 2.0 של Orisod זמינה עכשיו", "ניקוד", "• שָׁלוֹם עוֹלָם", "• " + SPLIT_HE.join(""), "• Orisod היא ערכת כלים חינמית"];
+function expectHebrewDrawing(pages) {
+  const all = pages.flatMap((p) => p.runs);
+  const reverse = (t) => [...t].reverse().join("");
+  const run = (logical) => all.find((r) => reverse(r.text) === logical);
+  // Pure Hebrew lines are drawn in visual order: read right to left they're the text as written.
+  for (const want of ["מצגת לדוגמה", "•  שלום עולם", "ניקוד", "•  " + SPLIT_HE.join("")])
+    expect(run(want), `no line drawn as the reverse of "${want}": ${JSON.stringify(all.map((r) => r.text))}`);
+  // Brackets the right way round, numbers left to right.
+  const brackets = all.find((r) => r.text.includes("מ״עמ") || r.text.includes("ללוכ"));
+  expect(brackets && brackets.text.indexOf("(") >= 0 && brackets.text.indexOf("(") < brackets.text.indexOf(")") && brackets.text.indexOf("[") < brackets.text.indexOf("]"),
+    `brackets are drawn mirrored: ${JSON.stringify(brackets?.text)}`);
+  const money = all.find((r) => r.text.includes("₪"));
+  expect(money && money.text.includes("1,250.50") && money.text.includes("100"), `the numbers aren't drawn intact: ${JSON.stringify(money?.text)}`);
+  // The long bullet wraps into lines in reading order: the top line holds its first words.
+  const wrapped = all.filter((r) => LONG_HE.includes(reverse(r.text).replace(/^•  /, ""))).sort((a, b) => b.y - a.y);
+  expect(wrapped.length >= 2 && wrapped.map((r) => reverse(r.text)).join(" ") === "•  " + LONG_HE,
+    `the long bullet's lines, top to bottom, don't read as the paragraph: ${JSON.stringify(wrapped.map((r) => reverse(r.text)))}`);
+  // Right to left lines end at the mirrored margins: titles at 562 pt, bullets (and their wrapped lines) at 548 pt.
+  for (const r of all.filter((x) => /[א-ת]/.test(x.text) && !x.text.startsWith("•  O"))) {
+    const edge = r.size === 18 ? 562 : 548;
+    expect(Math.abs(r.x + r.width - edge) <= 1, `"${reverse(r.text).slice(0, 30)}" ends at ${(r.x + r.width).toFixed(1)} pt, not ${edge} pt`);
+  }
+  // The rtl="1" paragraph that starts with a Latin word is right-aligned too.
+  const flagged = all.find((r) => r.text.includes("Orisod") && r.text.includes("•") && !r.text.includes("2.0"));
+  expect(flagged && Math.abs(flagged.x + flagged.width - 548) <= 1, `the rtl="1" paragraph ends at ${flagged && (flagged.x + flagged.width).toFixed(1)} pt, not 548 pt`);
+  // The split sentence is one bullet, not three.
+  expect(!all.some((r) => reverse(r.text) === "•  " + SPLIT_HE[1]), "the sentence split into runs became separate bullets");
+}
+
+// A slide as PowerPoint writes it (title and body placeholders, run properties, a run split where the
+// language changes, a line break, a slide-number field, an empty paragraph), Hebrew set right to left.
+const REAL_SLIDE_XML = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+  '<p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">' +
+  '<p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr/>' +
+  '<p:sp><p:nvSpPr><p:cNvPr id="2" name="Title 1"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr><p:ph type="title"/></p:nvPr></p:nvSpPr><p:spPr/>' +
+  '<p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:pPr algn="r" rtl="1"/><a:r><a:rPr lang="he-IL" dirty="0"/><a:t>דוח </a:t></a:r>' +
+  '<a:r><a:rPr lang="he-IL" b="1" dirty="0"/><a:t>רבעוני</a:t></a:r><a:endParaRPr lang="en-US" dirty="0"/></a:p></p:txBody></p:sp>' +
+  '<p:sp><p:nvSpPr><p:cNvPr id="3" name="Content Placeholder 2"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr><p:ph idx="1"/></p:nvPr></p:nvSpPr><p:spPr/>' +
+  '<p:txBody><a:bodyPr><a:normAutofit/></a:bodyPr><a:lstStyle/>' +
+  '<a:p><a:pPr marL="0" indent="0" algn="r" rtl="1"><a:buNone/></a:pPr><a:r><a:rPr lang="he-IL" dirty="0"/><a:t>גרסה </a:t></a:r>' +
+  '<a:r><a:rPr lang="en-US" dirty="0"/><a:t>Orisod</a:t></a:r><a:r><a:rPr lang="he-IL" dirty="0"/><a:t> 2.0 זמינה</a:t></a:r>' +
+  '<a:br><a:rPr lang="he-IL" dirty="0"/></a:br><a:r><a:rPr lang="he-IL" dirty="0" err="1"/><a:t>בכל הדפדפנים</a:t></a:r><a:endParaRPr lang="he-IL" dirty="0"/></a:p>' +
+  '<a:p><a:pPr rtl="1"/><a:r><a:rPr lang="he-IL" dirty="0"/><a:t>שקופית </a:t></a:r><a:fld id="{B6F15528-21DE-4FAA-801E-634DDDAF4B2B}" type="slidenum">' +
+  '<a:rPr lang="he-IL"/><a:t>1</a:t></a:fld><a:endParaRPr lang="he-IL" dirty="0"/></a:p>' +
+  '<a:p><a:r><a:rPr lang="en-US" dirty="0"/><a:t>Make sure to </a:t></a:r><a:r><a:rPr lang="en-US" b="1" dirty="0"/><a:t>always</a:t></a:r>' +
+  '<a:r><a:rPr lang="en-US" dirty="0"/><a:t> check</a:t></a:r></a:p><a:p><a:endParaRPr lang="he-IL" dirty="0"/></a:p>' +
+  '</p:txBody></p:sp></p:spTree></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>';
 
 const CASES = [
   {
@@ -1069,14 +1182,17 @@ const CASES = [
       const lines = await pdfjsLines(page, bytes);
       const wrapped = expectLgcText(lines, lang);
       expect((await warnState(page)).text === null, "a deck the font covers shows the unsupported-characters warning");
+      const sameAsMain = (b) => expect(stableSha(b) === MAIN_SHA.lgc[lang], `greek.pdf (stamp and date removed) has sha256 ${stableSha(b)}, not main's ${MAIN_SHA.lgc[lang]}`);
+      sameAsMain(bytes);
       const garbled = lines.map((l) => (l === "• Привет, мир" ? "•    @ 8 2 5 B ,   < 8 @ !" : l));
       const negatives = [
         mustFail("a line in the old garbled text", () => expectLgcText(garbled, lang)),
         mustFail("the font program removed", () => expectLiberationFonts(jspdfPages(tamper(bytes, "/FontFile2", "/FontFileX")))),
         mustFail("titles in Regular", () => expectLiberationFonts(pages.map((p) => ({ ...p, fonts: p.fonts.map((f) => ({ ...f, bbox: FONT_BBOX.regular })) })))),
         mustFail("FONT_RANGES missing a range", () => sameRanges(ranges.slice(1))),
+        mustFail("a PDF one byte off main's", () => sameAsMain(tamper(bytes, "/FontFile2", "/FontFilf2"))),
       ];
-      return `greek.pdf: ${pages.length} pages drawn with embedded Liberation Sans (titles Bold, text Regular, Identity-H), both fonts HTTP 200 with the manifest sha256, PDF.js reads every Greek, Cyrillic, Polish and Vietnamese line back exactly, the long Cyrillic bullet wraps into ${wrapped} lines; FONT_RANGES (${ranges.length} ranges) matches the fonts' cmaps; ${bytes.length} bytes; ${negatives.join("; ")}`;
+      return `greek.pdf: ${pages.length} pages drawn with embedded Liberation Sans (titles Bold, text Regular, Identity-H), both fonts HTTP 200 with the manifest sha256, PDF.js reads every Greek, Cyrillic, Polish and Vietnamese line back exactly, the long Cyrillic bullet wraps into ${wrapped} lines, identical to main's PDF apart from stamp and date; FONT_RANGES (${ranges.length} ranges) matches the fonts' cmaps; ${bytes.length} bytes; ${negatives.join("; ")}`;
     },
   },
   {
@@ -1111,13 +1227,14 @@ const CASES = [
       const es = lang === "es";
       // [label, text runs, script names (null: no warning, "": generic), short: every run has an unsupported character]
       const decks = [
-        ["Hebrew", ["שלום עולם"], es ? "hebreos" : "Hebrew", true],
+        ["Hebrew", ["שלום עולם"], null],
         ["Arabic", ["مرحبا بالعالم"], es ? "árabes" : "Arabic", true],
         ["Chinese", ["你好，世界"], es ? "chinos" : "Chinese", true],
         ["Japanese", ["こんにちは、世界"], es ? "japoneses" : "Japanese", true],
         ["Korean", ["안녕하세요"], es ? "coreanos" : "Korean", true],
-        ["several", ["שלום", "مرحبا", "안녕하세요"], es ? "hebreos, árabes y coreanos" : "Hebrew, Arabic and Korean", true],
-        ["Hebrew and Latin", ["שלום עולם", "Hello world"], es ? "hebreos" : "Hebrew", false],
+        ["several", ["שלום", "مرحبا", "안녕하세요"], es ? "árabes y coreanos" : "Arabic and Korean", false],
+        ["Hebrew and Latin", ["שלום עולם", "Hello world"], null],
+        ["Hebrew and Arabic", ["שלום עולם", "مرحبا بالعالم"], es ? "árabes" : "Arabic", false],
         ["symbols", ["Done ✓"], ""],
         ["Latin", ["Café crème, 5 €"], null],
         ["Greek", ["Καλημέρα κόσμε"], null],
@@ -1142,15 +1259,17 @@ const CASES = [
       // Choosing a file only reads it: the font is fetched when converting, and only if needed.
       expect(!ctl.requests.some((u) => u.includes("/liberation-sans/")), "choosing a file fetched Liberation Sans");
       const named = seen.find((x) => x.label === "several");
-      const hebrew = seen.find((x) => x.label === "Hebrew"), withLatin = seen.find((x) => x.label === "Hebrew and Latin");
+      const arabic = seen.find((x) => x.label === "Arabic"), withHebrew = seen.find((x) => x.label === "Hebrew and Arabic");
       const negatives = [
-        mustFail("the full warning on a Hebrew-only deck", () => expectWarning({ ...hebrew.state, text: PPTX_WARNING[lang](hebrew.names, false) }, PPTX_WARNING[lang](hebrew.names, true))),
-        mustFail("the short warning on a Hebrew + Latin deck", () => expectWarning({ ...withLatin.state, text: PPTX_WARNING[lang](withLatin.names, true) }, PPTX_WARNING[lang](withLatin.names, false))),
-        mustFail("a warning missing a script name", () => expectWarning({ ...named.state, text: named.state.text.replace(es ? "árabes y " : "Arabic and ", "") }, PPTX_WARNING[lang](named.names, true))),
-        mustFail("a warning with role=alert", () => expectWarning({ ...named.state, role: "alert" }, PPTX_WARNING[lang](named.names, true))),
+        mustFail("the full warning on an Arabic-only deck", () => expectWarning({ ...arabic.state, text: PPTX_WARNING[lang](arabic.names, false) }, PPTX_WARNING[lang](arabic.names, true))),
+        mustFail("the short warning on a Hebrew + Arabic deck", () => expectWarning({ ...withHebrew.state, text: PPTX_WARNING[lang](withHebrew.names, true) }, PPTX_WARNING[lang](withHebrew.names, false))),
+        mustFail("Hebrew named in the warning", () => expectWarning({ ...withHebrew.state, text: PPTX_WARNING[lang](es ? "hebreos y árabes" : "Hebrew and Arabic", false) }, PPTX_WARNING[lang](withHebrew.names, false))),
+        mustFail("a warning on the Hebrew deck", () => noWarning({ ...seen.find((x) => x.label === "Hebrew").state, text: PPTX_WARNING[lang](es ? "hebreos" : "Hebrew", true) }, "Hebrew")),
+        mustFail("a warning missing a script name", () => expectWarning({ ...named.state, text: named.state.text.replace(es ? "árabes y " : "Arabic and ", "") }, PPTX_WARNING[lang](named.names, false))),
+        mustFail("a warning with role=alert", () => expectWarning({ ...named.state, role: "alert" }, PPTX_WARNING[lang](named.names, false))),
         mustFail("a warning on the Greek deck", () => noWarning({ ...seen.find((x) => x.label === "Greek").state, text: PPTX_WARNING[lang]("") }, "Greek")),
       ];
-      return `warnings on selection: ${seen.filter((x) => x.names !== undefined).map((x) => (x.names || "(generic)") + (x.short ? " (short)" : x.names ? " (full)" : "")).join(" / ")}; none for the Latin and Greek decks; Convert stays available; ${negatives.join("; ")}`;
+      return `warnings on selection: ${seen.filter((x) => x.names !== undefined).map((x) => (x.names || "(generic)") + (x.short ? " (short)" : x.names ? " (full)" : "")).join(" / ")}; none for the Hebrew, Hebrew + Latin, Latin and Greek decks; Convert stays available; ${negatives.join("; ")}`;
     },
   },
   {
@@ -1180,6 +1299,118 @@ const CASES = [
         mustFail("no error shown", () => check({ ...state, error: "" })),
       ];
       return `font 404: error line says "${state.error}" (role="alert"), no PDF offered, Convert available again; ${negatives.join("; ")}`;
+    },
+  },
+  {
+    // Hebrew, right to left: drawn in visual order (checked through the font's ToUnicode map, read left
+    // to right as drawn), brackets the right way round, numbers intact, wrapped lines in reading
+    // order, right-aligned like the left edge mirrored, a sentence split into runs kept whole.
+    name: "JSZip + jsPDF + Liberation Sans (PowerPoint to PDF, Hebrew right to left)",
+    page: "/powerpoint-to-pdf/",
+    vendor: [JSZIP, JSPDF, FONT_REGULAR, FONT_BOLD],
+    async run(page, lang, ctl) {
+      await page.setInputFiles("#fileInput", { name: "hebrew.pptx", mimeType: "application/vnd.openxmlformats-officedocument.presentationml.presentation", buffer: fixturePptx(HEBREW_DECK) });
+      await page.waitForTimeout(1000);
+      expect((await warnState(page)).text === null, "a Hebrew deck shows the unsupported-characters warning");
+      const bytes = await convertDeck(page, "hebrew", HEBREW_DECK);
+      expect(ctl.requests.filter((u) => u.includes("/liberation-sans/")).length === 2, "the two font files weren't fetched");
+      expect((await warnState(page)).text === null, "the warning appeared after converting a Hebrew deck");
+      const pages = jspdfPages(bytes);
+      expectHebrewDrawing(pages);
+      const lines = await pdfjsLines(page, bytes);
+      const read = (l) => HEBREW_READ_BACK.forEach((want) => expect(l.includes(want), `PDF.js doesn't read "${want}" back: ${JSON.stringify(l)}`));
+      read(lines);
+      // Breaking copies of the real result, one way each, must fail the same checks.
+      const edit = (fn) => pages.map((p) => ({ ...p, runs: p.runs.map((r) => fn({ ...r })) }));
+      const reverse = (t) => [...t].reverse().join("");
+      const negatives = [
+        mustFail("Hebrew drawn in logical order", () => expectHebrewDrawing(edit((r) => (r.text.includes("םולש") ? { ...r, text: reverse(r.text) } : r)))),
+        mustFail("mirrored brackets", () => expectHebrewDrawing(edit((r) => ({ ...r, text: r.text.replace("(", "\0").replace(")", "(").replace("\0", ")") })))),
+        mustFail("a broken number", () => expectHebrewDrawing(edit((r) => ({ ...r, text: r.text.replace("1,250.50", "05.052,1") })))),
+        mustFail("the wrapped lines swapped", () => expectHebrewDrawing(pages.map((p) => {
+          const i = p.runs.findIndex((r) => reverse(r.text).startsWith("•  " + LONG_HE.slice(0, 12)));
+          if (i < 0) return p;
+          const runs = p.runs.map((r) => ({ ...r }));
+          [runs[i].y, runs[i + 1].y] = [runs[i + 1].y, runs[i].y];
+          return { ...p, runs };
+        }))),
+        mustFail("Hebrew left-aligned", () => expectHebrewDrawing(edit((r) => (/[א-ת]/.test(r.text) ? { ...r, x: 64 } : r)))),
+        mustFail("the split sentence in three bullets", () => expectHebrewDrawing(edit((r) => (reverse(r.text) === "•  " + SPLIT_HE.join("") ? { ...r, text: reverse("•  " + SPLIT_HE[1]) } : r)))),
+        mustFail("a line read back in the wrong order", () => read(lines.map((l) => (l === "• שלום עולם" ? "• םלוע םולש" : l)))),
+      ];
+      return `hebrew.pdf: no warning, both fonts fetched; pure Hebrew drawn in visual order, ( before ), "100" and "1,250.50" intact, the long bullet wrapped into lines in reading order, right edges at 562/548 pt, the split sentence one bullet, the rtl="1" paragraph right-aligned; PDF.js reads ${HEBREW_READ_BACK.length} lines back exactly; ${negatives.join("; ")}`;
+    },
+  },
+  {
+    // A left-to-right slide with one Hebrew word: the word reads right to left in place, the line stays left-aligned.
+    name: "JSZip + jsPDF + Liberation Sans (PowerPoint to PDF, Hebrew word in a left-to-right line)",
+    page: "/powerpoint-to-pdf/",
+    vendor: [JSZIP, JSPDF, FONT_REGULAR, FONT_BOLD],
+    async run(page) {
+      const deck = [["Product overview", "Our product is called שלום in Hebrew, version 2.0", "Plain English bullet"]];
+      const bytes = await convertDeck(page, "ltr", deck);
+      const check = (pages) => {
+        const run = pages[0].runs.find((r) => r.text.includes("Our product"));
+        expect(run && run.text === "•  Our product is called םולש in Hebrew, version 2.0", `the line is drawn as ${JSON.stringify(run?.text)}, not with the Hebrew word in visual order inside a left-to-right line`);
+        expect(Math.abs(run.x - 64) <= 1, `the line starts at ${run.x.toFixed(1)} pt, not left-aligned at 64 pt`);
+      };
+      const pages = jspdfPages(bytes);
+      check(pages);
+      const lines = await pdfjsLines(page, bytes);
+      expect(lines.includes("• Our product is called שלום in Hebrew, version 2.0"), `PDF.js reads ${JSON.stringify(lines)}`);
+      const edit = (fn) => pages.map((p) => ({ ...p, runs: p.runs.map((r) => (r.text.includes("Our product") ? fn({ ...r }) : r)) }));
+      const negatives = [
+        mustFail("the Hebrew word in logical order", () => check(edit((r) => ({ ...r, text: r.text.replace("םולש", "שלום") })))),
+        mustFail("the line right-aligned", () => check(edit((r) => ({ ...r, x: 548 - r.width })))),
+      ];
+      return `ltr.pdf: "Our product is called שלום in Hebrew, version 2.0" drawn left-aligned at 64 pt with the Hebrew word in visual order, PDF.js reads it back exactly; ${negatives.join("; ")}`;
+    },
+  },
+  {
+    // Decks without Hebrew must come out exactly as before Hebrew support, also when their paragraphs
+    // are split into several runs (those stay one bullet per run, as always).
+    name: "JSZip + jsPDF (PowerPoint to PDF, decks without Hebrew unchanged)",
+    page: "/powerpoint-to-pdf/",
+    vendor: [JSZIP, JSPDF],
+    async run(page, lang) {
+      const latin = await convertDeck(page, "latin-split", LATIN_SPLIT_DECK);
+      const lgc = await convertDeck(page, "lgc-split", LGC_SPLIT_DECK);
+      const lgcFull = await convertDeck(page, "greek", LGC_DECK);
+      const same = (b, key) => expect(stableSha(b) === MAIN_SHA[key][lang], `${key} (stamp and date removed) has sha256 ${stableSha(b)}, not main's ${MAIN_SHA[key][lang]}`);
+      same(latin, "latinSplit");
+      same(lgc, "lgcSplit");
+      same(lgcFull, "lgc");
+      const negatives = [
+        mustFail("a Latin PDF one byte off main's", () => same(tamper(latin, "Quarterly", "Quarterlz"), "latinSplit")),
+        mustFail("a Greek/Cyrillic PDF one byte off main's", () => same(tamper(lgc, "/FontFile2", "/FontFilf2"), "lgcSplit")),
+      ];
+      return `Latin and Greek/Cyrillic decks with runs split inside paragraphs, and the Greek/Cyrillic deck: all identical to main's PDFs apart from stamp and date; ${negatives.join("; ")}`;
+    },
+  },
+  {
+    // A slide written the way PowerPoint writes it (placeholders, run properties with languages,
+    // a run split for spelling, a line break, a slide-number field, an empty paragraph, rtl="1"
+    // with algn="r"): Hebrew paragraphs become whole lines; the English one stays one bullet per run.
+    name: "JSZip + jsPDF + Liberation Sans (PowerPoint to PDF, real PowerPoint slide structure)",
+    page: "/powerpoint-to-pdf/",
+    vendor: [JSZIP, JSPDF, FONT_REGULAR, FONT_BOLD],
+    async run(page, lang) {
+      const bytes = await convertDeck(page, "real", [{ xml: REAL_SLIDE_XML }]);
+      const want = ["דוח רבעוני", "• גרסה Orisod 2.0 זמינה בכל הדפדפנים", "• שקופית 1", "• Make sure to", "• always", "• check"];
+      const check = (lines) => {
+        want.forEach((w) => expect(lines.includes(w), `PDF.js doesn't read "${w}" back: ${JSON.stringify(lines)}`));
+        expect(!lines.includes("• רבעוני") && !lines.includes("• Orisod"), `a Hebrew paragraph was split into runs: ${JSON.stringify(lines)}`);
+      };
+      const lines = await pdfjsLines(page, bytes);
+      check(lines);
+      const pages = jspdfPages(bytes);
+      const title = pages[0].runs.find((r) => r.size === 18);
+      expect(title && Math.abs(title.x + title.width - 562) <= 1, `the right-to-left title ends at ${title && (title.x + title.width).toFixed(1)} pt, not 562 pt`);
+      const negatives = [
+        mustFail("the title split into its two runs", () => check([...lines.filter((l) => l !== "דוח רבעוני"), "דוח", "• רבעוני"])),
+        mustFail("the line break lost", () => check(lines.map((l) => l.replace("זמינה בכל", "זמינהבכל")))),
+      ];
+      return `real.pdf: title "דוח רבעוני" (2 runs) whole and right-aligned, "גרסה Orisod 2.0 זמינה בכל הדפדפנים" (4 runs and a line break) one bullet, "שקופית 1" with its slide-number field, the English paragraph one bullet per run as always, the empty paragraph skipped; ${negatives.join("; ")}`;
     },
   },
   {
