@@ -517,7 +517,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
     <p class="reason" id="openReason">Enter a phone number to open the chat.</p>
     <span class="copy-status" id="copyStatus" aria-live="polite"></span>
     <div class="error" id="actionError" role="alert"></div>
-    <p class="hint" id="qrNote">The QR code holds the whole link, message included, so anyone who scans it can read both.</p>
+    <p class="hint" id="qrNote">The QR code holds the whole link, including the number and message, so anyone who scans it can read both.</p>
     <div class="qr-preview" id="qrPreview"></div>
     <ul class="facts">
       <li>Nothing is sent automatically: WhatsApp opens the chat with your message typed in, and you press send.</li>
@@ -570,7 +570,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
     <summary>More about this tool</summary>
     <div class="seo-content">
       <h2>What a wa.me link is</h2>
-      <p>A wa.me link is WhatsApp's own short address for starting a chat. It holds the phone number in international format, without the plus sign, spaces or the leading zero, and it can carry a message in its text parameter. Opening it starts a chat with that number without saving it to your contacts first, and the message appears in the typing box, ready to send or edit.</p>
+      <p>A wa.me link is WhatsApp's own short address for starting a chat. It holds the phone number in international format, using digits only, and it can carry a message in its text parameter. Opening it starts a chat with that number without saving it to your contacts first, and the message appears in the typing box, ready to send or edit.</p>
 
       <h2>When to use it</h2>
       <ul>
@@ -680,7 +680,7 @@ const T = {
   "copyFail": "The link couldn't be copied. Select it in the box above and copy it yourself.",
   "shareFallback": "Sharing isn't available in this browser, so the link was copied instead.",
   "shareFail": "The link couldn't be shared. Copy it instead.",
-  "qrHint": "The QR code holds the whole link, message included, so anyone who scans it can read both.",
+  "qrHint": "The QR code holds the whole link, including the number and message, so anyone who scans it can read both.",
   "qrDense": "This link is long, so the QR code will be dense. Test it with a phone before you print it.",
   "qrTooLong": "This link is too long for a QR code ({n} of {max} characters). Shorten the message to create one.",
   "qrFail": "The QR code couldn't be created. Try a shorter message.",

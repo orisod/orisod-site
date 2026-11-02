@@ -71,7 +71,7 @@
           "name": "¿La otra persona ve que el mensaje salió de un link?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No. El mensaje aparece escrito en el chat como si lo hubieras tecleado tú, y solo le llega cuando lo envías. Ve tu número de WhatsApp, como en cualquier chat que inicias."
+            "text": "No. El mensaje aparece escrito en el chat como si lo hubieras escrito tú, y solo le llega a la otra persona cuando lo envías. Verá tu número de WhatsApp, como en cualquier chat que inicias."
           }
         },
         {
@@ -517,7 +517,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
     <p class="reason" id="openReason">Escribe un número de teléfono para abrir el chat.</p>
     <span class="copy-status" id="copyStatus" aria-live="polite"></span>
     <div class="error" id="actionError" role="alert"></div>
-    <p class="hint" id="qrNote">El código QR guarda el link completo, con el mensaje, así que quien lo escanee puede leer ambos.</p>
+    <p class="hint" id="qrNote">El código QR guarda el link completo, incluidos el número y el mensaje, así que quien lo escanee puede leer ambos.</p>
     <div class="qr-preview" id="qrPreview"></div>
     <ul class="facts">
       <li>Nada se envía automáticamente: WhatsApp abre el chat con tu mensaje escrito y tú decides cuándo enviarlo.</li>
@@ -536,7 +536,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
       </ol>
       <h3>Para tener en cuenta</h3>
       <ul>
-        <li>El número tiene que tener una cuenta de WhatsApp. Los teléfonos fijos solo funcionan si están registrados en WhatsApp Business.</li>
+        <li>El número debe estar asociado a una cuenta de WhatsApp. Los teléfonos fijos solo funcionan si están registrados en WhatsApp Business.</li>
         <li>El link no caduca, y cualquiera que lo tenga puede abrir un chat con ese número.</li>
         <li>Esta página recuerda en este dispositivo el último país que elegiste. No guarda el número ni el mensaje.</li>
       </ul>
@@ -570,7 +570,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
     <summary>Más sobre esta herramienta</summary>
     <div class="seo-content">
       <h2>Qué es un link wa.me</h2>
-      <p>Un link wa.me es la dirección corta de WhatsApp para iniciar un chat. Lleva el número de teléfono en formato internacional, sin el signo más, sin espacios y sin el cero inicial, y puede llevar un mensaje en su parámetro text. Al abrirlo se inicia un chat con ese número sin guardarlo antes en tus contactos, y el mensaje aparece en el cuadro de texto, listo para enviar o editar.</p>
+      <p>Un link wa.me es la dirección corta de WhatsApp para iniciar un chat. Lleva el número de teléfono en formato internacional, solo con dígitos, y puede incluir un mensaje en su parámetro text. Al abrirlo se inicia un chat con ese número sin guardarlo antes en tus contactos, y el mensaje aparece en el cuadro de texto, listo para enviar o editar.</p>
 
       <h2>Cuándo usarlo</h2>
       <ul>
@@ -583,7 +583,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
       <h2>Preguntas frecuentes</h2>
       <div class="faq-item">
         <div class="q">¿La otra persona ve que el mensaje salió de un link?</div>
-        <div>No. El mensaje aparece escrito en el chat como si lo hubieras tecleado tú, y solo le llega cuando lo envías. Ve tu número de WhatsApp, como en cualquier chat que inicias.</div>
+        <div>No. El mensaje aparece escrito en el chat como si lo hubieras escrito tú, y solo le llega a la otra persona cuando lo envías. Verá tu número de WhatsApp, como en cualquier chat que inicias.</div>
       </div>
       <div class="faq-item">
         <div class="q">¿Por qué WhatsApp dice que el número compartido por URL no es válido?</div>
@@ -680,7 +680,7 @@ const T = {
   "copyFail": "No se pudo copiar el link. Selecciónalo en el cuadro de arriba y cópialo tú.",
   "shareFallback": "Este navegador no permite compartir, así que el link se copió.",
   "shareFail": "No se pudo compartir el link. Cópialo en su lugar.",
-  "qrHint": "El código QR guarda el link completo, con el mensaje, así que quien lo escanee puede leer ambos.",
+  "qrHint": "El código QR guarda el link completo, incluidos el número y el mensaje, así que quien lo escanee puede leer ambos.",
   "qrDense": "Este link es largo, así que el código QR será denso. Pruébalo con un teléfono antes de imprimirlo.",
   "qrTooLong": "Este link es demasiado largo para un código QR ({n} de {max} caracteres). Acorta el mensaje para crearlo.",
   "qrFail": "No se pudo crear el código QR. Prueba con un mensaje más corto.",
