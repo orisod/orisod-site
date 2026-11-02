@@ -961,6 +961,80 @@ function expectNothingSent(requests, url, start) {
   expect(url === start, `the page URL changed to ${url}`);
 }
 
+// The formatting toolbar and the emoji picker (added with the guide diagram, 2026-11-02).
+const WA_GUIDE = "/blog/send-whatsapp-without-saving-contact/";
+const WA_FMT = {
+  en: { cross: "Select text that doesn't cut across other formatting", mono: "Monospace can't be combined", firstEmoji: "grinning face", heart: "red heart", luggage: "luggage", gestures: "Gestures" },
+  es: { cross: "Selecciona un texto que no corte otro formato", mono: "El monoespaciado no se puede combinar", firstEmoji: "cara sonriente", heart: "corazón rojo", luggage: "equipaje", gestures: "Gestos" },
+};
+// Put a value in the message, select [s, e) and reset the input event counter.
+async function waSelect(page, value, s, e) {
+  await page.fill("#messageInput", value);
+  await page.evaluate(([s, e]) => {
+    const t = document.getElementById("messageInput");
+    if (!window.__waInputs) { window.__waInputs = { n: 0 }; t.addEventListener("input", () => window.__waInputs.n++); }
+    t.focus();
+    t.setSelectionRange(s, e);
+    window.__waInputs.n = 0;
+  }, [s, e]);
+}
+const waMsgState = (page) => page.evaluate(() => {
+  const t = document.getElementById("messageInput");
+  return { value: t.value, sel: [t.selectionStart, t.selectionEnd], inputs: window.__waInputs ? window.__waInputs.n : 0, focus: document.activeElement.id,
+    strong: [...document.querySelectorAll("#bubble strong")].map((x) => x.textContent), link: document.getElementById("linkOutput").value,
+    status: document.getElementById("fmtStatus").textContent };
+});
+async function waFormat(page, kind, value, s, e) {
+  await waSelect(page, value, s, e);
+  await page.click(`.fmt-btn[data-format="${kind}"]`);
+  await page.waitForTimeout(100); // a refusal hint is written 50 ms later
+  return waMsgState(page);
+}
+function expectValue(got, want, what) {
+  expect(got.value === want, `${what}: the message is ${JSON.stringify(got.value)}, not ${JSON.stringify(want)}`);
+}
+function expectOneInput(got, what) {
+  expect(got.inputs === 1, `${what}: ${got.inputs} input events, not exactly 1`);
+}
+// Every emoji one character (one grapheme), no joiner, skin tone or flag, no duplicate emoji or name, 6 categories.
+const WA_EMOJI_DATA = () => {
+  const seg = new Intl.Segmenter("en", { granularity: "grapheme" });
+  const odd = (s) => [...s].some((ch) => { const c = ch.codePointAt(0); return c === 0x200D || (c >= 0x1F3FB && c <= 0x1F3FF) || (c >= 0x1F1E6 && c <= 0x1F1FF); });
+  const uniq = (key) => EMOJI.length - new Set(EMOJI.map((x) => x[key])).size;
+  const cats = EMOJI_CATEGORIES.map((c) => c.id);
+  return { count: EMOJI.length, cats: cats.length, perCat: cats.map((c) => EMOJI.filter((x) => x.category === c).length),
+    unknownCat: EMOJI.filter((x) => !cats.includes(x.category)).length, notOne: EMOJI.filter((x) => [...seg.segment(x.emoji)].length !== 1 || odd(x.emoji)).map((x) => x.emoji),
+    dup: uniq("emoji") + uniq("name_en") + uniq("name_es"), missingName: EMOJI.filter((x) => !x.name_en || !x.name_es).length };
+};
+function expectEmojiData(d) {
+  expect(d.count === 118 && d.cats === 6 && !d.unknownCat, `${d.count} emojis in ${d.cats} categories (${d.unknownCat} in no category), not 118 in 6`);
+  expect(JSON.stringify(d.perCat) === "[18,17,18,28,19,18]", `emojis per category ${d.perCat.join("/")}, not 18/17/18/28/19/18`);
+  expect(!d.notOne.length, `not a single emoji (or a joiner, skin tone or flag): ${d.notOne.join(" ")}`);
+  expect(!d.dup && !d.missingName, `${d.dup} duplicate emojis or names, ${d.missingName} missing names`);
+}
+const emojiBlock = (html) => {
+  const a = html.indexOf("// Emoji data: start"), b = html.indexOf("// Emoji data: end");
+  expect(a >= 0 && b > a, "no emoji data block in the page");
+  return html.slice(a, b);
+};
+function expectSameEmojiData(en, es) {
+  expect(emojiBlock(en) === emojiBlock(es), "the EN and ES pages' emoji data blocks differ");
+}
+function expectTabStops(stops, lang) {
+  expect(stops.length === 2 && stops[0].role === "tab" && stops[0].selected && stops[1].cls === "emoji-btn",
+    `from the message, Tab reached ${stops.map((s) => s.role || s.cls).join(", ")} before the emoji grid, not the selected tab then the grid (${lang})`);
+}
+const WA_DIAGRAM = () => [...document.querySelectorAll("figure.wa-flow svg")].map((s) => ({
+  cls: s.getAttribute("class"), shown: getComputedStyle(s).display !== "none", hidden: s.getAttribute("aria-hidden") === "true",
+  role: s.getAttribute("role"), label: s.getAttribute("aria-label") }));
+function expectOneDiagram(svgs, snapImgs, width) {
+  expect(svgs.length === 2 && svgs[0].label && svgs[0].label === svgs[1].label && svgs.every((s) => s.role === "img"), `the two diagrams don't share role="img" and one aria-label`);
+  const shown = svgs.filter((s) => s.shown);
+  expect(shown.length === 1 && !shown[0].hidden && svgs.filter((s) => !s.shown).every((s) => s.hidden), `at ${width}px: ${shown.length} diagrams shown, aria-hidden ${svgs.map((s) => s.hidden).join("/")}`);
+  expect(snapImgs === 1, `at ${width}px the accessibility tree exposes ${snapImgs} diagrams, not 1`);
+  expect(shown[0].cls === (width < 640 ? "wa-flow-stacked" : "wa-flow-wide"), `at ${width}px the ${shown[0].cls} diagram is shown`);
+}
+
 const CASES = [
   {
     name: "spark-md5",
@@ -2306,6 +2380,198 @@ const CASES = [
           mustFail("a FAQ answer that differs from the JSON-LD", () => expectFaq({ ...faq, jsonld: faq.jsonld.map((x, i) => (i === 2 ? [x[0], x[1] + " Extra."] : x)) })),
           mustFail("an indicator that doesn't change", () => expectIndicator(closed.arrow, closed.arrow)),
           mustFail("a 400px element at 320 px", () => expectNoOverflow(wide, "with a 400px element"))].join("; ");
+    },
+  },
+  {
+    name: "WhatsApp link generator (formatting toolbar)",
+    page: WA,
+    vendor: [LIBPHONE, QRJS],
+    async run(page, lang) {
+      const f = WA_FMT[lang];
+      await waCountry(page, "GB");
+      await waNumber(page, "07400 123456");
+      // Wrap: the selection, outer spaces kept outside; one native input event; focus stays; preview and link follow.
+      let got = await waFormat(page, "bold", "hello world ", 6, 12);
+      expectValue(got, "hello *world* ", "bold on a selection");
+      expectOneInput(got, "bold (execCommand path)");
+      expect(got.focus === "messageInput" && JSON.stringify(got.sel) === "[7,12]", `focus ${got.focus}, selection ${got.sel}`);
+      expect(got.strong.join() === "world" && got.link === "https://wa.me/447400123456?text=" + encodeURIComponent("hello *world* "), `preview ${got.strong}, link ${got.link}`);
+      const wrapped = got;
+      await page.click('.fmt-btn[data-format="bold"]');
+      expectValue(await waMsgState(page), "hello world ", "bold again removes it");
+      got = await waFormat(page, "strike", "hi ", 3, 3);
+      expectValue(got, "hi ~~", "no selection inserts a pair");
+      expect(JSON.stringify(got.sel) === "[4,4]", `the cursor is at ${got.sel}, not between the markers`);
+      got = await waFormat(page, "mono", "x ", 2, 2);
+      expectValue(got, "x ``````", "monospace pair");
+      expect(JSON.stringify(got.sel) === "[5,5]", `the cursor is at ${got.sel} after the monospace pair`);
+      expectValue(await waFormat(page, "italic", "a *bold* b", 0, 10), "_a *bold* b_", "nesting");
+      got = await waFormat(page, "italic", "a *bold* b", 0, 5);
+      expectValue(got, "a *bold* b", "crossing markers refused");
+      expect(got.status.startsWith(f.cross), `no hint for crossing markers: "${got.status}"`);
+      got = await waFormat(page, "mono", "a *bold* b", 0, 10);
+      expect(got.value === "a *bold* b" && got.status.startsWith(f.mono), `monospace around bold: ${got.value} "${got.status}"`);
+      expectValue(await waFormat(page, "bold", "x ```code``` y", 0, 14), "x ```code``` y", "bold around monospace refused");
+      expectValue(await waFormat(page, "bold", "one\n\n two \nthree", 0, 16), "*one*\n\n *two* \n*three*", "multi-line bold, line by line");
+      expectValue(await waFormat(page, "strike", "*one*\n\n *two* \n*three*", 0, 22), "~*one*~\n\n ~*two*~ \n~*three*~", "multi-line strikethrough around bold lines");
+      expectValue(await waFormat(page, "mono", "one\ntwo", 0, 7), "```one\ntwo```", "monospace across lines");
+      got = await waFormat(page, "bold", "abcdefghi", 3, 6);
+      expectValue(got, "abc*def*ghi", "markers inside a word are allowed");
+      const edges = await page.evaluate(() => WORD_EDGES_ONLY);
+      expect(got.strong.length === (edges ? 0 : 1), `the preview shows ${got.strong.length} bold runs for abc*def*ghi with WORD_EDGES_ONLY ${edges}`);
+      const zwj = await page.evaluate(() => String.fromCodePoint(0x1F469, 0x200D, 0x1F4BB));
+      expectValue(await waFormat(page, "bold", "a" + zwj + "b", 3, 3), "a" + zwj + "**b", "a cursor inside a joined emoji moves to its end");
+      // Ctrl and Command shortcuts, only in the message.
+      for (const key of ["Control+b", "Meta+b", "Control+i", "Meta+i"]) {
+        await waSelect(page, "hello world", 0, 5);
+        await page.keyboard.press(key);
+        const want = key.endsWith("b") ? "*hello* world" : "_hello_ world";
+        expectValue(await waMsgState(page), want, key);
+      }
+      await page.focus("#phoneInput");
+      const phoneBefore = await page.inputValue("#phoneInput");
+      const prevented = await page.evaluate(() => { const ev = new KeyboardEvent("keydown", { key: "b", ctrlKey: true, bubbles: true, cancelable: true }); document.getElementById("phoneInput").dispatchEvent(ev); return ev.defaultPrevented; });
+      expect(!prevented && (await page.inputValue("#phoneInput")) === phoneBefore, "Ctrl+B is handled outside the message field");
+      // Native undo and redo: one step per change.
+      await page.fill("#messageInput", "");
+      await page.click("#messageInput");
+      await page.keyboard.type("hello world");
+      await page.evaluate(() => document.getElementById("messageInput").setSelectionRange(6, 11));
+      await page.click('.fmt-btn[data-format="bold"]');
+      await page.keyboard.press("Control+z");
+      const undone = (await waMsgState(page)).value;
+      await page.keyboard.press("Control+y");
+      const redone = (await waMsgState(page)).value;
+      expect(undone === "hello world" && redone === "hello *world*", `undo gave ${JSON.stringify(undone)}, redo ${JSON.stringify(redone)}`);
+      // The fallback when execCommand is refused: same edit, exactly one input event.
+      await page.evaluate(() => { window.__execCommand = document.execCommand; document.execCommand = () => false; });
+      got = await waFormat(page, "italic", "hello world", 0, 5);
+      await page.evaluate(() => { document.execCommand = window.__execCommand; });
+      expectValue(got, "_hello_ world", "fallback path");
+      expectOneInput(got, "fallback path");
+      expect(got.link.endsWith(encodeURIComponent("_hello_ world")), "the fallback didn't update the link");
+      return `wrap with outer spaces kept, remove, pair at the cursor, nesting, crossing and monospace refused with a hint, line by line, monospace across lines, ` +
+        `mid-word allowed (WORD_EDGES_ONLY ${edges}), joined emoji kept whole; Ctrl/Meta+B and +I only in the message; undo/redo one step; ` +
+        `exactly 1 input event on the execCommand path and on the fallback path; ` +
+        [mustFail("a different wrap", () => expectValue(wrapped, "hello *world *", "bold")),
+          mustFail("two input events", () => expectOneInput({ ...wrapped, inputs: 2 }, "bold")),
+          mustFail("no input event", () => expectOneInput({ ...got, inputs: 0 }, "fallback"))].join("; ");
+    },
+  },
+  {
+    name: "WhatsApp link generator (emoji picker)",
+    page: WA,
+    vendor: [LIBPHONE, QRJS],
+    async run(page, lang) {
+      const f = WA_FMT[lang];
+      const data = await page.evaluate(WA_EMOJI_DATA);
+      expectEmojiData(data);
+      const [enHtml, esHtml] = await Promise.all(["whatsapp-link-generator/index.html", "es/whatsapp-link-generator/index.html"].map((x) => readFile(`${REPO_ROOT}/${x}`, "utf-8")));
+      expectSameEmojiData(enHtml, esHtml);
+      const labels = await page.evaluate(() => {
+        const key = document.documentElement.lang === "es" ? "name_es" : "name_en";
+        const btns = [...document.querySelectorAll(".emoji-btn")], tabs = [...document.querySelectorAll(".emoji-tab")];
+        return { buttons: btns.length, wrong: btns.filter((b, i) => b.getAttribute("aria-label") !== EMOJI[i][key] || b.textContent !== EMOJI[i].emoji).length,
+          tabs: tabs.map((t) => t.getAttribute("aria-label")), tabsOk: tabs.every((t, i) => t.getAttribute("aria-label") === EMOJI_CATEGORIES[i][key] && t.getAttribute("role") === "tab") };
+      });
+      expect(labels.buttons === 118 && !labels.wrong && labels.tabsOk, `${labels.buttons} emoji buttons, ${labels.wrong} with the wrong name, tabs ${labels.tabs.join(", ")}`);
+      await page.fill("#messageInput", "Hi there");
+      await waSelect(page, "Hi there", 2, 2);
+      await page.click("#emojiBtn");
+      const opened = await page.evaluate(() => ({ expanded: document.getElementById("emojiBtn").getAttribute("aria-expanded"), focus: document.activeElement.getAttribute("aria-label"),
+        tabbable: [...document.querySelectorAll("#emojiPicker .emoji-grid button")].filter((b) => b.tabIndex === 0 && b.offsetParent).length }));
+      expect(opened.expanded === "true" && opened.focus === f.firstEmoji && opened.tabbable === 1, `open: expanded ${opened.expanded}, focus "${opened.focus}", ${opened.tabbable} emoji in the Tab order`);
+      await page.keyboard.press("ArrowRight");
+      await page.keyboard.press("Enter");
+      let got = await waMsgState(page);
+      expect(got.value === "Hi😄 there" && got.focus === "messageInput" && got.sel[0] === 4, `Enter inserted: ${JSON.stringify(got.value)}, focus ${got.focus}, cursor ${got.sel}`);
+      expectOneInput(got, "emoji insert");
+      // Tab stops from the message field to the grid: the selected tab, then the remembered emoji.
+      const stops = [];
+      for (;;) {
+        await page.keyboard.press("Tab");
+        const s = await page.evaluate(() => { const a = document.activeElement; return { role: a.getAttribute("role"), cls: a.className, selected: a.getAttribute("aria-selected") === "true", label: a.getAttribute("aria-label") }; });
+        stops.push(s);
+        if (s.cls === "emoji-btn" || stops.length > 6) break;
+      }
+      expectTabStops(stops, lang);
+      expect(stops[1].label === (lang === "en" ? "grinning face with smiling eyes" : "cara sonriendo con ojos sonrientes"), `the grid didn't remember the last emoji (${stops[1].label})`);
+      await page.keyboard.down("Shift"); await page.keyboard.press("Tab"); await page.keyboard.up("Shift");
+      await page.keyboard.press("ArrowRight");
+      const tab = await page.evaluate(() => ({ label: document.activeElement.getAttribute("aria-label"), selected: document.activeElement.getAttribute("aria-selected"),
+        panels: [...document.querySelectorAll(".emoji-panel")].filter((p) => !p.hidden).map((p) => p.id) }));
+      expect(tab.label === f.gestures && tab.selected === "true" && tab.panels.join() === "emojiPanel-gestures", `ArrowRight on the tabs: ${JSON.stringify(tab)}`);
+      await page.keyboard.press("End");
+      await page.keyboard.press("Tab");
+      await page.keyboard.press("Control+End");
+      expect((await page.evaluate(() => document.activeElement.getAttribute("aria-label"))) === f.luggage, "Ctrl+End didn't reach the last emoji");
+      await page.keyboard.press("Escape");
+      expect((await page.evaluate(() => [document.activeElement.id, document.getElementById("emojiPicker").hidden].join())) === "emojiBtn,true", "Escape didn't close the picker and return focus to its button");
+      // Replace a selection, the variation selector included.
+      await waSelect(page, "abc", 1, 2);
+      await page.click("#emojiBtn");
+      await page.click("#emojiTab-hearts");
+      await page.click(`.emoji-btn[aria-label="${f.heart}"]`);
+      got = await waMsgState(page);
+      expect([...got.value].map((c) => c.codePointAt(0).toString(16)).join(" ") === "61 2764 fe0f 63", `the heart replaced the selection as ${JSON.stringify(got.value)}`);
+      await page.click("#messageInput");
+      const stillOpen = await page.evaluate(() => !document.getElementById("emojiPicker").hidden);
+      await page.click("h1");
+      const closedOutside = await page.evaluate(() => document.getElementById("emojiPicker").hidden);
+      expect(stillOpen && closedOutside, `a click in the message closed it (${!stillOpen}) or one outside didn't (${!closedOutside})`);
+      // Layout: in the flow under the message, as wide as the field, 8 or 5 columns, 44px targets, no sideways scroll.
+      const layouts = [];
+      for (const width of [1280, 479, 320]) {
+        await page.setViewportSize({ width, height: 800 });
+        await page.click("#emojiBtn");
+        await page.click("#emojiTab-work");
+        const l = await page.evaluate(() => {
+          const p = document.getElementById("emojiPicker"), t = document.getElementById("messageInput"), r = p.getBoundingClientRect();
+          const rects = [...p.querySelectorAll(".emoji-panel:not([hidden]) .emoji-btn, .emoji-tab, #emojiClose")].map((b) => b.getBoundingClientRect());
+          return { cols: p.querySelector(".emoji-panel:not([hidden]) .emoji-row").children.length, width: Math.round(r.width), field: Math.round(t.getBoundingClientRect().width),
+            below: r.top >= t.getBoundingClientRect().bottom, position: getComputedStyle(p).position, min: Math.min(...rects.map((x) => Math.min(x.width, x.height))),
+            scrolls: getComputedStyle(p.querySelector(".emoji-panel:not([hidden]) .emoji-grid")).overflowY, overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth };
+        });
+        layouts.push({ viewport: width, ...l });
+        await page.click("#emojiBtn");
+      }
+      for (const l of layouts) {
+        expect(l.cols === (l.viewport >= 480 ? 8 : 5), `${l.cols} columns at ${l.viewport}px`);
+        expect(l.width === l.field && l.below && l.position === "relative" && l.min >= 44 && l.scrolls === "auto" && l.overflow <= 0, `picker layout: ${JSON.stringify(l)}`);
+      }
+      const badData = await page.evaluate((fn) => { EMOJI.push({ emoji: String.fromCodePoint(0x1F1EA, 0x1F1F8), category: "symbols", name_en: "flag", name_es: "bandera" }); const d = (0, eval)("(" + fn + ")")(); EMOJI.pop(); return d; }, WA_EMOJI_DATA.toString());
+      return `118 emojis in 6 categories, one character each, no joiner, skin tone, flag or duplicate; EN and ES data blocks identical; localized names on every emoji and tab; ` +
+        `opens on the first emoji, arrows and Enter insert at the cursor, focus back in the message, 1 input event; ` +
+        `Tab stops from the message to the grid: ${stops.length} (${stops.map((s) => s.role || s.cls).join(", ")}); tabs with arrows and End, Ctrl+End, Escape returns focus; ` +
+        `replaces a selection with ❤ + U+FE0F; ${layouts.map((l) => `${l.cols} columns at ${l.viewport}px (panel ${l.width}px, as wide as the field)`).join(", ")}, 44px targets, no sideways scroll; ` +
+        [mustFail("a flag in the data", () => expectEmojiData(badData)),
+          mustFail("EN and ES data that differ", () => expectSameEmojiData(enHtml, esHtml.replace("cara sonriente", "cara sonriendo"))),
+          mustFail("a button between the message and the grid", () => expectTabStops([stops[0], { role: null, cls: "fmt-btn emoji-close", selected: false }, stops[1]], lang))].join("; ");
+    },
+  },
+  {
+    name: "WhatsApp guide (diagram)",
+    page: WA_GUIDE,
+    vendor: [],
+    async run(page, lang) {
+      const seen = [];
+      let last;
+      for (const width of [320, 375, 560, 639, 640, 768, 1280]) {
+        await page.setViewportSize({ width, height: 900 });
+        await page.waitForTimeout(50);
+        const svgs = await page.evaluate(WA_DIAGRAM);
+        const snap = await page.locator("figure.wa-flow").ariaSnapshot();
+        const imgs = (snap.match(/- img\b/g) || []).length;
+        expectOneDiagram(svgs, imgs, width);
+        expectNoOverflow(width === 320 ? await waOverflow(page) : 0, "guide diagram");
+        seen.push(`${width}px ${svgs.find((s) => s.shown).cls.replace("wa-flow-", "")}`);
+        last = { svgs, imgs, width };
+      }
+      const caption = await page.textContent("figure.wa-flow figcaption");
+      expect(caption.includes("WhatsApp"), `caption: ${caption}`);
+      return `exactly one diagram exposed (${seen.join(", ")}), same role="img" and aria-label, no sideways scroll at 320px; ` +
+        [mustFail("both diagrams exposed", () => expectOneDiagram(last.svgs.map((s) => ({ ...s, shown: true, hidden: false })), 2, last.width)),
+          mustFail("the wrong version at 320px", () => expectOneDiagram(last.svgs, last.imgs, 320))].join("; ");
     },
   },
 ];

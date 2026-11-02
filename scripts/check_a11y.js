@@ -94,6 +94,7 @@ const MENU_OPEN_PATHS = [
   "/blog/add-page-numbers-to-pdf/", "/es/blog/add-page-numbers-to-pdf/", "/about/", "/es/about/",
   "/blog/", "/es/blog/", "/tools/", "/es/tools/", "/404.html", "/es/a11y-check-missing-page/",
 ];
+const WA_EMOJI_CATEGORIES = ["smileys", "gestures", "hearts", "work", "symbols", "food"];
 const OPEN_STATES = [
   ...MENU_OPEN_PATHS.map((path) => ({ path, open: "menu" })),
   ...MENU_OPEN_PATHS.filter((p) => !["/", "/es/", "/tools/", "/es/tools/"].includes(p)).map((path) => ({ path, open: "search" })),
@@ -101,9 +102,9 @@ const OPEN_STATES = [
   ...["/", "/es/", "/tools/", "/es/tools/"].map((path) => ({ path, open: "flyout" })),
   // The minimal tool layout (WhatsApp link generator, the pilot): its collapsed "More about this tool"
   // block opened, the country list opened, and the form filled in so the number notes, the "Add the 9"
-  // button and the formatted preview show.
+  // button and the formatted preview show; and its emoji picker opened on each of its six categories.
   ...["/whatsapp-link-generator/", "/es/whatsapp-link-generator/"].flatMap((path) =>
-    ["details", "country list", "filled form"].map((open) => ({ path, open }))),
+    ["details", "country list", "filled form", ...WA_EMOJI_CATEGORIES.map((c) => "emoji picker: " + c)].map((open) => ({ path, open }))),
 ];
 // How to reach each tool state above (the nav states click a nav button instead).
 const TOOL_STATES = {
@@ -117,6 +118,11 @@ const TOOL_STATES = {
     await page.fill("#messageInput", "Hi *there* _you_ ~old~ `code`");
     return "#addNineBtn";
   },
+  ...Object.fromEntries(WA_EMOJI_CATEGORIES.map((cat) => ["emoji picker: " + cat, async (page) => {
+    await page.click("#emojiBtn");
+    await page.click("#emojiTab-" + cat);
+    return "#emojiPanel-" + cat + ":not([hidden]) .emoji-grid";
+  }])),
 };
 
 function sitemapPaths() {
@@ -265,7 +271,7 @@ async function main() {
     process.exit(1);
   }
 
-  console.log(`OK: all ${results.length} pages passed axe-core in dark and light themes (${AXE_TAGS.join(", ")}), including ${OPEN_STATES.length} scans with the nav menu, search box or a category flyout open, or a tool state shown (the WhatsApp link generator's collapsed block, country list and filled form); every error line is announced (role="alert").`);
+  console.log(`OK: all ${results.length} pages passed axe-core in dark and light themes (${AXE_TAGS.join(", ")}), including ${OPEN_STATES.length} scans with the nav menu, search box or a category flyout open, or a tool state shown (the WhatsApp link generator's collapsed block, country list, filled form and emoji picker on each category); every error line is announced (role="alert").`);
   process.exit(0);
 }
 
