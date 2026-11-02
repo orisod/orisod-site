@@ -199,6 +199,17 @@ a.btn:not([href]){cursor:default;}
 .facts li{margin:0 0 6px 0;}
 .tool .error{margin:8px 0 0 0;}
 .tool .error:empty{display:none;}
+/* Message formatting toolbar: 44px buttons above the message box, glyphs hidden from screen readers. */
+.fmt-tools{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px 0;}
+.fmt-btn{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;margin:0;padding:0;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-family:inherit;font-size:17px;line-height:1;cursor:pointer;}
+.fmt-btn:hover{border-color:var(--accent);}
+.fmt-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.fmt-btn .g-b{font-weight:bold;}
+.fmt-btn .g-i{font-family:Georgia, "Times New Roman", serif;font-style:italic;font-size:19px;}
+.fmt-btn .g-s{text-decoration:line-through;}
+.fmt-btn .g-m{font-family:Consolas, "Courier New", monospace;font-size:14px;}
+.fmt-status{font-weight:bold;}
+.fmt-status:empty{display:none;}
 .how-grid{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:28px;margin:44px 0 0 0;text-align:left;align-items:start;}
 @media (max-width:760px){.how-grid{grid-template-columns:minmax(0,1fr);gap:8px;}}
 .how-grid h2{margin:0 0 14px 0;}
@@ -493,8 +504,16 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 
     <div class="field">
       <label for="messageInput">Mensaje (opcional)</label>
-      <textarea id="messageInput" rows="4" aria-describedby="messageHint"></textarea>
+      <div class="fmt-tools" id="fmtTools" role="group" aria-label="Formato del mensaje">
+        <button type="button" class="fmt-btn" data-format="bold" aria-label="Negrita" title="Negrita" aria-keyshortcuts="Control+B Meta+B"><span class="g-b" aria-hidden="true">B</span></button>
+        <button type="button" class="fmt-btn" data-format="italic" aria-label="Cursiva" title="Cursiva" aria-keyshortcuts="Control+I Meta+I"><span class="g-i" aria-hidden="true">I</span></button>
+        <button type="button" class="fmt-btn" data-format="strike" aria-label="Tachado" title="Tachado"><span class="g-s" aria-hidden="true">S</span></button>
+        <button type="button" class="fmt-btn" data-format="mono" aria-label="Monoespaciado" title="Monoespaciado"><span class="g-m" aria-hidden="true">&lt;/&gt;</span></button>
+      </div>
+      <textarea id="messageInput" rows="4" aria-describedby="messageHint fmtHelp fmtStatus"></textarea>
       <p class="hint" id="messageHint">Se conservan los saltos de línea y los emojis. Usa *negrita*, _cursiva_, ~tachado~, ```monoespaciado``` o `código` como en WhatsApp.</p>
+      <p class="hint" id="fmtHelp">Selecciona texto y elige un formato. Si no hay una selección, los marcadores se insertan en la posición del cursor. WhatsApp no admite subrayado.</p>
+      <p class="hint fmt-status" id="fmtStatus" aria-live="polite"></p>
     </div>
 
     <div class="field">
@@ -685,6 +704,8 @@ const T = {
   "qrTooLong": "Este link es demasiado largo para un código QR ({n} de {max} caracteres). Acorta el mensaje para crearlo.",
   "qrFail": "No se pudo crear el código QR. Prueba con un mensaje más corto.",
   "qrAlt": "Código QR de tu link de WhatsApp",
+  "fmtCross": "Selecciona un texto que no corte otro formato, o selecciona todo el texto con formato para quitárselo.",
+  "fmtMono": "El monoespaciado no se puede combinar con negrita, cursiva ni tachado.",
   "qrFile": "link-whatsapp-qr.png"
 };
 const FLAG_DIR = "/assets/vendor/circle-flags/2.8.3/";
@@ -950,30 +971,50 @@ function renderStatus(r) {
 
 // --- The message preview: WhatsApp's *bold*, _italic_, ~strikethrough~, ```monospace``` and `inline code`,
 // built only from text nodes and elements (never HTML from what was typed).
+// WORD_EDGES_ONLY: *, _ and ~ format only at the edges of a word, so "abc*def*ghi" stays plain. The preview and the
+// toolbar's checks both follow it. Not yet checked on real WhatsApp: if WhatsApp formats markers inside a word,
+// set it to false (that's the only change needed).
+const WORD_EDGES_ONLY = true;
 const RULES = [
-  { re: /()```([\s\S]+?)```/, tag: "code", cls: "mono", plain: true },
-  { re: /()`([^`\n]+)`/, tag: "code", plain: true },
-  { re: /(^|[^\p{L}\p{N}*])\*(?=\S)([^\n]*?\S)\*(?![\p{L}\p{N}])/u, tag: "strong" },
-  { re: /(^|[^\p{L}\p{N}_])_(?=\S)([^\n]*?\S)_(?![\p{L}\p{N}])/u, tag: "em" },
-  { re: /(^|[^\p{L}\p{N}~])~(?=\S)([^\n]*?\S)~(?![\p{L}\p{N}])/u, tag: "s" },
+  { re: /()```([\s\S]+?)```/, tag: "code", cls: "mono", plain: true, len: 3 },
+  { re: /()`([^`\n]+)`/, tag: "code", plain: true, len: 1 },
+  { re: WORD_EDGES_ONLY ? /(^|[^\p{L}\p{N}*])\*(?=\S)([^\n]*?\S)\*(?![\p{L}\p{N}])/u : /(^|[^*])\*(?=\S)([^\n]*?\S)\*/u, tag: "strong", len: 1 },
+  { re: WORD_EDGES_ONLY ? /(^|[^\p{L}\p{N}_])_(?=\S)([^\n]*?\S)_(?![\p{L}\p{N}])/u : /(^|[^_])_(?=\S)([^\n]*?\S)_/u, tag: "em", len: 1 },
+  { re: WORD_EDGES_ONLY ? /(^|[^\p{L}\p{N}~])~(?=\S)([^\n]*?\S)~(?![\p{L}\p{N}])/u : /(^|[^~])~(?=\S)([^\n]*?\S)~/u, tag: "s", len: 1 },
 ];
-function renderFormatted(text, parent) {
-  while (text) {
+// Splits text into plain runs and formatted spans. Each span knows where it sits in the message (start and end
+// with its markers, innerStart and innerEnd without them), which the toolbar uses to avoid crossing markers.
+function parseFormatted(text, base) {
+  const nodes = [];
+  let at = 0;
+  while (at < text.length) {
+    const rest = text.slice(at);
     let best = null;
     for (const rule of RULES) {
-      const m = rule.re.exec(text);
+      const m = rule.re.exec(rest);
       if (!m) continue;
       const start = m.index + m[1].length;
       if (!best || start < best.start) best = { rule, start, inner: m[2], end: m.index + m[0].length };
     }
-    if (!best) { parent.append(document.createTextNode(text)); return; }
-    if (best.start) parent.append(document.createTextNode(text.slice(0, best.start)));
-    const el = document.createElement(best.rule.tag);
-    if (best.rule.cls) el.className = best.rule.cls;
-    if (best.rule.plain) el.textContent = best.inner;
-    else renderFormatted(best.inner, el);
+    if (!best) { nodes.push({ text: rest }); break; }
+    if (best.start) nodes.push({ text: rest.slice(0, best.start) });
+    const start = base + at + best.start, end = base + at + best.end, len = best.rule.len;
+    const span = { tag: best.rule.tag, cls: best.rule.cls, start, end, innerStart: start + len, innerEnd: end - len };
+    if (best.rule.plain) span.text = best.inner;
+    else span.children = parseFormatted(best.inner, start + len);
+    nodes.push(span);
+    at += best.end;
+  }
+  return nodes;
+}
+function renderNodes(nodes, parent) {
+  for (const n of nodes) {
+    if (!n.tag) { parent.append(document.createTextNode(n.text)); continue; }
+    const el = document.createElement(n.tag);
+    if (n.cls) el.className = n.cls;
+    if (n.children) renderNodes(n.children, el);
+    else el.textContent = n.text;
     parent.append(el);
-    text = text.slice(best.end);
   }
 }
 
@@ -981,8 +1022,143 @@ function renderPreview(message) {
   bubble.replaceChildren();
   bubble.classList.toggle("empty", !message.trim());
   if (!message.trim()) bubble.textContent = T.previewEmpty;
-  else renderFormatted(message, bubble);
+  else renderNodes(parseFormatted(message, 0), bubble);
 }
+
+// --- Editing the message from the page (toolbar, shortcuts, emoji picker).
+// replaceText() puts text in place of field[from, to) as if it were typed, then selects [selFrom, selTo).
+// It uses document.execCommand("insertText"), deprecated but with no replacement, because it's the only way
+// we found that keeps the browser's own undo and redo. Measured 2026-11-02 in Playwright's Chromium 140,
+// Firefox 141 and WebKit 26: after setting .value or calling setRangeText(), Ctrl+Z didn't undo the change in
+// any of them (and in Chromium a redo afterwards corrupted the text); with execCommand, undo and redo worked in
+// all three, one step per change, line breaks and emoji included (WebKit redoes with Ctrl+Shift+Z, not Ctrl+Y).
+// execCommand fires the field's input event itself, so nothing is dispatched on that path. If a browser refuses
+// it, setRangeText() plus exactly one input event makes the same edit, but it can't be undone with Ctrl+Z.
+function replaceText(field, from, to, text, selFrom, selTo) {
+  const before = field.value;
+  field.focus();
+  field.setSelectionRange(from, to);
+  let done = false;
+  try { done = document.execCommand(text ? "insertText" : "delete", false, text); } catch (e) { done = false; }
+  if (done && field.value === before) done = false;
+  if (!done) {
+    field.setRangeText(text, from, to, "end");
+    field.dispatchEvent(new Event("input", { bubbles: true }));
+  }
+  field.setSelectionRange(selFrom, selTo);
+}
+
+const graphemes = (() => { try { return new Intl.Segmenter(LANG, { granularity: "grapheme" }); } catch (e) { return null; } })();
+// Moves pos out of the middle of a character made of several code points (an emoji with a joiner, a variation
+// selector or a skin tone, a letter with a combining accent), to that character's start or end.
+function clusterEdge(value, pos, toEnd) {
+  if (pos <= 0 || pos >= value.length) return pos;
+  if (graphemes) {
+    const seg = graphemes.segment(value).containing(pos);
+    if (!seg || seg.index === pos) return pos;
+    return toEnd ? seg.index + seg.segment.length : seg.index;
+  }
+  // Without Intl.Segmenter: don't split a surrogate pair, and keep a joiner, a variation selector, a skin tone,
+  // a keycap or a combining mark with the character before it.
+  const glued = (i) => {
+    const c = value.charCodeAt(i), cp = value.codePointAt(i);
+    return (c >= 0xDC00 && c <= 0xDFFF) || value.charCodeAt(i - 1) === 0x200D || cp === 0x200D || cp === 0xFE0E || cp === 0xFE0F ||
+      cp === 0x20E3 || (cp >= 0x1F3FB && cp <= 0x1F3FF) || /\p{M}/u.test(String.fromCodePoint(cp));
+  };
+  while (pos > 0 && pos < value.length && glued(pos)) pos += toEnd ? 1 : -1;
+  return pos;
+}
+
+// --- Formatting toolbar and Ctrl/Command+B and +I: wrap the selected text in WhatsApp's markers, or remove them.
+const MARKS = { bold: "*", italic: "_", strike: "~", mono: "```" };
+const TAG_OF = { "*": "strong", "_": "em", "~": "s", "```": "code" };
+const fmtStatus = $("fmtStatus");
+const trimSpaces = (v, s, e) => { while (s < e && /\s/.test(v[s])) s++; while (e > s && /\s/.test(v[e - 1])) e--; return [s, e]; };
+const isWrapped = (t, mark) => t.length > 2 * mark.length && t.startsWith(mark) && t.endsWith(mark);
+function spansOf(value) {
+  const out = [];
+  const walk = (nodes) => { for (const n of nodes) if (n.tag) { out.push(n); if (n.children) walk(n.children); } };
+  walk(parseFormatted(value, 0));
+  return out;
+}
+// Why `mark` can't wrap [a, b) (a T key), or "" when it can: markers may nest but never cross, and monospace
+// (like inline code) takes no other format, inside or around it.
+function blocked(spans, a, b, mark) {
+  const mono = mark === "```";
+  for (const n of spans) {
+    if (b <= n.start || a >= n.end) continue;
+    const contains = a <= n.start && b >= n.end, inside = a >= n.innerStart && b <= n.innerEnd;
+    if (!contains && !inside) return "fmtCross";
+    if (mono && n.tag === "code") return "fmtCross";
+    if (mono || n.tag === "code") return "fmtMono";
+    if (inside && n.tag === TAG_OF[mark]) return "fmtCross";
+  }
+  return "";
+}
+// What applying `mark` to the selection does: { from, to, text, sel } to replace, or { why } when it can't.
+// Spaces at either end of the selection stay outside the markers. Selecting formatted text (with or without its
+// markers) and choosing the same format removes it. Bold, italic and strikethrough wrap each line with text
+// separately, keeping empty lines and line breaks; monospace may span lines.
+function planFormat(value, selStart, selEnd, mark) {
+  const L = mark.length, mono = mark === "```";
+  const caret = selStart === selEnd;
+  const s = clusterEdge(value, selStart, caret), e = caret ? s : clusterEdge(value, selEnd, true);
+  const [a, b] = trimSpaces(value, s, e);
+  const spans = spansOf(value);
+  if (a === b) {
+    const at = e;
+    if (value.slice(Math.max(0, at - L), at) === mark && value.slice(at, at + L) === mark) return { from: at - L, to: at + L, text: "", sel: [at - L, at - L] };
+    const why = blocked(spans, at, at, mark);
+    return why ? { why } : { from: at, to: at, text: mark + mark, sel: [at + L, at + L] };
+  }
+  const text = value.slice(a, b);
+  if (!mono && text.includes("\n")) {
+    const parts = [];
+    let pos = a;
+    for (const line of text.split("\n")) {
+      const [ls, le] = trimSpaces(value, pos, pos + line.length);
+      parts.push({ pos, line, ls, le, core: value.slice(ls, le) });
+      pos += line.length + 1;
+    }
+    const filled = parts.filter((p) => p.core);
+    const remove = filled.every((p) => isWrapped(p.core, mark));
+    if (!remove) for (const p of filled) if (!isWrapped(p.core, mark)) { const why = blocked(spans, p.ls, p.le, mark); if (why) return { why }; }
+    const out = parts.map((p) => {
+      if (!p.core) return p.line;
+      const done = remove ? p.core.slice(L, -L) : isWrapped(p.core, mark) ? p.core : mark + p.core + mark;
+      return value.slice(p.pos, p.ls) + done + value.slice(p.le, p.pos + p.line.length);
+    }).join("\n");
+    return { from: a, to: b, text: out, sel: [a, a + out.length] };
+  }
+  if (isWrapped(text, mark)) return { from: a, to: b, text: text.slice(L, -L), sel: [a, b - 2 * L] };
+  if (a >= L && value.slice(a - L, a) === mark && value.slice(b, b + L) === mark) return { from: a - L, to: b + L, text, sel: [a - L, b - L] };
+  const why = blocked(spans, a, b, mark);
+  return why ? { why } : { from: a, to: b, text: mark + text + mark, sel: [a + L, b + L] };
+}
+let fmtTimer = 0;
+function applyFormat(kind) {
+  const plan = planFormat(messageInput.value, messageInput.selectionStart, messageInput.selectionEnd, MARKS[kind]);
+  clearTimeout(fmtTimer);
+  fmtStatus.textContent = "";
+  if (plan.why) {
+    messageInput.focus();
+    // Written a moment later so the same hint is announced again on a second try.
+    fmtTimer = setTimeout(() => { fmtStatus.textContent = T[plan.why]; }, 50);
+    return;
+  }
+  replaceText(messageInput, plan.from, plan.to, plan.text, plan.sel[0], plan.sel[1]);
+}
+for (const btn of document.querySelectorAll(".fmt-btn[data-format]")) {
+  btn.addEventListener("mousedown", (e) => e.preventDefault()); // keep the cursor and the selection in the message
+  btn.addEventListener("click", () => applyFormat(btn.dataset.format));
+}
+messageInput.addEventListener("keydown", (e) => {
+  if (!(e.ctrlKey || e.metaKey) || e.altKey || e.shiftKey) return;
+  const key = /^[a-z]$/i.test(e.key) ? e.key.toLowerCase() : e.code === "KeyB" ? "b" : e.code === "KeyI" ? "i" : "";
+  if (key !== "b" && key !== "i") return;
+  e.preventDefault();
+  applyFormat(key === "b" ? "bold" : "italic");
+});
 
 // --- The link and the actions.
 let link = "";
@@ -1034,7 +1210,7 @@ for (const btn of modeBtns) {
 }
 phoneInput.addEventListener("input", () => update(false));
 phoneInput.addEventListener("blur", () => update(true));
-messageInput.addEventListener("input", () => update(true));
+messageInput.addEventListener("input", () => { fmtStatus.textContent = ""; update(true); });
 
 let copiedTimer = 0;
 function announceCopied(text) {
