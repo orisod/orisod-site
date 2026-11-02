@@ -815,6 +815,152 @@ const XLSX_LATIN_ROWS = [["Año", "Región", "Precio €", "Nota"], ["2026", "Se
 const XLSX_LGC_ROWS = [["Γλώσσα", "Пример", "Przykład"], ["Καλημέρα κόσμε", "Привет, мир", "Zażółć gęślą jaźń"], ["Ελληνικά", "Українська", "Việt Nam"]];
 const XLSX_SQUARE = '□';
 
+// --- WhatsApp link generator (the pilot of the minimal tool layout). Each check below has a negative
+// twin (mustFail) run on a broken copy of what the page gave.
+const WA = "/whatsapp-link-generator/";
+const LIBPHONE = "/assets/vendor/libphonenumber-js/1.13.15/libphonenumber-max.js";
+const QRJS = "/assets/vendor/qrcodejs/1.0.0/qrcode.min.js";
+const FLAG = (code) => `/assets/vendor/circle-flags/2.8.3/${code}.svg`;
+const WA_QR_MAX = 2328;
+const WA_TEXT = {
+  en: { copied: "Copied", reason: "Enter a phone number to open the chat.", reasonMessage: "Write a message first. WhatsApp will ask you who to send it to.",
+    add9: "Add the 9", mx1: "The 1 after +52 was removed", summary: "More about this tool", qrFile: "whatsapp-link-qr.png" },
+  es: { copied: "Copiado", reason: "Escribe un número de teléfono para abrir el chat.", reasonMessage: "Escribe un mensaje primero. WhatsApp te preguntará a quién enviarlo.",
+    add9: "Agregar el 9", mx1: "Se quitó el 1 después de +52", summary: "Más sobre esta herramienta", qrFile: "link-whatsapp-qr.png" },
+};
+const regionName = (page, code) => page.evaluate((c) => new Intl.DisplayNames([document.documentElement.lang], { type: "region" }).of(c), code);
+// Pick a country the way a visitor does: type its name in the combobox and press Enter.
+async function waCountry(page, code) {
+  const name = await regionName(page, code);
+  await page.click("#countryInput");
+  await page.fill("#countryInput", name);
+  await page.keyboard.press("Enter");
+  const value = await page.inputValue("#countryInput");
+  expect(value.startsWith(name + " (+"), `picking ${code} by typing "${name}" gave "${value}"`);
+}
+async function waNumber(page, number) {
+  await page.fill("#phoneInput", number);
+  await page.locator("#phoneInput").blur();
+  return page.evaluate(() => ({ href: document.getElementById("openLink").getAttribute("href") || "", status: document.getElementById("phoneStatus").textContent }));
+}
+// [country picked, what's typed, the digits WhatsApp needs]
+const WA_NUMBERS = [
+  ["AR", "011 15 2345-6789", "5491123456789"],
+  ["AR", "+54 9 11 2345-6789", "5491123456789"],
+  ["AR", "0351 15 512 3456", "5493515123456"],
+  ["MX", "55 1234 5678", "525512345678"],
+  ["MX", "+52 1 55 1234 5678", "525512345678"],
+  ["BR", "(11) 91234-5678", "5511912345678"],
+  ["GB", "07400 123456", "447400123456"],
+  ["ES", "0044 7400 123456", "447400123456"],
+  ["US", "0044 7400 123456", "447400123456"],
+  ["US", "011 44 7400 123456", "447400123456"],
+  ["US", "(415) 555-2671", "14155552671"],
+];
+function expectNumbers(got) {
+  const bad = WA_NUMBERS.map(([cc, input, digits], i) => [cc, input, digits, got[i]]).filter((r) => r[3] !== "https://wa.me/" + r[2]);
+  expect(!bad.length, "wrong links: " + bad.map(([cc, input, digits, href]) => `${cc} "${input}" gave ${href || "no link"}, not wa.me/${digits}`).join("; "));
+}
+const WA_MESSAGE = "Hola *negrita* _cursiva_ ~tachado~ `code` ```mono```\nSegunda línea 🙌 ¿sí?\n<img src=x onerror=\"window.__xss=1\">";
+function expectEncoded(href, message) {
+  expect(href === "https://wa.me/447400123456?text=" + encodeURIComponent(message), `the link isn't the number plus the encodeURIComponent message: ${href}`);
+  expect(new URL(href).searchParams.get("text") === message, "the message doesn't decode back exactly (line breaks, emoji, accents)");
+}
+function expectPreview(p) {
+  const want = ["strong", "em", "s", "code", "code.mono"];
+  expect(JSON.stringify(p.tags) === JSON.stringify(want), `preview elements are ${p.tags.join(", ")}, not ${want.join(", ")}`);
+  expect(p.text.includes('<img src=x onerror="window.__xss=1">') && !p.xss, "typed markup became an element or ran");
+}
+function expectNoLink(s, reason) {
+  expect(s.openHidden && !s.href && !s.disabledHidden && s.disabled, `"Open in WhatsApp" is live without a number (link hidden ${s.openHidden}, href "${s.href}")`);
+  expect(s.reason === reason, `the visible reason is "${s.reason}", not "${reason}"`);
+  expect(s.copyDisabled && s.shareDisabled && s.qrDisabled, "copy, share or QR is enabled without a link");
+}
+const waState = (page) => page.evaluate(() => {
+  const $ = (id) => document.getElementById(id);
+  return { openHidden: $("openLink").hidden, href: $("openLink").getAttribute("href") || "", disabledHidden: $("openDisabled").hidden,
+    disabled: $("openDisabled").disabled, reason: $("openReason").textContent, copyDisabled: $("copyBtn").disabled,
+    shareDisabled: $("shareBtn").disabled, qrDisabled: $("qrBtn").disabled, phoneHidden: $("phoneSection").hidden };
+});
+function expectCopied(c, link, word) {
+  expect(c.copied === link, `the clipboard got ${c.copied}, not ${link}`);
+  expect(c.status === word && c.live === "polite", `the copy status says "${c.status}" (aria-live ${c.live}), not "${word}"`);
+}
+function expectQrBlocked(q, lang) {
+  expect(q.disabled, "the QR button is enabled for a link too long for a QR code");
+  expect(q.note.includes((WA_QR_MAX + 1).toLocaleString(lang)) && q.note.includes(WA_QR_MAX.toLocaleString(lang)), `the QR note doesn't give the length and the limit: ${q.note}`);
+}
+function pngSize(buf) {
+  expect(buf.subarray(1, 4).toString("latin1") === "PNG", "the QR download isn't a PNG");
+  return [buf.readUInt32BE(16), buf.readUInt32BE(20)];
+}
+async function qrDownload(page) {
+  const [download] = await Promise.all([page.waitForEvent("download", { timeout: 10000 }), page.click("#qrBtn")]);
+  const png = await readFile(await download.path());
+  const pixels = await page.evaluate(async () => {
+    const img = document.querySelector("#qrPreview img");
+    await img.decode();
+    const c = document.createElement("canvas");
+    c.width = img.naturalWidth; c.height = img.naturalHeight;
+    const ctx = c.getContext("2d", { willReadFrequently: true });
+    ctx.drawImage(img, 0, 0);
+    const { data } = ctx.getImageData(0, 0, c.width, c.height);
+    let dark = 0;
+    for (let i = 0; i < data.length; i += 4) if (data[i] < 128) dark++;
+    const margin = ctx.getImageData(0, 0, 30, 30).data.every((v) => v === 255);
+    return { dark: dark / (c.width * c.height), margin, alt: img.alt };
+  });
+  return { name: download.suggestedFilename(), size: pngSize(png), ...pixels };
+}
+function expectQrPng(q, lang) {
+  expect(q.name === WA_TEXT[lang].qrFile, `the QR file is called ${q.name}`);
+  expect(q.size[0] === 592 && q.size[1] === 592, `the QR PNG is ${q.size.join("x")}, not 592x592`);
+  expect(q.margin, "the QR code has no white quiet zone");
+  expect(q.dark > 0.15 && q.dark < 0.6, `the QR image is ${Math.round(q.dark * 100)}% dark, not a QR code`);
+}
+function expectFirst(first, code) {
+  expect(first === "country-" + code, `the first option is ${first || "nothing"}, not ${code}`);
+}
+const WA_STRUCTURE = () => {
+  const q = (s) => document.querySelector(s);
+  const footer = q("footer.site-footer"), details = q("details.more"), guide = q("p.guide-link");
+  const after = [...document.body.querySelectorAll("*")].filter((el) => (footer.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING)
+    && !footer.contains(el) && !["SCRIPT", "STYLE"].includes(el.tagName) && el.getClientRects().length > 0);
+  const order = ["nav.breadcrumbs", "h1", "p.lead", "p.affil", ".tool", ".how-grid", "p.guide-link", "details.more", "footer.site-footer"].map(q);
+  const inOrder = order.every((el, i) => el && (i === 0 || (order[i - 1].compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING)));
+  return { after: after.map((el) => el.tagName.toLowerCase() + (el.id ? "#" + el.id : el.className ? "." + String(el.className).split(" ")[0] : "")),
+    detailsAfterGuide: !!(guide.compareDocumentPosition(details) & Node.DOCUMENT_POSITION_FOLLOWING),
+    detailsBeforeFooter: !!(details.compareDocumentPosition(footer) & Node.DOCUMENT_POSITION_FOLLOWING), inOrder };
+};
+function expectStructure(s) {
+  expect(!s.after.length, `visible elements after the footer: ${s.after.join(", ")}`);
+  expect(s.detailsAfterGuide && s.detailsBeforeFooter, "the collapsed block isn't between the guide link and the footer");
+  expect(s.inOrder, "the page isn't breadcrumb, H1, description, not-affiliated line, tool, How it works, guide link, collapsed block, footer");
+}
+const WA_FAQ = () => {
+  const visible = [...document.querySelectorAll("details.more .faq-item")].map((el) => [el.children[0].textContent.trim(), el.children[1].textContent.trim()]);
+  const graph = [...document.querySelectorAll('script[type="application/ld+json"]')].flatMap((s) => JSON.parse(s.textContent)["@graph"] || []);
+  const faq = graph.find((x) => x["@type"] === "FAQPage");
+  return { visible, jsonld: faq.mainEntity.map((x) => [x.name, x.acceptedAnswer.text]) };
+};
+function expectFaq(f) {
+  expect(f.visible.length === 4, `${f.visible.length} FAQ items in the collapsed block, not 4`);
+  expect(JSON.stringify(f.visible) === JSON.stringify(f.jsonld), "the FAQ text differs from the FAQPage JSON-LD");
+}
+function expectIndicator(closed, open) {
+  expect(closed && open && closed !== open, `the open/closed indicator doesn't change (${closed} / ${open})`);
+}
+const waOverflow = (page) => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+function expectNoOverflow(px, when) {
+  expect(px <= 0, `the page scrolls sideways by ${px}px at 320 CSS px (${when})`);
+}
+const WA_SECRET = { digits: "447400123456", words: ["Zanahoria", "secreta"] };
+function expectNothingSent(requests, url, start) {
+  const leaked = requests.filter((r) => r.includes(WA_SECRET.digits) || WA_SECRET.words.some((w) => r.includes(w)));
+  expect(!leaked.length, `a request carried the number or the message: ${leaked.join(", ")}`);
+  expect(url === start, `the page URL changed to ${url}`);
+}
+
 const CASES = [
   {
     name: "spark-md5",
@@ -1888,6 +2034,278 @@ const CASES = [
       const done = await ocrRun(page, lang);
       expect(!(await page.textContent("#errorMsg")), "the engine error is still shown after a successful retry");
       return `still loading 5 s before the ${timeout / 1000} s timeout, engine error shown after it; retry: ${done}`;
+    },
+  },
+  {
+    name: "libphonenumber-js (WhatsApp link generator, numbers)",
+    page: WA,
+    vendor: [LIBPHONE, QRJS],
+    async run(page, lang) {
+      const got = [];
+      for (const [cc, input] of WA_NUMBERS) {
+        await waCountry(page, cc);
+        got.push((await waNumber(page, input)).href);
+      }
+      expectNumbers(got);
+      // Argentina without the 9: a hint and a button, never a block.
+      await waCountry(page, "AR");
+      const plain = await waNumber(page, "11 2345 6789");
+      expect(plain.href === "https://wa.me/541123456789", `an Argentine number without the 9 gave ${plain.href || "no link"}; the link must still be made`);
+      const add = page.locator("#addNineBtn");
+      expect((await add.textContent()) === WA_TEXT[lang].add9, `the button says "${await add.textContent()}"`);
+      await add.click();
+      const nine = await page.getAttribute("#openLink", "href");
+      expect(nine === "https://wa.me/5491123456789", `"${WA_TEXT[lang].add9}" gave ${nine}`);
+      expect(!(await page.locator("#addNineBtn").count()), "the add-the-9 hint is still shown after adding the 9");
+      // Mexico's old 1 after +52: dropped, with a note.
+      await waCountry(page, "MX");
+      const mx = await waNumber(page, "+52 1 55 1234 5678");
+      expect(mx.status.includes(WA_TEXT[lang].mx1), `no note about the dropped 1: "${mx.status}"`);
+      return `${WA_NUMBERS.length} numbers give the right wa.me links (Argentina 0/15/9, Mexico's 1 dropped with a note, Brazil, UK, 00 and 011 as +, US); ` +
+        `"${WA_TEXT[lang].add9}" turns wa.me/541123456789 into wa.me/5491123456789; ` +
+        mustFail("a wrong digit", () => expectNumbers(got.map((h, i) => (i === 3 ? h.replace(/8$/, "9") : h)))) + "; " +
+        mustFail("011 under Argentina read as international", () => expectNumbers(got.map((h, i) => (i === 0 ? "https://wa.me/11523456789" : h))));
+    },
+  },
+  {
+    name: "WhatsApp link generator (message, preview, actions)",
+    page: WA,
+    vendor: [LIBPHONE, QRJS],
+    async run(page, lang) {
+      const t = WA_TEXT[lang];
+      const empty = await waState(page);
+      expectNoLink(empty, t.reason);
+      await waCountry(page, "GB");
+      await waNumber(page, "07400 123456");
+      await page.fill("#messageInput", WA_MESSAGE);
+      const href = await page.getAttribute("#openLink", "href");
+      expectEncoded(href, WA_MESSAGE);
+      const attrs = await page.evaluate(() => { const a = document.getElementById("openLink"); return [a.target, a.rel, a.hidden]; });
+      expect(attrs[0] === "_blank" && attrs[1] === "noopener noreferrer" && !attrs[2], `the open link is ${attrs.join(" / ")}`);
+      const preview = await page.evaluate(() => {
+        const b = document.getElementById("bubble");
+        return { tags: [...b.querySelectorAll("*")].map((e) => e.tagName.toLowerCase() + (e.className ? "." + e.className : "")), text: b.textContent, xss: window.__xss };
+      });
+      expectPreview(preview);
+      // Copy and share, with the browser's clipboard and share sheet replaced by recorders.
+      await page.evaluate(() => {
+        window.__copied = null; window.__shared = null;
+        Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText: async (text) => { window.__copied = text; } } });
+        Object.defineProperty(navigator, "share", { configurable: true, value: async (data) => { window.__shared = data; } });
+      });
+      await page.click("#copyBtn");
+      await page.waitForFunction(() => document.getElementById("copyStatus").textContent !== "", null, { timeout: 5000 });
+      const copy = await page.evaluate(() => ({ copied: window.__copied, status: document.getElementById("copyStatus").textContent, live: document.getElementById("copyStatus").getAttribute("aria-live") }));
+      expectCopied(copy, href, t.copied);
+      await page.click("#shareBtn");
+      const shared = await page.evaluate(() => window.__shared);
+      expect(shared && shared.url === href, `Share was given ${JSON.stringify(shared)}`);
+      // No-number mode: WhatsApp asks who to send the message to.
+      await page.click(".mode button >> nth=1");
+      await page.fill("#messageInput", "");
+      const any = await waState(page);
+      expect(any.phoneHidden && any.reason === t.reasonMessage && any.openHidden, `no-number mode without a message: ${JSON.stringify(any)}`);
+      await page.fill("#messageInput", "Hi there");
+      const anyHref = await page.getAttribute("#openLink", "href");
+      expect(anyHref === "https://wa.me/?text=Hi%20there", `no-number mode gave ${anyHref}`);
+      return `link ${href.slice(0, 48)}... decodes back exactly; preview has strong, em, s, code and monospace, typed <img> stays text; ` +
+        `copied with "${copy.status}" announced; shared; no-number mode gives wa.me/?text=; ` +
+        [mustFail("a live link with no number", () => expectNoLink({ ...empty, openHidden: false, href: "https://wa.me/" }, t.reason)),
+          mustFail("encoded with escape()", () => expectEncoded("https://wa.me/447400123456?text=" + escape(WA_MESSAGE), WA_MESSAGE)),
+          mustFail("an element made from typed text", () => expectPreview({ ...preview, tags: [...preview.tags, "img"] })),
+          mustFail("no announcement", () => expectCopied({ ...copy, status: "" }, href, t.copied))].join("; ");
+    },
+  },
+  {
+    name: "qrcodejs (WhatsApp link generator, QR code)",
+    page: WA,
+    vendor: [LIBPHONE, QRJS],
+    async run(page, lang) {
+      await waCountry(page, "GB");
+      await waNumber(page, "07400 123456");
+      await page.fill("#messageInput", "Hello");
+      const short = await qrDownload(page);
+      expectQrPng(short, lang);
+      // The longest link qrcodejs can encode at level M still works; one character more is refused with a reason.
+      const base = "https://wa.me/447400123456?text=";
+      const fill = "a".repeat(WA_QR_MAX - base.length);
+      await page.fill("#messageInput", fill);
+      expect((await page.inputValue("#linkOutput")).length === WA_QR_MAX, "the test link isn't exactly at the limit");
+      expectQrPng(await qrDownload(page), lang);
+      await page.fill("#messageInput", fill + "a");
+      const over = await page.evaluate(() => ({ disabled: document.getElementById("qrBtn").disabled, note: document.getElementById("qrNote").textContent }));
+      expectQrBlocked(over, lang);
+      const libFails = await page.evaluate((text) => {
+        try { new QRCode(document.createElement("div"), { text, width: 64, height: 64, correctLevel: QRCode.CorrectLevel.M }); return false; } catch (e) { return true; }
+      }, base + fill + "a");
+      expect(libFails, `qrcodejs encodes ${WA_QR_MAX + 1} characters, so the limit in the page is out of date`);
+      return `592x592 PNG ${short.name} with a quiet zone (${Math.round(short.dark * 100)}% dark); a ${WA_QR_MAX}-character link still works, ` +
+        `${WA_QR_MAX + 1} is refused with "${over.note}" (qrcodejs itself fails there); ` +
+        mustFail("an over-limit link offered as a QR code", () => expectQrBlocked({ ...over, disabled: false }, lang));
+    },
+  },
+  {
+    name: "circle-flags (WhatsApp link generator, country picker)",
+    page: WA,
+    vendor: [LIBPHONE, QRJS, FLAG("pe")],
+    async run(page, lang) {
+      await page.focus("#countryInput");
+      await page.keyboard.press("ArrowDown");
+      const opened = await page.evaluate(() => ({ expanded: document.getElementById("countryInput").getAttribute("aria-expanded"),
+        active: document.getElementById("countryInput").getAttribute("aria-activedescendant"), shown: !document.getElementById("countryList").hidden }));
+      expect(opened.expanded === "true" && opened.shown && opened.active, `ArrowDown didn't open the list: ${JSON.stringify(opened)}`);
+      await page.keyboard.press("ArrowDown");
+      const moved = await page.getAttribute("#countryInput", "aria-activedescendant");
+      expect(moved && moved !== opened.active, "ArrowDown doesn't move the active option");
+      await page.keyboard.press("Escape");
+      expect((await page.getAttribute("#countryInput", "aria-expanded")) === "false", "Escape didn't close the list");
+      const first = () => page.evaluate(() => { const li = [...document.querySelectorAll("#countryList li")].find((x) => !x.hidden); return li ? li.id : null; });
+      // Accents and case are ignored ("peru" finds Perú), and a calling code finds its countries.
+      await page.fill("#countryInput", "peru");
+      const peru = await first();
+      expectFirst(peru, "PE");
+      await page.keyboard.press("Enter");
+      const name = await regionName(page, "PE");
+      expect((await page.inputValue("#countryInput")) === `${name} (+51)`, `picked "${await page.inputValue("#countryInput")}"`);
+      await page.waitForFunction(() => { const f = document.getElementById("countryFlag"); return !f.hidden && f.complete && f.naturalWidth > 0; }, null, { timeout: 5000 });
+      expect((await page.getAttribute("#countryFlag", "src")) === FLAG("pe") && (await page.getAttribute("#countryFlag", "alt")) === "", "the flag isn't the vendored pe.svg with an empty alt");
+      await page.fill("#countryInput", "+44");
+      expectFirst(await first(), "GB");
+      await page.fill("#countryInput", "+1");
+      const shared = await page.evaluate(() => [...document.querySelectorAll("#countryList li")].filter((x) => !x.hidden).map((x) => x.id));
+      expect(shared.includes("country-US") && shared.includes("country-CA") && shared.includes("country-DO"), `+1 lists ${shared.length} countries, not the US, Canada and the Dominican Republic separately`);
+      await page.fill("#countryInput", "zzzz");
+      expect(await page.isVisible("#countryEmpty"), "no message when no country matches");
+      await page.keyboard.press("Escape");
+      expect((await page.inputValue("#countryInput")) === `${name} (+51)`, "Escape didn't restore the chosen country");
+      return `ArrowDown opens and moves, Escape closes; "peru" finds ${name}, flag pe.svg loaded with an empty alt; +44 finds the UK; +1 lists ${shared.length} countries separately; ` +
+        mustFail("an accented search that finds nothing", () => expectFirst(null, "PE"));
+    },
+  },
+  {
+    name: "WhatsApp link generator (remembered country, privacy)",
+    page: WA,
+    vendor: [LIBPHONE, QRJS],
+    async run(page, lang, ctl) {
+      const start = page.url();
+      // The first browser language's region is the default (en-US, es-ES).
+      const home = await regionName(page, lang === "es" ? "ES" : "US");
+      const initial = await page.inputValue("#countryInput");
+      expect(initial.startsWith(home + " (+"), `the default country is "${initial}", not ${home}`);
+      await waCountry(page, "MX");
+      expect((await page.evaluate(() => localStorage.getItem("orisod-wa-country"))) === "MX", "the chosen country wasn't saved as orisod-wa-country");
+      await page.reload();
+      const mexico = await regionName(page, "MX");
+      const restored = await page.inputValue("#countryInput");
+      const expectRestored = (value) => expect(value.startsWith(mexico + " (+"), `after a reload the country is "${value}", not ${mexico}`);
+      expectRestored(restored);
+      // A first browser language without a region: no country is guessed.
+      await page.evaluate(() => localStorage.removeItem("orisod-wa-country"));
+      await page.addInitScript(() => Object.defineProperty(navigator, "languages", { get: () => ["es"] }));
+      await page.reload();
+      expect((await page.inputValue("#countryInput")) === "", "a country was guessed from a language with no region");
+      // This page's storage blocked (its own key throws): it still works and nothing breaks.
+      await page.addInitScript(() => {
+        const get = Storage.prototype.getItem, set = Storage.prototype.setItem;
+        Storage.prototype.getItem = function (k) { if (String(k).startsWith("orisod-wa")) throw new DOMException("blocked", "SecurityError"); return get.call(this, k); };
+        Storage.prototype.setItem = function (k, v) { if (String(k).startsWith("orisod-wa")) throw new DOMException("blocked", "SecurityError"); return set.call(this, k, v); };
+      });
+      await page.reload();
+      await waCountry(page, "GB");
+      // A whole session with a number and a message: nothing that carries either leaves the page.
+      await waNumber(page, "07400 123456");
+      await page.fill("#messageInput", `${WA_SECRET.words.join(" ")} 🙌`);
+      expect((await page.getAttribute("#openLink", "href")).includes(WA_SECRET.digits), "no link with storage blocked");
+      await page.evaluate(() => {
+        Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText: async () => {} } });
+        Object.defineProperty(navigator, "share", { configurable: true, value: async () => {} });
+      });
+      await page.click("#copyBtn");
+      await page.click("#shareBtn");
+      await qrDownload(page);
+      await page.click(".mode button >> nth=1");
+      await page.click(".mode button >> nth=0");
+      await page.waitForTimeout(700);
+      expectNothingSent(ctl.requests, page.url(), start);
+      await page.evaluate(() => history.replaceState(null, "", location.pathname + "?text=Zanahoria"));
+      const changed = page.url();
+      return `default ${home} from the browser language, MX saved and restored, no guess for "es", works with storage blocked; ` +
+        `${ctl.requests.length} requests, none with the number or the message, URL unchanged; ` +
+        [mustFail("the saved country not restored", () => expectRestored(initial)),
+          mustFail("history.replaceState adding ?text=", () => expectNothingSent(ctl.requests, changed, start)),
+          mustFail("a request with the number", () => expectNothingSent([...ctl.requests, "https://orisod.goatcounter.com/count?p=/x&q=447400123456"], start, start))].join("; ");
+    },
+  },
+  {
+    name: "WhatsApp link generator (minimal layout, collapsed block)",
+    page: WA,
+    vendor: [LIBPHONE, QRJS],
+    async run(page, lang) {
+      const structure = await page.evaluate(WA_STRUCTURE);
+      expectStructure(structure);
+      const summary = page.locator("details.more > summary");
+      const closed = await page.evaluate(() => {
+        const d = document.querySelector("details.more"), s = d.querySelector("summary");
+        return { open: d.open, text: d.textContent, label: s.textContent.trim(), height: s.getBoundingClientRect().height,
+          interactive: s.querySelectorAll("a, button, input, select, textarea, [tabindex]").length, arrow: getComputedStyle(s, "::before").transform };
+      });
+      expect(!closed.open, "the collapsed block is open on load");
+      expect(closed.label === WA_TEXT[lang].summary && closed.height >= 44 && !closed.interactive, `summary "${closed.label}", ${closed.height}px, ${closed.interactive} controls inside`);
+      const faq = await page.evaluate(WA_FAQ);
+      expect(faq.visible.every(([q, a]) => closed.text.includes(q) && closed.text.includes(a)), "the FAQ text isn't in the page while the block is closed");
+      expectFaq(faq);
+      await summary.focus();
+      await page.keyboard.press("Enter");
+      const afterEnter = await page.evaluate(() => ({ open: document.querySelector("details.more").open, arrow: getComputedStyle(document.querySelector("details.more > summary"), "::before").transform }));
+      expect(afterEnter.open, "Enter on the summary didn't open the block");
+      // The arrow turns with a 0.2 s transition: read it once that's over.
+      await page.waitForTimeout(400);
+      afterEnter.arrow = await page.evaluate(() => getComputedStyle(document.querySelector("details.more > summary"), "::before").transform);
+      expectIndicator(closed.arrow, afterEnter.arrow);
+      await page.keyboard.press("Space");
+      expect(!(await page.evaluate(() => document.querySelector("details.more").open)), "Space on the summary didn't close the block");
+      const ring = await page.evaluate(() => getComputedStyle(document.querySelector("details.more > summary")).outlineStyle);
+      expect(ring === "solid", `the focused summary has no visible focus ring (outline ${ring})`);
+      // 200% zoom at 320 CSS px: no sideways scrolling, also with the form filled, the list and the block open.
+      await page.setViewportSize({ width: 320, height: 640 });
+      const widths = [["empty", await waOverflow(page)]];
+      await waCountry(page, "AR");
+      await waNumber(page, "11 2345 6789");
+      await page.fill("#messageInput", "https://example.org/" + "x".repeat(300) + "\n*bold* " + "y".repeat(200));
+      widths.push(["filled", await waOverflow(page)]);
+      await page.click("#qrBtn");
+      widths.push(["QR shown", await waOverflow(page)]);
+      await page.focus("#countryInput");
+      await page.keyboard.press("ArrowDown");
+      widths.push(["country list open", await waOverflow(page)]);
+      await page.keyboard.press("Escape");
+      await summary.click();
+      widths.push(["block open", await waOverflow(page)]);
+      for (const [when, px] of widths) expectNoOverflow(px, when);
+      // Negatives on the live page: the block moved after the footer, a 400px element at 320px.
+      await page.evaluate(() => document.querySelector("footer.site-footer").after(document.querySelector("details.more")));
+      const moved = await page.evaluate(WA_STRUCTURE);
+      await page.evaluate(() => { const d = document.createElement("div"); d.style.width = "400px"; d.style.height = "1px"; document.querySelector(".tool").append(d); });
+      const wide = await waOverflow(page);
+      // Without JavaScript the block is still there, closed, and opens with a click.
+      const noJs = await page.context().browser().newContext({ javaScriptEnabled: false });
+      await noJs.route("**/*", async (route) => {
+        const url = route.request().url();
+        return url.startsWith(SITE + "/") ? route.fulfill(await localFile(url)) : route.abort();
+      });
+      const plain = await noJs.newPage();
+      await plain.goto(SITE + (lang === "es" ? "/es" : "") + WA, { waitUntil: "load" });
+      const wasOpen = await plain.evaluate(() => document.querySelector("details.more").open);
+      await plain.click("details.more > summary");
+      const nowOpen = await plain.evaluate(() => ({ open: document.querySelector("details.more").open, faq: document.querySelectorAll("details.more .faq-item").length }));
+      await noJs.close();
+      expect(!wasOpen && nowOpen.open && nowOpen.faq === 4, `without JavaScript the block was open ${wasOpen}, opened ${nowOpen.open}, ${nowOpen.faq} FAQ items`);
+      return `footer last, block between the guide link and the footer; closed on load with its text in the page; "${closed.label}" ${Math.round(closed.height)}px; ` +
+        `Enter opens, Space closes, the arrow turns, focus ring shown; FAQ equals the FAQPage JSON-LD; no sideways scroll at 320 px (${widths.map((w) => w[0]).join(", ")}); works without JavaScript; ` +
+        [mustFail("the block moved after the footer", () => expectStructure(moved)),
+          mustFail("a FAQ answer that differs from the JSON-LD", () => expectFaq({ ...faq, jsonld: faq.jsonld.map((x, i) => (i === 2 ? [x[0], x[1] + " Extra."] : x)) })),
+          mustFail("an indicator that doesn't change", () => expectIndicator(closed.arrow, closed.arrow)),
+          mustFail("a 400px element at 320 px", () => expectNoOverflow(wide, "with a 400px element"))].join("; ");
     },
   },
 ];
