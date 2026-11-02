@@ -964,8 +964,8 @@ function expectNothingSent(requests, url, start) {
 // The formatting toolbar and the emoji picker (added with the guide diagram, 2026-11-02).
 const WA_GUIDE = "/blog/send-whatsapp-without-saving-contact/";
 const WA_FMT = {
-  en: { cross: "Select text that doesn't cut across other formatting", mono: "Monospace can't be combined", firstEmoji: "grinning face", heart: "red heart", luggage: "luggage", gestures: "Gestures" },
-  es: { cross: "Selecciona un texto que no corte otro formato", mono: "El monoespaciado no se puede combinar", firstEmoji: "cara sonriente", heart: "corazón rojo", luggage: "equipaje", gestures: "Gestos" },
+  en: { cross: "Select text that does not overlap other formatting", mono: "Monospace can't be combined", firstEmoji: "grinning face", heart: "red heart", luggage: "luggage", gestures: "Gestures" },
+  es: { cross: "Selecciona texto que no se superponga con otro formato", mono: "El monoespaciado no se puede combinar", firstEmoji: "cara sonriente", heart: "corazón rojo", luggage: "equipaje", gestures: "Gestos" },
 };
 // Put a value in the message, select [s, e) and reset the input event counter.
 async function waSelect(page, value, s, e) {
