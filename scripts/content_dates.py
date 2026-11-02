@@ -10,7 +10,10 @@ How a page's dates are measured:
 - Its content is the visible text from the page's H1 (the first <h1> inside
   <main>) up to the CTA box, the related cards, the footer or </main>,
   whichever comes first, with <script>/<style> removed and whitespace
-  collapsed. The nav, breadcrumb, footer, JSON-LD, CSS, JS and markup-only
+  collapsed. Related tools cards in a sidebar (<aside class="related-aside">,
+  in the minimal tool layout, where they sit beside "How it works" and the
+  collapsed block follows) are removed first, so the content runs on to the
+  footer and includes that block's text. The nav, breadcrumb, footer, JSON-LD, CSS, JS and markup-only
   edits (site-wide rollouts) don't change that text, so they don't count.
 - dateModified / lastmod: the day of the newest commit whose content differs
   from its parent's (from every parent's, for a merge commit: a merge that
@@ -46,6 +49,7 @@ BLOGPOSTING = re.compile(r'<script type="application/ld\+json">\s*\{\s*"@context
 def article_text(src):
     """The page's content text (see the module docstring), or None if it can't be read."""
     src = re.sub(r"<(script|style)\b.*?</\1>", "", src, flags=re.S)
+    src = re.sub(r'<aside class="related-aside".*?</aside>', "", src, flags=re.S)
     m = re.search(r"<main\b", src)
     start = src.find("<h1", m.end() if m else 0)
     if start < 0:

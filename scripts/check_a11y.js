@@ -8,9 +8,10 @@
  * hand-maintained list of pages to scan. Every URL in sitemap.xml gets a
  * real headless-Chromium render + a full axe-core scan, once in the default
  * dark theme and once in light theme. A few representative pages are scanned
- * again with the nav's menu panel, search box or a category flyout open (see
- * OPEN_STATES), since those are hidden in a plain scan. Each page is also
- * checked for uploads a keyboard can't reach, and for error lines a screen reader
+ * again with the nav's menu panel, search box or a category flyout open, and
+ * the WhatsApp link generator in three states (see OPEN_STATES), since those
+ * are hidden in a plain scan. Each page is also checked for uploads a keyboard
+ * can't reach, and for error lines a screen reader
  * wouldn't announce, which axe misses. Run in CI on every push/PR to main, same as
  * check_sitemap.py. Takes --root DIR to scan a test copy of the site.
  */
@@ -98,7 +99,25 @@ const OPEN_STATES = [
   ...MENU_OPEN_PATHS.filter((p) => !["/", "/es/", "/tools/", "/es/tools/"].includes(p)).map((path) => ({ path, open: "search" })),
   // The desktop category flyouts (homepages and /tools), opened with the PDF one showing.
   ...["/", "/es/", "/tools/", "/es/tools/"].map((path) => ({ path, open: "flyout" })),
+  // The minimal tool layout (WhatsApp link generator, the pilot): its collapsed "More about this tool"
+  // block opened, the country list opened, and the form filled in so the number notes, the "Add the 9"
+  // button and the formatted preview show.
+  ...["/whatsapp-link-generator/", "/es/whatsapp-link-generator/"].flatMap((path) =>
+    ["details", "country list", "filled form"].map((open) => ({ path, open }))),
 ];
+// How to reach each tool state above (the nav states click a nav button instead).
+const TOOL_STATES = {
+  details: async (page) => { await page.click("details.more > summary"); return "details.more[open]"; },
+  "country list": async (page) => { await page.focus("#countryInput"); await page.keyboard.press("ArrowDown"); return "#countryList:not([hidden])"; },
+  "filled form": async (page) => {
+    await page.fill("#countryInput", "Argentina");
+    await page.keyboard.press("Enter");
+    await page.fill("#phoneInput", "11 2345 6789");
+    await page.locator("#phoneInput").blur();
+    await page.fill("#messageInput", "Hi *there* _you_ ~old~ `code`");
+    return "#addNineBtn";
+  },
+};
 
 function sitemapPaths() {
   const xml = readFileSync(join(REPO_ROOT, "sitemap.xml"), "utf-8");
@@ -116,7 +135,10 @@ async function scanPath(context, item) {
   try {
     await page.goto(`http://127.0.0.1:${PORT}${urlPath}`, { waitUntil: "load", timeout: 30000 });
     await page.addScriptTag({ content: axeSource.source });
-    if (typeof item !== "string") {
+    if (typeof item !== "string" && TOOL_STATES[item.open]) {
+      const shown = await TOOL_STATES[item.open](page);
+      if (!(await page.locator(shown).isVisible())) throw new Error(`the ${item.open} did not show`);
+    } else if (typeof item !== "string") {
       await page.click(item.open === "search" ? "#navSearchBtn" : "#navMenuBtn");
       if (item.open === "flyout") await page.focus('#navMenu a.menu-item[data-flyout$="-pdf"]');
       const panel = { menu: "#navMenu", search: "#navSearch", flyout: "#menuFlyout-pdf" }[item.open];
@@ -243,7 +265,7 @@ async function main() {
     process.exit(1);
   }
 
-  console.log(`OK: all ${results.length} pages passed axe-core in dark and light themes (${AXE_TAGS.join(", ")}), including ${OPEN_STATES.length} scans with the nav menu, search box or a category flyout open; every error line is announced (role="alert").`);
+  console.log(`OK: all ${results.length} pages passed axe-core in dark and light themes (${AXE_TAGS.join(", ")}), including ${OPEN_STATES.length} scans with the nav menu, search box or a category flyout open, or a tool state shown (the WhatsApp link generator's collapsed block, country list and filled form); every error line is announced (role="alert").`);
   process.exit(0);
 }
 

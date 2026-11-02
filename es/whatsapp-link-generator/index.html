@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- GoatCounter: cookie-free visit counts (see /privacy/). count.js is a pinned, self-hosted copy; visits are sent to orisod.goatcounter.com -->
+<script data-goatcounter="https://orisod.goatcounter.com/count" async src="/assets/goatcounter/count.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generador de links de WhatsApp – Herramienta gratuita en línea | Orisod</title>
+<meta name="description" content="Crea un link de WhatsApp con mensaje para enviar WhatsApp sin agregar el contacto. Con código QR, gratis y en tu navegador: no se envían datos.">
+<link rel="canonical" href="https://orisod.com/es/whatsapp-link-generator/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/whatsapp-link-generator/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/whatsapp-link-generator/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/whatsapp-link-generator/">
+<link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#2563eb">
+<!-- Link previews (WhatsApp, Facebook, X, Slack...): same title and description as the page -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Orisod">
+<meta property="og:locale" content="es_ES">
+<meta property="og:title" content="Generador de links de WhatsApp – Herramienta gratuita en línea | Orisod">
+<meta property="og:description" content="Crea un link de WhatsApp con mensaje para enviar WhatsApp sin agregar el contacto. Con código QR, gratis y en tu navegador: no se envían datos.">
+<meta property="og:url" content="https://orisod.com/es/whatsapp-link-generator/">
+<meta property="og:image" content="https://orisod.com/assets/og-image-es.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Orisod: herramientas gratis de imagen y PDF en tu navegador">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Generador de links de WhatsApp",
+      "description": "Crea un link de WhatsApp con mensaje para enviar WhatsApp sin agregar el contacto. Con código QR, gratis y en tu navegador: no se envían datos.",
+      "url": "https://orisod.com/es/whatsapp-link-generator/",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requiere JavaScript. Funciona en un navegador web moderno.",
+      "inLanguage": "es",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "@id": "https://orisod.com/#organization",
+        "name": "Orisod"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿La otra persona ve que el mensaje salió de un link?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. El mensaje aparece escrito en el chat como si lo hubieras tecleado tú, y solo le llega cuando lo envías. Ve tu número de WhatsApp, como en cualquier chat que inicias."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Por qué WhatsApp dice que el número compartido por URL no es válido?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Normalmente el número no tiene cuenta de WhatsApp, o el código de país o algún dígito está mal. Revisa el número que aparece debajo del campo. En los celulares de Argentina, comprueba que haya un 9 después de +54."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo crear un link para un grupo de WhatsApp?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Los links de invitación a grupos se crean en WhatsApp, desde la configuración del grupo. Un link wa.me siempre abre un chat con un número, o te deja elegir el chat cuando no lleva número."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿El link deja de funcionar con el tiempo?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Un link wa.me no caduca. Funciona mientras el número tenga cuenta de WhatsApp, así que crea uno nuevo si cambian el número o el mensaje."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+  --icon-alpha:.30;
+  --grid-alpha:.05;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+  --icon-alpha:.24;
+  --grid-alpha:.10;
+}
+*{box-sizing:border-box;}
+.site-nav{position:sticky;top:0;z-index:50;background-color:var(--bg);transition:background-color 0.2s;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);display:inline-flex;align-items:center;gap:8px;}
+.site-nav-logo img{height:26px;width:auto;display:block;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:40px 20px 60px 20px;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background-color:var(--bg);background-image:linear-gradient(rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px),linear-gradient(90deg, rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px);background-size:42px 42px;color:var(--text);text-align:center;transition:background-color 0.2s, color 0.2s;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:48px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:30px 20px;margin-top:30px;}
+/* WhatsApp link generator: the tool, "How it works" beside Related tools, and the collapsed block. */
+.lead{margin:0 auto 6px auto;}
+.affil{font-size:13px;color:var(--muted-text);opacity:1;margin:0 auto;}
+.tool{text-align:left;max-width:680px;margin-left:auto;margin-right:auto;padding:26px 22px;}
+.tool .field{margin:0 0 20px 0;}
+.tool label, .tool .field-label{display:block;font-size:15px;font-weight:bold;line-height:1.4;margin:0 0 6px 0;opacity:1;max-width:none;}
+.tool .hint{font-size:13px;color:var(--muted-text);line-height:1.5;margin:6px 0 0 0;opacity:1;max-width:none;}
+.tool input[type="text"], .tool input[type="tel"], .tool textarea{display:block;width:100%;margin:0;padding:12px;border-radius:8px;border:1px solid var(--dropzone-border);background:var(--bg);color:var(--text);font-family:inherit;font-size:16px;line-height:1.4;}
+.tool textarea{min-height:110px;resize:vertical;}
+.tool input::placeholder, .tool textarea::placeholder{color:var(--muted-text);opacity:1;}
+.tool input:focus, .tool textarea:focus{outline:2px solid var(--accent);outline-offset:1px;}
+.tool input[readonly]{font-size:14px;}
+/* Option buttons are real <button>s: same look as before, plus the focus ring. */
+.mode{display:flex;flex-wrap:wrap;gap:8px;margin:0;}
+.mode button{margin:0;font-family:inherit;line-height:inherit;font-size:14px;padding:9px 14px;min-height:44px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer;}
+.mode button[aria-pressed="true"]{border-color:#8b5cf6;box-shadow:inset 0 0 0 1px #8b5cf6;font-weight:bold;}
+.mode button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.combo{position:relative;}
+.combo-flag{position:absolute;left:12px;top:50%;width:22px;height:22px;margin-top:-11px;pointer-events:none;}
+.combo.has-flag input{padding-left:44px;}
+.combo-list{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:20;max-height:290px;overflow-y:auto;margin:0;padding:4px;list-style:none;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;box-shadow:0 14px 36px rgba(0,0,0,.35);}
+:root[data-theme="light"] .combo-list{box-shadow:0 14px 36px rgba(15,23,42,.16);}
+.combo-list[hidden]{display:none;}
+.combo-list li{display:flex;align-items:center;gap:10px;min-height:42px;margin:0;padding:8px 10px;border-radius:6px;font-size:15px;cursor:default;}
+.combo-list li[hidden]{display:none;}
+.combo-list li img{flex:none;width:22px;height:22px;}
+.combo-list .opt-name{flex:1 1 auto;min-width:0;}
+.combo-list .opt-dial{flex:none;color:var(--muted-text);font-size:14px;}
+.combo-list li[aria-selected="true"]{background:rgba(37,99,235,.18);box-shadow:inset 0 0 0 2px var(--accent);}
+.combo-list li[aria-selected="true"] .opt-dial{color:var(--text);}
+.combo-empty{font-size:14px;margin:6px 0 0 0;opacity:1;max-width:none;}
+.number-out{font-size:15px;line-height:1.5;margin:10px 0 0 0;opacity:1;max-width:none;}
+.number-out strong{white-space:nowrap;}
+.note-box{font-size:14px;line-height:1.5;margin:10px 0 0 0;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg);opacity:1;max-width:none;}
+.note-box.warn{border-color:#f59e0b;}
+.small-btn{display:inline-block;margin:8px 0 0 0;padding:8px 14px;min-height:40px;border-radius:8px;border:1px solid var(--accent);background:var(--card-bg);color:var(--text);font-family:inherit;font-size:14px;line-height:1.3;cursor:pointer;}
+.small-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.chat{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;}
+.bubble{max-width:85%;margin:0 0 0 auto;padding:10px 12px;border-radius:12px 12px 3px 12px;background:rgba(139,92,246,var(--icon-alpha));border:1px solid rgba(139,92,246,.6);color:var(--text);font-size:15px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere;opacity:1;}
+.bubble.empty{font-style:italic;}
+.bubble code{font-family:Consolas, "Courier New", monospace;font-size:14px;padding:0 3px;border-radius:4px;background:rgba(148,163,184,.22);}
+.bubble code.mono{padding:0;background:none;}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:0;}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;margin:0;padding:10px 16px;border-radius:8px;border:1px solid var(--accent);background:var(--card-bg);color:var(--text);font-family:inherit;font-size:15px;line-height:1.3;text-decoration:none;cursor:pointer;}
+.btn.primary{background:var(--accent);color:#ffffff;}
+.btn[hidden]{display:none;}
+a.btn:not([href]){cursor:default;}
+.btn:disabled{opacity:.45;cursor:not-allowed;}
+.btn:hover:not(:disabled){filter:brightness(1.08);}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.reason{font-size:14px;margin:8px 0 0 0;opacity:1;max-width:none;}
+.reason:empty, .copy-status:empty{display:none;}
+.copy-status{display:block;font-size:14px;font-weight:bold;margin:8px 0 0 0;}
+.qr-preview{margin:12px 0 0 0;}
+.qr-preview img{display:block;width:200px;max-width:100%;height:auto;border-radius:6px;}
+.facts{margin:18px 0 0 0;padding:0 0 0 20px;font-size:14px;line-height:1.55;color:var(--text);opacity:.85;}
+.facts li{margin:0 0 6px 0;}
+.tool .error{margin:8px 0 0 0;}
+.tool .error:empty{display:none;}
+.how-grid{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:28px;margin:44px 0 0 0;text-align:left;align-items:start;}
+@media (max-width:760px){.how-grid{grid-template-columns:minmax(0,1fr);gap:8px;}}
+.how-grid h2{margin:0 0 14px 0;}
+.how ol{margin:0;padding:0 0 0 22px;font-size:15px;line-height:1.6;opacity:.85;}
+.how ol li{margin:0 0 8px 0;}
+.how h3{font-size:16px;margin:20px 0 8px 0;}
+.how ul{margin:0;padding:0 0 0 20px;font-size:14px;line-height:1.6;opacity:.85;}
+.how ul li{margin:0 0 6px 0;}
+@media (max-width:760px){.related-aside h2{margin-top:30px;}}
+.related-aside .related-grid{grid-template-columns:minmax(0,1fr);}
+.guide-link{max-width:none;margin:28px 0 0 0;text-align:left;font-size:14px;opacity:.85;}
+.guide-link a{color:var(--accent);text-decoration:none;}
+:root[data-theme="light"] .guide-link a{color:#1d4ed8;}
+/* The collapsed block: native <details>, closed by default, its text in the HTML from the start. */
+.more{margin:28px 0 0 0;text-align:left;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;}
+.more > summary{display:flex;align-items:center;gap:12px;min-height:48px;padding:12px 16px;font-size:16px;font-weight:bold;line-height:1.3;cursor:pointer;list-style:none;border-radius:10px;}
+.more > summary::-webkit-details-marker{display:none;}
+.more > summary::before{content:"";flex:none;width:8px;height:8px;margin:0 2px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg);transition:transform .2s;}
+.more[open] > summary::before{transform:rotate(45deg);}
+.more > summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.more > summary:hover{text-decoration:underline;}
+.more .seo-content{max-width:none;padding:0 18px 10px 18px;}
+.more .seo-content h2:first-child{margin-top:10px;}
+@media (prefers-reduced-motion:reduce){.more > summary::before{transition:none;}}
+@media (max-width:600px){h1{font-size:36px;}.tool{padding:20px 14px;}}
+.site-footer{
+  margin-top:40px;
+  padding:40px 24px 30px 24px;
+  border-top:1px solid var(--border);
+  text-align:left;
+}
+.footer-inner{max-width:1000px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;gap:40px;}
+@media (min-width:700px){.footer-inner{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media (min-width:1100px){.footer-inner{grid-template-columns:minmax(0,1.6fr) repeat(3,minmax(0,1fr));}}
+.footer-brand{max-width:280px;}
+.footer-brand-logo{font-size:16px;font-weight:bold;letter-spacing:0.5px;margin-bottom:10px;}
+.footer-brand-desc{font-size:13px;color:var(--muted-text);line-height:1.5;margin-bottom:14px;}
+.footer-copy{font-size:12px;color:var(--muted-text);opacity:0.7;}
+.footer-col h3{font-size:13px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-text);margin:0 0 14px 0;}
+.footer-col a{display:block;font-size:14px;color:var(--text);text-decoration:none;opacity:0.8;margin-bottom:10px;}
+.footer-col a:hover{opacity:1;color:var(--accent);}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related-grid{display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:12px;}
+@media (max-width:600px){.related-grid{grid-template-columns:minmax(0,1fr);}}
+.related-card{display:flex;align-items:center;gap:14px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-card:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.related-card .icon-box{flex:none;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;border:2px solid transparent;}
+.related-card .icon-box.cat-image{background:rgba(37,99,235,var(--icon-alpha));border-color:#2563eb;color:#2563eb;}
+.related-card .icon-box.cat-pdf{background:rgba(245,158,11,var(--icon-alpha));border-color:#f59e0b;color:#f59e0b;}
+.related-card .icon-box.cat-utility{background:rgba(139,92,246,var(--icon-alpha));border-color:#8b5cf6;color:#8b5cf6;}
+.related-card .icon-box svg{width:22px;height:22px;display:block;}
+.related-card .body{flex:1 1 auto;min-width:0;}
+.related-card .title{font-size:14px;font-weight:bold;margin-bottom:2px;}
+.related-card .desc{font-size:12px;color:var(--muted-text);line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.related-card .arrow{flex:none;font-size:16px;color:var(--muted-text);transition:0.2s;}
+.related-card:hover .arrow{color:var(--accent);transform:translateX(2px);}
+.trust-strip{font-size:12px;color:var(--muted-text);margin-top:12px;line-height:1.5;}
+.footer-support-text{font-size:13px;color:var(--muted-text);line-height:1.5;margin:0 0 10px 0;}
+.footer-support-btn{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:8px 14px;border-radius:999px;font-size:13px;font-weight:bold;}
+.footer-support-btn:hover{filter:brightness(1.1);}
+/* Sticky nav (Phase 11.5): stays pinned while scrolling. --site-nav-h is kept in sync by the small script right after </header>. */
+html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
+@media (max-width:900px){
+  .site-nav{padding:10px 16px;}
+}
+/* ==========================================================================
+   Minimal nav (Initiative 2): logo left; Support, Search, the theme toggle
+   and Menu on the right. Same look as the homepage nav, without the menu's
+   category flyouts. Blog, the category links and EN/ES live in the menu.
+   Rules here set their own margin, padding, opacity, filter and line-height
+   on purpose: many pages have page-wide button{} and p{} rules that would
+   otherwise leak into the nav (the same trap as the old .theme-toggle
+   margin bug). The menu's category icon colors use their own alpha token
+   because not every page defines --icon-alpha.
+   ========================================================================== */
+:root{--nav-icon-alpha:.30;}
+:root[data-theme="light"]{--nav-icon-alpha:.24;}
+.site-nav{flex-wrap:nowrap;}
+.nav-icons{display:flex;align-items:center;gap:6px;}
+.site-nav .nav-icon-btn{
+  box-sizing:border-box;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:36px;
+  height:36px;
+  margin:0;
+  padding:0;
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:8px;
+  color:var(--text);
+  font:inherit;
+  line-height:1;
+  cursor:pointer;
+  text-decoration:none;
+  filter:none;
+  transition:border-color .2s, color .2s;
+}
+.site-nav .nav-icon-btn:hover{border-color:var(--accent);filter:none;}
+.site-nav .nav-icon-btn:focus-visible, .site-nav .theme-toggle:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.site-nav .nav-icon-btn svg{width:18px;height:18px;display:block;}
+.site-nav .nav-icon-btn.support{color:#f472b6;}
+:root[data-theme="light"] .site-nav .nav-icon-btn.support{color:#be185d;}
+/* same 36px box as the icon buttons so the row lines up */
+.site-nav .nav-icons .theme-toggle{width:36px;height:36px;padding:0;border-radius:8px;filter:none;}
+.site-nav .nav-icon-btn[aria-expanded="true"]{border-color:var(--accent);background:rgba(37,99,235,.14);}
+.site-nav .nav-icon-btn .menu-icon-close{display:none;}
+.site-nav .nav-icon-btn[aria-expanded="true"] .menu-icon-open{display:none;}
+.site-nav .nav-icon-btn[aria-expanded="true"] .menu-icon-close{display:block;}
+
+/* --- Menu panel and search box: both drop down under the nav --- */
+.nav-menu, .nav-search{
+  position:absolute;
+  top:calc(100% + 8px);
+  right:16px;
+  margin:0;
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:12px;
+  box-shadow:0 18px 48px rgba(0,0,0,.45);
+  padding:8px;
+  text-align:left;
+  z-index:60;
+}
+:root[data-theme="light"] .nav-menu, :root[data-theme="light"] .nav-search{box-shadow:0 18px 48px rgba(15,23,42,.16);}
+.nav-menu[hidden], .nav-search[hidden]{display:none;}
+.nav-menu{
+  width:300px;
+  max-height:calc(100vh - var(--site-nav-h, 60px) - 24px);
+  overflow-y:auto;
+}
+.nav-menu .nav-menu-label{
+  font-size:11px;
+  font-weight:bold;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  line-height:normal;
+  color:var(--muted-text);
+  opacity:1;
+  max-width:none;
+  padding:10px 10px 6px 10px;
+  margin:0;
+}
+.nav-menu a.menu-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px;
+  min-height:44px;
+  border-radius:8px;
+  color:var(--text);
+  text-decoration:none;
+  font-size:15px;
+  line-height:normal;
+}
+.nav-menu a.menu-item:hover, .nav-menu a.menu-item:focus-visible{background:rgba(37,99,235,.14);outline:none;}
+/* The page you're on: marked for screen readers, with only a quiet visual cue. */
+.nav-menu a.menu-item[aria-current="page"]{font-weight:bold;box-shadow:inset 3px 0 0 var(--accent);}
+.nav-menu .menu-item .icon-box{
+  width:30px;height:30px;border-radius:7px;flex:none;margin:0;
+  display:flex;align-items:center;justify-content:center;
+  border:1.5px solid transparent;font-size:inherit;
+}
+.nav-menu .menu-item .icon-box svg{width:16px;height:16px;display:block;}
+.nav-menu .menu-item .icon-box.cat-all{background:rgba(148,163,184,.18);border-color:var(--muted-text);color:var(--text);}
+.nav-menu .menu-item .icon-box.cat-image{background:rgba(37,99,235,var(--nav-icon-alpha));border-color:#2563eb;color:#2563eb;}
+.nav-menu .menu-item .icon-box.cat-pdf{background:rgba(245,158,11,var(--nav-icon-alpha));border-color:#f59e0b;color:#f59e0b;}
+.nav-menu .menu-item .icon-box.cat-utility{background:rgba(139,92,246,var(--nav-icon-alpha));border-color:#8b5cf6;color:#8b5cf6;}
+.nav-menu hr{border:none;border-top:1px solid var(--border);margin:6px 4px;}
+.menu-lang{display:flex;align-items:center;gap:8px;padding:8px 10px 6px 10px;font-size:13px;color:var(--muted-text);}
+.menu-lang .lang-flag{margin-left:0;}
+.menu-lang-label{margin-right:auto;}
+
+.nav-search{width:340px;display:flex;gap:6px;}
+.nav-search-label{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;}
+.nav-search input{
+  flex:1 1 auto;
+  min-width:0;
+  height:40px;
+  margin:0;
+  padding:0 12px;
+  font-family:inherit;
+  font-size:16px; /* 16px stops iPhones from zooming in on focus */
+  color:var(--text);
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:8px;
+}
+.nav-search input::placeholder{color:var(--muted-text);opacity:1;}
+.nav-search input:focus{outline:2px solid var(--accent);outline-offset:0;border-color:var(--accent);}
+.site-nav .nav-search .nav-icon-btn{width:40px;height:40px;flex:none;background:var(--accent);border-color:var(--accent);color:#fff;}
+
+@media (max-width:600px){
+  .site-nav{padding:10px 16px;}
+  .nav-menu, .nav-search{left:12px;right:12px;width:auto;}
+}
+/* Breadcrumbs (Initiative 2): Home / Category / Tool on tool pages,
+   Home / Blog / short label on blog posts. The separators are drawn with
+   CSS, so screen readers don't read out a "/" between levels. */
+.breadcrumbs{margin:0 0 12px 0;padding:0;text-align:left;font-size:13px;line-height:1.4;}
+.breadcrumbs ol{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;align-items:center;row-gap:2px;}
+.breadcrumbs li{display:inline-flex;align-items:center;margin:0;padding:0;color:var(--muted-text);}
+.breadcrumbs li + li::before{content:"";display:inline-block;width:0;height:.85em;margin:0 9px;border-right:1px solid var(--muted-text);transform:rotate(18deg);}
+.breadcrumbs a{color:var(--muted-text);text-decoration:none;}
+.breadcrumbs a:hover{color:var(--text);text-decoration:underline;}
+.breadcrumbs a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px;}
+.breadcrumbs [aria-current="page"]{color:var(--text);}
+/* Phones: tuck the trail into the top padding of <main> (40px on tool pages, 50px on
+   posts), so it doesn't push the tool's dropzone further down the screen. */
+@media (max-width:600px){.breadcrumbs{margin:-26px 0 8px 0;}}
+</style>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://orisod.com/es/"}, {"@type": "ListItem", "position": 2, "name": "Utilidades", "item": "https://orisod.com/es/tools/#utility"}, {"@type": "ListItem", "position": 3, "name": "Generador de links de WhatsApp", "item": "https://orisod.com/es/whatsapp-link-generator/"}]}
+</script>
+</head>
+<body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/es/"><img src="/assets/orisod-icon-nav.png" alt="" width="26" height="26">Orisod</a>
+  <div class="nav-icons">
+    <a class="nav-icon-btn support" href="/es/support/" aria-label="Apoyar a Orisod" title="Apoyar a Orisod"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg></a>
+    <button class="nav-icon-btn" id="navSearchBtn" type="button" aria-expanded="false" aria-controls="navSearch" aria-label="Buscar herramientas" title="Buscar herramientas"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
+    <form class="nav-search" id="navSearch" role="search" action="/es/tools/" method="get" hidden><label class="nav-search-label" for="navSearchInput">Buscar herramientas</label><input type="search" id="navSearchInput" name="search" placeholder="Buscar herramientas…" autocomplete="off" enterkeyhint="search"><button class="nav-icon-btn" type="submit" aria-label="Buscar"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button></form>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar entre tema claro y oscuro">🌙</button>
+    <button class="nav-icon-btn" id="navMenuBtn" type="button" aria-label="Menú" title="Menú" aria-expanded="false" aria-controls="navMenu" data-label-open="Menú" data-label-close="Cerrar menú"><svg class="menu-icon-open" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><svg class="menu-icon-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <nav class="nav-menu" id="navMenu" aria-label="Menú del sitio" hidden>
+    <p class="nav-menu-label">Herramientas</p>
+    <a class="menu-item" href="/es/tools/"><span class="icon-box cat-all"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>Todas las herramientas</a>
+    <a class="menu-item" href="/es/tools/#image"><span class="icon-box cat-image"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 2 18 17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="14" height="13" rx="1.5"/><circle cx="6" cy="8" r="1.2"/><path d="M2 15l3.5-3.5 2.5 2.5 3.5-4 3 3"/></svg></span>Herramientas de imagen</a>
+    <a class="menu-item" href="/es/tools/#pdf"><span class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/></svg></span>Herramientas PDF</a>
+    <a class="menu-item" href="/es/tools/#utility"><span class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3L5 8L11 8L11 3"/><path d="M8 8L17 19"/><path d="M15.5 20.5L18.5 17.5"/></svg></span>Utilidades</a>
+    <hr>
+    <a class="menu-item" href="/es/blog/"><span class="icon-box cat-all"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span>Blog</a>
+    <hr>
+    <div class="menu-lang"><span class="menu-lang-label">Idioma</span><a class="lang-flag" href="/whatsapp-link-generator/">EN</a><span class="lang-flag active">ES</span></div>
+  </nav>
+</header>
+<script>(function(){var n=document.querySelector('.site-nav');if(!n)return;var r=document.documentElement;function s(){r.style.setProperty('--site-nav-h',n.offsetHeight+'px');}s();if(window.ResizeObserver){new ResizeObserver(s).observe(n);}else{window.addEventListener('resize',s);}})();</script>
+
+<main>
+<div class="container">
+  <nav class="breadcrumbs" aria-label="Ruta de navegación">
+    <ol>
+      <li><a href="/es/">Inicio</a></li>
+      <li><a href="/es/tools/#utility">Utilidades</a></li>
+      <li><span aria-current="page">Generador de links de WhatsApp</span></li>
+    </ol>
+  </nav>
+  <h1>Generador de links de WhatsApp</h1>
+  <p class="lead">Crea un link que abre un chat de WhatsApp con cualquier número sin guardarlo como contacto, con un mensaje opcional listo para enviar.</p>
+  <p class="affil">No está afiliado a WhatsApp ni a Meta.</p>
+
+  <div class="box tool">
+    <div class="field">
+      <p class="field-label" id="modeLabel">Enviar a</p>
+      <div class="mode" role="group" aria-labelledby="modeLabel">
+        <button type="button" aria-pressed="true">Un número de teléfono</button>
+        <button type="button" aria-pressed="false">Cualquier chat (sin número)</button>
+      </div>
+      <p class="hint" id="anyHint" hidden>WhatsApp se abre con tu mensaje y te pide que elijas el chat.</p>
+    </div>
+
+    <div id="phoneSection">
+      <div class="field">
+        <label for="countryInput">País</label>
+        <div class="combo" id="combo">
+          <img class="combo-flag" id="countryFlag" alt="" width="22" height="22" hidden>
+          <input type="text" id="countryInput" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="countryList" aria-describedby="countryHint" autocomplete="off" spellcheck="false" placeholder="Busca un país">
+          <ul class="combo-list" id="countryList" role="listbox" aria-label="País" hidden></ul>
+        </div>
+        <p class="combo-empty" id="countryEmpty" hidden>Ningún país coincide. Prueba con otro nombre o con un código como +54.</p>
+        <p class="hint" id="countryHint">Elige el país del número. Puedes buscar por nombre o por código de país.</p>
+      </div>
+
+      <div class="field">
+        <label for="phoneInput">Número de teléfono</label>
+        <input type="tel" id="phoneInput" inputmode="tel" autocomplete="off" aria-describedby="phoneHint phoneStatus phoneError">
+        <p class="hint" id="phoneHint">Escríbelo como lo marcarías en ese país, o pégalo con + y el código de país. Puedes usar espacios, guiones y paréntesis.</p>
+        <div id="phoneStatus" aria-live="polite"></div>
+        <div class="error" id="phoneError" role="alert"></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="messageInput">Mensaje (opcional)</label>
+      <textarea id="messageInput" rows="4" aria-describedby="messageHint"></textarea>
+      <p class="hint" id="messageHint">Se conservan los saltos de línea y los emojis. Usa *negrita*, _cursiva_, ~tachado~, ```monoespaciado``` o `código` como en WhatsApp.</p>
+    </div>
+
+    <div class="field">
+      <p class="field-label" id="previewLabel">Vista previa</p>
+      <div class="chat" role="group" aria-labelledby="previewLabel"><div class="bubble empty" id="bubble">Tu mensaje aparecerá aquí.</div></div>
+    </div>
+
+    <div class="field">
+      <label for="linkOutput">Tu link</label>
+      <input type="text" id="linkOutput" readonly placeholder="El link aparece aquí cuando hay un número.">
+    </div>
+
+    <div class="actions">
+      <a class="btn primary" id="openLink" target="_blank" rel="noopener noreferrer" hidden>Abrir en WhatsApp</a>
+      <button type="button" class="btn primary" id="openDisabled" disabled aria-describedby="openReason">Abrir en WhatsApp</button>
+      <button type="button" class="btn" id="copyBtn" disabled>Copiar link</button>
+      <button type="button" class="btn" id="shareBtn" disabled>Compartir</button>
+      <button type="button" class="btn" id="qrBtn" disabled aria-describedby="qrNote">Descargar código QR</button>
+    </div>
+    <p class="reason" id="openReason">Escribe un número de teléfono para abrir el chat.</p>
+    <span class="copy-status" id="copyStatus" aria-live="polite"></span>
+    <div class="error" id="actionError" role="alert"></div>
+    <p class="hint" id="qrNote">El código QR guarda el link completo, con el mensaje, así que quien lo escanee puede leer ambos.</p>
+    <div class="qr-preview" id="qrPreview"></div>
+    <ul class="facts">
+      <li>Nada se envía automáticamente: WhatsApp abre el chat con tu mensaje escrito y tú decides cuándo enviarlo.</li>
+      <li>Orisod no guarda ni recibe el número ni el mensaje. Cuando abres el link, o alguien escanea el código QR, WhatsApp los recibe.</li>
+      <li>En el teléfono, el link abre la app de WhatsApp. En una computadora, WhatsApp muestra primero su propia página y luego abre WhatsApp Desktop o WhatsApp Web.</li>
+    </ul>
+  </div>
+
+  <div class="how-grid">
+    <section class="how" aria-labelledby="howTitle">
+      <h2 id="howTitle">Cómo funciona</h2>
+      <ol>
+        <li>Elige el país y escribe el número como lo marcarías allí, o pégalo con su código de país.</li>
+        <li>Agrega un mensaje si quieres. Aparece escrito en el chat y tú decides si lo envías.</li>
+        <li>Abre el chat, copia el link, compártelo o descárgalo como código QR.</li>
+      </ol>
+      <h3>Para tener en cuenta</h3>
+      <ul>
+        <li>El número tiene que tener una cuenta de WhatsApp. Los teléfonos fijos solo funcionan si están registrados en WhatsApp Business.</li>
+        <li>El link no caduca, y cualquiera que lo tenga puede abrir un chat con ese número.</li>
+        <li>Esta página recuerda en este dispositivo el último país que elegiste. No guarda el número ni el mensaje.</li>
+      </ul>
+    </section>
+    <aside class="related-aside" aria-labelledby="relatedTitle">
+      <h2 id="relatedTitle">Herramientas relacionadas</h2>
+      <div class="related-grid">
+      <a class="related-card" href="/es/qr-code-generator/">
+        <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="3" height="3"/><rect x="18" y="18" width="3" height="3"/></svg></div>
+        <div class="body">
+          <div class="title">Generador de códigos QR</div>
+          <div class="desc">Convierte un enlace o texto en un código QR.</div>
+        </div>
+        <div class="arrow">→</div>
+      </a>
+      <a class="related-card" href="/es/word-character-counter/">
+        <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4" cy="6" r="1.3"/><circle cx="4" cy="12" r="1.3"/><circle cx="4" cy="18" r="1.3"/></svg></div>
+        <div class="body">
+          <div class="title">Contador de palabras y caracteres</div>
+          <div class="desc">Cuenta palabras, caracteres y tiempo de lectura.</div>
+        </div>
+        <div class="arrow">→</div>
+      </a>
+      </div>
+    </aside>
+  </div>
+
+  <p class="guide-link">📖 ¿Quieres profundizar? Lee nuestra guía: <a href="/es/blog/send-whatsapp-without-saving-contact/">Cómo enviar un WhatsApp sin agregar el contacto</a></p>
+
+  <details class="more" id="more">
+    <summary>Más sobre esta herramienta</summary>
+    <div class="seo-content">
+      <h2>Qué es un link wa.me</h2>
+      <p>Un link wa.me es la dirección corta de WhatsApp para iniciar un chat. Lleva el número de teléfono en formato internacional, sin el signo más, sin espacios y sin el cero inicial, y puede llevar un mensaje en su parámetro text. Al abrirlo se inicia un chat con ese número sin guardarlo antes en tus contactos, y el mensaje aparece en el cuadro de texto, listo para enviar o editar.</p>
+
+      <h2>Cuándo usarlo</h2>
+      <ul>
+        <li>Escribir una sola vez a un número, como un repartidor o un vendedor, sin agregarlo a tus contactos</li>
+        <li>Poner un botón de chat en un sitio web, en la firma de un correo o en un perfil de redes sociales</li>
+        <li>Imprimir un código QR en una tarjeta, un volante o el mostrador de una tienda para que los clientes te escriban</li>
+        <li>Enviar a tus clientes un mensaje ya escrito, como una solicitud de reserva, que solo tienen que enviar</li>
+      </ul>
+
+      <h2>Preguntas frecuentes</h2>
+      <div class="faq-item">
+        <div class="q">¿La otra persona ve que el mensaje salió de un link?</div>
+        <div>No. El mensaje aparece escrito en el chat como si lo hubieras tecleado tú, y solo le llega cuando lo envías. Ve tu número de WhatsApp, como en cualquier chat que inicias.</div>
+      </div>
+      <div class="faq-item">
+        <div class="q">¿Por qué WhatsApp dice que el número compartido por URL no es válido?</div>
+        <div>Normalmente el número no tiene cuenta de WhatsApp, o el código de país o algún dígito está mal. Revisa el número que aparece debajo del campo. En los celulares de Argentina, comprueba que haya un 9 después de +54.</div>
+      </div>
+      <div class="faq-item">
+        <div class="q">¿Puedo crear un link para un grupo de WhatsApp?</div>
+        <div>No. Los links de invitación a grupos se crean en WhatsApp, desde la configuración del grupo. Un link wa.me siempre abre un chat con un número, o te deja elegir el chat cuando no lleva número.</div>
+      </div>
+      <div class="faq-item">
+        <div class="q">¿El link deja de funcionar con el tiempo?</div>
+        <div>No. Un link wa.me no caduca. Funciona mientras el número tenga cuenta de WhatsApp, así que crea uno nuevo si cambian el número o el mensaje.</div>
+      </div>
+    </div>
+  </details>
+
+  <footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-brand-logo">ORISOD</div>
+      <div class="footer-brand-desc">Herramientas gratuitas para imágenes y PDF que funcionan directamente en tu navegador. Todo el procesamiento de imágenes y PDF es 100 % local: tus archivos permanecen en tu dispositivo.</div>
+      <div class="footer-copy">© Orisod Labs</div>
+    </div>
+    <div class="footer-col">
+      <h3>Herramientas</h3>
+      <a href="/es/tools/#image">Herramientas de imagen</a>
+      <a href="/es/tools/#pdf">Herramientas PDF</a>
+      <a href="/es/tools/#utility">Utilidades</a>
+    </div>
+    <div class="footer-col">
+      <h3>Empresa</h3>
+      <a href="/es/about/">Acerca de</a>
+      <a href="/es/privacy/">Privacidad</a>
+      <a href="/es/blog/">Blog</a>
+    </div>
+    <div class="footer-col">
+      <h3>Apoyo</h3>
+      <p class="footer-support-text">Sin presión, se agradece si quieres ayudar a mantener esto gratis.</p>
+      <a class="footer-support-btn" href="/es/support/">Apoyar</a>
+    </div>
+  </div>
+</footer>
+</div>
+
+</main>
+
+<script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+<!-- Tool libraries load here, after the page content, so they don't hold up the first paint. -->
+<script src="/assets/vendor/libphonenumber-js/1.13.15/libphonenumber-max.js"></script>
+<script src="/assets/vendor/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+// WhatsApp link generator. Everything runs in this page: the number and the message are never stored, sent
+// anywhere by Orisod or written into this page's address. The only thing saved is the last country chosen
+// (localStorage "orisod-wa-country"). WhatsApp receives the number and the message when the link is opened.
+const LANG = "es";
+const T = {
+  "noMatch": "Ningún país coincide. Prueba con otro nombre o con un código como +54.",
+  "number": "Número de WhatsApp:",
+  "needCountry": "Elige un país o empieza el número con + y su código de país.",
+  "noDigits": "Escribe el número de teléfono con dígitos.",
+  "incomplete": "Este número parece demasiado corto o demasiado largo. Revísalo antes de compartir el link.",
+  "invalidFor": "Este número no parece válido en {country}. Revisa los dígitos: el link se crea igual.",
+  "invalidGeneric": "Este número no parece válido. Revisa los dígitos: el link se crea igual.",
+  "landline": "Parece un teléfono fijo. Solo funciona si el número está registrado en WhatsApp Business.",
+  "ar9": "En WhatsApp, los celulares de Argentina llevan un 9 después de +54. Si es un celular, agrégalo.",
+  "ar9Btn": "Agregar el 9",
+  "mx1": "Se quitó el 1 después de +52: los números de México ya no lo usan y WhatsApp necesita +52 y los 10 dígitos.",
+  "intl00": "El 00 del principio se leyó como el prefijo internacional (+).",
+  "intl011": "El 011 del principio se leyó como el prefijo internacional (+).",
+  "reasonNumber": "Escribe un número de teléfono para abrir el chat.",
+  "reasonMessage": "Escribe un mensaje primero. WhatsApp te preguntará a quién enviarlo.",
+  "previewEmpty": "Tu mensaje aparecerá aquí.",
+  "copied": "Copiado",
+  "copyFail": "No se pudo copiar el link. Selecciónalo en el cuadro de arriba y cópialo tú.",
+  "shareFallback": "Este navegador no permite compartir, así que el link se copió.",
+  "shareFail": "No se pudo compartir el link. Cópialo en su lugar.",
+  "qrHint": "El código QR guarda el link completo, con el mensaje, así que quien lo escanee puede leer ambos.",
+  "qrDense": "Este link es largo, así que el código QR será denso. Pruébalo con un teléfono antes de imprimirlo.",
+  "qrTooLong": "Este link es demasiado largo para un código QR ({n} de {max} caracteres). Acorta el mensaje para crearlo.",
+  "qrFail": "No se pudo crear el código QR. Prueba con un mensaje más corto.",
+  "qrAlt": "Código QR de tu link de WhatsApp",
+  "qrFile": "link-whatsapp-qr.png"
+};
+const FLAG_DIR = "/assets/vendor/circle-flags/2.8.3/";
+const FLAG_CODES = "ac ad ae af ag ai al am ao ar as at au aw ax az ba bb bd be bf bg bh bi bj bl bm bn bo bq br bs bt bw by bz ca cc cd cf cg ch ci ck cl cm cn co cr cu cv cw cx cy cz de dj dk dm do dz ec ee eg eh er es et fi fj fk fm fo fr ga gb gd ge gf gg gh gi gl gm gn gp gq gr gt gu gw gy hk hn hr ht hu id ie il im in io iq ir is it je jm jo jp ke kg kh ki km kn kp kr kw ky kz la lb lc li lk lr ls lt lu lv ly ma mc md me mf mg mh mk ml mm mn mo mp mq mr ms mt mu mv mw mx my mz na nc ne nf ng ni nl no np nr nu nz om pa pe pf pg ph pk pl pm pr ps pt pw py qa re ro rs ru rw sa sb sc sd se sg sh si sj sk sl sm sn so sr ss st sv sx sy sz ta tc td tg th tj tk tl tm tn to tr tt tv tw tz ua ug us uy uz va vc ve vg vi vn vu wf ws xk ye yt za zm zw";
+const FLAGS = new Set(FLAG_CODES.split(" "));
+const STORE_KEY = "orisod-wa-country";
+const QR_MAX = 2329;   // the longest link qrcodejs 1.0.0 can encode at error correction level M
+const QR_DENSE = 500;  // past this the code gets dense: test it before printing
+const QR_SIZE = 512, QR_MARGIN = 40;
+const lib = window.libphonenumber;
+const $ = (id) => document.getElementById(id);
+const modeBtns = [...document.querySelectorAll(".mode button")];
+const phoneSection = $("phoneSection"), anyHint = $("anyHint");
+const combo = $("combo"), countryInput = $("countryInput"), countryList = $("countryList"), countryFlag = $("countryFlag"), countryEmpty = $("countryEmpty");
+const phoneInput = $("phoneInput"), phoneStatus = $("phoneStatus"), phoneError = $("phoneError");
+const messageInput = $("messageInput"), bubble = $("bubble"), linkOutput = $("linkOutput");
+const openLink = $("openLink"), openDisabled = $("openDisabled"), openReason = $("openReason");
+const copyBtn = $("copyBtn"), shareBtn = $("shareBtn"), qrBtn = $("qrBtn"), qrNote = $("qrNote"), qrPreview = $("qrPreview");
+const copyStatus = $("copyStatus"), actionError = $("actionError");
+
+const fold = (s) => s.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
+const fill = (s, vars) => s.replace(/\{(\w+)\}/g, (m, k) => (k in vars ? vars[k] : m));
+const flagUrl = (code) => (FLAGS.has(code.toLowerCase()) ? FLAG_DIR + code.toLowerCase() + ".svg" : "");
+const displayNames = (() => { try { return new Intl.DisplayNames([LANG], { type: "region" }); } catch (e) { return null; } })();
+
+// --- Countries: every region libphonenumber knows, named in the page's language. Shared calling codes
+// (+1, +7, +44...) are listed once per country.
+const COUNTRIES = lib.getCountries().map((code) => {
+  let name = code;
+  try { name = (displayNames && displayNames.of(code)) || code; } catch (e) { name = code; }
+  return { code, name, dial: String(lib.getCountryCallingCode(code)), key: fold(name) };
+}).sort((a, b) => a.name.localeCompare(b.name, LANG));
+const BY_CODE = new Map(COUNTRIES.map((c) => [c.code, c]));
+let country = null;
+let visible = [];
+let active = -1;
+let flagsLoaded = false;
+
+for (const c of COUNTRIES) {
+  const li = document.createElement("li");
+  li.id = "country-" + c.code;
+  li.setAttribute("role", "option");
+  li.setAttribute("aria-selected", "false");
+  const img = document.createElement("img");
+  img.alt = "";
+  img.width = 22;
+  img.height = 22;
+  img.loading = "lazy";
+  const name = document.createElement("span");
+  name.className = "opt-name";
+  name.textContent = c.name;
+  const dial = document.createElement("span");
+  dial.className = "opt-dial";
+  dial.textContent = "+" + c.dial;
+  li.append(img, name, dial);
+  li.addEventListener("mousedown", (e) => e.preventDefault()); // keep focus in the input
+  li.addEventListener("click", () => choose(c));
+  c.li = li;
+  countryList.appendChild(li);
+}
+
+const display = (c) => (c ? `${c.name} (+${c.dial})` : "");
+
+function matches(query) {
+  const q = query.trim();
+  if (!q) return COUNTRIES.slice();
+  const digits = q.replace(/\D/g, "");
+  if (/^\+?\d+$/.test(q)) {
+    return COUNTRIES.filter((c) => c.dial === digits).concat(COUNTRIES.filter((c) => c.dial !== digits && c.dial.startsWith(digits)));
+  }
+  const f = fold(q);
+  const first = [], rest = [];
+  for (const c of COUNTRIES) {
+    if (c.key.startsWith(f) || c.code.toLowerCase() === f) first.push(c);
+    else if (c.key.includes(f)) rest.push(c);
+  }
+  return first.concat(rest);
+}
+
+function setActive(i) {
+  if (active >= 0 && visible[active]) visible[active].li.setAttribute("aria-selected", "false");
+  active = i;
+  if (i >= 0 && visible[i]) {
+    visible[i].li.setAttribute("aria-selected", "true");
+    countryInput.setAttribute("aria-activedescendant", visible[i].li.id);
+    visible[i].li.scrollIntoView({ block: "nearest" });
+  } else {
+    countryInput.removeAttribute("aria-activedescendant");
+  }
+}
+
+function showList(query) {
+  if (!flagsLoaded) {
+    flagsLoaded = true;
+    for (const c of COUNTRIES) { const src = flagUrl(c.code); if (src) c.li.firstChild.src = src; }
+  }
+  setActive(-1);
+  visible = matches(query);
+  for (const c of COUNTRIES) c.li.hidden = true;
+  for (const c of visible) { c.li.hidden = false; countryList.appendChild(c.li); }
+  countryEmpty.hidden = visible.length > 0;
+  countryList.hidden = visible.length === 0;
+  countryInput.setAttribute("aria-expanded", visible.length ? "true" : "false");
+}
+
+function hideList() {
+  setActive(-1);
+  countryList.hidden = true;
+  countryEmpty.hidden = true;
+  countryInput.setAttribute("aria-expanded", "false");
+}
+
+function showFlag(c) {
+  const src = c ? flagUrl(c.code) : "";
+  countryFlag.hidden = !src;
+  if (src) countryFlag.src = src;
+  combo.classList.toggle("has-flag", !!src);
+}
+
+function choose(c) {
+  country = c;
+  countryInput.value = display(c);
+  showFlag(c);
+  hideList();
+  try { localStorage.setItem(STORE_KEY, c.code); } catch (e) { /* storage blocked: nothing is remembered */ }
+  update();
+}
+
+countryInput.addEventListener("focus", () => countryInput.select());
+countryInput.addEventListener("click", () => {
+  if (!countryList.hidden) return;
+  showList("");
+  if (country) setActive(visible.indexOf(country));
+});
+countryInput.addEventListener("input", () => {
+  showList(countryInput.value);
+  if (visible.length) setActive(0);
+});
+countryInput.addEventListener("keydown", (e) => {
+  const open = !countryList.hidden;
+  if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+    e.preventDefault();
+    if (!open) {
+      showList("");
+      const at = country ? visible.indexOf(country) : -1;
+      setActive(at >= 0 ? at : (e.key === "ArrowDown" ? 0 : visible.length - 1));
+      return;
+    }
+    if (!visible.length) return;
+    const step = e.key === "ArrowDown" ? 1 : -1;
+    setActive(active < 0 ? (step > 0 ? 0 : visible.length - 1) : (active + step + visible.length) % visible.length);
+  } else if (e.key === "Enter") {
+    if (open && active >= 0) { e.preventDefault(); choose(visible[active]); }
+  } else if (e.key === "Escape") {
+    if (open || !countryEmpty.hidden) { e.preventDefault(); hideList(); }
+    countryInput.value = display(country);
+  }
+});
+countryInput.addEventListener("blur", () => {
+  hideList();
+  countryInput.value = display(country);
+});
+
+function initialCountry() {
+  try {
+    const saved = localStorage.getItem(STORE_KEY);
+    if (saved && BY_CODE.has(saved)) return BY_CODE.get(saved);
+  } catch (e) { /* storage blocked */ }
+  // Only the browser's first language counts, and only when it names a region (es-AR, en-GB): no guessing.
+  const tag = (navigator.languages && navigator.languages[0]) || navigator.language || "";
+  let region = "";
+  try { region = new Intl.Locale(tag).region || ""; } catch (e) { region = ""; }
+  return BY_CODE.get(region.toUpperCase()) || null;
+}
+
+// --- The phone number: what libphonenumber makes of it, plus the fixes WhatsApp needs.
+function readPhone(raw) {
+  const text = raw.trim();
+  if (!text) return { state: "empty" };
+  const compact = text.replace(/[^\d+]/g, "");
+  if (!/\d/.test(compact)) return { state: "no-digits" };
+  const notes = [];
+  let intl = null;
+  if (compact.startsWith("+")) intl = compact.slice(1).replace(/\D/g, "");
+  else if (compact.startsWith("00")) { intl = compact.slice(2); notes.push("intl00"); }
+  else if (compact.startsWith("011") && country && country.dial === "1") { intl = compact.slice(3); notes.push("intl011"); }
+  let pn;
+  if (intl !== null) {
+    if (!intl) return { state: "no-digits" };
+    pn = lib.parsePhoneNumberFromString("+" + intl);
+    if (!pn) return { state: "ok", digits: intl, pn: null, notes };
+  } else {
+    if (!country) return { state: "need-country" };
+    const digits = compact.replace(/\D/g, "");
+    pn = lib.parsePhoneNumberFromString(digits, country.code);
+    if (!pn) return { state: "ok", digits: country.dial + digits.replace(/^0+/, ""), pn: null, notes };
+  }
+  // Mexico: mobile numbers dropped the 1 after +52 in 2019, and WhatsApp needs +52 and the 10 digits.
+  if (pn.countryCallingCode === "52" && /^1\d{10}$/.test(pn.nationalNumber)) {
+    const fixed = lib.parsePhoneNumberFromString("+52" + pn.nationalNumber.slice(1));
+    if (fixed) { pn = fixed; notes.push("mx1"); }
+  }
+  let type;
+  try { type = pn.getType(); } catch (e) { type = undefined; }
+  return {
+    state: "ok", digits: pn.number.slice(1), pn, notes, type,
+    // Argentina: on WhatsApp a mobile number needs a 9 after +54 (dialled at home as 15). Without it the
+    // number reads as a landline; we suggest the 9 and never add it on our own.
+    ar9: pn.countryCallingCode === "54" && !pn.nationalNumber.startsWith("9"),
+  };
+}
+
+function note(text, warn) {
+  const p = document.createElement("p");
+  p.className = "note-box" + (warn ? " warn" : "");
+  p.textContent = (warn ? "⚠️ " : "") + text;
+  return p;
+}
+
+function renderStatus(r) {
+  phoneStatus.replaceChildren();
+  phoneError.textContent = "";
+  if (r.state === "empty") return;
+  if (r.state === "need-country") { phoneError.textContent = T.needCountry; return; }
+  if (r.state === "no-digits") { phoneError.textContent = T.noDigits; return; }
+  const out = document.createElement("p");
+  out.className = "number-out";
+  out.append(T.number + " ");
+  const strong = document.createElement("strong");
+  strong.textContent = r.pn ? r.pn.formatInternational() : "+" + r.digits;
+  out.append(strong);
+  const where = r.pn && r.pn.country && BY_CODE.get(r.pn.country);
+  if (where) out.append(` (${where.name})`);
+  phoneStatus.append(out);
+  for (const n of r.notes) phoneStatus.append(note(T[n], false));
+  if (!r.pn || !r.pn.isPossible()) {
+    phoneStatus.append(note(T.incomplete, true));
+  } else if (r.ar9) {
+    const box = note(T.ar9, true);
+    const add = document.createElement("button");
+    add.type = "button";
+    add.className = "small-btn";
+    add.id = "addNineBtn";
+    add.textContent = T.ar9Btn;
+    add.addEventListener("click", () => {
+      const fixed = lib.parsePhoneNumberFromString("+549" + r.pn.nationalNumber);
+      phoneInput.value = fixed ? fixed.formatInternational() : "+549" + r.pn.nationalNumber;
+      update(true);
+      phoneInput.focus();
+    });
+    box.append(document.createElement("br"), add);
+    phoneStatus.append(box);
+  } else if (!r.pn.isValid()) {
+    phoneStatus.append(note(where ? fill(T.invalidFor, { country: where.name }) : T.invalidGeneric, true));
+  } else if (r.type === "FIXED_LINE") {
+    phoneStatus.append(note(T.landline, true));
+  }
+}
+
+// --- The message preview: WhatsApp's *bold*, _italic_, ~strikethrough~, ```monospace``` and `inline code`,
+// built only from text nodes and elements (never HTML from what was typed).
+const RULES = [
+  { re: /()```([\s\S]+?)```/, tag: "code", cls: "mono", plain: true },
+  { re: /()`([^`\n]+)`/, tag: "code", plain: true },
+  { re: /(^|[^\p{L}\p{N}*])\*(?=\S)([^\n]*?\S)\*(?![\p{L}\p{N}])/u, tag: "strong" },
+  { re: /(^|[^\p{L}\p{N}_])_(?=\S)([^\n]*?\S)_(?![\p{L}\p{N}])/u, tag: "em" },
+  { re: /(^|[^\p{L}\p{N}~])~(?=\S)([^\n]*?\S)~(?![\p{L}\p{N}])/u, tag: "s" },
+];
+function renderFormatted(text, parent) {
+  while (text) {
+    let best = null;
+    for (const rule of RULES) {
+      const m = rule.re.exec(text);
+      if (!m) continue;
+      const start = m.index + m[1].length;
+      if (!best || start < best.start) best = { rule, start, inner: m[2], end: m.index + m[0].length };
+    }
+    if (!best) { parent.append(document.createTextNode(text)); return; }
+    if (best.start) parent.append(document.createTextNode(text.slice(0, best.start)));
+    const el = document.createElement(best.rule.tag);
+    if (best.rule.cls) el.className = best.rule.cls;
+    if (best.rule.plain) el.textContent = best.inner;
+    else renderFormatted(best.inner, el);
+    parent.append(el);
+    text = text.slice(best.end);
+  }
+}
+
+function renderPreview(message) {
+  bubble.replaceChildren();
+  bubble.classList.toggle("empty", !message.trim());
+  if (!message.trim()) bubble.textContent = T.previewEmpty;
+  else renderFormatted(message, bubble);
+}
+
+// --- The link and the actions.
+let link = "";
+let statusTimer = 0;
+function update(statusNow) {
+  const noNumber = modeBtns[1].getAttribute("aria-pressed") === "true";
+  const message = messageInput.value;
+  const hasMessage = message.trim() !== "";
+  const text = hasMessage ? "?text=" + encodeURIComponent(message) : "";
+  let reason = "";
+  if (noNumber) {
+    link = hasMessage ? "https://wa.me/" + text : "";
+    if (!hasMessage) reason = T.reasonMessage;
+    phoneError.textContent = "";
+  } else {
+    const r = readPhone(phoneInput.value);
+    link = r.state === "ok" ? "https://wa.me/" + r.digits + text : "";
+    if (!link) reason = r.state === "need-country" ? T.needCountry : r.state === "no-digits" ? T.noDigits : T.reasonNumber;
+    // The notes under the field wait until typing pauses, so a screen reader isn't told about every digit.
+    clearTimeout(statusTimer);
+    if (statusNow) renderStatus(r);
+    else statusTimer = setTimeout(() => renderStatus(readPhone(phoneInput.value)), 500);
+  }
+  renderPreview(message);
+  linkOutput.value = link;
+  const ready = !!link;
+  openLink.hidden = !ready;
+  openDisabled.hidden = ready;
+  if (ready) openLink.href = link; else openLink.removeAttribute("href");
+  openReason.textContent = reason;
+  copyBtn.disabled = shareBtn.disabled = !ready;
+  copyStatus.textContent = "";
+  actionError.textContent = "";
+  qrPreview.replaceChildren();
+  qrBtn.disabled = !ready || link.length > QR_MAX;
+  qrNote.textContent = ready && link.length > QR_MAX
+    ? fill(T.qrTooLong, { n: link.length.toLocaleString(LANG), max: QR_MAX.toLocaleString(LANG) })
+    : ready && link.length > QR_DENSE ? T.qrDense : T.qrHint;
+}
+
+for (const btn of modeBtns) {
+  btn.addEventListener("click", () => {
+    for (const b of modeBtns) b.setAttribute("aria-pressed", b === btn ? "true" : "false");
+    const noNumber = btn === modeBtns[1];
+    phoneSection.hidden = noNumber;
+    anyHint.hidden = !noNumber;
+    update(true);
+  });
+}
+phoneInput.addEventListener("input", () => update(false));
+phoneInput.addEventListener("blur", () => update(true));
+messageInput.addEventListener("input", () => update(true));
+
+let copiedTimer = 0;
+function announceCopied(text) {
+  clearTimeout(copiedTimer);
+  copyStatus.textContent = "";
+  // A fresh text node each time, so "Copied" is announced again on a second copy.
+  setTimeout(() => { copyStatus.textContent = text; }, 50);
+  copiedTimer = setTimeout(() => { copyStatus.textContent = ""; }, 5000);
+}
+async function copyText(value) {
+  try {
+    await navigator.clipboard.writeText(value);
+    return true;
+  } catch (e) {
+    try {
+      linkOutput.focus();
+      linkOutput.select();
+      return document.execCommand("copy");
+    } catch (e2) { return false; }
+  }
+}
+copyBtn.addEventListener("click", async () => {
+  actionError.textContent = "";
+  if (await copyText(link)) announceCopied(T.copied);
+  else actionError.textContent = T.copyFail;
+});
+shareBtn.addEventListener("click", async () => {
+  actionError.textContent = "";
+  if (!navigator.share) {
+    if (await copyText(link)) announceCopied(T.shareFallback);
+    else actionError.textContent = T.copyFail;
+    return;
+  }
+  try { await navigator.share({ url: link }); }
+  catch (e) { if (e && e.name !== "AbortError") actionError.textContent = T.shareFail; }
+});
+qrBtn.addEventListener("click", () => {
+  actionError.textContent = "";
+  qrPreview.replaceChildren();
+  if (!link || link.length > QR_MAX) return;
+  try {
+    const holder = document.createElement("div");
+    new QRCode(holder, { text: link, width: QR_SIZE, height: QR_SIZE, colorDark: "#000000", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M });
+    const drawn = holder.querySelector("canvas");
+    if (!drawn) throw new Error("no canvas");
+    // qrcodejs draws no quiet zone; scanners need a white margin round the code.
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = QR_SIZE + 2 * QR_MARGIN;
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(drawn, QR_MARGIN, QR_MARGIN);
+    const url = canvas.toDataURL("image/png");
+    const img = document.createElement("img");
+    img.src = url;
+    img.alt = T.qrAlt;
+    qrPreview.append(img);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = T.qrFile;
+    document.body.append(a);
+    a.click();
+    a.remove();
+  } catch (e) {
+    actionError.textContent = T.qrFail;
+  }
+});
+
+const start = initialCountry();
+if (start) { country = start; countryInput.value = display(start); showFlag(start); }
+update(true);
+</script>
+<script>
+// Minimal nav (Initiative 2): the Menu panel and the Search icon.
+// Button labels come from data attributes, so the same script works in every
+// language. The Search icon opens a small search box under the nav; only
+// submitting it leaves the page (to /tools/?search=...). On a page that has
+// its own search box, the icon's data-search-target names it and the icon
+// just scrolls to it and focuses it instead.
+(function(){
+  var menuBtn = document.getElementById('navMenuBtn');
+  var menu = document.getElementById('navMenu');
+  var searchBtn = document.getElementById('navSearchBtn');
+  var form = document.getElementById('navSearch');
+  var input = form && form.querySelector('input');
+  if(!menuBtn || !menu || !searchBtn) return;
+
+  function openMenu(){
+    closeSearch(false);
+    menu.hidden = false;
+    menuBtn.setAttribute('aria-expanded', 'true');
+    menuBtn.setAttribute('aria-label', menuBtn.getAttribute('data-label-close'));
+    var first = menu.querySelector('a'); if(first) first.focus();
+  }
+  function closeMenu(returnFocus){
+    if(menu.hidden) return;
+    menu.hidden = true;
+    menuBtn.setAttribute('aria-expanded', 'false');
+    menuBtn.setAttribute('aria-label', menuBtn.getAttribute('data-label-open'));
+    if(returnFocus) menuBtn.focus();
+  }
+  menuBtn.addEventListener('click', function(){
+    if(menu.hidden) openMenu(); else closeMenu(true);
+  });
+  // Picking a link closes the menu (matters where a link acts in place, like /tools filters).
+  menu.addEventListener('click', function(e){
+    if(e.target.closest('a')) closeMenu(false);
+  });
+  // Tabbing past the last menu link closes the menu.
+  menu.addEventListener('focusout', function(e){
+    if(e.relatedTarget && !menu.contains(e.relatedTarget) && e.relatedTarget !== menuBtn) closeMenu(false);
+  });
+
+  function openSearch(){
+    closeMenu(false);
+    form.hidden = false;
+    searchBtn.setAttribute('aria-expanded', 'true');
+    input.focus();
+  }
+  function closeSearch(returnFocus){
+    if(!form || form.hidden) return;
+    form.hidden = true;
+    input.value = '';
+    searchBtn.setAttribute('aria-expanded', 'false');
+    if(returnFocus) searchBtn.focus();
+  }
+  searchBtn.addEventListener('click', function(){
+    var target = document.getElementById(searchBtn.getAttribute('data-search-target'));
+    if(target){
+      closeMenu(false);
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      target.scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block: 'center'});
+      target.focus({preventScroll: true});
+      return;
+    }
+    if(!form) return;
+    if(form.hidden) openSearch(); else closeSearch(true);
+  });
+  if(form){
+    // An empty search goes nowhere; the box just stays open.
+    form.addEventListener('submit', function(e){
+      if(!input.value.trim()){ e.preventDefault(); input.focus(); }
+    });
+    form.addEventListener('focusout', function(e){
+      if(e.relatedTarget && !form.contains(e.relatedTarget) && e.relatedTarget !== searchBtn) closeSearch(false);
+    });
+  }
+
+  document.addEventListener('click', function(e){
+    if(!menu.contains(e.target) && !menuBtn.contains(e.target)) closeMenu(false);
+    if(form && !form.contains(e.target) && !searchBtn.contains(e.target)) closeSearch(false);
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key !== 'Escape') return;
+    if(form && !form.hidden) closeSearch(true); else closeMenu(true);
+  });
+})();
+</script>
+</body>
+</html>
