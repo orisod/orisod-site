@@ -824,9 +824,9 @@ const FLAG = (code) => `/assets/vendor/circle-flags/2.8.3/${code}.svg`;
 const WA_QR_MAX = 2328;
 const WA_TEXT = {
   en: { copied: "Copied", reason: "Enter a phone number to open the chat.", reasonMessage: "Write a message first. WhatsApp will ask you who to send it to.",
-    add9: "Add the 9", mx1: "The 1 after +52 was removed", summary: "More about this tool", qrFile: "whatsapp-link-qr.png" },
+    add9: "Add the 9", mx1: "The 1 after +52 was removed", summary: "Help and details", qrFile: "whatsapp-link-qr.png" },
   es: { copied: "Copiado", reason: "Escribe un número de teléfono para abrir el chat.", reasonMessage: "Escribe un mensaje primero. WhatsApp te preguntará a quién enviarlo.",
-    add9: "Agregar el 9", mx1: "Se quitó el 1 después de +52", summary: "Más sobre esta herramienta", qrFile: "link-whatsapp-qr.png" },
+    add9: "Agregar el 9", mx1: "Se quitó el 1 después de +52", summary: "Ayuda y detalles", qrFile: "link-whatsapp-qr.png" },
 };
 const regionName = (page, code) => page.evaluate((c) => new Intl.DisplayNames([document.documentElement.lang], { type: "region" }).of(c), code);
 // Pick a country the way a visitor does: type its name in the combobox and press Enter.
@@ -923,19 +923,38 @@ function expectFirst(first, code) {
 }
 const WA_STRUCTURE = () => {
   const q = (s) => document.querySelector(s);
-  const footer = q("footer.site-footer"), details = q("details.more"), guide = q("p.guide-link");
+  const footer = q("footer.site-footer"), details = q("details.more"), guide = q(".how p.guide-link");
   const after = [...document.body.querySelectorAll("*")].filter((el) => (footer.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING)
     && !footer.contains(el) && !["SCRIPT", "STYLE"].includes(el.tagName) && el.getClientRects().length > 0);
-  const order = ["nav.breadcrumbs", "h1", "p.lead", "p.affil", ".tool", ".how-grid", "p.guide-link", "details.more", "footer.site-footer"].map(q);
+  const order = ["nav.breadcrumbs", "h1", "p.lead", "p.affil", ".tool", ".how-grid", "details.more", "footer.site-footer"].map(q);
   const inOrder = order.every((el, i) => el && (i === 0 || (order[i - 1].compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING)));
   return { after: after.map((el) => el.tagName.toLowerCase() + (el.id ? "#" + el.id : el.className ? "." + String(el.className).split(" ")[0] : "")),
     detailsAfterGuide: !!(guide.compareDocumentPosition(details) & Node.DOCUMENT_POSITION_FOLLOWING),
-    detailsBeforeFooter: !!(details.compareDocumentPosition(footer) & Node.DOCUMENT_POSITION_FOLLOWING), inOrder };
+    detailsBeforeFooter: !!(details.compareDocumentPosition(footer) & Node.DOCUMENT_POSITION_FOLLOWING), inOrder,
+    // How it works: three steps in an <ol>, the guide line right under them (a real link, outside the block);
+    // Related tools: three cards; one <details>, its <summary> the first child, with no role and no control inside.
+    steps: document.querySelectorAll(".how-grid .how > ol > li").length,
+    guideAfterSteps: !!guide && guide.previousElementSibling === q(".how-grid .how > ol"),
+    guideHref: guide?.querySelector("a[href]")?.getAttribute("href") || "", guideInDetails: !!guide && details.contains(guide),
+    cards: document.querySelectorAll(".how-grid .related-aside .related-card").length,
+    detailsCount: document.querySelectorAll("details").length,
+    summaryFirst: details.firstElementChild?.tagName === "SUMMARY", summaryRole: details.querySelector("summary").getAttribute("role") };
 };
 function expectStructure(s) {
   expect(!s.after.length, `visible elements after the footer: ${s.after.join(", ")}`);
   expect(s.detailsAfterGuide && s.detailsBeforeFooter, "the collapsed block isn't between the guide link and the footer");
-  expect(s.inOrder, "the page isn't breadcrumb, H1, description, not-affiliated line, tool, How it works, guide link, collapsed block, footer");
+  expect(s.inOrder, "the page isn't breadcrumb, H1, description, not-affiliated line, tool, How it works and Related tools, collapsed block, footer");
+  expect(s.steps === 3, `${s.steps} steps in How it works, not 3`);
+  expect(s.guideAfterSteps && /\/blog\/send-whatsapp-without-saving-contact\/$/.test(s.guideHref) && !s.guideInDetails,
+    `the guide link isn't right under the steps, outside the collapsed block (href "${s.guideHref}")`);
+  expect(s.cards === 3, `${s.cards} Related tools cards, not 3`);
+  expect(s.detailsCount === 1 && s.summaryFirst && s.summaryRole === null, `${s.detailsCount} <details>, summary first ${s.summaryFirst}, role ${s.summaryRole}`);
+}
+function expectNotes(n) {
+  expect(n.moved === 6, `${6 - n.moved} field notes still in the tool or missing from the collapsed block`);
+  expect(n.sections === 6 && n.faqLast, `${n.sections} sections in the collapsed block, FAQ last ${n.faqLast}`);
+  expect(n.facts === 0, "a list of notes is still in the tool");
+  expect(n.qrHidden, "the QR note shows before there's a link");
 }
 const WA_FAQ = () => {
   const visible = [...document.querySelectorAll("details.more .faq-item")].map((el) => [el.children[0].textContent.trim(), el.children[1].textContent.trim()]);
@@ -2317,6 +2336,15 @@ const CASES = [
     async run(page, lang) {
       const structure = await page.evaluate(WA_STRUCTURE);
       expectStructure(structure);
+      // The operational notes live in the collapsed block (6 sections, FAQ last), not in the tool; the QR note shows only with a link.
+      const notes = await page.evaluate(() => {
+        const d = document.querySelector("details.more"), tool = document.querySelector(".tool");
+        const ids = ["countryHint", "phoneHint", "fmtHelp", "messageHint", "emojiHelp", "emojiLengthNote"];
+        return { moved: ids.filter((id) => d.contains(document.getElementById(id)) && !tool.contains(document.getElementById(id))).length,
+          sections: d.querySelectorAll(".seo-content > h2").length, faqLast: d.querySelector(".seo-content > h2:last-of-type").nextElementSibling?.className === "faq-item",
+          facts: tool.querySelectorAll("ul:not(.combo-list)").length, qrHidden: document.getElementById("qrNote").hidden };
+      });
+      expectNotes(notes);
       const summary = page.locator("details.more > summary");
       const closed = await page.evaluate(() => {
         const d = document.querySelector("details.more"), s = d.querySelector("summary");
@@ -2345,6 +2373,8 @@ const CASES = [
       const widths = [["empty", await waOverflow(page)]];
       await waCountry(page, "AR");
       await waNumber(page, "11 2345 6789");
+      const qrShown = await page.evaluate(() => { const n = document.getElementById("qrNote"); return !n.hidden && n.getClientRects().length > 0 && n.textContent.length > 0; });
+      expect(qrShown, "the QR note isn't shown once there's a link");
       await page.fill("#messageInput", "https://example.org/" + "x".repeat(300) + "\n*bold* " + "y".repeat(200));
       widths.push(["filled", await waOverflow(page)]);
       await page.click("#qrBtn");
@@ -2374,9 +2404,16 @@ const CASES = [
       const nowOpen = await plain.evaluate(() => ({ open: document.querySelector("details.more").open, faq: document.querySelectorAll("details.more .faq-item").length }));
       await noJs.close();
       expect(!wasOpen && nowOpen.open && nowOpen.faq === 4, `without JavaScript the block was open ${wasOpen}, opened ${nowOpen.open}, ${nowOpen.faq} FAQ items`);
-      return `footer last, block between the guide link and the footer; closed on load with its text in the page; "${closed.label}" ${Math.round(closed.height)}px; ` +
+      return `footer last; How it works with 3 steps and the guide link under them, 3 Related tools cards, one block with its summary first; ` +
+        `the field notes in the block's 6 sections, the QR note only once there's a link; closed on load with its text in the page; "${closed.label}" ${Math.round(closed.height)}px; ` +
         `Enter opens, Space closes, the arrow turns, focus ring shown; FAQ equals the FAQPage JSON-LD; no sideways scroll at 320 px (${widths.map((w) => w[0]).join(", ")}); works without JavaScript; ` +
         [mustFail("the block moved after the footer", () => expectStructure(moved)),
+          mustFail("a fourth step", () => expectStructure({ ...structure, steps: 4 })),
+          mustFail("the guide link inside the block", () => expectStructure({ ...structure, guideInDetails: true })),
+          mustFail("two Related tools cards", () => expectStructure({ ...structure, cards: 2 })),
+          mustFail("a summary with role=button", () => expectStructure({ ...structure, summaryRole: "button" })),
+          mustFail("a hint left in the tool", () => expectNotes({ ...notes, moved: 5 })),
+          mustFail("the QR note shown with no link", () => expectNotes({ ...notes, qrHidden: false })),
           mustFail("a FAQ answer that differs from the JSON-LD", () => expectFaq({ ...faq, jsonld: faq.jsonld.map((x, i) => (i === 2 ? [x[0], x[1] + " Extra."] : x)) })),
           mustFail("an indicator that doesn't change", () => expectIndicator(closed.arrow, closed.arrow)),
           mustFail("a 400px element at 320 px", () => expectNoOverflow(wide, "with a 400px element"))].join("; ");
