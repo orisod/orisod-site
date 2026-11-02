@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Negative tests for check_vendor.py's tarball-member and vendor-path rules.
+"""Negative tests for check_vendor.py's tarball-member, vendor-path, flag-folder and wa.me rules.
 
 Builds a tiny site in a temporary folder (one page, one vendored "font" taken from
-a release tarball, its LICENSE), checks that check_vendor.py passes on it, then
+a release tarball, its LICENSE, two circle-flags images and theirs, and a
+WhatsApp link generator page), checks that check_vendor.py passes on it, then
 breaks it one way at a time and checks that check_vendor.py fails with the
 expected message. Run after changing either rule:
 
@@ -21,6 +22,8 @@ URL = "https://example.org/releases/demo-fonts-1.0.tar.gz"
 FOLDER = "assets/vendor/demo-font/1.0/"
 FONT = b"not really a font, only bytes to hash"
 LICENSE = b"Demo license text\n"
+FLAGS = "assets/vendor/circle-flags/9.9/"
+FLAG_SVG = b"<svg xmlns='http://www.w3.org/2000/svg'/>"
 
 
 def entry(name, data):
@@ -33,6 +36,12 @@ MANIFEST = {"about": "test", "libraries": [{
     "release_archive": {"url": URL, "sha256": "0" * 64, "bytes": 1, "checksum_from": "a test"},
     "files": [entry("Demo-Regular.ttf", FONT)],
     "license_file": entry("LICENSE", LICENSE),
+}, {
+    "name": "circle-flags", "version": "9.9", "license": "MIT", "used_by": ["whatsapp-link-generator"],
+    "files": [{"path": FLAGS + c + ".svg", "source": "https://example.org/flags/" + c + ".svg",
+               "sha256": hashlib.sha256(FLAG_SVG).hexdigest(), "bytes": len(FLAG_SVG)} for c in ("ar", "mx")],
+    "license_file": {"path": FLAGS + "LICENSE", "source": "https://example.org/LICENSE",
+                     "sha256": hashlib.sha256(LICENSE).hexdigest(), "bytes": len(LICENSE)},
 }]}
 PAGE = """<!doctype html><html><head><title>t</title></head><body><main>t</main>
 <script>
@@ -41,12 +50,26 @@ fetch(FONT_FILES[0]);
 fetch(`${location.origin}/assets/vendor/demo-font/1.0/Demo-Regular.ttf`);
 </script></body></html>
 """
+WA_PAGE = """<!doctype html><html><head><title>w</title></head><body><main>w</main>
+<script>
+const FLAG_DIR = "/assets/vendor/circle-flags/9.9/";
+const FLAG_CODES = "ar mx";
+img.src = FLAG_DIR + code + ".svg";
+link.href = `https://wa.me/${digits}?text=${encodeURIComponent(message)}`;
+</script></body></html>
+"""
 
 
-def build(root, manifest=MANIFEST, page=PAGE, site_js=None):
+def build(root, manifest=MANIFEST, page=PAGE, site_js=None, wa_page=WA_PAGE):
     (root / FOLDER).mkdir(parents=True)
     (root / FOLDER / "Demo-Regular.ttf").write_bytes(FONT)
     (root / FOLDER / "LICENSE").write_bytes(LICENSE)
+    (root / FLAGS).mkdir(parents=True)
+    for c in ("ar", "mx"):
+        (root / FLAGS / (c + ".svg")).write_bytes(FLAG_SVG)
+    (root / FLAGS / "LICENSE").write_bytes(LICENSE)
+    (root / "whatsapp-link-generator").mkdir()
+    (root / "whatsapp-link-generator/index.html").write_text(wa_page, encoding="utf-8")
     (root / "assets/vendor/manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
     (root / ".gitattributes").write_text("assets/vendor/** -text\n", encoding="utf-8")
     (root / "index.html").write_text(page, encoding="utf-8")
@@ -93,6 +116,16 @@ CASES = [
      "names /assets/vendor/demo-font/1.0/Gone.ttf"),
     ("the site's own JS naming a missing vendor file", {"site_js": 'fetch("/assets/vendor/demo-font/2.0/Demo-Regular.ttf");\n'},
      "assets/js/site.js: a script names /assets/vendor/demo-font/2.0/Demo-Regular.ttf"),
+    ("FLAG_CODES naming a flag that isn't vendored", {"wa_page": WA_PAGE.replace('"ar mx"', '"ar mx br"')},
+     "FLAG_CODES names flags that aren't library files in assets/vendor/manifest.json under /assets/vendor/circle-flags/9.9/: br"),
+    ("FLAG_DIR pointing at another version", {"wa_page": WA_PAGE.replace("circle-flags/9.9/", "circle-flags/9.8/")},
+     "a script names the folder /assets/vendor/circle-flags/9.8/, which holds no library file"),
+    ("a page using the flag folder without FLAG_CODES", {"wa_page": WA_PAGE.replace('const FLAG_CODES = "ar mx";', "")},
+     "doesn't declare const FLAG_DIR"),
+    ("FLAG_CODES with an upper-case code", {"wa_page": WA_PAGE.replace('"ar mx"', '"ar MX"')},
+     "FLAG_CODES must be distinct two-letter lowercase codes"),
+    ("a wa.me link on a page that isn't the WhatsApp tool", {"page": PAGE.replace("</script>", "location.href = 'https://wa.me/123';\n</script>")},
+     "index.html: inline script refers to https://wa.me/123 on another host"),
 ]
 
 
