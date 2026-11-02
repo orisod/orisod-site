@@ -195,8 +195,6 @@ a.btn:not([href]){cursor:default;}
 .copy-status{display:block;font-size:14px;font-weight:bold;margin:8px 0 0 0;}
 .qr-preview{margin:12px 0 0 0;}
 .qr-preview img{display:block;width:200px;max-width:100%;height:auto;border-radius:6px;}
-.facts{margin:18px 0 0 0;padding:0 0 0 20px;font-size:14px;line-height:1.55;color:var(--text);opacity:.85;}
-.facts li{margin:0 0 6px 0;}
 .tool .error{margin:8px 0 0 0;}
 .tool .error:empty{display:none;}
 /* Message formatting toolbar: 44px buttons above the message box, glyphs hidden from screen readers. */
@@ -231,18 +229,14 @@ a.btn:not([href]){cursor:default;}
 @media (min-width:480px){.emoji-row{grid-template-columns:repeat(8,minmax(44px,1fr));}}
 .emoji-btn{display:flex;align-items:center;justify-content:center;width:100%;height:44px;margin:0;padding:0;border-radius:8px;border:1px solid transparent;background:none;color:var(--text);font-family:"Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;font-size:24px;line-height:1;cursor:pointer;}
 .emoji-btn:hover{border-color:var(--accent);background:rgba(37,99,235,.10);}
-.emoji-picker .hint{margin:8px 4px 2px 4px;}
 .how-grid{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:28px;margin:44px 0 0 0;text-align:left;align-items:start;}
-@media (max-width:760px){.how-grid{grid-template-columns:minmax(0,1fr);gap:8px;}}
+@media (max-width:639px){.how-grid{grid-template-columns:minmax(0,1fr);gap:8px;}}
 .how-grid h2{margin:0 0 14px 0;}
 .how ol{margin:0;padding:0 0 0 22px;font-size:15px;line-height:1.6;opacity:.85;}
 .how ol li{margin:0 0 8px 0;}
-.how h3{font-size:16px;margin:20px 0 8px 0;}
-.how ul{margin:0;padding:0 0 0 20px;font-size:14px;line-height:1.6;opacity:.85;}
-.how ul li{margin:0 0 6px 0;}
-@media (max-width:760px){.related-aside h2{margin-top:30px;}}
+@media (max-width:639px){.related-aside h2{margin-top:30px;}}
 .related-aside .related-grid{grid-template-columns:minmax(0,1fr);}
-.guide-link{max-width:none;margin:28px 0 0 0;text-align:left;font-size:14px;opacity:.85;}
+.guide-link{max-width:none;margin:14px 0 0 0;text-align:left;font-size:14px;opacity:.85;}
 .guide-link a{color:var(--accent);text-decoration:none;}
 :root[data-theme="light"] .guide-link a{color:#1d4ed8;}
 /* The collapsed block: native <details>, closed by default, its text in the HTML from the start. */
@@ -255,6 +249,7 @@ a.btn:not([href]){cursor:default;}
 .more > summary:hover{text-decoration:underline;}
 .more .seo-content{max-width:none;padding:0 18px 10px 18px;}
 .more .seo-content h2:first-child{margin-top:10px;}
+.more .seo-content ol{font-size:15px;opacity:0.85;line-height:1.7;}
 @media (prefers-reduced-motion:reduce){.more > summary::before{transition:none;}}
 @media (max-width:600px){h1{font-size:36px;}.tool{padding:20px 14px;}}
 .site-footer{
@@ -512,13 +507,11 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
           <ul class="combo-list" id="countryList" role="listbox" aria-label="Country" hidden></ul>
         </div>
         <p class="combo-empty" id="countryEmpty" hidden>No country matches. Try another name or a calling code like +44.</p>
-        <p class="hint" id="countryHint">Pick the country of the phone number. You can search by name or by calling code.</p>
       </div>
 
       <div class="field">
         <label for="phoneInput">Phone number</label>
         <input type="tel" id="phoneInput" inputmode="tel" autocomplete="off" aria-describedby="phoneHint phoneStatus phoneError">
-        <p class="hint" id="phoneHint">Type it as you'd dial it in that country, or paste it with + and the country code. Spaces, dashes and brackets are fine.</p>
         <div id="phoneStatus" aria-live="polite"></div>
         <div class="error" id="phoneError" role="alert"></div>
       </div>
@@ -538,11 +531,8 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
         <p class="emoji-title" id="emojiTitle">Choose an emoji</p>
         <div class="emoji-tabs" id="emojiTabs" role="tablist" aria-labelledby="emojiTitle"></div>
         <div id="emojiPanels"></div>
-        <p class="hint" id="emojiHelp">Choose an emoji to insert at the cursor. For more options, use your device's emoji keyboard.</p>
         <button type="button" class="fmt-btn emoji-close" id="emojiClose" aria-label="Close emoji picker" title="Close emoji picker"><span aria-hidden="true">✕</span></button>
       </div>
-      <p class="hint" id="messageHint">Line breaks and emojis are preserved. Use the buttons above the message for bold, italic, strikethrough, monospace and emoji, or type WhatsApp's markers yourself, such as *bold* or `inline code`.</p>
-      <p class="hint" id="fmtHelp">Select text and choose a format. Without a selection, the markers are inserted at the cursor. WhatsApp does not support underline.</p>
       <p class="hint fmt-status" id="fmtStatus" aria-live="polite"></p>
     </div>
 
@@ -566,30 +556,19 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
     <p class="reason" id="openReason">Enter a phone number to open the chat.</p>
     <span class="copy-status" id="copyStatus" aria-live="polite"></span>
     <div class="error" id="actionError" role="alert"></div>
-    <p class="hint" id="qrNote">The QR code holds the whole link, including the number and message, so anyone who scans it can read both.</p>
-    <p class="hint" id="emojiLengthNote">Emojis can make the encoded link longer, especially when one emoji is made from several characters.</p>
+    <p class="hint" id="qrNote" hidden>The QR code holds the whole link, including the number and message, so anyone who scans it can read both.</p>
     <div class="qr-preview" id="qrPreview"></div>
-    <ul class="facts">
-      <li>Nothing is sent automatically: WhatsApp opens the chat with your message typed in, and you press send.</li>
-      <li>Orisod does not store or receive the number or message. A QR scanner can read both from the generated code. WhatsApp receives them when the resulting link is opened.</li>
-      <li>On a phone the link opens the WhatsApp app. On a computer, WhatsApp shows its own page first, then opens WhatsApp Desktop or WhatsApp Web.</li>
-    </ul>
   </div>
 
   <div class="how-grid">
     <section class="how" aria-labelledby="howTitle">
       <h2 id="howTitle">How it works</h2>
       <ol>
-        <li>Choose the country and type the phone number the way you'd dial it there, or paste it with its country code.</li>
-        <li>Add a message if you want one. It's typed into the chat for you, and you decide whether to send it.</li>
-        <li>Open the chat, copy the link, share it or download it as a QR code.</li>
+        <li>Choose the country and enter the phone number.</li>
+        <li>Add a message if you like.</li>
+        <li>Open the chat, copy the link or scan the QR code.</li>
       </ol>
-      <h3>Good to know</h3>
-      <ul>
-        <li>The number needs a WhatsApp account. Landlines work only if they're registered with WhatsApp Business.</li>
-        <li>The link doesn't expire, and anyone who has it can open a chat with that number.</li>
-        <li>This page remembers the last country you chose on this device. It doesn't save the number or the message.</li>
-      </ul>
+      <p class="guide-link">Want the full picture? Read our guide: <a href="/blog/send-whatsapp-without-saving-contact/">How to send a WhatsApp message without saving the contact</a></p>
     </section>
     <aside class="related-aside" aria-labelledby="relatedTitle">
       <h2 id="relatedTitle">Related tools</h2>
@@ -610,15 +589,42 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
         </div>
         <div class="arrow">→</div>
       </a>
+      <a class="related-card" href="/case-converter/">
+        <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 16l4-11 4 11M4.5 12h5"/><path d="M14 10a3 3 0 1 1 0 6 3 3 0 0 1 0-6zM20 10v6"/></svg></div>
+        <div class="body">
+          <div class="title">Case Converter</div>
+          <div class="desc">Convert text between case styles.</div>
+        </div>
+        <div class="arrow">→</div>
+      </a>
       </div>
     </aside>
   </div>
 
-  <p class="guide-link">📖 Want the full picture? Read our guide: <a href="/blog/send-whatsapp-without-saving-contact/">How to send a WhatsApp message without saving the contact</a></p>
-
   <details class="more" id="more">
-    <summary>More about this tool</summary>
+    <summary>Help and details</summary>
     <div class="seo-content">
+      <h2>Help and common issues</h2>
+      <ol>
+        <li>Choose the country and type the phone number the way you'd dial it there, or paste it with its country code.</li>
+        <li>Add a message if you want one. It's typed into the chat for you, and you decide whether to send it.</li>
+        <li>Open the chat, copy the link, share it or download it as a QR code.</li>
+      </ol>
+      <ul>
+        <li id="countryHint">Pick the country of the phone number. You can search by name or by calling code.</li>
+        <li id="phoneHint">Type it as you'd dial it in that country, or paste it with + and the country code. Spaces, dashes and brackets are fine.</li>
+        <li>The number needs a WhatsApp account. Landlines work only if they're registered with WhatsApp Business.</li>
+        <li>On a phone the link opens the WhatsApp app. On a computer, WhatsApp shows its own page first, then opens WhatsApp Desktop or WhatsApp Web.</li>
+      </ul>
+
+      <h2>Privacy and sharing</h2>
+      <ul>
+        <li>Nothing is sent automatically: WhatsApp opens the chat with your message typed in, and you press send.</li>
+        <li>Orisod does not store or receive the number or message. A QR scanner can read both from the generated code. WhatsApp receives them when the resulting link is opened.</li>
+        <li>The link doesn't expire, and anyone who has it can open a chat with that number.</li>
+        <li>This page remembers the last country you chose on this device. It doesn't save the number or the message.</li>
+      </ul>
+
       <h2>What a wa.me link is</h2>
       <p>A wa.me link is WhatsApp's own short address for starting a chat. It holds the phone number in international format, using digits only, and it can carry a message in its text parameter. Opening it starts a chat with that number without saving it to your contacts first, and the message appears in the typing box, ready to send or edit.</p>
 
@@ -629,6 +635,12 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
         <li>Print a QR code on a card, a flyer or a shop counter so customers can write to you</li>
         <li>Send customers a ready-made message, like a booking request, that they only need to send</li>
       </ul>
+
+      <h2>Emoji and formatting</h2>
+      <p id="fmtHelp">Select text and choose a format. Without a selection, the markers are inserted at the cursor. WhatsApp does not support underline.</p>
+      <p id="messageHint">Line breaks and emojis are preserved. Use the buttons above the message for bold, italic, strikethrough, monospace and emoji, or type WhatsApp's markers yourself, such as *bold* or `inline code`.</p>
+      <p id="emojiHelp">Choose an emoji to insert at the cursor. For more options, use your device's emoji keyboard.</p>
+      <p id="emojiLengthNote">Emojis can make the encoded link longer, especially when one emoji is made from several characters.</p>
 
       <h2>Frequently asked questions</h2>
       <div class="faq-item">
@@ -1508,6 +1520,7 @@ function update(statusNow) {
   actionError.textContent = "";
   qrPreview.replaceChildren();
   qrBtn.disabled = !ready || link.length > QR_MAX;
+  qrNote.hidden = !ready;
   qrNote.textContent = ready && link.length > QR_MAX
     ? fill(T.qrTooLong, { n: link.length.toLocaleString(LANG), max: QR_MAX.toLocaleString(LANG) })
     : ready && link.length > QR_DENSE ? T.qrDense : T.qrHint;
