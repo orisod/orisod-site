@@ -210,6 +210,28 @@ a.btn:not([href]){cursor:default;}
 .fmt-btn .g-m{font-family:Consolas, "Courier New", monospace;font-size:14px;}
 .fmt-status{font-weight:bold;}
 .fmt-status:empty{display:none;}
+/* Emoji picker: a panel in the page flow under the message box, as wide as the field, never over other
+   controls. Category tabs, then a grid of 44px buttons (5 columns, 8 from 480px) that scrolls on its own. */
+.fmt-btn[aria-expanded="true"]{border-color:var(--accent);background:rgba(37,99,235,.14);}
+.fmt-btn .g-e{font-family:"Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;font-size:20px;}
+.emoji-picker{position:relative;margin:10px 0 0 0;padding:8px 6px 6px 6px;border:1px solid var(--border);border-radius:10px;background:var(--card-bg);}
+.emoji-picker[hidden]{display:none;}
+.tool .emoji-title{font-size:14px;font-weight:bold;line-height:1.4;margin:4px 52px 10px 4px;opacity:1;max-width:none;}
+.emoji-close{position:absolute;top:4px;right:4px;}
+.emoji-tabs{display:flex;flex-wrap:wrap;gap:4px;margin:0 0 6px 0;}
+.emoji-tab{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;margin:0;padding:0;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-family:"Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;font-size:21px;line-height:1;cursor:pointer;}
+.emoji-tab:hover{border-color:var(--accent);}
+.emoji-tab[aria-selected="true"]{border-color:var(--accent);box-shadow:inset 0 -4px 0 var(--accent);background:rgba(37,99,235,.14);}
+.emoji-tab:focus-visible, .emoji-btn:focus-visible{outline:2px solid var(--accent);outline-offset:1px;}
+.emoji-panel[hidden]{display:none;}
+.tool .emoji-cat{font-size:13px;font-weight:bold;color:var(--muted-text);line-height:1.4;margin:6px 4px 6px 4px;opacity:1;max-width:none;}
+.emoji-grid{max-height:236px;overflow-y:auto;padding:2px;}
+.emoji-grid[hidden]{display:none;}
+.emoji-row{display:grid;grid-template-columns:repeat(5,minmax(44px,1fr));gap:2px;margin:0 0 2px 0;}
+@media (min-width:480px){.emoji-row{grid-template-columns:repeat(8,minmax(44px,1fr));}}
+.emoji-btn{display:flex;align-items:center;justify-content:center;width:100%;height:44px;margin:0;padding:0;border-radius:8px;border:1px solid transparent;background:none;color:var(--text);font-family:"Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;font-size:24px;line-height:1;cursor:pointer;}
+.emoji-btn:hover{border-color:var(--accent);background:rgba(37,99,235,.10);}
+.emoji-picker .hint{margin:8px 4px 2px 4px;}
 .how-grid{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:28px;margin:44px 0 0 0;text-align:left;align-items:start;}
 @media (max-width:760px){.how-grid{grid-template-columns:minmax(0,1fr);gap:8px;}}
 .how-grid h2{margin:0 0 14px 0;}
@@ -509,8 +531,16 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
         <button type="button" class="fmt-btn" data-format="italic" aria-label="Italic" title="Italic" aria-keyshortcuts="Control+I Meta+I"><span class="g-i" aria-hidden="true">I</span></button>
         <button type="button" class="fmt-btn" data-format="strike" aria-label="Strikethrough" title="Strikethrough"><span class="g-s" aria-hidden="true">S</span></button>
         <button type="button" class="fmt-btn" data-format="mono" aria-label="Monospace" title="Monospace"><span class="g-m" aria-hidden="true">&lt;/&gt;</span></button>
+        <button type="button" class="fmt-btn" id="emojiBtn" aria-label="Insert emoji" title="Insert emoji" aria-expanded="false" aria-controls="emojiPicker"><span class="g-e" aria-hidden="true">🙂</span></button>
       </div>
       <textarea id="messageInput" rows="4" aria-describedby="messageHint fmtHelp fmtStatus"></textarea>
+      <div class="emoji-picker" id="emojiPicker" role="group" aria-labelledby="emojiTitle" hidden>
+        <p class="emoji-title" id="emojiTitle">Choose an emoji</p>
+        <div class="emoji-tabs" id="emojiTabs" role="tablist" aria-labelledby="emojiTitle"></div>
+        <div id="emojiPanels"></div>
+        <p class="hint" id="emojiHelp">Choose an emoji to insert it at the cursor. For more options, use your device's emoji keyboard.</p>
+        <button type="button" class="fmt-btn emoji-close" id="emojiClose" aria-label="Close emoji picker" title="Close emoji picker"><span aria-hidden="true">✕</span></button>
+      </div>
       <p class="hint" id="messageHint">Line breaks and emoji are kept. Use *bold*, _italic_, ~strikethrough~, ```monospace``` or `inline code` as in WhatsApp.</p>
       <p class="hint" id="fmtHelp">Select text and choose a format. Without a selection, the markers are inserted at the cursor. WhatsApp does not support underline.</p>
       <p class="hint fmt-status" id="fmtStatus" aria-live="polite"></p>
@@ -537,6 +567,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
     <span class="copy-status" id="copyStatus" aria-live="polite"></span>
     <div class="error" id="actionError" role="alert"></div>
     <p class="hint" id="qrNote">The QR code holds the whole link, including the number and message, so anyone who scans it can read both.</p>
+    <p class="hint" id="emojiLengthNote">Emojis can make the encoded link longer, especially combined emoji sequences.</p>
     <div class="qr-preview" id="qrPreview"></div>
     <ul class="facts">
       <li>Nothing is sent automatically: WhatsApp opens the chat with your message typed in, and you press send.</li>
@@ -706,6 +737,7 @@ const T = {
   "qrAlt": "QR code for your WhatsApp link",
   "fmtCross": "Select text that doesn't cut across other formatting, or select the whole formatted text to remove its format.",
   "fmtMono": "Monospace can't be combined with bold, italic or strikethrough.",
+  "emojiEmpty": "No emojis in this category",
   "qrFile": "whatsapp-link-qr.png"
 };
 const FLAG_DIR = "/assets/vendor/circle-flags/2.8.3/";
@@ -1148,6 +1180,288 @@ function applyFormat(kind) {
   }
   replaceText(messageInput, plan.from, plan.to, plan.text, plan.sel[0], plan.sel[1]);
 }
+// --- Emoji picker: a non-modal panel under the message box. Real tabs for the categories (Left/Right/Home/End),
+// and a grid with a single Tab stop (arrows, Home/End, Ctrl+Home/End; Enter or Space inserts). Choosing an emoji
+// puts it at the cursor, or in place of the selection, and focus goes back to the message.
+// Emoji data: start. One identical block on the EN and ES pages (the smoke test compares them). Fields: emoji,
+// category, name_en, name_es. \uFE0F is the variation selector some symbols need to draw as an emoji.
+const EMOJI_CATEGORIES = [
+  { id: "smileys", icon: "😀", name_en: "Smileys", name_es: "Caritas" },
+  { id: "gestures", icon: "👋", name_en: "Gestures", name_es: "Gestos" },
+  { id: "hearts", icon: "❤\uFE0F", name_en: "Hearts and celebrations", name_es: "Corazones y celebraciones" },
+  { id: "work", icon: "💼", name_en: "Work and objects", name_es: "Trabajo y objetos" },
+  { id: "symbols", icon: "✅", name_en: "Symbols", name_es: "Símbolos" },
+  { id: "food", icon: "☕", name_en: "Food and travel", name_es: "Comida y viajes" },
+];
+const EMOJI = [
+  { emoji: "😀", category: "smileys", name_en: "grinning face", name_es: "cara sonriente" },
+  { emoji: "😄", category: "smileys", name_en: "grinning face with smiling eyes", name_es: "cara sonriendo con ojos sonrientes" },
+  { emoji: "😅", category: "smileys", name_en: "grinning face with sweat", name_es: "cara sonriendo con sudor" },
+  { emoji: "😂", category: "smileys", name_en: "face with tears of joy", name_es: "cara llorando de risa" },
+  { emoji: "🙂", category: "smileys", name_en: "slightly smiling face", name_es: "cara con una leve sonrisa" },
+  { emoji: "😉", category: "smileys", name_en: "winking face", name_es: "cara guiñando el ojo" },
+  { emoji: "😊", category: "smileys", name_en: "smiling face with smiling eyes", name_es: "cara feliz con ojos sonrientes" },
+  { emoji: "😍", category: "smileys", name_en: "smiling face with heart-eyes", name_es: "cara sonriendo con ojos de corazón" },
+  { emoji: "🥰", category: "smileys", name_en: "smiling face with hearts", name_es: "cara sonriendo con corazones" },
+  { emoji: "😎", category: "smileys", name_en: "smiling face with sunglasses", name_es: "cara sonriendo con lentes de sol" },
+  { emoji: "🤩", category: "smileys", name_en: "star-struck", name_es: "cara con estrellas" },
+  { emoji: "🤗", category: "smileys", name_en: "smiling face with open hands", name_es: "cara dando un abrazo" },
+  { emoji: "🤔", category: "smileys", name_en: "thinking face", name_es: "cara pensativa" },
+  { emoji: "😮", category: "smileys", name_en: "face with open mouth", name_es: "cara con la boca abierta" },
+  { emoji: "🙁", category: "smileys", name_en: "slightly frowning face", name_es: "cara ligeramente triste" },
+  { emoji: "😔", category: "smileys", name_en: "pensive face", name_es: "cara desanimada" },
+  { emoji: "😢", category: "smileys", name_en: "crying face", name_es: "cara llorando" },
+  { emoji: "😴", category: "smileys", name_en: "sleeping face", name_es: "cara durmiendo" },
+  { emoji: "👋", category: "gestures", name_en: "waving hand", name_es: "mano saludando" },
+  { emoji: "🙏", category: "gestures", name_en: "folded hands", name_es: "manos juntas" },
+  { emoji: "👍", category: "gestures", name_en: "thumbs up", name_es: "pulgar hacia arriba" },
+  { emoji: "👎", category: "gestures", name_en: "thumbs down", name_es: "pulgar hacia abajo" },
+  { emoji: "👌", category: "gestures", name_en: "OK hand", name_es: "señal de OK con la mano" },
+  { emoji: "👏", category: "gestures", name_en: "clapping hands", name_es: "manos aplaudiendo" },
+  { emoji: "🙌", category: "gestures", name_en: "raising hands", name_es: "manos levantadas" },
+  { emoji: "🤝", category: "gestures", name_en: "handshake", name_es: "apretón de manos" },
+  { emoji: "✌\uFE0F", category: "gestures", name_en: "victory hand", name_es: "mano con señal de victoria" },
+  { emoji: "🤞", category: "gestures", name_en: "crossed fingers", name_es: "dedos cruzados" },
+  { emoji: "💪", category: "gestures", name_en: "flexed biceps", name_es: "bíceps flexionado" },
+  { emoji: "✋", category: "gestures", name_en: "raised hand", name_es: "mano levantada" },
+  { emoji: "🤙", category: "gestures", name_en: "call me hand", name_es: "gesto de llámame" },
+  { emoji: "👉", category: "gestures", name_en: "pointing right", name_es: "índice apuntando a la derecha" },
+  { emoji: "👈", category: "gestures", name_en: "pointing left", name_es: "índice apuntando a la izquierda" },
+  { emoji: "👆", category: "gestures", name_en: "pointing up", name_es: "índice apuntando hacia arriba" },
+  { emoji: "👇", category: "gestures", name_en: "pointing down", name_es: "índice apuntando hacia abajo" },
+  { emoji: "❤\uFE0F", category: "hearts", name_en: "red heart", name_es: "corazón rojo" },
+  { emoji: "🧡", category: "hearts", name_en: "orange heart", name_es: "corazón naranja" },
+  { emoji: "💛", category: "hearts", name_en: "yellow heart", name_es: "corazón amarillo" },
+  { emoji: "💚", category: "hearts", name_en: "green heart", name_es: "corazón verde" },
+  { emoji: "💙", category: "hearts", name_en: "blue heart", name_es: "corazón azul" },
+  { emoji: "💜", category: "hearts", name_en: "purple heart", name_es: "corazón morado" },
+  { emoji: "🖤", category: "hearts", name_en: "black heart", name_es: "corazón negro" },
+  { emoji: "💖", category: "hearts", name_en: "sparkling heart", name_es: "corazón con destellos" },
+  { emoji: "💕", category: "hearts", name_en: "two hearts", name_es: "dos corazones" },
+  { emoji: "🎉", category: "hearts", name_en: "party popper", name_es: "confeti de celebración" },
+  { emoji: "🥳", category: "hearts", name_en: "partying face", name_es: "cara de fiesta" },
+  { emoji: "🎁", category: "hearts", name_en: "wrapped gift", name_es: "regalo envuelto" },
+  { emoji: "🎂", category: "hearts", name_en: "birthday cake", name_es: "pastel de cumpleaños" },
+  { emoji: "🎈", category: "hearts", name_en: "balloon", name_es: "globo" },
+  { emoji: "✨", category: "hearts", name_en: "sparkles", name_es: "destellos" },
+  { emoji: "🌟", category: "hearts", name_en: "glowing star", name_es: "estrella brillante" },
+  { emoji: "🏆", category: "hearts", name_en: "trophy", name_es: "trofeo" },
+  { emoji: "💐", category: "hearts", name_en: "bouquet", name_es: "ramo de flores" },
+  { emoji: "📅", category: "work", name_en: "calendar", name_es: "calendario" },
+  { emoji: "⏰", category: "work", name_en: "alarm clock", name_es: "reloj despertador" },
+  { emoji: "⏳", category: "work", name_en: "hourglass in progress", name_es: "reloj de arena en curso" },
+  { emoji: "📦", category: "work", name_en: "package", name_es: "paquete" },
+  { emoji: "🚚", category: "work", name_en: "delivery truck", name_es: "camión de reparto" },
+  { emoji: "🛒", category: "work", name_en: "shopping cart", name_es: "carrito de compras" },
+  { emoji: "🧾", category: "work", name_en: "receipt", name_es: "recibo" },
+  { emoji: "📞", category: "work", name_en: "telephone", name_es: "teléfono" },
+  { emoji: "📱", category: "work", name_en: "mobile phone", name_es: "teléfono celular" },
+  { emoji: "✉\uFE0F", category: "work", name_en: "envelope", name_es: "sobre" },
+  { emoji: "📧", category: "work", name_en: "e-mail", name_es: "correo electrónico" },
+  { emoji: "💳", category: "work", name_en: "credit card", name_es: "tarjeta de crédito" },
+  { emoji: "💵", category: "work", name_en: "dollar banknote", name_es: "billete de dólar" },
+  { emoji: "💶", category: "work", name_en: "euro banknote", name_es: "billete de euro" },
+  { emoji: "💰", category: "work", name_en: "money bag", name_es: "bolsa de dinero" },
+  { emoji: "🔗", category: "work", name_en: "link", name_es: "enlace" },
+  { emoji: "📎", category: "work", name_en: "paperclip", name_es: "clip" },
+  { emoji: "📌", category: "work", name_en: "pushpin", name_es: "tachuela" },
+  { emoji: "📝", category: "work", name_en: "memo", name_es: "nota" },
+  { emoji: "💼", category: "work", name_en: "briefcase", name_es: "maletín" },
+  { emoji: "💻", category: "work", name_en: "laptop", name_es: "computadora portátil" },
+  { emoji: "🔑", category: "work", name_en: "key", name_es: "llave" },
+  { emoji: "📣", category: "work", name_en: "megaphone", name_es: "megáfono" },
+  { emoji: "📋", category: "work", name_en: "clipboard", name_es: "portapapeles" },
+  { emoji: "🏷\uFE0F", category: "work", name_en: "label", name_es: "etiqueta" },
+  { emoji: "🛍\uFE0F", category: "work", name_en: "shopping bags", name_es: "bolsas de compras" },
+  { emoji: "🛠\uFE0F", category: "work", name_en: "hammer and wrench", name_es: "herramientas" },
+  { emoji: "📤", category: "work", name_en: "outbox tray", name_es: "bandeja de salida" },
+  { emoji: "✅", category: "symbols", name_en: "check mark", name_es: "marca de verificación" },
+  { emoji: "❌", category: "symbols", name_en: "cross mark", name_es: "equis roja" },
+  { emoji: "⚠\uFE0F", category: "symbols", name_en: "warning", name_es: "advertencia" },
+  { emoji: "ℹ\uFE0F", category: "symbols", name_en: "information", name_es: "información" },
+  { emoji: "❗", category: "symbols", name_en: "red exclamation mark", name_es: "exclamación roja" },
+  { emoji: "❓", category: "symbols", name_en: "red question mark", name_es: "interrogación roja" },
+  { emoji: "🚫", category: "symbols", name_en: "prohibited", name_es: "símbolo de prohibido" },
+  { emoji: "🔴", category: "symbols", name_en: "red circle", name_es: "círculo rojo" },
+  { emoji: "🔵", category: "symbols", name_en: "blue circle", name_es: "círculo azul" },
+  { emoji: "⭐", category: "symbols", name_en: "star", name_es: "estrella" },
+  { emoji: "💯", category: "symbols", name_en: "hundred points", name_es: "cien puntos" },
+  { emoji: "🔥", category: "symbols", name_en: "fire", name_es: "fuego" },
+  { emoji: "➡\uFE0F", category: "symbols", name_en: "right arrow", name_es: "flecha hacia la derecha" },
+  { emoji: "⬅\uFE0F", category: "symbols", name_en: "left arrow", name_es: "flecha hacia la izquierda" },
+  { emoji: "🆕", category: "symbols", name_en: "new", name_es: "nuevo" },
+  { emoji: "🆗", category: "symbols", name_en: "OK", name_es: "OK" },
+  { emoji: "💬", category: "symbols", name_en: "chat bubble", name_es: "globo de diálogo" },
+  { emoji: "🔔", category: "symbols", name_en: "bell", name_es: "campana" },
+  { emoji: "🔒", category: "symbols", name_en: "locked", name_es: "candado cerrado" },
+  { emoji: "☕", category: "food", name_en: "hot beverage", name_es: "bebida caliente" },
+  { emoji: "🍰", category: "food", name_en: "slice of cake", name_es: "porción de pastel" },
+  { emoji: "🍕", category: "food", name_en: "pizza", name_es: "pizza" },
+  { emoji: "🍔", category: "food", name_en: "hamburger", name_es: "hamburguesa" },
+  { emoji: "🥐", category: "food", name_en: "croissant", name_es: "croissant" },
+  { emoji: "🍷", category: "food", name_en: "wine glass", name_es: "copa de vino" },
+  { emoji: "🥂", category: "food", name_en: "clinking glasses", name_es: "copas brindando" },
+  { emoji: "🍽\uFE0F", category: "food", name_en: "fork and knife with plate", name_es: "plato con cubiertos" },
+  { emoji: "🚗", category: "food", name_en: "automobile", name_es: "auto" },
+  { emoji: "🚌", category: "food", name_en: "bus", name_es: "autobús" },
+  { emoji: "✈\uFE0F", category: "food", name_en: "airplane", name_es: "avión" },
+  { emoji: "🚆", category: "food", name_en: "train", name_es: "tren" },
+  { emoji: "🏠", category: "food", name_en: "house", name_es: "casa" },
+  { emoji: "🏢", category: "food", name_en: "office building", name_es: "edificio de oficinas" },
+  { emoji: "🏨", category: "food", name_en: "hotel", name_es: "hotel" },
+  { emoji: "📍", category: "food", name_en: "location pin", name_es: "marcador de ubicación" },
+  { emoji: "🗺\uFE0F", category: "food", name_en: "world map", name_es: "mapa del mundo" },
+  { emoji: "🧳", category: "food", name_en: "luggage", name_es: "equipaje" },
+];
+// Emoji data: end
+const emojiBtn = $("emojiBtn"), picker = $("emojiPicker"), emojiTabs = $("emojiTabs"), emojiPanels = $("emojiPanels");
+const fmtTools = $("fmtTools"), emojiClose = $("emojiClose");
+const WIDE_GRID = window.matchMedia("(min-width:480px)"); // the same width as the 8-column rule in the CSS
+const nameOf = (x) => (LANG === "es" ? x.name_es : x.name_en);
+function insertEmoji(emoji) {
+  const v = messageInput.value, s = messageInput.selectionStart, e = messageInput.selectionEnd;
+  const from = clusterEdge(v, s, s === e), to = s === e ? from : clusterEdge(v, e, true);
+  replaceText(messageInput, from, to, emoji, from + emoji.length, from + emoji.length);
+}
+const pickerCats = EMOJI_CATEGORIES.map((cat, k) => {
+  const name = nameOf(cat);
+  const tab = document.createElement("button");
+  tab.type = "button";
+  tab.className = "emoji-tab";
+  tab.id = "emojiTab-" + cat.id;
+  tab.setAttribute("role", "tab");
+  tab.setAttribute("aria-label", name);
+  tab.setAttribute("aria-controls", "emojiPanel-" + cat.id);
+  tab.title = name;
+  const icon = document.createElement("span");
+  icon.setAttribute("aria-hidden", "true");
+  icon.textContent = cat.icon;
+  tab.append(icon);
+  const panel = document.createElement("div");
+  panel.className = "emoji-panel";
+  panel.id = "emojiPanel-" + cat.id;
+  panel.setAttribute("role", "tabpanel");
+  panel.setAttribute("aria-labelledby", tab.id);
+  const heading = document.createElement("p");
+  heading.className = "emoji-cat";
+  heading.id = "emojiCat-" + cat.id;
+  heading.textContent = name;
+  const grid = document.createElement("div");
+  grid.className = "emoji-grid";
+  grid.setAttribute("role", "grid");
+  grid.setAttribute("aria-labelledby", heading.id);
+  const empty = document.createElement("p");
+  empty.className = "hint";
+  empty.textContent = T.emojiEmpty;
+  const c = { tab, panel, grid, buttons: [], current: 0, cols: 5 };
+  c.buttons = EMOJI.filter((x) => x.category === cat.id).map((x, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "emoji-btn";
+    b.textContent = x.emoji;
+    b.setAttribute("aria-label", nameOf(x));
+    b.title = nameOf(x);
+    b.tabIndex = i === 0 ? 0 : -1;
+    b.addEventListener("mousedown", (ev) => ev.preventDefault());
+    b.addEventListener("click", () => { moveInGrid(c, i, false); insertEmoji(x.emoji); });
+    return b;
+  });
+  grid.hidden = !c.buttons.length;
+  empty.hidden = c.buttons.length > 0;
+  grid.addEventListener("keydown", (ev) => {
+    const i = c.buttons.indexOf(document.activeElement);
+    if (i < 0) return;
+    const n = c.buttons.length, rowStart = i - (i % c.cols), rowEnd = Math.min(rowStart + c.cols, n) - 1;
+    const to = {
+      ArrowRight: i + 1, ArrowLeft: i - 1,
+      ArrowDown: i + c.cols < n ? i + c.cols : i, ArrowUp: i - c.cols >= 0 ? i - c.cols : i,
+      Home: ev.ctrlKey ? 0 : rowStart, End: ev.ctrlKey ? n - 1 : rowEnd,
+    }[ev.key];
+    if (to === undefined) return;
+    ev.preventDefault();
+    moveInGrid(c, to, true);
+  });
+  panel.append(heading, grid, empty);
+  emojiTabs.append(tab);
+  emojiPanels.append(panel);
+  return c;
+});
+// The roving tab stop: only the remembered emoji of each grid is in the Tab order.
+function moveInGrid(c, i, focus) {
+  i = Math.max(0, Math.min(c.buttons.length - 1, i));
+  c.buttons[c.current].tabIndex = -1;
+  c.current = i;
+  c.buttons[i].tabIndex = 0;
+  if (focus) c.buttons[i].focus();
+}
+function layoutGrids() {
+  const cols = WIDE_GRID.matches ? 8 : 5;
+  const focused = document.activeElement;
+  for (const c of pickerCats) {
+    c.cols = cols;
+    c.grid.replaceChildren();
+    for (let i = 0; i < c.buttons.length; i += cols) {
+      const row = document.createElement("div");
+      row.className = "emoji-row";
+      row.setAttribute("role", "row");
+      for (const b of c.buttons.slice(i, i + cols)) {
+        const cell = document.createElement("div");
+        cell.setAttribute("role", "gridcell");
+        cell.append(b);
+        row.append(cell);
+      }
+      c.grid.append(row);
+    }
+  }
+  if (focused && focused.classList.contains("emoji-btn")) focused.focus();
+}
+function selectTab(k, focus) {
+  pickerCats.forEach((c, i) => {
+    c.tab.setAttribute("aria-selected", i === k ? "true" : "false");
+    c.tab.tabIndex = i === k ? 0 : -1;
+    c.panel.hidden = i !== k;
+  });
+  if (focus) pickerCats[k].tab.focus();
+}
+pickerCats.forEach((c, k) => c.tab.addEventListener("click", () => selectTab(k, false)));
+emojiTabs.addEventListener("keydown", (ev) => {
+  const k = pickerCats.findIndex((c) => c.tab === document.activeElement);
+  if (k < 0) return;
+  const n = pickerCats.length;
+  const to = { ArrowRight: (k + 1) % n, ArrowLeft: (k - 1 + n) % n, Home: 0, End: n - 1 }[ev.key];
+  if (to === undefined) return;
+  ev.preventDefault();
+  selectTab(to, true);
+});
+function openPicker() {
+  picker.hidden = false;
+  emojiBtn.setAttribute("aria-expanded", "true");
+  const c = pickerCats.find((x) => !x.panel.hidden);
+  (c.buttons[c.current] || c.tab).focus();
+}
+function closePicker(returnFocus) {
+  if (picker.hidden) return;
+  picker.hidden = true;
+  emojiBtn.setAttribute("aria-expanded", "false");
+  if (returnFocus) emojiBtn.focus();
+}
+selectTab(0, false);
+layoutGrids();
+if (WIDE_GRID.addEventListener) WIDE_GRID.addEventListener("change", layoutGrids); else if (WIDE_GRID.addListener) WIDE_GRID.addListener(layoutGrids);
+emojiBtn.addEventListener("mousedown", (e) => e.preventDefault());
+emojiBtn.addEventListener("click", () => (picker.hidden ? openPicker() : closePicker(true)));
+emojiClose.addEventListener("click", () => closePicker(true));
+picker.addEventListener("keydown", (e) => { if (e.key === "Escape") { e.preventDefault(); closePicker(true); } });
+// Escape in the message closes the picker and leaves the cursor where it is.
+messageInput.addEventListener("keydown", (e) => { if (e.key === "Escape" && !picker.hidden) { e.preventDefault(); closePicker(false); } });
+// A click or tap elsewhere closes it; the message, the toolbar and the picker itself don't.
+document.addEventListener("pointerdown", (e) => {
+  if (picker.hidden) return;
+  const t = e.target;
+  if (picker.contains(t) || fmtTools.contains(t) || t === messageInput) return;
+  closePicker(false);
+});
+
 for (const btn of document.querySelectorAll(".fmt-btn[data-format]")) {
   btn.addEventListener("mousedown", (e) => e.preventDefault()); // keep the cursor and the selection in the message
   btn.addEventListener("click", () => applyFormat(btn.dataset.format));
