@@ -691,7 +691,7 @@ const FLAG_DIR = "/assets/vendor/circle-flags/2.8.3/";
 const FLAG_CODES = "ac ad ae af ag ai al am ao ar as at au aw ax az ba bb bd be bf bg bh bi bj bl bm bn bo bq br bs bt bw by bz ca cc cd cf cg ch ci ck cl cm cn co cr cu cv cw cx cy cz de dj dk dm do dz ec ee eg eh er es et fi fj fk fm fo fr ga gb gd ge gf gg gh gi gl gm gn gp gq gr gt gu gw gy hk hn hr ht hu id ie il im in io iq ir is it je jm jo jp ke kg kh ki km kn kp kr kw ky kz la lb lc li lk lr ls lt lu lv ly ma mc md me mf mg mh mk ml mm mn mo mp mq mr ms mt mu mv mw mx my mz na nc ne nf ng ni nl no np nr nu nz om pa pe pf pg ph pk pl pm pr ps pt pw py qa re ro rs ru rw sa sb sc sd se sg sh si sj sk sl sm sn so sr ss st sv sx sy sz ta tc td tg th tj tk tl tm tn to tr tt tv tw tz ua ug us uy uz va vc ve vg vi vn vu wf ws xk ye yt za zm zw";
 const FLAGS = new Set(FLAG_CODES.split(" "));
 const STORE_KEY = "orisod-wa-country";
-const QR_MAX = 2329;   // the longest link qrcodejs 1.0.0 can encode at error correction level M
+const QR_MAX = 2328;   // the longest link qrcodejs 1.0.0 can encode at error correction level M (2,329 throws)
 const QR_DENSE = 500;  // past this the code gets dense: test it before printing
 const QR_SIZE = 512, QR_MARGIN = 40;
 const lib = window.libphonenumber;
@@ -718,6 +718,7 @@ const COUNTRIES = lib.getCountries().map((code) => {
   return { code, name, dial: String(lib.getCountryCallingCode(code)), key: fold(name) };
 }).sort((a, b) => a.name.localeCompare(b.name, LANG));
 const BY_CODE = new Map(COUNTRIES.map((c) => [c.code, c]));
+const META = new lib.Metadata();
 let country = null;
 let visible = [];
 let active = -1;
@@ -753,7 +754,10 @@ function matches(query) {
   if (!q) return COUNTRIES.slice();
   const digits = q.replace(/\D/g, "");
   if (/^\+?\d+$/.test(q)) {
-    return COUNTRIES.filter((c) => c.dial === digits).concat(COUNTRIES.filter((c) => c.dial !== digits && c.dial.startsWith(digits)));
+    // A calling code: its countries with the main one first (+44: United Kingdom, then Guernsey...), then
+    // the codes that start with those digits.
+    const exact = (META.getCountryCodesForCallingCode(digits) || []).map((code) => BY_CODE.get(code)).filter(Boolean);
+    return exact.concat(COUNTRIES.filter((c) => c.dial !== digits && c.dial.startsWith(digits)));
   }
   const f = fold(q);
   const first = [], rest = [];
