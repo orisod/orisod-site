@@ -261,9 +261,13 @@ a.btn:not([href]){cursor:default;}
 .share-toggle{width:48px;height:48px;margin:0 auto;list-style:none;}
 .share-toggle::-webkit-details-marker{display:none;}
 .share-item{position:static;width:44px;height:44px;}
-.share-toggle:hover, .share-item:hover{background:#1d4ed8;}
-:root:not([data-theme="light"]) .share-toggle:hover, :root:not([data-theme="light"]) .share-item:hover{box-shadow:0 0 0 1px #60a5fa;}
 .share-toggle:focus-visible, .share-item:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
+/* Lit state: on hover (pointer devices only) and keyboard focus each circle turns a lighter blue with a soft halo.
+   The solid focus ring above stays the focus indicator; the halo is decoration only. */
+.share-toggle, .share-item{transition:background-color .18s ease, box-shadow .18s ease;}
+@media (hover:hover){.share-toggle:hover, .share-item:hover{background:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.22), 0 0 16px 3px rgba(96,165,250,.55);}}
+.share-toggle:focus-visible, .share-item:focus-visible{background:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.22), 0 0 16px 3px rgba(96,165,250,.55);}
+@media (prefers-reduced-motion:reduce){.share-toggle, .share-item{transition:none;}}
 .share-ico{display:block;width:22px;height:22px;}
 .share-toggle .ico-close{display:none;}
 .share-menu[open] > .share-toggle .ico-share{display:none;}
