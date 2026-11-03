@@ -815,6 +815,299 @@ const XLSX_LATIN_ROWS = [["Año", "Región", "Precio €", "Nota"], ["2026", "Se
 const XLSX_LGC_ROWS = [["Γλώσσα", "Пример", "Przykład"], ["Καλημέρα κόσμε", "Привет, мир", "Zażółć gęślą jaźń"], ["Ελληνικά", "Українська", "Việt Nam"]];
 const XLSX_SQUARE = '□';
 
+// --- WhatsApp link generator (the pilot of the minimal tool layout). Each check below has a negative
+// twin (mustFail) run on a broken copy of what the page gave.
+const WA = "/whatsapp-link-generator/";
+const LIBPHONE = "/assets/vendor/libphonenumber-js/1.13.15/libphonenumber-max.js";
+const QRJS = "/assets/vendor/qrcodejs/1.0.0/qrcode.min.js";
+const FLAG = (code) => `/assets/vendor/circle-flags/2.8.3/${code}.svg`;
+const WA_QR_MAX = 2328;
+const WA_TEXT = {
+  en: { copied: "Copied", reason: "Enter a phone number to open the chat.", reasonMessage: "Write a message first. WhatsApp will ask you who to send it to.",
+    add9: "Add the 9", mx1: "The 1 after +52 was removed", summary: "Help and details", qrFile: "whatsapp-link-qr.png" },
+  es: { copied: "Copiado", reason: "Escribe un número de teléfono para abrir el chat.", reasonMessage: "Escribe un mensaje primero. WhatsApp te preguntará a quién enviarlo.",
+    add9: "Agregar el 9", mx1: "Se quitó el 1 después de +52", summary: "Ayuda y detalles", qrFile: "link-whatsapp-qr.png" },
+};
+const regionName = (page, code) => page.evaluate((c) => new Intl.DisplayNames([document.documentElement.lang], { type: "region" }).of(c), code);
+// Pick a country the way a visitor does: type its name in the combobox and press Enter.
+async function waCountry(page, code) {
+  const name = await regionName(page, code);
+  await page.click("#countryInput");
+  await page.fill("#countryInput", name);
+  await page.keyboard.press("Enter");
+  const value = await page.inputValue("#countryInput");
+  expect(value.startsWith(name + " (+"), `picking ${code} by typing "${name}" gave "${value}"`);
+}
+async function waNumber(page, number) {
+  await page.fill("#phoneInput", number);
+  await page.locator("#phoneInput").blur();
+  return page.evaluate(() => ({ href: document.getElementById("openLink").getAttribute("href") || "", status: document.getElementById("phoneStatus").textContent }));
+}
+// [country picked, what's typed, the digits WhatsApp needs]
+const WA_NUMBERS = [
+  ["AR", "011 15 2345-6789", "5491123456789"],
+  ["AR", "+54 9 11 2345-6789", "5491123456789"],
+  ["AR", "0351 15 512 3456", "5493515123456"],
+  ["MX", "55 1234 5678", "525512345678"],
+  ["MX", "+52 1 55 1234 5678", "525512345678"],
+  ["BR", "(11) 91234-5678", "5511912345678"],
+  ["GB", "07400 123456", "447400123456"],
+  ["ES", "0044 7400 123456", "447400123456"],
+  ["US", "0044 7400 123456", "447400123456"],
+  ["US", "011 44 7400 123456", "447400123456"],
+  ["US", "(415) 555-2671", "14155552671"],
+];
+function expectNumbers(got) {
+  const bad = WA_NUMBERS.map(([cc, input, digits], i) => [cc, input, digits, got[i]]).filter((r) => r[3] !== "https://wa.me/" + r[2]);
+  expect(!bad.length, "wrong links: " + bad.map(([cc, input, digits, href]) => `${cc} "${input}" gave ${href || "no link"}, not wa.me/${digits}`).join("; "));
+}
+const WA_MESSAGE = "Hola *negrita* _cursiva_ ~tachado~ `code` ```mono```\nSegunda línea 🙌 ¿sí?\n<img src=x onerror=\"window.__xss=1\">";
+function expectEncoded(href, message) {
+  expect(href === "https://wa.me/447400123456?text=" + encodeURIComponent(message), `the link isn't the number plus the encodeURIComponent message: ${href}`);
+  expect(new URL(href).searchParams.get("text") === message, "the message doesn't decode back exactly (line breaks, emoji, accents)");
+}
+function expectPreview(p) {
+  const want = ["strong", "em", "s", "code", "code.mono"];
+  expect(JSON.stringify(p.tags) === JSON.stringify(want), `preview elements are ${p.tags.join(", ")}, not ${want.join(", ")}`);
+  expect(p.text.includes('<img src=x onerror="window.__xss=1">') && !p.xss, "typed markup became an element or ran");
+}
+function expectNoLink(s, reason) {
+  expect(s.openHidden && !s.href && !s.disabledHidden && s.disabled, `"Open in WhatsApp" is live without a number (link hidden ${s.openHidden}, href "${s.href}")`);
+  expect(s.reason === reason, `the visible reason is "${s.reason}", not "${reason}"`);
+  expect(s.copyDisabled && s.shareDisabled && s.qrDisabled, "copy, share or QR is enabled without a link");
+}
+const waState = (page) => page.evaluate(() => {
+  const $ = (id) => document.getElementById(id);
+  return { openHidden: $("openLink").hidden, href: $("openLink").getAttribute("href") || "", disabledHidden: $("openDisabled").hidden,
+    disabled: $("openDisabled").disabled, reason: $("openReason").textContent, copyDisabled: $("copyBtn").disabled,
+    shareDisabled: $("shareBtn").disabled, qrDisabled: $("qrBtn").disabled, phoneHidden: $("phoneSection").hidden };
+});
+function expectCopied(c, link, word) {
+  expect(c.copied === link, `the clipboard got ${c.copied}, not ${link}`);
+  expect(c.status === word && c.live === "polite", `the copy status says "${c.status}" (aria-live ${c.live}), not "${word}"`);
+}
+function expectQrBlocked(q, lang) {
+  expect(q.disabled, "the QR button is enabled for a link too long for a QR code");
+  expect(q.note.includes((WA_QR_MAX + 1).toLocaleString(lang)) && q.note.includes(WA_QR_MAX.toLocaleString(lang)), `the QR note doesn't give the length and the limit: ${q.note}`);
+}
+function pngSize(buf) {
+  expect(buf.subarray(1, 4).toString("latin1") === "PNG", "the QR download isn't a PNG");
+  return [buf.readUInt32BE(16), buf.readUInt32BE(20)];
+}
+async function qrDownload(page) {
+  const [download] = await Promise.all([page.waitForEvent("download", { timeout: 10000 }), page.click("#qrBtn")]);
+  const png = await readFile(await download.path());
+  const pixels = await page.evaluate(async () => {
+    const img = document.querySelector("#qrPreview img");
+    await img.decode();
+    const c = document.createElement("canvas");
+    c.width = img.naturalWidth; c.height = img.naturalHeight;
+    const ctx = c.getContext("2d", { willReadFrequently: true });
+    ctx.drawImage(img, 0, 0);
+    const { data } = ctx.getImageData(0, 0, c.width, c.height);
+    let dark = 0;
+    for (let i = 0; i < data.length; i += 4) if (data[i] < 128) dark++;
+    const margin = ctx.getImageData(0, 0, 30, 30).data.every((v) => v === 255);
+    return { dark: dark / (c.width * c.height), margin, alt: img.alt };
+  });
+  return { name: download.suggestedFilename(), size: pngSize(png), ...pixels };
+}
+function expectQrPng(q, lang) {
+  expect(q.name === WA_TEXT[lang].qrFile, `the QR file is called ${q.name}`);
+  expect(q.size[0] === 592 && q.size[1] === 592, `the QR PNG is ${q.size.join("x")}, not 592x592`);
+  expect(q.margin, "the QR code has no white quiet zone");
+  expect(q.dark > 0.15 && q.dark < 0.6, `the QR image is ${Math.round(q.dark * 100)}% dark, not a QR code`);
+}
+function expectFirst(first, code) {
+  expect(first === "country-" + code, `the first option is ${first || "nothing"}, not ${code}`);
+}
+const WA_STRUCTURE = () => {
+  const q = (s) => document.querySelector(s);
+  const footer = q("footer.site-footer"), details = q("details.more"), guide = q(".how p.guide-link");
+  const after = [...document.body.querySelectorAll("*")].filter((el) => (footer.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING)
+    && !footer.contains(el) && !["SCRIPT", "STYLE"].includes(el.tagName) && el.getClientRects().length > 0);
+  const order = ["nav.breadcrumbs", "h1", "p.lead", "p.affil", ".tool", ".how-grid", "details.more", "footer.site-footer"].map(q);
+  const inOrder = order.every((el, i) => el && (i === 0 || (order[i - 1].compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING)));
+  return { after: after.map((el) => el.tagName.toLowerCase() + (el.id ? "#" + el.id : el.className ? "." + String(el.className).split(" ")[0] : "")),
+    detailsAfterGuide: !!(guide.compareDocumentPosition(details) & Node.DOCUMENT_POSITION_FOLLOWING),
+    detailsBeforeFooter: !!(details.compareDocumentPosition(footer) & Node.DOCUMENT_POSITION_FOLLOWING), inOrder,
+    // How it works: three steps in an <ol>, the guide line right under them (a real link, outside the block);
+    // Related tools: three cards; one <details>, its <summary> the first child, with no role and no control inside.
+    steps: document.querySelectorAll(".how-grid .how > ol > li").length,
+    guideAfterSteps: !!guide && guide.previousElementSibling === q(".how-grid .how > ol"),
+    guideHref: guide?.querySelector("a[href]")?.getAttribute("href") || "", guideInDetails: !!guide && details.contains(guide),
+    cards: document.querySelectorAll(".how-grid .related-aside .related-card").length,
+    detailsCount: document.querySelectorAll("details").length,
+    summaryFirst: details.firstElementChild?.tagName === "SUMMARY", summaryRole: details.querySelector("summary").getAttribute("role") };
+};
+function expectStructure(s) {
+  expect(!s.after.length, `visible elements after the footer: ${s.after.join(", ")}`);
+  expect(s.detailsAfterGuide && s.detailsBeforeFooter, "the collapsed block isn't between the guide link and the footer");
+  expect(s.inOrder, "the page isn't breadcrumb, H1, description, not-affiliated line, tool, How it works and Related tools, collapsed block, footer");
+  expect(s.steps === 3, `${s.steps} steps in How it works, not 3`);
+  expect(s.guideAfterSteps && /\/blog\/send-whatsapp-without-saving-contact\/$/.test(s.guideHref) && !s.guideInDetails,
+    `the guide link isn't right under the steps, outside the collapsed block (href "${s.guideHref}")`);
+  expect(s.cards === 3, `${s.cards} Related tools cards, not 3`);
+  expect(s.detailsCount === 1 && s.summaryFirst && s.summaryRole === null, `${s.detailsCount} <details>, summary first ${s.summaryFirst}, role ${s.summaryRole}`);
+}
+function expectNotes(n) {
+  expect(n.moved === 6, `${6 - n.moved} field notes still in the tool or missing from the collapsed block`);
+  expect(n.sections === 6 && n.faqLast, `${n.sections} sections in the collapsed block, FAQ last ${n.faqLast}`);
+  expect(n.facts === 0, "a list of notes is still in the tool");
+  expect(n.qrHidden, "the QR note shows before there's a link");
+}
+const WA_FAQ = () => {
+  const visible = [...document.querySelectorAll("details.more .faq-item")].map((el) => [el.children[0].textContent.trim(), el.children[1].textContent.trim()]);
+  const graph = [...document.querySelectorAll('script[type="application/ld+json"]')].flatMap((s) => JSON.parse(s.textContent)["@graph"] || []);
+  const faq = graph.find((x) => x["@type"] === "FAQPage");
+  return { visible, jsonld: faq.mainEntity.map((x) => [x.name, x.acceptedAnswer.text]) };
+};
+function expectFaq(f) {
+  expect(f.visible.length === 4, `${f.visible.length} FAQ items in the collapsed block, not 4`);
+  expect(JSON.stringify(f.visible) === JSON.stringify(f.jsonld), "the FAQ text differs from the FAQPage JSON-LD");
+}
+function expectIndicator(closed, open) {
+  expect(closed && open && closed !== open, `the open/closed indicator doesn't change (${closed} / ${open})`);
+}
+const waOverflow = (page) => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+function expectNoOverflow(px, when) {
+  expect(px <= 0, `the page scrolls sideways by ${px}px at 320 CSS px (${when})`);
+}
+// The placeholders: the message's fixed text and the phone field's example for the chosen country
+// (libphonenumber-js's examples.mobile.json in its national format; without it, only the US gets one).
+const WA_EXAMPLES = "/assets/vendor/libphonenumber-js/1.13.15/examples.mobile.json";
+const WA_MSG_PLACEHOLDER = { en: "Hello, I have a question", es: "Hola, tengo una pregunta" };
+const WA_US_FALLBACK = "202 555 0123";
+const WA_LABELS = { en: { phoneInput: "Phone number", messageInput: "Message (optional)" }, es: { phoneInput: "Número de teléfono", messageInput: "Mensaje (opcional)" } };
+// Territories that share a bigger country's numbering plan: their example is a valid number, but libphonenumber
+// (and so the page's status line) names the main country when it reads it back.
+const WA_SHARED_PLAN = { AX: "FI", BL: "GP", CC: "AU", CX: "AU", EH: "MA", IM: "GB", MF: "GP", SJ: "NO", VA: "IT" };
+const waPick = (page, code) => page.evaluate((c) => document.getElementById("country-" + c).click(), code);
+const waPlaceholder = (page) => page.getAttribute("#phoneInput", "placeholder");
+// Every country in the list: its placeholder, what the examples file says it should be, and what typing it gives.
+async function waEveryExample(page, examples) {
+  const codes = await page.evaluate(() => [...document.querySelectorAll("#countryList li")].map((li) => li.id.slice("country-".length)));
+  const rows = [];
+  for (const code of codes) {
+    await waPick(page, code);
+    const placeholder = (await waPlaceholder(page)) || "";
+    await waNumber(page, placeholder);
+    rows.push(await page.evaluate(([code, placeholder, examples]) => {
+      const lib = window.libphonenumber, ex = lib.getExampleNumber(code, examples);
+      const row = { code, placeholder, want: ex ? ex.formatNational() : "", e164: ex ? ex.number : "",
+        href: document.getElementById("openLink").getAttribute("href") || "", error: document.getElementById("phoneError").textContent };
+      try { const n = lib.parsePhoneNumber(placeholder, code); row.valid = n.isValid(); row.parsed = n.number; row.country = n.country; } catch (e) { row.valid = false; }
+      return row;
+    }, [code, placeholder, examples]));
+  }
+  return rows;
+}
+function expectExamples(rows) {
+  expect(rows.length > 200, `only ${rows.length} countries in the list`);
+  const bad = rows.filter((r) => r.placeholder !== r.want || (r.want && (!r.valid || r.parsed !== r.e164 || r.error ||
+    r.href !== "https://wa.me/" + r.e164.slice(1) || (r.country !== r.code && WA_SHARED_PLAN[r.code] !== r.country))));
+  expect(!bad.length, "examples that fail: " + bad.map((r) => `${r.code} "${r.placeholder}" (want "${r.want}", valid ${r.valid}, read as ${r.country}, link ${r.href || "none"}${r.error ? ", error " + r.error : ""})`).join("; "));
+}
+// Placeholder text against the field's own background, in the current theme.
+const waPlaceholderContrast = (page, sel) => page.evaluate((s) => {
+  const rgb = (c) => (c.match(/[\d.]+/g) || []).map(Number);
+  const lum = ([r, g, b]) => [r, g, b].map((v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }).reduce((a, v, i) => a + v * [0.2126, 0.7152, 0.0722][i], 0);
+  const el = document.querySelector(s);
+  let bg = [0, 0, 0];
+  for (let n = el; n; n = n.parentElement) { const c = rgb(getComputedStyle(n).backgroundColor); if (c.length === 3 || c[3] > 0) { bg = c; break; } }
+  const fg = rgb(getComputedStyle(el, "::placeholder").color), a = fg.length === 4 ? fg[3] : 1;
+  const mixed = [0, 1, 2].map((i) => fg[i] * a + bg[i] * (1 - a));
+  const [l1, l2] = [lum(mixed), lum(bg)].sort((x, y) => y - x);
+  return (l1 + 0.05) / (l2 + 0.05);
+}, sel);
+function expectContrast(ratio, what) {
+  expect(ratio >= 4.5, `${what} placeholder contrast is ${ratio.toFixed(2)}:1, under 4.5:1`);
+}
+function expectLabels(labels, lang) {
+  for (const [id, text] of Object.entries(WA_LABELS[lang])) expect(labels[id] === text, `the ${id} label is "${labels[id]}", not "${text}"`);
+}
+const waLabels = (page) => page.evaluate(() => Object.fromEntries(["phoneInput", "messageInput"].map((id) => [id, document.querySelector(`label[for="${id}"]`)?.textContent.trim() || ""])));
+const WA_SECRET = { digits: "447400123456", words: ["Zanahoria", "secreta"] };
+function expectNothingSent(requests, url, start) {
+  const leaked = requests.filter((r) => r.includes(WA_SECRET.digits) || WA_SECRET.words.some((w) => r.includes(w)));
+  expect(!leaked.length, `a request carried the number or the message: ${leaked.join(", ")}`);
+  expect(url === start, `the page URL changed to ${url}`);
+}
+
+// The formatting toolbar and the emoji picker (added with the guide diagram, 2026-11-02).
+const WA_GUIDE = "/blog/send-whatsapp-without-saving-contact/";
+const WA_FMT = {
+  en: { cross: "Select text that does not overlap other formatting", mono: "Monospace can't be combined", firstEmoji: "grinning face", heart: "red heart", luggage: "luggage", gestures: "Gestures" },
+  es: { cross: "Selecciona texto que no se superponga con otro formato", mono: "El monoespaciado no se puede combinar", firstEmoji: "cara sonriente", heart: "corazón rojo", luggage: "equipaje", gestures: "Gestos" },
+};
+// Put a value in the message, select [s, e) and reset the input event counter.
+async function waSelect(page, value, s, e) {
+  await page.fill("#messageInput", value);
+  await page.evaluate(([s, e]) => {
+    const t = document.getElementById("messageInput");
+    if (!window.__waInputs) { window.__waInputs = { n: 0 }; t.addEventListener("input", () => window.__waInputs.n++); }
+    t.focus();
+    t.setSelectionRange(s, e);
+    window.__waInputs.n = 0;
+  }, [s, e]);
+}
+const waMsgState = (page) => page.evaluate(() => {
+  const t = document.getElementById("messageInput");
+  return { value: t.value, sel: [t.selectionStart, t.selectionEnd], inputs: window.__waInputs ? window.__waInputs.n : 0, focus: document.activeElement.id,
+    strong: [...document.querySelectorAll("#bubble strong")].map((x) => x.textContent), link: document.getElementById("linkOutput").value,
+    status: document.getElementById("fmtStatus").textContent };
+});
+async function waFormat(page, kind, value, s, e) {
+  await waSelect(page, value, s, e);
+  await page.click(`.fmt-btn[data-format="${kind}"]`);
+  await page.waitForTimeout(100); // a refusal hint is written 50 ms later
+  return waMsgState(page);
+}
+function expectValue(got, want, what) {
+  expect(got.value === want, `${what}: the message is ${JSON.stringify(got.value)}, not ${JSON.stringify(want)}`);
+}
+function expectOneInput(got, what) {
+  expect(got.inputs === 1, `${what}: ${got.inputs} input events, not exactly 1`);
+}
+// Every emoji one character (one grapheme), no joiner, skin tone or flag, no duplicate emoji or name, 6 categories.
+const WA_EMOJI_DATA = () => {
+  const seg = new Intl.Segmenter("en", { granularity: "grapheme" });
+  const odd = (s) => [...s].some((ch) => { const c = ch.codePointAt(0); return c === 0x200D || (c >= 0x1F3FB && c <= 0x1F3FF) || (c >= 0x1F1E6 && c <= 0x1F1FF); });
+  const uniq = (key) => EMOJI.length - new Set(EMOJI.map((x) => x[key])).size;
+  const cats = EMOJI_CATEGORIES.map((c) => c.id);
+  return { count: EMOJI.length, cats: cats.length, perCat: cats.map((c) => EMOJI.filter((x) => x.category === c).length),
+    unknownCat: EMOJI.filter((x) => !cats.includes(x.category)).length, notOne: EMOJI.filter((x) => [...seg.segment(x.emoji)].length !== 1 || odd(x.emoji)).map((x) => x.emoji),
+    dup: uniq("emoji") + uniq("name_en") + uniq("name_es"), missingName: EMOJI.filter((x) => !x.name_en || !x.name_es).length };
+};
+function expectEmojiData(d) {
+  expect(d.count === 118 && d.cats === 6 && !d.unknownCat, `${d.count} emojis in ${d.cats} categories (${d.unknownCat} in no category), not 118 in 6`);
+  expect(JSON.stringify(d.perCat) === "[18,17,18,28,19,18]", `emojis per category ${d.perCat.join("/")}, not 18/17/18/28/19/18`);
+  expect(!d.notOne.length, `not a single emoji (or a joiner, skin tone or flag): ${d.notOne.join(" ")}`);
+  expect(!d.dup && !d.missingName, `${d.dup} duplicate emojis or names, ${d.missingName} missing names`);
+}
+const emojiBlock = (html) => {
+  const a = html.indexOf("// Emoji data: start"), b = html.indexOf("// Emoji data: end");
+  expect(a >= 0 && b > a, "no emoji data block in the page");
+  return html.slice(a, b);
+};
+function expectSameEmojiData(en, es) {
+  expect(emojiBlock(en) === emojiBlock(es), "the EN and ES pages' emoji data blocks differ");
+}
+function expectTabStops(stops, lang) {
+  expect(stops.length === 2 && stops[0].role === "tab" && stops[0].selected && stops[1].cls === "emoji-btn",
+    `from the message, Tab reached ${stops.map((s) => s.role || s.cls).join(", ")} before the emoji grid, not the selected tab then the grid (${lang})`);
+}
+const WA_DIAGRAM = () => [...document.querySelectorAll("figure.wa-flow svg")].map((s) => ({
+  cls: s.getAttribute("class"), shown: getComputedStyle(s).display !== "none", hidden: s.getAttribute("aria-hidden") === "true",
+  role: s.getAttribute("role"), label: s.getAttribute("aria-label") }));
+function expectOneDiagram(svgs, snapImgs, width) {
+  expect(svgs.length === 2 && svgs[0].label && svgs[0].label === svgs[1].label && svgs.every((s) => s.role === "img"), `the two diagrams don't share role="img" and one aria-label`);
+  const shown = svgs.filter((s) => s.shown);
+  expect(shown.length === 1 && !shown[0].hidden && svgs.filter((s) => !s.shown).every((s) => s.hidden), `at ${width}px: ${shown.length} diagrams shown, aria-hidden ${svgs.map((s) => s.hidden).join("/")}`);
+  expect(snapImgs === 1, `at ${width}px the accessibility tree exposes ${snapImgs} diagrams, not 1`);
+  expect(shown[0].cls === (width < 640 ? "wa-flow-stacked" : "wa-flow-wide"), `at ${width}px the ${shown[0].cls} diagram is shown`);
+}
+
 const CASES = [
   {
     name: "spark-md5",
@@ -1888,6 +2181,565 @@ const CASES = [
       const done = await ocrRun(page, lang);
       expect(!(await page.textContent("#errorMsg")), "the engine error is still shown after a successful retry");
       return `still loading 5 s before the ${timeout / 1000} s timeout, engine error shown after it; retry: ${done}`;
+    },
+  },
+  {
+    name: "libphonenumber-js (WhatsApp link generator, numbers)",
+    page: WA,
+    vendor: [LIBPHONE, QRJS],
+    async run(page, lang) {
+      const got = [];
+      for (const [cc, input] of WA_NUMBERS) {
+        await waCountry(page, cc);
+        got.push((await waNumber(page, input)).href);
+      }
+      expectNumbers(got);
+      // Argentina without the 9: a hint and a button, never a block.
+      await waCountry(page, "AR");
+      const plain = await waNumber(page, "11 2345 6789");
+      expect(plain.href === "https://wa.me/541123456789", `an Argentine number without the 9 gave ${plain.href || "no link"}; the link must still be made`);
+      const add = page.locator("#addNineBtn");
+      expect((await add.textContent()) === WA_TEXT[lang].add9, `the button says "${await add.textContent()}"`);
+      await add.click();
+      const nine = await page.getAttribute("#openLink", "href");
+      expect(nine === "https://wa.me/5491123456789", `"${WA_TEXT[lang].add9}" gave ${nine}`);
+      expect(!(await page.locator("#addNineBtn").count()), "the add-the-9 hint is still shown after adding the 9");
+      // Mexico's old 1 after +52: dropped, with a note.
+      await waCountry(page, "MX");
+      const mx = await waNumber(page, "+52 1 55 1234 5678");
+      expect(mx.status.includes(WA_TEXT[lang].mx1), `no note about the dropped 1: "${mx.status}"`);
+      return `${WA_NUMBERS.length} numbers give the right wa.me links (Argentina 0/15/9, Mexico's 1 dropped with a note, Brazil, UK, 00 and 011 as +, US); ` +
+        `"${WA_TEXT[lang].add9}" turns wa.me/541123456789 into wa.me/5491123456789; ` +
+        mustFail("a wrong digit", () => expectNumbers(got.map((h, i) => (i === 3 ? h.replace(/8$/, "9") : h)))) + "; " +
+        mustFail("011 under Argentina read as international", () => expectNumbers(got.map((h, i) => (i === 0 ? "https://wa.me/11523456789" : h))));
+    },
+  },
+  {
+    name: "WhatsApp link generator (message, preview, actions)",
+    page: WA,
+    vendor: [LIBPHONE, QRJS],
+    async run(page, lang) {
+      const t = WA_TEXT[lang];
+      const empty = await waState(page);
+      expectNoLink(empty, t.reason);
+      await waCountry(page, "GB");
+      await waNumber(page, "07400 123456");
+      await page.fill("#messageInput", WA_MESSAGE);
+      const href = await page.getAttribute("#openLink", "href");
+      expectEncoded(href, WA_MESSAGE);
+      const attrs = await page.evaluate(() => { const a = document.getElementById("openLink"); return [a.target, a.rel, a.hidden]; });
+      expect(attrs[0] === "_blank" && attrs[1] === "noopener noreferrer" && !attrs[2], `the open link is ${attrs.join(" / ")}`);
+      const preview = await page.evaluate(() => {
+        const b = document.getElementById("bubble");
+        return { tags: [...b.querySelectorAll("*")].map((e) => e.tagName.toLowerCase() + (e.className ? "." + e.className : "")), text: b.textContent, xss: window.__xss };
+      });
+      expectPreview(preview);
+      // Copy and share, with the browser's clipboard and share sheet replaced by recorders.
+      await page.evaluate(() => {
+        window.__copied = null; window.__shared = null;
+        Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText: async (text) => { window.__copied = text; } } });
+        Object.defineProperty(navigator, "share", { configurable: true, value: async (data) => { window.__shared = data; } });
+      });
+      await page.click("#copyBtn");
+      await page.waitForFunction(() => document.getElementById("copyStatus").textContent !== "", null, { timeout: 5000 });
+      const copy = await page.evaluate(() => ({ copied: window.__copied, status: document.getElementById("copyStatus").textContent, live: document.getElementById("copyStatus").getAttribute("aria-live") }));
+      expectCopied(copy, href, t.copied);
+      await page.click("#shareBtn");
+      const shared = await page.evaluate(() => window.__shared);
+      expect(shared && shared.url === href, `Share was given ${JSON.stringify(shared)}`);
+      // No-number mode: WhatsApp asks who to send the message to.
+      await page.click(".mode button >> nth=1");
+      await page.fill("#messageInput", "");
+      const any = await waState(page);
+      expect(any.phoneHidden && any.reason === t.reasonMessage && any.openHidden, `no-number mode without a message: ${JSON.stringify(any)}`);
+      await page.fill("#messageInput", "Hi there");
+      const anyHref = await page.getAttribute("#openLink", "href");
+      expect(anyHref === "https://wa.me/?text=Hi%20there", `no-number mode gave ${anyHref}`);
+      return `link ${href.slice(0, 48)}... decodes back exactly; preview has strong, em, s, code and monospace, typed <img> stays text; ` +
+        `copied with "${copy.status}" announced; shared; no-number mode gives wa.me/?text=; ` +
+        [mustFail("a live link with no number", () => expectNoLink({ ...empty, openHidden: false, href: "https://wa.me/" }, t.reason)),
+          mustFail("encoded with escape()", () => expectEncoded("https://wa.me/447400123456?text=" + escape(WA_MESSAGE), WA_MESSAGE)),
+          mustFail("an element made from typed text", () => expectPreview({ ...preview, tags: [...preview.tags, "img"] })),
+          mustFail("no announcement", () => expectCopied({ ...copy, status: "" }, href, t.copied))].join("; ");
+    },
+  },
+  {
+    name: "qrcodejs (WhatsApp link generator, QR code)",
+    page: WA,
+    vendor: [LIBPHONE, QRJS],
+    async run(page, lang) {
+      await waCountry(page, "GB");
+      await waNumber(page, "07400 123456");
+      await page.fill("#messageInput", "Hello");
+      const short = await qrDownload(page);
+      expectQrPng(short, lang);
+      // The longest link qrcodejs can encode at level M still works; one character more is refused with a reason.
+      const base = "https://wa.me/447400123456?text=";
+      const fill = "a".repeat(WA_QR_MAX - base.length);
+      await page.fill("#messageInput", fill);
+      expect((await page.inputValue("#linkOutput")).length === WA_QR_MAX, "the test link isn't exactly at the limit");
+      expectQrPng(await qrDownload(page), lang);
+      await page.fill("#messageInput", fill + "a");
+      const over = await page.evaluate(() => ({ disabled: document.getElementById("qrBtn").disabled, note: document.getElementById("qrNote").textContent }));
+      expectQrBlocked(over, lang);
+      const libFails = await page.evaluate((text) => {
+        try { new QRCode(document.createElement("div"), { text, width: 64, height: 64, correctLevel: QRCode.CorrectLevel.M }); return false; } catch (e) { return true; }
+      }, base + fill + "a");
+      expect(libFails, `qrcodejs encodes ${WA_QR_MAX + 1} characters, so the limit in the page is out of date`);
+      return `592x592 PNG ${short.name} with a quiet zone (${Math.round(short.dark * 100)}% dark); a ${WA_QR_MAX}-character link still works, ` +
+        `${WA_QR_MAX + 1} is refused with "${over.note}" (qrcodejs itself fails there); ` +
+        mustFail("an over-limit link offered as a QR code", () => expectQrBlocked({ ...over, disabled: false }, lang));
+    },
+  },
+  {
+    name: "circle-flags (WhatsApp link generator, country picker)",
+    page: WA,
+    vendor: [LIBPHONE, QRJS, FLAG("pe")],
+    async run(page, lang) {
+      await page.focus("#countryInput");
+      await page.keyboard.press("ArrowDown");
+      const opened = await page.evaluate(() => ({ expanded: document.getElementById("countryInput").getAttribute("aria-expanded"),
+        active: document.getElementById("countryInput").getAttribute("aria-activedescendant"), shown: !document.getElementById("countryList").hidden }));
+      expect(opened.expanded === "true" && opened.shown && opened.active, `ArrowDown didn't open the list: ${JSON.stringify(opened)}`);
+      await page.keyboard.press("ArrowDown");
+      const moved = await page.getAttribute("#countryInput", "aria-activedescendant");
+      expect(moved && moved !== opened.active, "ArrowDown doesn't move the active option");
+      await page.keyboard.press("Escape");
+      expect((await page.getAttribute("#countryInput", "aria-expanded")) === "false", "Escape didn't close the list");
+      const first = () => page.evaluate(() => { const li = [...document.querySelectorAll("#countryList li")].find((x) => !x.hidden); return li ? li.id : null; });
+      // Accents and case are ignored ("peru" finds Perú), and a calling code finds its countries.
+      await page.fill("#countryInput", "peru");
+      const peru = await first();
+      expectFirst(peru, "PE");
+      await page.keyboard.press("Enter");
+      const name = await regionName(page, "PE");
+      expect((await page.inputValue("#countryInput")) === `${name} (+51)`, `picked "${await page.inputValue("#countryInput")}"`);
+      await page.waitForFunction(() => { const f = document.getElementById("countryFlag"); return !f.hidden && f.complete && f.naturalWidth > 0; }, null, { timeout: 5000 });
+      expect((await page.getAttribute("#countryFlag", "src")) === FLAG("pe") && (await page.getAttribute("#countryFlag", "alt")) === "", "the flag isn't the vendored pe.svg with an empty alt");
+      await page.fill("#countryInput", "+44");
+      expectFirst(await first(), "GB");
+      await page.fill("#countryInput", "+1");
+      const shared = await page.evaluate(() => [...document.querySelectorAll("#countryList li")].filter((x) => !x.hidden).map((x) => x.id));
+      expect(shared.includes("country-US") && shared.includes("country-CA") && shared.includes("country-DO"), `+1 lists ${shared.length} countries, not the US, Canada and the Dominican Republic separately`);
+      await page.fill("#countryInput", "zzzz");
+      expect(await page.isVisible("#countryEmpty"), "no message when no country matches");
+      await page.keyboard.press("Escape");
+      expect((await page.inputValue("#countryInput")) === `${name} (+51)`, "Escape didn't restore the chosen country");
+      return `ArrowDown opens and moves, Escape closes; "peru" finds ${name}, flag pe.svg loaded with an empty alt; +44 finds the UK; +1 lists ${shared.length} countries separately; ` +
+        mustFail("an accented search that finds nothing", () => expectFirst(null, "PE"));
+    },
+  },
+  {
+    name: "WhatsApp link generator (remembered country, privacy)",
+    page: WA,
+    vendor: [LIBPHONE, QRJS],
+    async run(page, lang, ctl) {
+      const start = page.url();
+      // The first browser language's region is the default (en-US, es-ES).
+      const home = await regionName(page, lang === "es" ? "ES" : "US");
+      const initial = await page.inputValue("#countryInput");
+      expect(initial.startsWith(home + " (+"), `the default country is "${initial}", not ${home}`);
+      await waCountry(page, "MX");
+      expect((await page.evaluate(() => localStorage.getItem("orisod-wa-country"))) === "MX", "the chosen country wasn't saved as orisod-wa-country");
+      await page.reload();
+      const mexico = await regionName(page, "MX");
+      const restored = await page.inputValue("#countryInput");
+      const expectRestored = (value) => expect(value.startsWith(mexico + " (+"), `after a reload the country is "${value}", not ${mexico}`);
+      expectRestored(restored);
+      // A first browser language without a region: no country is guessed.
+      await page.evaluate(() => localStorage.removeItem("orisod-wa-country"));
+      await page.addInitScript(() => Object.defineProperty(navigator, "languages", { get: () => ["es"] }));
+      await page.reload();
+      expect((await page.inputValue("#countryInput")) === "", "a country was guessed from a language with no region");
+      // This page's storage blocked (its own key throws): it still works and nothing breaks.
+      await page.addInitScript(() => {
+        const get = Storage.prototype.getItem, set = Storage.prototype.setItem;
+        Storage.prototype.getItem = function (k) { if (String(k).startsWith("orisod-wa")) throw new DOMException("blocked", "SecurityError"); return get.call(this, k); };
+        Storage.prototype.setItem = function (k, v) { if (String(k).startsWith("orisod-wa")) throw new DOMException("blocked", "SecurityError"); return set.call(this, k, v); };
+      });
+      await page.reload();
+      await waCountry(page, "GB");
+      // A whole session with a number and a message: nothing that carries either leaves the page.
+      await waNumber(page, "07400 123456");
+      await page.fill("#messageInput", `${WA_SECRET.words.join(" ")} 🙌`);
+      expect((await page.getAttribute("#openLink", "href")).includes(WA_SECRET.digits), "no link with storage blocked");
+      await page.evaluate(() => {
+        Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText: async () => {} } });
+        Object.defineProperty(navigator, "share", { configurable: true, value: async () => {} });
+      });
+      await page.click("#copyBtn");
+      await page.click("#shareBtn");
+      await qrDownload(page);
+      await page.click(".mode button >> nth=1");
+      await page.click(".mode button >> nth=0");
+      await page.waitForTimeout(700);
+      expectNothingSent(ctl.requests, page.url(), start);
+      await page.evaluate(() => history.replaceState(null, "", location.pathname + "?text=Zanahoria"));
+      const changed = page.url();
+      return `default ${home} from the browser language, MX saved and restored, no guess for "es", works with storage blocked; ` +
+        `${ctl.requests.length} requests, none with the number or the message, URL unchanged; ` +
+        [mustFail("the saved country not restored", () => expectRestored(initial)),
+          mustFail("history.replaceState adding ?text=", () => expectNothingSent(ctl.requests, changed, start)),
+          mustFail("a request with the number", () => expectNothingSent([...ctl.requests, "https://orisod.goatcounter.com/count?p=/x&q=447400123456"], start, start))].join("; ");
+    },
+  },
+  {
+    name: "WhatsApp link generator (placeholders)",
+    page: WA,
+    vendor: [LIBPHONE, QRJS, WA_EXAMPLES],
+    async run(page, lang) {
+      const examples = JSON.parse(await readFile(`${REPO_ROOT}${WA_EXAMPLES}`, "utf-8"));
+      expect((await page.getAttribute("#messageInput", "placeholder")) === WA_MSG_PLACEHOLDER[lang], "the message placeholder isn't the approved text");
+      const labels = await waLabels(page);
+      expectLabels(labels, lang);
+      // Both themes: the placeholders stay readable against the field.
+      await page.addStyleTag({ content: "*{transition:none !important}" });
+      const contrast = {};
+      for (const theme of ["dark", "light"]) {
+        await page.evaluate((t) => (t === "light" ? document.documentElement.setAttribute("data-theme", "light") : document.documentElement.removeAttribute("data-theme")), theme);
+        for (const id of ["phoneInput", "messageInput"]) expectContrast(contrast[theme + " " + id] = await waPlaceholderContrast(page, "#" + id), `${theme} ${id}`);
+      }
+      // Changing the country changes the example, in its own national format.
+      await waPick(page, "US");
+      await page.waitForFunction(() => document.getElementById("phoneInput").placeholder === "(201) 555-0123");
+      await waPick(page, "GB");
+      const gb = await waPlaceholder(page);
+      expect(gb === "07400 123456", `the United Kingdom's placeholder is "${gb}"`);
+      // A placeholder is not a value: Argentina and Mexico with an empty field give no link, note or hint.
+      for (const code of ["AR", "MX"]) {
+        await waPick(page, code);
+        await waNumber(page, "");
+        const s = await page.evaluate(() => ({ href: document.getElementById("openLink").getAttribute("href") || "", status: document.getElementById("phoneStatus").textContent,
+          add9: document.querySelectorAll("#addNineBtn").length, value: document.getElementById("phoneInput").value }));
+        expect(!s.href && !s.status && !s.add9 && !s.value, `${code} with only its placeholder gave a link, a note or a value: ${JSON.stringify(s)}`);
+      }
+      // Every country in the list: type its example as it is shown.
+      const rows = await waEveryExample(page, examples);
+      expectExamples(rows);
+      const shared = rows.filter((r) => r.country && r.country !== r.code).map((r) => `${r.code} as ${r.country}`);
+      // No country chosen (a first browser language with no region): no placeholder; the label stays.
+      await page.addInitScript(() => Object.defineProperty(navigator, "languages", { get: () => ["es"] }));
+      await page.evaluate(() => localStorage.removeItem("orisod-wa-country"));
+      await page.reload();
+      await page.waitForLoadState("networkidle");
+      expect((await page.inputValue("#countryInput")) === "", "a country was chosen on load");
+      const none = await waPlaceholder(page);
+      expect(!none, `with no country the phone placeholder is "${none}"`);
+      expectLabels(await waLabels(page), lang);
+      const withData = rows.filter((r) => r.want).length;
+      return `${withData} of ${rows.length} countries have an example and each typed as shown is valid and gives its wa.me link with no error ` +
+        `(read back as the main country: ${shared.join(", ")}); the placeholder follows the country (US "(201) 555-0123", UK "07400 123456"), ` +
+        `none with no country, labels kept, Argentina and Mexico ignore it; contrast ${Object.entries(contrast).map(([k, v]) => `${k} ${v.toFixed(1)}:1`).join(", ")}; ` +
+        mustFail("a US-format example under another country", () => expectExamples(rows.map((r) => (r.code === "GB" ? { ...r, placeholder: "(201) 555-0123" } : r)))) + "; " +
+        mustFail("an example that gives no link", () => expectExamples(rows.map((r) => (r.code === "DE" ? { ...r, href: "" } : r)))) + "; " +
+        mustFail("an example read as another country", () => expectExamples(rows.map((r) => (r.code === "ES" ? { ...r, country: "PT" } : r)))) + "; " +
+        mustFail("a missing label", () => expectLabels({ ...labels, phoneInput: "" }, lang)) + "; " +
+        mustFail("a faint placeholder", () => expectContrast(3.2, "test"));
+    },
+  },
+  {
+    name: "WhatsApp link generator (placeholders, examples file missing)",
+    page: WA,
+    vendor: [LIBPHONE, QRJS],
+    broken: () => ({ path: WA_EXAMPLES, mode: "404" }),
+    async run(page) {
+      await page.waitForLoadState("networkidle");
+      await waPick(page, "US");
+      const us = await waPlaceholder(page);
+      expect(us === WA_US_FALLBACK, `without the examples the United States placeholder is "${us}", not "${WA_US_FALLBACK}"`);
+      const s = await waNumber(page, us);
+      expect(s.href === "https://wa.me/12025550123", `typing the fallback example gave ${s.href || "no link"}`);
+      const others = [];
+      for (const code of ["GB", "MX", "AR", "CA"]) {
+        await waPick(page, code);
+        others.push([code, (await waPlaceholder(page)) || ""]);
+      }
+      const expectNoneElsewhere = (o) => expect(o.every(([, p]) => !p), "a country other than the US has a placeholder without the examples: " + o.filter(([, p]) => p).map(([c, p]) => `${c} "${p}"`).join(", "));
+      expectNoneElsewhere(others);
+      return `the United States shows "${WA_US_FALLBACK}" (wa.me/12025550123 when typed), the UK, Mexico, Argentina and Canada (also +1) show none; ` +
+        mustFail("a US example under Canada", () => expectNoneElsewhere([...others, ["CA", WA_US_FALLBACK]]));
+    },
+  },
+  {
+    name: "WhatsApp link generator (minimal layout, collapsed block)",
+    page: WA,
+    vendor: [LIBPHONE, QRJS],
+    async run(page, lang) {
+      const structure = await page.evaluate(WA_STRUCTURE);
+      expectStructure(structure);
+      // The operational notes live in the collapsed block (6 sections, FAQ last), not in the tool; the QR note shows only with a link.
+      const notes = await page.evaluate(() => {
+        const d = document.querySelector("details.more"), tool = document.querySelector(".tool");
+        const ids = ["countryHint", "phoneHint", "fmtHelp", "messageHint", "emojiHelp", "emojiLengthNote"];
+        return { moved: ids.filter((id) => d.contains(document.getElementById(id)) && !tool.contains(document.getElementById(id))).length,
+          sections: d.querySelectorAll(".seo-content > h2").length, faqLast: d.querySelector(".seo-content > h2:last-of-type").nextElementSibling?.className === "faq-item",
+          facts: tool.querySelectorAll("ul:not(.combo-list)").length, qrHidden: document.getElementById("qrNote").hidden };
+      });
+      expectNotes(notes);
+      const summary = page.locator("details.more > summary");
+      const closed = await page.evaluate(() => {
+        const d = document.querySelector("details.more"), s = d.querySelector("summary");
+        return { open: d.open, text: d.textContent, label: s.textContent.trim(), height: s.getBoundingClientRect().height,
+          interactive: s.querySelectorAll("a, button, input, select, textarea, [tabindex]").length, arrow: getComputedStyle(s, "::before").transform };
+      });
+      expect(!closed.open, "the collapsed block is open on load");
+      expect(closed.label === WA_TEXT[lang].summary && closed.height >= 44 && !closed.interactive, `summary "${closed.label}", ${closed.height}px, ${closed.interactive} controls inside`);
+      const faq = await page.evaluate(WA_FAQ);
+      expect(faq.visible.every(([q, a]) => closed.text.includes(q) && closed.text.includes(a)), "the FAQ text isn't in the page while the block is closed");
+      expectFaq(faq);
+      await summary.focus();
+      await page.keyboard.press("Enter");
+      const afterEnter = await page.evaluate(() => ({ open: document.querySelector("details.more").open, arrow: getComputedStyle(document.querySelector("details.more > summary"), "::before").transform }));
+      expect(afterEnter.open, "Enter on the summary didn't open the block");
+      // The arrow turns with a 0.2 s transition: read it once that's over.
+      await page.waitForTimeout(400);
+      afterEnter.arrow = await page.evaluate(() => getComputedStyle(document.querySelector("details.more > summary"), "::before").transform);
+      expectIndicator(closed.arrow, afterEnter.arrow);
+      await page.keyboard.press("Space");
+      expect(!(await page.evaluate(() => document.querySelector("details.more").open)), "Space on the summary didn't close the block");
+      const ring = await page.evaluate(() => getComputedStyle(document.querySelector("details.more > summary")).outlineStyle);
+      expect(ring === "solid", `the focused summary has no visible focus ring (outline ${ring})`);
+      // 200% zoom at 320 CSS px: no sideways scrolling, also with the form filled, the list and the block open.
+      await page.setViewportSize({ width: 320, height: 640 });
+      const widths = [["empty", await waOverflow(page)]];
+      await waCountry(page, "AR");
+      await waNumber(page, "11 2345 6789");
+      const qrShown = await page.evaluate(() => { const n = document.getElementById("qrNote"); return !n.hidden && n.getClientRects().length > 0 && n.textContent.length > 0; });
+      expect(qrShown, "the QR note isn't shown once there's a link");
+      await page.fill("#messageInput", "https://example.org/" + "x".repeat(300) + "\n*bold* " + "y".repeat(200));
+      widths.push(["filled", await waOverflow(page)]);
+      await page.click("#qrBtn");
+      widths.push(["QR shown", await waOverflow(page)]);
+      await page.focus("#countryInput");
+      await page.keyboard.press("ArrowDown");
+      widths.push(["country list open", await waOverflow(page)]);
+      await page.keyboard.press("Escape");
+      await summary.click();
+      widths.push(["block open", await waOverflow(page)]);
+      for (const [when, px] of widths) expectNoOverflow(px, when);
+      // Negatives on the live page: the block moved after the footer, a 400px element at 320px.
+      await page.evaluate(() => document.querySelector("footer.site-footer").after(document.querySelector("details.more")));
+      const moved = await page.evaluate(WA_STRUCTURE);
+      await page.evaluate(() => { const d = document.createElement("div"); d.style.width = "400px"; d.style.height = "1px"; document.querySelector(".tool").append(d); });
+      const wide = await waOverflow(page);
+      // Without JavaScript the block is still there, closed, and opens with a click.
+      const noJs = await page.context().browser().newContext({ javaScriptEnabled: false });
+      await noJs.route("**/*", async (route) => {
+        const url = route.request().url();
+        return url.startsWith(SITE + "/") ? route.fulfill(await localFile(url)) : route.abort();
+      });
+      const plain = await noJs.newPage();
+      await plain.goto(SITE + (lang === "es" ? "/es" : "") + WA, { waitUntil: "load" });
+      const wasOpen = await plain.evaluate(() => document.querySelector("details.more").open);
+      await plain.click("details.more > summary");
+      const nowOpen = await plain.evaluate(() => ({ open: document.querySelector("details.more").open, faq: document.querySelectorAll("details.more .faq-item").length }));
+      await noJs.close();
+      expect(!wasOpen && nowOpen.open && nowOpen.faq === 4, `without JavaScript the block was open ${wasOpen}, opened ${nowOpen.open}, ${nowOpen.faq} FAQ items`);
+      return `footer last; How it works with 3 steps and the guide link under them, 3 Related tools cards, one block with its summary first; ` +
+        `the field notes in the block's 6 sections, the QR note only once there's a link; closed on load with its text in the page; "${closed.label}" ${Math.round(closed.height)}px; ` +
+        `Enter opens, Space closes, the arrow turns, focus ring shown; FAQ equals the FAQPage JSON-LD; no sideways scroll at 320 px (${widths.map((w) => w[0]).join(", ")}); works without JavaScript; ` +
+        [mustFail("the block moved after the footer", () => expectStructure(moved)),
+          mustFail("a fourth step", () => expectStructure({ ...structure, steps: 4 })),
+          mustFail("the guide link inside the block", () => expectStructure({ ...structure, guideInDetails: true })),
+          mustFail("two Related tools cards", () => expectStructure({ ...structure, cards: 2 })),
+          mustFail("a summary with role=button", () => expectStructure({ ...structure, summaryRole: "button" })),
+          mustFail("a hint left in the tool", () => expectNotes({ ...notes, moved: 5 })),
+          mustFail("the QR note shown with no link", () => expectNotes({ ...notes, qrHidden: false })),
+          mustFail("a FAQ answer that differs from the JSON-LD", () => expectFaq({ ...faq, jsonld: faq.jsonld.map((x, i) => (i === 2 ? [x[0], x[1] + " Extra."] : x)) })),
+          mustFail("an indicator that doesn't change", () => expectIndicator(closed.arrow, closed.arrow)),
+          mustFail("a 400px element at 320 px", () => expectNoOverflow(wide, "with a 400px element"))].join("; ");
+    },
+  },
+  {
+    name: "WhatsApp link generator (formatting toolbar)",
+    page: WA,
+    vendor: [LIBPHONE, QRJS],
+    async run(page, lang) {
+      const f = WA_FMT[lang];
+      await waCountry(page, "GB");
+      await waNumber(page, "07400 123456");
+      // Wrap: the selection, outer spaces kept outside; one native input event; focus stays; preview and link follow.
+      let got = await waFormat(page, "bold", "hello world ", 6, 12);
+      expectValue(got, "hello *world* ", "bold on a selection");
+      expectOneInput(got, "bold (execCommand path)");
+      expect(got.focus === "messageInput" && JSON.stringify(got.sel) === "[7,12]", `focus ${got.focus}, selection ${got.sel}`);
+      expect(got.strong.join() === "world" && got.link === "https://wa.me/447400123456?text=" + encodeURIComponent("hello *world* "), `preview ${got.strong}, link ${got.link}`);
+      const wrapped = got;
+      await page.click('.fmt-btn[data-format="bold"]');
+      expectValue(await waMsgState(page), "hello world ", "bold again removes it");
+      got = await waFormat(page, "strike", "hi ", 3, 3);
+      expectValue(got, "hi ~~", "no selection inserts a pair");
+      expect(JSON.stringify(got.sel) === "[4,4]", `the cursor is at ${got.sel}, not between the markers`);
+      got = await waFormat(page, "mono", "x ", 2, 2);
+      expectValue(got, "x ``````", "monospace pair");
+      expect(JSON.stringify(got.sel) === "[5,5]", `the cursor is at ${got.sel} after the monospace pair`);
+      expectValue(await waFormat(page, "italic", "a *bold* b", 0, 10), "_a *bold* b_", "nesting");
+      got = await waFormat(page, "italic", "a *bold* b", 0, 5);
+      expectValue(got, "a *bold* b", "crossing markers refused");
+      expect(got.status.startsWith(f.cross), `no hint for crossing markers: "${got.status}"`);
+      got = await waFormat(page, "mono", "a *bold* b", 0, 10);
+      expect(got.value === "a *bold* b" && got.status.startsWith(f.mono), `monospace around bold: ${got.value} "${got.status}"`);
+      expectValue(await waFormat(page, "bold", "x ```code``` y", 0, 14), "x ```code``` y", "bold around monospace refused");
+      expectValue(await waFormat(page, "bold", "one\n\n two \nthree", 0, 16), "*one*\n\n *two* \n*three*", "multi-line bold, line by line");
+      expectValue(await waFormat(page, "strike", "*one*\n\n *two* \n*three*", 0, 22), "~*one*~\n\n ~*two*~ \n~*three*~", "multi-line strikethrough around bold lines");
+      expectValue(await waFormat(page, "mono", "one\ntwo", 0, 7), "```one\ntwo```", "monospace across lines");
+      got = await waFormat(page, "bold", "abcdefghi", 3, 6);
+      expectValue(got, "abc*def*ghi", "markers inside a word are allowed");
+      const edges = await page.evaluate(() => WORD_EDGES_ONLY);
+      expect(got.strong.length === (edges ? 0 : 1), `the preview shows ${got.strong.length} bold runs for abc*def*ghi with WORD_EDGES_ONLY ${edges}`);
+      const zwj = await page.evaluate(() => String.fromCodePoint(0x1F469, 0x200D, 0x1F4BB));
+      expectValue(await waFormat(page, "bold", "a" + zwj + "b", 3, 3), "a" + zwj + "**b", "a cursor inside a joined emoji moves to its end");
+      // Ctrl and Command shortcuts, only in the message.
+      for (const key of ["Control+b", "Meta+b", "Control+i", "Meta+i"]) {
+        await waSelect(page, "hello world", 0, 5);
+        await page.keyboard.press(key);
+        const want = key.endsWith("b") ? "*hello* world" : "_hello_ world";
+        expectValue(await waMsgState(page), want, key);
+      }
+      await page.focus("#phoneInput");
+      const phoneBefore = await page.inputValue("#phoneInput");
+      const prevented = await page.evaluate(() => { const ev = new KeyboardEvent("keydown", { key: "b", ctrlKey: true, bubbles: true, cancelable: true }); document.getElementById("phoneInput").dispatchEvent(ev); return ev.defaultPrevented; });
+      expect(!prevented && (await page.inputValue("#phoneInput")) === phoneBefore, "Ctrl+B is handled outside the message field");
+      // Native undo and redo: one step per change.
+      await page.fill("#messageInput", "");
+      await page.click("#messageInput");
+      await page.keyboard.type("hello world");
+      await page.evaluate(() => document.getElementById("messageInput").setSelectionRange(6, 11));
+      await page.click('.fmt-btn[data-format="bold"]');
+      await page.keyboard.press("Control+z");
+      const undone = (await waMsgState(page)).value;
+      await page.keyboard.press("Control+y");
+      const redone = (await waMsgState(page)).value;
+      expect(undone === "hello world" && redone === "hello *world*", `undo gave ${JSON.stringify(undone)}, redo ${JSON.stringify(redone)}`);
+      // The fallback when execCommand is refused: same edit, exactly one input event.
+      await page.evaluate(() => { window.__execCommand = document.execCommand; document.execCommand = () => false; });
+      got = await waFormat(page, "italic", "hello world", 0, 5);
+      await page.evaluate(() => { document.execCommand = window.__execCommand; });
+      expectValue(got, "_hello_ world", "fallback path");
+      expectOneInput(got, "fallback path");
+      expect(got.link.endsWith(encodeURIComponent("_hello_ world")), "the fallback didn't update the link");
+      return `wrap with outer spaces kept, remove, pair at the cursor, nesting, crossing and monospace refused with a hint, line by line, monospace across lines, ` +
+        `mid-word allowed (WORD_EDGES_ONLY ${edges}), joined emoji kept whole; Ctrl/Meta+B and +I only in the message; undo/redo one step; ` +
+        `exactly 1 input event on the execCommand path and on the fallback path; ` +
+        [mustFail("a different wrap", () => expectValue(wrapped, "hello *world *", "bold")),
+          mustFail("two input events", () => expectOneInput({ ...wrapped, inputs: 2 }, "bold")),
+          mustFail("no input event", () => expectOneInput({ ...got, inputs: 0 }, "fallback"))].join("; ");
+    },
+  },
+  {
+    name: "WhatsApp link generator (emoji picker)",
+    page: WA,
+    vendor: [LIBPHONE, QRJS],
+    async run(page, lang) {
+      const f = WA_FMT[lang];
+      const data = await page.evaluate(WA_EMOJI_DATA);
+      expectEmojiData(data);
+      const [enHtml, esHtml] = await Promise.all(["whatsapp-link-generator/index.html", "es/whatsapp-link-generator/index.html"].map((x) => readFile(`${REPO_ROOT}/${x}`, "utf-8")));
+      expectSameEmojiData(enHtml, esHtml);
+      const labels = await page.evaluate(() => {
+        const key = document.documentElement.lang === "es" ? "name_es" : "name_en";
+        const btns = [...document.querySelectorAll(".emoji-btn")], tabs = [...document.querySelectorAll(".emoji-tab")];
+        return { buttons: btns.length, wrong: btns.filter((b, i) => b.getAttribute("aria-label") !== EMOJI[i][key] || b.textContent !== EMOJI[i].emoji).length,
+          tabs: tabs.map((t) => t.getAttribute("aria-label")), tabsOk: tabs.every((t, i) => t.getAttribute("aria-label") === EMOJI_CATEGORIES[i][key] && t.getAttribute("role") === "tab") };
+      });
+      expect(labels.buttons === 118 && !labels.wrong && labels.tabsOk, `${labels.buttons} emoji buttons, ${labels.wrong} with the wrong name, tabs ${labels.tabs.join(", ")}`);
+      await page.fill("#messageInput", "Hi there");
+      await waSelect(page, "Hi there", 2, 2);
+      await page.click("#emojiBtn");
+      const opened = await page.evaluate(() => ({ expanded: document.getElementById("emojiBtn").getAttribute("aria-expanded"), focus: document.activeElement.getAttribute("aria-label"),
+        tabbable: [...document.querySelectorAll("#emojiPicker .emoji-grid button")].filter((b) => b.tabIndex === 0 && b.offsetParent).length }));
+      expect(opened.expanded === "true" && opened.focus === f.firstEmoji && opened.tabbable === 1, `open: expanded ${opened.expanded}, focus "${opened.focus}", ${opened.tabbable} emoji in the Tab order`);
+      await page.keyboard.press("ArrowRight");
+      await page.keyboard.press("Enter");
+      let got = await waMsgState(page);
+      expect(got.value === "Hi😄 there" && got.focus === "messageInput" && got.sel[0] === 4, `Enter inserted: ${JSON.stringify(got.value)}, focus ${got.focus}, cursor ${got.sel}`);
+      expectOneInput(got, "emoji insert");
+      // Tab stops from the message field to the grid: the selected tab, then the remembered emoji.
+      const stops = [];
+      for (;;) {
+        await page.keyboard.press("Tab");
+        const s = await page.evaluate(() => { const a = document.activeElement; return { role: a.getAttribute("role"), cls: a.className, selected: a.getAttribute("aria-selected") === "true", label: a.getAttribute("aria-label") }; });
+        stops.push(s);
+        if (s.cls === "emoji-btn" || stops.length > 6) break;
+      }
+      expectTabStops(stops, lang);
+      expect(stops[1].label === (lang === "en" ? "grinning face with smiling eyes" : "cara sonriendo con ojos sonrientes"), `the grid didn't remember the last emoji (${stops[1].label})`);
+      await page.keyboard.down("Shift"); await page.keyboard.press("Tab"); await page.keyboard.up("Shift");
+      await page.keyboard.press("ArrowRight");
+      const tab = await page.evaluate(() => ({ label: document.activeElement.getAttribute("aria-label"), selected: document.activeElement.getAttribute("aria-selected"),
+        panels: [...document.querySelectorAll(".emoji-panel")].filter((p) => !p.hidden).map((p) => p.id) }));
+      expect(tab.label === f.gestures && tab.selected === "true" && tab.panels.join() === "emojiPanel-gestures", `ArrowRight on the tabs: ${JSON.stringify(tab)}`);
+      await page.keyboard.press("End");
+      await page.keyboard.press("Tab");
+      await page.keyboard.press("Control+End");
+      expect((await page.evaluate(() => document.activeElement.getAttribute("aria-label"))) === f.luggage, "Ctrl+End didn't reach the last emoji");
+      await page.keyboard.press("Escape");
+      expect((await page.evaluate(() => [document.activeElement.id, document.getElementById("emojiPicker").hidden].join())) === "emojiBtn,true", "Escape didn't close the picker and return focus to its button");
+      // Replace a selection, the variation selector included.
+      await waSelect(page, "abc", 1, 2);
+      await page.click("#emojiBtn");
+      await page.click("#emojiTab-hearts");
+      await page.click(`.emoji-btn[aria-label="${f.heart}"]`);
+      got = await waMsgState(page);
+      expect([...got.value].map((c) => c.codePointAt(0).toString(16)).join(" ") === "61 2764 fe0f 63", `the heart replaced the selection as ${JSON.stringify(got.value)}`);
+      await page.click("#messageInput");
+      const stillOpen = await page.evaluate(() => !document.getElementById("emojiPicker").hidden);
+      await page.click("h1");
+      const closedOutside = await page.evaluate(() => document.getElementById("emojiPicker").hidden);
+      expect(stillOpen && closedOutside, `a click in the message closed it (${!stillOpen}) or one outside didn't (${!closedOutside})`);
+      // Layout: in the flow under the message, as wide as the field, 8 or 5 columns, 44px targets, no sideways scroll.
+      const layouts = [];
+      for (const width of [1280, 479, 320]) {
+        await page.setViewportSize({ width, height: 800 });
+        await page.click("#emojiBtn");
+        await page.click("#emojiTab-work");
+        const l = await page.evaluate(() => {
+          const p = document.getElementById("emojiPicker"), t = document.getElementById("messageInput"), r = p.getBoundingClientRect();
+          const rects = [...p.querySelectorAll(".emoji-panel:not([hidden]) .emoji-btn, .emoji-tab, #emojiClose")].map((b) => b.getBoundingClientRect());
+          return { cols: p.querySelector(".emoji-panel:not([hidden]) .emoji-row").children.length, width: Math.round(r.width), field: Math.round(t.getBoundingClientRect().width),
+            below: r.top >= t.getBoundingClientRect().bottom, position: getComputedStyle(p).position, min: Math.min(...rects.map((x) => Math.min(x.width, x.height))),
+            scrolls: getComputedStyle(p.querySelector(".emoji-panel:not([hidden]) .emoji-grid")).overflowY, overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth };
+        });
+        layouts.push({ viewport: width, ...l });
+        await page.click("#emojiBtn");
+      }
+      for (const l of layouts) {
+        expect(l.cols === (l.viewport >= 480 ? 8 : 5), `${l.cols} columns at ${l.viewport}px`);
+        expect(l.width === l.field && l.below && l.position === "relative" && l.min >= 44 && l.scrolls === "auto" && l.overflow <= 0, `picker layout: ${JSON.stringify(l)}`);
+      }
+      const badData = await page.evaluate((fn) => { EMOJI.push({ emoji: String.fromCodePoint(0x1F1EA, 0x1F1F8), category: "symbols", name_en: "flag", name_es: "bandera" }); const d = (0, eval)("(" + fn + ")")(); EMOJI.pop(); return d; }, WA_EMOJI_DATA.toString());
+      return `118 emojis in 6 categories, one character each, no joiner, skin tone, flag or duplicate; EN and ES data blocks identical; localized names on every emoji and tab; ` +
+        `opens on the first emoji, arrows and Enter insert at the cursor, focus back in the message, 1 input event; ` +
+        `Tab stops from the message to the grid: ${stops.length} (${stops.map((s) => s.role || s.cls).join(", ")}); tabs with arrows and End, Ctrl+End, Escape returns focus; ` +
+        `replaces a selection with ❤ + U+FE0F; ${layouts.map((l) => `${l.cols} columns at ${l.viewport}px (panel ${l.width}px, as wide as the field)`).join(", ")}, 44px targets, no sideways scroll; ` +
+        [mustFail("a flag in the data", () => expectEmojiData(badData)),
+          mustFail("EN and ES data that differ", () => expectSameEmojiData(enHtml, esHtml.replace("cara sonriente", "cara sonriendo"))),
+          mustFail("a button between the message and the grid", () => expectTabStops([stops[0], { role: null, cls: "fmt-btn emoji-close", selected: false }, stops[1]], lang))].join("; ");
+    },
+  },
+  {
+    name: "WhatsApp guide (diagram)",
+    page: WA_GUIDE,
+    vendor: [],
+    async run(page, lang) {
+      const seen = [];
+      let last;
+      for (const width of [320, 375, 560, 639, 640, 768, 1280]) {
+        await page.setViewportSize({ width, height: 900 });
+        await page.waitForTimeout(50);
+        const svgs = await page.evaluate(WA_DIAGRAM);
+        const snap = await page.locator("figure.wa-flow").ariaSnapshot();
+        const imgs = (snap.match(/- img\b/g) || []).length;
+        expectOneDiagram(svgs, imgs, width);
+        expectNoOverflow(width === 320 ? await waOverflow(page) : 0, "guide diagram");
+        seen.push(`${width}px ${svgs.find((s) => s.shown).cls.replace("wa-flow-", "")}`);
+        last = { svgs, imgs, width };
+      }
+      const caption = await page.textContent("figure.wa-flow figcaption");
+      expect(caption.includes("WhatsApp"), `caption: ${caption}`);
+      return `exactly one diagram exposed (${seen.join(", ")}), same role="img" and aria-label, no sideways scroll at 320px; ` +
+        [mustFail("both diagrams exposed", () => expectOneDiagram(last.svgs.map((s) => ({ ...s, shown: true, hidden: false })), 2, last.width)),
+          mustFail("the wrong version at 320px", () => expectOneDiagram(last.svgs, last.imgs, 320))].join("; ");
     },
   },
 ];

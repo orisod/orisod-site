@@ -37,7 +37,13 @@ Rules, for every page (every .html outside the folders below, including 404.html
 - every /assets/vendor/ file path written in an inline script or the site's own JS
   (what fetch(), workerSrc and the like are given, directly or through a constant)
   is a library file in the manifest, not a license or notice and not a missing
-  file: a font PowerPoint to PDF fetches only when needed is checked like a script
+  file: a font PowerPoint to PDF fetches only when needed is checked like a script;
+  a folder path (ending in "/" or with no file extension) must be the folder of a
+  manifest file
+- a script that names the circle-flags folder (images a page picks at runtime by
+  country code) declares const FLAG_DIR = "/assets/vendor/circle-flags/<version>/"
+  and const FLAG_CODES = "<code> <code> ...", and every <FLAG_DIR><code>.svg is a
+  library file in the manifest, so no flag the page can ask for is missing
 - an English page and its /es/ twin load the same vendor and CDN scripts, in the
   same order
 And for assets/vendor:
@@ -100,6 +106,8 @@ NOT_LOADED = (
     ("*", "http://www.w3.org/"),  # XML namespace names (SVG's), which browsers never fetch
     ("image-metadata-viewer/index.html", "https://www.google.com/maps?q="),  # the "Open in Google Maps" link
     ("es/image-metadata-viewer/index.html", "https://www.google.com/maps?q="),
+    ("whatsapp-link-generator/index.html", "https://wa.me/"),  # the chat link the visitor opens (never fetched by the page)
+    ("es/whatsapp-link-generator/index.html", "https://wa.me/"),
     ("assets/goatcounter/count.js", "https://www.goatcounter.com"),  # comments in the pinned count.js
     ("assets/goatcounter/count.js", "https://opensource.org/licenses/ISC"),
     ("assets/goatcounter/count.js", "https://github.com/arp242/goatcounter"),
@@ -134,6 +142,10 @@ ARCHIVE = re.compile(r"\.(?:tar\.gz|tar\.xz|zip)$")
 # A /assets/vendor/ path in a script string ("..." '...' `...`, optionally after ${location.origin} or the site's URL).
 VENDOR_PATH = re.compile(r"""["'`](?:\$\{location\.origin\}|https://(?:www\.)?orisod\.com)?(/assets/vendor/[^"'`$?#\s]*)""")
 VENDOR_LINK = re.compile(r"""<a\b[^>]*\bhref\s*=\s*["'](?:https://(?:www\.)?orisod\.com)?(/assets/vendor/[^"'#?]*)["']""", re.I)
+# The circle-flags folder and the codes a page may append to it (img.src = FLAG_DIR + code + ".svg").
+FLAG_FOLDER_USE = re.compile(r"/assets/vendor/circle-flags/")
+FLAG_DIR = re.compile(r"""\bconst FLAG_DIR = ["'](/assets/vendor/circle-flags/[^"'/]+/)["']""")
+FLAG_CODES = re.compile(r"""\bconst FLAG_CODES = ["']([^"']*)["']""")
 SPDX = re.compile(r"^[A-Za-z0-9.+-]+(?: (?:OR|AND|WITH) [A-Za-z0-9.+-]+)*$")
 
 
@@ -316,10 +328,31 @@ def check_vendor_link(rel, href, kinds, problems):
 def check_vendor_path(rel, path, vendor_files, problems):
     """A /assets/vendor/ file path in a script (for fetch() and the like) must be a library file in the manifest."""
     if "." not in path.rsplit("/", 1)[-1]:
-        return  # a folder (Tesseract's corePath and langPath, checked in check_tesseract)
+        # A folder (Tesseract's corePath and langPath, checked in check_tesseract; the circle-flags folder,
+        # checked in check_flags): it must hold at least one library file in the manifest.
+        folder = path.rstrip("/") + "/"
+        if not any(f.startswith(folder) for f in vendor_files):
+            problems.append(f"{rel}: a script names the folder {path}, which holds no library file in {MANIFEST}")
+        return
     if path not in vendor_files:
         problems.append(f"{rel}: a script names {path}, which isn't a library file in {MANIFEST}; "
                         f"fetch() and other loaders may only get vendored files listed there")
+
+
+def check_flags(rel, body, vendor_files, problems):
+    """A script picking circle-flags by code must name the folder and every code, each a flag in the manifest."""
+    dirs, codes = FLAG_DIR.findall(body), FLAG_CODES.findall(body)
+    if len(dirs) != 1 or len(codes) != 1:
+        problems.append(f"{rel}: a script uses the circle-flags folder but doesn't declare const FLAG_DIR = "
+                        f"\"/assets/vendor/circle-flags/<version>/\" and const FLAG_CODES = \"<code> ...\" once each")
+        return
+    names = codes[0].split()
+    if not names or len(set(names)) != len(names) or not all(re.fullmatch(r"[a-z]{2}", c) for c in names):
+        problems.append(f"{rel}: FLAG_CODES must be distinct two-letter lowercase codes separated by spaces")
+    missing = [c for c in names if f"{dirs[0]}{c}.svg" not in vendor_files]
+    if missing:
+        problems.append(f"{rel}: FLAG_CODES names flags that aren't library files in {MANIFEST} under {dirs[0]}: "
+                        + " ".join(missing[:20]) + (" ..." if len(missing) > 20 else ""))
 
 
 def main() -> int:
@@ -391,6 +424,8 @@ def main() -> int:
                 check_vendor_path(rel, vm.group(1), vendor_scripts, problems)
             if "Tesseract.createWorker(" in body:
                 check_tesseract(rel, body, loads[rel], vendor_scripts, problems)
+            if FLAG_FOLDER_USE.search(body):
+                check_flags(rel, body, vendor_scripts, problems)
             for wm in WORKER_SRC.finditer(body):
                 worker = wm.group(1)
                 worker_srcs[rel].append(worker)

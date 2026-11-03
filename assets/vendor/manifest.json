@@ -696,6 +696,1530 @@
           "bytes": 2406
         }
       ]
+    },
+    {
+      "name": "libphonenumber-js",
+      "version": "1.13.15",
+      "license": "MIT",
+      "license_note": "MIT. Its phone number metadata comes from Google's libphonenumber (Apache-2.0), whose license text the package ships as LICENSE.Apache (kept as a notice file). Orisod uses the max bundle, which tells mobile numbers from landlines, and the package's examples.mobile.json (one example mobile number per country) for the phone field's placeholder.",
+      "used_by": [
+        "whatsapp-link-generator"
+      ],
+      "files": [
+        {
+          "path": "assets/vendor/libphonenumber-js/1.13.15/libphonenumber-max.js",
+          "source": "https://cdn.jsdelivr.net/npm/libphonenumber-js@1.13.15/bundle/libphonenumber-max.js",
+          "sha256": "49963114d3f93de9fc618d37b0faca897235baf314ede30ee8c0a511029d8508",
+          "bytes": 252237
+        },
+        {
+          "path": "assets/vendor/libphonenumber-js/1.13.15/examples.mobile.json",
+          "source": "https://cdn.jsdelivr.net/npm/libphonenumber-js@1.13.15/examples.mobile.json",
+          "sha256": "ec37ae84a131432e00c6176c4dae85e0651965c4c7a79d0590a4ef8953b1074f",
+          "bytes": 4064
+        }
+      ],
+      "license_file": {
+        "path": "assets/vendor/libphonenumber-js/1.13.15/LICENSE",
+        "source": "https://cdn.jsdelivr.net/npm/libphonenumber-js@1.13.15/LICENSE",
+        "sha256": "ea6fc5fe0f905c5fdedd8f160f1dd73ce739004fc5f35656b35258aea126dbde",
+        "bytes": 1108
+      },
+      "notice_files": [
+        {
+          "path": "assets/vendor/libphonenumber-js/1.13.15/LICENSE.Apache",
+          "source": "https://cdn.jsdelivr.net/npm/libphonenumber-js@1.13.15/LICENSE.Apache",
+          "sha256": "59899c6091b540582ed617e8eeaac4919dc985ccfc35459ee9752b699be5205b",
+          "bytes": 10172
+        }
+      ]
+    },
+    {
+      "name": "circle-flags",
+      "version": "2.8.3",
+      "license": "MIT",
+      "license_note": "Only the flags of the 245 regions libphonenumber-js lists (FLAG_CODES on the page) are vendored. LICENSE is upstream's LICENSE.md.",
+      "used_by": [
+        "whatsapp-link-generator"
+      ],
+      "files": [
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ac.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ac.svg",
+          "sha256": "3acc0d1b3156debe149d1ea086c7eda3dfd5ecd7fd14b7a3e385ae63cd71ab64",
+          "bytes": 869
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ad.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ad.svg",
+          "sha256": "fc4f87b1f8c57f2ad165916694b07539dff9fe12e1d167157cba83301bfa5a98",
+          "bytes": 844
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ae.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ae.svg",
+          "sha256": "0f06b4c957bede126a408e1b94d8672a7b1084c190a9f5d41bc95252974fc246",
+          "bytes": 404
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/af.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/af.svg",
+          "sha256": "2e3631fedb5c4f8cd195ddd2d8f8f8eb6b107e3fd94f2ef1d619eedd4abddc9b",
+          "bytes": 495
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ag.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ag.svg",
+          "sha256": "ccb2e9bc8079c69d67432c2e4ee1d101ff5fb1b37c5863c5a8d4fedf520440e3",
+          "bytes": 537
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ai.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ai.svg",
+          "sha256": "8148ff525d147d65fe976d999894e88d1b5e06b2e7f1e9026fbf082429cc3412",
+          "bytes": 1274
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/al.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/al.svg",
+          "sha256": "17eb797a77f9e77adf95f22e7031daa56dd10095142d3d7b59d0cef21dda2a9a",
+          "bytes": 639
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/am.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/am.svg",
+          "sha256": "7bbd356098b958bf8426f5174ccb5169f2105f4a6ee0d91e2fc6699ac192cfff",
+          "bytes": 334
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ao.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ao.svg",
+          "sha256": "b238b6fa290104f4a4659001c26515b545701a88a659bb7e022e87d4546e001d",
+          "bytes": 587
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ar.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ar.svg",
+          "sha256": "e5b242113ec0eb86a7df29fd9eba2e5a66d254d6c60ab25b8c58b105d27a4e20",
+          "bytes": 523
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/as.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/as.svg",
+          "sha256": "2fa24e675e51aaa8601d186c0ec15034d9b7ae6c327360f82e559aec20ec1d3c",
+          "bytes": 614
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/at.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/at.svg",
+          "sha256": "d19f21ede4e28fe449afb78dee099ab6a8dd002dcc19d0c195cdb40b2484bbf8",
+          "bytes": 306
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/au.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/au.svg",
+          "sha256": "2dca728e7e70fffba5efeb1d7f5230f9fad0a4851c5b4daeb187f84f775e845d",
+          "bytes": 866
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/aw.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/aw.svg",
+          "sha256": "1ee6c2824ae7202cee8134e210a09ffcda86b85b2a589139b439ca4aa198edab",
+          "bytes": 577
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ax.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ax.svg",
+          "sha256": "3d048141ed2acd72d83e87f61487118da2e6fbb88f386992f07ad48ecfeb82ea",
+          "bytes": 600
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/az.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/az.svg",
+          "sha256": "3d1a779574cab86f4b0fab453954009a08a9d40726271aff6eca15a52b69c2f2",
+          "bytes": 534
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ba.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ba.svg",
+          "sha256": "d3e3164d24ba5b8fecd80f08345fe0200cf6009f434876c532896618b8084413",
+          "bytes": 998
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/bb.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/bb.svg",
+          "sha256": "f8a2c13ea9221524273555d51e39a9e984f6e91157e8d8d020cf306f8ee7dcfa",
+          "bytes": 620
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/bd.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/bd.svg",
+          "sha256": "10a9a22007107755509020f476e5625d4a7d8d806f1fde30f2753bfc13a0035f",
+          "bytes": 278
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/be.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/be.svg",
+          "sha256": "b85dc31faa76653bed994e8f3c77ce63c93121356213230275e3f81fe1ef3907",
+          "bytes": 338
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/bf.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/bf.svg",
+          "sha256": "e2137f17900c1b2fbfee2d04e6c7a729a2395b2f6d837050f5c1d636cb22cb9d",
+          "bytes": 397
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/bg.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/bg.svg",
+          "sha256": "edd7977244a276509b29e47d6f375d43c593e129d13ce2a8fa2688315d15f818",
+          "bytes": 347
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/bh.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/bh.svg",
+          "sha256": "d3496113366293a82a77fb84117caf4d56dd348a5bf83ca0afb95a012073201a",
+          "bytes": 407
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/bi.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/bi.svg",
+          "sha256": "b66fbf18032dce33ed03899afaeda2477f36bf169c26e4f0288d92b61b4fb6d1",
+          "bytes": 854
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/bj.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/bj.svg",
+          "sha256": "84d85fec9ce8322ee564b2717521e05bb6d54c256b87d0ccd3ca9201cf3056b2",
+          "bytes": 356
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/bl.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/bl.svg",
+          "sha256": "70046c237c06c2f0efe135e540cd8446bcfa057014dbeaa2d0713e1689c322e3",
+          "bytes": 704
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/bm.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/bm.svg",
+          "sha256": "f31cc6b7ec98acfaeea8aab5ae1bde5e36fca05add4a2851dc5efbc9af22d500",
+          "bytes": 924
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/bn.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/bn.svg",
+          "sha256": "f1ee0ae2c8bf7bfaac5ccc6a2328083043a913d3ff12d45e18351da5d1eded7c",
+          "bytes": 641
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/bo.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/bo.svg",
+          "sha256": "fbff70d718745c370c18130ee56acfef0649293f0e89b34492c3034e5f29c889",
+          "bytes": 343
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/bq.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/bq.svg",
+          "sha256": "a9261a41bdd59682cf555e6f9b1501cc30ca29ccb4c707f7c7b9efba34759e5c",
+          "bytes": 695
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/br.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/br.svg",
+          "sha256": "2333b293cbc44e8b736565ac84d4bd03cb136f017e5194d321dcc8ca46aa0464",
+          "bytes": 686
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/bs.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/bs.svg",
+          "sha256": "44d6437414de65b6263c812264147ba4ededb10f6b85e1575f2a4645906b4a40",
+          "bytes": 351
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/bt.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/bt.svg",
+          "sha256": "9b2916157566ca8181e9458ee5fc6eef75624818c83ea03ac6cb57a45bbdb171",
+          "bytes": 831
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/bw.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/bw.svg",
+          "sha256": "5876b4030c09f8b33c9f5ab764762769e5761583327c0b2c62079dc08ce5d075",
+          "bytes": 398
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/by.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/by.svg",
+          "sha256": "17f35987237a3d9986baf3069e9bc4c729dd29f6a55927d4ff71a5fcb46ffb35",
+          "bytes": 676
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/bz.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/bz.svg",
+          "sha256": "0417fb75bb953cce69e008a272b63538f2751cf43b0f8ad46f4e1c07ec12b823",
+          "bytes": 602
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ca.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ca.svg",
+          "sha256": "be435f09cf3e411f2436202801a90d127800cc5f7b970fdd95aa4f177f8075a9",
+          "bytes": 438
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/cc.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/cc.svg",
+          "sha256": "74f382a6062cdb0cffe0d5041b0694175d498b35222fca3f1734d8f4a14cfd27",
+          "bytes": 870
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/cd.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/cd.svg",
+          "sha256": "34588e3aeba28aef866421df625349791eaef361e5b39d9274b56b0a58163517",
+          "bytes": 497
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/cf.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/cf.svg",
+          "sha256": "64800988f43683be4b4fbcbe1ab8f2723ecb2fd24aa25c5033798270e10ebd64",
+          "bytes": 612
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/cg.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/cg.svg",
+          "sha256": "eb08cc9989b6ed5e4aff5d2014f38fc56b99354f30f2d6738cccc4c05784c1dc",
+          "bytes": 344
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ch.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ch.svg",
+          "sha256": "ffc0339408d6d2f0132b059e59fc84a32af3f609b7d6651a6a13d17f9116a66b",
+          "bytes": 301
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ci.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ci.svg",
+          "sha256": "0de03bf6711094c6ce98cc89c069d452bf3848859bd36f6e3271074f6ac11b7c",
+          "bytes": 338
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ck.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ck.svg",
+          "sha256": "0d3c4d88b2e60ccaaaf728ec7eb2567e1851eb1a3e6b8dc651a2cd0e355f88bb",
+          "bytes": 1103
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/cl.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/cl.svg",
+          "sha256": "adc5239ae20b01235b9a6e62947c1b21f77d33adc21dae70b8cbb23f507b7fae",
+          "bytes": 425
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/cm.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/cm.svg",
+          "sha256": "99f3e751599a0429277112445ee00f31a3dbf3b0b07635a30ec2c0d884fe2a40",
+          "bytes": 449
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/cn.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/cn.svg",
+          "sha256": "73d72f59389845361b0d59623fc60b0e47ebd6c9623df706e8d8b079baa3af64",
+          "bytes": 705
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/co.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/co.svg",
+          "sha256": "d390a4acd9ed3a2568311c5e45eb58c5a48bbd7bca7849106cf316d1c7d9fee3",
+          "bytes": 340
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/cr.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/cr.svg",
+          "sha256": "eb87dc49a738d5d194843be5aec90acde0799531f8572a96d5d5e7ff4e8806a9",
+          "bytes": 391
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/cu.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/cu.svg",
+          "sha256": "5e5cb25fb47f6ef38d0d246a79841ca4d61b06e6cf855e46eb3990af35dc62e8",
+          "bytes": 574
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/cv.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/cv.svg",
+          "sha256": "b79ed88538b84804309f36e67f318b8a94390f8d8a62ccd2babf6433c6f235f5",
+          "bytes": 1244
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/cw.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/cw.svg",
+          "sha256": "293804f81b96587515a3eef9014e4515f9543430d82e54e7418fa1e59aca1b50",
+          "bytes": 518
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/cx.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/cx.svg",
+          "sha256": "13f35b3634a2e5285d1469540f7b2a2932dd6340149daade5f31f1b0059f4893",
+          "bytes": 1360
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/cy.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/cy.svg",
+          "sha256": "50435f4b1c6d24261af4927afbe3e6010946e0f84a6f165f6281f50798c1381f",
+          "bytes": 613
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/cz.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/cz.svg",
+          "sha256": "8f6b3a1cf096220f68c203c9affc381d17bee266abc643cd65b8ad3ca30f0be5",
+          "bytes": 323
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/de.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/de.svg",
+          "sha256": "3f6dc3fa445f3225e6ed2a1b4bcdb6b74684b5804e6bb2cb6b50aa0325b8d81a",
+          "bytes": 334
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/dj.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/dj.svg",
+          "sha256": "019b6be8bdc49e80fe38ebf6f0c0bc8472ff67331fa737bd1fe2a933182fe3c0",
+          "bytes": 442
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/dk.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/dk.svg",
+          "sha256": "a046fb2c8845158ff43c0e648cd948f7e03acea9baf17e72bf4c0b5ab86a1f10",
+          "bytes": 412
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/dm.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/dm.svg",
+          "sha256": "4571011437061965f9e8c17e56dec4456798d1774bf8e35d27b8c66a7fc1a90c",
+          "bytes": 1323
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/do.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/do.svg",
+          "sha256": "3ec5c998839a54f325ee4d04d6be5b3a3d80f83289e764371f6793c15a7ed46d",
+          "bytes": 701
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/dz.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/dz.svg",
+          "sha256": "0c9a765a8403da59875ae7aa3a4b4be5abdefd5e757d77a4d58a10eac465189d",
+          "bytes": 444
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ec.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ec.svg",
+          "sha256": "03318289c8448ebc00ac6f7fe15a3e742e85a38c63e66d91631df20ade801943",
+          "bytes": 732
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ee.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ee.svg",
+          "sha256": "08acf561fbdd3415e3ee783b20a2b717a623faae5c3e78c16edf56c47387f47d",
+          "bytes": 345
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/eg.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/eg.svg",
+          "sha256": "beadec3f831d66ed0d733a4ad8061c287567b30ae0c048f82c3d1e909c00882b",
+          "bytes": 522
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/eh.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/eh.svg",
+          "sha256": "582cd00de55d27e69cdc5f8a362bce1ba7a9f26dbdda4384cd4d9260f04f5381",
+          "bytes": 590
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/er.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/er.svg",
+          "sha256": "3bad1d458a1a9b21cf1d2339715724c7357fd67ca773011c5ddb6b5d098c07af",
+          "bytes": 579
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/es.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/es.svg",
+          "sha256": "a1bb2d6b70b35386101376e01a18a56172cfdaa8bcf58691c1dd633e27161593",
+          "bytes": 2000
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/et.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/et.svg",
+          "sha256": "01eaa7f5aa40e626f28517a8730b13f66408a1ebe2935aeaaaabe09318fdf290",
+          "bytes": 548
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/fi.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/fi.svg",
+          "sha256": "eab30db0f20c7b9d92afa80701904fc18c186a7155895332de7672a236544d97",
+          "bytes": 415
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/fj.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/fj.svg",
+          "sha256": "3a11e111168c5689392a6933fcebf37ca3003fd0f1cf530910a77f2c858db659",
+          "bytes": 803
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/fk.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/fk.svg",
+          "sha256": "8e78c897cdf89cd417752ddb789091d2f58087197749fc5e47bc8f9d8ba35ac4",
+          "bytes": 1060
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/fm.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/fm.svg",
+          "sha256": "7a9e0ec7f1ff59d3b742182b8976173a19a19a1427b63cdf43ba295322e25cb7",
+          "bytes": 526
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/fo.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/fo.svg",
+          "sha256": "9ba8a7bbc13646bb15e0cb2fb26d0d338d87cbb06e3d93862c7bcc64dea763ae",
+          "bytes": 598
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/fr.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/fr.svg",
+          "sha256": "1d0c12a2157fc4a25fb7eb4e989b7555289c118fcb20c5eacebbfe0dafcbe30c",
+          "bytes": 340
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ga.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ga.svg",
+          "sha256": "d534ace24c3c5b5e6963e2c78faa27dfdff31474a134e11be66318369205b573",
+          "bytes": 343
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/gb.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/gb.svg",
+          "sha256": "88169c656c516ac6374fe2a7988e103f6eb99db165ce6478aa68ce1b74e67ba9",
+          "bytes": 817
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/gd.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/gd.svg",
+          "sha256": "0b6fb7b857e445d3159dfeff55a52f31cda6da2625a6f40934d891f1002d1328",
+          "bytes": 1160
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ge.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ge.svg",
+          "sha256": "f4bd2b7b7c00013e7ad3542767f733bee19c814fad4860f283791c9bda8c9578",
+          "bytes": 558
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/gf.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/gf.svg",
+          "sha256": "11077b4571aed57440a42165fd0b332d7ae4cb5bc0b021a8ebdc8507565c1b00",
+          "bytes": 341
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/gg.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/gg.svg",
+          "sha256": "c3a98f402d537c562eb51dd90cc2c05bbeb972fe6bda60c6060bab283e0501e4",
+          "bytes": 585
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/gh.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/gh.svg",
+          "sha256": "f378a941b051eb665aacfac7a3ce2483dfb86318c6420f129402060ca0446ec7",
+          "bytes": 394
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/gi.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/gi.svg",
+          "sha256": "3eca123e24ffdd1a95bde7b4ea5bfa026f3db6aab55ba490d5c7f962b3f36461",
+          "bytes": 703
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/gl.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/gl.svg",
+          "sha256": "23d0516beb8247327e6c802b177bd778e76d8969135ed1a1b0a4a9a51dc0306c",
+          "bytes": 409
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/gm.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/gm.svg",
+          "sha256": "672096bab8fb6859612d2973fc46cbe6f17b942da8e58ef258348c6fb9ee7bd0",
+          "bytes": 444
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/gn.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/gn.svg",
+          "sha256": "6e61dc52f06e16afd5da5b099ff2f341bcc47e518075c840ff1338ecb410ce77",
+          "bytes": 343
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/gp.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/gp.svg",
+          "sha256": "7ae231a215597f5df10abb275d075498a864d6a8ec6a709996c201ffa850252a",
+          "bytes": 2017
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/gq.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/gq.svg",
+          "sha256": "c0e5641e7e5880a0b2ac2724e29b0c85df0e3a26aec84d06506c2aed9dce526a",
+          "bytes": 541
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/gr.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/gr.svg",
+          "sha256": "518be37b017287a3d6247b50968191fd08a764696c9a67e272e142b45b97db2d",
+          "bytes": 485
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/gt.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/gt.svg",
+          "sha256": "f2458456ca25cd40534139a42baa4094c3aafad47963e1986847de3d0a7f0deb",
+          "bytes": 612
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/gu.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/gu.svg",
+          "sha256": "34857ac45895664dd80ce38525b9a8753ec020e276db6fbaad64e86f97c95113",
+          "bytes": 925
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/gw.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/gw.svg",
+          "sha256": "d2a8d772e7eaef92aec05aa94c274991e08a31b95595dd21844c9710ebc8bb90",
+          "bytes": 466
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/gy.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/gy.svg",
+          "sha256": "916aee25a4bbad945b7ebfb5bb31b375d6e8b305ed3065c2086a0c70f0ac83bb",
+          "bytes": 484
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/hk.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/hk.svg",
+          "sha256": "050572c4702c51dd080efe7c0d3860163d6784e16216cb4df9cfb9b1d212d87d",
+          "bytes": 704
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/hn.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/hn.svg",
+          "sha256": "28e32e150ab0d520953967f65cb42fa790a8462e244f4891dfd3d4c1d431afbf",
+          "bytes": 783
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/hr.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/hr.svg",
+          "sha256": "a7ab4df78bf6b6bd4573cc039b30656564d0bd5959077989c64cb463e01210a4",
+          "bytes": 1182
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ht.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ht.svg",
+          "sha256": "959484bf48747b9f9cdc175eac6da64ab98574c0be3d322215bd381118012d7e",
+          "bytes": 615
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/hu.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/hu.svg",
+          "sha256": "7025d130427751ba411352e9af9ffbd248ff1468f3df2a6bc37b3215a4a646c5",
+          "bytes": 340
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/id.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/id.svg",
+          "sha256": "c8d7eddb5b3f676f0c674219029c7b683405b012fd07a4a25f9a7786ba8e7214",
+          "bytes": 280
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ie.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ie.svg",
+          "sha256": "2976b79e7e6dc856a54209078c1eeb8aec61a9d784b659b9e0953402c902d894",
+          "bytes": 340
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/il.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/il.svg",
+          "sha256": "97c68cd0605b7e6bf20fcda99ade7d31002caf45a75e984cf0d00200e78d6200",
+          "bytes": 708
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/im.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/im.svg",
+          "sha256": "620b3110ac996514151c21497a5253729edf39d5fc4b0ef1ccc275ba35f9c802",
+          "bytes": 445
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/in.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/in.svg",
+          "sha256": "2ca4c5390345dec3c0c86d73c1f40e798027600ffbb5a96653f7799a7f71896c",
+          "bytes": 475
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/io.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/io.svg",
+          "sha256": "9ce44340534e042c2daaad4d4575708e8b04488e83c4442b354e121ddca27f42",
+          "bytes": 3522
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/iq.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/iq.svg",
+          "sha256": "b7178e5d3eee44c9bc8e43a3592747635689e298338a991c7cf525028a40bdd0",
+          "bytes": 1066
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ir.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ir.svg",
+          "sha256": "232c14645189cea4994735ea1e0f1fecd7ecda702986542086e935e765da979e",
+          "bytes": 824
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/is.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/is.svg",
+          "sha256": "13187e2f748309e4f9d95b44dbbc1fc3fd509f0bfeca03e9e20d89c770b3292c",
+          "bytes": 592
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/it.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/it.svg",
+          "sha256": "8f3ce99568a7c2e2560aa69cb825ac34a68dd483ffcb5c71a1204d52f882f45e",
+          "bytes": 340
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/je.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/je.svg",
+          "sha256": "b4929b9fe0b875cbb5edec805dcffa30029cdd43ed72bc2c584311b12d5ba5c1",
+          "bytes": 576
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/jm.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/jm.svg",
+          "sha256": "48ffb89d2787d773f066f6cce247381aac2855a9550b91a093e3067db1030ec9",
+          "bytes": 497
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/jo.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/jo.svg",
+          "sha256": "58c333d953dc228e42fa6acdd9178ad70b2c6edfa80dbf756322b70c950d6c24",
+          "bytes": 542
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/jp.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/jp.svg",
+          "sha256": "17cea0bab5029d578ee10727a9d9b93ab89720e394241ff6d59b5744d44f3d9c",
+          "bytes": 273
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ke.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ke.svg",
+          "sha256": "a7c07574a435ae1a64fea57b0186833f3bae9a0854c3f84700e6b55bcc826f74",
+          "bytes": 1073
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/kg.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/kg.svg",
+          "sha256": "b99d0b1cfb5f037a56a026368be18e7919bc55c12898cf6aacfaed121518c0ea",
+          "bytes": 869
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/kh.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/kh.svg",
+          "sha256": "6d8bd1763024f1765f8160674aa60ae214d0dc4c882e6b58ee57a75d75772820",
+          "bytes": 484
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ki.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ki.svg",
+          "sha256": "c1e436c9d4f8e17b0ada63d8e6dc77549a93147b0f216587b80d3566a87ba79c",
+          "bytes": 2827
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/km.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/km.svg",
+          "sha256": "c308f9683feec7fd105a194920350b7603e36bec73b946797bf094eea3bd3b7f",
+          "bytes": 707
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/kn.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/kn.svg",
+          "sha256": "0d48df9446fb55320547f4782f32633ab40abb52523cafab37fd6889672c700b",
+          "bytes": 627
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/kp.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/kp.svg",
+          "sha256": "f7e86362bf08b4da82a30e03236dec1ffa0f536b52d2e2ed815a3b19cd0645dc",
+          "bytes": 559
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/kr.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/kr.svg",
+          "sha256": "a0176d1f7b6aefb13f9233976b017ba8a8da82634b03e8150ccf5f78f4db9494",
+          "bytes": 933
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/kw.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/kw.svg",
+          "sha256": "3dc308356979f1eb7683a1581acd074e82e2dd765c6e9e715bc4141cba543bbd",
+          "bytes": 388
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ky.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ky.svg",
+          "sha256": "158b7822072fc747bb893aa887c00bc53af514baba6f5b63f442e62c6d30e8ec",
+          "bytes": 1262
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/kz.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/kz.svg",
+          "sha256": "059b6bb1003455efc94c13c2b9bb6f2593f1c5cd8a26ac59da5345a7f99e643d",
+          "bytes": 712
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/la.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/la.svg",
+          "sha256": "17b180f2752f18285fe05208e23ab59e0cef661f84668661c193947c4de16e71",
+          "bytes": 371
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/lb.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/lb.svg",
+          "sha256": "73a71f6fffaf8d8b2f4cccdccb55df07768a3e3a55c00772795d74741db1293d",
+          "bytes": 402
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/lc.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/lc.svg",
+          "sha256": "97fbcbb3c4bd2a8503f84dd8c181a35fca2f8e3b85a315b36b7205526f3ed6b5",
+          "bytes": 385
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/li.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/li.svg",
+          "sha256": "c5817ccec9756eb4cec418ec939cae09c24be5130b028e8493374a11b1dee2d6",
+          "bytes": 470
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/lk.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/lk.svg",
+          "sha256": "0199463eeafae43277b1f0915bd6559e0557f3560e4ba0be11338530485edfb5",
+          "bytes": 834
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/lr.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/lr.svg",
+          "sha256": "846bcdb2a03133d817705fd960135262a7369e040144f39748b5a14fd9b1820a",
+          "bytes": 731
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ls.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ls.svg",
+          "sha256": "8a7915c94c93fbbeee3af90447257267391600fdbb0a5e7e614849ab7ab7f960",
+          "bytes": 436
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/lt.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/lt.svg",
+          "sha256": "2d943c53008ffe259b114a5fd3fea23d0db45cc78f5a1d92a38258ea5fa4ceb7",
+          "bytes": 343
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/lu.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/lu.svg",
+          "sha256": "1672d81e115a4701d76fad6fb0d2ca6136ebdecf435c413652cbc79dd9dbb28e",
+          "bytes": 340
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/lv.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/lv.svg",
+          "sha256": "0cebfa5477065b0ae7c949f52075857c1007421cfaf54c972074a81d16836cc5",
+          "bytes": 316
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ly.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ly.svg",
+          "sha256": "71f66b72099adfbd22f2708c3863cf6ac46cb57f1e10cd0e31f1eed39d2cd3a2",
+          "bytes": 492
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ma.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ma.svg",
+          "sha256": "62c6e3fc10d773f7453dbdd27312ec8e06138e7cfe4c90bf157016a36ede4704",
+          "bytes": 525
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/mc.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/mc.svg",
+          "sha256": "8bf56c51850a87229b440dfc471dcfaaf9db053ede093596062a8b80bc6cd863",
+          "bytes": 280
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/md.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/md.svg",
+          "sha256": "9a5138682dc0d8aafba03efcccec950b8c3e779a1de3c7b8904b2acf605ae95e",
+          "bytes": 787
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/me.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/me.svg",
+          "sha256": "bdcd6b1afebac296d07e13bd169595c305845eb19ab20b37f976e105d0190ff1",
+          "bytes": 907
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/mf.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/mf.svg",
+          "sha256": "6c6cf3328e46a05ffb1505b51fe58a4e75a9bfaa6f573a2ed47efe5fd531d999",
+          "bytes": 448
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/mg.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/mg.svg",
+          "sha256": "4cfd60fe92e4838ad891bc52fb0c8961f1653e77892d2243aef93a2f872b0520",
+          "bytes": 350
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/mh.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/mh.svg",
+          "sha256": "dda400c6acce6c7ba7c9ba395d863ae697e33438a493767e399291de75f83a3e",
+          "bytes": 548
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/mk.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/mk.svg",
+          "sha256": "c92d0dd7b2193fdec323e076ea98bc52ee61f419c4bc935a8b1297c99ae8c354",
+          "bytes": 733
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ml.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ml.svg",
+          "sha256": "348881785db2248fcf172f4c589a6fba274136f8a42dfb0d400b05b37e20a036",
+          "bytes": 343
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/mm.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/mm.svg",
+          "sha256": "0b2d6de96e08eb1456400c08e8eb81c0a82843c6c38b908c06f786691738a5a2",
+          "bytes": 458
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/mn.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/mn.svg",
+          "sha256": "a56150f61a6d3719be8719263ab4458de2e9361a84166e6440f500975bdd6079",
+          "bytes": 609
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/mo.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/mo.svg",
+          "sha256": "f73b2e21b339d54393d6ee6c7475df9e1244d84c6669de5e5f4723eb30a71547",
+          "bytes": 1189
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/mp.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/mp.svg",
+          "sha256": "c0d02ccd3731f9d11fde8402a0d176e51f75fac86b1ab37b68122b8241c2374b",
+          "bytes": 1596
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/mq.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/mq.svg",
+          "sha256": "5a82be8199a385a417b7b886cbfda9217767c63f6bc9bdb3c4379893c8258b1f",
+          "bytes": 321
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/mr.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/mr.svg",
+          "sha256": "3ab7dd54fc45f5977bcca51fbcfcfe071dd01b5c98365783f8c30780613dbd2b",
+          "bytes": 459
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ms.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ms.svg",
+          "sha256": "169cf6de45fb92e734b1940e943ea594596c234eadf6c5c73fc62ec4a5aee4e6",
+          "bytes": 706
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/mt.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/mt.svg",
+          "sha256": "22d59aa70f1db408b992b8a347a17ecbc664c331dcf6f4b7d1f7e8ad59161e81",
+          "bytes": 352
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/mu.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/mu.svg",
+          "sha256": "4371c04fd1a19c3fd91de8d55ea01d538942ad21d857a2b19e4b4550af064138",
+          "bytes": 410
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/mv.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/mv.svg",
+          "sha256": "55b665e2f37eeafe8a95e21ba97366969dbf3e399f1ec00bb57e3e0c5a5a7c35",
+          "bytes": 377
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/mw.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/mw.svg",
+          "sha256": "2ab1a258ccae0d59f5a02c65ce6afecefeba18309c72331861bee0abee64e680",
+          "bytes": 469
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/mx.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/mx.svg",
+          "sha256": "371a972eb6aa41682f1f256195afdd1e3ac1a417ab2e47b453427e1054529c13",
+          "bytes": 1687
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/my.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/my.svg",
+          "sha256": "11ca22cda5e07ab24eb126f19868436c1dc9bd553c6db02a1c275a5d3ee71749",
+          "bytes": 623
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/mz.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/mz.svg",
+          "sha256": "831f84a79911fd2955a62c8d606ea0cb7c2b5043ee6311833a483656659bc3bd",
+          "bytes": 768
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/na.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/na.svg",
+          "sha256": "20cced1f49d36fb9a9bf28abd3fa8de2020809cde24499a37028df4f60828802",
+          "bytes": 632
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/nc.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/nc.svg",
+          "sha256": "c55af240c1752c226ecd10b117e68d94204f43c690376bad688db16ba880c219",
+          "bytes": 936
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ne.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ne.svg",
+          "sha256": "74abeb05e00eed1c1092862c5446c61ac1b8bf8274279495a2adffc0c6741725",
+          "bytes": 401
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/nf.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/nf.svg",
+          "sha256": "8fb5233ea3bfd78cafc8334e7cf1628ac772241215585a02e7e4bce02ff6f764",
+          "bytes": 400
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ng.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ng.svg",
+          "sha256": "ab75a08914c02ab04c98d5b000c028b177b3140b1746ba738bda294d6b4d6f59",
+          "bytes": 300
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ni.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ni.svg",
+          "sha256": "67af38c2d27ef448d3540b5c6bfce5b38b6e549a1f7a984c48acd0e7a116e503",
+          "bytes": 647
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/nl.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/nl.svg",
+          "sha256": "0f226a654db8f6150da746d09fea6f738d4cbd7cef54c1ded5da0f1fa9b07a92",
+          "bytes": 340
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/no.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/no.svg",
+          "sha256": "b79bb6ffa81e949a1e005f3188c259631d7655e1bf3a6b1226d59086c9cacaa8",
+          "bytes": 592
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/np.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/np.svg",
+          "sha256": "1eacf478bc28d332e7b271ba35309be2b008d7930db735780f3c8b6865d6ea53",
+          "bytes": 735
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/nr.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/nr.svg",
+          "sha256": "11288dab6791fb78dbde36308e0eeac3a7dc195a57fc17ea8af218071b938f6c",
+          "bytes": 517
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/nu.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/nu.svg",
+          "sha256": "21ba1501f71795b3aefdffdbf45d04920ab407614aa40546808ae13b833521ae",
+          "bytes": 717
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/nz.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/nz.svg",
+          "sha256": "b2af18c961a79158701d120e7e0e334dbf2709dec31010e54973a23aad3cf822",
+          "bytes": 931
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/om.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/om.svg",
+          "sha256": "95ea2b01174d8c0901cee046b86d7d90427ae1995d5dc29101047f3f6a533ad1",
+          "bytes": 490
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/pa.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/pa.svg",
+          "sha256": "a768b3c9361ec1f04735e5a2ee5fd408103f6d4bf37a64cd4e6799c765ec64cd",
+          "bytes": 553
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/pe.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/pe.svg",
+          "sha256": "8482ba49e818304b4ed0f918d389257d1b646d24717236a5ee3d493d88907817",
+          "bytes": 308
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/pf.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/pf.svg",
+          "sha256": "3a1736128337217b66692eafd0ae6b42c2394636769db711d3ef0c1358f8dedb",
+          "bytes": 559
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/pg.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/pg.svg",
+          "sha256": "65c596aa08f8ec73dfe86608a6e85f5c486fa09e5d39a89b2f4d7a815aeb163f",
+          "bytes": 1164
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ph.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ph.svg",
+          "sha256": "25e6ebd84fb3ced1be5d6ef6c31dfbda19ab156eb85e31b3384491e06194160f",
+          "bytes": 788
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/pk.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/pk.svg",
+          "sha256": "3fb630a0aa9c79b1841bc5195a80c305e56ee6c3f24c49e1019a17f1e8d6943f",
+          "bytes": 488
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/pl.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/pl.svg",
+          "sha256": "ce234b41d725be3ea502dae7cf23e9c34d18b6e14f9e1f2de0fa7231171eb61c",
+          "bytes": 280
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/pm.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/pm.svg",
+          "sha256": "50a5f4bf0aa1d349ba1041db8942349641adf239520d99f434ce256adf669dd1",
+          "bytes": 1100
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/pr.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/pr.svg",
+          "sha256": "62098ba6e9d870a7c153eef95025f4c5ceaf05f58522bbca80c1c0f1e497226e",
+          "bytes": 517
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ps.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ps.svg",
+          "sha256": "cf688614cbdf4fc84e5674ca7745aa749d43a0d50a6ac083073bf42e4974356b",
+          "bytes": 372
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/pt.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/pt.svg",
+          "sha256": "94f8cd284ba5e9e8e386396e116a607780e8d330f74aae1f4940d6b0aecbd265",
+          "bytes": 506
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/pw.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/pw.svg",
+          "sha256": "f85452be44f09bfe1e70852db1f0a7e8462b2ecf2c290409b723273cf215b0a8",
+          "bytes": 278
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/py.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/py.svg",
+          "sha256": "ba26795ef4a7ce87bbb6171b6ed391cece80ae7348d0d3075a970aab6d752c1c",
+          "bytes": 585
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/qa.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/qa.svg",
+          "sha256": "2c37a7f64a5af6f018b5a75018d8ffc4db8691b98cb602c24830260bef5f2cd6",
+          "bytes": 432
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/re.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/re.svg",
+          "sha256": "bab9ac7d7a8803a2110f847e52b2656d0350393092cc25f0c4956a8a815048c3",
+          "bytes": 470
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ro.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ro.svg",
+          "sha256": "376910899aa5224336c13fa606a836f091de8d021feaacb73e64ee8237af190b",
+          "bytes": 343
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/rs.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/rs.svg",
+          "sha256": "8f77bd8d324095595fae98066f3980a1a6a45136c8ed7ef467f5c1c390d962f1",
+          "bytes": 941
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ru.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ru.svg",
+          "sha256": "cd36b52bccfccafb97f3b40692e9c1f02560ec63b19ae4ce2128831b9687472f",
+          "bytes": 332
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/rw.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/rw.svg",
+          "sha256": "2b45b5ed15eb753b4762c98dfd5a221ed98c8216b63b2758fc85d5da29ee6070",
+          "bytes": 559
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/sa.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/sa.svg",
+          "sha256": "c69496f3eeef80224321f875cf2bbc3cecd39f8975bd65369912a5348f9c9506",
+          "bytes": 2684
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/sb.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/sb.svg",
+          "sha256": "1f2ce51bc710cce5704a4cf8b28bd36bda413af9ea9c977992f4f58f35a52a12",
+          "bytes": 769
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/sc.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/sc.svg",
+          "sha256": "a5aadfb7889050763d3424fe50824e5eb303c231d2cee81e5ff948599930e7e0",
+          "bytes": 486
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/sd.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/sd.svg",
+          "sha256": "bba978f8fad8da717f95017e74d701173088bbba8df2fc664c1972757c4ba2dc",
+          "bytes": 380
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/se.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/se.svg",
+          "sha256": "aa99b810a0fa665541f0c59bb1d2006bf91169a4b37e13ac3f0eba99a77e13b4",
+          "bytes": 412
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/sg.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/sg.svg",
+          "sha256": "ba318683cf178442edc06bb523664b312be7ed6113b4b8b520b00101b605b37c",
+          "bytes": 602
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/sh.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/sh.svg",
+          "sha256": "de3016581ceed9fc847f20b188d59b686a770aeab310ecf08f2a5646f13cd683",
+          "bytes": 1075
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/si.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/si.svg",
+          "sha256": "efce6698d4de9dbe210728c899c40b4f1a79a8c2d0cd2677f0bf5bafb3276bd6",
+          "bytes": 518
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/sj.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/sj.svg",
+          "sha256": "b79bb6ffa81e949a1e005f3188c259631d7655e1bf3a6b1226d59086c9cacaa8",
+          "bytes": 592
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/sk.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/sk.svg",
+          "sha256": "b5c06dc8282fab6642e952662ed1ebe5af137d83be6fcdee30a3b46173214870",
+          "bytes": 773
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/sl.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/sl.svg",
+          "sha256": "cf156b7a6363b9746cc98956fde4c288b6baab6f2186e4be4533ac0bd0218d06",
+          "bytes": 340
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/sm.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/sm.svg",
+          "sha256": "f7c750ab20a64c93951e5de05012fc03bd437ca8cb918058e006caacea047f53",
+          "bytes": 954
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/sn.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/sn.svg",
+          "sha256": "eb9aad5849b2e38ef0dacd101f7861e55c8b8cd6194211e08b176ce5f8aa0468",
+          "bytes": 449
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/so.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/so.svg",
+          "sha256": "6e348b166eb69e04b6d9e9f91c0be37cdd83f19347c5efc7568804068b858624",
+          "bytes": 332
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/sr.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/sr.svg",
+          "sha256": "d2c8d35ab75676356da7fe84dd68ca8b13d6b4f4aab354b7e735e39c19d2bf58",
+          "bytes": 503
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ss.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ss.svg",
+          "sha256": "ab44773961fe99f42382760262171fe5d6424badc67c7a8157c7e91b1815ba05",
+          "bytes": 577
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/st.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/st.svg",
+          "sha256": "8063b3ef918c7e17e28b5e3de2d0880829692308f5e922bd3566b824a5723df7",
+          "bytes": 516
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/sv.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/sv.svg",
+          "sha256": "367a2dc1ca101d80af78abd8b0385c1fb7537efbcc1eae992279bce0fe1885a6",
+          "bytes": 564
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/sx.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/sx.svg",
+          "sha256": "cd4c0615c4ed5b9e0137663952b96942f3b28193cda6938ead4eec1589c731e4",
+          "bytes": 668
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/sy.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/sy.svg",
+          "sha256": "72ed88933c187dd46201d9499702afc9d61688a5cbe021113de62d76d1a6c0a7",
+          "bytes": 459
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/sz.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/sz.svg",
+          "sha256": "05840a326107af284565c66e83ae5d75fb4e0216a2b34695c60ee20fd9472998",
+          "bytes": 774
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ta.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ta.svg",
+          "sha256": "b2fef05dadbdb7e7ffd770784b9d51323a6f3dec349decb58e0147bc42c65a94",
+          "bytes": 938
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/tc.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/tc.svg",
+          "sha256": "de0a023c5a820b0aa5af6dc487674f8a03b9534711dc2f6e86e4eeec92ed4c86",
+          "bytes": 1046
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/td.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/td.svg",
+          "sha256": "a349c0055141eefb26d0ddfd7ff97637d882584bde3e9e10879e89d9e30089aa",
+          "bytes": 340
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/tg.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/tg.svg",
+          "sha256": "891b715ae0eef35b2cdcc8f7f3442d7db2d6bad82015b4ece7ea24dcf715f04a",
+          "bytes": 594
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/th.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/th.svg",
+          "sha256": "ef842ff877873b4438f24d06d618c0e567832eb538c2b6d2f83c5052e94db237",
+          "bytes": 389
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/tj.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/tj.svg",
+          "sha256": "d6fe9b1878cc076dadeb2808149152e139c58c704e74c2feb18582a377bd2195",
+          "bytes": 987
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/tk.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/tk.svg",
+          "sha256": "f11f77b705c26e4f7cc87a6e13f1d2d9827203fc6e06b271f4ee0d8d6ef0b503",
+          "bytes": 1055
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/tl.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/tl.svg",
+          "sha256": "5314768d1f4aa786509858d2daf117b93732d0cbe8f4688e89500d546c646857",
+          "bytes": 442
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/tm.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/tm.svg",
+          "sha256": "f252dc93492ab201bcc4719a1868e31ff221d116fd6c453bb56a4c7a9b11937c",
+          "bytes": 1605
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/tn.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/tn.svg",
+          "sha256": "4decb255282cdf960ef144e7f0dd8ec633ab27988ee4a7a64593a6ae214b5ed7",
+          "bytes": 435
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/to.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/to.svg",
+          "sha256": "cc03a9b7ea43aff60e1e6578406774dd8de475f9ea7cd1b0c497b62b4f472b2c",
+          "bytes": 365
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/tr.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/tr.svg",
+          "sha256": "eb77f68bb3e22001f7ed4b1c844d6cd6cecd36469bf88380a56427778e3d2a26",
+          "bytes": 390
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/tt.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/tt.svg",
+          "sha256": "00955f93d9cbb6f0e7d5b1373b7641b3b6d8083f061892ac1cdb8d274c4de1da",
+          "bytes": 375
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/tv.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/tv.svg",
+          "sha256": "89dac52f5cba3ff02572404c04543eed2621483258b27904de15945224d599df",
+          "bytes": 1425
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/tw.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/tw.svg",
+          "sha256": "04347983cb65c2d91b0f17fec4c695094f58227f4660ece02430a706f06598ea",
+          "bytes": 593
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/tz.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/tz.svg",
+          "sha256": "8b85945462bfb0b55b7223e5214aae363bc363e9540f685fa7c7e5c4bfb8edf5",
+          "bytes": 391
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ua.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ua.svg",
+          "sha256": "e6dc4d24003ec8f207d345280f8e3be96d749b88227afd61bae75a7b2be10205",
+          "bytes": 281
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ug.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ug.svg",
+          "sha256": "4e0dd4bd3f3f16a58ec0a0b166cda5bac479eab07d49780c69ba82256146bcee",
+          "bytes": 683
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/us.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/us.svg",
+          "sha256": "7f3012f520e4aefcff6acbb8cc7198fee604f3f806fd228f59c94077437bda82",
+          "bytes": 723
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/uy.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/uy.svg",
+          "sha256": "a815a24d08fa788c3b525c70bd78b027ca96bdb6e98196ee114a8ac1bdaa06bc",
+          "bytes": 720
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/uz.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/uz.svg",
+          "sha256": "d058391ed4f7c197c8ab92192fa4d5f764cd951f88eeb340bf588f65644a7930",
+          "bytes": 1372
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/va.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/va.svg",
+          "sha256": "4c0f7536d1384433f01ccf7a2cddc643422532ac58444e90c7e701d18de7add2",
+          "bytes": 650
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/vc.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/vc.svg",
+          "sha256": "d97bc896ac42fea0e88b59b62dc430b102899e2bfd4553de26e101c81a370deb",
+          "bytes": 472
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ve.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ve.svg",
+          "sha256": "47bd6cdcc25c2d141378fd47f78636f5855130b718a7493083ffa50c7e30fe6a",
+          "bytes": 1040
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/vg.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/vg.svg",
+          "sha256": "b7c92d737082618953957728bbb5cf07673b1367d935a26c01edadae096724a4",
+          "bytes": 950
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/vi.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/vi.svg",
+          "sha256": "311f15b9a22eb0618b400749a096b7f8b95b6909e45ad59b4ef94e0df2c8fb06",
+          "bytes": 734
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/vn.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/vn.svg",
+          "sha256": "a560ad179886f3909c7248372466c6769011bf7d521e86af3ebefa2106cb70dd",
+          "bytes": 287
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/vu.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/vu.svg",
+          "sha256": "7bb7b9bbc01c4dfa05a3b0aa4a4ffb37da132590a62f3b68c8d41122b1bb3df2",
+          "bytes": 628
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/wf.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/wf.svg",
+          "sha256": "5494ee23d1e4e96f8fde7d6ee7695eda81a441db1bb7f88fc8aec7263ebd07ff",
+          "bytes": 450
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ws.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ws.svg",
+          "sha256": "6895e30583a6b2862768dcb7245f06b86688e35290b97127859c2c40e6133240",
+          "bytes": 716
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/xk.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/xk.svg",
+          "sha256": "9303f9827032b2dd386ca35d44de1f219a3cf3cbc5c37325f87d289238f1ff19",
+          "bytes": 909
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/ye.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/ye.svg",
+          "sha256": "767265f844c4bf36e7ee6eb3d49e1dcb0ce63a8cf5187e5fca87dd72a214e14c",
+          "bytes": 337
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/yt.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/yt.svg",
+          "sha256": "de2e65a8a3b41bd5f0d2e57dc8a4934a5e9f458e6fe5aa55fefbf0adaf0d216a",
+          "bytes": 2326
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/za.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/za.svg",
+          "sha256": "895a8a071362e15239351e492bcfd369620cded26ce2f75e5b607c850fdc269d",
+          "bytes": 542
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/zm.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/zm.svg",
+          "sha256": "012e8b55228a24697e30b2c24ce98c409363c867d9c9875acfcf26f27da3205f",
+          "bytes": 632
+        },
+        {
+          "path": "assets/vendor/circle-flags/2.8.3/zw.svg",
+          "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/flags/zw.svg",
+          "sha256": "fbc6570723d3f5b3369abe46df81e62bf2a4063d205d8ef1d7da14b1e1b34bac",
+          "bytes": 807
+        }
+      ],
+      "license_file": {
+        "path": "assets/vendor/circle-flags/2.8.3/LICENSE",
+        "source": "https://cdn.jsdelivr.net/npm/circle-flags@2.8.3/LICENSE.md",
+        "sha256": "9ef248a32ebbb1587b7c4caa3203a33065de29aa6098a6933bad67de2057e72f",
+        "bytes": 1069
+      }
     }
   ]
 }

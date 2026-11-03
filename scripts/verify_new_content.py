@@ -46,7 +46,7 @@ from sync_guide_links import link_diffs  # noqa: E402
 
 SITE_CHECKS = ["check_sitemap.py", "check_jsonld.py", "check_breadcrumbs.py", "check_nav.py",
                "check_copy.py", "check_social.py", "check_analytics.py"]
-GUIDE_LINK = re.compile(r"📖[^<]*(Want the full picture\?|¿Quieres saber más\?|Lee nuestra guía)[^<]*<a href=\"([^\"]+)\"")
+GUIDE_LINK = re.compile(r"(?:📖[^<]*)?(Read our guide:|Lee nuestra guía:)[^<]*<a href=\"([^\"]+)\"")
 WHY = re.compile(r"<h[23][^>]*>\s*(why (use )?orisod|por qu[ée] (usar )?orisod)", re.I)
 
 # Words that keep their capital letter mid-sentence. All-caps words (PDF, JPG, A4),

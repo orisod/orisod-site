@@ -3,7 +3,8 @@
 
 Each tool page has one guide line under its FAQ ("📖 Want the full picture?
 Read our guide: <a ...>...</a>", "📖 ¿Quieres profundizar? Lee nuestra guía:
-<a ...>...</a>" in Spanish). The link text is a copy of the guide post's H1, so
+<a ...>...</a>" in Spanish; the minimal layout's line, under "How it works", has
+no 📖, so the link is found by "Read our guide:" / "Lee nuestra guía:"). The link text is a copy of the guide post's H1, so
 it can drift when a post's H1 is edited. This script does that copy:
 
     python scripts/sync_guide_links.py           # dry run (default): list what would change
@@ -24,7 +25,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from audit_extract import NOT_PAGES, REPO_ROOT, read  # noqa: E402
 
-GUIDE_LINK = re.compile(r'📖[^<]*(?:Read our guide|Lee nuestra guía):\s*<a href="([^"]+)"[^>]*>(.*?)</a>', re.S)
+GUIDE_LINK = re.compile(r'(?:Read our guide|Lee nuestra guía):\s*<a href="([^"]+)"[^>]*>(.*?)</a>', re.S)
 H1 = re.compile(r"<h1[^>]*>(.*?)</h1>", re.S)
 
 
