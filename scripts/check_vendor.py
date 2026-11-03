@@ -116,6 +116,8 @@ NOT_LOADED = (
     ("es/whatsapp-link-generator/index.html", "https://x.com/intent/tweet"),
     ("whatsapp-link-generator/index.html", "https://www.linkedin.com/sharing/share-offsite/"),
     ("es/whatsapp-link-generator/index.html", "https://www.linkedin.com/sharing/share-offsite/"),
+    ("whatsapp-link-generator/index.html", "https://www.reddit.com/submit"),
+    ("es/whatsapp-link-generator/index.html", "https://www.reddit.com/submit"),
     ("assets/goatcounter/count.js", "https://www.goatcounter.com"),  # comments in the pinned count.js
     ("assets/goatcounter/count.js", "https://opensource.org/licenses/ISC"),
     ("assets/goatcounter/count.js", "https://github.com/arp242/goatcounter"),
