@@ -1713,10 +1713,10 @@ fetch(EXAMPLES_FILE).then((r) => (r.ok ? r.json() : null))
   const UNDOCUMENTED_ENDPOINTS = {
     "facebook": {"status": "undocumented", "lastVerified": "2026-11-03", "testedUrl": "https://orisod.com/whatsapp-link-generator/",
       "result": "Opened by Code in Chromium, not logged in: sharer.php answered HTTP 200 with the u parameter kept and showed Facebook's login prompt (posting needs an account)."},
-    "linkedin": {"status": "undocumented", "lastVerified": "not verified", "testedUrl": "https://orisod.com/whatsapp-link-generator/",
-      "result": "not verified by Code, owner to check manually. Code's attempt on 2026-11-03: share-offsite answered HTTP 302 to LinkedIn's login page with the shared address kept, then the login page answered HTTP 403 from bot protection."},
-    "reddit": {"status": "undocumented", "lastVerified": "not verified", "testedUrl": "https://orisod.com/whatsapp-link-generator/",
-      "result": "not verified by Code, owner to check manually. Code's attempt on 2026-11-03: submit answered HTTP 200 with a JavaScript challenge, then HTTP 403 blocked by network security."}
+    "linkedin": {"status": "undocumented", "lastVerified": "2026-11-03", "testedUrl": "https://orisod.com/whatsapp-link-generator/",
+      "result": "Verified manually by the owner in a signed-in browser: the post composer opened with the page link already attached and a link preview card (page title and the site-wide share image). Nothing was posted."},
+    "reddit": {"status": "undocumented", "lastVerified": "2026-11-03", "testedUrl": "https://orisod.com/whatsapp-link-generator/",
+      "result": "Verified manually by the owner in a signed-in browser: the submit page opened with the title WhatsApp Link Generator and the page link attached as a link preview card. Nothing was posted."}
   };
   list.querySelectorAll("a[data-share]").forEach((a) => { a.href = SHARE_LINKS[a.dataset.share](url, title); });
 
