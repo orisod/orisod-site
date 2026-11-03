@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Negative tests for check_vendor.py's tarball-member, vendor-path, flag-folder and wa.me rules.
+"""Negative tests for check_vendor.py's tarball-member, vendor-path, flag-folder, wa.me and share-link rules.
 
 Builds a tiny site in a temporary folder (one page, one vendored "font" taken from
 a release tarball, its LICENSE, two circle-flags images and theirs, and a
@@ -56,6 +56,7 @@ const FLAG_DIR = "/assets/vendor/circle-flags/9.9/";
 const FLAG_CODES = "ar mx";
 img.src = FLAG_DIR + code + ".svg";
 link.href = `https://wa.me/${digits}?text=${encodeURIComponent(message)}`;
+const SHARE = "https://t.me/share/url?url=" + enc(u) + "&text=" + enc(t);
 </script></body></html>
 """
 
@@ -126,6 +127,10 @@ CASES = [
      "FLAG_CODES must be distinct two-letter lowercase codes"),
     ("a wa.me link on a page that isn't the WhatsApp tool", {"page": PAGE.replace("</script>", "location.href = 'https://wa.me/123';\n</script>")},
      "index.html: inline script refers to https://wa.me/123 on another host"),
+    ("a share link on a page that isn't the WhatsApp tool", {"page": PAGE.replace("</script>", "a.href = 'https://t.me/share/url?url=x';\n</script>")},
+     "index.html: inline script refers to https://t.me/share/url?url=x on another host"),
+    ("another address on a share host", {"wa_page": WA_PAGE.replace("t.me/share/url?url=", "t.me/joinchat?url=")},
+     "inline script refers to https://t.me/joinchat?url= on another host"),
 ]
 
 

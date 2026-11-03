@@ -926,7 +926,7 @@ const WA_STRUCTURE = () => {
   const footer = q("footer.site-footer"), details = q("details.more"), guide = q(".how p.guide-link");
   const after = [...document.body.querySelectorAll("*")].filter((el) => (footer.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING)
     && !footer.contains(el) && !["SCRIPT", "STYLE"].includes(el.tagName) && el.getClientRects().length > 0);
-  const order = ["nav.breadcrumbs", "h1", "p.lead", "p.affil", ".tool", ".how-grid", "details.more", "footer.site-footer"].map(q);
+  const order = ["nav.breadcrumbs", "h1", "p.lead", "p.affil", ".tool", ".how-grid", ".share-tool", "details.more", "footer.site-footer"].map(q);
   const inOrder = order.every((el, i) => el && (i === 0 || (order[i - 1].compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING)));
   return { after: after.map((el) => el.tagName.toLowerCase() + (el.id ? "#" + el.id : el.className ? "." + String(el.className).split(" ")[0] : "")),
     detailsAfterGuide: !!(guide.compareDocumentPosition(details) & Node.DOCUMENT_POSITION_FOLLOWING),
@@ -937,13 +937,18 @@ const WA_STRUCTURE = () => {
     guideAfterSteps: !!guide && guide.previousElementSibling === q(".how-grid .how > ol"),
     guideHref: guide?.querySelector("a[href]")?.getAttribute("href") || "", guideInDetails: !!guide && details.contains(guide),
     cards: document.querySelectorAll(".how-grid .related-aside .related-card").length,
-    detailsCount: document.querySelectorAll("details").length,
-    summaryFirst: details.firstElementChild?.tagName === "SUMMARY", summaryRole: details.querySelector("summary").getAttribute("role") };
+    detailsCount: document.querySelectorAll("details.more").length,
+    summaryFirst: details.firstElementChild?.tagName === "SUMMARY", summaryRole: details.querySelector("summary").getAttribute("role"),
+    // "Share this tool": exactly one, right after the row and before the block, with one control shown.
+    shareTools: document.querySelectorAll(".share-tool").length,
+    shareAfterRow: !!q(".share-tool") && !!(q(".how-grid").compareDocumentPosition(q(".share-tool")) & Node.DOCUMENT_POSITION_FOLLOWING),
+    shareControls: [q("#shareMenu > summary"), q("#shareNative")].filter((el) => el && el.getClientRects().length > 0).length };
 };
 function expectStructure(s) {
   expect(!s.after.length, `visible elements after the footer: ${s.after.join(", ")}`);
   expect(s.detailsAfterGuide && s.detailsBeforeFooter, "the collapsed block isn't between the guide link and the footer");
-  expect(s.inOrder, "the page isn't breadcrumb, H1, description, not-affiliated line, tool, How it works and Related tools, collapsed block, footer");
+  expect(s.inOrder, "the page isn't breadcrumb, H1, description, not-affiliated line, tool, How it works and Related tools, Share this tool, collapsed block, footer");
+  expect(s.shareTools === 1 && s.shareAfterRow && s.shareControls === 1, `${s.shareTools} share blocks (after the row ${s.shareAfterRow}), ${s.shareControls} share controls shown`);
   expect(s.steps === 3, `${s.steps} steps in How it works, not 3`);
   expect(s.guideAfterSteps && /\/blog\/send-whatsapp-without-saving-contact\/$/.test(s.guideHref) && !s.guideInDetails,
     `the guide link isn't right under the steps, outside the collapsed block (href "${s.guideHref}")`);
@@ -972,6 +977,146 @@ function expectIndicator(closed, open) {
 const waOverflow = (page) => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
 function expectNoOverflow(px, when) {
   expect(px <= 0, `the page scrolls sideways by ${px}px at 320 CSS px (${when})`);
+}
+// "Share this tool": shares the page's own canonical address (never the generated link) with the H1 as its text,
+// through a <details> row of links (and Copy, where the browser can copy) or, on touch devices, the Web Share API.
+const WA_SHARE = {
+  en: { url: "https://orisod.com/whatsapp-link-generator/", title: "WhatsApp Link Generator", toggle: "Share this tool", newTab: " (opens in a new tab)",
+    copied: "Tool link copied", copyFail: "Could not copy the tool link", resultShare: "Share",
+    labels: ["Share on WhatsApp", "Copy tool link", "Share on Telegram", "Share on Facebook", "Share on X", "Share on LinkedIn", "Share by email"] },
+  es: { url: "https://orisod.com/es/whatsapp-link-generator/", title: "Generador de links de WhatsApp", toggle: "Compartir esta herramienta", newTab: " (se abre en una pestaña nueva)",
+    copied: "Link de la herramienta copiado", copyFail: "No se pudo copiar el link de la herramienta", resultShare: "Compartir",
+    labels: ["Compartir en WhatsApp", "Copiar link de la herramienta", "Compartir en Telegram", "Compartir en Facebook", "Compartir en X", "Compartir en LinkedIn", "Compartir por correo"] },
+};
+const WA_SHARE_ORDER = ["whatsapp", "copy", "telegram", "facebook", "x", "linkedin", "email"];
+const WA_SHARE_NEW_TAB = ["whatsapp", "telegram", "facebook", "x", "linkedin"];
+// Each service's share address as its current first-party documentation gives it, every parameter encoded on its own.
+// (Facebook's sharer.php and LinkedIn's share-offsite aren't in their current docs: see CLAUDE.md.)
+function waShareHrefs(u, t) {
+  const e = encodeURIComponent;
+  return {
+    whatsapp: `https://wa.me/?text=${e(t + " " + u)}`,
+    telegram: `https://t.me/share/url?url=${e(u)}&text=${e(t)}`,
+    facebook: `https://www.facebook.com/sharer/sharer.php?u=${e(u)}`,
+    x: `https://x.com/intent/tweet?text=${e(t)}&url=${e(u)}`,
+    linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${e(u)}`,
+    email: `mailto:?subject=${e(t)}&body=${e(t + " " + u)}`,
+  };
+}
+const waShareState = (page) => page.evaluate(() => {
+  const menu = document.getElementById("shareMenu"), summary = menu.querySelector("summary"), nativeBtn = document.getElementById("shareNative");
+  const status = document.getElementById("shareToolStatus"), active = document.activeElement;
+  const shown = (el) => !!el && el.getClientRects().length > 0;
+  const name = (el) => el.querySelector(".share-sr")?.textContent || "";
+  const box = (el) => { const r = el.getBoundingClientRect(); return [Math.round(r.width), Math.round(r.height), Math.round(r.left), Math.round(r.top)]; };
+  const items = [...document.querySelectorAll("#shareList > li > *")].map((el) => ({ kind: el.dataset.share || (el.id === "shareCopy" ? "copy" : "?"),
+    tag: el.tagName.toLowerCase(), href: el.getAttribute("href"), target: el.getAttribute("target"), rel: el.getAttribute("rel"),
+    name: name(el), tip: el.querySelector(".share-tip")?.textContent || "", box: box(el) }));
+  const list = document.getElementById("shareList").getBoundingClientRect();
+  const rows = [...new Set(items.map((i) => i.box[3]))].map((top) => items.filter((i) => i.box[3] === top));
+  return { open: menu.open, menuShown: shown(menu), nativeShown: shown(nativeBtn), summaryName: name(summary), nativeName: name(nativeBtn),
+    summaryFirst: menu.firstElementChild === summary, summaryRole: summary.getAttribute("role"), summaryExpanded: summary.getAttribute("aria-expanded"),
+    nativeType: nativeBtn.getAttribute("type"), summaryBox: shown(summary) ? box(summary) : box(nativeBtn), items,
+    rows: rows.map((r) => r.length), offCentre: rows.map((r) => Math.abs((r[0].box[2] - list.left) - (list.right - (r[r.length - 1].box[2] + r[r.length - 1].box[0])))),
+    status: status.textContent, live: status.getAttribute("aria-live"), changes: window.__shareStatusChanges ?? null,
+    focus: active === summary ? "summary" : active === nativeBtn ? "native" : active.closest?.("#shareList") ? "list" : active.id || active.tagName,
+    resultShare: document.getElementById("shareBtn").textContent.trim(), actionError: document.getElementById("actionError").textContent };
+});
+// Counts updates to the share status line (one per copy attempt).
+const waWatchShareStatus = (page) => page.evaluate(() => {
+  window.__shareStatusChanges = 0;
+  new MutationObserver((records) => { window.__shareStatusChanges += records.length; })
+    .observe(document.getElementById("shareToolStatus"), { childList: true, characterData: true, subtree: true });
+});
+function expectShareControl(st, lang) {
+  const t = WA_SHARE[lang];
+  expect(st.summaryName === t.toggle && st.summaryFirst && st.summaryRole === null && st.summaryExpanded === null,
+    `the share summary is "${st.summaryName}" (first child ${st.summaryFirst}, role ${st.summaryRole}, aria-expanded ${st.summaryExpanded})`);
+  expect(st.summaryName !== st.resultShare && st.resultShare === t.resultShare, `the share control and the result's share button have the names "${st.summaryName}" and "${st.resultShare}"`);
+  expect(st.summaryBox[0] >= 48 && st.summaryBox[1] >= 48, `the share control is ${st.summaryBox[0]}x${st.summaryBox[1]}px, under 48px`);
+}
+function expectShareLinks(st, lang, kinds = WA_SHARE_ORDER) {
+  const t = WA_SHARE[lang], want = waShareHrefs(t.url, t.title);
+  expect(JSON.stringify(st.items.map((i) => i.kind)) === JSON.stringify(kinds), `the share row is ${st.items.map((i) => i.kind).join(", ")}, not ${kinds.join(", ")}`);
+  for (const i of st.items) {
+    const label = t.labels[WA_SHARE_ORDER.indexOf(i.kind)], newTab = WA_SHARE_NEW_TAB.includes(i.kind);
+    expect(i.name === label + (newTab ? t.newTab : "") && i.tip === label, `${i.kind} is named "${i.name}" with the tooltip "${i.tip}"`);
+    expect(i.box[0] >= 44 && i.box[1] >= 44, `${i.kind} is ${i.box[0]}x${i.box[1]}px, under 44px`);
+    if (i.kind === "copy") { expect(i.tag === "button" && i.href === null, "Copy tool link isn't a button"); continue; }
+    expect(i.tag === "a" && i.href === want[i.kind], `${i.kind} links to ${i.href}, not ${want[i.kind]}`);
+    expect(newTab ? i.target === "_blank" && i.rel === "noopener noreferrer" : i.target === null, `${i.kind} has target ${i.target}, rel ${i.rel}`);
+    // Every parameter decodes back to the canonical address or the title, with no query string or fragment of the page's own URL.
+    const params = [...new URL(i.href).searchParams.values()];
+    expect(params.length && params.every((v) => v === t.url || v === t.title || v === t.title + " " + t.url), `${i.kind}'s parameters are ${JSON.stringify(params)}`);
+  }
+}
+function expectNoSecret(texts, what) {
+  const leaked = texts.filter((x) => x && (x.includes(WA_SECRET.digits) || WA_SECRET.words.some((w) => x.includes(w))));
+  expect(!leaked.length, `${what} carries the number or the message: ${leaked.join(", ")}`);
+}
+function expectOutsideRequests(urls, when) {
+  expect(!urls.length, `requests to another host ${when}: ${urls.join(", ")}`);
+}
+const waOutside = (requests) => requests.filter((u) => !u.startsWith(SITE + "/") && !u.startsWith(GOATCOUNTER) && !/^(data|blob):/.test(u));
+// A context of its own (touch emulation, no JavaScript, no clipboard...): the site from the checkout, GoatCounter answered
+// locally, any other host recorded and answered with an empty page (only a click on a share link should reach one).
+async function waShareContext(browser, lang, options = {}, init = null) {
+  const context = await browser.newContext({ locale: lang === "es" ? "es-ES" : "en-US", ...options });
+  const outside = [], errors = [];
+  await context.route("**/*", async (route) => {
+    const url = route.request().url();
+    if (url.startsWith(GOATCOUNTER)) return route.fulfill({ status: 204, body: "" });
+    if (url.startsWith(SITE + "/")) return route.fulfill(await localFile(url));
+    if (/^(data|blob):/.test(url)) return route.continue();
+    outside.push(url);
+    return route.fulfill({ status: 200, contentType: "text/html", body: "<!doctype html><title>outside</title>" });
+  });
+  if (init) await context.addInitScript(init);
+  const page = await context.newPage();
+  page.on("pageerror", (e) => errors.push(e.message));
+  page.on("console", (m) => { if (m.type() === "error") errors.push(m.text()); });
+  await page.goto(SITE + (lang === "es" ? "/es" : "") + WA, { waitUntil: "load" });
+  return { context, page, outside, errors };
+}
+// A stand-in for navigator.share: records each call, then resolves, cancels (AbortError) or fails as window.__shareMode says.
+const WA_SHARE_STUB = () => {
+  window.__shareCalls = [];
+  window.__shareMode = "resolve";
+  Object.defineProperty(navigator, "share", { configurable: true, value: async (data) => {
+    window.__shareCalls.push(JSON.parse(JSON.stringify(data)));
+    await new Promise((r) => setTimeout(r, 50));
+    if (window.__shareMode === "abort") throw new DOMException("Share canceled", "AbortError");
+    if (window.__shareMode === "fail") throw new DOMException("Permission denied", "NotAllowedError");
+  } });
+  Object.defineProperty(navigator, "canShare", { configurable: true, value: () => true });
+};
+const waContrast = (a, b) => {
+  const lum = ([r, g, b]) => [r, g, b].map((v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }).reduce((s, v, i) => s + v * [0.2126, 0.7152, 0.0722][i], 0);
+  const [l1, l2] = [lum(a), lum(b)].sort((x, y) => y - x);
+  return (l1 + 0.05) / (l2 + 0.05);
+};
+// Colours of the share control in the current theme: its fill, icon, focus ring and the page behind it.
+const waShareColours = (page) => page.evaluate(() => {
+  const rgb = (c) => (c.match(/[\d.]+/g) || []).slice(0, 3).map(Number);
+  const s = document.querySelector("#shareMenu > summary"), cs = getComputedStyle(s);
+  return { fill: rgb(cs.backgroundColor), icon: rgb(cs.color), ring: rgb(cs.outlineColor), ringStyle: cs.outlineStyle, page: rgb(getComputedStyle(document.body).backgroundColor), shadow: cs.boxShadow };
+});
+function expectShareColours(c, theme, hover) {
+  expect(waContrast(c.icon, c.fill) >= 4.5, `${theme}${hover ? " hover" : ""}: the icon is ${waContrast(c.icon, c.fill).toFixed(2)}:1 on the button`);
+  // Non-text contrast: the button against the page, or (dark hover, a darker blue) its light edge against the page.
+  const edge = hover && c.shadow && c.shadow !== "none" ? (c.shadow.match(/rgb\([^)]*\)/) || [""])[0].match(/\d+/g)?.map(Number) : null;
+  const best = Math.max(waContrast(c.fill, c.page), edge ? waContrast(edge, c.page) : 0);
+  expect(best >= 3, `${theme}${hover ? " hover" : ""}: the share button is ${best.toFixed(2)}:1 against the page`);
+}
+function expectShareRing(c, theme) {
+  expect(c.ringStyle === "solid" && waContrast(c.ring, c.page) >= 3, `${theme}: the focus ring is ${c.ringStyle}, ${waContrast(c.ring, c.page).toFixed(2)}:1 against the page`);
+}
+const waTip = (page, sel) => page.evaluate((s) => {
+  const t = document.querySelector(s + " > .share-tip"), r = t.getBoundingClientRect();
+  return { shown: getComputedStyle(t).display !== "none", text: t.textContent, left: r.left, right: r.right, width: document.documentElement.clientWidth };
+}, sel);
+function expectTip(tip, shown, label, when) {
+  expect(tip.shown === shown && (!shown || (tip.text === label && tip.left >= 0 && tip.right <= tip.width)), `${when}: tooltip shown ${tip.shown} ("${tip.text}", ${Math.round(tip.left)} to ${Math.round(tip.right)} of ${tip.width}px)`);
 }
 // The placeholders: the message's fixed text and the phone field's example for the chosen country
 // (libphonenumber-js's examples.mobile.json in its national format; without it, only the US gets one).
@@ -2548,6 +2693,247 @@ const CASES = [
           mustFail("a FAQ answer that differs from the JSON-LD", () => expectFaq({ ...faq, jsonld: faq.jsonld.map((x, i) => (i === 2 ? [x[0], x[1] + " Extra."] : x)) })),
           mustFail("an indicator that doesn't change", () => expectIndicator(closed.arrow, closed.arrow)),
           mustFail("a 400px element at 320 px", () => expectNoOverflow(wide, "with a 400px element"))].join("; ");
+    },
+  },
+  {
+    name: "WhatsApp link generator (share this tool)",
+    page: WA,
+    vendor: [LIBPHONE, QRJS],
+    async run(page, lang, ctl) {
+      const t = WA_SHARE[lang], prefix = lang === "es" ? "/es" : "";
+      // Opened with a query string and a fragment: neither may reach a share link.
+      await page.goto(SITE + prefix + WA + "?x=1#y");
+      await page.waitForLoadState("networkidle");
+      const atLoad = waOutside(ctl.requests);
+      const structure = await page.evaluate(WA_STRUCTURE);
+      expectStructure(structure);
+      const closed = await waShareState(page);
+      expect(!closed.open && closed.menuShown && !closed.nativeShown, `on a desktop the share row is open ${closed.open}, shown ${closed.menuShown}, native button ${closed.nativeShown}`);
+      expectShareControl(closed, lang);
+      expect(closed.live === "polite" && closed.status === "", `the share status line is aria-live ${closed.live} with "${closed.status}" on load`);
+      // Enter opens, Space closes; the icon changes (a cross while open) and the focus ring shows.
+      const icon = () => page.evaluate(() => [...document.querySelectorAll("#shareMenu > summary svg")].map((x) => getComputedStyle(x).display).join(" "));
+      const closedIcon = await icon();
+      await page.focus("#shareMenu > summary");
+      await page.keyboard.press("Enter");
+      const openIcon = await icon();
+      expect((await waShareState(page)).open, "Enter on the share summary didn't open it");
+      expectIndicator(closedIcon, openIcon);
+      await page.keyboard.press("Space");
+      expect(!(await waShareState(page)).open, "Space on the share summary didn't close it");
+      await page.keyboard.press("Enter");
+      const opened = await waShareState(page);
+      expectShareLinks(opened, lang);
+      expect(opened.rows.length === 1, `at 1280px the share row has ${opened.rows.length} lines`);
+      // Escape from inside the row closes it and puts focus back on the summary.
+      await page.keyboard.press("Tab");
+      const firstTip = await waTip(page, "#shareList li:first-child > *");
+      expectTip(firstTip, true, t.labels[0], "WhatsApp link focused");
+      await page.keyboard.press("Escape");
+      const escaped = await waShareState(page);
+      expect(!escaped.open && escaped.focus === "summary", `after Escape the row is open ${escaped.open}, focus on ${escaped.focus}`);
+      const afterEscTip = await waTip(page, "#shareMenu > summary");
+      expectTip(afterEscTip, false, t.toggle, "summary right after Escape");
+      // Hover shows the tooltip, Escape hides it.
+      await page.hover("#shareMenu > summary");
+      const hoverTip = await waTip(page, "#shareMenu > summary");
+      expectTip(hoverTip, true, t.toggle, "summary hovered");
+      await page.keyboard.press("Escape");
+      expectTip(await waTip(page, "#shareMenu > summary"), false, t.toggle, "hover tooltip after Escape");
+      await page.mouse.move(0, 0);
+      // The tool's number and message never reach the share links, the copied text or the shared data.
+      await waCountry(page, "GB");
+      await waNumber(page, "07400 123456");
+      await page.fill("#messageInput", `${WA_SECRET.words.join(" ")} 🙌`);
+      await page.click("#shareMenu > summary");
+      const atOpen = waOutside(ctl.requests);
+      // Copy: success and failure each update the status line once.
+      await waWatchShareStatus(page);
+      await page.evaluate(() => Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText: async (x) => { window.__toolCopied = x; } } }));
+      await page.click("#shareCopy");
+      await page.waitForFunction(() => document.getElementById("shareToolStatus").textContent !== "");
+      await page.waitForTimeout(200);
+      const copied = { ...(await waShareState(page)), text: await page.evaluate(() => window.__toolCopied) };
+      const expectCopy = (st, text, changes) => expect(st.status === text && st.changes === changes, `the status says "${st.status}" after ${st.changes} updates, not "${text}" after ${changes}`);
+      expectCopy(copied, t.copied, 1);
+      expect(copied.text === t.url, `Copy tool link copied ${copied.text}, not ${t.url}`);
+      expectShareLinks(copied, lang);
+      expectNoSecret([...copied.items.map((i) => i.href), copied.text], "Share this tool");
+      await page.evaluate(() => Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText: async () => { throw new DOMException("denied", "NotAllowedError"); } } }));
+      await page.click("#shareCopy");
+      await page.waitForFunction((x) => document.getElementById("shareToolStatus").textContent === x, t.copyFail);
+      await page.waitForTimeout(200);
+      const failed = await waShareState(page);
+      expectCopy(failed, t.copyFail, 2);
+      const atCopy = waOutside(ctl.requests);
+      for (const [when, urls] of [["at load", atLoad], ["on opening the row", atOpen], ["on copying", atCopy]]) expectOutsideRequests(urls, when);
+      // Both themes: white icon on the blue, the button against the page (also hovered), the focus ring.
+      await page.addStyleTag({ content: "*{transition:none !important}" });
+      const colours = [];
+      for (const theme of ["dark", "light"]) {
+        await page.evaluate((x) => (x === "light" ? document.documentElement.setAttribute("data-theme", "light") : document.documentElement.removeAttribute("data-theme")), theme);
+        await page.mouse.move(0, 0);
+        await page.focus("#shareMenu > summary");
+        await page.keyboard.press("Shift+Tab");
+        await page.keyboard.press("Tab");
+        const c = await waShareColours(page);
+        expectShareColours(c, theme, false);
+        expectShareRing(c, theme);
+        await page.hover("#shareMenu > summary");
+        const h = await waShareColours(page);
+        expectShareColours(h, theme, true);
+        colours.push(`${theme} ${waContrast(c.icon, c.fill).toFixed(1)}:1 icon, ${waContrast(c.fill, c.page).toFixed(1)}:1 button, ${waContrast(c.ring, c.page).toFixed(1)}:1 ring`);
+      }
+      await page.evaluate(() => document.documentElement.removeAttribute("data-theme"));
+      // 320 CSS px (200% zoom of a 640px window): no sideways scroll, the row on two centred lines, tooltips inside the page.
+      await page.setViewportSize({ width: 320, height: 640 });
+      const narrow = await waShareState(page);
+      const px = await waOverflow(page);
+      const expectNarrow = (st, px) => {
+        expectNoOverflow(px, "share row open");
+        expect(st.rows.length === 2 && st.offCentre.every((d) => d <= 1), `at 320px the share row has lines of ${st.rows.join(" + ")}, off centre by ${st.offCentre.join(", ")}px`);
+      };
+      expectNarrow(narrow, px);
+      await page.focus("#shareList li:last-child > *");
+      await page.keyboard.press("Shift+Tab");
+      await page.keyboard.press("Tab");
+      expectTip(await waTip(page, "#shareList li:last-child > *"), true, t.labels[6], "last link focused at 320px");
+      expectNoOverflow(await waOverflow(page), "tooltip shown");
+      // Without JavaScript: the same links in the HTML, no Copy button, the row opens with a click.
+      const noJs = await waShareContext(page.context().browser(), lang, { javaScriptEnabled: false });
+      const wasOpen = await noJs.page.evaluate(() => document.getElementById("shareMenu").open);
+      await noJs.page.click("#shareMenu > summary");
+      const plain = await waShareState(noJs.page);
+      await noJs.context.close();
+      expect(!wasOpen && plain.open && plain.menuShown && !plain.nativeShown, `without JavaScript the row was open ${wasOpen}, opened ${plain.open}`);
+      expectShareLinks(plain, lang, WA_SHARE_ORDER.filter((k) => k !== "copy"));
+      // A browser without the Clipboard API: no Copy button.
+      const noClip = await waShareContext(page.context().browser(), lang, {}, () => { Object.defineProperty(navigator, "clipboard", { configurable: true, value: undefined }); });
+      const without = await waShareState(noClip.page);
+      await noClip.context.close();
+      expectShareLinks(without, lang, WA_SHARE_ORDER.filter((k) => k !== "copy"));
+      // Only a click on a link reaches the service: one navigation, to exactly that address.
+      const nav = await waShareContext(page.context().browser(), lang);
+      await nav.page.click("#shareMenu > summary");
+      const before = [...nav.outside];
+      const [popup] = await Promise.all([nav.page.waitForEvent("popup"), nav.page.click('#shareList a[data-share="telegram"]')]);
+      await popup.waitForLoadState();
+      const telegram = waShareHrefs(t.url, t.title).telegram;
+      const clicked = [...nav.outside];
+      await nav.context.close();
+      expect(!before.length && clicked.length === 1 && clicked[0] === telegram, `clicking Telegram requested ${JSON.stringify(clicked)} (before: ${JSON.stringify(before)})`);
+      expect(!noJs.errors.length && !noClip.errors.length && !nav.errors.length, `errors in the extra contexts: ${[...noJs.errors, ...noClip.errors, ...nav.errors].join("; ")}`);
+      return `one share control, "${t.toggle}", distinct from the result's "${t.resultShare}"; closed on load, Enter opens, Space closes, the icon changes; ` +
+        `${opened.items.length} items in order, each href the documented address for ${t.url} (opened with ?x=1#y); Escape closes and focuses the summary; ` +
+        `tooltips on focus and hover, gone on Escape; copy announced once ("${t.copied}", then "${t.copyFail}"); no number or message anywhere; ` +
+        `no outside request at load, opening or copying, one on clicking Telegram; ${colours.join("; ")}; 320px: lines of ${narrow.rows.join(" + ")}, no sideways scroll; ` +
+        `no Copy without JavaScript or the Clipboard API; ` +
+        [mustFail("a summary with role=button", () => expectShareControl({ ...closed, summaryRole: "button" }, lang)),
+          mustFail("aria-expanded added to the summary", () => expectShareControl({ ...closed, summaryExpanded: "false" }, lang)),
+          mustFail("the same name as the result's share button", () => expectShareControl({ ...closed, summaryName: closed.resultShare }, lang)),
+          mustFail("two share controls", () => expectStructure({ ...structure, shareControls: 2 })),
+          mustFail("the share block after the collapsed block", () => expectStructure({ ...structure, inOrder: false })),
+          mustFail("the page's query string shared", () => expectShareLinks({ ...opened, items: opened.items.map((i) => (i.kind === "facebook" ? { ...i, href: i.href.replace("%2F", "%2F%3Fx%3D1") } : i)) }, lang)),
+          mustFail("the fragment shared", () => expectShareLinks({ ...opened, items: opened.items.map((i) => (i.kind === "x" ? { ...i, href: i.href + "%23y" } : i)) }, lang)),
+          mustFail("an unencoded parameter", () => expectShareLinks({ ...opened, items: opened.items.map((i) => (i.kind === "telegram" ? { ...i, href: `https://t.me/share/url?url=${t.url}&text=${encodeURIComponent(t.title)}` } : i)) }, lang)),
+          mustFail("the other language's address", () => expectShareLinks(opened, lang === "es" ? "en" : "es")),
+          mustFail("Copy and Telegram swapped", () => expectShareLinks({ ...opened, items: [opened.items[0], opened.items[2], opened.items[1], ...opened.items.slice(3)] }, lang)),
+          mustFail("a new-tab link without its hidden text", () => expectShareLinks({ ...opened, items: opened.items.map((i) => (i.kind === "x" ? { ...i, name: t.labels[4] } : i)) }, lang)),
+          mustFail("the number in a share link", () => expectNoSecret([opened.items[0].href + WA_SECRET.digits], "Share this tool")),
+          mustFail("the status updated twice", () => expectCopy(copied, t.copied, 2)),
+          mustFail("Copy without the Clipboard API", () => expectShareLinks(copied, lang, WA_SHARE_ORDER.filter((k) => k !== "copy"))),
+          mustFail("a request at load", () => expectOutsideRequests(["https://www.facebook.com/tr"], "at load")),
+          mustFail("a tooltip left after Escape", () => expectTip(hoverTip, false, t.toggle, "test")),
+          mustFail("a faint button", () => expectShareColours({ fill: [30, 41, 59], icon: [255, 255, 255], page: [11, 15, 26], shadow: "none" }, "test", false)),
+          mustFail("the row on one line at 320px", () => expectNarrow({ ...narrow, rows: [7], offCentre: [0] }, 0)),
+          mustFail("a 30px link", () => expectShareLinks({ ...opened, items: opened.items.map((i, n) => (n === 3 ? { ...i, box: [30, 30, i.box[2], i.box[3]] } : i)) }, lang))].join("; ");
+    },
+  },
+  {
+    name: "WhatsApp link generator (share this tool, Web Share API)",
+    page: WA,
+    vendor: [LIBPHONE, QRJS],
+    async run(page, lang) {
+      const t = WA_SHARE[lang], browser = page.context().browser();
+      // The share script is one block, byte-identical on the EN and ES pages.
+      const block = async (path) => { const html = await readFile(`${REPO_ROOT}${path}index.html`, "utf-8"); const a = html.indexOf("// Share this tool: start"), b = html.indexOf("// Share this tool: end");
+        return a > 0 && b > a ? html.slice(a, b) : ""; };
+      const blocks = [await block(WA.slice(1)), await block("es" + WA)];
+      const expectSameBlock = ([en, es]) => expect(en && en === es, "the \"Share this tool\" script block is missing or differs between the EN and ES pages");
+      expectSameBlock(blocks);
+      const data = { title: t.title, text: t.title, url: t.url };
+      // A touch device with navigator.share: one real button with the same name, the row hidden.
+      const touch = await waShareContext(browser, lang, { hasTouch: true, viewport: { width: 390, height: 800 } }, WA_SHARE_STUB);
+      const tp = touch.page;
+      const st = await waShareState(tp);
+      const expectNative = (st) => expect(!st.menuShown && st.nativeShown && st.nativeName === t.toggle && st.nativeType === "button", `on a touch device: row shown ${st.menuShown}, button shown ${st.nativeShown} named "${st.nativeName}"`);
+      expectNative(st);
+      expectShareControl(st, lang);
+      expect(await tp.evaluate(() => [...document.querySelectorAll(".share-tool")].length === 1), "more than one share block");
+      // The tool's number and message are never part of the shared data.
+      await waCountry(tp, "GB");
+      await waNumber(tp, "07400 123456");
+      await tp.fill("#messageInput", `${WA_SECRET.words.join(" ")} 🙌`);
+      const quiet = (st) => expect(st.status === "" && st.actionError === "" && st.nativeShown && !st.menuShown && st.focus === "native",
+        `after the share sheet: status "${st.status}", error "${st.actionError}", button shown ${st.nativeShown}, focus on ${st.focus}`);
+      await tp.click("#shareNative");
+      await tp.waitForFunction(() => window.__shareCalls.length === 1 && document.activeElement.id === "shareNative");
+      const resolved = await waShareState(tp);
+      quiet(resolved);
+      const calls = await tp.evaluate(() => window.__shareCalls);
+      const expectData = (got) => expect(JSON.stringify(got) === JSON.stringify(data), `navigator.share got ${JSON.stringify(got)}, not ${JSON.stringify(data)}`);
+      expectData(calls[0]);
+      expectNoSecret([JSON.stringify(calls[0])], "the navigator.share data");
+      // Cancelled (AbortError): no message, the button stays.
+      await tp.evaluate(() => { window.__shareMode = "abort"; });
+      await tp.click("#shareNative");
+      await tp.waitForFunction(() => window.__shareCalls.length === 2);
+      await tp.waitForTimeout(150);
+      const aborted = await waShareState(tp);
+      quiet(aborted);
+      // Any other error: the row of links instead, open, focus on its summary.
+      await tp.evaluate(() => { window.__shareMode = "fail"; });
+      await tp.click("#shareNative");
+      await tp.waitForFunction(() => window.__shareCalls.length === 3);
+      await tp.waitForTimeout(150);
+      const fellBack = await waShareState(tp);
+      const expectFallback = (st) => expect(st.menuShown && st.open && !st.nativeShown && st.focus === "summary" && st.status === "" && st.actionError === "",
+        `after a failed share: row shown ${st.menuShown}, open ${st.open}, button shown ${st.nativeShown}, focus on ${st.focus}, status "${st.status}"`);
+      expectFallback(fellBack);
+      expectShareLinks(fellBack, lang);
+      const touchOutside = [...touch.outside];
+      await touch.context.close();
+      // A desktop with navigator.share still gets the row; so does a touch device where canShare says no, or without navigator.share.
+      const desk = await waShareContext(browser, lang, {}, WA_SHARE_STUB);
+      const deskSt = await waShareState(desk.page);
+      await desk.context.close();
+      const refused = await waShareContext(browser, lang, { hasTouch: true }, () => {
+        Object.defineProperty(navigator, "share", { configurable: true, value: async () => {} });
+        Object.defineProperty(navigator, "canShare", { configurable: true, value: () => false });
+      });
+      const refusedSt = await waShareState(refused.page);
+      await refused.context.close();
+      const bare = await waShareContext(browser, lang, { hasTouch: true }, () => { Object.defineProperty(navigator, "share", { configurable: true, value: undefined }); });
+      const bareSt = await waShareState(bare.page);
+      await bare.context.close();
+      const expectRow = (st, when) => expect(st.menuShown && !st.nativeShown, `${when}: row shown ${st.menuShown}, button shown ${st.nativeShown}`);
+      expectRow(deskSt, "desktop with navigator.share");
+      expectRow(refusedSt, "touch device where canShare says no");
+      expectRow(bareSt, "touch device without navigator.share");
+      expectOutsideRequests(touchOutside, "while sharing");
+      const errs = [touch, desk, refused, bare].flatMap((x) => x.errors);
+      expect(!errs.length, `errors: ${errs.join("; ")}`);
+      return `the share script identical on EN and ES; touch: one button "${t.toggle}" (row hidden), shared ${JSON.stringify(data)} with no number or message, focus back on the button; cancel: no message, button kept; ` +
+        `other error: the row instead, open, focus on its summary; desktop with navigator.share, canShare false and no navigator.share: the row; ` +
+        [mustFail("EN and ES share scripts that differ", () => expectSameBlock([blocks[0], blocks[1] + " "])),
+          mustFail("the row on a touch device", () => expectNative({ ...st, menuShown: true })),
+          mustFail("an error shown on cancel", () => quiet({ ...aborted, actionError: "The link couldn't be shared." })),
+          mustFail("the button gone on cancel", () => quiet({ ...aborted, nativeShown: false })),
+          mustFail("focus lost after the sheet", () => quiet({ ...resolved, focus: "BODY" })),
+          mustFail("no fallback after an error", () => expectFallback({ ...fellBack, menuShown: false, nativeShown: true })),
+          mustFail("the fallback closed", () => expectFallback({ ...fellBack, open: false })),
+          mustFail("the generated link shared", () => expectData({ ...data, url: "https://wa.me/" + WA_SECRET.digits })),
+          mustFail("the native button on a desktop", () => expectRow({ ...deskSt, menuShown: false, nativeShown: true }, "test"))].join("; ");
     },
   },
   {

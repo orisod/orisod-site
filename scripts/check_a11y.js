@@ -109,6 +109,14 @@ const OPEN_STATES = [
 // How to reach each tool state above (the nav states click a nav button instead).
 const TOOL_STATES = {
   details: async (page) => { await page.click("details.more > summary"); return "details.more[open]"; },
+  // "Share this tool": the row of links open, then with a tooltip shown by keyboard focus.
+  "share panel": async (page) => { await page.click("#shareMenu > summary"); return "#shareList"; },
+  "share tooltip": async (page) => {
+    await page.click("#shareMenu > summary");
+    await page.focus("#shareMenu > summary");
+    await page.keyboard.press("Tab");
+    return "#shareList li:first-child .share-tip";
+  },
   "country list": async (page) => { await page.focus("#countryInput"); await page.keyboard.press("ArrowDown"); return "#countryList:not([hidden])"; },
   "filled form": async (page) => {
     await page.fill("#countryInput", "Argentina");
@@ -271,7 +279,7 @@ async function main() {
     process.exit(1);
   }
 
-  console.log(`OK: all ${results.length} pages passed axe-core in dark and light themes (${AXE_TAGS.join(", ")}), including ${OPEN_STATES.length} scans with the nav menu, search box or a category flyout open, or a tool state shown (the WhatsApp link generator's collapsed block, country list, filled form and emoji picker on each category); every error line is announced (role="alert").`);
+  console.log(`OK: all ${results.length} pages passed axe-core in dark and light themes (${AXE_TAGS.join(", ")}), including ${OPEN_STATES.length} scans with the nav menu, search box or a category flyout open, or a tool state shown (the WhatsApp link generator's collapsed block, country list, filled form, emoji picker on each category and Share this tool row and tooltip); every error line is announced (role="alert").`);
   process.exit(0);
 }
 

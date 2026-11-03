@@ -108,6 +108,14 @@ NOT_LOADED = (
     ("es/image-metadata-viewer/index.html", "https://www.google.com/maps?q="),
     ("whatsapp-link-generator/index.html", "https://wa.me/"),  # the chat link the visitor opens (never fetched by the page)
     ("es/whatsapp-link-generator/index.html", "https://wa.me/"),
+    ("whatsapp-link-generator/index.html", "https://t.me/share/url"),  # "Share this tool" links the visitor opens (never fetched by the page)
+    ("es/whatsapp-link-generator/index.html", "https://t.me/share/url"),
+    ("whatsapp-link-generator/index.html", "https://www.facebook.com/sharer/sharer.php"),
+    ("es/whatsapp-link-generator/index.html", "https://www.facebook.com/sharer/sharer.php"),
+    ("whatsapp-link-generator/index.html", "https://x.com/intent/tweet"),
+    ("es/whatsapp-link-generator/index.html", "https://x.com/intent/tweet"),
+    ("whatsapp-link-generator/index.html", "https://www.linkedin.com/sharing/share-offsite/"),
+    ("es/whatsapp-link-generator/index.html", "https://www.linkedin.com/sharing/share-offsite/"),
     ("assets/goatcounter/count.js", "https://www.goatcounter.com"),  # comments in the pinned count.js
     ("assets/goatcounter/count.js", "https://opensource.org/licenses/ISC"),
     ("assets/goatcounter/count.js", "https://github.com/arp242/goatcounter"),
