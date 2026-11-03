@@ -979,19 +979,21 @@ function expectNoOverflow(px, when) {
   expect(px <= 0, `the page scrolls sideways by ${px}px at 320 CSS px (${when})`);
 }
 // "Share this tool": shares the page's own canonical address (never the generated link) with the H1 as its text,
-// through a <details> row of links (and Copy, where the browser can copy) or, on touch devices, the Web Share API.
+// through a <details> list of links (and Copy, where the browser can copy) or, on touch devices, the Web Share API.
 const WA_SHARE = {
   en: { url: "https://orisod.com/whatsapp-link-generator/", title: "WhatsApp Link Generator", toggle: "Share this tool", newTab: " (opens in a new tab)",
     copied: "Tool link copied", copyFail: "Could not copy the tool link", resultShare: "Share",
-    labels: ["Share on WhatsApp", "Copy tool link", "Share on Telegram", "Share on Facebook", "Share on X", "Share on LinkedIn", "Share by email"] },
+    labels: ["Share on WhatsApp", "Copy tool link", "Share on Telegram", "Share on Facebook", "Share on X", "Share on LinkedIn", "Share on Reddit", "Share by email"] },
   es: { url: "https://orisod.com/es/whatsapp-link-generator/", title: "Generador de links de WhatsApp", toggle: "Compartir esta herramienta", newTab: " (se abre en una pestaña nueva)",
     copied: "Link de la herramienta copiado", copyFail: "No se pudo copiar el link de la herramienta", resultShare: "Compartir",
-    labels: ["Compartir en WhatsApp", "Copiar link de la herramienta", "Compartir en Telegram", "Compartir en Facebook", "Compartir en X", "Compartir en LinkedIn", "Compartir por correo"] },
+    labels: ["Compartir en WhatsApp", "Copiar link de la herramienta", "Compartir en Telegram", "Compartir en Facebook", "Compartir en X", "Compartir en LinkedIn", "Compartir en Reddit", "Compartir por correo"] },
 };
-const WA_SHARE_ORDER = ["whatsapp", "copy", "telegram", "facebook", "x", "linkedin", "email"];
-const WA_SHARE_NEW_TAB = ["whatsapp", "telegram", "facebook", "x", "linkedin"];
-// Each service's share address as its current first-party documentation gives it, every parameter encoded on its own.
-// (Facebook's sharer.php and LinkedIn's share-offsite aren't in their current docs: see CLAUDE.md.)
+const WA_SHARE_ORDER = ["whatsapp", "copy", "telegram", "facebook", "x", "linkedin", "reddit", "email"];
+const WA_SHARE_NEW_TAB = ["whatsapp", "telegram", "facebook", "x", "linkedin", "reddit"];
+// Share addresses their services no longer document: each needs a record in the page script (see CLAUDE.md).
+const WA_SHARE_UNDOCUMENTED = ["facebook", "linkedin", "reddit"];
+// Each service's share address, every parameter encoded on its own. WhatsApp, Telegram and X (intent/tweet) are as
+// their current first-party documentation gives them; Facebook, LinkedIn and Reddit are undocumented (records in the page).
 function waShareHrefs(u, t) {
   const e = encodeURIComponent;
   return {
@@ -1000,24 +1002,34 @@ function waShareHrefs(u, t) {
     facebook: `https://www.facebook.com/sharer/sharer.php?u=${e(u)}`,
     x: `https://x.com/intent/tweet?text=${e(t)}&url=${e(u)}`,
     linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${e(u)}`,
+    reddit: `https://www.reddit.com/submit?url=${e(u)}&title=${e(t)}`,
     email: `mailto:?subject=${e(t)}&body=${e(t + " " + u)}`,
   };
 }
 const waShareState = (page) => page.evaluate(() => {
   const menu = document.getElementById("shareMenu"), summary = menu.querySelector("summary"), nativeBtn = document.getElementById("shareNative");
-  const status = document.getElementById("shareToolStatus"), active = document.activeElement;
+  const status = document.getElementById("shareToolStatus"), active = document.activeElement, list = document.getElementById("shareList");
   const shown = (el) => !!el && el.getClientRects().length > 0;
   const name = (el) => el.querySelector(".share-sr")?.textContent || "";
   const box = (el) => { const r = el.getBoundingClientRect(); return [Math.round(r.width), Math.round(r.height), Math.round(r.left), Math.round(r.top)]; };
-  const items = [...document.querySelectorAll("#shareList > li > *")].map((el) => ({ kind: el.dataset.share || (el.id === "shareCopy" ? "copy" : "?"),
+  const items = [...list.querySelectorAll(":scope > li > *")].map((el) => ({ kind: el.dataset.share || (el.id === "shareCopy" ? "copy" : "?"),
     tag: el.tagName.toLowerCase(), href: el.getAttribute("href"), target: el.getAttribute("target"), rel: el.getAttribute("rel"),
     name: name(el), tip: el.querySelector(".share-tip")?.textContent || "", box: box(el) }));
-  const list = document.getElementById("shareList").getBoundingClientRect();
+  const lr = list.getBoundingClientRect();
   const rows = [...new Set(items.map((i) => i.box[3]))].map((top) => items.filter((i) => i.box[3] === top));
+  // Items that overlap each other (none may).
+  let overlapping = 0;
+  for (let a = 0; a < items.length; a++) for (let b = a + 1; b < items.length; b++) {
+    const [x, y] = [items[a].box, items[b].box];
+    if (x[2] < y[2] + y[0] && y[2] < x[2] + x[0] && x[3] < y[3] + y[1] && y[3] < x[3] + x[1]) overlapping++;
+  }
+  const labelledby = list.getAttribute("aria-labelledby");
   return { open: menu.open, menuShown: shown(menu), nativeShown: shown(nativeBtn), summaryName: name(summary), nativeName: name(nativeBtn),
     summaryFirst: menu.firstElementChild === summary, summaryRole: summary.getAttribute("role"), summaryExpanded: summary.getAttribute("aria-expanded"),
-    nativeType: nativeBtn.getAttribute("type"), summaryBox: shown(summary) ? box(summary) : box(nativeBtn), items,
-    rows: rows.map((r) => r.length), offCentre: rows.map((r) => Math.abs((r[0].box[2] - list.left) - (list.right - (r[r.length - 1].box[2] + r[r.length - 1].box[0])))),
+    nativeType: nativeBtn.getAttribute("type"), summaryBox: shown(summary) ? box(summary) : box(nativeBtn), items, overlapping,
+    list: { tag: list.tagName.toLowerCase(), role: list.getAttribute("role"), labelledby, label: labelledby ? document.getElementById(labelledby)?.textContent || "" : "",
+      labelInSummary: !!labelledby && summary.contains(document.getElementById(labelledby)), liOnly: [...list.children].every((c) => c.tagName === "LI") },
+    rows: rows.map((r) => r.length), offCentre: rows.map((r) => Math.abs((r[0].box[2] - lr.left) - (lr.right - (r[r.length - 1].box[2] + r[r.length - 1].box[0])))),
     status: status.textContent, live: status.getAttribute("aria-live"), changes: window.__shareStatusChanges ?? null,
     focus: active === summary ? "summary" : active === nativeBtn ? "native" : active.closest?.("#shareList") ? "list" : active.id || active.tagName,
     resultShare: document.getElementById("shareBtn").textContent.trim(), actionError: document.getElementById("actionError").textContent };
@@ -1035,9 +1047,14 @@ function expectShareControl(st, lang) {
   expect(st.summaryName !== st.resultShare && st.resultShare === t.resultShare, `the share control and the result's share button have the names "${st.summaryName}" and "${st.resultShare}"`);
   expect(st.summaryBox[0] >= 48 && st.summaryBox[1] >= 48, `the share control is ${st.summaryBox[0]}x${st.summaryBox[1]}px, under 48px`);
 }
+function expectShareList(st, lang) {
+  const l = st.list;
+  expect(l.tag === "ul" && l.role === null && l.liOnly && l.labelInSummary && l.label === WA_SHARE[lang].toggle,
+    `the share list is a <${l.tag}> with role ${l.role}, only <li> children ${l.liOnly}, named by "${l.label}" (in the summary ${l.labelInSummary})`);
+}
 function expectShareLinks(st, lang, kinds = WA_SHARE_ORDER) {
   const t = WA_SHARE[lang], want = waShareHrefs(t.url, t.title);
-  expect(JSON.stringify(st.items.map((i) => i.kind)) === JSON.stringify(kinds), `the share row is ${st.items.map((i) => i.kind).join(", ")}, not ${kinds.join(", ")}`);
+  expect(JSON.stringify(st.items.map((i) => i.kind)) === JSON.stringify(kinds), `the share list is ${st.items.map((i) => i.kind).join(", ")}, not ${kinds.join(", ")}`);
   for (const i of st.items) {
     const label = t.labels[WA_SHARE_ORDER.indexOf(i.kind)], newTab = WA_SHARE_NEW_TAB.includes(i.kind);
     expect(i.name === label + (newTab ? t.newTab : "") && i.tip === label, `${i.kind} is named "${i.name}" with the tooltip "${i.tip}"`);
@@ -1049,6 +1066,12 @@ function expectShareLinks(st, lang, kinds = WA_SHARE_ORDER) {
     const params = [...new URL(i.href).searchParams.values()];
     expect(params.length && params.every((v) => v === t.url || v === t.title || v === t.title + " " + t.url), `${i.kind}'s parameters are ${JSON.stringify(params)}`);
   }
+}
+// One line when all 8 fit, otherwise exactly 4 + 4, centred, with no overlap and no sideways scroll.
+function expectShareRows(st, px, want, when) {
+  expectNoOverflow(px, when);
+  expect(JSON.stringify(st.rows) === JSON.stringify(want) && st.offCentre.every((d) => d <= 1) && !st.overlapping,
+    `${when}: the share list has lines of ${st.rows.join(" + ")} (not ${want.join(" + ")}), off centre by ${st.offCentre.join(", ")}px, ${st.overlapping} overlapping items`);
 }
 function expectNoSecret(texts, what) {
   const leaked = texts.filter((x) => x && (x.includes(WA_SECRET.digits) || WA_SECRET.words.some((w) => x.includes(w))));
@@ -1095,28 +1118,68 @@ const waContrast = (a, b) => {
   const [l1, l2] = [lum(a), lum(b)].sort((x, y) => y - x);
   return (l1 + 0.05) / (l2 + 0.05);
 };
-// Colours of the share control in the current theme: its fill, icon, focus ring and the page behind it.
-const waShareColours = (page) => page.evaluate(() => {
+// One share circle's colours in the current theme: its fill and icon (the halo, a box-shadow, is never counted),
+// its focus ring, its transition and the page behind it.
+const waShareColours = (page, sel) => page.evaluate((sel) => {
   const rgb = (c) => (c.match(/[\d.]+/g) || []).slice(0, 3).map(Number);
-  const s = document.querySelector("#shareMenu > summary"), cs = getComputedStyle(s);
-  return { fill: rgb(cs.backgroundColor), icon: rgb(cs.color), ring: rgb(cs.outlineColor), ringStyle: cs.outlineStyle, page: rgb(getComputedStyle(document.body).backgroundColor), shadow: cs.boxShadow };
-});
-function expectShareColours(c, theme, hover) {
-  expect(waContrast(c.icon, c.fill) >= 4.5, `${theme}${hover ? " hover" : ""}: the icon is ${waContrast(c.icon, c.fill).toFixed(2)}:1 on the button`);
-  // Non-text contrast: the button against the page, or (dark hover, a darker blue) its light edge against the page.
-  const edge = hover && c.shadow && c.shadow !== "none" ? (c.shadow.match(/rgb\([^)]*\)/) || [""])[0].match(/\d+/g)?.map(Number) : null;
-  const best = Math.max(waContrast(c.fill, c.page), edge ? waContrast(edge, c.page) : 0);
-  expect(best >= 3, `${theme}${hover ? " hover" : ""}: the share button is ${best.toFixed(2)}:1 against the page`);
-}
-function expectShareRing(c, theme) {
-  expect(c.ringStyle === "solid" && waContrast(c.ring, c.page) >= 3, `${theme}: the focus ring is ${c.ringStyle}, ${waContrast(c.ring, c.page).toFixed(2)}:1 against the page`);
-}
-const waTip = (page, sel) => page.evaluate((s) => {
-  const t = document.querySelector(s + " > .share-tip"), r = t.getBoundingClientRect();
-  return { shown: getComputedStyle(t).display !== "none", text: t.textContent, left: r.left, right: r.right, width: document.documentElement.clientWidth };
+  const el = document.querySelector(sel), cs = getComputedStyle(el);
+  return { fill: rgb(cs.backgroundColor), icon: rgb(cs.color), page: rgb(getComputedStyle(document.body).backgroundColor), halo: cs.boxShadow !== "none",
+    ring: { style: cs.outlineStyle, width: cs.outlineWidth, offset: cs.outlineOffset, color: rgb(cs.outlineColor) }, transition: cs.transitionDuration };
 }, sel);
-function expectTip(tip, shown, label, when) {
-  expect(tip.shown === shown && (!shown || (tip.text === label && tip.left >= 0 && tip.right <= tip.width)), `${when}: tooltip shown ${tip.shown} ("${tip.text}", ${Math.round(tip.left)} to ${Math.round(tip.right)} of ${tip.width}px)`);
+const WA_SHARE_BLUE = [37, 99, 235], WA_SHARE_LIT = [59, 130, 246];
+const WA_SHARE_RING = { style: "solid", width: "2px", offset: "3px", color: [37, 99, 235] };
+function expectShareColours(c, what, fill) {
+  expect(JSON.stringify(c.fill) === JSON.stringify(fill), `${what}: the circle is rgb(${c.fill}), not rgb(${fill})`);
+  expect(waContrast(c.icon, c.fill) >= 3, `${what}: the icon is ${waContrast(c.icon, c.fill).toFixed(2)}:1 on the circle`);
+  expect(waContrast(c.fill, c.page) >= 3, `${what}: the circle is ${waContrast(c.fill, c.page).toFixed(2)}:1 against the page`);
+}
+function expectShareRing(c, what) {
+  expect(JSON.stringify(c.ring) === JSON.stringify(WA_SHARE_RING) && waContrast(c.ring.color, c.page) >= 3,
+    `${what}: the focus ring is ${JSON.stringify(c.ring)}, ${waContrast(c.ring.color, c.page).toFixed(2)}:1 against the page`);
+}
+// The visible tooltip (if any), and the controls it overlaps: the toggle, every item and the collapsed block's summary.
+const waTipCheck = (page) => page.evaluate(() => {
+  const box = (el) => el.getBoundingClientRect();
+  const hit = (a, b) => a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
+  const tips = [...document.querySelectorAll("#shareTool .share-tip")].filter((t) => getComputedStyle(t).display !== "none");
+  const r = tips[0] ? box(tips[0]) : null;
+  const controls = [document.querySelector("#shareMenu > summary"), ...document.querySelectorAll("#shareList > li > *"), document.querySelector("details.more > summary")];
+  return { count: tips.length, text: tips[0]?.textContent || "", covers: r ? controls.filter((c) => hit(r, box(c))).map((c) => c.dataset.share || c.id || c.tagName.toLowerCase()) : [],
+    inPage: !!r && r.left >= 0 && r.right <= document.documentElement.clientWidth };
+});
+function expectTip(tip, label, when) {
+  expect(label === null ? tip.count === 0 : tip.count === 1 && tip.text === label && tip.inPage && !tip.covers.length,
+    `${when}: ${tip.count} tooltips shown ("${tip.text}", inside the page ${tip.inPage}, covering ${tip.covers.join(", ") || "nothing"})`);
+}
+// Tab through every item with the list open: each shows its own tooltip, inside the page, over no control.
+async function waEveryTip(page, lang) {
+  await page.focus("#shareMenu > summary");
+  const tips = [];
+  for (let i = 0; i < WA_SHARE_ORDER.length; i++) {
+    await page.keyboard.press("Tab");
+    tips.push(await waTipCheck(page));
+  }
+  return tips;
+}
+function expectEveryTip(tips, lang, when) {
+  tips.forEach((tip, i) => expectTip(tip, WA_SHARE[lang].labels[i], `${when}, ${WA_SHARE_ORDER[i]} focused`));
+}
+// The records the page keeps for undocumented share addresses (JSON inside the share script).
+function waShareRecords(block) {
+  const m = block.match(/const UNDOCUMENTED_ENDPOINTS = (\{[\s\S]*?\n  \});/);
+  return m ? JSON.parse(m[1]) : null;
+}
+function expectShareRecords(rec) {
+  expect(rec && JSON.stringify(Object.keys(rec).sort()) === JSON.stringify([...WA_SHARE_UNDOCUMENTED].sort()), `undocumented endpoint records for ${rec ? Object.keys(rec).join(", ") : "nothing"}, not ${WA_SHARE_UNDOCUMENTED.join(", ")}`);
+  for (const [name, r] of Object.entries(rec)) {
+    const missing = ["status", "lastVerified", "result", "testedUrl"].filter((k) => typeof r[k] !== "string" || !r[k].trim());
+    expect(!missing.length, `the ${name} record lacks ${missing.join(", ")}`);
+    expect(r.status === "undocumented" && /^https:\/\/orisod\.com\//.test(r.testedUrl), `the ${name} record says status "${r.status}", testedUrl "${r.testedUrl}"`);
+    // A date that isn't in the future, or "not verified" with the result saying the owner must check it.
+    const dated = /^\d{4}-\d{2}-\d{2}$/.test(r.lastVerified) && r.lastVerified <= new Date().toISOString().slice(0, 10);
+    const unverified = r.lastVerified === "not verified" && r.result.startsWith("not verified by Code, owner to check manually");
+    expect(dated || unverified, `the ${name} record's lastVerified is "${r.lastVerified}"`);
+  }
 }
 // The placeholders: the message's fixed text and the phone field's example for the chosen country
 // (libphonenumber-js's examples.mobile.json in its national format; without it, only the US gets one).
@@ -2708,10 +2771,11 @@ const CASES = [
       const structure = await page.evaluate(WA_STRUCTURE);
       expectStructure(structure);
       const closed = await waShareState(page);
-      expect(!closed.open && closed.menuShown && !closed.nativeShown, `on a desktop the share row is open ${closed.open}, shown ${closed.menuShown}, native button ${closed.nativeShown}`);
+      expect(!closed.open && closed.menuShown && !closed.nativeShown, `on a desktop the share list is open ${closed.open}, shown ${closed.menuShown}, native button ${closed.nativeShown}`);
       expectShareControl(closed, lang);
+      expectShareList(closed, lang);
       expect(closed.live === "polite" && closed.status === "", `the share status line is aria-live ${closed.live} with "${closed.status}" on load`);
-      // Enter opens, Space closes; the icon changes (a cross while open) and the focus ring shows.
+      // Enter opens, Space closes; the icon changes (a cross while open).
       const icon = () => page.evaluate(() => [...document.querySelectorAll("#shareMenu > summary svg")].map((x) => getComputedStyle(x).display).join(" "));
       const closedIcon = await icon();
       await page.focus("#shareMenu > summary");
@@ -2724,28 +2788,34 @@ const CASES = [
       await page.keyboard.press("Enter");
       const opened = await waShareState(page);
       expectShareLinks(opened, lang);
-      expect(opened.rows.length === 1, `at 1280px the share row has ${opened.rows.length} lines`);
-      // Escape from inside the row closes it and puts focus back on the summary.
-      await page.keyboard.press("Tab");
-      const firstTip = await waTip(page, "#shareList li:first-child > *");
-      expectTip(firstTip, true, t.labels[0], "WhatsApp link focused");
+      expectShareRows(opened, await waOverflow(page), [8], "1280px");
+      // Every tooltip at 1280px: its own name, inside the page, over no control.
+      const tips1280 = await waEveryTip(page, lang);
+      expectEveryTip(tips1280, lang, "1280px");
+      // The first Escape hides the tooltip (focus stays on the item), the second closes the list and focuses the summary.
       await page.keyboard.press("Escape");
-      const escaped = await waShareState(page);
-      expect(!escaped.open && escaped.focus === "summary", `after Escape the row is open ${escaped.open}, focus on ${escaped.focus}`);
-      const afterEscTip = await waTip(page, "#shareMenu > summary");
-      expectTip(afterEscTip, false, t.toggle, "summary right after Escape");
-      // Hover shows the tooltip, Escape hides it.
-      await page.hover("#shareMenu > summary");
-      const hoverTip = await waTip(page, "#shareMenu > summary");
-      expectTip(hoverTip, true, t.toggle, "summary hovered");
+      const esc1 = { ...(await waShareState(page)), tip: await waTipCheck(page) };
+      expect(esc1.open && esc1.focus === "list" && esc1.tip.count === 0, `after one Escape the list is open ${esc1.open}, focus on ${esc1.focus}, ${esc1.tip.count} tooltips`);
       await page.keyboard.press("Escape");
-      expectTip(await waTip(page, "#shareMenu > summary"), false, t.toggle, "hover tooltip after Escape");
+      const esc2 = await waShareState(page);
+      expect(!esc2.open && esc2.focus === "summary", `after a second Escape the list is open ${esc2.open}, focus on ${esc2.focus}`);
+      // Hover shows the tooltip and keeps it while the pointer moves into the space under the list; Escape hides it.
+      await page.click("#shareMenu > summary");
+      await page.hover('#shareList a[data-share="telegram"]');
+      const hoverTip = await waTipCheck(page);
+      expectTip(hoverTip, t.labels[2], "Telegram hovered");
+      const slot = await page.evaluate(() => { const r = document.getElementById("shareList").getBoundingClientRect(); return [r.left + r.width / 2, r.bottom - 20]; });
+      await page.mouse.move(slot[0], slot[1], { steps: 4 });
+      expectTip(await waTipCheck(page), t.labels[2], "pointer moved onto the tooltip");
+      await page.keyboard.press("Escape");
+      const hoverEsc = { ...(await waTipCheck(page)), open: (await waShareState(page)).open };
+      expect(hoverEsc.count === 0 && hoverEsc.open, `after Escape on a hover tooltip: ${hoverEsc.count} tooltips, list open ${hoverEsc.open}`);
       await page.mouse.move(0, 0);
       // The tool's number and message never reach the share links, the copied text or the shared data.
       await waCountry(page, "GB");
       await waNumber(page, "07400 123456");
       await page.fill("#messageInput", `${WA_SECRET.words.join(" ")} 🙌`);
-      await page.click("#shareMenu > summary");
+      if (!(await waShareState(page)).open) await page.click("#shareMenu > summary");
       const atOpen = waOutside(ctl.requests);
       // Copy: success and failure each update the status line once.
       await waWatchShareStatus(page);
@@ -2766,47 +2836,77 @@ const CASES = [
       const failed = await waShareState(page);
       expectCopy(failed, t.copyFail, 2);
       const atCopy = waOutside(ctl.requests);
-      for (const [when, urls] of [["at load", atLoad], ["on opening the row", atOpen], ["on copying", atCopy]]) expectOutsideRequests(urls, when);
-      // Both themes: white icon on the blue, the button against the page (also hovered), the focus ring.
+      for (const [when, urls] of [["at load", atLoad], ["on opening the list", atOpen], ["on copying", atCopy]]) expectOutsideRequests(urls, when);
+      await page.mouse.move(0, 0);
+      // The lit state: 180 ms normally, none under reduced motion.
+      const telegram = '#shareList a[data-share="telegram"]';
+      const normalMotion = (await waShareColours(page, telegram)).transition;
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      const reducedMotion = (await waShareColours(page, telegram)).transition;
+      await page.emulateMedia({ reducedMotion: "no-preference" });
+      const expectMotion = (normal, reduced) => expect(/^0\.18s/.test(normal) && reduced.split(",").every((d) => parseFloat(d) === 0), `transition ${normal}, under reduced motion ${reduced}`);
+      expectMotion(normalMotion, reducedMotion);
+      // Both themes, measured without the halo: plain, hovered (lit), focused (lit, with the unchanged solid ring).
       await page.addStyleTag({ content: "*{transition:none !important}" });
       const colours = [];
+      let litDark = null;
       for (const theme of ["dark", "light"]) {
         await page.evaluate((x) => (x === "light" ? document.documentElement.setAttribute("data-theme", "light") : document.documentElement.removeAttribute("data-theme")), theme);
         await page.mouse.move(0, 0);
-        await page.focus("#shareMenu > summary");
-        await page.keyboard.press("Shift+Tab");
+        await page.evaluate(() => document.activeElement.blur());
+        const plain = await waShareColours(page, telegram);
+        expectShareColours(plain, theme, WA_SHARE_BLUE);
+        expect(!plain.halo, `${theme}: a halo with no hover or focus`);
+        await page.hover(telegram);
+        const lit = await waShareColours(page, telegram);
+        expectShareColours(lit, theme + " hovered", WA_SHARE_LIT);
+        expect(lit.halo, `${theme}: no halo when hovered`);
+        if (theme === "dark") litDark = lit;
+        await page.mouse.move(0, 0);
+        await page.focus("#shareCopy");
         await page.keyboard.press("Tab");
-        const c = await waShareColours(page);
-        expectShareColours(c, theme, false);
-        expectShareRing(c, theme);
-        await page.hover("#shareMenu > summary");
-        const h = await waShareColours(page);
-        expectShareColours(h, theme, true);
-        colours.push(`${theme} ${waContrast(c.icon, c.fill).toFixed(1)}:1 icon, ${waContrast(c.fill, c.page).toFixed(1)}:1 button, ${waContrast(c.ring, c.page).toFixed(1)}:1 ring`);
+        const focused = await waShareColours(page, telegram);
+        expectShareColours(focused, theme + " focused", WA_SHARE_LIT);
+        expectShareRing(focused, theme + " focused");
+        await page.hover(telegram);
+        const both = await waShareColours(page, telegram);
+        expectShareRing(both, theme + " focused and hovered");
+        colours.push(`${theme}: plain icon ${waContrast(plain.icon, plain.fill).toFixed(2)}:1, circle ${waContrast(plain.fill, plain.page).toFixed(2)}:1; ` +
+          `lit icon ${waContrast(lit.icon, lit.fill).toFixed(2)}:1, circle ${waContrast(lit.fill, lit.page).toFixed(2)}:1; ring ${waContrast(focused.ring.color, focused.page).toFixed(2)}:1`);
       }
-      await page.evaluate(() => document.documentElement.removeAttribute("data-theme"));
-      // 320 CSS px (200% zoom of a 640px window): no sideways scroll, the row on two centred lines, tooltips inside the page.
-      await page.setViewportSize({ width: 320, height: 640 });
-      const narrow = await waShareState(page);
-      const px = await waOverflow(page);
-      const expectNarrow = (st, px) => {
-        expectNoOverflow(px, "share row open");
-        expect(st.rows.length === 2 && st.offCentre.every((d) => d <= 1), `at 320px the share row has lines of ${st.rows.join(" + ")}, off centre by ${st.offCentre.join(", ")}px`);
-      };
-      expectNarrow(narrow, px);
-      await page.focus("#shareList li:last-child > *");
-      await page.keyboard.press("Shift+Tab");
-      await page.keyboard.press("Tab");
-      expectTip(await waTip(page, "#shareList li:last-child > *"), true, t.labels[6], "last link focused at 320px");
-      expectNoOverflow(await waOverflow(page), "tooltip shown");
-      // Without JavaScript: the same links in the HTML, no Copy button, the row opens with a click.
+      await page.evaluate(() => { document.documentElement.removeAttribute("data-theme"); document.activeElement.blur(); });
+      await page.mouse.move(0, 0);
+      // 390 and 320 CSS px (320 is a 640px window at 200% zoom): 4 + 4, centred, 44px targets, no overlap, every tooltip clear.
+      const narrow = {};
+      for (const width of [390, 320]) {
+        await page.setViewportSize({ width, height: 700 });
+        const st = await waShareState(page);
+        expectShareLinks(st, lang);
+        expectShareRows(st, await waOverflow(page), [4, 4], width + "px");
+        const tips = await waEveryTip(page, lang);
+        expectEveryTip(tips, lang, width + "px");
+        expectNoOverflow(await waOverflow(page), width + "px with a tooltip shown");
+        narrow[width] = { st, tips };
+        await page.keyboard.press("Escape");
+      }
+      // No hover style where the device can't hover (a touch screen without navigator.share keeps the list).
+      const touch = await waShareContext(page.context().browser(), lang, { hasTouch: true }, () => { Object.defineProperty(navigator, "share", { configurable: true, value: undefined }); });
+      await touch.page.addStyleTag({ content: "*{transition:none !important}" });
+      await touch.page.click("#shareMenu > summary");
+      await touch.page.hover(telegram);
+      const noHover = { ...(await waShareColours(touch.page, telegram)), media: await touch.page.evaluate(() => matchMedia("(hover: none)").matches) };
+      await touch.context.close();
+      const expectNoHoverStyle = (c) => expect(c.media && JSON.stringify(c.fill) === JSON.stringify(WA_SHARE_BLUE) && !c.halo, `under (hover: none) a hovered circle is rgb(${c.fill}) with halo ${c.halo}`);
+      expectNoHoverStyle(noHover);
+      // Without JavaScript: the same links in the HTML, no Copy button, the list opens with a click.
       const noJs = await waShareContext(page.context().browser(), lang, { javaScriptEnabled: false });
       const wasOpen = await noJs.page.evaluate(() => document.getElementById("shareMenu").open);
       await noJs.page.click("#shareMenu > summary");
-      const plain = await waShareState(noJs.page);
+      const plainJs = await waShareState(noJs.page);
       await noJs.context.close();
-      expect(!wasOpen && plain.open && plain.menuShown && !plain.nativeShown, `without JavaScript the row was open ${wasOpen}, opened ${plain.open}`);
-      expectShareLinks(plain, lang, WA_SHARE_ORDER.filter((k) => k !== "copy"));
+      expect(!wasOpen && plainJs.open && plainJs.menuShown && !plainJs.nativeShown, `without JavaScript the list was open ${wasOpen}, opened ${plainJs.open}`);
+      expectShareLinks(plainJs, lang, WA_SHARE_ORDER.filter((k) => k !== "copy"));
+      expectShareList(plainJs, lang);
       // A browser without the Clipboard API: no Copy button.
       const noClip = await waShareContext(page.context().browser(), lang, {}, () => { Object.defineProperty(navigator, "clipboard", { configurable: true, value: undefined }); });
       const without = await waShareState(noClip.page);
@@ -2816,37 +2916,50 @@ const CASES = [
       const nav = await waShareContext(page.context().browser(), lang);
       await nav.page.click("#shareMenu > summary");
       const before = [...nav.outside];
-      const [popup] = await Promise.all([nav.page.waitForEvent("popup"), nav.page.click('#shareList a[data-share="telegram"]')]);
+      const [popup] = await Promise.all([nav.page.waitForEvent("popup"), nav.page.click('#shareList a[data-share="reddit"]')]);
       await popup.waitForLoadState();
-      const telegram = waShareHrefs(t.url, t.title).telegram;
+      const reddit = waShareHrefs(t.url, t.title).reddit;
       const clicked = [...nav.outside];
       await nav.context.close();
-      expect(!before.length && clicked.length === 1 && clicked[0] === telegram, `clicking Telegram requested ${JSON.stringify(clicked)} (before: ${JSON.stringify(before)})`);
-      expect(!noJs.errors.length && !noClip.errors.length && !nav.errors.length, `errors in the extra contexts: ${[...noJs.errors, ...noClip.errors, ...nav.errors].join("; ")}`);
-      return `one share control, "${t.toggle}", distinct from the result's "${t.resultShare}"; closed on load, Enter opens, Space closes, the icon changes; ` +
-        `${opened.items.length} items in order, each href the documented address for ${t.url} (opened with ?x=1#y); Escape closes and focuses the summary; ` +
-        `tooltips on focus and hover, gone on Escape; copy announced once ("${t.copied}", then "${t.copyFail}"); no number or message anywhere; ` +
-        `no outside request at load, opening or copying, one on clicking Telegram; ${colours.join("; ")}; 320px: lines of ${narrow.rows.join(" + ")}, no sideways scroll; ` +
+      expect(!before.length && clicked.length === 1 && clicked[0] === reddit, `clicking Reddit requested ${JSON.stringify(clicked)} (before: ${JSON.stringify(before)})`);
+      const extra = [...touch.errors, ...noJs.errors, ...noClip.errors, ...nav.errors];
+      expect(!extra.length, `errors in the extra contexts: ${extra.join("; ")}`);
+      const coverAt = (tips, i, what) => tips.map((x, n) => (n === i ? { ...x, covers: [what] } : x));
+      return `one share control, "${t.toggle}", distinct from the result's "${t.resultShare}"; a <ul> named by the summary text; closed on load, Enter opens, Space closes, the icon changes; ` +
+        `${opened.items.length} items in order, each href the expected address for ${t.url} (opened with ?x=1#y); 1280px one line, 390px and 320px 4 + 4 with no overlap or sideways scroll; ` +
+        `every tooltip (${3 * WA_SHARE_ORDER.length} checked) inside the page and over no control; Escape hides the tooltip, then closes the list and focuses the summary; ` +
+        `hover tooltip kept on the way to it; copy announced once ("${t.copied}", then "${t.copyFail}"); no number or message anywhere; ` +
+        `no outside request at load, opening or copying, one on clicking Reddit; transition ${normalMotion}, ${reducedMotion} under reduced motion; ${colours.join("; ")}; no hover style under (hover: none); ` +
         `no Copy without JavaScript or the Clipboard API; ` +
         [mustFail("a summary with role=button", () => expectShareControl({ ...closed, summaryRole: "button" }, lang)),
           mustFail("aria-expanded added to the summary", () => expectShareControl({ ...closed, summaryExpanded: "false" }, lang)),
           mustFail("the same name as the result's share button", () => expectShareControl({ ...closed, summaryName: closed.resultShare }, lang)),
+          mustFail("a list with role=menu", () => expectShareList({ ...closed, list: { ...closed.list, role: "menu" } }, lang)),
+          mustFail("a list without its name", () => expectShareList({ ...closed, list: { ...closed.list, labelledby: null, label: "", labelInSummary: false } }, lang)),
           mustFail("two share controls", () => expectStructure({ ...structure, shareControls: 2 })),
           mustFail("the share block after the collapsed block", () => expectStructure({ ...structure, inOrder: false })),
           mustFail("the page's query string shared", () => expectShareLinks({ ...opened, items: opened.items.map((i) => (i.kind === "facebook" ? { ...i, href: i.href.replace("%2F", "%2F%3Fx%3D1") } : i)) }, lang)),
           mustFail("the fragment shared", () => expectShareLinks({ ...opened, items: opened.items.map((i) => (i.kind === "x" ? { ...i, href: i.href + "%23y" } : i)) }, lang)),
-          mustFail("an unencoded parameter", () => expectShareLinks({ ...opened, items: opened.items.map((i) => (i.kind === "telegram" ? { ...i, href: `https://t.me/share/url?url=${t.url}&text=${encodeURIComponent(t.title)}` } : i)) }, lang)),
+          mustFail("an unencoded Reddit title", () => expectShareLinks({ ...opened, items: opened.items.map((i) => (i.kind === "reddit" ? { ...i, href: `https://www.reddit.com/submit?url=${encodeURIComponent(t.url)}&title=${t.title}` } : i)) }, lang)),
           mustFail("the other language's address", () => expectShareLinks(opened, lang === "es" ? "en" : "es")),
-          mustFail("Copy and Telegram swapped", () => expectShareLinks({ ...opened, items: [opened.items[0], opened.items[2], opened.items[1], ...opened.items.slice(3)] }, lang)),
-          mustFail("a new-tab link without its hidden text", () => expectShareLinks({ ...opened, items: opened.items.map((i) => (i.kind === "x" ? { ...i, name: t.labels[4] } : i)) }, lang)),
+          mustFail("Reddit and email swapped", () => expectShareLinks({ ...opened, items: [...opened.items.slice(0, 6), opened.items[7], opened.items[6]] }, lang)),
+          mustFail("a new-tab link without its hidden text", () => expectShareLinks({ ...opened, items: opened.items.map((i) => (i.kind === "reddit" ? { ...i, name: t.labels[6] } : i)) }, lang)),
           mustFail("the number in a share link", () => expectNoSecret([opened.items[0].href + WA_SECRET.digits], "Share this tool")),
           mustFail("the status updated twice", () => expectCopy(copied, t.copied, 2)),
           mustFail("Copy without the Clipboard API", () => expectShareLinks(copied, lang, WA_SHARE_ORDER.filter((k) => k !== "copy"))),
           mustFail("a request at load", () => expectOutsideRequests(["https://www.facebook.com/tr"], "at load")),
-          mustFail("a tooltip left after Escape", () => expectTip(hoverTip, false, t.toggle, "test")),
-          mustFail("a faint button", () => expectShareColours({ fill: [30, 41, 59], icon: [255, 255, 255], page: [11, 15, 26], shadow: "none" }, "test", false)),
-          mustFail("the row on one line at 320px", () => expectNarrow({ ...narrow, rows: [7], offCentre: [0] }, 0)),
-          mustFail("a 30px link", () => expectShareLinks({ ...opened, items: opened.items.map((i, n) => (n === 3 ? { ...i, box: [30, 30, i.box[2], i.box[3]] } : i)) }, lang))].join("; ");
+          mustFail("5 + 3 at 320px", () => expectShareRows({ ...narrow[320].st, rows: [5, 3] }, 0, [4, 4], "test")),
+          mustFail("two lines at 1280px", () => expectShareRows({ ...opened, rows: [4, 4] }, 0, [8], "test")),
+          mustFail("overlapping items", () => expectShareRows({ ...narrow[390].st, overlapping: 1 }, 0, [4, 4], "test")),
+          mustFail("a tooltip over the toggle", () => expectEveryTip(coverAt(narrow[320].tips, 0, "summary"), lang, "test")),
+          mustFail("a last-row tooltip over its neighbour", () => expectEveryTip(coverAt(narrow[390].tips, 7, "reddit"), lang, "test")),
+          mustFail("a tooltip left after Escape", () => expectTip(hoverTip, null, "test")),
+          mustFail("a 30px link", () => expectShareLinks({ ...opened, items: opened.items.map((i, n) => (n === 3 ? { ...i, box: [30, 30, i.box[2], i.box[3]] } : i)) }, lang)),
+          mustFail("a faint lit icon", () => expectShareColours({ ...litDark, icon: [150, 180, 250] }, "test", WA_SHARE_LIT)),
+          mustFail("a lit circle too close to the page", () => expectShareColours({ ...litDark, page: [70, 110, 200] }, "test", WA_SHARE_LIT)),
+          mustFail("a changed focus ring", () => expectShareRing({ ...litDark, ring: { ...WA_SHARE_RING, style: "dotted" } }, "test")),
+          mustFail("a transition under reduced motion", () => expectMotion(normalMotion, "0.18s, 0.18s")),
+          mustFail("a hover style under (hover: none)", () => expectNoHoverStyle({ ...noHover, fill: WA_SHARE_LIT }))].join("; ");
     },
   },
   {
@@ -2861,6 +2974,10 @@ const CASES = [
       const blocks = [await block(WA.slice(1)), await block("es" + WA)];
       const expectSameBlock = ([en, es]) => expect(en && en === es, "the \"Share this tool\" script block is missing or differs between the EN and ES pages");
       expectSameBlock(blocks);
+      // Every undocumented share address has a complete record (status, lastVerified, result, testedUrl).
+      const records = waShareRecords(blocks[0]);
+      expectShareRecords(records);
+      const drop = (name, key) => ({ ...records, [name]: Object.fromEntries(Object.entries(records[name]).filter(([k]) => k !== key)) });
       const data = { title: t.title, text: t.title, url: t.url };
       // A touch device with navigator.share: one real button with the same name, the row hidden.
       const touch = await waShareContext(browser, lang, { hasTouch: true, viewport: { width: 390, height: 800 } }, WA_SHARE_STUB);
@@ -2923,9 +3040,15 @@ const CASES = [
       expectOutsideRequests(touchOutside, "while sharing");
       const errs = [touch, desk, refused, bare].flatMap((x) => x.errors);
       expect(!errs.length, `errors: ${errs.join("; ")}`);
-      return `the share script identical on EN and ES; touch: one button "${t.toggle}" (row hidden), shared ${JSON.stringify(data)} with no number or message, focus back on the button; cancel: no message, button kept; ` +
+      return `the share script identical on EN and ES, a complete record for each undocumented address (Facebook, LinkedIn, Reddit); touch: one button "${t.toggle}" (row hidden), shared ${JSON.stringify(data)} with no number or message, focus back on the button; cancel: no message, button kept; ` +
         `other error: the row instead, open, focus on its summary; desktop with navigator.share, canShare false and no navigator.share: the row; ` +
         [mustFail("EN and ES share scripts that differ", () => expectSameBlock([blocks[0], blocks[1] + " "])),
+          mustFail("a record without lastVerified", () => expectShareRecords(drop("reddit", "lastVerified"))),
+          mustFail("a record without testedUrl", () => expectShareRecords(drop("facebook", "testedUrl"))),
+          mustFail("a record without status", () => expectShareRecords(drop("linkedin", "status"))),
+          mustFail("a record with an empty result", () => expectShareRecords({ ...records, facebook: { ...records.facebook, result: " " } })),
+          mustFail("an undocumented endpoint with no record", () => expectShareRecords(Object.fromEntries(Object.entries(records).filter(([k]) => k !== "reddit")))),
+          mustFail("a future date", () => expectShareRecords({ ...records, facebook: { ...records.facebook, lastVerified: "2999-01-01" } })),
           mustFail("the row on a touch device", () => expectNative({ ...st, menuShown: true })),
           mustFail("an error shown on cancel", () => quiet({ ...aborted, actionError: "The link couldn't be shared." })),
           mustFail("the button gone on cancel", () => quiet({ ...aborted, nativeShown: false })),

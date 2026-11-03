@@ -102,20 +102,27 @@ const OPEN_STATES = [
   ...["/", "/es/", "/tools/", "/es/tools/"].map((path) => ({ path, open: "flyout" })),
   // The minimal tool layout (WhatsApp link generator, the pilot): its collapsed "Help and details"
   // block opened, the country list opened, and the form filled in so the number notes, the "Add the 9"
-  // button and the formatted preview show; and its emoji picker opened on each of its six categories.
+  // button and the formatted preview show; its emoji picker opened on each of its six categories; and its
+  // "Share this tool" list opened, with a tooltip shown and with an item lit by hover.
   ...["/whatsapp-link-generator/", "/es/whatsapp-link-generator/"].flatMap((path) =>
-    ["details", "country list", "filled form", ...WA_EMOJI_CATEGORIES.map((c) => "emoji picker: " + c)].map((open) => ({ path, open }))),
+    ["details", "country list", "filled form", ...WA_EMOJI_CATEGORIES.map((c) => "emoji picker: " + c),
+      "share list", "share tooltip", "share lit"].map((open) => ({ path, open }))),
 ];
 // How to reach each tool state above (the nav states click a nav button instead).
 const TOOL_STATES = {
   details: async (page) => { await page.click("details.more > summary"); return "details.more[open]"; },
-  // "Share this tool": the row of links open, then with a tooltip shown by keyboard focus.
-  "share panel": async (page) => { await page.click("#shareMenu > summary"); return "#shareList"; },
+  // "Share this tool": the list open, with a tooltip shown by keyboard focus, and with an item hovered (lit).
+  "share list": async (page) => { await page.click("#shareMenu > summary"); return "#shareList"; },
   "share tooltip": async (page) => {
     await page.click("#shareMenu > summary");
     await page.focus("#shareMenu > summary");
     await page.keyboard.press("Tab");
     return "#shareList li:first-child .share-tip";
+  },
+  "share lit": async (page) => {
+    await page.click("#shareMenu > summary");
+    await page.hover('#shareList a[data-share="reddit"]');
+    return '#shareList a[data-share="reddit"] .share-tip';
   },
   "country list": async (page) => { await page.focus("#countryInput"); await page.keyboard.press("ArrowDown"); return "#countryList:not([hidden])"; },
   "filled form": async (page) => {
@@ -279,7 +286,7 @@ async function main() {
     process.exit(1);
   }
 
-  console.log(`OK: all ${results.length} pages passed axe-core in dark and light themes (${AXE_TAGS.join(", ")}), including ${OPEN_STATES.length} scans with the nav menu, search box or a category flyout open, or a tool state shown (the WhatsApp link generator's collapsed block, country list, filled form, emoji picker on each category and Share this tool row and tooltip); every error line is announced (role="alert").`);
+  console.log(`OK: all ${results.length} pages passed axe-core in dark and light themes (${AXE_TAGS.join(", ")}), including ${OPEN_STATES.length} scans with the nav menu, search box or a category flyout open, or a tool state shown (the WhatsApp link generator's collapsed block, country list, filled form, emoji picker on each category and Share this tool list, tooltip and lit state); every error line is announced (role="alert").`);
   process.exit(0);
 }
 
