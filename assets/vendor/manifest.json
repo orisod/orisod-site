@@ -701,7 +701,7 @@
       "name": "libphonenumber-js",
       "version": "1.13.15",
       "license": "MIT",
-      "license_note": "MIT. Its phone number metadata comes from Google's libphonenumber (Apache-2.0), whose license text the package ships as LICENSE.Apache (kept as a notice file). Orisod uses the max bundle, which tells mobile numbers from landlines.",
+      "license_note": "MIT. Its phone number metadata comes from Google's libphonenumber (Apache-2.0), whose license text the package ships as LICENSE.Apache (kept as a notice file). Orisod uses the max bundle, which tells mobile numbers from landlines, and the package's examples.mobile.json (one example mobile number per country) for the phone field's placeholder.",
       "used_by": [
         "whatsapp-link-generator"
       ],
@@ -711,6 +711,12 @@
           "source": "https://cdn.jsdelivr.net/npm/libphonenumber-js@1.13.15/bundle/libphonenumber-max.js",
           "sha256": "49963114d3f93de9fc618d37b0faca897235baf314ede30ee8c0a511029d8508",
           "bytes": 252237
+        },
+        {
+          "path": "assets/vendor/libphonenumber-js/1.13.15/examples.mobile.json",
+          "source": "https://cdn.jsdelivr.net/npm/libphonenumber-js@1.13.15/examples.mobile.json",
+          "sha256": "ec37ae84a131432e00c6176c4dae85e0651965c4c7a79d0590a4ef8953b1074f",
+          "bytes": 4064
         }
       ],
       "license_file": {

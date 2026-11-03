@@ -973,6 +973,60 @@ const waOverflow = (page) => page.evaluate(() => document.documentElement.scroll
 function expectNoOverflow(px, when) {
   expect(px <= 0, `the page scrolls sideways by ${px}px at 320 CSS px (${when})`);
 }
+// The placeholders: the message's fixed text and the phone field's example for the chosen country
+// (libphonenumber-js's examples.mobile.json in its national format; without it, only the US gets one).
+const WA_EXAMPLES = "/assets/vendor/libphonenumber-js/1.13.15/examples.mobile.json";
+const WA_MSG_PLACEHOLDER = { en: "Hello, I have a question", es: "Hola, tengo una pregunta" };
+const WA_US_FALLBACK = "202 555 0123";
+const WA_LABELS = { en: { phoneInput: "Phone number", messageInput: "Message (optional)" }, es: { phoneInput: "Número de teléfono", messageInput: "Mensaje (opcional)" } };
+// Territories that share a bigger country's numbering plan: their example is a valid number, but libphonenumber
+// (and so the page's status line) names the main country when it reads it back.
+const WA_SHARED_PLAN = { AX: "FI", BL: "GP", CC: "AU", CX: "AU", EH: "MA", IM: "GB", MF: "GP", SJ: "NO", VA: "IT" };
+const waPick = (page, code) => page.evaluate((c) => document.getElementById("country-" + c).click(), code);
+const waPlaceholder = (page) => page.getAttribute("#phoneInput", "placeholder");
+// Every country in the list: its placeholder, what the examples file says it should be, and what typing it gives.
+async function waEveryExample(page, examples) {
+  const codes = await page.evaluate(() => [...document.querySelectorAll("#countryList li")].map((li) => li.id.slice("country-".length)));
+  const rows = [];
+  for (const code of codes) {
+    await waPick(page, code);
+    const placeholder = (await waPlaceholder(page)) || "";
+    await waNumber(page, placeholder);
+    rows.push(await page.evaluate(([code, placeholder, examples]) => {
+      const lib = window.libphonenumber, ex = lib.getExampleNumber(code, examples);
+      const row = { code, placeholder, want: ex ? ex.formatNational() : "", e164: ex ? ex.number : "",
+        href: document.getElementById("openLink").getAttribute("href") || "", error: document.getElementById("phoneError").textContent };
+      try { const n = lib.parsePhoneNumber(placeholder, code); row.valid = n.isValid(); row.parsed = n.number; row.country = n.country; } catch (e) { row.valid = false; }
+      return row;
+    }, [code, placeholder, examples]));
+  }
+  return rows;
+}
+function expectExamples(rows) {
+  expect(rows.length > 200, `only ${rows.length} countries in the list`);
+  const bad = rows.filter((r) => r.placeholder !== r.want || (r.want && (!r.valid || r.parsed !== r.e164 || r.error ||
+    r.href !== "https://wa.me/" + r.e164.slice(1) || (r.country !== r.code && WA_SHARED_PLAN[r.code] !== r.country))));
+  expect(!bad.length, "examples that fail: " + bad.map((r) => `${r.code} "${r.placeholder}" (want "${r.want}", valid ${r.valid}, read as ${r.country}, link ${r.href || "none"}${r.error ? ", error " + r.error : ""})`).join("; "));
+}
+// Placeholder text against the field's own background, in the current theme.
+const waPlaceholderContrast = (page, sel) => page.evaluate((s) => {
+  const rgb = (c) => (c.match(/[\d.]+/g) || []).map(Number);
+  const lum = ([r, g, b]) => [r, g, b].map((v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }).reduce((a, v, i) => a + v * [0.2126, 0.7152, 0.0722][i], 0);
+  const el = document.querySelector(s);
+  let bg = [0, 0, 0];
+  for (let n = el; n; n = n.parentElement) { const c = rgb(getComputedStyle(n).backgroundColor); if (c.length === 3 || c[3] > 0) { bg = c; break; } }
+  const fg = rgb(getComputedStyle(el, "::placeholder").color), a = fg.length === 4 ? fg[3] : 1;
+  const mixed = [0, 1, 2].map((i) => fg[i] * a + bg[i] * (1 - a));
+  const [l1, l2] = [lum(mixed), lum(bg)].sort((x, y) => y - x);
+  return (l1 + 0.05) / (l2 + 0.05);
+}, sel);
+function expectContrast(ratio, what) {
+  expect(ratio >= 4.5, `${what} placeholder contrast is ${ratio.toFixed(2)}:1, under 4.5:1`);
+}
+function expectLabels(labels, lang) {
+  for (const [id, text] of Object.entries(WA_LABELS[lang])) expect(labels[id] === text, `the ${id} label is "${labels[id]}", not "${text}"`);
+}
+const waLabels = (page) => page.evaluate(() => Object.fromEntries(["phoneInput", "messageInput"].map((id) => [id, document.querySelector(`label[for="${id}"]`)?.textContent.trim() || ""])));
 const WA_SECRET = { digits: "447400123456", words: ["Zanahoria", "secreta"] };
 function expectNothingSent(requests, url, start) {
   const leaked = requests.filter((r) => r.includes(WA_SECRET.digits) || WA_SECRET.words.some((w) => r.includes(w)));
@@ -2327,6 +2381,83 @@ const CASES = [
         [mustFail("the saved country not restored", () => expectRestored(initial)),
           mustFail("history.replaceState adding ?text=", () => expectNothingSent(ctl.requests, changed, start)),
           mustFail("a request with the number", () => expectNothingSent([...ctl.requests, "https://orisod.goatcounter.com/count?p=/x&q=447400123456"], start, start))].join("; ");
+    },
+  },
+  {
+    name: "WhatsApp link generator (placeholders)",
+    page: WA,
+    vendor: [LIBPHONE, QRJS, WA_EXAMPLES],
+    async run(page, lang) {
+      const examples = JSON.parse(await readFile(`${REPO_ROOT}${WA_EXAMPLES}`, "utf-8"));
+      expect((await page.getAttribute("#messageInput", "placeholder")) === WA_MSG_PLACEHOLDER[lang], "the message placeholder isn't the approved text");
+      const labels = await waLabels(page);
+      expectLabels(labels, lang);
+      // Both themes: the placeholders stay readable against the field.
+      await page.addStyleTag({ content: "*{transition:none !important}" });
+      const contrast = {};
+      for (const theme of ["dark", "light"]) {
+        await page.evaluate((t) => (t === "light" ? document.documentElement.setAttribute("data-theme", "light") : document.documentElement.removeAttribute("data-theme")), theme);
+        for (const id of ["phoneInput", "messageInput"]) expectContrast(contrast[theme + " " + id] = await waPlaceholderContrast(page, "#" + id), `${theme} ${id}`);
+      }
+      // Changing the country changes the example, in its own national format.
+      await waPick(page, "US");
+      await page.waitForFunction(() => document.getElementById("phoneInput").placeholder === "(201) 555-0123");
+      await waPick(page, "GB");
+      const gb = await waPlaceholder(page);
+      expect(gb === "07400 123456", `the United Kingdom's placeholder is "${gb}"`);
+      // A placeholder is not a value: Argentina and Mexico with an empty field give no link, note or hint.
+      for (const code of ["AR", "MX"]) {
+        await waPick(page, code);
+        await waNumber(page, "");
+        const s = await page.evaluate(() => ({ href: document.getElementById("openLink").getAttribute("href") || "", status: document.getElementById("phoneStatus").textContent,
+          add9: document.querySelectorAll("#addNineBtn").length, value: document.getElementById("phoneInput").value }));
+        expect(!s.href && !s.status && !s.add9 && !s.value, `${code} with only its placeholder gave a link, a note or a value: ${JSON.stringify(s)}`);
+      }
+      // Every country in the list: type its example as it is shown.
+      const rows = await waEveryExample(page, examples);
+      expectExamples(rows);
+      const shared = rows.filter((r) => r.country && r.country !== r.code).map((r) => `${r.code} as ${r.country}`);
+      // No country chosen (a first browser language with no region): no placeholder; the label stays.
+      await page.addInitScript(() => Object.defineProperty(navigator, "languages", { get: () => ["es"] }));
+      await page.evaluate(() => localStorage.removeItem("orisod-wa-country"));
+      await page.reload();
+      await page.waitForLoadState("networkidle");
+      expect((await page.inputValue("#countryInput")) === "", "a country was chosen on load");
+      const none = await waPlaceholder(page);
+      expect(!none, `with no country the phone placeholder is "${none}"`);
+      expectLabels(await waLabels(page), lang);
+      const withData = rows.filter((r) => r.want).length;
+      return `${withData} of ${rows.length} countries have an example and each typed as shown is valid and gives its wa.me link with no error ` +
+        `(read back as the main country: ${shared.join(", ")}); the placeholder follows the country (US "(201) 555-0123", UK "07400 123456"), ` +
+        `none with no country, labels kept, Argentina and Mexico ignore it; contrast ${Object.entries(contrast).map(([k, v]) => `${k} ${v.toFixed(1)}:1`).join(", ")}; ` +
+        mustFail("a US-format example under another country", () => expectExamples(rows.map((r) => (r.code === "GB" ? { ...r, placeholder: "(201) 555-0123" } : r)))) + "; " +
+        mustFail("an example that gives no link", () => expectExamples(rows.map((r) => (r.code === "DE" ? { ...r, href: "" } : r)))) + "; " +
+        mustFail("an example read as another country", () => expectExamples(rows.map((r) => (r.code === "ES" ? { ...r, country: "PT" } : r)))) + "; " +
+        mustFail("a missing label", () => expectLabels({ ...labels, phoneInput: "" }, lang)) + "; " +
+        mustFail("a faint placeholder", () => expectContrast(3.2, "test"));
+    },
+  },
+  {
+    name: "WhatsApp link generator (placeholders, examples file missing)",
+    page: WA,
+    vendor: [LIBPHONE, QRJS],
+    broken: () => ({ path: WA_EXAMPLES, mode: "404" }),
+    async run(page) {
+      await page.waitForLoadState("networkidle");
+      await waPick(page, "US");
+      const us = await waPlaceholder(page);
+      expect(us === WA_US_FALLBACK, `without the examples the United States placeholder is "${us}", not "${WA_US_FALLBACK}"`);
+      const s = await waNumber(page, us);
+      expect(s.href === "https://wa.me/12025550123", `typing the fallback example gave ${s.href || "no link"}`);
+      const others = [];
+      for (const code of ["GB", "MX", "AR", "CA"]) {
+        await waPick(page, code);
+        others.push([code, (await waPlaceholder(page)) || ""]);
+      }
+      const expectNoneElsewhere = (o) => expect(o.every(([, p]) => !p), "a country other than the US has a placeholder without the examples: " + o.filter(([, p]) => p).map(([c, p]) => `${c} "${p}"`).join(", "));
+      expectNoneElsewhere(others);
+      return `the United States shows "${WA_US_FALLBACK}" (wa.me/12025550123 when typed), the UK, Mexico, Argentina and Canada (also +1) show none; ` +
+        mustFail("a US example under Canada", () => expectNoneElsewhere([...others, ["CA", WA_US_FALLBACK]]));
     },
   },
   {
