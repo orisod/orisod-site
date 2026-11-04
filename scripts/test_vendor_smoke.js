@@ -1198,6 +1198,59 @@ function expectMenu(m, open, when, focus = null, ring = null) {
   expect(m.open === open && (focus === null || m.focus === focus) && (ring === null || m.ring === ring),
     `${when}: the list is ${m.open ? "open" : "closed"} (want ${open ? "open" : "closed"}), focus on ${m.focus}${focus ? ` (want ${focus})` : ""}, visible ring ${m.ring}`);
 }
+// Scroll anchoring stays off on pages with the share button: otherwise, after the list was open during a scroll,
+// opening it again by hover makes the page taller and Chrome moves the page, so the button leaves the pointer.
+const WA_ANCHOR_RULE = "html{overflow-anchor:none;}";
+const WA_JUMP_SEQUENCES = {
+  "open, scroll to the bottom, close by click": { scroll: "bottom", close: "click" },
+  "open, scroll to the bottom, close with Escape": { scroll: "bottom", close: "escape" },
+  "open, scroll 300px with the wheel, close by click": { scroll: "wheel", close: "click" },
+};
+const waBox = (page, sel) => page.evaluate((s) => { const r = document.querySelector(s).getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2, top: r.top, left: r.left }; }, sel);
+// Runs one sequence on a freshly loaded page (with anchoring forced back on if asked), then rests the mouse on the
+// share button until hover opens the list, clicks to pin it, leaves, and clicks again.
+async function waJumpRun(page, url, seq, anchoring) {
+  const S = "#shareMenu > summary";
+  await page.goto(url, { waitUntil: "load" });
+  if (anchoring) await page.addStyleTag({ content: "html{overflow-anchor:auto !important}" });
+  await page.mouse.move(5, 5);
+  await page.locator(S).scrollIntoViewIfNeeded();
+  await page.click(S);
+  if (seq.scroll === "wheel") {
+    await page.mouse.move(640, 300);
+    await page.mouse.wheel(0, 300);
+    await page.waitForTimeout(300);
+  } else {
+    await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" }));
+    await page.waitForTimeout(200);
+  }
+  if (seq.close === "escape") { await page.focus(S); await page.keyboard.press("Escape"); } else await page.click(S);
+  await page.mouse.move(5, 5);
+  await page.waitForTimeout(WA_HOVER_CLOSE + 150);
+  const before = await waBox(page, S);
+  await page.mouse.move(before.x, before.y, { steps: 3 });
+  await page.waitForTimeout(WA_HOVER_OPEN * 2 + 100);
+  const after = await waBox(page, S);
+  const hover = await page.evaluate(([x, y]) => ({ open: document.getElementById("shareMenu").open,
+    under: document.elementFromPoint(x, y)?.closest("summary") === document.querySelector("#shareMenu > summary") }), [before.x, before.y]);
+  await page.mouse.down();
+  await page.mouse.up();
+  await page.mouse.move(5, 5, { steps: 3 });
+  await page.waitForTimeout(WA_HOVER_CLOSE + 200);
+  const pinned = (await waMenu(page)).open;
+  await page.click(S);
+  await page.mouse.move(5, 5);
+  const closedAgain = !(await waMenu(page)).open;
+  return { jump: Math.round(Math.max(Math.abs(after.top - before.top), Math.abs(after.left - before.left))), ...hover, pinned, closedAgain };
+}
+function expectNoJump(r, label) {
+  expect(r.jump <= 1 && r.under && r.open && r.pinned && r.closedAgain,
+    `${label}: the share button moved ${r.jump}px when hover opened the list (pointer still on it ${r.under}, open ${r.open}); a click then pinned it ${r.pinned}, a second click closed it ${r.closedAgain}`);
+}
+function expectAnchorRule(pages) {
+  const missing = Object.entries(pages).filter(([, html]) => ![...html.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi)].some((m) => m[1].includes(WA_ANCHOR_RULE))).map(([f]) => f);
+  expect(!missing.length, `${WA_ANCHOR_RULE} is missing from the inline CSS of ${missing.join(", ")}`);
+}
 // The placeholders: the message's fixed text and the phone field's example for the chosen country
 // (libphonenumber-js's examples.mobile.json in its national format; without it, only the US gets one).
 const WA_EXAMPLES = "/assets/vendor/libphonenumber-js/1.13.15/examples.mobile.json";
@@ -3197,6 +3250,30 @@ const CASES = [
           mustFail("the copy status announced twice", () => expectCopyFlow({ ...copyClosed, n: 2 })),
           mustFail("hover opening on a touch screen", () => expectTouch({ ...tHover, open: true }, tOpen, tClosed, tChosen)),
           mustFail("a tap that leaves the list open after a service", () => expectTouch(tHover, tOpen, tClosed, { ...tChosen, open: true }))].join("; ");
+    },
+  },
+  {
+    name: "WhatsApp link generator (share this tool, no page jump)",
+    page: WA,
+    vendor: [LIBPHONE, QRJS],
+    async run(page, lang) {
+      // Both pages carry the rule in their own inline CSS.
+      const files = { [WA.slice(1) + "index.html"]: "", ["es" + WA + "index.html"]: "" };
+      for (const f of Object.keys(files)) files[f] = await readFile(`${REPO_ROOT}${f}`, "utf-8");
+      expectAnchorRule(files);
+      const url = page.url();
+      const results = [];
+      for (const [label, seq] of Object.entries(WA_JUMP_SEQUENCES)) {
+        const off = await waJumpRun(page, url, seq, false);
+        expectNoJump(off, label);
+        // The same sequence with scroll anchoring forced back on must reproduce the jump: the test can see it.
+        const on = await waJumpRun(page, url, seq, true);
+        results.push({ label, off, on });
+      }
+      return results.map((r) => `${r.label}: ${r.off.jump}px with the rule (pointer on the button, click pins, second click closes), ${r.on.jump}px with anchoring forced on`).join("; ") + "; " +
+        [...results.map((r) => mustFail(`the jump with anchoring on (${r.label})`, () => expectNoJump(r.on, r.label))),
+          mustFail("the rule missing from the ES page", () => expectAnchorRule({ ...files, ["es" + WA + "index.html"]: files["es" + WA + "index.html"].replace(WA_ANCHOR_RULE, "") })),
+          mustFail("the rule missing from the EN page", () => expectAnchorRule({ ...files, [WA.slice(1) + "index.html"]: files[WA.slice(1) + "index.html"].replace(WA_ANCHOR_RULE, "") }))].join("; ");
     },
   },
   {
