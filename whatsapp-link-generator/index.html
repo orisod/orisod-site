@@ -1719,15 +1719,21 @@ fetch(EXAMPLES_FILE).then((r) => (r.ok ? r.json() : null))
       "result": "Verified manually by the owner in a signed-in browser: the submit page opened with the title WhatsApp Link Generator and the page link attached as a link preview card. Nothing was posted."}
   };
   list.querySelectorAll("a[data-share]").forEach((a) => { a.href = SHARE_LINKS[a.dataset.share](url, title); });
+  // pinned: the list stays open until a click, Enter, Space or Escape closes it; a list opened by hover isn't.
+  const COPY_CLOSE_MS = 1200;
+  let pinned = false, hoverOpening = false, pointerInside = false, suppressHover = false;
 
   // Copy tool link: only where the browser can copy, second in the list.
   if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
     const item = document.getElementById("shareCopyTemplate").content.firstElementChild.cloneNode(true);
     list.children[0].after(item);
-    item.querySelector("button").addEventListener("click", async () => {
+    item.querySelector("button").addEventListener("click", async (e) => {
+      const keyboard = e.detail === 0;
       let ok = true;
-      try { await navigator.clipboard.writeText(url); } catch (e) { ok = false; }
+      try { await navigator.clipboard.writeText(url); } catch (err) { ok = false; }
+      // The status line sits outside the <details>, so it stays visible after the list closes.
       status.textContent = ok ? root.dataset.copied : root.dataset.copyFail;
+      afterChoice(COPY_CLOSE_MS, keyboard);
     });
   }
 
@@ -1788,13 +1794,93 @@ fetch(EXAMPLES_FILE).then((r) => (r.ok ? r.json() : null))
       show(null);
       return;
     }
-    const active = document.activeElement;
-    if (menu.open && !menu.hidden && (menu.contains(active) || active === document.body)) {
+    // Then the list: focus goes back to the summary if it was in the list (or nowhere); a list the pointer
+    // opened closes even when focus is elsewhere, and focus stays where it is.
+    const active = document.activeElement, inside = menu.contains(active) || active === document.body;
+    if (menu.open && !menu.hidden && (inside || !pinned)) {
       e.preventDefault();
-      menu.open = false;
-      toggle.focus();
+      closeList(inside, true);
     }
   });
+
+  // Open on hover, only for a mouse or pen on a device that can hover (never on touch or a coarse pointer):
+  // HOVER_OPEN_MS over the summary opens the list "transient"; it closes HOVER_CLOSE_MS after the pointer leaves
+  // the whole <details> (summary and list), unless focus is inside it or it's pinned. A pointer click on the summary
+  // of a transient list pins it instead of closing it; the next click closes it. A list opened by a click or the
+  // keyboard is pinned. Enter and Space make clicks with detail 0, so they toggle as before.
+  const HOVER_OPEN_MS = 120, HOVER_CLOSE_MS = 300;
+  const canHover = () => !!(window.matchMedia && matchMedia("(hover: hover) and (pointer: fine)").matches);
+  const byPointer = (e) => e.pointerType === "mouse" || e.pointerType === "pen";
+  let openTimer = 0, closeTimer = 0;
+  function clearTimers() {
+    clearTimeout(openTimer);
+    clearTimeout(closeTimer);
+    openTimer = closeTimer = 0;
+  }
+  function closeList(focusSummary, keyboard) {
+    clearTimers();
+    show(null);
+    pinned = false;
+    if (menu.open) menu.open = false;
+    // A visible focus ring only when the keyboard got us here.
+    if (focusSummary) toggle.focus({ focusVisible: keyboard });
+  }
+  function scheduleClose() {
+    clearTimeout(closeTimer);
+    closeTimer = 0;
+    if (!menu.open || pinned || pointerInside) return;
+    closeTimer = setTimeout(() => {
+      closeTimer = 0;
+      if (menu.open && !pinned && !pointerInside && !menu.contains(document.activeElement)) closeList(false, false);
+    }, HOVER_CLOSE_MS);
+  }
+  menu.addEventListener("toggle", () => {
+    if (menu.open) { pinned = !hoverOpening; hoverOpening = false; } else { pinned = false; clearTimers(); }
+  });
+  toggle.addEventListener("pointerenter", (e) => {
+    if (!byPointer(e) || !canHover() || suppressHover || menu.open || menu.hidden) return;
+    clearTimeout(openTimer);
+    openTimer = setTimeout(() => {
+      openTimer = 0;
+      if (!menu.open && !suppressHover) { hoverOpening = true; menu.open = true; }
+    }, HOVER_OPEN_MS);
+  });
+  toggle.addEventListener("pointerleave", () => { clearTimeout(openTimer); openTimer = 0; });
+  menu.addEventListener("pointerenter", (e) => {
+    if (!byPointer(e)) return;
+    pointerInside = true;
+    clearTimeout(closeTimer);
+    closeTimer = 0;
+  });
+  menu.addEventListener("pointerleave", (e) => {
+    if (!byPointer(e)) return;
+    pointerInside = false;
+    scheduleClose();
+  });
+  menu.addEventListener("focusout", () => setTimeout(scheduleClose, 0));
+  // After a choice, only a real pointer movement outside the share control lets hover open the list again (closing
+  // the list moves things under a resting pointer, which must not count).
+  document.addEventListener("pointermove", (e) => { if (suppressHover && !menu.contains(e.target)) suppressHover = false; });
+  toggle.addEventListener("click", (e) => {
+    clearTimeout(openTimer);
+    openTimer = 0;
+    if (e.detail > 0 && menu.open && !pinned) {
+      e.preventDefault();
+      pinned = true;
+    }
+  });
+
+  // Choosing a service (all devices): the link's own navigation or mailto goes ahead untouched; on the next tick
+  // (after COPY_CLOSE_MS for Copy) the list closes and focus goes to the summary, and hover can't reopen it until
+  // the pointer has moved away and come back.
+  function afterChoice(delay, keyboard) {
+    suppressHover = true;
+    setTimeout(() => {
+      const active = document.activeElement;
+      closeList(menu.contains(active) || active === document.body, keyboard);
+    }, delay);
+  }
+  list.querySelectorAll("a[data-share]").forEach((a) => a.addEventListener("click", (e) => afterChoice(0, e.detail === 0)));
 })();
 // Share this tool: end
 </script>
