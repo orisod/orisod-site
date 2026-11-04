@@ -251,6 +251,9 @@ a.btn:not([href]){cursor:default;}
 .more .seo-content h2:first-child{margin-top:10px;}
 .more .seo-content ol{font-size:15px;opacity:0.85;line-height:1.7;}
 @media (prefers-reduced-motion:reduce){.more > summary::before{transition:none;}}
+/* Scroll anchoring off: opening the share list by hover makes the page taller, and Chrome's scroll anchoring
+   can then move the page so the button leaves the pointer (see CLAUDE.md). */
+html{overflow-anchor:none;}
 /* Share this tool (pilot): a small circular button that shares this page's own address, never the generated link.
    A native <details> with a list of real links works without JavaScript; on a touch device with the Web Share API an
    equivalent <button> opens the system share sheet instead. Fixed blue with a white icon in both themes. */
