@@ -1808,7 +1808,7 @@ fetch(EXAMPLES_FILE).then((r) => (r.ok ? r.json() : null))
   // the whole <details> (summary and list), unless focus is inside it or it's pinned. A pointer click on the summary
   // of a transient list pins it instead of closing it; the next click closes it. A list opened by a click or the
   // keyboard is pinned. Enter and Space make clicks with detail 0, so they toggle as before.
-  const HOVER_OPEN_MS = 120, HOVER_CLOSE_MS = 300;
+  const HOVER_OPEN_MS = 120, HOVER_CLOSE_MS = 150;
   const canHover = () => !!(window.matchMedia && matchMedia("(hover: hover) and (pointer: fine)").matches);
   const byPointer = (e) => e.pointerType === "mouse" || e.pointerType === "pen";
   let openTimer = 0, closeTimer = 0;

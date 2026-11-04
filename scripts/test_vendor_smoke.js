@@ -1182,7 +1182,7 @@ function expectShareRecords(rec) {
   }
 }
 // Hover-to-open and close after choosing a service: the delays in the page script (HOVER_OPEN_MS, HOVER_CLOSE_MS, COPY_CLOSE_MS).
-const WA_HOVER_OPEN = 120, WA_HOVER_CLOSE = 300, WA_COPY_CLOSE = 1200;
+const WA_HOVER_OPEN = 120, WA_HOVER_CLOSE = 150, WA_COPY_CLOSE = 1200;
 const waMenu = (page) => page.evaluate(() => {
   const menu = document.getElementById("shareMenu"), summary = menu.querySelector("summary"), a = document.activeElement;
   return { open: menu.open, focus: a === summary ? "summary" : a.closest?.("#shareList") ? "list" : a.tagName, ring: a === summary && summary.matches(":focus-visible") };
@@ -3000,16 +3000,23 @@ const CASES = [
       const opened = await waMenu(page);
       expectMenu(early, false, "40 ms into a hover");
       expectMenu(opened, true, "after the hover delay");
-      // Summary to an icon: stays open. Leaving the zone: still open just after, closed after the delay.
+      // Summary to an icon and back: stays open. A leave shorter than the delay: stays open. A real leave: closed after the delay.
       await waMouseTo(page, '#shareList a[data-share="reddit"]');
       await page.waitForTimeout(WA_HOVER_CLOSE + 200);
-      expectMenu(await waMenu(page), true, "pointer moved from the summary to an icon");
-      await page.mouse.move(5, 5, { steps: 3 });
+      await waMouseTo(page, S);
+      await waMouseTo(page, '#shareList a[data-share="whatsapp"]');
+      await page.waitForTimeout(WA_HOVER_CLOSE + 200);
+      const between = await waMenu(page);
+      expectMenu(between, true, "pointer moved between the summary and the icons");
+      await page.mouse.move(5, 5);
       await page.waitForTimeout(WA_HOVER_CLOSE / 3);
-      const leaving = await waMenu(page);
+      await waMouseTo(page, '#shareList a[data-share="x"]');
+      await page.waitForTimeout(WA_HOVER_CLOSE + 200);
+      const shortLeave = await waMenu(page);
+      expectMenu(shortLeave, true, `a ${Math.round(WA_HOVER_CLOSE / 3)} ms leave, back on an icon`);
+      await page.mouse.move(5, 5, { steps: 3 });
       await page.waitForTimeout(WA_HOVER_CLOSE + 150);
       const left = await waMenu(page);
-      expectMenu(leaving, true, "100 ms after leaving");
       expectMenu(left, false, "after the close delay");
       await waMouseTo(page, S);
       await page.waitForTimeout(WA_HOVER_OPEN / 3);
@@ -3017,7 +3024,7 @@ const CASES = [
       await page.waitForTimeout(WA_HOVER_OPEN + WA_HOVER_CLOSE);
       const brief = await waMenu(page);
       expectMenu(brief, false, "a hover shorter than the delay");
-      log.push("hover opens after the delay, not before; icon keeps it open; leaving closes it after the delay; a brief pass opens nothing");
+      log.push(`hover opens after ${WA_HOVER_OPEN} ms, not before; moving between the summary and the icons keeps it open; a ${Math.round(WA_HOVER_CLOSE / 3)} ms leave keeps it open; a real leave closes it after ${WA_HOVER_CLOSE} ms; a brief pass opens nothing`);
       // Focus inside the zone keeps a hover-opened list open; once focus leaves, it closes.
       await waMouseTo(page, S);
       await page.waitForTimeout(WA_HOVER_OPEN * 2);
@@ -3172,6 +3179,9 @@ const CASES = [
       log.push("touch screen: no hover opening, tap toggles, tapping a service closes the list");
       return log.join("; ") + "; " +
         [mustFail("opened before the delay", () => expectMenu({ ...early, open: true }, false, "test")),
+          mustFail("closed by moving between the summary and the icons", () => expectMenu({ ...between, open: false }, true, "test")),
+          mustFail("closed by a leave shorter than the delay", () => expectMenu({ ...shortLeave, open: false }, true, "test")),
+          mustFail("still open after a real leave", () => expectMenu({ ...left, open: true }, false, "test")),
           mustFail("not opened after the delay", () => expectMenu({ ...opened, open: false }, true, "test")),
           mustFail("a brief pass that opens it", () => expectMenu({ ...brief, open: true }, false, "test")),
           mustFail("closed while focus is inside", () => expectMenu({ ...focusKept, open: false }, true, "test")),
