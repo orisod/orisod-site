@@ -1181,6 +1181,23 @@ function expectShareRecords(rec) {
     expect(dated || unverified, `the ${name} record's lastVerified is "${r.lastVerified}"`);
   }
 }
+// Hover-to-open and close after choosing a service: the delays in the page script (HOVER_OPEN_MS, HOVER_CLOSE_MS, COPY_CLOSE_MS).
+const WA_HOVER_OPEN = 120, WA_HOVER_CLOSE = 300, WA_COPY_CLOSE = 1200;
+const waMenu = (page) => page.evaluate(() => {
+  const menu = document.getElementById("shareMenu"), summary = menu.querySelector("summary"), a = document.activeElement;
+  return { open: menu.open, focus: a === summary ? "summary" : a.closest?.("#shareList") ? "list" : a.tagName, ring: a === summary && summary.matches(":focus-visible") };
+});
+// The centre of an element, for moving the mouse onto it.
+const waCentre = (page, sel) => page.evaluate((s) => { const r = document.querySelector(s).getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; }, sel);
+async function waMouseTo(page, sel) {
+  await page.locator(sel).scrollIntoViewIfNeeded();
+  const [x, y] = await waCentre(page, sel);
+  await page.mouse.move(x, y, { steps: 3 });
+}
+function expectMenu(m, open, when, focus = null, ring = null) {
+  expect(m.open === open && (focus === null || m.focus === focus) && (ring === null || m.ring === ring),
+    `${when}: the list is ${m.open ? "open" : "closed"} (want ${open ? "open" : "closed"}), focus on ${m.focus}${focus ? ` (want ${focus})` : ""}, visible ring ${m.ring}`);
+}
 // The placeholders: the message's fixed text and the phone field's example for the chosen country
 // (libphonenumber-js's examples.mobile.json in its national format; without it, only the US gets one).
 const WA_EXAMPLES = "/assets/vendor/libphonenumber-js/1.13.15/examples.mobile.json";
@@ -2960,6 +2977,216 @@ const CASES = [
           mustFail("a changed focus ring", () => expectShareRing({ ...litDark, ring: { ...WA_SHARE_RING, style: "dotted" } }, "test")),
           mustFail("a transition under reduced motion", () => expectMotion(normalMotion, "0.18s, 0.18s")),
           mustFail("a hover style under (hover: none)", () => expectNoHoverStyle({ ...noHover, fill: WA_SHARE_LIT }))].join("; ");
+    },
+  },
+  {
+    name: "WhatsApp link generator (share this tool, hover and close)",
+    page: WA,
+    vendor: [LIBPHONE, QRJS],
+    async run(page, lang) {
+      const t = WA_SHARE[lang], want = waShareHrefs(t.url, t.title), S = "#shareMenu > summary";
+      // Share destinations answered here and aborted: nothing reaches them, every attempt is recorded.
+      const hits = [];
+      await page.context().route(/^https:\/\/(wa\.me|t\.me|www\.facebook\.com|x\.com|www\.linkedin\.com|www\.reddit\.com)\//, (r) => { hits.push(r.request().url()); return r.abort(); });
+      // The click's default action is never cancelled (a listener on window runs after the page's own).
+      await page.evaluate(() => window.addEventListener("click", (e) => { if (e.target.closest?.("#shareList")) window.__prevented = e.defaultPrevented; }));
+      await page.mouse.move(0, 0);
+      const log = [];
+      // Hover intent: not before the delay, open after it; a pass shorter than the delay opens nothing.
+      await waMouseTo(page, S);
+      await page.waitForTimeout(WA_HOVER_OPEN / 3);
+      const early = await waMenu(page);
+      await page.waitForTimeout(WA_HOVER_OPEN * 2);
+      const opened = await waMenu(page);
+      expectMenu(early, false, "40 ms into a hover");
+      expectMenu(opened, true, "after the hover delay");
+      // Summary to an icon: stays open. Leaving the zone: still open just after, closed after the delay.
+      await waMouseTo(page, '#shareList a[data-share="reddit"]');
+      await page.waitForTimeout(WA_HOVER_CLOSE + 200);
+      expectMenu(await waMenu(page), true, "pointer moved from the summary to an icon");
+      await page.mouse.move(5, 5, { steps: 3 });
+      await page.waitForTimeout(WA_HOVER_CLOSE / 3);
+      const leaving = await waMenu(page);
+      await page.waitForTimeout(WA_HOVER_CLOSE + 150);
+      const left = await waMenu(page);
+      expectMenu(leaving, true, "100 ms after leaving");
+      expectMenu(left, false, "after the close delay");
+      await waMouseTo(page, S);
+      await page.waitForTimeout(WA_HOVER_OPEN / 3);
+      await page.mouse.move(5, 5, { steps: 2 });
+      await page.waitForTimeout(WA_HOVER_OPEN + WA_HOVER_CLOSE);
+      const brief = await waMenu(page);
+      expectMenu(brief, false, "a hover shorter than the delay");
+      log.push("hover opens after the delay, not before; icon keeps it open; leaving closes it after the delay; a brief pass opens nothing");
+      // Focus inside the zone keeps a hover-opened list open; once focus leaves, it closes.
+      await waMouseTo(page, S);
+      await page.waitForTimeout(WA_HOVER_OPEN * 2);
+      await page.focus('#shareList a[data-share="x"]');
+      await page.mouse.move(5, 5, { steps: 3 });
+      await page.waitForTimeout(WA_HOVER_CLOSE + 200);
+      const focusKept = await waMenu(page);
+      expectMenu(focusKept, true, "pointer gone, focus on X");
+      await page.focus("#messageInput");
+      await page.waitForTimeout(WA_HOVER_CLOSE + 200);
+      expectMenu(await waMenu(page), false, "focus moved out of the list");
+      // A click on a hover-opened list pins it (leaving no longer closes it); the next click closes it.
+      await waMouseTo(page, S);
+      await page.waitForTimeout(WA_HOVER_OPEN * 2);
+      await page.mouse.down();
+      await page.mouse.up();
+      await page.mouse.move(5, 5, { steps: 3 });
+      await page.waitForTimeout(WA_HOVER_CLOSE + 200);
+      const pinned = await waMenu(page);
+      expectMenu(pinned, true, "pinned by a click, pointer gone");
+      await page.click(S);
+      await page.mouse.move(5, 5);
+      expectMenu(await waMenu(page), false, "second click on the pinned list");
+      log.push("focus inside keeps it open; a click pins a hover-opened list, the next click closes it");
+      // Keyboard: Enter and Space toggle as before; a keyboard-opened list is pinned; Escape twice.
+      await page.focus(S);
+      await page.keyboard.press("Enter");
+      await page.waitForTimeout(WA_HOVER_CLOSE + 200);
+      expectMenu(await waMenu(page), true, "Enter, pointer elsewhere");
+      await page.keyboard.press("Space");
+      expectMenu(await waMenu(page), false, "Space");
+      await page.keyboard.press("Enter");
+      await page.keyboard.press("Tab");
+      await page.keyboard.press("Escape");
+      const esc1 = { ...(await waMenu(page)), tip: (await waTipCheck(page)).count };
+      await page.keyboard.press("Escape");
+      const esc2 = await waMenu(page);
+      expect(esc1.open && esc1.tip === 0 && esc1.focus === "list", `first Escape: list open ${esc1.open}, ${esc1.tip} tooltips, focus ${esc1.focus}`);
+      expectMenu(esc2, false, "second Escape", "summary", true);
+      // A hover-opened list closes on Escape even with focus elsewhere, and focus stays where it was.
+      await page.focus("#messageInput");
+      await waMouseTo(page, S);
+      await page.waitForTimeout(WA_HOVER_OPEN * 2);
+      await page.mouse.move(5, 5);
+      await page.keyboard.press("Escape");
+      const transientEsc = await waMenu(page);
+      expectMenu(transientEsc, false, "Escape on a hover-opened list", "TEXTAREA");
+      log.push("Enter and Space toggle, keyboard-opened is pinned, Escape hides the tooltip then closes; Escape closes a hover-opened list without moving focus");
+      // Choosing each service with the mouse: the browser's action goes ahead (a new tab for 6, mailto not cancelled),
+      // the list closes, focus is on the summary without a ring, and hover can't reopen it until the pointer leaves.
+      const chosen = [];
+      for (const kind of ["whatsapp", "telegram", "facebook", "x", "linkedin", "reddit", "email"]) {
+        await page.mouse.move(5, 5);
+        await waMouseTo(page, S);
+        await page.waitForTimeout(WA_HOVER_OPEN * 2);
+        const sel = `#shareList a[data-share="${kind}"]`;
+        const before = hits.length;
+        let popup = null;
+        if (kind === "email") {
+          await page.click(sel);
+        } else {
+          [popup] = await Promise.all([page.waitForEvent("popup"), page.click(sel)]);
+        }
+        await page.waitForTimeout(50);
+        const after = { ...(await waMenu(page)), prevented: await page.evaluate(() => window.__prevented), hit: hits.slice(before) };
+        if (popup) await popup.close();
+        // Straight back onto the summary in one movement, never outside the share control: hover doesn't reopen it.
+        const [sx, sy] = await waCentre(page, S);
+        await page.mouse.move(sx, sy);
+        await page.waitForTimeout(WA_HOVER_OPEN * 3);
+        const stayed = await waMenu(page);
+        chosen.push({ kind, after, stayed, popup: !!popup });
+      }
+      const expectChosen = (c) => {
+        expectMenu(c.after, false, `after choosing ${c.kind}`, "summary", false);
+        expect(c.after.prevented === false, `the ${c.kind} click was cancelled`);
+        expect(c.kind === "email" ? !c.popup && !c.after.hit.length : c.popup && c.after.hit.length === 1 && c.after.hit[0] === want[c.kind],
+          `${c.kind}: new tab ${c.popup}, requested ${JSON.stringify(c.after.hit)}`);
+        expectMenu(c.stayed, false, `hovering the summary again after ${c.kind}, without leaving`);
+      };
+      chosen.forEach(expectChosen);
+      // Leaving and coming back opens it again.
+      await page.mouse.move(5, 5, { steps: 3 });
+      await waMouseTo(page, S);
+      await page.waitForTimeout(WA_HOVER_OPEN * 2);
+      const reentered = await waMenu(page);
+      expectMenu(reentered, true, "leaving and hovering again after a choice");
+      // Focus is on the summary (inside the zone), so the hover-opened list stays open when the pointer leaves.
+      await page.mouse.move(5, 5);
+      await page.waitForTimeout(WA_HOVER_CLOSE + 150);
+      const focusHolds = await waMenu(page);
+      expectMenu(focusHolds, true, "pointer gone, focus on the summary", "summary");
+      // From the keyboard: Escape closes it; Enter opens it; Enter on a link closes it and focus lands on the summary with a visible ring.
+      await page.focus(S);
+      await page.keyboard.press("Escape");
+      expectMenu(await waMenu(page), false, "Escape on the summary", "summary");
+      await page.keyboard.press("Enter");
+      await page.keyboard.press("Tab");
+      await page.keyboard.press("Tab");
+      await page.keyboard.press("Tab");
+      const [kbPopup] = await Promise.all([page.waitForEvent("popup"), page.keyboard.press("Enter")]);
+      await page.waitForTimeout(50);
+      const kb = await waMenu(page);
+      await kbPopup.close();
+      expectMenu(kb, false, "Enter on Telegram", "summary", true);
+      log.push(`each of the 7 links: the browser action goes ahead (${chosen.filter((c) => c.popup).length} new tabs to exactly their href, mailto not cancelled), the list closes, focus on the summary (ring only from the keyboard); no reopen until the pointer leaves`);
+      // Copy: the status shows once and stays visible after the list closes (it's outside the <details>).
+      await page.evaluate(() => Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText: async () => {} } }));
+      await waWatchShareStatus(page);
+      await page.click(S);
+      await page.click("#shareCopy");
+      await page.waitForTimeout(WA_COPY_CLOSE / 2);
+      const copyOpen = await waMenu(page);
+      await page.waitForTimeout(WA_COPY_CLOSE / 2 + 300);
+      const copyClosed = { ...(await waMenu(page)), ...(await page.evaluate(() => { const st = document.getElementById("shareToolStatus");
+        return { text: st.textContent, visible: st.checkVisibility(), live: st.getAttribute("aria-live"), n: window.__shareStatusChanges, outside: !document.getElementById("shareMenu").contains(st) }; })) };
+      const expectCopyFlow = (c) => {
+        expect(c.text === t.copied && c.visible && c.live === "polite" && c.n === 1 && c.outside, `after Copy the status is "${c.text}" (visible ${c.visible}, ${c.n} updates, aria-live ${c.live})`);
+        expectMenu(c, false, "1.5 s after Copy", "summary");
+      };
+      expectMenu(copyOpen, true, "0.6 s after Copy");
+      expectCopyFlow(copyClosed);
+      log.push(`Copy: "${copyClosed.text}" announced once and still visible; the list stays ${WA_COPY_CLOSE / 1000} s then closes, focus on the summary`);
+      // A touch screen (hover: none, coarse pointer, no navigator.share so the list is used): no hover behaviour; tap
+      // toggles; tapping a service closes the list.
+      const touch = await waShareContext(page.context().browser(), lang, { hasTouch: true, viewport: { width: 390, height: 800 } },
+        () => { Object.defineProperty(navigator, "share", { configurable: true, value: undefined }); });
+      await touch.page.mouse.move(0, 0);
+      await waMouseTo(touch.page, S);
+      await touch.page.waitForTimeout(WA_HOVER_OPEN * 3);
+      const tHover = await waMenu(touch.page);
+      await touch.page.tap(S);
+      const tOpen = await waMenu(touch.page);
+      await touch.page.tap(S);
+      const tClosed = await waMenu(touch.page);
+      await touch.page.tap(S);
+      const [tPopup] = await Promise.all([touch.page.waitForEvent("popup"), touch.page.tap('#shareList a[data-share="telegram"]')]);
+      await touch.page.waitForTimeout(50);
+      const tChosen = await waMenu(touch.page);
+      await tPopup.close();
+      const tMedia = await touch.page.evaluate(() => matchMedia("(hover: hover) and (pointer: fine)").matches);
+      await touch.context.close();
+      expect(!tMedia, "the touch context matches (hover: hover) and (pointer: fine)");
+      const expectTouch = (h, o, c, ch) => {
+        expectMenu(h, false, "touch screen, mouse over the summary");
+        expectMenu(o, true, "first tap");
+        expectMenu(c, false, "second tap");
+        expectMenu(ch, false, "tapping Telegram", "summary");
+      };
+      expectTouch(tHover, tOpen, tClosed, tChosen);
+      expect(!touch.errors.length, `errors on the touch screen: ${touch.errors.join("; ")}`);
+      log.push("touch screen: no hover opening, tap toggles, tapping a service closes the list");
+      return log.join("; ") + "; " +
+        [mustFail("opened before the delay", () => expectMenu({ ...early, open: true }, false, "test")),
+          mustFail("not opened after the delay", () => expectMenu({ ...opened, open: false }, true, "test")),
+          mustFail("a brief pass that opens it", () => expectMenu({ ...brief, open: true }, false, "test")),
+          mustFail("closed while focus is inside", () => expectMenu({ ...focusKept, open: false }, true, "test")),
+          mustFail("a click that closes a hover-opened list", () => expectMenu({ ...pinned, open: false }, true, "test")),
+          mustFail("focus lost after Escape", () => expectMenu({ ...esc2, focus: "BODY" }, false, "test", "summary", true)),
+          mustFail("Escape on a hover-opened list that steals focus", () => expectMenu({ ...transientEsc, focus: "summary" }, false, "test", "TEXTAREA")),
+          mustFail("a choice that leaves the list open", () => expectChosen({ ...chosen[2], after: { ...chosen[2].after, open: true } })),
+          mustFail("a cancelled click", () => expectChosen({ ...chosen[6], after: { ...chosen[6].after, prevented: true } })),
+          mustFail("a ring after a mouse choice", () => expectChosen({ ...chosen[0], after: { ...chosen[0].after, ring: true } })),
+          mustFail("a reopen under the pointer", () => expectChosen({ ...chosen[5], stayed: { ...chosen[5].stayed, open: true } })),
+          mustFail("a navigation to another address", () => expectChosen({ ...chosen[4], after: { ...chosen[4].after, hit: ["https://www.linkedin.com/feed/"] } })),
+          mustFail("the copy status hidden by closing", () => expectCopyFlow({ ...copyClosed, visible: false })),
+          mustFail("the copy status announced twice", () => expectCopyFlow({ ...copyClosed, n: 2 })),
+          mustFail("hover opening on a touch screen", () => expectTouch({ ...tHover, open: true }, tOpen, tClosed, tChosen)),
+          mustFail("a tap that leaves the list open after a service", () => expectTouch(tHover, tOpen, tClosed, { ...tChosen, open: true }))].join("; ");
     },
   },
   {
