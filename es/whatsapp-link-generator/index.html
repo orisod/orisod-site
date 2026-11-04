@@ -251,6 +251,40 @@ a.btn:not([href]){cursor:default;}
 .more .seo-content h2:first-child{margin-top:10px;}
 .more .seo-content ol{font-size:15px;opacity:0.85;line-height:1.7;}
 @media (prefers-reduced-motion:reduce){.more > summary::before{transition:none;}}
+/* Share this tool (pilot): a small circular button that shares this page's own address, never the generated link.
+   A native <details> with a list of real links works without JavaScript; on a touch device with the Web Share API an
+   equivalent <button> opens the system share sheet instead. Fixed blue with a white icon in both themes. */
+.share-tool{margin:32px 0 0 0;text-align:center;}
+.share-menu{display:block;margin:0;container-type:inline-size;}
+.share-menu[hidden], .share-toggle[hidden]{display:none;}
+.share-toggle, .share-item{position:relative;box-sizing:border-box;display:flex;align-items:center;justify-content:center;margin:0;padding:0;border:0;border-radius:50%;background:#2563eb;color:#ffffff;font-family:inherit;font-size:15px;line-height:1;text-decoration:none;cursor:pointer;opacity:1;}
+.share-toggle{width:48px;height:48px;margin:0 auto;list-style:none;}
+.share-toggle::-webkit-details-marker{display:none;}
+.share-item{position:static;width:44px;height:44px;}
+.share-toggle:focus-visible, .share-item:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
+/* Lit state: on hover (pointer devices only) and keyboard focus each circle turns a lighter blue with a soft halo.
+   The solid focus ring above stays the focus indicator; the halo is decoration only. */
+.share-toggle, .share-item{transition:background-color .18s ease, box-shadow .18s ease;}
+@media (hover:hover){.share-toggle:hover, .share-item:hover{background:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.22), 0 0 16px 3px rgba(96,165,250,.55);}}
+.share-toggle:focus-visible, .share-item:focus-visible{background:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.22), 0 0 16px 3px rgba(96,165,250,.55);}
+@media (prefers-reduced-motion:reduce){.share-toggle, .share-item{transition:none;}}
+.share-ico{display:block;width:22px;height:22px;}
+.share-toggle .ico-close{display:none;}
+.share-menu[open] > .share-toggle .ico-share{display:none;}
+.share-menu[open] > .share-toggle .ico-close{display:block;}
+/* The list: all 8 on one line when they fit at 44px with the 12px gap (436px), otherwise 4 + 4. The space under it holds
+   the tooltip, so a tooltip never covers the toggle or another control. */
+.share-list{position:relative;display:grid;grid-template-columns:repeat(4,44px);justify-content:center;gap:12px;margin:14px 0 0 0;padding:0 0 40px 0;list-style:none;}
+@container (min-width:436px){.share-list{grid-template-columns:repeat(8,44px);}}
+.share-list li{margin:0;padding:0;}
+.share-sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;}
+/* Tooltips repeat the item's name, centred in the space under the list, on hover (pointer devices only) and keyboard
+   focus. With JavaScript one shows at a time (.tip-on) and Escape hides it. */
+.share-tip{display:none;position:absolute;left:50%;bottom:6px;z-index:5;transform:translateX(-50%);padding:5px 9px;border-radius:6px;background:var(--text);color:var(--bg);font-size:13px;font-weight:normal;line-height:1.3;white-space:nowrap;}
+@media (hover:hover){.share-tool:not(.js-tips) .share-item:hover > .share-tip{display:block;}}
+.share-tool:not(.js-tips) .share-item:focus-visible > .share-tip, .share-item.tip-on > .share-tip{display:block;}
+.share-tool.tips-off .share-tip{display:none;}
+.share-status{margin:10px 0 0 0;font-size:14px;font-weight:bold;max-width:none;opacity:1;}
 @media (max-width:600px){h1{font-size:36px;}.tool{padding:20px 14px;}}
 .site-footer{
   margin-top:40px;
@@ -599,6 +633,24 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
       </a>
       </div>
     </aside>
+  </div>
+
+  <div class="share-tool" id="shareTool" data-copied="Link de la herramienta copiado" data-copy-fail="No se pudo copiar el link de la herramienta">
+    <details class="share-menu" id="shareMenu">
+      <summary class="share-toggle"><svg class="share-ico ico-share" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="17.5" cy="5.5" r="2.75"/><circle cx="6.5" cy="12" r="2.75"/><circle cx="17.5" cy="18.5" r="2.75"/><path d="M8.9 10.6l6.2-3.7M8.9 13.4l6.2 3.7"/></svg><svg class="share-ico ico-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg><span class="share-sr" id="shareTitle">Compartir esta herramienta</span></summary>
+      <ul class="share-list" id="shareList" aria-labelledby="shareTitle">
+        <li><a class="share-item" data-share="whatsapp" href="https://wa.me/?text=Generador%20de%20links%20de%20WhatsApp%20https%3A%2F%2Forisod.com%2Fes%2Fwhatsapp-link-generator%2F" target="_blank" rel="noopener noreferrer"><svg class="share-ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg><span class="share-sr">Compartir en WhatsApp (se abre en una pestaña nueva)</span><span class="share-tip" aria-hidden="true">Compartir en WhatsApp</span></a></li>
+        <li><a class="share-item" data-share="telegram" href="https://t.me/share/url?url=https%3A%2F%2Forisod.com%2Fes%2Fwhatsapp-link-generator%2F&amp;text=Generador%20de%20links%20de%20WhatsApp" target="_blank" rel="noopener noreferrer"><svg class="share-ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg><span class="share-sr">Compartir en Telegram (se abre en una pestaña nueva)</span><span class="share-tip" aria-hidden="true">Compartir en Telegram</span></a></li>
+        <li><a class="share-item" data-share="facebook" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Forisod.com%2Fes%2Fwhatsapp-link-generator%2F" target="_blank" rel="noopener noreferrer"><svg class="share-ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg><span class="share-sr">Compartir en Facebook (se abre en una pestaña nueva)</span><span class="share-tip" aria-hidden="true">Compartir en Facebook</span></a></li>
+        <li><a class="share-item" data-share="x" href="https://x.com/intent/tweet?text=Generador%20de%20links%20de%20WhatsApp&amp;url=https%3A%2F%2Forisod.com%2Fes%2Fwhatsapp-link-generator%2F" target="_blank" rel="noopener noreferrer"><svg class="share-ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M14.234 10.162 22.977 0h-2.072l-7.591 8.824L7.251 0H.258l9.168 13.343L.258 24H2.33l8.016-9.318L16.749 24h6.993zm-2.837 3.299-.929-1.329L3.076 1.56h3.182l5.965 8.532.929 1.329 7.754 11.09h-3.182z"/></svg><span class="share-sr">Compartir en X (se abre en una pestaña nueva)</span><span class="share-tip" aria-hidden="true">Compartir en X</span></a></li>
+        <li><a class="share-item" data-share="linkedin" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Forisod.com%2Fes%2Fwhatsapp-link-generator%2F" target="_blank" rel="noopener noreferrer"><svg class="share-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 10.5V17M7 7v.01M11 17v-6.5M11 13.5a3 3 0 0 1 6 0V17"/></svg><span class="share-sr">Compartir en LinkedIn (se abre en una pestaña nueva)</span><span class="share-tip" aria-hidden="true">Compartir en LinkedIn</span></a></li>
+        <li><a class="share-item" data-share="reddit" href="https://www.reddit.com/submit?url=https%3A%2F%2Forisod.com%2Fes%2Fwhatsapp-link-generator%2F&amp;title=Generador%20de%20links%20de%20WhatsApp" target="_blank" rel="noopener noreferrer"><svg class="share-ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12 0C5.373 0 0 5.373 0 12c0 3.314 1.343 6.314 3.515 8.485l-2.286 2.286C.775 23.225 1.097 24 1.738 24H12c6.627 0 12-5.373 12-12S18.627 0 12 0Zm4.388 3.199c1.104 0 1.999.895 1.999 1.999 0 1.105-.895 2-1.999 2-.946 0-1.739-.657-1.947-1.539v.002c-1.147.162-2.032 1.15-2.032 2.341v.007c1.776.067 3.4.567 4.686 1.363.473-.363 1.064-.58 1.707-.58 1.547 0 2.802 1.254 2.802 2.802 0 1.117-.655 2.081-1.601 2.531-.088 3.256-3.637 5.876-7.997 5.876-4.361 0-7.905-2.617-7.998-5.87-.954-.447-1.614-1.415-1.614-2.538 0-1.548 1.255-2.802 2.803-2.802.645 0 1.239.218 1.712.585 1.275-.79 2.881-1.291 4.64-1.365v-.01c0-1.663 1.263-3.034 2.88-3.207.188-.911.993-1.595 1.959-1.595Zm-8.085 8.376c-.784 0-1.459.78-1.506 1.797-.047 1.016.64 1.429 1.426 1.429.786 0 1.371-.369 1.418-1.385.047-1.017-.553-1.841-1.338-1.841Zm7.406 0c-.786 0-1.385.824-1.338 1.841.047 1.017.634 1.385 1.418 1.385.785 0 1.473-.413 1.426-1.429-.046-1.017-.721-1.797-1.506-1.797Zm-3.703 4.013c-.974 0-1.907.048-2.77.135-.147.015-.241.168-.183.305.483 1.154 1.622 1.964 2.953 1.964 1.33 0 2.47-.81 2.953-1.964.057-.137-.037-.29-.184-.305-.863-.087-1.795-.135-2.769-.135Z"/></svg><span class="share-sr">Compartir en Reddit (se abre en una pestaña nueva)</span><span class="share-tip" aria-hidden="true">Compartir en Reddit</span></a></li>
+        <li><a class="share-item" data-share="email" href="mailto:?subject=Generador%20de%20links%20de%20WhatsApp&amp;body=Generador%20de%20links%20de%20WhatsApp%20https%3A%2F%2Forisod.com%2Fes%2Fwhatsapp-link-generator%2F"><svg class="share-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5l8.5 6 8.5-6"/></svg><span class="share-sr">Compartir por correo</span><span class="share-tip" aria-hidden="true">Compartir por correo</span></a></li>
+      </ul>
+    </details>
+    <button type="button" class="share-toggle" id="shareNative" hidden><svg class="share-ico ico-share" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="17.5" cy="5.5" r="2.75"/><circle cx="6.5" cy="12" r="2.75"/><circle cx="17.5" cy="18.5" r="2.75"/><path d="M8.9 10.6l6.2-3.7M8.9 13.4l6.2 3.7"/></svg><svg class="share-ico ico-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg><span class="share-sr">Compartir esta herramienta</span></button>
+    <template id="shareCopyTemplate"><li><button type="button" class="share-item" id="shareCopy"><svg class="share-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 5.5V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h.5"/></svg><span class="share-sr">Copiar link de la herramienta</span><span class="share-tip" aria-hidden="true">Copiar link de la herramienta</span></button></li></template>
+    <p class="share-status" id="shareToolStatus" aria-live="polite"></p>
   </div>
 
   <details class="more" id="more">
@@ -1628,6 +1680,123 @@ update(true);
 fetch(EXAMPLES_FILE).then((r) => (r.ok ? r.json() : null))
   .then((d) => { if (d) { examples = d; phoneInput.placeholder = phoneExample(); } })
   .catch(() => { /* no examples: only the United States keeps its fixed example */ });
+</script>
+<script>
+// Share this tool: start
+// Shares this page's own address, read only from its canonical link (so never a query string or fragment),
+// with the H1 as the text. It never reads the tool's fields. Nothing is requested before a click.
+// This block is byte-identical on the EN and ES pages: change one and copy it to the other.
+(function () {
+  const root = document.getElementById("shareTool"), canonical = document.querySelector('link[rel="canonical"]');
+  if (!root || !canonical) return;
+  const menu = document.getElementById("shareMenu"), toggle = menu.querySelector("summary");
+  const list = document.getElementById("shareList"), nativeBtn = document.getElementById("shareNative");
+  const status = document.getElementById("shareToolStatus");
+  const page = new URL(canonical.getAttribute("href"), location.href);
+  page.search = "";
+  page.hash = "";
+  const url = page.href, title = document.querySelector("h1").textContent.trim();
+  const enc = encodeURIComponent;
+  // Each service's share address; every parameter is encoded on its own.
+  const SHARE_LINKS = {
+    whatsapp: (u, t) => "https://wa.me/?text=" + enc(t + " " + u),
+    telegram: (u, t) => "https://t.me/share/url?url=" + enc(u) + "&text=" + enc(t),
+    facebook: (u) => "https://www.facebook.com/sharer/sharer.php?u=" + enc(u),
+    x: (u, t) => "https://x.com/intent/tweet?text=" + enc(t) + "&url=" + enc(u),
+    linkedin: (u) => "https://www.linkedin.com/sharing/share-offsite/?url=" + enc(u),
+    reddit: (u, t) => "https://www.reddit.com/submit?url=" + enc(u) + "&title=" + enc(t),
+    email: (u, t) => "mailto:?subject=" + enc(t) + "&body=" + enc(t + " " + u),
+  };
+  // Share addresses their services no longer document (kept by owner decision), with their last manual check.
+  // Recheck at least every six months, before a site-wide rollout and whenever a sharing failure is reported (see CLAUDE.md).
+  // Kept as JSON so the smoke test can read it.
+  const UNDOCUMENTED_ENDPOINTS = {
+    "facebook": {"status": "undocumented", "lastVerified": "2026-11-03", "testedUrl": "https://orisod.com/whatsapp-link-generator/",
+      "result": "Opened by Code in Chromium, not logged in: sharer.php answered HTTP 200 with the u parameter kept and showed Facebook's login prompt (posting needs an account)."},
+    "linkedin": {"status": "undocumented", "lastVerified": "2026-11-03", "testedUrl": "https://orisod.com/whatsapp-link-generator/",
+      "result": "Verified manually by the owner in a signed-in browser: the post composer opened with the page link already attached and a link preview card (page title and the site-wide share image). Nothing was posted."},
+    "reddit": {"status": "undocumented", "lastVerified": "2026-11-03", "testedUrl": "https://orisod.com/whatsapp-link-generator/",
+      "result": "Verified manually by the owner in a signed-in browser: the submit page opened with the title WhatsApp Link Generator and the page link attached as a link preview card. Nothing was posted."}
+  };
+  list.querySelectorAll("a[data-share]").forEach((a) => { a.href = SHARE_LINKS[a.dataset.share](url, title); });
+
+  // Copy tool link: only where the browser can copy, second in the list.
+  if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+    const item = document.getElementById("shareCopyTemplate").content.firstElementChild.cloneNode(true);
+    list.children[0].after(item);
+    item.querySelector("button").addEventListener("click", async () => {
+      let ok = true;
+      try { await navigator.clipboard.writeText(url); } catch (e) { ok = false; }
+      status.textContent = ok ? root.dataset.copied : root.dataset.copyFail;
+    });
+  }
+
+  // On a touch device with the Web Share API, one button opens the system share sheet instead of the list.
+  const data = { title, text: title, url };
+  let useNative = !!(window.matchMedia && matchMedia("(pointer: coarse)").matches) && typeof navigator.share === "function";
+  if (useNative && typeof navigator.canShare === "function") {
+    try { useNative = navigator.canShare(data); } catch (e) { useNative = false; }
+  }
+  if (useNative) {
+    menu.hidden = true;
+    nativeBtn.hidden = false;
+  }
+  nativeBtn.addEventListener("click", async () => {
+    try {
+      await navigator.share(data);
+    } catch (e) {
+      if (!e || e.name !== "AbortError") {
+        // Sharing failed (not a cancel): fall back to the list of links, open, with focus on its button.
+        nativeBtn.hidden = true;
+        menu.hidden = false;
+        menu.open = true;
+        toggle.focus();
+        return;
+      }
+    }
+    nativeBtn.focus();
+  });
+
+  // Tooltips: one at a time, for the item last hovered (mouse or pen) or focused from the keyboard. Moving the
+  // pointer into the space under the list keeps it. The first Escape hides it; the next closes the list.
+  root.classList.add("js-tips");
+  let shown = null, hovered = null, focused = null;
+  const show = (item) => {
+    if (shown) shown.classList.remove("tip-on");
+    shown = item;
+    if (item) item.classList.add("tip-on");
+  };
+  list.addEventListener("pointerover", (e) => {
+    if (e.pointerType === "touch") return;
+    const item = e.target.closest(".share-item");
+    if (item && item !== hovered) { hovered = item; root.classList.remove("tips-off"); show(item); }
+  });
+  list.addEventListener("pointerleave", () => { hovered = null; show(focused); });
+  list.addEventListener("focusin", (e) => {
+    const item = e.target.closest(".share-item");
+    if (item && item.matches(":focus-visible")) { focused = item; root.classList.remove("tips-off"); show(item); }
+  });
+  list.addEventListener("focusout", (e) => {
+    if (e.target.closest(".share-item") === focused) { focused = null; show(hovered); }
+  });
+  const tipVisible = () => [...root.querySelectorAll(".share-tip")].some((t) => getComputedStyle(t).display !== "none");
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    if (tipVisible()) {
+      e.preventDefault();
+      root.classList.add("tips-off");
+      show(null);
+      return;
+    }
+    const active = document.activeElement;
+    if (menu.open && !menu.hidden && (menu.contains(active) || active === document.body)) {
+      e.preventDefault();
+      menu.open = false;
+      toggle.focus();
+    }
+  });
+})();
+// Share this tool: end
 </script>
 <script>
 // Minimal nav (Initiative 2): the Menu panel and the Search icon.
