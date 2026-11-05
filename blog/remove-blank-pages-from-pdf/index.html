@@ -379,18 +379,18 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 <p>The check looks at a small picture, so it can't read what a faint mark means. A page that is empty apart from a signature line, a single handwritten initial or a light stamp can matter a great deal. A page marked as blank is a suggestion, not a decision: look at each one before you save, and clear Remove page on anything you want to keep.</p>
 
 <h2>Choosing the sensitivity</h2>
-<p>There are three settings. <strong>Conservative</strong>, the default, suggests only pages with practically no marks, so a page with a page number or a faint header is kept. <strong>Balanced</strong> also suggests pages with a few small marks, such as a page number. <strong>More aggressive</strong> goes further and ignores light marks and a wider band along the edges, which helps with noisy scans. Raising the sensitivity only ever adds suggestions, and a page you chose yourself keeps your choice when you change it.</p>
+<p>There are three settings. <strong>Conservative</strong>, the default, suggests only pages with practically no marks, so a page with a page number or a faint header is kept. <strong>Balanced</strong> also suggests pages with a few small marks, such as a page number. <strong>More aggressive</strong> goes further and ignores light marks and a wider band along the edges, which helps with noisy scans. Raising the sensitivity can add suggestions without removing earlier ones, and a page you chose yourself keeps your choice when you change it.</p>
 
 <h2>Scans, shadows and small marks</h2>
 <p>Scanners add things that aren't on the paper: dust, a grey tint, a dark edge where the lid didn't close, text showing through from the other side. If a scanned empty page isn't suggested at Conservative, try Balanced or More aggressive. If a page with a small but real mark is suggested, keep it by clearing its box, or go back to a lower setting.</p>
 
 <h2>Hidden text, annotations and forms</h2>
-<p>Some pages look empty but aren't. A page can hold white text, an invisible text layer added by text recognition, a comment, a form field or a signature field. The tool checks for these before suggesting a page, and a page that has any of them is never suggested automatically. It shows the note "This page looks blank but contains nonvisual content." You can still remove it yourself if you're sure.</p>
+<p>Some pages look empty but aren't. A page can hold white text, an invisible text layer added by text recognition, a comment, a form field or a signature field. The tool checks for these before suggesting a page, and a page that has any of them is not suggested automatically. It shows the note "This page looks blank but contains nonvisual content." You can still remove it yourself if you're sure.</p>
 
 <h2>What may change in the downloaded PDF</h2>
-<p>The tool removes the pages you chose from the original file and saves the rest. The pages you keep keep their content, links to websites, comments and form fields, and the title, author and attachments stay as they were. Other things may change:</p>
+<p>The tool removes the pages you chose and saves a new copy with the rest. Content, website links, comments and form fields on the pages you keep are generally retained, along with the title, author and attachments. Other things may change:</p>
 <ul>
-  <li><strong>Bookmarks and internal links</strong> that pointed to a removed page stop working.</li>
+  <li><strong>Bookmarks and internal links</strong> that pointed to a removed page may stop working.</li>
   <li><strong>Form fields</strong> whose box was on a removed page no longer appear on any page.</li>
   <li><strong>Tags</strong> for accessibility aren't updated, so a tagged PDF may need its tags checked.</li>
   <li><strong>PDF/A</strong> files may no longer meet the standard, even if the file still says it does.</li>
@@ -401,13 +401,13 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 <p>A PDF with a password can't be checked: remove the password in a trusted PDF application first, then add the file again. A digitally signed PDF can be checked, and the tool warns you first, because any change to a signed file, such as removing a page, means the signature may no longer be valid. If the signature matters, keep the signed original as it is.</p>
 
 <h2>Browser processing and privacy</h2>
-<p>Your PDF is processed in your browser and is not uploaded to Orisod servers. The page downloads only its own code, such as the PDF libraries, from orisod.com. It doesn't save your file, its name or your choices, and closing the tab clears them.</p>
+<p>Your PDF is processed in your browser and is not uploaded to Orisod servers. The tool loads its PDF libraries from orisod.com. It doesn't save your file, its name or your choices, and closing the tab removes them from the page.</p>
 
 <h2>Troubleshooting large PDFs</h2>
-<p>Every page has to be drawn once, so a long PDF takes a while: a thousand pages of text take around twenty seconds on a typical laptop, and a file full of photos uses roughly three times its own size in memory while it's checked. For very large files, close other tabs, or split the PDF into parts first. If the page becomes unresponsive, reload it and try a smaller part of the file.</p>
+<p>Every page has to be drawn once, so a long PDF can take a while and a file full of photos can use considerably more memory than its file size. For very large files, close other tabs or split the PDF into parts first. If the page becomes unresponsive, reload it and try a smaller part of the file.</p>
 <div class="cta-box">
   <h3>Remove blank pages from a PDF</h3>
-  <p>Check every page for blank ones, review the suggestions and download the PDF without the pages you removed. Your PDF is processed in your browser and is not uploaded to Orisod servers.</p>
+  <p>Let the tool check each page, review the suggestions and download the PDF without the pages you removed. Your PDF is processed in your browser and is not uploaded to Orisod servers.</p>
   <a class="cta-button" href="/remove-blank-pages/">Remove blank pages →</a>
 </div>
 

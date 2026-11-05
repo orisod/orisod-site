@@ -71,7 +71,7 @@
           "name": "Why was a page with only a page number marked as blank?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "At Balanced and More aggressive, a few small marks such as a page number or a short footer count as too little content. Choose Conservative to keep those pages, or clear Remove page on that page before saving."
+            "text": "At Balanced and More aggressive, a few small marks such as a page number or a short footer count as too little content. Choose Conservative to keep those pages, or clear Remove page before saving."
           }
         },
         {
@@ -95,7 +95,7 @@
           "name": "Will bookmarks, links and forms be preserved?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Not always. The pages you keep keep their content, links to websites and their form fields. Bookmarks and internal links that pointed to a removed page may stop working, and tags, attachments, PDF/A compliance and digital signatures can be affected. Check the downloaded PDF before replacing the original."
+            "text": "Not always. Content, website links and form fields on the pages you keep are generally retained. Bookmarks and internal links that pointed to a removed page may stop working, and tags, attachments, PDF/A compliance and digital signatures can be affected. Check the downloaded PDF before replacing the original."
           }
         },
         {
@@ -111,7 +111,7 @@
           "name": "Is my PDF uploaded to Orisod?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No. Your PDF is processed in your browser and is not uploaded to Orisod servers. The page only downloads its own code, such as the PDF libraries, from orisod.com."
+            "text": "No. Your PDF is processed in your browser and is not uploaded to Orisod servers. The tool loads its PDF libraries from orisod.com."
           }
         }
       ]
@@ -513,7 +513,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
       <select id="sensitivity" aria-describedby="sensitivityHelp"><option value="conservative" selected>Conservative</option><option value="balanced">Balanced</option><option value="aggressive">More aggressive</option></select>
       <p class="hint" id="sensitivityHelp">Higher sensitivity allows pages with small marks or light scan noise to be marked as blank. Review the marked pages before saving.</p>
     </div>
-    <p class="warn-note" id="signedNote" hidden>This PDF has a digital signature. Removing pages changes the file, so the signature may no longer be valid.</p>
+    <p class="warn-note" id="signedNote" hidden>This PDF has a digital signature. Removing pages changes the downloaded copy, so the signature may no longer be valid.</p>
     <p class="warn-note" id="largeNote" hidden>This is a large PDF, so checking it may take a while and use a lot of memory. If the browser slows down, close other tabs.</p>
     <div class="progress-row" id="progressRow" hidden>
       <progress id="progressBar" max="1" value="0" aria-hidden="true"></progress>
@@ -603,12 +603,12 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
       <h2>Privacy and sharing</h2>
       <ul>
         <li>Your PDF is processed in your browser and is not uploaded to Orisod servers.</li>
-        <li>This page doesn't save your PDF, its name or your choices. Closing the tab clears them.</li>
-        <li>The share button shares only the address of this tool, never your file or the pages you chose.</li>
+        <li>This page doesn't save your PDF, its name or your choices. Closing the tab removes them from the page.</li>
+        <li>The share button includes only this tool's address, not your file or the pages you chose.</li>
       </ul>
 
       <h2>What blank-page detection means</h2>
-      <p>Each page is drawn as a small picture and compared with the colour of its own paper, so off-white and grey scans are judged fairly. Marks clearly darker than the paper are counted, apart from a thin band along the edges where scanners leave shadows. When those marks cover almost none of the page, it's suggested as blank. The sensitivity sets how dark a mark must be, how much of the page it may cover and how wide the edge band is. A page with text you can't see, comments, form fields or a signature field is never suggested, even if it looks empty, because that content may matter.</p>
+      <p>Each page is drawn as a small picture and compared with the colour of its own paper, so off-white and grey scans are evaluated relative to their background. Marks clearly darker than the paper are counted, apart from a thin band along the edges where scanners leave shadows. When those marks cover almost none of the page, it's suggested as blank. The sensitivity sets how dark a mark must be, how much of the page it may cover and how wide the edge band is. A page with text you can't see, comments, form fields or a signature field is not suggested automatically, even if it looks empty, because that content may matter.</p>
 
       <h2>When to use it</h2>
       <ul>
@@ -621,7 +621,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
       <h2>Frequently asked questions</h2>
       <div class="faq-item">
         <div class="q">Why was a page with only a page number marked as blank?</div>
-        <div>At Balanced and More aggressive, a few small marks such as a page number or a short footer count as too little content. Choose Conservative to keep those pages, or clear Remove page on that page before saving.</div>
+        <div>At Balanced and More aggressive, a few small marks such as a page number or a short footer count as too little content. Choose Conservative to keep those pages, or clear Remove page before saving.</div>
       </div>
       <div class="faq-item">
         <div class="q">Why wasn't a scanned blank page detected?</div>
@@ -633,7 +633,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
       </div>
       <div class="faq-item">
         <div class="q">Will bookmarks, links and forms be preserved?</div>
-        <div>Not always. The pages you keep keep their content, links to websites and their form fields. Bookmarks and internal links that pointed to a removed page may stop working, and tags, attachments, PDF/A compliance and digital signatures can be affected. Check the downloaded PDF before replacing the original.</div>
+        <div>Not always. Content, website links and form fields on the pages you keep are generally retained. Bookmarks and internal links that pointed to a removed page may stop working, and tags, attachments, PDF/A compliance and digital signatures can be affected. Check the downloaded PDF before replacing the original.</div>
       </div>
       <div class="faq-item">
         <div class="q">Can it open a password-protected PDF?</div>
@@ -641,7 +641,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
       </div>
       <div class="faq-item">
         <div class="q">Is my PDF uploaded to Orisod?</div>
-        <div>No. Your PDF is processed in your browser and is not uploaded to Orisod servers. The page only downloads its own code, such as the PDF libraries, from orisod.com.</div>
+        <div>No. Your PDF is processed in your browser and is not uploaded to Orisod servers. The tool loads its PDF libraries from orisod.com.</div>
       </div>
     </div>
   </details>

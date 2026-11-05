@@ -71,7 +71,7 @@
           "name": "¿Por qué se marcó en blanco una página que solo tiene el número de página?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Con Equilibrada y Más estricta, unas pocas marcas pequeñas, como un número de página o un pie breve, cuentan como muy poco contenido. Elige Conservadora para conservar esas páginas, o desmarca Eliminar página en esa página antes de guardar."
+            "text": "Con Equilibrada y Más estricta, unas pocas marcas pequeñas, como un número de página o un pie breve, cuentan como muy poco contenido. Elige Conservadora para conservar esas páginas o desmarca Eliminar página antes de guardar."
           }
         },
         {
@@ -95,7 +95,7 @@
           "name": "¿Se conservan los marcadores, los enlaces y los formularios?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No siempre. Las páginas que conservas mantienen su contenido, sus enlaces a sitios web y sus campos de formulario. Los marcadores y enlaces internos que apuntaban a una página eliminada pueden dejar de funcionar, y las etiquetas, los archivos adjuntos, el cumplimiento de PDF/A y las firmas digitales pueden verse afectados. Revisa el PDF descargado antes de reemplazar el original."
+            "text": "No siempre. Por lo general, se conservan el contenido, los enlaces a sitios web y los campos de formulario de las páginas que mantienes. Los marcadores y enlaces internos que apuntaban a una página eliminada pueden dejar de funcionar, y las etiquetas, los archivos adjuntos, el cumplimiento de PDF/A y las firmas digitales pueden verse afectados. Revisa el PDF descargado antes de reemplazar el original."
           }
         },
         {
@@ -111,7 +111,7 @@
           "name": "¿Se sube mi PDF a Orisod?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No. Tu PDF se procesa en tu navegador y no se sube a los servidores de Orisod. La página solo descarga su propio código, como las bibliotecas de PDF, desde orisod.com."
+            "text": "No. Tu PDF se procesa en tu navegador y no se sube a los servidores de Orisod. La herramienta carga sus bibliotecas de PDF desde orisod.com."
           }
         }
       ]
@@ -513,7 +513,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
       <select id="sensitivity" aria-describedby="sensitivityHelp"><option value="conservative" selected>Conservadora</option><option value="balanced">Equilibrada</option><option value="aggressive">Más estricta</option></select>
       <p class="hint" id="sensitivityHelp">Una sensibilidad mayor permite marcar como en blanco páginas con marcas pequeñas o ruido leve del escaneo. Revisa las páginas marcadas antes de guardar.</p>
     </div>
-    <p class="warn-note" id="signedNote" hidden>Este PDF tiene una firma digital. Eliminar páginas cambia el archivo, así que la firma podría dejar de ser válida.</p>
+    <p class="warn-note" id="signedNote" hidden>Este PDF tiene una firma digital. Eliminar páginas cambia la copia descargada, así que la firma podría dejar de ser válida.</p>
     <p class="warn-note" id="largeNote" hidden>Este PDF es grande, así que revisarlo puede tardar y usar mucha memoria. Si el navegador se vuelve lento, cierra otras pestañas.</p>
     <div class="progress-row" id="progressRow" hidden>
       <progress id="progressBar" max="1" value="0" aria-hidden="true"></progress>
@@ -603,12 +603,12 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
       <h2>Privacidad y uso compartido</h2>
       <ul>
         <li>Tu PDF se procesa en tu navegador y no se sube a los servidores de Orisod.</li>
-        <li>Esta página no guarda tu PDF, su nombre ni tus elecciones. Al cerrar la pestaña desaparecen.</li>
-        <li>El botón para compartir solo comparte la dirección de esta herramienta, nunca tu archivo ni las páginas que elegiste.</li>
+        <li>Esta página no guarda tu PDF, su nombre ni tus elecciones. Al cerrar la pestaña, se eliminan de la página.</li>
+        <li>El botón para compartir incluye solo la dirección de esta herramienta, no tu archivo ni las páginas que elegiste.</li>
       </ul>
 
       <h2>Qué significa detectar páginas en blanco</h2>
-      <p>Cada página se dibuja como una imagen pequeña y se compara con el color de su propio papel, así que los escaneos blanquecinos o grises se juzgan de forma justa. Se cuentan las marcas claramente más oscuras que el papel, salvo en una franja estrecha junto a los bordes, donde los escáneres dejan sombras. Cuando esas marcas casi no ocupan la página, se sugiere como página en blanco. La sensibilidad define qué tan oscura debe ser una marca, cuánto de la página puede ocupar y qué tan ancha es la franja del borde. Una página con texto que no se ve, comentarios, campos de formulario o un campo de firma nunca se sugiere, aunque parezca vacía, porque ese contenido puede importar.</p>
+      <p>Cada página se dibuja como una imagen pequeña y se compara con el color de su propio papel, así que los escaneos blanquecinos o grises se evalúan en relación con su fondo. Se cuentan las marcas claramente más oscuras que el papel, salvo en una franja estrecha junto a los bordes, donde los escáneres dejan sombras. Cuando esas marcas casi no ocupan la página, se sugiere como página en blanco. La sensibilidad define qué tan oscura debe ser una marca, cuánto de la página puede ocupar y qué tan ancha es la franja del borde. Una página con texto que no se ve, comentarios, campos de formulario o un campo de firma no se sugiere de forma automática, aunque parezca vacía, porque ese contenido puede importar.</p>
 
       <h2>Cuándo usarlo</h2>
       <ul>
@@ -621,7 +621,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
       <h2>Preguntas frecuentes</h2>
       <div class="faq-item">
         <div class="q">¿Por qué se marcó en blanco una página que solo tiene el número de página?</div>
-        <div>Con Equilibrada y Más estricta, unas pocas marcas pequeñas, como un número de página o un pie breve, cuentan como muy poco contenido. Elige Conservadora para conservar esas páginas, o desmarca Eliminar página en esa página antes de guardar.</div>
+        <div>Con Equilibrada y Más estricta, unas pocas marcas pequeñas, como un número de página o un pie breve, cuentan como muy poco contenido. Elige Conservadora para conservar esas páginas o desmarca Eliminar página antes de guardar.</div>
       </div>
       <div class="faq-item">
         <div class="q">¿Por qué no se detectó una página en blanco escaneada?</div>
@@ -633,7 +633,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
       </div>
       <div class="faq-item">
         <div class="q">¿Se conservan los marcadores, los enlaces y los formularios?</div>
-        <div>No siempre. Las páginas que conservas mantienen su contenido, sus enlaces a sitios web y sus campos de formulario. Los marcadores y enlaces internos que apuntaban a una página eliminada pueden dejar de funcionar, y las etiquetas, los archivos adjuntos, el cumplimiento de PDF/A y las firmas digitales pueden verse afectados. Revisa el PDF descargado antes de reemplazar el original.</div>
+        <div>No siempre. Por lo general, se conservan el contenido, los enlaces a sitios web y los campos de formulario de las páginas que mantienes. Los marcadores y enlaces internos que apuntaban a una página eliminada pueden dejar de funcionar, y las etiquetas, los archivos adjuntos, el cumplimiento de PDF/A y las firmas digitales pueden verse afectados. Revisa el PDF descargado antes de reemplazar el original.</div>
       </div>
       <div class="faq-item">
         <div class="q">¿Puede abrir un PDF protegido con contraseña?</div>
@@ -641,7 +641,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
       </div>
       <div class="faq-item">
         <div class="q">¿Se sube mi PDF a Orisod?</div>
-        <div>No. Tu PDF se procesa en tu navegador y no se sube a los servidores de Orisod. La página solo descarga su propio código, como las bibliotecas de PDF, desde orisod.com.</div>
+        <div>No. Tu PDF se procesa en tu navegador y no se sube a los servidores de Orisod. La herramienta carga sus bibliotecas de PDF desde orisod.com.</div>
       </div>
     </div>
   </details>
