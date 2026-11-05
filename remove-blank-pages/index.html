@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Remove Blank Pages from PDF</title>
+</head>
+<body>
+<main>
+<h1>Remove Blank Pages from PDF</h1>
+</main>
+<script>
+// BEGIN detection
+// Decides whether a rendered page looks blank. Pure: it reads only the pixel array it's given (RGBA, row by row, as a
+// canvas returns it) and the config, with no DOM or canvas, so the Node tests run this exact text from the page. The
+// same pixels and config always give the same result.
+//
+// 1. Every pixel is laid over white (a transparent background counts as paper) and turned into a brightness, 0 to 255.
+// 2. The paper's brightness is the level that BLANK_PAPER_SHARE of the pixels reach or stay under, so off-white or
+//    grey scans are measured against their own paper, not against pure white. A page whose paper is darker than
+//    BLANK_MIN_PAPER is a coloured or dark page and is never blank.
+// 3. A pixel is a mark when it's at least inkDelta darker than the paper. A band of `margin` on each edge is left out
+//    (scanner shadows, punched holes, the edge of the glass).
+// 4. The page is blank when its marks are no more than maxInk of all the page's pixels.
+//
+// Each sensitivity is at least as lenient as the one before it in all three settings, and the paper level doesn't
+// depend on the sensitivity, so a page that's blank at one level is blank at every higher level.
+const BLANK_PAPER_SHARE = 0.9;
+const BLANK_MIN_PAPER = 200;
+const BLANK_SENSITIVITY = {
+  conservative: { inkDelta: 24, maxInk: 0.00005, margin: 0.02 },
+  balanced: { inkDelta: 40, maxInk: 0.001, margin: 0.04 },
+  aggressive: { inkDelta: 64, maxInk: 0.004, margin: 0.06 },
+};
+const BLANK_LEVELS = ["conservative", "balanced", "aggressive"];
+// Whether a page shows anything at all: any pixel slightly darker than the paper, anywhere, counts. The page uses it to
+// tell text that shows (a page number) from text that doesn't (white or invisible text): only the second is hidden
+// content. It doesn't depend on the sensitivity.
+const BLANK_TRACE = { inkDelta: 8, maxInk: 0, margin: 0 };
+
+function detectBlankPage(pixels, width, height, config) {
+  if (!Number.isInteger(width) || !Number.isInteger(height) || width < 1 || height < 1) {
+    throw new RangeError("width and height must be positive whole numbers");
+  }
+  const count = width * height;
+  if (!pixels || pixels.length < count * 4) throw new RangeError("the pixel array is shorter than width x height x 4");
+  if (!config || !(config.inkDelta >= 0) || !(config.maxInk >= 0) || !(config.margin >= 0) || config.margin >= 0.5) {
+    throw new RangeError("config needs inkDelta >= 0, maxInk >= 0 and 0 <= margin < 0.5");
+  }
+  const level = new Uint8Array(count);
+  const histogram = new Uint32Array(256);
+  for (let i = 0, p = 0; i < count; i++, p += 4) {
+    const alpha = pixels[p + 3] / 255;
+    const white = 255 * (1 - alpha);
+    const r = pixels[p] * alpha + white, g = pixels[p + 1] * alpha + white, b = pixels[p + 2] * alpha + white;
+    const v = Math.round(0.2126 * r + 0.7152 * g + 0.0722 * b);
+    level[i] = v;
+    histogram[v]++;
+  }
+  let paper = 255;
+  for (let v = 0, seen = 0, need = Math.ceil(BLANK_PAPER_SHARE * count); v < 256; v++) {
+    seen += histogram[v];
+    if (seen >= need) { paper = v; break; }
+  }
+  const limit = Math.floor(config.maxInk * count + 1e-9);
+  if (paper < BLANK_MIN_PAPER) return { blank: false, reason: "dark-page", paper, marks: 0, limit };
+  const left = Math.floor(width * config.margin), top = Math.floor(height * config.margin);
+  let marks = 0;
+  for (let y = top; y < height - top; y++) {
+    for (let x = left, i = y * width + left; x < width - left; x++, i++) {
+      if (paper - level[i] >= config.inkDelta) marks++;
+    }
+  }
+  return { blank: marks <= limit, reason: marks <= limit ? "blank" : "marks", paper, marks, limit };
+}
+// END detection
+</script>
+</body>
+</html>
