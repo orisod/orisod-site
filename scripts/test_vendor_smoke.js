@@ -1289,7 +1289,7 @@ const RBP_PAGES = [
   { what: "a page of text", expect: [false, false, false] },
   { what: "an empty page", expect: [true, true, true] },
   { what: "only a page number", expect: [false, true, true] },
-  { what: "a faint header", expect: [false, true, true] },
+  { what: "a pale header (words and a band)", expect: [false, true, true] },
   { what: "a single speck", expect: [true, true, true] },
   { what: "a scan: grey paper, dust and an edge shadow", expect: [false, true, true] },
   { what: "white text", expect: [false, false, false], hidden: true },
@@ -1319,7 +1319,12 @@ const RBP_MAKE = async ([kind, n]) => {
   p.drawText("Body text on the first page.", { x: 72, y: 650, size: 12, font });
   add();
   add().drawText("3", { x: 302, y: 36, size: 10, font });
-  add().drawText("Draft header", { x: 72, y: 740, size: 9, font, color: rgb(0.86, 0.86, 0.86) });
+  // A pale header: the words, and a band of the same grey under them. Thin pale glyphs alone leave almost no pixel
+  // 24 levels darker than the paper at 240 px, and how many depends on the platform's text smoothing (Windows and
+  // Linux differ), so the band is what reliably makes it a mark at Conservative and not at Balanced.
+  const header = add();
+  header.drawText("Draft header", { x: 72, y: 740, size: 9, font, color: rgb(0.86, 0.86, 0.86) });
+  header.drawRectangle({ x: 72, y: 732, width: 300, height: 3, color: rgb(0.86, 0.86, 0.86) });
   add().drawCircle({ x: 300, y: 400, size: 0.6, color: rgb(0, 0, 0) });
   p = add();
   p.drawRectangle({ x: 0, y: 0, width: 612, height: 792, color: rgb(0.93, 0.92, 0.9) });
