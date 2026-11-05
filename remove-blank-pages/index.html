@@ -847,8 +847,9 @@ function paint(p) {
   const state = p.choice ? (remove ? T.chosenRemove : T.chosenKeep) : (remove ? T.autoRemove : T.autoKeep);
   p.li.dataset.state = (p.choice ? "manual-" : "auto-") + (remove ? "remove" : "keep");
   p.stateText.textContent = state;
-  p.iconRemove.hidden = !remove;
-  p.iconKeep.hidden = remove;
+  // SVG elements have no .hidden property: set the attribute the CSS hides.
+  p.iconRemove.toggleAttribute("hidden", !remove);
+  p.iconKeep.toggleAttribute("hidden", remove);
   p.check.checked = remove;
 }
 

@@ -1350,7 +1350,7 @@ const rbpState = (page) => page.evaluate(() => ({
     return { state: li.dataset.state, checked: cb.checked, name: document.getElementById(cb.getAttribute("aria-labelledby"))?.textContent || "",
       describedBy: (cb.getAttribute("aria-describedby") || "").split(" ").map((id) => document.getElementById(id)?.textContent || "").join(" | "),
       num: li.querySelector(".page-num")?.textContent || "", stateText: li.querySelector(".page-state")?.textContent || "",
-      icons: [...li.querySelectorAll(".page-state svg")].filter((x) => !x.hidden).length, note: li.querySelector(".page-note")?.textContent || "",
+      icons: [...li.querySelectorAll(".page-state svg")].filter((x) => getComputedStyle(x).display !== "none").length, note: li.querySelector(".page-note")?.textContent || "",
       thumbAlt: li.querySelector("img")?.getAttribute("alt"), checkboxes: li.querySelectorAll('input[type="checkbox"]').length,
       buttons: li.querySelectorAll("button, a").length };
   }),
