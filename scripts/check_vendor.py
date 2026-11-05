@@ -102,25 +102,27 @@ REMAINING_CDN = {}
 
 # Outside addresses an inline script or the site's own JS may mention, because
 # nothing loads them: (file pattern, URL prefix). Anything else on another host fails.
+# Pages with the "Share this tool" button, and the share addresses its links open (never fetched by the page).
+SHARE_PAGES = ("whatsapp-link-generator", "remove-blank-pages")
+SHARE_ADDRESSES = (
+    "https://wa.me/?text=",
+    "https://t.me/share/url",
+    "https://www.facebook.com/sharer/sharer.php",
+    "https://x.com/intent/tweet",
+    "https://www.linkedin.com/sharing/share-offsite/",
+    "https://www.reddit.com/submit",
+)
 NOT_LOADED = (
     ("*", "http://www.w3.org/"),  # XML namespace names (SVG's), which browsers never fetch
     ("image-metadata-viewer/index.html", "https://www.google.com/maps?q="),  # the "Open in Google Maps" link
     ("es/image-metadata-viewer/index.html", "https://www.google.com/maps?q="),
     ("whatsapp-link-generator/index.html", "https://wa.me/"),  # the chat link the visitor opens (never fetched by the page)
     ("es/whatsapp-link-generator/index.html", "https://wa.me/"),
-    ("whatsapp-link-generator/index.html", "https://t.me/share/url"),  # "Share this tool" links the visitor opens (never fetched by the page)
-    ("es/whatsapp-link-generator/index.html", "https://t.me/share/url"),
-    ("whatsapp-link-generator/index.html", "https://www.facebook.com/sharer/sharer.php"),
-    ("es/whatsapp-link-generator/index.html", "https://www.facebook.com/sharer/sharer.php"),
-    ("whatsapp-link-generator/index.html", "https://x.com/intent/tweet"),
-    ("es/whatsapp-link-generator/index.html", "https://x.com/intent/tweet"),
-    ("whatsapp-link-generator/index.html", "https://www.linkedin.com/sharing/share-offsite/"),
-    ("es/whatsapp-link-generator/index.html", "https://www.linkedin.com/sharing/share-offsite/"),
-    ("whatsapp-link-generator/index.html", "https://www.reddit.com/submit"),
-    ("es/whatsapp-link-generator/index.html", "https://www.reddit.com/submit"),
     ("assets/goatcounter/count.js", "https://www.goatcounter.com"),  # comments in the pinned count.js
     ("assets/goatcounter/count.js", "https://opensource.org/licenses/ISC"),
     ("assets/goatcounter/count.js", "https://github.com/arp242/goatcounter"),
+) + tuple(
+    (f"{lang}{page}/index.html", url) for page in SHARE_PAGES for lang in ("", "es/") for url in SHARE_ADDRESSES
 )
 SITE_HOSTS = {"orisod.com", "www.orisod.com"}
 

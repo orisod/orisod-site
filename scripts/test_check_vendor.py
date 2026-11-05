@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Negative tests for check_vendor.py's tarball-member, vendor-path, flag-folder, wa.me and share-link rules.
+"""Negative tests for check_vendor.py's tarball-member, vendor-path, flag-folder, wa.me and share-link rules (both share pages).
 
 Builds a tiny site in a temporary folder (one page, one vendored "font" taken from
 a release tarball, its LICENSE, two circle-flags images and theirs, and a
@@ -61,7 +61,15 @@ const SHARE = "https://t.me/share/url?url=" + enc(u) + "&text=" + enc(t);
 """
 
 
-def build(root, manifest=MANIFEST, page=PAGE, site_js=None, wa_page=WA_PAGE):
+# A second page with the "Share this tool" button: its share links are allowed, a WhatsApp chat link isn't.
+RBP_PAGE = """<!doctype html><html><head><title>r</title></head><body><main>r</main>
+<script>
+const SHARE = ["https://wa.me/?text=" + enc(t), "https://t.me/share/url?url=" + enc(u), "https://www.reddit.com/submit?url=" + enc(u)];
+</script></body></html>
+"""
+
+
+def build(root, manifest=MANIFEST, page=PAGE, site_js=None, wa_page=WA_PAGE, rbp_page=RBP_PAGE):
     (root / FOLDER).mkdir(parents=True)
     (root / FOLDER / "Demo-Regular.ttf").write_bytes(FONT)
     (root / FOLDER / "LICENSE").write_bytes(LICENSE)
@@ -71,6 +79,8 @@ def build(root, manifest=MANIFEST, page=PAGE, site_js=None, wa_page=WA_PAGE):
     (root / FLAGS / "LICENSE").write_bytes(LICENSE)
     (root / "whatsapp-link-generator").mkdir()
     (root / "whatsapp-link-generator/index.html").write_text(wa_page, encoding="utf-8")
+    (root / "remove-blank-pages").mkdir()
+    (root / "remove-blank-pages/index.html").write_text(rbp_page, encoding="utf-8")
     (root / "assets/vendor/manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
     (root / ".gitattributes").write_text("assets/vendor/** -text\n", encoding="utf-8")
     (root / "index.html").write_text(page, encoding="utf-8")
@@ -129,6 +139,10 @@ CASES = [
      "index.html: inline script refers to https://wa.me/123 on another host"),
     ("a share link on a page that isn't the WhatsApp tool", {"page": PAGE.replace("</script>", "a.href = 'https://t.me/share/url?url=x';\n</script>")},
      "index.html: inline script refers to https://t.me/share/url?url=x on another host"),
+    ("a WhatsApp chat link on a page that only shares", {"rbp_page": RBP_PAGE.replace("https://wa.me/?text=", "https://wa.me/447400123456?text=")},
+     "remove-blank-pages/index.html: inline script refers to https://wa.me/447400123456?text= on another host"),
+    ("another address on a share host, on the second share page", {"rbp_page": RBP_PAGE.replace("reddit.com/submit?url=", "reddit.com/r/all?url=")},
+     "remove-blank-pages/index.html: inline script refers to https://www.reddit.com/r/all?url= on another host"),
     ("another address on a share host", {"wa_page": WA_PAGE.replace("t.me/share/url?url=", "t.me/joinchat?url=")},
      "inline script refers to https://t.me/joinchat?url= on another host"),
 ]
