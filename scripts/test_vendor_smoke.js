@@ -4047,9 +4047,19 @@ const CASES = [
       }
       const expectFit = (rows) => { const bad = rows.filter((r) => r.over > 0); expect(!bad.length, `labels past their panel: ${bad.map((r) => `"${r.text}" by ${r.over}px in ${r.where}`).join(", ")}`); };
       expectFit(overflow);
-      return `exactly one diagram exposed (${seen.join(", ")}), the approved aria-label, Keep and Remove shown for both suggested pages, no label under 12px, every label inside its panel (wide and stacked), no sideways scroll at 320px; ` +
+      // The stage 2 note is two text lines that must read as one complete sentence, in both versions (EN and ES alike).
+      const NOTE = { en: "Two pages look blank. You choose for each one", es: "Dos páginas parecen en blanco. Tú eliges en cada una" };
+      const notes = await page.evaluate(() => [...document.querySelectorAll("figure.rbp-flow svg")].map((svg) => {
+        const t = [...svg.querySelectorAll("text")].map((x) => x.textContent);
+        const i = t.findIndex((x) => /^(Two pages|Dos páginas)/.test(x));
+        return i < 0 ? "" : `${t[i]} ${t[i + 1]}`;
+      }));
+      const expectNote = (got) => expect(got.length === 2 && got.every((x) => x === NOTE[lang]), `the stage 2 note reads ${JSON.stringify(got)}, not "${NOTE[lang]}"`);
+      expectNote(notes);
+      return `exactly one diagram exposed (${seen.join(", ")}), the approved aria-label, Keep and Remove shown for both suggested pages, no label under 12px, every label inside its panel (wide and stacked), the stage 2 note one complete sentence in both versions, no sideways scroll at 320px; ` +
         [mustFail("both diagrams exposed", () => expectOneDiagram(last.svgs.map((x) => ({ ...x, shown: true, hidden: false })), 2, last.width, "rbp-flow")),
           mustFail("a label past its panel", () => expectFit([...overflow, { text: "x", over: 3, where: "test" }])),
+          mustFail("the old half-sentence note", () => expectNote(lang === "es" ? ["Dos páginas parecen Tú eliges en cada una", "Dos páginas parecen Tú eliges en cada una"] : ["Two pages look Tú eliges", "x"])),
           mustFail("the wrong version at 320px", () => expectOneDiagram(last.svgs, last.imgs, 320, "rbp-flow"))].join("; ");
     },
   },
