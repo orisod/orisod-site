@@ -107,6 +107,9 @@ const OPEN_STATES = [
   ...["/whatsapp-link-generator/", "/es/whatsapp-link-generator/"].flatMap((path) =>
     ["details", "country list", "filled form", ...WA_EMOJI_CATEGORIES.map((c) => "emoji picker: " + c),
       "share list", "share tooltip", "share lit"].map((open) => ({ path, open }))),
+  // Remove Blank Pages from PDF: a generated PDF checked (pages marked, one with the hidden-content note), the
+  // collapsed block open, and the share list open.
+  ...["/remove-blank-pages/", "/es/remove-blank-pages/"].flatMap((path) => ["blank pages checked", "details", "share list"].map((open) => ({ path, open }))),
 ];
 // How to reach each tool state above (the nav states click a nav button instead).
 const TOOL_STATES = {
@@ -123,6 +126,22 @@ const TOOL_STATES = {
     await page.click("#shareMenu > summary");
     await page.hover('#shareList a[data-share="reddit"]');
     return '#shareList a[data-share="reddit"] .share-tip';
+  },
+  "blank pages checked": async (page) => {
+    const b64 = await page.evaluate(async () => {
+      const { PDFDocument, StandardFonts, PDFName, PDFString } = PDFLib;
+      const doc = await PDFDocument.create();
+      const font = await doc.embedFont(StandardFonts.Helvetica);
+      doc.addPage([612, 792]).drawText("A page with text", { x: 72, y: 700, size: 24, font });
+      doc.addPage([612, 792]);
+      const note = doc.addPage([612, 792]);
+      note.node.set(PDFName.of("Annots"), doc.context.obj([doc.context.register(doc.context.obj({ Type: "Annot", Subtype: "Text", Rect: [72, 72, 92, 92], Contents: PDFString.of("a note") }))]));
+      let s = ""; for (const b of await doc.save()) s += String.fromCharCode(b); return btoa(s);
+    });
+    await page.setInputFiles("#fileInput", { name: "check.pdf", mimeType: "application/pdf", buffer: Buffer.from(b64, "base64") });
+    await page.waitForFunction(() => !document.getElementById("actions").hidden, null, { timeout: 20000 });
+    await page.click("#pageCheck1");
+    return "#pageList";
   },
   "country list": async (page) => { await page.focus("#countryInput"); await page.keyboard.press("ArrowDown"); return "#countryList:not([hidden])"; },
   "filled form": async (page) => {
@@ -286,7 +305,7 @@ async function main() {
     process.exit(1);
   }
 
-  console.log(`OK: all ${results.length} pages passed axe-core in dark and light themes (${AXE_TAGS.join(", ")}), including ${OPEN_STATES.length} scans with the nav menu, search box or a category flyout open, or a tool state shown (the WhatsApp link generator's collapsed block, country list, filled form, emoji picker on each category and Share this tool list, tooltip and lit state); every error line is announced (role="alert").`);
+  console.log(`OK: all ${results.length} pages passed axe-core in dark and light themes (${AXE_TAGS.join(", ")}), including ${OPEN_STATES.length} scans with the nav menu, search box or a category flyout open, or a tool state shown (the WhatsApp link generator's collapsed block, country list, filled form, emoji picker on each category and Share this tool list, tooltip and lit state; Remove Blank Pages with pages checked, its block and its share list); every error line is announced (role="alert").`);
   process.exit(0);
 }
 

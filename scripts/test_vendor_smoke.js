@@ -1032,7 +1032,7 @@ const waShareState = (page) => page.evaluate(() => {
     rows: rows.map((r) => r.length), offCentre: rows.map((r) => Math.abs((r[0].box[2] - lr.left) - (lr.right - (r[r.length - 1].box[2] + r[r.length - 1].box[0])))),
     status: status.textContent, live: status.getAttribute("aria-live"), changes: window.__shareStatusChanges ?? null,
     focus: active === summary ? "summary" : active === nativeBtn ? "native" : active.closest?.("#shareList") ? "list" : active.id || active.tagName,
-    resultShare: document.getElementById("shareBtn").textContent.trim(), actionError: document.getElementById("actionError").textContent };
+    resultShare: document.getElementById("shareBtn")?.textContent.trim() || "", actionError: document.getElementById("actionError")?.textContent || "" };
 });
 // Counts updates to the share status line (one per copy attempt).
 const waWatchShareStatus = (page) => page.evaluate(() => {
@@ -1083,7 +1083,7 @@ function expectOutsideRequests(urls, when) {
 const waOutside = (requests) => requests.filter((u) => !u.startsWith(SITE + "/") && !u.startsWith(GOATCOUNTER) && !/^(data|blob):/.test(u));
 // A context of its own (touch emulation, no JavaScript, no clipboard...): the site from the checkout, GoatCounter answered
 // locally, any other host recorded and answered with an empty page (only a click on a share link should reach one).
-async function waShareContext(browser, lang, options = {}, init = null) {
+async function waShareContext(browser, lang, options = {}, init = null, path = WA) {
   const context = await browser.newContext({ locale: lang === "es" ? "es-ES" : "en-US", ...options });
   const outside = [], errors = [];
   await context.route("**/*", async (route) => {
@@ -1098,7 +1098,7 @@ async function waShareContext(browser, lang, options = {}, init = null) {
   const page = await context.newPage();
   page.on("pageerror", (e) => errors.push(e.message));
   page.on("console", (m) => { if (m.type() === "error") errors.push(m.text()); });
-  await page.goto(SITE + (lang === "es" ? "/es" : "") + WA, { waitUntil: "load" });
+  await page.goto(SITE + (lang === "es" ? "/es" : "") + path, { waitUntil: "load" });
   return { context, page, outside, errors };
 }
 // A stand-in for navigator.share: records each call, then resolves, cancels (AbortError) or fails as window.__shareMode says.
@@ -1251,6 +1251,186 @@ function expectAnchorRule(pages) {
   const missing = Object.entries(pages).filter(([, html]) => ![...html.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi)].some((m) => m[1].includes(WA_ANCHOR_RULE))).map(([f]) => f);
   expect(!missing.length, `${WA_ANCHOR_RULE} is missing from the inline CSS of ${missing.join(", ")}`);
 }
+// Remove Blank Pages from PDF (/remove-blank-pages/). Every PDF is built in the page at test time with the vendored
+// pdf-lib (and jsPDF for the password-protected ones), so there are no fixture files.
+const RBP = "/remove-blank-pages/";
+const RBP_GUIDE = "/blog/remove-blank-pages-from-pdf/";
+const PDFLIB = "/assets/vendor/pdf-lib/1.17.1/pdf-lib.min.js";
+const RBP_TEXT = {
+  en: { url: "https://orisod.com/remove-blank-pages/", title: "Remove Blank Pages from PDF",
+    doneMany: "Review complete. {n} pages are marked for removal.", totalMany: "{n} pages will be removed.", totalOne: "1 page will be removed.", totalNone: "No pages will be removed.",
+    checking: /^Checking page \d+ of \d+$/, stopped: "Checking stopped.", removePage: "Remove page {n}", pageNumber: "Page {n}",
+    autoRemove: "Looks blank: marked for removal", autoKeep: "Has content: kept", chosenRemove: "Your choice: remove", chosenKeep: "Your choice: keep",
+    nonvisual: "This page looks blank but contains nonvisual content.",
+    allSelected: "Every page is marked for removal. Keep at least one page to save the PDF.",
+    noneSelected: "No pages are marked for removal. Mark at least one page, or keep the original PDF.",
+    password: "This PDF is password-protected. Remove the password in a trusted PDF application, then try again.",
+    signed: "This PDF has a digital signature. Removing pages changes the file, so the signature may no longer be valid.",
+    notPdf: "Please select a valid PDF file.", replace: "Replace the current PDF? Your Keep and Remove choices will be lost.",
+    sensLabel: "Sensitivity", sens: ["Conservative", "Balanced", "More aggressive"], keepAll: "Keep all", save: "Delete Pages & Download", suffix: "-blank-pages-removed.pdf",
+    summary: "Help and details", guide: "/blog/remove-blank-pages-from-pdf/", cards: ["/delete-pdf-pages/", "/pdf-page-organizer/", "/compress-pdf/"] },
+  es: { url: "https://orisod.com/es/remove-blank-pages/", title: "Eliminar páginas en blanco de PDF",
+    doneMany: "Revisión completa. {n} páginas están marcadas para eliminar.", totalMany: "Se eliminarán {n} páginas.", totalOne: "Se eliminará 1 página.", totalNone: "No se eliminará ninguna página.",
+    checking: /^Revisando la página \d+ de \d+$/, stopped: "Revisión detenida.", removePage: "Eliminar página {n}", pageNumber: "Página {n}",
+    autoRemove: "Parece en blanco: marcada para eliminar", autoKeep: "Tiene contenido: se conserva", chosenRemove: "Tu elección: eliminar", chosenKeep: "Tu elección: conservar",
+    nonvisual: "Esta página parece estar en blanco, pero contiene contenido no visual.",
+    allSelected: "Todas las páginas están marcadas para eliminar. Conserva al menos una página para guardar el PDF.",
+    noneSelected: "Ninguna página está marcada para eliminar. Marca al menos una página o conserva el PDF original.",
+    password: "Este PDF está protegido con contraseña. Quita la contraseña en una aplicación de PDF de confianza y vuelve a intentarlo.",
+    signed: "Este PDF tiene una firma digital. Eliminar páginas cambia el archivo, así que la firma podría dejar de ser válida.",
+    notPdf: "Selecciona un archivo PDF válido.", replace: "¿Reemplazar el PDF actual? Se perderán tus elecciones de Conservar y Eliminar.",
+    sensLabel: "Sensibilidad", sens: ["Conservadora", "Equilibrada", "Más estricta"], keepAll: "Conservar todas", save: "Eliminar páginas y descargar", suffix: "-sin-paginas-en-blanco.pdf",
+    summary: "Ayuda y detalles", guide: "/es/blog/remove-blank-pages-from-pdf/", cards: ["/es/delete-pdf-pages/", "/es/pdf-page-organizer/", "/es/compress-pdf/"] },
+};
+const rbpFill = (text, n) => text.replace("{n}", n);
+// The test PDF: what each page is and what it should be at each sensitivity (true = suggested for removal).
+// "hidden" pages look blank but have content that doesn't show, so they're never suggested and carry the note.
+const RBP_PAGES = [
+  { what: "a page of text", expect: [false, false, false] },
+  { what: "an empty page", expect: [true, true, true] },
+  { what: "only a page number", expect: [false, true, true] },
+  { what: "a faint header", expect: [false, true, true] },
+  { what: "a single speck", expect: [true, true, true] },
+  { what: "a scan: grey paper, dust and an edge shadow", expect: [false, true, true] },
+  { what: "white text", expect: [false, false, false], hidden: true },
+  { what: "a comment annotation", expect: [false, false, false], hidden: true },
+  { what: "a form field", expect: [false, false, false], hidden: true },
+  { what: "a signature field", expect: [false, false, false], hidden: true },
+];
+// Builds the PDFs in the page. Returns base64.
+const RBP_MAKE = async ([kind, n]) => {
+  const toB64 = (bytes) => { let s = ""; for (const b of new Uint8Array(bytes)) s += String.fromCharCode(b); return btoa(s); };
+  if (kind === "password" || kind === "owner-only") {
+    const d = new window.jspdf.jsPDF({ encryption: { userPassword: kind === "password" ? "secret" : "", ownerPassword: "owner", userPermissions: ["print"] } });
+    d.text("Locked", 20, 20);
+    d.addPage();
+    return toB64(d.output("arraybuffer"));
+  }
+  const { PDFDocument, StandardFonts, rgb, PDFName, PDFString } = PDFLib;
+  const doc = await PDFDocument.create();
+  const font = await doc.embedFont(StandardFonts.Helvetica);
+  if (kind === "long") {
+    for (let i = 0; i < n; i++) { const p = doc.addPage([612, 792]); if (i % 3) p.drawText("Page " + (i + 1), { x: 72, y: 700, size: 20, font }); }
+    return toB64(await doc.save());
+  }
+  const add = () => doc.addPage([612, 792]);
+  let p = add();
+  p.drawText("Quarterly report", { x: 72, y: 700, size: 28, font });
+  p.drawText("Body text on the first page.", { x: 72, y: 650, size: 12, font });
+  add();
+  add().drawText("3", { x: 302, y: 36, size: 10, font });
+  add().drawText("Draft header", { x: 72, y: 740, size: 9, font, color: rgb(0.86, 0.86, 0.86) });
+  add().drawCircle({ x: 300, y: 400, size: 0.6, color: rgb(0, 0, 0) });
+  p = add();
+  p.drawRectangle({ x: 0, y: 0, width: 612, height: 792, color: rgb(0.93, 0.92, 0.9) });
+  p.drawRectangle({ x: 0, y: 0, width: 14, height: 792, color: rgb(0.45, 0.45, 0.45) });
+  for (let i = 0; i < 25; i++) p.drawCircle({ x: 60 + ((i * 97) % 480), y: 60 + ((i * 61) % 660), size: 1.6, color: rgb(0.62, 0.62, 0.62) });
+  add().drawText("Hidden words", { x: 72, y: 400, size: 12, font, color: rgb(1, 1, 1) });
+  const note = add();
+  const ctx = doc.context;
+  note.node.set(PDFName.of("Annots"), ctx.obj([ctx.register(ctx.obj({ Type: "Annot", Subtype: "Text", Rect: [72, 72, 92, 92], Contents: PDFString.of("a note") }))]));
+  const field = add();
+  doc.getForm().createTextField("name").addToPage(field, { x: 72, y: 600, width: 200, height: 20, borderWidth: 0 });
+  const sigPage = add();
+  const sig = ctx.register(ctx.obj({ Type: "Annot", Subtype: "Widget", FT: "Sig", T: PDFString.of("Signature1"), Rect: [72, 72, 272, 122], F: 4, P: sigPage.ref }));
+  sigPage.node.set(PDFName.of("Annots"), ctx.obj([sig]));
+  doc.getForm().acroForm.dict.lookup(PDFName.of("Fields")).push(sig);
+  if (kind === "unsigned") doc.getForm().acroForm.dict.set(PDFName.of("Fields"), ctx.obj([]));
+  return toB64(await doc.save());
+};
+async function rbpLoad(page, kind = "report", name = "report.pdf", n = 0) {
+  if (kind === "password" || kind === "owner-only") await page.addScriptTag({ url: SITE + JSPDF });
+  const b64 = await page.evaluate(RBP_MAKE, [kind, n]);
+  await page.setInputFiles("#fileInput", { name, mimeType: "application/pdf", buffer: Buffer.from(b64, "base64") });
+}
+const rbpDone = (page) => page.waitForFunction(() => !document.getElementById("actions").hidden, null, { timeout: 60000 });
+const rbpState = (page) => page.evaluate(() => ({
+  pages: [...document.querySelectorAll("#pageList > li")].map((li) => {
+    const cb = li.querySelector('input[type="checkbox"]');
+    return { state: li.dataset.state, checked: cb.checked, name: document.getElementById(cb.getAttribute("aria-labelledby"))?.textContent || "",
+      describedBy: (cb.getAttribute("aria-describedby") || "").split(" ").map((id) => document.getElementById(id)?.textContent || "").join(" | "),
+      num: li.querySelector(".page-num")?.textContent || "", stateText: li.querySelector(".page-state")?.textContent || "",
+      icons: [...li.querySelectorAll(".page-state svg")].filter((x) => !x.hidden).length, note: li.querySelector(".page-note")?.textContent || "",
+      thumbAlt: li.querySelector("img")?.getAttribute("alt"), checkboxes: li.querySelectorAll('input[type="checkbox"]').length,
+      buttons: li.querySelectorAll("button, a").length };
+  }),
+  live: document.getElementById("liveStatus").textContent, liveAttr: document.getElementById("liveStatus").getAttribute("aria-live"),
+  error: document.getElementById("errorMsg").textContent, saveError: document.getElementById("saveError").textContent,
+  signed: !document.getElementById("signedNote").hidden, actions: !document.getElementById("actions").hidden,
+  progress: !document.getElementById("progressRow").hidden, sensitivity: document.getElementById("sensitivity").value,
+}));
+// Everything the live region said since the watcher started.
+const rbpWatchLive = (page) => page.evaluate(() => {
+  window.__live = [];
+  new MutationObserver(() => window.__live.push(document.getElementById("liveStatus").textContent))
+    .observe(document.getElementById("liveStatus"), { childList: true, characterData: true, subtree: true });
+});
+function expectMarks(st, level, lang) {
+  const t = RBP_TEXT[lang];
+  const wrong = RBP_PAGES.map((pg, i) => [pg, st.pages[i]]).filter(([pg, got], i) => !got || got.checked !== pg.expect[level] || (!!pg.hidden) !== (got.note === t.nonvisual));
+  expect(st.pages.length === RBP_PAGES.length && !wrong.length, `at ${t.sens[level]}: ${wrong.map(([pg, got]) => `${pg.what} is ${got ? (got.checked ? "marked" : "kept") + (got.note ? " with the note" : "") : "missing"}`).join("; ")}`);
+}
+function expectCards(st, lang) {
+  const t = RBP_TEXT[lang];
+  const bad = st.pages.filter((p, i) => p.name !== rbpFill(t.removePage, i + 1) || p.num !== rbpFill(t.pageNumber, i + 1) || p.checkboxes !== 1 || p.buttons !== 0 ||
+    p.thumbAlt !== "" || p.icons !== 1 || !p.describedBy.includes(p.stateText) ||
+    ![t.autoRemove, t.autoKeep, t.chosenRemove, t.chosenKeep].includes(p.stateText) || (p.checked !== /remove$/.test(p.state)));
+  expect(!bad.length, `page cards that break the rules: ${JSON.stringify(bad[0])}`);
+}
+function expectLive(said, lang, removed) {
+  const t = RBP_TEXT[lang];
+  const last = said[said.length - 1];
+  expect(said.length >= 1 && said.length <= 4 && said.every((x) => t.checking.test(x) || x === rbpFill(t.doneMany, removed) || x === ""),
+    `the live region said ${JSON.stringify(said)} (only progress and one summary allowed)`);
+  expect(last === rbpFill(t.doneMany, removed), `the last summary is "${last}", not "${rbpFill(t.doneMany, removed)}"`);
+}
+// The text of every stream in a PDF, to prove a removed page's words aren't left inside the file.
+const RBP_STREAM_TEXT = async (b64) => {
+  const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+  const doc = await PDFLib.PDFDocument.load(bytes);
+  let all = "";
+  for (const [, obj] of doc.context.enumerateIndirectObjects()) {
+    if (obj instanceof PDFLib.PDFRawStream) {
+      try { all += new TextDecoder("latin1").decode(PDFLib.decodePDFRawStream(obj).decode()); } catch (e) { all += new TextDecoder("latin1").decode(obj.getContents()); }
+    }
+  }
+  const pdf = await pdfjsLib.getDocument({ data: bytes, isEvalSupported: false }).promise;
+  const texts = [];
+  for (let i = 1; i <= pdf.numPages; i++) texts.push((await (await pdf.getPage(i)).getTextContent()).items.map((x) => x.str).join(" ").trim());
+  return { pages: pdf.numPages, texts, streams: all };
+};
+const RBP_STRUCTURE = () => {
+  const q = (s) => document.querySelector(s);
+  const footer = q("footer.site-footer"), details = q("details.more"), guide = q(".how p.guide-link");
+  const after = [...document.body.querySelectorAll("*")].filter((el) => (footer.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING)
+    && !footer.contains(el) && !el.contains(footer) && !["SCRIPT", "STYLE", "TEMPLATE"].includes(el.tagName) && el.checkVisibility());
+  const order = ["nav.breadcrumbs", "h1", "p.lead", ".tool", ".how-grid", ".share-tool", "details.more", "footer.site-footer"].map(q);
+  return { after: after.map((el) => el.tagName.toLowerCase() + (el.id ? "#" + el.id : "")),
+    inOrder: order.every((el, i) => el && (i === 0 || (order[i - 1].compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING))),
+    steps: [...document.querySelectorAll(".how-grid .how > ol > li")].map((li) => li.textContent.trim()),
+    guideAfterSteps: !!guide && guide.previousElementSibling === q(".how-grid .how > ol"), guideHref: guide?.querySelector("a")?.getAttribute("href") || "",
+    guideInDetails: !!guide && details.contains(guide), cards: [...document.querySelectorAll(".how-grid .related-aside .related-card")].map((a) => a.getAttribute("href")),
+    details: document.querySelectorAll("details.more").length, summaryFirst: details.firstElementChild?.tagName === "SUMMARY", summaryRole: details.querySelector("summary").getAttribute("role"),
+    summary: details.querySelector("summary").textContent.trim(), open: details.open,
+    shareTools: document.querySelectorAll(".share-tool").length, shareControls: [q("#shareMenu > summary"), q("#shareNative")].filter((el) => el && el.getClientRects().length > 0).length,
+    anchorOff: getComputedStyle(document.documentElement).overflowAnchor === "none",
+    sensLabel: document.querySelector('label[for="sensitivity"]')?.textContent.trim(), sens: [...document.querySelectorAll("#sensitivity option")].map((o) => o.textContent),
+    sensDefault: document.getElementById("sensitivity").value, sensHelp: document.getElementById("sensitivity").getAttribute("aria-describedby"),
+    listTag: document.getElementById("pageList").tagName, listRole: document.getElementById("pageList").getAttribute("role") };
+};
+function expectRbpStructure(s, lang) {
+  const t = RBP_TEXT[lang];
+  expect(!s.after.length, `visible elements after the footer: ${s.after.join(", ")}`);
+  expect(s.inOrder, "the page isn't breadcrumb, H1, description, tool, How it works and Related tools, Share this tool, collapsed block, footer");
+  expect(s.steps.length === 3, `${s.steps.length} steps`);
+  expect(s.guideAfterSteps && s.guideHref === t.guide && !s.guideInDetails, `the guide link isn't right under the steps (href "${s.guideHref}")`);
+  expect(JSON.stringify(s.cards) === JSON.stringify(t.cards), `Related tools cards ${s.cards.join(", ")}`);
+  expect(s.details === 1 && s.summaryFirst && s.summaryRole === null && s.summary === t.summary && !s.open, `${s.details} collapsed blocks, summary "${s.summary}" first ${s.summaryFirst}, role ${s.summaryRole}, open ${s.open}`);
+  expect(s.shareTools === 1 && s.shareControls === 1 && s.anchorOff, `${s.shareTools} share blocks, ${s.shareControls} share controls, overflow-anchor none ${s.anchorOff}`);
+  expect(s.sensLabel === t.sensLabel && JSON.stringify(s.sens) === JSON.stringify(t.sens) && s.sensDefault === "conservative" && s.sensHelp === "sensitivityHelp",
+    `the sensitivity select: label "${s.sensLabel}", options ${s.sens.join("/")}, default ${s.sensDefault}`);
+  expect(s.listTag === "UL" && s.listRole === null, `the page list is a <${s.listTag}> with role ${s.listRole}`);
+}
 // The placeholders: the message's fixed text and the phone field's example for the chosen country
 // (libphonenumber-js's examples.mobile.json in its national format; without it, only the US gets one).
 const WA_EXAMPLES = "/assets/vendor/libphonenumber-js/1.13.15/examples.mobile.json";
@@ -1378,12 +1558,12 @@ function expectTabStops(stops, lang) {
 const WA_DIAGRAM = () => [...document.querySelectorAll("figure.wa-flow svg")].map((s) => ({
   cls: s.getAttribute("class"), shown: getComputedStyle(s).display !== "none", hidden: s.getAttribute("aria-hidden") === "true",
   role: s.getAttribute("role"), label: s.getAttribute("aria-label") }));
-function expectOneDiagram(svgs, snapImgs, width) {
+function expectOneDiagram(svgs, snapImgs, width, prefix = "wa-flow") {
   expect(svgs.length === 2 && svgs[0].label && svgs[0].label === svgs[1].label && svgs.every((s) => s.role === "img"), `the two diagrams don't share role="img" and one aria-label`);
   const shown = svgs.filter((s) => s.shown);
   expect(shown.length === 1 && !shown[0].hidden && svgs.filter((s) => !s.shown).every((s) => s.hidden), `at ${width}px: ${shown.length} diagrams shown, aria-hidden ${svgs.map((s) => s.hidden).join("/")}`);
   expect(snapImgs === 1, `at ${width}px the accessibility tree exposes ${snapImgs} diagrams, not 1`);
-  expect(shown[0].cls === (width < 640 ? "wa-flow-stacked" : "wa-flow-wide"), `at ${width}px the ${shown[0].cls} diagram is shown`);
+  expect(shown[0].cls === (width < 640 ? `${prefix}-stacked` : `${prefix}-wide`), `at ${width}px the ${shown[0].cls} diagram is shown`);
 }
 
 const CASES = [
@@ -3563,6 +3743,291 @@ const CASES = [
       return `exactly one diagram exposed (${seen.join(", ")}), same role="img" and aria-label, no sideways scroll at 320px; ` +
         [mustFail("both diagrams exposed", () => expectOneDiagram(last.svgs.map((s) => ({ ...s, shown: true, hidden: false })), 2, last.width)),
           mustFail("the wrong version at 320px", () => expectOneDiagram(last.svgs, last.imgs, 320))].join("; ");
+    },
+  },
+  {
+    name: "Remove Blank Pages (detection, choices, saving)",
+    page: RBP,
+    vendor: [PDFJS, PDFJS_WORKER, PDFLIB],
+    async run(page, lang, ctl) {
+      const t = RBP_TEXT[lang];
+      await rbpWatchLive(page);
+      await rbpLoad(page);
+      await rbpDone(page);
+      const conservative = await rbpState(page);
+      const said = await page.evaluate(() => window.__live);
+      expectMarks(conservative, 0, lang);
+      expectCards(conservative, lang);
+      expect(conservative.signed, "the signature field didn't bring the signed warning");
+      expect(conservative.liveAttr === "polite", `the live region is aria-live ${conservative.liveAttr}`);
+      expectLive(said, lang, 2);
+      // Each higher sensitivity adds suggestions and says the new total once.
+      const levels = [conservative];
+      for (const [i, level] of [[1, "balanced"], [2, "aggressive"]]) {
+        await page.evaluate(() => { window.__live = []; });
+        await page.selectOption("#sensitivity", level);
+        const st = await rbpState(page);
+        expectMarks(st, i, lang);
+        const n = RBP_PAGES.filter((x) => x.expect[i]).length;
+        const once = await page.evaluate(() => window.__live);
+        expect(once.length === 1 && once[0] === rbpFill(t.totalMany, n), `after choosing ${level} the live region said ${JSON.stringify(once)}`);
+        levels.push(st);
+      }
+      const monotonic = levels.every((st, i) => i === 0 || levels[i - 1].pages.every((p, k) => !p.checked || st.pages[k].checked));
+      expect(monotonic, "raising the sensitivity unmarked a page");
+      // Manual choices: keep page 3 (suggested at More aggressive), remove page 1; they survive every sensitivity.
+      await page.click("#pageCheck3");
+      await page.click("#pageCheck1");
+      const manual = [];
+      for (const level of ["conservative", "balanced", "aggressive"]) {
+        await page.selectOption("#sensitivity", level);
+        const st = await rbpState(page);
+        manual.push([st.pages[0], st.pages[2]]);
+      }
+      const expectManual = (m) => expect(m.every(([one, three]) => one.state === "manual-remove" && one.checked && one.stateText === t.chosenRemove &&
+        three.state === "manual-keep" && !three.checked && three.stateText === t.chosenKeep), `manual choices changed with the sensitivity: ${JSON.stringify(m.map(([a, b]) => [a.state, b.state]))}`);
+      expectManual(manual);
+      // Keep all: every page kept by choice, nothing to save.
+      await page.evaluate(() => { window.__live = []; });
+      await page.click("#keepAllBtn");
+      const kept = await rbpState(page);
+      expect(kept.pages.every((p) => p.state === "manual-keep" && !p.checked) && kept.live === t.totalNone, `after Keep all: ${kept.live}, ${kept.pages.filter((p) => p.checked).length} still marked`);
+      let downloads = 0;
+      page.on("download", () => downloads++);
+      await page.click("#saveBtn");
+      const none = await rbpState(page);
+      expect(none.saveError === t.noneSelected, `saving with nothing marked said "${none.saveError}"`);
+      // Every page marked: saving is refused with the message.
+      for (let n = 1; n <= RBP_PAGES.length; n++) await page.check(`#pageCheck${n}`);
+      await page.click("#saveBtn");
+      await page.waitForTimeout(300);
+      const all = await rbpState(page);
+      const expectBlocked = (st, d) => expect(st.saveError === t.allSelected && d === 0, `with every page marked: error "${st.saveError}", ${d} downloads`);
+      expectBlocked(all, downloads);
+      const saveErrorRole = await page.getAttribute("#saveError", "role");
+      expect(saveErrorRole === "alert", "the save error isn't role=alert");
+      // Remove pages 2, 4 (faint header "Draft header") and 5; save; reopen with pdf.js.
+      await page.click("#keepAllBtn");
+      for (const n of [2, 4, 5]) await page.check(`#pageCheck${n}`);
+      const total = await page.textContent("#liveStatus");
+      expect(total === rbpFill(t.totalMany, 3), `the running total says "${total}"`);
+      const [download] = await Promise.all([page.waitForEvent("download"), page.click("#saveBtn")]);
+      const out = (await readFile(await download.path())).toString("base64");
+      const saved = await page.evaluate(RBP_STREAM_TEXT, out);
+      const expectSaved = (sv) => {
+        expect(sv.pages === RBP_PAGES.length - 3, `the saved PDF has ${sv.pages} pages, not ${RBP_PAGES.length - 3}`);
+        expect(sv.texts[0].includes("Quarterly report") && sv.texts[1] === "3", `the saved pages are in the wrong order: ${JSON.stringify(sv.texts.slice(0, 3))}`);
+        expect(!sv.streams.includes("Draft header") && !/4472616674/i.test(sv.streams), "the removed page's text is still inside the saved file");
+      };
+      expectSaved(saved);
+      expect(download.suggestedFilename() === "report" + t.suffix, `the download is called ${download.suggestedFilename()}`);
+      return `at ${t.sens.join(" / ")}: ${levels.map((st) => st.pages.filter((p) => p.checked).length).join(" / ")} of ${RBP_PAGES.length} pages marked as expected (${RBP_PAGES.map((x) => x.what).join(", ")}); ` +
+        `the four with hidden content kept with the note; monotonic; one live update per change ("${said[said.length - 1]}"); manual choices survive every sensitivity; Keep all; ` +
+        `nothing marked and every page marked are refused; saved ${saved.pages} pages, reopened with pdf.js, the removed page's text gone from the file; ` +
+        [mustFail("a page marked at the wrong sensitivity", () => expectMarks({ ...conservative, pages: conservative.pages.map((p, i) => (i === 2 ? { ...p, checked: true } : p)) }, 0, lang)),
+          mustFail("a hidden-content page without its note", () => expectMarks({ ...conservative, pages: conservative.pages.map((p, i) => (i === 6 ? { ...p, note: "" } : p)) }, 0, lang)),
+          mustFail("a card named after its state", () => expectCards({ ...conservative, pages: conservative.pages.map((p, i) => (i === 1 ? { ...p, name: p.stateText } : p)) }, lang)),
+          mustFail("a state shown by colour only", () => expectCards({ ...conservative, pages: conservative.pages.map((p, i) => (i === 1 ? { ...p, icons: 0 } : p)) }, lang)),
+          mustFail("a button inside a card", () => expectCards({ ...conservative, pages: conservative.pages.map((p, i) => (i === 1 ? { ...p, buttons: 1 } : p)) }, lang)),
+          mustFail("one live update per thumbnail", () => expectLive([...Array(10).fill(lang === "en" ? "Checking page 1 of 10" : "Revisando la página 1 de 10"), ...said], lang, 2)),
+          mustFail("a manual choice overwritten by the sensitivity", () => expectManual([[manual[0][0], { ...manual[0][1], state: "auto-remove", checked: true }]])),
+          mustFail("saving with every page marked", () => expectBlocked({ ...all, saveError: "" }, 1)),
+          mustFail("the removed page's text left in the file", () => expectSaved({ ...saved, streams: saved.streams + "Draft header" })),
+          mustFail("a page too many", () => expectSaved({ ...saved, pages: saved.pages + 1 }))].join("; ");
+    },
+  },
+  {
+    name: "Remove Blank Pages (password, signature warning, cancel, replace)",
+    page: RBP,
+    vendor: [PDFJS, PDFJS_WORKER, PDFLIB],
+    async run(page, lang) {
+      const t = RBP_TEXT[lang];
+      // Counts preview URLs made and released.
+      await page.evaluate(() => {
+        window.__urls = { made: 0, freed: 0 };
+        const make = URL.createObjectURL, free = URL.revokeObjectURL;
+        URL.createObjectURL = (b) => { window.__urls.made++; return make(b); };
+        URL.revokeObjectURL = (u) => { window.__urls.freed++; return free(u); };
+      });
+      const results = {};
+      for (const kind of ["password", "owner-only"]) {
+        await rbpLoad(page, kind, kind + ".pdf");
+        await page.waitForFunction(() => document.getElementById("errorMsg").textContent !== "", null, { timeout: 20000 });
+        const st = await rbpState(page);
+        results[kind] = st;
+        expect(st.error === t.password && !st.pages.length && !st.actions, `${kind}: "${st.error}", ${st.pages.length} pages`);
+      }
+      const errorRole = await page.getAttribute("#errorMsg", "role");
+      expect(errorRole === "alert", "the load error isn't role=alert");
+      // A file that isn't a PDF.
+      await page.setInputFiles("#fileInput", { name: "notes.txt", mimeType: "text/plain", buffer: Buffer.from("hello") });
+      expect((await rbpState(page)).error === t.notPdf, "a text file wasn't refused");
+      // The signature warning is up before the first page is checked.
+      await page.evaluate(() => {
+        window.__signedFirst = null;
+        new MutationObserver(() => { if (window.__signedFirst === null && document.querySelector("#pageList > li")) window.__signedFirst = !document.getElementById("signedNote").hidden; })
+          .observe(document.getElementById("pageList"), { childList: true });
+      });
+      await rbpLoad(page);
+      await rbpDone(page);
+      const signedFirst = await page.evaluate(() => window.__signedFirst);
+      const signedText = await page.textContent("#signedNote");
+      expect(signedFirst === true && signedText === t.signed, `the signed warning was shown before the pages: ${signedFirst} ("${signedText}")`);
+      // Replace: the question; dismissing keeps the PDF, accepting replaces it.
+      let asked = "";
+      page.once("dialog", (d) => { asked = d.message(); d.dismiss(); });
+      await rbpLoad(page, "unsigned", "other.pdf");
+      await page.waitForTimeout(400);
+      const kept = await rbpState(page);
+      expect(asked === t.replace && kept.pages.length === RBP_PAGES.length && kept.signed, `replace dismissed: asked "${asked}", ${kept.pages.length} pages`);
+      page.once("dialog", (d) => d.accept());
+      await rbpLoad(page, "unsigned", "other.pdf");
+      await rbpDone(page);
+      const replaced = await rbpState(page);
+      expect(!replaced.signed && replaced.pages.length === RBP_PAGES.length, `after replacing, the signed warning is ${replaced.signed}`);
+      // Cancel a long PDF part way: everything is released and nothing more is added.
+      page.once("dialog", (d) => d.accept());
+      await rbpLoad(page, "long", "long.pdf", 240);
+      await page.waitForFunction(() => document.querySelectorAll("#pageList > li").length >= 3, null, { timeout: 30000 });
+      await page.click("#cancelBtn");
+      await page.waitForTimeout(800);
+      const cancelled = { ...(await rbpState(page)), urls: await page.evaluate(() => window.__urls) };
+      const expectCancelled = (c) => expect(!c.pages.length && !c.progress && !c.actions && c.live === t.stopped && c.urls.made === c.urls.freed,
+        `after cancelling: ${c.pages.length} pages, progress ${c.progress}, live "${c.live}", preview URLs made ${c.urls.made}, freed ${c.urls.freed}`);
+      expectCancelled(cancelled);
+      return `password and owner-only encryption refused with the message; a text file refused; the signed warning shown before any page; replace asks first ("${asked}"), dismissing keeps the PDF; ` +
+        `cancelling a 240-page PDF stops it, clears the list and frees all ${cancelled.urls.made} preview URLs; ` +
+        [mustFail("the password message missing", () => expect(results.password.error === "x", "")),
+          mustFail("a preview URL not freed", () => expectCancelled({ ...cancelled, urls: { ...cancelled.urls, freed: cancelled.urls.freed - 1 } })),
+          mustFail("pages left after cancelling", () => expectCancelled({ ...cancelled, pages: [{}] }))].join("; ");
+    },
+  },
+  {
+    name: "Remove Blank Pages (layout and structure)",
+    page: RBP,
+    vendor: [PDFJS, PDFJS_WORKER, PDFLIB],
+    async run(page, lang) {
+      const s = await page.evaluate(RBP_STRUCTURE);
+      expectRbpStructure(s, lang);
+      const steps = s.steps;
+      expect(lang === "en" ? steps[0] === "Add a PDF to preview its pages." : steps[0] === "Agrega un PDF para ver sus páginas.", `step 1 is "${steps[0]}"`);
+      await rbpLoad(page);
+      await rbpDone(page);
+      // The focus ring surrounds the card when its checkbox has keyboard focus.
+      await page.focus("#sensitivity");
+      for (let i = 0; i < 40; i++) { await page.keyboard.press("Tab"); if (await page.evaluate(() => document.activeElement.id === "pageCheck1")) break; }
+      const ring = await page.evaluate(() => { const card = document.activeElement.closest(".page-card"); const cs = getComputedStyle(card); return card ? cs.outlineStyle + " " + cs.outlineWidth : ""; });
+      expect(ring === "solid 3px", `the focused card's ring is "${ring}"`);
+      await page.keyboard.press("Space");
+      const toggled = await page.evaluate(() => document.getElementById("pageCheck1").checked);
+      expect(toggled, "Space on the focused card didn't mark it");
+      // 320 CSS px (200% zoom of a 640px window): no sideways scroll with the pages shown.
+      const widths = [];
+      for (const width of [1280, 390, 320]) {
+        await page.setViewportSize({ width, height: 800 });
+        widths.push([width, await waOverflow(page)]);
+      }
+      for (const [w, px] of widths) expectNoOverflow(px, `${w}px with the pages shown`);
+      // Without JavaScript the page and its Help and details block still work.
+      const noJs = await page.context().browser().newContext({ javaScriptEnabled: false });
+      await noJs.route("**/*", async (route) => { const url = route.request().url(); return url.startsWith(SITE + "/") ? route.fulfill(await localFile(url)) : route.abort(); });
+      const plain = await noJs.newPage();
+      await plain.goto(SITE + (lang === "es" ? "/es" : "") + RBP, { waitUntil: "load" });
+      await plain.click("details.more > summary");
+      const plainOpen = await plain.evaluate(() => ({ open: document.querySelector("details.more").open, faq: document.querySelectorAll("details.more .faq-item").length }));
+      await noJs.close();
+      expect(plainOpen.open && plainOpen.faq === 6, `without JavaScript the block opened ${plainOpen.open} with ${plainOpen.faq} FAQ items`);
+      const faq = await page.evaluate(() => {
+        const visible = [...document.querySelectorAll("details.more .faq-item")].map((el) => [el.children[0].textContent.trim(), el.children[1].textContent.trim()]);
+        const graph = [...document.querySelectorAll('script[type="application/ld+json"]')].flatMap((x) => JSON.parse(x.textContent)["@graph"] || []);
+        return { visible, jsonld: graph.find((x) => x["@type"] === "FAQPage").mainEntity.map((x) => [x.name, x.acceptedAnswer.text]) };
+      });
+      expect(faq.visible.length === 6 && JSON.stringify(faq.visible) === JSON.stringify(faq.jsonld), "the FAQ differs from the FAQPage JSON-LD");
+      return `breadcrumb, H1, description, tool, How it works (3 steps, guide link under them) and 3 Related tools, Share this tool, one closed Help and details, footer last; ` +
+        `the sensitivity select labelled and described; the page list a plain <ul>; the focused card has a 3px ring and Space marks it; no sideways scroll at 1280, 390 and 320px; works without JavaScript; FAQ equals the JSON-LD; ` +
+        [mustFail("the share block after the collapsed block", () => expectRbpStructure({ ...s, inOrder: false }, lang)),
+          mustFail("a fourth step", () => expectRbpStructure({ ...s, steps: [...s.steps, "x"] }, lang)),
+          mustFail("two collapsed blocks", () => expectRbpStructure({ ...s, details: 2 }, lang)),
+          mustFail("the list with role=grid", () => expectRbpStructure({ ...s, listRole: "grid" }, lang)),
+          mustFail("the guide link inside the block", () => expectRbpStructure({ ...s, guideInDetails: true }, lang)),
+          mustFail("no overflow-anchor rule", () => expectRbpStructure({ ...s, anchorOff: false }, lang)),
+          mustFail("a 400px element at 320 px", () => expectNoOverflow(80, "test"))].join("; ");
+    },
+  },
+  {
+    name: "Remove Blank Pages (share this tool)",
+    page: RBP,
+    vendor: [PDFJS, PDFJS_WORKER, PDFLIB],
+    async run(page, lang, ctl) {
+      const t = RBP_TEXT[lang], s = WA_SHARE[lang];
+      // The share script is the same block, byte for byte, on all four pages that carry it.
+      const block = async (path) => { const html = await readFile(`${REPO_ROOT}${path}index.html`, "utf-8"); const a = html.indexOf("// Share this tool: start"), b = html.indexOf("// Share this tool: end"); return a > 0 && b > a ? html.slice(a, b) : ""; };
+      const blocks = [await block(WA.slice(1)), await block("es" + WA), await block(RBP.slice(1)), await block("es" + RBP)];
+      const expectSame = (b) => expect(b[0] && b.every((x) => x === b[0]), "the share script differs between the WhatsApp and Remove Blank Pages pages");
+      expectSame(blocks);
+      await page.click("#shareMenu > summary");
+      const st = await waShareState(page);
+      const want = waShareHrefs(t.url, t.title);
+      const bad = st.items.filter((i) => i.kind !== "copy" && i.href !== want[i.kind]);
+      const kinds = st.items.map((i) => i.kind);
+      const expectRow = (st, bad, kinds) => expect(JSON.stringify(kinds) === JSON.stringify(WA_SHARE_ORDER) && !bad.length && st.summaryName === s.toggle,
+        `share list ${kinds.join(", ")}; wrong links ${bad.map((i) => i.kind + " " + i.href).join(", ")}; named "${st.summaryName}"`);
+      expectRow(st, bad, kinds);
+      // The page's own state (file name, choices) never reaches a share link.
+      await rbpLoad(page, "unsigned", "Secret-Contract.pdf");
+      await rbpDone(page);
+      const hrefs = await page.evaluate(() => [...document.querySelectorAll("#shareList a")].map((a) => a.href).join(" "));
+      expect(!/Secret|Contract|pageCheck|report/i.test(hrefs), "a share link carries the file name or a choice");
+      expect(!waOutside(ctl.requests).length, `requests to another host: ${waOutside(ctl.requests).join(", ")}`);
+      // Hover opens it on a pointer device; on a touch device with navigator.share one button replaces the list.
+      await page.evaluate(() => { document.getElementById("shareMenu").open = false; });
+      await page.mouse.move(5, 5);
+      await waMouseTo(page, "#shareMenu > summary");
+      await page.waitForTimeout(WA_HOVER_OPEN * 2);
+      const hovered = (await waMenu(page)).open;
+      expect(hovered, "hover didn't open the share list");
+      const touch = await waShareContext(page.context().browser(), lang, { hasTouch: true, viewport: { width: 390, height: 800 } }, WA_SHARE_STUB, RBP);
+      const tst = await waShareState(touch.page);
+      await touch.context.close();
+      expect(!tst.menuShown && tst.nativeShown, `touch with navigator.share: list shown ${tst.menuShown}, button ${tst.nativeShown}`);
+      return `the share script is byte-identical on the WhatsApp and Remove Blank Pages pages (EN and ES); 8 options in order, each href built from ${t.url} and the H1; no file name or choice in any link; ` +
+        `no outside request; hover opens the list; the Web Share button on touch; ` +
+        [mustFail("a different share script", () => expectSame([...blocks.slice(0, 3), blocks[3] + " "])),
+          mustFail("the WhatsApp tool's address shared", () => expectRow(st, [{ kind: "x", href: waShareHrefs(s.url, s.title).x }], kinds))].join("; ");
+    },
+  },
+  {
+    name: "Remove Blank Pages guide (diagram)",
+    page: RBP_GUIDE,
+    vendor: [],
+    async run(page, lang) {
+      const seen = [];
+      let last;
+      for (const width of [320, 375, 560, 639, 640, 768, 1280]) {
+        await page.setViewportSize({ width, height: 900 });
+        await page.waitForTimeout(50);
+        const svgs = await page.evaluate(() => [...document.querySelectorAll("figure.rbp-flow svg")].map((x) => ({
+          cls: x.getAttribute("class"), shown: getComputedStyle(x).display !== "none", hidden: x.getAttribute("aria-hidden") === "true", role: x.getAttribute("role"), label: x.getAttribute("aria-label") })));
+        const snap = await page.locator("figure.rbp-flow").ariaSnapshot();
+        const imgs = (snap.match(/- img\b/g) || []).length;
+        expectOneDiagram(svgs, imgs, width, "rbp-flow");
+        expectNoOverflow(width === 320 ? await waOverflow(page) : 0, "guide diagram");
+        seen.push(`${width}px ${svgs.find((x) => x.shown).cls.replace("rbp-flow-", "")}`);
+        last = { svgs, imgs, width };
+      }
+      const label = last.svgs[0].label;
+      const want = lang === "en" ? "Diagram showing a PDF being checked for blank pages, the user reviewing the suggested removals, and a new PDF saved with the selected pages removed."
+        : "Diagrama que muestra un PDF revisado para detectar páginas en blanco, al usuario comprobando las eliminaciones sugeridas y un nuevo PDF guardado sin las páginas seleccionadas.";
+      expect(label === want, `the diagram's aria-label is "${label}"`);
+      // It shows a person's choice: both Keep and Remove controls appear in the review stage.
+      const words = await page.evaluate(() => [...document.querySelectorAll("figure.rbp-flow svg.rbp-flow-wide text")].map((x) => x.textContent));
+      const keep = lang === "en" ? "Keep" : "Conservar", remove = lang === "en" ? "Remove" : "Eliminar";
+      expect(words.filter((w) => w === keep).length === 2 && words.filter((w) => w === remove).length === 2, `the review stage shows ${words.join(" / ")}`);
+      const tiny = await page.evaluate(() => [...document.querySelectorAll("figure.rbp-flow svg text")].filter((x) => Number(x.getAttribute("font-size")) < 12).length);
+      expect(!tiny, `${tiny} diagram labels under 12px`);
+      return `exactly one diagram exposed (${seen.join(", ")}), the approved aria-label, Keep and Remove shown for both suggested pages, no label under 12px, no sideways scroll at 320px; ` +
+        [mustFail("both diagrams exposed", () => expectOneDiagram(last.svgs.map((x) => ({ ...x, shown: true, hidden: false })), 2, last.width, "rbp-flow")),
+          mustFail("the wrong version at 320px", () => expectOneDiagram(last.svgs, last.imgs, 320, "rbp-flow"))].join("; ");
     },
   },
 ];
