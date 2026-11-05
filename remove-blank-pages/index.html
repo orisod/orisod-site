@@ -1,14 +1,650 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('orisod-theme')==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+    }
+  }catch(e){}
+})();
+</script>
+<!-- GoatCounter: cookie-free visit counts (see /privacy/). count.js is a pinned, self-hosted copy; visits are sent to orisod.goatcounter.com -->
+<script data-goatcounter="https://orisod.goatcounter.com/count" async src="/assets/goatcounter/count.js"></script>
 <meta charset="UTF-8">
-<title>Remove Blank Pages from PDF</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Remove blank pages from PDF – Free online tool | Orisod</title>
+<meta name="description" content="Remove blank and nearly blank pages from a PDF online. Review the detected pages before downloading the result. Free and processed in your browser.">
+<link rel="canonical" href="https://orisod.com/remove-blank-pages/">
+<link rel="alternate" hreflang="en" href="https://orisod.com/remove-blank-pages/">
+<link rel="alternate" hreflang="es" href="https://orisod.com/es/remove-blank-pages/">
+<link rel="alternate" hreflang="x-default" href="https://orisod.com/remove-blank-pages/">
+<link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="theme-color" content="#2563eb">
+<!-- Link previews (WhatsApp, Facebook, X, Slack...): same title and description as the page -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Orisod">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Remove blank pages from PDF – Free online tool | Orisod">
+<meta property="og:description" content="Remove blank and nearly blank pages from a PDF online. Review the detected pages before downloading the result. Free and processed in your browser.">
+<meta property="og:url" content="https://orisod.com/remove-blank-pages/">
+<meta property="og:image" content="https://orisod.com/assets/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Orisod: free image and PDF tools that run in your browser">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Remove Blank Pages from PDF",
+      "description": "Remove blank and nearly blank pages from a PDF online. Review the detected pages before downloading the result. Free and processed in your browser.",
+      "url": "https://orisod.com/remove-blank-pages/",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript. Runs in a modern web browser.",
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "@id": "https://orisod.com/#organization",
+        "name": "Orisod"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Why was a page with only a page number marked as blank?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "At Balanced and More aggressive, a few small marks such as a page number or a short footer count as too little content. Choose Conservative to keep those pages, or clear Remove page on that page before saving."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why wasn't a scanned blank page detected?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Scans often have specks, shadows, a grey tint or text showing through from the other side. At Conservative those marks are enough for a page to count as having content. Try Balanced or More aggressive, or tick Remove page on it yourself."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I change which pages are removed?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. The detection only makes suggestions. Tick or clear Remove page on any page, or use Keep all to clear every mark. Your own choices stay as they are when you change the sensitivity."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Will bookmarks, links and forms be preserved?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not always. The pages you keep keep their content, links to websites and their form fields. Bookmarks and internal links that pointed to a removed page may stop working, and tags, attachments, PDF/A compliance and digital signatures can be affected. Check the downloaded PDF before replacing the original."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can it open a password-protected PDF?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Remove the password in a trusted PDF application first, then add the PDF here. This tool doesn't try to unlock files."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my PDF uploaded to Orisod?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Your PDF is processed in your browser and is not uploaded to Orisod servers. The page only downloads its own code, such as the PDF libraries, from orisod.com."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<style>
+:root{
+  --bg:#0b0f1a;
+  --text:#ffffff;
+  --card-bg:#111827;
+  --border:#1f2937;
+  --accent:#2563eb;
+  --muted-text:#94a3b8;
+  --dropzone-border:#374151;
+  --icon-alpha:.30;
+  --grid-alpha:.05;
+}
+:root[data-theme="light"]{
+  --bg:#f8fafc;
+  --text:#0f172a;
+  --card-bg:#ffffff;
+  --border:#e2e8f0;
+  --accent:#2563eb;
+  --muted-text:#64748b;
+  --dropzone-border:#cbd5e1;
+  --icon-alpha:.24;
+  --grid-alpha:.10;
+}
+*{box-sizing:border-box;}
+.site-nav{position:sticky;top:0;z-index:50;background-color:var(--bg);transition:background-color 0.2s;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.site-nav-logo{font-size:19px;font-weight:bold;letter-spacing:0.5px;text-decoration:none;color:var(--text);display:inline-flex;align-items:center;gap:8px;}
+.site-nav-logo img{height:26px;width:auto;display:block;}
+.lang-flag{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;padding:0 10px;font-size:13px;border-radius:6px;text-decoration:none;color:var(--muted-text);background:var(--card-bg);border:1px solid var(--border);}
+.lang-flag.active{color:var(--text);border-color:var(--accent);cursor:default;}
+.theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
+.theme-toggle:hover{border-color:var(--accent);}
+main{padding:40px 20px 60px 20px;}
+body{margin:0;font-family:Arial, Helvetica, sans-serif;background-color:var(--bg);background-image:linear-gradient(rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px),linear-gradient(90deg, rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px);background-size:42px 42px;color:var(--text);text-align:center;transition:background-color 0.2s, color 0.2s;}
+.container{max-width:800px;margin:0 auto;}
+h1{font-size:48px;margin-bottom:10px;}
+p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
+.box{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:30px 20px;margin-top:30px;}
+/* Remove Blank Pages from PDF: the tool, the list of pages and their states. */
+.lead{margin:0 auto 6px auto;}
+.tool{text-align:left;max-width:760px;margin-left:auto;margin-right:auto;padding:26px 22px;}
+.dropzone{display:block;border:2px dashed var(--dropzone-border);border-radius:10px;padding:30px 20px;cursor:pointer;transition:0.2s;text-align:center;font-size:16px;line-height:1.5;}
+.dropzone:hover, .dropzone.dragover{border-color:var(--accent);}
+/* File inputs stay in the Tab order: the real input is visually hidden (never display:none), and its focus ring is
+   drawn on the input's label (the dropzone). */
+input[type="file"]{position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;opacity:0;}
+label:has(+ input[type="file"]:focus-visible), label:has(input[type="file"]:focus-visible){outline:2px solid var(--accent);outline-offset:2px;}
+.tool .error{color:#f87171;font-size:14px;line-height:1.5;margin:10px 0 0 0;opacity:1;max-width:none;}
+:root[data-theme="light"] .tool .error{color:#b91c1c;}
+.tool .error:empty{display:none;}
+.tool .field{margin:20px 0 0 0;}
+.tool .field label{display:block;font-size:15px;font-weight:bold;line-height:1.4;margin:0 0 6px 0;}
+.tool select{min-height:44px;margin:0;padding:8px 12px;border-radius:8px;border:1px solid var(--dropzone-border);background:var(--bg);color:var(--text);font-family:inherit;font-size:16px;}
+.tool select:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.tool .hint{font-size:13px;color:var(--muted-text);line-height:1.5;margin:6px 0 0 0;opacity:1;max-width:none;}
+.tool .warn-note{font-size:14px;line-height:1.5;margin:14px 0 0 0;padding:10px 12px;border-radius:8px;border:1px solid #f59e0b;background:rgba(245,158,11,.10);color:#fbbf24;opacity:1;max-width:none;}
+:root[data-theme="light"] .tool .warn-note{color:#92400e;}
+.tool .warn-note[hidden]{display:none;}
+.progress-row{display:flex;align-items:center;gap:12px;margin:16px 0 0 0;}
+.progress-row[hidden]{display:none;}
+.progress-row progress{flex:1 1 auto;min-width:0;height:10px;accent-color:var(--accent);}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;margin:0;padding:10px 16px;border-radius:8px;border:1px solid var(--accent);background:var(--card-bg);color:var(--text);font-family:inherit;font-size:15px;line-height:1.3;cursor:pointer;}
+.btn.primary{background:var(--accent);color:#ffffff;}
+.btn:disabled{opacity:.45;cursor:not-allowed;}
+.btn:hover:not(:disabled){filter:brightness(1.08);}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.tool .live-status{font-size:14px;font-weight:bold;line-height:1.5;margin:12px 0 0 0;opacity:1;max-width:none;}
+.tool .live-status:empty{margin:0;}
+/* The pages: a list shown as a grid. Each card is the label of its one checkbox, so the whole card toggles it. */
+.page-list{list-style:none;margin:16px 0 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;}
+@media (max-width:420px){.page-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}}
+.page-item{margin:0;padding:0;min-width:0;}
+.page-card{display:flex;flex-direction:column;gap:6px;height:100%;padding:8px;border:2px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;font-size:13px;line-height:1.35;}
+.page-card:has(input:focus-visible){outline:3px solid var(--accent);outline-offset:2px;}
+.page-thumb{display:block;background:#ffffff;border:1px solid var(--border);border-radius:4px;overflow:hidden;}
+.page-thumb img{display:block;width:100%;height:auto;}
+.page-num{font-size:14px;font-weight:bold;}
+.page-state{display:flex;align-items:flex-start;gap:6px;}
+.state-ico{flex:none;width:16px;height:16px;margin-top:1px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;}
+.state-ico[hidden]{display:none;}
+.page-note{font-size:12px;color:#fbbf24;}
+:root[data-theme="light"] .page-note{color:#92400e;}
+.page-check{display:flex;align-items:center;gap:8px;min-height:44px;margin-top:auto;font-weight:bold;}
+.page-check input{flex:none;width:20px;height:20px;margin:0;accent-color:#dc2626;cursor:pointer;}
+/* Marked for removal: a dashed red edge and a faded preview, besides the cross and the words. */
+.page-item[data-state$="-remove"] .page-card{border-style:dashed;border-color:#f87171;}
+:root[data-theme="light"] .page-item[data-state$="-remove"] .page-card{border-color:#dc2626;}
+.page-item[data-state$="-remove"] .page-thumb img{opacity:.45;}
+.page-item[data-state^="manual-"] .page-state{font-weight:bold;}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 0 0;}
+.actions[hidden]{display:none;}
+.how-grid{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:28px;margin:44px 0 0 0;text-align:left;align-items:start;}
+@media (max-width:639px){.how-grid{grid-template-columns:minmax(0,1fr);gap:8px;}}
+.how-grid h2{margin:0 0 14px 0;}
+.how ol{margin:0;padding:0 0 0 22px;font-size:15px;line-height:1.6;opacity:.85;}
+.how ol li{margin:0 0 8px 0;}
+@media (max-width:639px){.related-aside h2{margin-top:30px;}}
+.related-aside .related-grid{grid-template-columns:minmax(0,1fr);}
+.guide-link{max-width:none;margin:14px 0 0 0;text-align:left;font-size:14px;opacity:.85;}
+.guide-link a{color:var(--accent);text-decoration:none;}
+:root[data-theme="light"] .guide-link a{color:#1d4ed8;}
+/* The collapsed block: native <details>, closed by default, its text in the HTML from the start. */
+.more{margin:28px 0 0 0;text-align:left;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;}
+.more > summary{display:flex;align-items:center;gap:12px;min-height:48px;padding:12px 16px;font-size:16px;font-weight:bold;line-height:1.3;cursor:pointer;list-style:none;border-radius:10px;}
+.more > summary::-webkit-details-marker{display:none;}
+.more > summary::before{content:"";flex:none;width:8px;height:8px;margin:0 2px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg);transition:transform .2s;}
+.more[open] > summary::before{transform:rotate(45deg);}
+.more > summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.more > summary:hover{text-decoration:underline;}
+.more .seo-content{max-width:none;padding:0 18px 10px 18px;}
+.more .seo-content h2:first-child{margin-top:10px;}
+.more .seo-content ol{font-size:15px;opacity:0.85;line-height:1.7;}
+@media (prefers-reduced-motion:reduce){.more > summary::before{transition:none;}}
+@media (max-width:600px){h1{font-size:36px;}.tool{padding:20px 14px;}}
+.site-footer{
+  margin-top:40px;
+  padding:40px 24px 30px 24px;
+  border-top:1px solid var(--border);
+  text-align:left;
+}
+.footer-inner{max-width:1000px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;gap:40px;}
+@media (min-width:700px){.footer-inner{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media (min-width:1100px){.footer-inner{grid-template-columns:minmax(0,1.6fr) repeat(3,minmax(0,1fr));}}
+.footer-brand{max-width:280px;}
+.footer-brand-logo{font-size:16px;font-weight:bold;letter-spacing:0.5px;margin-bottom:10px;}
+.footer-brand-desc{font-size:13px;color:var(--muted-text);line-height:1.5;margin-bottom:14px;}
+.footer-copy{font-size:12px;color:var(--muted-text);opacity:0.7;}
+.footer-col h3{font-size:13px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-text);margin:0 0 14px 0;}
+.footer-col a{display:block;font-size:14px;color:var(--text);text-decoration:none;opacity:0.8;margin-bottom:10px;}
+.footer-col a:hover{opacity:1;color:var(--accent);}
+.error{color:#f87171;font-size:14px;margin-top:10px;}
+h2{margin-top:50px;font-size:22px;}
+.seo-content{max-width:700px;margin:0 auto;text-align:left;}
+.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
+.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
+.faq-item{margin-bottom:18px;}
+.faq-item .q{font-weight:bold;margin-bottom:4px;}
+.related-grid{display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:12px;}
+@media (max-width:600px){.related-grid{grid-template-columns:minmax(0,1fr);}}
+.related-card{display:flex;align-items:center;gap:14px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;color:var(--text);transition:0.2s;}
+.related-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.related-card:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.related-card .icon-box{flex:none;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;border:2px solid transparent;}
+.related-card .icon-box.cat-image{background:rgba(37,99,235,var(--icon-alpha));border-color:#2563eb;color:#2563eb;}
+.related-card .icon-box.cat-pdf{background:rgba(245,158,11,var(--icon-alpha));border-color:#f59e0b;color:#f59e0b;}
+.related-card .icon-box.cat-utility{background:rgba(139,92,246,var(--icon-alpha));border-color:#8b5cf6;color:#8b5cf6;}
+.related-card .icon-box svg{width:22px;height:22px;display:block;}
+.related-card .body{flex:1 1 auto;min-width:0;}
+.related-card .title{font-size:14px;font-weight:bold;margin-bottom:2px;}
+.related-card .desc{font-size:12px;color:var(--muted-text);line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.related-card .arrow{flex:none;font-size:16px;color:var(--muted-text);transition:0.2s;}
+.related-card:hover .arrow{color:var(--accent);transform:translateX(2px);}
+.trust-strip{font-size:12px;color:var(--muted-text);margin-top:12px;line-height:1.5;}
+.footer-support-text{font-size:13px;color:var(--muted-text);line-height:1.5;margin:0 0 10px 0;}
+.footer-support-btn{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:8px 14px;border-radius:999px;font-size:13px;font-weight:bold;}
+.footer-support-btn:hover{filter:brightness(1.1);}
+/* Sticky nav (Phase 11.5): stays pinned while scrolling. --site-nav-h is kept in sync by the small script right after </header>. */
+html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
+@media (max-width:900px){
+  .site-nav{padding:10px 16px;}
+}
+/* ==========================================================================
+   Minimal nav (Initiative 2): logo left; Support, Search, the theme toggle
+   and Menu on the right. Same look as the homepage nav, without the menu's
+   category flyouts. Blog, the category links and EN/ES live in the menu.
+   Rules here set their own margin, padding, opacity, filter and line-height
+   on purpose: many pages have page-wide button{} and p{} rules that would
+   otherwise leak into the nav (the same trap as the old .theme-toggle
+   margin bug). The menu's category icon colors use their own alpha token
+   because not every page defines --icon-alpha.
+   ========================================================================== */
+:root{--nav-icon-alpha:.30;}
+:root[data-theme="light"]{--nav-icon-alpha:.24;}
+.site-nav{flex-wrap:nowrap;}
+.nav-icons{display:flex;align-items:center;gap:6px;}
+.site-nav .nav-icon-btn{
+  box-sizing:border-box;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:36px;
+  height:36px;
+  margin:0;
+  padding:0;
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:8px;
+  color:var(--text);
+  font:inherit;
+  line-height:1;
+  cursor:pointer;
+  text-decoration:none;
+  filter:none;
+  transition:border-color .2s, color .2s;
+}
+.site-nav .nav-icon-btn:hover{border-color:var(--accent);filter:none;}
+.site-nav .nav-icon-btn:focus-visible, .site-nav .theme-toggle:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.site-nav .nav-icon-btn svg{width:18px;height:18px;display:block;}
+.site-nav .nav-icon-btn.support{color:#f472b6;}
+:root[data-theme="light"] .site-nav .nav-icon-btn.support{color:#be185d;}
+/* same 36px box as the icon buttons so the row lines up */
+.site-nav .nav-icons .theme-toggle{width:36px;height:36px;padding:0;border-radius:8px;filter:none;}
+.site-nav .nav-icon-btn[aria-expanded="true"]{border-color:var(--accent);background:rgba(37,99,235,.14);}
+.site-nav .nav-icon-btn .menu-icon-close{display:none;}
+.site-nav .nav-icon-btn[aria-expanded="true"] .menu-icon-open{display:none;}
+.site-nav .nav-icon-btn[aria-expanded="true"] .menu-icon-close{display:block;}
+
+/* --- Menu panel and search box: both drop down under the nav --- */
+.nav-menu, .nav-search{
+  position:absolute;
+  top:calc(100% + 8px);
+  right:16px;
+  margin:0;
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:12px;
+  box-shadow:0 18px 48px rgba(0,0,0,.45);
+  padding:8px;
+  text-align:left;
+  z-index:60;
+}
+:root[data-theme="light"] .nav-menu, :root[data-theme="light"] .nav-search{box-shadow:0 18px 48px rgba(15,23,42,.16);}
+.nav-menu[hidden], .nav-search[hidden]{display:none;}
+.nav-menu{
+  width:300px;
+  max-height:calc(100vh - var(--site-nav-h, 60px) - 24px);
+  overflow-y:auto;
+}
+.nav-menu .nav-menu-label{
+  font-size:11px;
+  font-weight:bold;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  line-height:normal;
+  color:var(--muted-text);
+  opacity:1;
+  max-width:none;
+  padding:10px 10px 6px 10px;
+  margin:0;
+}
+.nav-menu a.menu-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px;
+  min-height:44px;
+  border-radius:8px;
+  color:var(--text);
+  text-decoration:none;
+  font-size:15px;
+  line-height:normal;
+}
+.nav-menu a.menu-item:hover, .nav-menu a.menu-item:focus-visible{background:rgba(37,99,235,.14);outline:none;}
+/* The page you're on: marked for screen readers, with only a quiet visual cue. */
+.nav-menu a.menu-item[aria-current="page"]{font-weight:bold;box-shadow:inset 3px 0 0 var(--accent);}
+.nav-menu .menu-item .icon-box{
+  width:30px;height:30px;border-radius:7px;flex:none;margin:0;
+  display:flex;align-items:center;justify-content:center;
+  border:1.5px solid transparent;font-size:inherit;
+}
+.nav-menu .menu-item .icon-box svg{width:16px;height:16px;display:block;}
+.nav-menu .menu-item .icon-box.cat-all{background:rgba(148,163,184,.18);border-color:var(--muted-text);color:var(--text);}
+.nav-menu .menu-item .icon-box.cat-image{background:rgba(37,99,235,var(--nav-icon-alpha));border-color:#2563eb;color:#2563eb;}
+.nav-menu .menu-item .icon-box.cat-pdf{background:rgba(245,158,11,var(--nav-icon-alpha));border-color:#f59e0b;color:#f59e0b;}
+.nav-menu .menu-item .icon-box.cat-utility{background:rgba(139,92,246,var(--nav-icon-alpha));border-color:#8b5cf6;color:#8b5cf6;}
+.nav-menu hr{border:none;border-top:1px solid var(--border);margin:6px 4px;}
+.menu-lang{display:flex;align-items:center;gap:8px;padding:8px 10px 6px 10px;font-size:13px;color:var(--muted-text);}
+.menu-lang .lang-flag{margin-left:0;}
+.menu-lang-label{margin-right:auto;}
+
+.nav-search{width:340px;display:flex;gap:6px;}
+.nav-search-label{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;}
+.nav-search input{
+  flex:1 1 auto;
+  min-width:0;
+  height:40px;
+  margin:0;
+  padding:0 12px;
+  font-family:inherit;
+  font-size:16px; /* 16px stops iPhones from zooming in on focus */
+  color:var(--text);
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:8px;
+}
+.nav-search input::placeholder{color:var(--muted-text);opacity:1;}
+.nav-search input:focus{outline:2px solid var(--accent);outline-offset:0;border-color:var(--accent);}
+.site-nav .nav-search .nav-icon-btn{width:40px;height:40px;flex:none;background:var(--accent);border-color:var(--accent);color:#fff;}
+
+@media (max-width:600px){
+  .site-nav{padding:10px 16px;}
+  .nav-menu, .nav-search{left:12px;right:12px;width:auto;}
+}
+/* Breadcrumbs (Initiative 2): Home / Category / Tool on tool pages,
+   Home / Blog / short label on blog posts. The separators are drawn with
+   CSS, so screen readers don't read out a "/" between levels. */
+.breadcrumbs{margin:0 0 12px 0;padding:0;text-align:left;font-size:13px;line-height:1.4;}
+.breadcrumbs ol{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;align-items:center;row-gap:2px;}
+.breadcrumbs li{display:inline-flex;align-items:center;margin:0;padding:0;color:var(--muted-text);}
+.breadcrumbs li + li::before{content:"";display:inline-block;width:0;height:.85em;margin:0 9px;border-right:1px solid var(--muted-text);transform:rotate(18deg);}
+.breadcrumbs a{color:var(--muted-text);text-decoration:none;}
+.breadcrumbs a:hover{color:var(--text);text-decoration:underline;}
+.breadcrumbs a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px;}
+.breadcrumbs [aria-current="page"]{color:var(--text);}
+/* Phones: tuck the trail into the top padding of <main> (40px on tool pages, 50px on
+   posts), so it doesn't push the tool's dropzone further down the screen. */
+@media (max-width:600px){.breadcrumbs{margin:-26px 0 8px 0;}}
+</style>
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://orisod.com/"}, {"@type": "ListItem", "position": 2, "name": "PDF Tools", "item": "https://orisod.com/tools/#pdf"}, {"@type": "ListItem", "position": 3, "name": "Remove Blank Pages from PDF", "item": "https://orisod.com/remove-blank-pages/"}]}
+</script>
 </head>
 <body>
+
+<header class="site-nav">
+  <a class="site-nav-logo" href="/"><img src="/assets/orisod-icon-nav.png" alt="" width="26" height="26">Orisod</a>
+  <div class="nav-icons">
+    <a class="nav-icon-btn support" href="/support/" aria-label="Support Orisod" title="Support Orisod"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg></a>
+    <button class="nav-icon-btn" id="navSearchBtn" type="button" aria-expanded="false" aria-controls="navSearch" aria-label="Search tools" title="Search tools"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
+    <form class="nav-search" id="navSearch" role="search" action="/tools/" method="get" hidden><label class="nav-search-label" for="navSearchInput">Search tools</label><input type="search" id="navSearchInput" name="search" placeholder="Search tools…" autocomplete="off" enterkeyhint="search"><button class="nav-icon-btn" type="submit" aria-label="Search"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button></form>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">🌙</button>
+    <button class="nav-icon-btn" id="navMenuBtn" type="button" aria-label="Menu" title="Menu" aria-expanded="false" aria-controls="navMenu" data-label-open="Menu" data-label-close="Close menu"><svg class="menu-icon-open" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><svg class="menu-icon-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <nav class="nav-menu" id="navMenu" aria-label="Site menu" hidden>
+    <p class="nav-menu-label">Tools</p>
+    <a class="menu-item" href="/tools/"><span class="icon-box cat-all"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>All Tools</a>
+    <a class="menu-item" href="/tools/#image"><span class="icon-box cat-image"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 2 18 17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="14" height="13" rx="1.5"/><circle cx="6" cy="8" r="1.2"/><path d="M2 15l3.5-3.5 2.5 2.5 3.5-4 3 3"/></svg></span>Image Tools</a>
+    <a class="menu-item" href="/tools/#pdf"><span class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/></svg></span>PDF Tools</a>
+    <a class="menu-item" href="/tools/#utility"><span class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3L5 8L11 8L11 3"/><path d="M8 8L17 19"/><path d="M15.5 20.5L18.5 17.5"/></svg></span>Utility Tools</a>
+    <hr>
+    <a class="menu-item" href="/blog/"><span class="icon-box cat-all"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span>Blog</a>
+    <hr>
+    <div class="menu-lang"><span class="menu-lang-label">Language</span><span class="lang-flag active">EN</span><a class="lang-flag" href="/es/remove-blank-pages/">ES</a></div>
+  </nav>
+</header>
+<script>(function(){var n=document.querySelector('.site-nav');if(!n)return;var r=document.documentElement;function s(){r.style.setProperty('--site-nav-h',n.offsetHeight+'px');}s();if(window.ResizeObserver){new ResizeObserver(s).observe(n);}else{window.addEventListener('resize',s);}})();</script>
+
 <main>
-<h1>Remove Blank Pages from PDF</h1>
+<div class="container">
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <ol>
+      <li><a href="/">Home</a></li>
+      <li><a href="/tools/#pdf">PDF Tools</a></li>
+      <li><span aria-current="page">Remove Blank Pages from PDF</span></li>
+    </ol>
+  </nav>
+  <h1>Remove Blank Pages from PDF</h1>
+  <p class="lead">Find the blank pages in a PDF, check each suggestion and download a copy without them.</p>
+
+  <div class="box tool">
+    <label class="dropzone" id="dropzone" for="fileInput"><span id="dropzoneText">📁 Click to select a PDF or drag and drop it here</span></label>
+    <input type="file" id="fileInput" accept=".pdf,application/pdf">
+    <div class="error" id="errorMsg" role="alert"></div>
+    <div class="field">
+      <label for="sensitivity">Sensitivity</label>
+      <select id="sensitivity" aria-describedby="sensitivityHelp"><option value="conservative" selected>Conservative</option><option value="balanced">Balanced</option><option value="aggressive">More aggressive</option></select>
+      <p class="hint" id="sensitivityHelp">Higher sensitivity allows pages with small marks or light scan noise to be marked as blank. Review the marked pages before saving.</p>
+    </div>
+    <p class="warn-note" id="signedNote" hidden>This PDF has a digital signature. Removing pages changes the file, so the signature may no longer be valid.</p>
+    <p class="warn-note" id="largeNote" hidden>This is a large PDF, so checking it may take a while and use a lot of memory. If the browser slows down, close other tabs.</p>
+    <div class="progress-row" id="progressRow" hidden>
+      <progress id="progressBar" max="1" value="0" aria-hidden="true"></progress>
+      <button type="button" class="btn" id="cancelBtn">Cancel</button>
+    </div>
+    <p class="live-status" id="liveStatus" aria-live="polite"></p>
+    <ul class="page-list" id="pageList"></ul>
+    <div class="actions" id="actions" hidden>
+      <button type="button" class="btn" id="keepAllBtn">Keep all</button>
+      <button type="button" class="btn primary" id="saveBtn" aria-describedby="saveHelp">Delete Pages &amp; Download</button>
+    </div>
+    <div class="error" id="saveError" role="alert"></div>
+    <p class="hint" id="saveHelp">Removing pages may affect bookmarks, internal links, forms, tags, attachments, PDF/A compliance and digital signatures. Check the downloaded PDF before replacing the original.</p>
+  </div>
+
+  <div class="how-grid">
+    <section class="how" aria-labelledby="howTitle">
+      <h2 id="howTitle">How it works</h2>
+      <ol>
+        <li>Add a PDF to preview its pages.</li>
+        <li>Review the pages marked as blank.</li>
+        <li>Choose Keep or Remove, then save the PDF.</li>
+      </ol>
+    </section>
+  </div>
+
+  <details class="more" id="more">
+    <summary>Help and details</summary>
+    <div class="seo-content">
+      <h2>Help and common issues</h2>
+      <ul>
+        <li>Add a PDF by clicking the box or dragging the file onto it. Each page is checked in your browser and shown as a small preview.</li>
+        <li>Pages that look blank are marked for removal. Check every marked page: a page can look empty in a small preview and still matter.</li>
+        <li>Clear Remove page on any page you want to keep, or tick it on a page you want to remove. Keep all clears every mark.</li>
+        <li>Large PDFs take longer and use more memory. If the browser slows down, close other tabs or split the PDF first.</li>
+        <li>Removing pages may affect bookmarks, internal links, forms, tags, attachments, PDF/A compliance and digital signatures. Check the downloaded PDF before replacing the original.</li>
+      </ul>
+
+      <h2>Privacy and sharing</h2>
+      <ul>
+        <li>Your PDF is processed in your browser and is not uploaded to Orisod servers.</li>
+        <li>This page doesn't save your PDF, its name or your choices. Closing the tab clears them.</li>
+        <li>The share button shares only the address of this tool, never your file or the pages you chose.</li>
+      </ul>
+
+      <h2>What blank-page detection means</h2>
+      <p>Each page is drawn as a small picture and compared with the colour of its own paper, so off-white and grey scans are judged fairly. Marks clearly darker than the paper are counted, apart from a thin band along the edges where scanners leave shadows. When those marks cover almost none of the page, it's suggested as blank. The sensitivity sets how dark a mark must be, how much of the page it may cover and how wide the edge band is. A page with text you can't see, comments, form fields or a signature field is never suggested, even if it looks empty, because that content may matter.</p>
+
+      <h2>When to use it</h2>
+      <ul>
+        <li>Clean up a scan from a document feeder that also captured the empty backs of single-sided pages</li>
+        <li>Remove separator pages or empty pages left at the end of a report</li>
+        <li>Tidy a PDF before printing, so no paper is spent on empty sheets</li>
+        <li>Prepare a file for a form or portal that limits how many pages you can upload</li>
+      </ul>
+
+      <h2>Frequently asked questions</h2>
+      <div class="faq-item">
+        <div class="q">Why was a page with only a page number marked as blank?</div>
+        <div>At Balanced and More aggressive, a few small marks such as a page number or a short footer count as too little content. Choose Conservative to keep those pages, or clear Remove page on that page before saving.</div>
+      </div>
+      <div class="faq-item">
+        <div class="q">Why wasn't a scanned blank page detected?</div>
+        <div>Scans often have specks, shadows, a grey tint or text showing through from the other side. At Conservative those marks are enough for a page to count as having content. Try Balanced or More aggressive, or tick Remove page on it yourself.</div>
+      </div>
+      <div class="faq-item">
+        <div class="q">Can I change which pages are removed?</div>
+        <div>Yes. The detection only makes suggestions. Tick or clear Remove page on any page, or use Keep all to clear every mark. Your own choices stay as they are when you change the sensitivity.</div>
+      </div>
+      <div class="faq-item">
+        <div class="q">Will bookmarks, links and forms be preserved?</div>
+        <div>Not always. The pages you keep keep their content, links to websites and their form fields. Bookmarks and internal links that pointed to a removed page may stop working, and tags, attachments, PDF/A compliance and digital signatures can be affected. Check the downloaded PDF before replacing the original.</div>
+      </div>
+      <div class="faq-item">
+        <div class="q">Can it open a password-protected PDF?</div>
+        <div>No. Remove the password in a trusted PDF application first, then add the PDF here. This tool doesn't try to unlock files.</div>
+      </div>
+      <div class="faq-item">
+        <div class="q">Is my PDF uploaded to Orisod?</div>
+        <div>No. Your PDF is processed in your browser and is not uploaded to Orisod servers. The page only downloads its own code, such as the PDF libraries, from orisod.com.</div>
+      </div>
+    </div>
+  </details>
+
+  <footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-brand-logo">ORISOD</div>
+      <div class="footer-brand-desc">Free, browser-based image and PDF tools. All image and PDF processing happens 100% locally: your files are never uploaded anywhere.</div>
+      <div class="footer-copy">© Orisod Labs</div>
+    </div>
+    <div class="footer-col">
+      <h3>Tools</h3>
+      <a href="/tools/#image">Image Tools</a>
+      <a href="/tools/#pdf">PDF Tools</a>
+      <a href="/tools/#utility">Utility Tools</a>
+    </div>
+    <div class="footer-col">
+      <h3>Company</h3>
+      <a href="/about/">About</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/blog/">Blog</a>
+    </div>
+    <div class="footer-col">
+      <h3>Support</h3>
+      <p class="footer-support-text">No pressure, just appreciated if you'd like to help keep this free.</p>
+      <a class="footer-support-btn" href="/support/">Support</a>
+    </div>
+  </div>
+</footer>
+</div>
+
 </main>
+
 <script>
+(function(){
+  var btn = document.getElementById('themeToggle');
+  function updateIcon(){
+    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '☀️' : '🌙';
+  }
+  updateIcon();
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme')==='light';
+    if(isLight){
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('orisod-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      localStorage.setItem('orisod-theme','light');
+    }
+    updateIcon();
+  });
+})();
+</script>
+
+<!-- Tool libraries load here, after the page content, so they don't hold up the first paint. -->
+<script src="/assets/vendor/pdfjs/3.11.174/pdf.min.js"></script>
+<script src="/assets/vendor/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = "/assets/vendor/pdfjs/3.11.174/pdf.worker.min.js";
+const T = {
+  "dropzone": "📁 Click to select a PDF or drag and drop it here",
+  "loaded": "✅ {name} loaded",
+  "notPdf": "Please select a valid PDF file.",
+  "damaged": "This PDF could not be opened. It may be damaged.",
+  "password": "This PDF is password-protected. Remove the password in a trusted PDF application, then try again.",
+  "replace": "Replace the current PDF? Your Keep and Remove choices will be lost.",
+  "checking": "Checking page {i} of {n}",
+  "doneNone": "Review complete. No pages are marked for removal.",
+  "doneOne": "Review complete. 1 page is marked for removal.",
+  "doneMany": "Review complete. {n} pages are marked for removal.",
+  "totalNone": "No pages will be removed.",
+  "totalOne": "1 page will be removed.",
+  "totalMany": "{n} pages will be removed.",
+  "stopped": "Checking stopped.",
+  "pageNumber": "Page {n}",
+  "removePage": "Remove page {n}",
+  "autoRemove": "Looks blank: marked for removal",
+  "autoKeep": "Has content: kept",
+  "chosenRemove": "Your choice: remove",
+  "chosenKeep": "Your choice: keep",
+  "nonvisual": "This page looks blank but contains nonvisual content.",
+  "noneSelected": "No pages are marked for removal. Mark at least one page, or keep the original PDF.",
+  "allSelected": "Every page is marked for removal. Keep at least one page to save the PDF.",
+  "saveFailed": "The PDF could not be saved. Try again, or check that the file isn't damaged.",
+  "suffix": "-blank-pages-removed.pdf"
+};
+
 // BEGIN detection
 // Decides whether a rendered page looks blank. Pure: it reads only the pixel array it's given (RGBA, row by row, as a
 // canvas returns it) and the config, with no DOM or canvas, so the Node tests run this exact text from the page. The
@@ -73,6 +709,498 @@ function detectBlankPage(pixels, width, height, config) {
   return { blank: marks <= limit, reason: marks <= limit ? "blank" : "marks", paper, marks, limit };
 }
 // END detection
+
+// Every page is drawn once at RENDER_WIDTH pixels wide, whatever the screen, so detection gives the same result on
+// every device. The same picture becomes the page's small JPEG preview, then the canvas is released.
+const RENDER_WIDTH = 240;
+// Pages drawn at the same time: enough to keep the browser busy without holding many canvases at once.
+const RENDER_AT_ONCE = 2;
+// The live region gets a progress line at most this often (the visible progress bar moves on every page).
+const ANNOUNCE_EVERY_MS = 1500;
+// Above either of these the page warns that checking may be slow and use a lot of memory. Measured in Chromium
+// (2026-11-04): about 18 ms a page for text, and the browser's memory grows by roughly three times the file size for
+// photo-heavy PDFs (a 90 MB file: about 280 MB more). There's no page limit.
+const LARGE_PAGES = 300;
+const LARGE_BYTES = 50 * 1024 * 1024;
+
+const $ = (id) => document.getElementById(id);
+const fileInput = $("fileInput"), dropzone = $("dropzone"), dropzoneText = $("dropzoneText"), errorMsg = $("errorMsg");
+const sensitivity = $("sensitivity"), signedNote = $("signedNote"), largeNote = $("largeNote");
+const progressRow = $("progressRow"), progressBar = $("progressBar"), cancelBtn = $("cancelBtn");
+const liveStatus = $("liveStatus"), pageList = $("pageList"), actions = $("actions");
+const keepAllBtn = $("keepAllBtn"), saveBtn = $("saveBtn"), saveError = $("saveError");
+
+// One run per chosen PDF. Starting another (or cancelling) bumps `generation`, so late results from the old run are
+// dropped, and everything the old run holds is released.
+let generation = 0;
+let run = null;
+
+const plural = (n, one, many) => (n === 1 ? one : many).replace("{n}", n);
+const fill = (text, values) => text.replace(/\{(\w+)\}/g, (m, k) => (k in values ? values[k] : m));
+
+function say(text) {
+  liveStatus.textContent = text;
+}
+function removalCount() {
+  return run ? run.pages.filter((p) => p && willRemove(p)).length : 0;
+}
+function sayTotal() {
+  const n = removalCount();
+  say(n === 0 ? T.totalNone : plural(n, T.totalOne, T.totalMany));
+}
+
+// A page is removed when the visitor chose so, or, with no choice yet, when it looks blank at the chosen sensitivity
+// and has nothing that doesn't show (text, annotations, form fields, signatures).
+function suggested(p) {
+  return !p.hidden && p.blankAt[sensitivity.value];
+}
+function willRemove(p) {
+  return p.choice ? p.choice === "remove" : suggested(p);
+}
+function paint(p) {
+  const remove = willRemove(p);
+  const state = p.choice ? (remove ? T.chosenRemove : T.chosenKeep) : (remove ? T.autoRemove : T.autoKeep);
+  p.li.dataset.state = (p.choice ? "manual-" : "auto-") + (remove ? "remove" : "keep");
+  p.stateText.textContent = state;
+  p.iconRemove.hidden = !remove;
+  p.iconKeep.hidden = remove;
+  p.check.checked = remove;
+}
+
+function buildItem(p) {
+  const li = document.createElement("li");
+  li.className = "page-item";
+  const label = document.createElement("label");
+  label.className = "page-card";
+  const thumb = document.createElement("span");
+  thumb.className = "page-thumb";
+  const img = document.createElement("img");
+  img.alt = "";
+  img.src = p.url;
+  img.width = p.width;
+  img.height = p.height;
+  thumb.append(img);
+  const num = document.createElement("span");
+  num.className = "page-num";
+  num.textContent = fill(T.pageNumber, { n: p.n });
+  const state = document.createElement("span");
+  state.className = "page-state";
+  state.id = "pageState" + p.n;
+  const iconRemove = svgIcon("M6 6l12 12M18 6L6 18");
+  const iconKeep = svgIcon("M5 12.5l4.5 4.5L19 7.5");
+  const stateText = document.createElement("span");
+  state.append(iconRemove, iconKeep, stateText);
+  const describedBy = [state.id];
+  label.append(thumb, num, state);
+  if (p.hidden) {
+    const note = document.createElement("span");
+    note.className = "page-note";
+    note.id = "pageNote" + p.n;
+    note.textContent = T.nonvisual;
+    label.append(note);
+    describedBy.push(note.id);
+  }
+  const row = document.createElement("span");
+  row.className = "page-check";
+  const check = document.createElement("input");
+  check.type = "checkbox";
+  check.id = "pageCheck" + p.n;
+  const checkText = document.createElement("span");
+  checkText.id = "pageCheckLabel" + p.n;
+  checkText.textContent = fill(T.removePage, { n: p.n });
+  check.setAttribute("aria-labelledby", checkText.id);
+  check.setAttribute("aria-describedby", describedBy.join(" "));
+  check.addEventListener("change", () => {
+    p.choice = check.checked ? "remove" : "keep";
+    saveError.textContent = "";
+    paint(p);
+    sayTotal();
+  });
+  row.append(check, checkText);
+  label.append(row);
+  li.append(label);
+  Object.assign(p, { li, check, stateText, iconRemove, iconKeep });
+  paint(p);
+  return li;
+}
+function svgIcon(d) {
+  const ns = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(ns, "svg");
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("aria-hidden", "true");
+  svg.setAttribute("focusable", "false");
+  svg.setAttribute("class", "state-ico");
+  const path = document.createElementNS(ns, "path");
+  path.setAttribute("d", d);
+  svg.append(path);
+  return svg;
+}
+
+// Releases everything a run holds: render tasks, the pdf.js document and its loading task, preview URLs and the
+// original bytes. Safe to call twice.
+function release(r) {
+  if (!r) return;
+  r.stopped = true;
+  for (const task of r.tasks) { try { task.cancel(); } catch (e) { /* already finished */ } }
+  r.tasks.clear();
+  if (r.pdf) { r.pdf.destroy().catch(() => {}); r.pdf = null; }
+  if (r.loadingTask) { r.loadingTask.destroy().catch(() => {}); r.loadingTask = null; }
+  for (const p of r.pages) if (p && p.url) URL.revokeObjectURL(p.url);
+  r.pages = [];
+  r.bytes = null;
+}
+function resetView() {
+  pageList.replaceChildren();
+  actions.hidden = true;
+  progressRow.hidden = true;
+  signedNote.hidden = true;
+  largeNote.hidden = true;
+  errorMsg.textContent = "";
+  saveError.textContent = "";
+}
+
+async function openFile(file) {
+  if (!file) return;
+  if (run && !run.stopped && run.pages.length && !window.confirm(T.replace)) return;
+  generation++;
+  release(run);
+  run = null;
+  resetView();
+  say("");
+  dropzoneText.textContent = T.dropzone;
+  if (!/\.pdf$/i.test(file.name) && file.type !== "application/pdf") {
+    errorMsg.textContent = T.notPdf;
+    return;
+  }
+  const mine = generation;
+  const r = { file, bytes: null, pdf: null, loadingTask: null, tasks: new Set(), pages: [], stopped: false, done: false };
+  run = r;
+  try {
+    r.bytes = new Uint8Array(await file.arrayBuffer());
+  } catch (e) {
+    errorMsg.textContent = T.damaged;
+    return;
+  }
+  if (mine !== generation) return;
+  // pdf.js first: it tells a password-protected PDF apart from a damaged one. The loading task is kept so that
+  // cancelling can destroy it while the file is still being read.
+  const loading = (r.loadingTask = pdfjsLib.getDocument({ data: r.bytes.slice(0), isEvalSupported: false })).promise;
+  try {
+    r.pdf = await loading;
+  } catch (e) {
+    if (mine !== generation) return;
+    errorMsg.textContent = e && e.name === "PasswordException" ? T.password : T.damaged;
+    release(r);
+    return;
+  }
+  if (mine !== generation) return;
+  // pdf-lib must be able to save it too: an encrypted PDF that opens without a password (owner password only) still
+  // can't be saved, and signature fields get a warning before any page is checked.
+  let signed = false;
+  try {
+    const doc = await PDFLib.PDFDocument.load(r.bytes, { ignoreEncryption: true, updateMetadata: false });
+    if (doc.isEncrypted) {
+      errorMsg.textContent = T.password;
+      release(r);
+      return;
+    }
+    signed = doc.getForm().getFields().some((f) => f instanceof PDFLib.PDFSignature);
+  } catch (e) {
+    if (mine !== generation) return;
+    errorMsg.textContent = T.damaged;
+    release(r);
+    return;
+  }
+  if (mine !== generation) return;
+  dropzoneText.textContent = fill(T.loaded, { name: file.name });
+  signedNote.hidden = !signed;
+  const count = r.pdf.numPages;
+  largeNote.hidden = !(count > LARGE_PAGES || r.bytes.length > LARGE_BYTES);
+  r.pages = new Array(count).fill(null);
+  await checkPages(r, mine);
+}
+
+async function checkPages(r, mine) {
+  const count = r.pages.length;
+  progressRow.hidden = false;
+  progressBar.max = count;
+  progressBar.value = 0;
+  say(fill(T.checking, { i: 1, n: count }));
+  let lastSaid = performance.now(), next = 0, finished = 0, appended = 0;
+  const ready = [];
+  const appendInOrder = () => {
+    while (appended < count && ready[appended]) {
+      pageList.append(buildItem(ready[appended]));
+      ready[appended] = null;
+      appended++;
+    }
+  };
+  async function worker() {
+    while (next < count && mine === generation) {
+      const index = next++;
+      const p = await checkPage(r, index + 1, mine);
+      if (!p || mine !== generation) return;
+      r.pages[index] = p;
+      ready[index] = p;
+      appendInOrder();
+      finished++;
+      progressBar.value = finished;
+      const now = performance.now();
+      if (now - lastSaid >= ANNOUNCE_EVERY_MS && finished < count) {
+        say(fill(T.checking, { i: finished + 1, n: count }));
+        lastSaid = now;
+      }
+    }
+  }
+  try {
+    await Promise.all(Array.from({ length: Math.min(RENDER_AT_ONCE, count) }, worker));
+  } catch (e) {
+    if (mine !== generation) return;
+    errorMsg.textContent = T.damaged;
+    progressRow.hidden = true;
+    return;
+  }
+  if (mine !== generation) return;
+  r.done = true;
+  progressRow.hidden = true;
+  actions.hidden = false;
+  // Everything is checked: pdf.js isn't needed any more (saving works from the original bytes).
+  r.pdf.destroy().catch(() => {});
+  r.pdf = null;
+  r.loadingTask = null;
+  const n = removalCount();
+  say(n === 0 ? T.doneNone : plural(n, T.doneOne, T.doneMany));
+}
+
+async function checkPage(r, n, mine) {
+  const page = await r.pdf.getPage(n);
+  if (mine !== generation) return null;
+  const base = page.getViewport({ scale: 1 });
+  const viewport = page.getViewport({ scale: RENDER_WIDTH / base.width });
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.max(1, Math.round(viewport.width));
+  canvas.height = Math.max(1, Math.round(viewport.height));
+  const ctx = canvas.getContext("2d");
+  const task = page.render({ canvasContext: ctx, viewport });
+  r.tasks.add(task);
+  try {
+    await task.promise;
+  } catch (e) {
+    if (e && e.name === "RenderingCancelledException") return null;
+    throw e;
+  } finally {
+    r.tasks.delete(task);
+  }
+  if (mine !== generation) { canvas.width = canvas.height = 0; return null; }
+  const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const blankAt = {};
+  for (const level of BLANK_LEVELS) blankAt[level] = detectBlankPage(data, canvas.width, canvas.height, BLANK_SENSITIVITY[level]).blank;
+  // Content that may not show in the picture: annotations, form fields and signature widgets always count; text counts
+  // when the page shows no mark at all (white or invisible text, such as a hidden OCR layer). A page number that
+  // shows is visible content, judged by the sensitivity like any other mark. Only checked for pages that could be
+  // suggested, since the others are kept anyway.
+  let hidden = false;
+  if (blankAt.aggressive) {
+    const annotations = await page.getAnnotations();
+    if (annotations.length > 0) hidden = true;
+    else if (detectBlankPage(data, canvas.width, canvas.height, BLANK_TRACE).marks === 0) {
+      const text = await page.getTextContent();
+      hidden = text.items.some((item) => typeof item.str === "string" && item.str.trim() !== "");
+    }
+  }
+  const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.7));
+  const width = canvas.width, height = canvas.height;
+  canvas.width = canvas.height = 0;
+  page.cleanup();
+  if (mine !== generation) return null;
+  return { n, blankAt, hidden, choice: null, url: blob ? URL.createObjectURL(blob) : "", width, height };
+}
+
+// pdf-lib writes every object it loaded, so a removed page's text and pictures would still be inside the saved file.
+// Before saving: references to removed pages (from bookmarks, links or form widgets that pointed at them, now broken
+// anyway) become null, and every object no longer reachable from the document's root or info dictionary is dropped.
+function dropRemovedObjects(doc, removedRefs) {
+  const { PDFRef, PDFDict, PDFArray, PDFStream, PDFNull } = PDFLib;
+  const context = doc.context;
+  const removed = new Set(removedRefs.map((ref) => ref.toString()));
+  const reachable = new Set();
+  const pending = [context.trailerInfo.Root, context.trailerInfo.Info].filter((ref) => ref instanceof PDFRef);
+  const follow = (value, replace) => {
+    if (value instanceof PDFRef) {
+      if (removed.has(value.toString())) replace();
+      else pending.push(value);
+    } else if (value instanceof PDFDict || value instanceof PDFArray || value instanceof PDFStream) {
+      scan(value);
+    }
+  };
+  function scan(obj) {
+    if (obj instanceof PDFStream) obj = obj.dict;
+    if (obj instanceof PDFDict) {
+      for (const [key, value] of obj.entries()) follow(value, () => obj.set(key, PDFNull));
+    } else if (obj instanceof PDFArray) {
+      for (let i = 0; i < obj.size(); i++) follow(obj.get(i), () => obj.set(i, PDFNull));
+    }
+  }
+  while (pending.length) {
+    const ref = pending.pop();
+    const key = ref.toString();
+    if (reachable.has(key)) continue;
+    reachable.add(key);
+    const obj = context.lookup(ref);
+    if (obj) scan(obj);
+  }
+  for (const [ref] of context.enumerateIndirectObjects()) if (!reachable.has(ref.toString())) context.delete(ref);
+}
+
+cancelBtn.addEventListener("click", () => {
+  generation++;
+  release(run);
+  run = null;
+  resetView();
+  dropzoneText.textContent = T.dropzone;
+  fileInput.value = "";
+  say(T.stopped);
+});
+
+sensitivity.addEventListener("change", () => {
+  if (!run || !run.pages.length) return;
+  // Only the suggestions change; a page the visitor chose keeps that choice.
+  for (const p of run.pages) if (p && p.li) paint(p);
+  saveError.textContent = "";
+  sayTotal();
+});
+
+keepAllBtn.addEventListener("click", () => {
+  if (!run) return;
+  for (const p of run.pages) if (p && p.li) { p.choice = "keep"; paint(p); }
+  saveError.textContent = "";
+  sayTotal();
+});
+
+saveBtn.addEventListener("click", async () => {
+  saveError.textContent = "";
+  if (!run || !run.done) return;
+  const remove = run.pages.filter(willRemove).map((p) => p.n - 1);
+  if (remove.length === 0) { saveError.textContent = T.noneSelected; return; }
+  if (remove.length === run.pages.length) { saveError.textContent = T.allSelected; return; }
+  saveBtn.disabled = true;
+  try {
+    // The original document, with the chosen pages taken out from the last to the first, so the remaining pages
+    // keep their own objects (links, form fields, annotations) as far as pdf-lib can.
+    const doc = await PDFLib.PDFDocument.load(run.bytes, { updateMetadata: false });
+    const removedRefs = remove.map((index) => doc.getPage(index).ref);
+    for (const index of remove.sort((a, b) => b - a)) doc.removePage(index);
+    dropRemovedObjects(doc, removedRefs);
+    const bytes = await doc.save();
+    const url = URL.createObjectURL(new Blob([bytes], { type: "application/pdf" }));
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = run.file.name.replace(/\.pdf$/i, "") + T.suffix;
+    document.body.append(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+  } catch (e) {
+    saveError.textContent = T.saveFailed;
+  } finally {
+    saveBtn.disabled = false;
+  }
+});
+
+fileInput.addEventListener("change", () => { const f = fileInput.files[0]; fileInput.value = ""; openFile(f); });
+dropzone.addEventListener("dragover", (e) => { e.preventDefault(); dropzone.classList.add("dragover"); });
+dropzone.addEventListener("dragleave", () => dropzone.classList.remove("dragover"));
+dropzone.addEventListener("drop", (e) => {
+  e.preventDefault();
+  dropzone.classList.remove("dragover");
+  openFile(e.dataTransfer.files[0]);
+});
+</script>
+<script>
+// Minimal nav (Initiative 2): the Menu panel and the Search icon.
+// Button labels come from data attributes, so the same script works in every
+// language. The Search icon opens a small search box under the nav; only
+// submitting it leaves the page (to /tools/?search=...). On a page that has
+// its own search box, the icon's data-search-target names it and the icon
+// just scrolls to it and focuses it instead.
+(function(){
+  var menuBtn = document.getElementById('navMenuBtn');
+  var menu = document.getElementById('navMenu');
+  var searchBtn = document.getElementById('navSearchBtn');
+  var form = document.getElementById('navSearch');
+  var input = form && form.querySelector('input');
+  if(!menuBtn || !menu || !searchBtn) return;
+
+  function openMenu(){
+    closeSearch(false);
+    menu.hidden = false;
+    menuBtn.setAttribute('aria-expanded', 'true');
+    menuBtn.setAttribute('aria-label', menuBtn.getAttribute('data-label-close'));
+    var first = menu.querySelector('a'); if(first) first.focus();
+  }
+  function closeMenu(returnFocus){
+    if(menu.hidden) return;
+    menu.hidden = true;
+    menuBtn.setAttribute('aria-expanded', 'false');
+    menuBtn.setAttribute('aria-label', menuBtn.getAttribute('data-label-open'));
+    if(returnFocus) menuBtn.focus();
+  }
+  menuBtn.addEventListener('click', function(){
+    if(menu.hidden) openMenu(); else closeMenu(true);
+  });
+  // Picking a link closes the menu (matters where a link acts in place, like /tools filters).
+  menu.addEventListener('click', function(e){
+    if(e.target.closest('a')) closeMenu(false);
+  });
+  // Tabbing past the last menu link closes the menu.
+  menu.addEventListener('focusout', function(e){
+    if(e.relatedTarget && !menu.contains(e.relatedTarget) && e.relatedTarget !== menuBtn) closeMenu(false);
+  });
+
+  function openSearch(){
+    closeMenu(false);
+    form.hidden = false;
+    searchBtn.setAttribute('aria-expanded', 'true');
+    input.focus();
+  }
+  function closeSearch(returnFocus){
+    if(!form || form.hidden) return;
+    form.hidden = true;
+    input.value = '';
+    searchBtn.setAttribute('aria-expanded', 'false');
+    if(returnFocus) searchBtn.focus();
+  }
+  searchBtn.addEventListener('click', function(){
+    var target = document.getElementById(searchBtn.getAttribute('data-search-target'));
+    if(target){
+      closeMenu(false);
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      target.scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block: 'center'});
+      target.focus({preventScroll: true});
+      return;
+    }
+    if(!form) return;
+    if(form.hidden) openSearch(); else closeSearch(true);
+  });
+  if(form){
+    // An empty search goes nowhere; the box just stays open.
+    form.addEventListener('submit', function(e){
+      if(!input.value.trim()){ e.preventDefault(); input.focus(); }
+    });
+    form.addEventListener('focusout', function(e){
+      if(e.relatedTarget && !form.contains(e.relatedTarget) && e.relatedTarget !== searchBtn) closeSearch(false);
+    });
+  }
+
+  document.addEventListener('click', function(e){
+    if(!menu.contains(e.target) && !menuBtn.contains(e.target)) closeMenu(false);
+    if(form && !form.contains(e.target) && !searchBtn.contains(e.target)) closeSearch(false);
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key !== 'Escape') return;
+    if(form && !form.hidden) closeSearch(true); else closeMenu(true);
+  });
+})();
 </script>
 </body>
 </html>
