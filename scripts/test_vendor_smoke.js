@@ -1265,19 +1265,19 @@ const RBP_TEXT = {
     allSelected: "Every page is marked for removal. Keep at least one page to save the PDF.",
     noneSelected: "No pages are marked for removal. Mark at least one page, or keep the original PDF.",
     password: "This PDF is password-protected. Remove the password in a trusted PDF application, then try again.",
-    signed: "This PDF has a digital signature. Removing pages changes the file, so the signature may no longer be valid.",
+    signed: "This PDF has a digital signature. Removing pages changes the downloaded copy, so the signature may no longer be valid.",
     notPdf: "Please select a valid PDF file.", replace: "Replace the current PDF? Your Keep and Remove choices will be lost.",
-    sensLabel: "Sensitivity", sens: ["Conservative", "Balanced", "More aggressive"], keepAll: "Keep all", save: "Delete Pages & Download", suffix: "-blank-pages-removed.pdf",
+    sensLabel: "Sensitivity", sens: ["Conservative", "Balanced", "More aggressive"], keepAll: "Keep all", save: "Remove pages and download", suffix: "-blank-pages-removed.pdf",
     summary: "Help and details", guide: "/blog/remove-blank-pages-from-pdf/", cards: ["/delete-pdf-pages/", "/pdf-page-organizer/", "/compress-pdf/"] },
   es: { url: "https://orisod.com/es/remove-blank-pages/", title: "Eliminar páginas en blanco de PDF",
-    doneMany: "Revisión completa. {n} páginas están marcadas para eliminar.", totalMany: "Se eliminarán {n} páginas.", totalOne: "Se eliminará 1 página.", totalNone: "No se eliminará ninguna página.",
-    checking: /^Revisando la página \d+ de \d+$/, stopped: "Revisión detenida.", removePage: "Eliminar página {n}", pageNumber: "Página {n}",
+    doneMany: "Revisión completada. {n} páginas están marcadas para eliminar.", totalMany: "Se eliminarán {n} páginas.", totalOne: "Se eliminará 1 página.", totalNone: "No se eliminará ninguna página.",
+    checking: /^Revisando la página \d+ de \d+$/, stopped: "Se detuvo la revisión.", removePage: "Eliminar página {n}", pageNumber: "Página {n}",
     autoRemove: "Parece en blanco: marcada para eliminar", autoKeep: "Tiene contenido: se conserva", chosenRemove: "Tu elección: eliminar", chosenKeep: "Tu elección: conservar",
     nonvisual: "Esta página parece estar en blanco, pero contiene contenido no visual.",
     allSelected: "Todas las páginas están marcadas para eliminar. Conserva al menos una página para guardar el PDF.",
     noneSelected: "Ninguna página está marcada para eliminar. Marca al menos una página o conserva el PDF original.",
     password: "Este PDF está protegido con contraseña. Quita la contraseña en una aplicación de PDF de confianza y vuelve a intentarlo.",
-    signed: "Este PDF tiene una firma digital. Eliminar páginas cambia el archivo, así que la firma podría dejar de ser válida.",
+    signed: "Este PDF tiene una firma digital. Eliminar páginas cambia la copia descargada, así que la firma podría dejar de ser válida.",
     notPdf: "Selecciona un archivo PDF válido.", replace: "¿Reemplazar el PDF actual? Se perderán tus elecciones de Conservar y Eliminar.",
     sensLabel: "Sensibilidad", sens: ["Conservadora", "Equilibrada", "Más estricta"], keepAll: "Conservar todas", save: "Eliminar páginas y descargar", suffix: "-sin-paginas-en-blanco.pdf",
     summary: "Ayuda y detalles", guide: "/es/blog/remove-blank-pages-from-pdf/", cards: ["/es/delete-pdf-pages/", "/es/pdf-page-organizer/", "/es/compress-pdf/"] },
@@ -3915,6 +3915,8 @@ const CASES = [
       const s = await page.evaluate(RBP_STRUCTURE);
       expectRbpStructure(s, lang);
       const steps = s.steps;
+      const saveLabel = (await page.textContent("#saveBtn")).trim();
+      expect(saveLabel === RBP_TEXT[lang].save, `the save button says "${saveLabel}", not "${RBP_TEXT[lang].save}"`);
       expect(lang === "en" ? steps[0] === "Add a PDF to preview its pages." : steps[0] === "Agrega un PDF para ver sus páginas.", `step 1 is "${steps[0]}"`);
       await rbpLoad(page);
       await rbpDone(page);
@@ -4030,8 +4032,24 @@ const CASES = [
       expect(words.filter((w) => w === keep).length === 2 && words.filter((w) => w === remove).length === 2, `the review stage shows ${words.join(" / ")}`);
       const tiny = await page.evaluate(() => [...document.querySelectorAll("figure.rbp-flow svg text")].filter((x) => Number(x.getAttribute("font-size")) < 12).length);
       expect(!tiny, `${tiny} diagram labels under 12px`);
-      return `exactly one diagram exposed (${seen.join(", ")}), the approved aria-label, Keep and Remove shown for both suggested pages, no label under 12px, no sideways scroll at 320px; ` +
+      // Every label stays inside its panel, in the wide and the stacked version (the longest ES note included).
+      const overflow = [];
+      for (const width of [1280, 390]) {
+        await page.setViewportSize({ width, height: 900 });
+        overflow.push(...(await page.evaluate(() => {
+          const svg = [...document.querySelectorAll("figure.rbp-flow svg")].find((x) => getComputedStyle(x).display !== "none");
+          const panels = [...svg.querySelectorAll("rect[rx='10']")].map((x) => x.getBBox());
+          return [...svg.querySelectorAll("text")].map((t) => {
+            const b = t.getBBox(), box = panels.find((q) => b.x >= q.x && b.x <= q.x + q.width && b.y >= q.y && b.y <= q.y + q.height);
+            return { text: t.textContent, over: box ? Math.round(b.x + b.width - (box.x + box.width - 6)) : 0, where: svg.getAttribute("class") };
+          });
+        })));
+      }
+      const expectFit = (rows) => { const bad = rows.filter((r) => r.over > 0); expect(!bad.length, `labels past their panel: ${bad.map((r) => `"${r.text}" by ${r.over}px in ${r.where}`).join(", ")}`); };
+      expectFit(overflow);
+      return `exactly one diagram exposed (${seen.join(", ")}), the approved aria-label, Keep and Remove shown for both suggested pages, no label under 12px, every label inside its panel (wide and stacked), no sideways scroll at 320px; ` +
         [mustFail("both diagrams exposed", () => expectOneDiagram(last.svgs.map((x) => ({ ...x, shown: true, hidden: false })), 2, last.width, "rbp-flow")),
+          mustFail("a label past its panel", () => expectFit([...overflow, { text: "x", over: 3, where: "test" }])),
           mustFail("the wrong version at 320px", () => expectOneDiagram(last.svgs, last.imgs, 320, "rbp-flow"))].join("; ");
     },
   },
