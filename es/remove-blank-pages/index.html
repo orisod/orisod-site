@@ -87,7 +87,7 @@
           "name": "¿Puedo cambiar qué páginas se eliminan?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Sí. La detección solo hace sugerencias. Marca o desmarca Eliminar página en cualquier página, o usa Conservar todas para quitar todas las marcas. Tus propias elecciones se mantienen cuando cambias la sensibilidad."
+            "text": "Sí. La detección solo hace sugerencias. Marca o desmarca Eliminar página en cualquier página. Tus propias elecciones se mantienen cuando cambias la sensibilidad."
           }
         },
         {
@@ -209,6 +209,9 @@ label:has(+ input[type="file"]:focus-visible), label:has(input[type="file"]:focu
 .page-item[data-state^="manual-"] .page-state{font-weight:bold;}
 .actions{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 0 0;}
 .actions[hidden]{display:none;}
+/* Why Save is disabled (nothing marked, or every page marked): shown next to it and read with it. */
+.tool .save-note{font-size:14px;line-height:1.5;margin:8px 0 0 0;opacity:1;max-width:none;}
+.tool .save-note:empty{display:none;}
 .how-grid{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:28px;margin:44px 0 0 0;text-align:left;align-items:start;}
 @media (max-width:639px){.how-grid{grid-template-columns:minmax(0,1fr);gap:8px;}}
 .how-grid h2{margin:0 0 14px 0;}
@@ -522,9 +525,10 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
     <p class="live-status" id="liveStatus" aria-live="polite"></p>
     <ul class="page-list" id="pageList"></ul>
     <div class="actions" id="actions" hidden>
-      <button type="button" class="btn" id="keepAllBtn">Conservar todas</button>
-      <button type="button" class="btn primary" id="saveBtn" aria-describedby="saveHelp">Eliminar páginas y descargar</button>
+      <button type="button" class="btn primary" id="saveBtn" aria-describedby="saveNote saveHelp" disabled>Eliminar páginas y descargar</button>
+      <button type="button" class="btn" id="startOverBtn"></button>
     </div>
+    <p class="save-note" id="saveNote"></p>
     <div class="error" id="saveError" role="alert"></div>
     <p class="hint" id="saveHelp">Eliminar páginas puede afectar marcadores, enlaces internos, formularios, etiquetas, archivos adjuntos, el cumplimiento de PDF/A y las firmas digitales. Revisa el PDF descargado antes de reemplazar el original.</p>
   </div>
@@ -595,7 +599,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
       <ul>
         <li>Agrega un PDF haciendo clic en el recuadro o arrastrando el archivo hasta él. Cada página se revisa en tu navegador y se muestra como una vista previa pequeña.</li>
         <li>Las páginas que parecen en blanco quedan marcadas para eliminar. Revisa cada página marcada: una página puede verse vacía en una vista previa pequeña y aun así ser importante.</li>
-        <li>Desmarca Eliminar página en cualquier página que quieras conservar, o márcala en una página que quieras eliminar. Conservar todas quita todas las marcas.</li>
+        <li>Desmarca Eliminar página en cualquier página que quieras conservar, o márcala en una página que quieras eliminar.</li>
         <li>Los PDF grandes tardan más y usan más memoria. Si el navegador se vuelve lento, cierra otras pestañas o divide el PDF primero.</li>
         <li>Eliminar páginas puede afectar marcadores, enlaces internos, formularios, etiquetas, archivos adjuntos, el cumplimiento de PDF/A y las firmas digitales. Revisa el PDF descargado antes de reemplazar el original.</li>
       </ul>
@@ -629,7 +633,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
       </div>
       <div class="faq-item">
         <div class="q">¿Puedo cambiar qué páginas se eliminan?</div>
-        <div>Sí. La detección solo hace sugerencias. Marca o desmarca Eliminar página en cualquier página, o usa Conservar todas para quitar todas las marcas. Tus propias elecciones se mantienen cuando cambias la sensibilidad.</div>
+        <div>Sí. La detección solo hace sugerencias. Marca o desmarca Eliminar página en cualquier página. Tus propias elecciones se mantienen cuando cambias la sensibilidad.</div>
       </div>
       <div class="faq-item">
         <div class="q">¿Se conservan los marcadores, los enlaces y los formularios?</div>
@@ -716,6 +720,7 @@ const T = {
   "totalNone": "No se eliminará ninguna página.",
   "totalOne": "Se eliminará 1 página.",
   "totalMany": "Se eliminarán {n} páginas.",
+  "startOver": "Empezar de nuevo",
   "stopped": "Se detuvo la revisión.",
   "pageNumber": "Página {n}",
   "removePage": "Eliminar página {n}",
@@ -813,7 +818,8 @@ const fileInput = $("fileInput"), dropzone = $("dropzone"), dropzoneText = $("dr
 const sensitivity = $("sensitivity"), signedNote = $("signedNote"), largeNote = $("largeNote");
 const progressRow = $("progressRow"), progressBar = $("progressBar"), cancelBtn = $("cancelBtn");
 const liveStatus = $("liveStatus"), pageList = $("pageList"), actions = $("actions");
-const keepAllBtn = $("keepAllBtn"), saveBtn = $("saveBtn"), saveError = $("saveError");
+const startOverBtn = $("startOverBtn"), saveBtn = $("saveBtn"), saveNote = $("saveNote"), saveError = $("saveError");
+startOverBtn.textContent = T.startOver;
 
 // One run per chosen PDF. Starting another (or cancelling) bumps `generation`, so late results from the old run are
 // dropped, and everything the old run holds is released.
@@ -901,6 +907,7 @@ function buildItem(p) {
     saveError.textContent = "";
     paint(p);
     sayTotal();
+    updateSave();
   });
   row.append(check, checkText);
   label.append(row);
@@ -943,6 +950,18 @@ function resetView() {
   largeNote.hidden = true;
   errorMsg.textContent = "";
   saveError.textContent = "";
+  saveNote.textContent = "";
+  saveBtn.disabled = true;
+}
+
+// Save works only when there's something to save: at least one page marked and at least one kept, once every page
+// is checked. Otherwise it's disabled and the reason is shown next to it (and read with it, through aria-describedby);
+// marking a page, or Start over, is always possible.
+function updateSave() {
+  const ready = !!(run && run.done);
+  const n = ready ? removalCount() : 0;
+  saveNote.textContent = !ready ? "" : n === 0 ? T.noneSelected : n === run.pages.length ? T.allSelected : "";
+  saveBtn.disabled = !ready || saveNote.textContent !== "";
 }
 
 async function openFile(file) {
@@ -1003,6 +1022,9 @@ async function openFile(file) {
   const count = r.pdf.numPages;
   largeNote.hidden = !(count > LARGE_PAGES || r.bytes.length > LARGE_BYTES);
   r.pages = new Array(count).fill(null);
+  // From here a PDF is loaded: Start over is there (Save stays disabled until every page is checked).
+  actions.hidden = false;
+  updateSave();
   await checkPages(r, mine);
 }
 
@@ -1050,6 +1072,7 @@ async function checkPages(r, mine) {
   r.done = true;
   progressRow.hidden = true;
   actions.hidden = false;
+  updateSave();
   // Everything is checked: pdf.js isn't needed any more (saving works from the original bytes).
   r.pdf.destroy().catch(() => {});
   r.pdf = null;
@@ -1154,21 +1177,28 @@ sensitivity.addEventListener("change", () => {
   for (const p of run.pages) if (p && p.li) paint(p);
   saveError.textContent = "";
   sayTotal();
+  updateSave();
 });
 
-keepAllBtn.addEventListener("click", () => {
-  if (!run) return;
-  for (const p of run.pages) if (p && p.li) { p.choice = "keep"; paint(p); }
-  saveError.textContent = "";
-  sayTotal();
+// Start over: back to the empty page, as on a fresh load. It stops any checking, releases everything the run held,
+// puts the sensitivity back to its default and focus on the file picker. No question and no announcement.
+startOverBtn.addEventListener("click", () => {
+  generation++;
+  release(run);
+  run = null;
+  resetView();
+  say("");
+  dropzoneText.textContent = T.dropzone;
+  fileInput.value = "";
+  sensitivity.value = "conservative";
+  fileInput.focus();
 });
 
 saveBtn.addEventListener("click", async () => {
   saveError.textContent = "";
   if (!run || !run.done) return;
   const remove = run.pages.filter(willRemove).map((p) => p.n - 1);
-  if (remove.length === 0) { saveError.textContent = T.noneSelected; return; }
-  if (remove.length === run.pages.length) { saveError.textContent = T.allSelected; return; }
+  if (remove.length === 0 || remove.length === run.pages.length) { updateSave(); return; }
   saveBtn.disabled = true;
   try {
     // The original document, with the chosen pages taken out from the last to the first, so the remaining pages
@@ -1189,7 +1219,7 @@ saveBtn.addEventListener("click", async () => {
   } catch (e) {
     saveError.textContent = T.saveFailed;
   } finally {
-    saveBtn.disabled = false;
+    updateSave();
   }
 });
 
