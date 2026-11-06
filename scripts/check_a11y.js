@@ -107,9 +107,9 @@ const OPEN_STATES = [
   ...["/whatsapp-link-generator/", "/es/whatsapp-link-generator/"].flatMap((path) =>
     ["details", "country list", "filled form", ...WA_EMOJI_CATEGORIES.map((c) => "emoji picker: " + c),
       "share list", "share tooltip", "share lit"].map((open) => ({ path, open }))),
-  // Remove Blank Pages from PDF: a generated PDF checked (pages marked, one with the hidden-content note), the
-  // collapsed block open, and the share list open.
-  ...["/remove-blank-pages/", "/es/remove-blank-pages/"].flatMap((path) => ["blank pages checked", "details", "share list"].map((open) => ({ path, open }))),
+  // Remove Blank Pages from PDF: a generated PDF checked (pages marked, one with the hidden-content note), then with
+  // nothing marked (Save disabled, its reason shown), the collapsed block open, and the share list open.
+  ...["/remove-blank-pages/", "/es/remove-blank-pages/"].flatMap((path) => ["blank pages checked", "blank pages nothing to save", "details", "share list"].map((open) => ({ path, open }))),
 ];
 // How to reach each tool state above (the nav states click a nav button instead).
 const TOOL_STATES = {
@@ -139,9 +139,15 @@ const TOOL_STATES = {
       let s = ""; for (const b of await doc.save()) s += String.fromCharCode(b); return btoa(s);
     });
     await page.setInputFiles("#fileInput", { name: "check.pdf", mimeType: "application/pdf", buffer: Buffer.from(b64, "base64") });
-    await page.waitForFunction(() => !document.getElementById("actions").hidden, null, { timeout: 20000 });
+    await page.waitForFunction(() => !document.getElementById("actions").hidden && document.getElementById("progressRow").hidden && document.querySelector("#pageList > li"), null, { timeout: 20000 });
     await page.click("#pageCheck1");
     return "#pageList";
+  },
+  // Nothing marked: Save disabled, with its reason shown next to it.
+  "blank pages nothing to save": async (page) => {
+    await TOOL_STATES["blank pages checked"](page);
+    for (const id of ["#pageCheck1", "#pageCheck2"]) await page.uncheck(id);
+    return "#saveNote";
   },
   "country list": async (page) => { await page.focus("#countryInput"); await page.keyboard.press("ArrowDown"); return "#countryList:not([hidden])"; },
   "filled form": async (page) => {
@@ -305,7 +311,7 @@ async function main() {
     process.exit(1);
   }
 
-  console.log(`OK: all ${results.length} pages passed axe-core in dark and light themes (${AXE_TAGS.join(", ")}), including ${OPEN_STATES.length} scans with the nav menu, search box or a category flyout open, or a tool state shown (the WhatsApp link generator's collapsed block, country list, filled form, emoji picker on each category and Share this tool list, tooltip and lit state; Remove Blank Pages with pages checked, its block and its share list); every error line is announced (role="alert").`);
+  console.log(`OK: all ${results.length} pages passed axe-core in dark and light themes (${AXE_TAGS.join(", ")}), including ${OPEN_STATES.length} scans with the nav menu, search box or a category flyout open, or a tool state shown (the WhatsApp link generator's collapsed block, country list, filled form, emoji picker on each category and Share this tool list, tooltip and lit state; Remove Blank Pages with pages checked, with nothing to save, its block and its share list); every error line is announced (role="alert").`);
   process.exit(0);
 }
 

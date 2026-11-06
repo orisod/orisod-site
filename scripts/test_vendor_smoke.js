@@ -1267,7 +1267,7 @@ const RBP_TEXT = {
     password: "This PDF is password-protected. Remove the password in a trusted PDF application, then try again.",
     signed: "This PDF has a digital signature. Removing pages changes the downloaded copy, so the signature may no longer be valid.",
     notPdf: "Please select a valid PDF file.", replace: "Replace the current PDF? Your Keep and Remove choices will be lost.",
-    sensLabel: "Sensitivity", sens: ["Conservative", "Balanced", "More aggressive"], keepAll: "Keep all", save: "Remove pages and download", suffix: "-blank-pages-removed.pdf",
+    sensLabel: "Sensitivity", sens: ["Conservative", "Balanced", "More aggressive"], startOver: "Start over", removedKeepAll: "Keep all", save: "Remove pages and download", suffix: "-blank-pages-removed.pdf",
     summary: "Help and details", guide: "/blog/remove-blank-pages-from-pdf/", cards: ["/delete-pdf-pages/", "/pdf-page-organizer/", "/compress-pdf/"] },
   es: { url: "https://orisod.com/es/remove-blank-pages/", title: "Eliminar páginas en blanco de PDF",
     doneMany: "Revisión completada. {n} páginas están marcadas para eliminar.", totalMany: "Se eliminarán {n} páginas.", totalOne: "Se eliminará 1 página.", totalNone: "No se eliminará ninguna página.",
@@ -1279,7 +1279,7 @@ const RBP_TEXT = {
     password: "Este PDF está protegido con contraseña. Quita la contraseña en una aplicación de PDF de confianza y vuelve a intentarlo.",
     signed: "Este PDF tiene una firma digital. Eliminar páginas cambia la copia descargada, así que la firma podría dejar de ser válida.",
     notPdf: "Selecciona un archivo PDF válido.", replace: "¿Reemplazar el PDF actual? Se perderán tus elecciones de Conservar y Eliminar.",
-    sensLabel: "Sensibilidad", sens: ["Conservadora", "Equilibrada", "Más estricta"], keepAll: "Conservar todas", save: "Eliminar páginas y descargar", suffix: "-sin-paginas-en-blanco.pdf",
+    sensLabel: "Sensibilidad", sens: ["Conservadora", "Equilibrada", "Más estricta"], startOver: "Empezar de nuevo", removedKeepAll: "Conservar todas", save: "Eliminar páginas y descargar", suffix: "-sin-paginas-en-blanco.pdf",
     summary: "Ayuda y detalles", guide: "/es/blog/remove-blank-pages-from-pdf/", cards: ["/es/delete-pdf-pages/", "/es/pdf-page-organizer/", "/es/compress-pdf/"] },
 };
 const rbpFill = (text, n) => text.replace("{n}", n);
@@ -1348,7 +1348,9 @@ async function rbpLoad(page, kind = "report", name = "report.pdf", n = 0) {
   const b64 = await page.evaluate(RBP_MAKE, [kind, n]);
   await page.setInputFiles("#fileInput", { name, mimeType: "application/pdf", buffer: Buffer.from(b64, "base64") });
 }
-const rbpDone = (page) => page.waitForFunction(() => !document.getElementById("actions").hidden, null, { timeout: 60000 });
+// Checking is finished: the actions are shown (they appear as soon as a PDF loads), the progress row is gone and the pages are listed.
+const rbpDone = (page) => page.waitForFunction(() => !document.getElementById("actions").hidden && document.getElementById("progressRow").hidden &&
+  document.querySelector("#pageList > li"), null, { timeout: 60000 });
 const rbpState = (page) => page.evaluate(() => ({
   pages: [...document.querySelectorAll("#pageList > li")].map((li) => {
     const cb = li.querySelector('input[type="checkbox"]');
@@ -1363,7 +1365,21 @@ const rbpState = (page) => page.evaluate(() => ({
   error: document.getElementById("errorMsg").textContent, saveError: document.getElementById("saveError").textContent,
   signed: !document.getElementById("signedNote").hidden, actions: !document.getElementById("actions").hidden,
   progress: !document.getElementById("progressRow").hidden, sensitivity: document.getElementById("sensitivity").value,
+  saveDisabled: document.getElementById("saveBtn").disabled, saveNote: document.getElementById("saveNote").textContent,
+  saveNoteShown: document.getElementById("saveNote").checkVisibility(),
+  saveDescribed: (document.getElementById("saveBtn").getAttribute("aria-describedby") || "").split(" ").includes("saveNote"),
+  startOver: document.getElementById("startOverBtn").checkVisibility() ? document.getElementById("startOverBtn").textContent : null,
+  startOverType: document.getElementById("startOverBtn").getAttribute("type"),
+  focus: document.activeElement.id || document.activeElement.tagName,
+  dropzone: document.getElementById("dropzoneText").textContent, notes: [...document.querySelectorAll("#pageList .page-note")].length,
 }));
+// Save is disabled, with the reason shown next to it and read with it, exactly when nothing or everything is marked.
+function expectSaveState(st, lang, want) {
+  const t = RBP_TEXT[lang];
+  const note = want === "none" ? t.noneSelected : want === "all" ? t.allSelected : "";
+  expect(st.saveDisabled === (want !== "ok") && st.saveNote === note && st.saveNoteShown === (note !== "") && st.saveDescribed,
+    `Save with ${want}: disabled ${st.saveDisabled}, note "${st.saveNote}" shown ${st.saveNoteShown}, described by it ${st.saveDescribed}`);
+}
 // Everything the live region said since the watcher started.
 const rbpWatchLive = (page) => page.evaluate(() => {
   window.__live = [];
@@ -1421,7 +1437,8 @@ const RBP_STRUCTURE = () => {
     anchorOff: getComputedStyle(document.documentElement).overflowAnchor === "none",
     sensLabel: document.querySelector('label[for="sensitivity"]')?.textContent.trim(), sens: [...document.querySelectorAll("#sensitivity option")].map((o) => o.textContent),
     sensDefault: document.getElementById("sensitivity").value, sensHelp: document.getElementById("sensitivity").getAttribute("aria-describedby"),
-    listTag: document.getElementById("pageList").tagName, listRole: document.getElementById("pageList").getAttribute("role") };
+    listTag: document.getElementById("pageList").tagName, listRole: document.getElementById("pageList").getAttribute("role"),
+    html: document.documentElement.outerHTML };
 };
 function expectRbpStructure(s, lang) {
   const t = RBP_TEXT[lang];
@@ -1435,6 +1452,7 @@ function expectRbpStructure(s, lang) {
   expect(s.sensLabel === t.sensLabel && JSON.stringify(s.sens) === JSON.stringify(t.sens) && s.sensDefault === "conservative" && s.sensHelp === "sensitivityHelp",
     `the sensitivity select: label "${s.sensLabel}", options ${s.sens.join("/")}, default ${s.sensDefault}`);
   expect(s.listTag === "UL" && s.listRole === null, `the page list is a <${s.listTag}> with role ${s.listRole}`);
+  expect(!s.html.includes("keepAllBtn") && !s.html.includes(t.removedKeepAll), `"${t.removedKeepAll}" is still on the page`);
 }
 // The placeholders: the message's fixed text and the phone field's example for the chosen country
 // (libphonenumber-js's examples.mobile.json in its national format; without it, only the US gets one).
@@ -3792,27 +3810,34 @@ const CASES = [
       const expectManual = (m) => expect(m.every(([one, three]) => one.state === "manual-remove" && one.checked && one.stateText === t.chosenRemove &&
         three.state === "manual-keep" && !three.checked && three.stateText === t.chosenKeep), `manual choices changed with the sensitivity: ${JSON.stringify(m.map(([a, b]) => [a.state, b.state]))}`);
       expectManual(manual);
-      // Keep all: every page kept by choice, nothing to save.
+      // Save works: some pages marked, some kept.
+      const some = await rbpState(page);
+      expectSaveState(some, lang, "ok");
+      // Nothing marked (every mark cleared by hand): Save disabled, the reason shown and described, no download.
       await page.evaluate(() => { window.__live = []; });
-      await page.click("#keepAllBtn");
-      const kept = await rbpState(page);
-      expect(kept.pages.every((p) => p.state === "manual-keep" && !p.checked) && kept.live === t.totalNone, `after Keep all: ${kept.live}, ${kept.pages.filter((p) => p.checked).length} still marked`);
+      for (let n = 1; n <= RBP_PAGES.length; n++) await page.uncheck(`#pageCheck${n}`);
+      const none = await rbpState(page);
+      expect(none.pages.every((p) => !p.checked) && none.live === t.totalNone, `with every mark cleared: ${none.live}`);
+      expectSaveState(none, lang, "none");
       let downloads = 0;
       page.on("download", () => downloads++);
-      await page.click("#saveBtn");
-      const none = await rbpState(page);
-      expect(none.saveError === t.noneSelected, `saving with nothing marked said "${none.saveError}"`);
-      // Every page marked: saving is refused with the message.
+      await page.click("#saveBtn", { force: true });
+      // Every page marked: disabled again, with the other reason.
       for (let n = 1; n <= RBP_PAGES.length; n++) await page.check(`#pageCheck${n}`);
-      await page.click("#saveBtn");
       await page.waitForTimeout(300);
       const all = await rbpState(page);
-      const expectBlocked = (st, d) => expect(st.saveError === t.allSelected && d === 0, `with every page marked: error "${st.saveError}", ${d} downloads`);
+      expectSaveState(all, lang, "all");
+      const expectBlocked = (st, d) => expect(st.saveDisabled && st.saveNote === t.allSelected && d === 0, `with every page marked: disabled ${st.saveDisabled}, note "${st.saveNote}", ${d} downloads`);
+      await page.click("#saveBtn", { force: true });
+      await page.waitForTimeout(300);
       expectBlocked(all, downloads);
+      // Unmarking one page enables it again and clears the note.
+      await page.uncheck("#pageCheck1");
+      expectSaveState(await rbpState(page), lang, "ok");
       const saveErrorRole = await page.getAttribute("#saveError", "role");
       expect(saveErrorRole === "alert", "the save error isn't role=alert");
       // Remove pages 2, 4 (faint header "Draft header") and 5; save; reopen with pdf.js.
-      await page.click("#keepAllBtn");
+      for (let n = 1; n <= RBP_PAGES.length; n++) await page.uncheck(`#pageCheck${n}`);
       for (const n of [2, 4, 5]) await page.check(`#pageCheck${n}`);
       const total = await page.textContent("#liveStatus");
       expect(total === rbpFill(t.totalMany, 3), `the running total says "${total}"`);
@@ -3827,8 +3852,8 @@ const CASES = [
       expectSaved(saved);
       expect(download.suggestedFilename() === "report" + t.suffix, `the download is called ${download.suggestedFilename()}`);
       return `at ${t.sens.join(" / ")}: ${levels.map((st) => st.pages.filter((p) => p.checked).length).join(" / ")} of ${RBP_PAGES.length} pages marked as expected (${RBP_PAGES.map((x) => x.what).join(", ")}); ` +
-        `the four with hidden content kept with the note; monotonic; one live update per change ("${said[said.length - 1]}"); manual choices survive every sensitivity; Keep all; ` +
-        `nothing marked and every page marked are refused; saved ${saved.pages} pages, reopened with pdf.js, the removed page's text gone from the file; ` +
+        `the four with hidden content kept with the note; monotonic; one live update per change ("${said[said.length - 1]}"); manual choices survive every sensitivity; ` +
+        `Save disabled with its reason shown and described when nothing or every page is marked, and enabled again when that changes; saved ${saved.pages} pages, reopened with pdf.js, the removed page's text gone from the file; ` +
         [mustFail("a page marked at the wrong sensitivity", () => expectMarks({ ...conservative, pages: conservative.pages.map((p, i) => (i === 2 ? { ...p, checked: true } : p)) }, 0, lang)),
           mustFail("a hidden-content page without its note", () => expectMarks({ ...conservative, pages: conservative.pages.map((p, i) => (i === 6 ? { ...p, note: "" } : p)) }, 0, lang)),
           mustFail("a card named after its state", () => expectCards({ ...conservative, pages: conservative.pages.map((p, i) => (i === 1 ? { ...p, name: p.stateText } : p)) }, lang)),
@@ -3836,7 +3861,11 @@ const CASES = [
           mustFail("a button inside a card", () => expectCards({ ...conservative, pages: conservative.pages.map((p, i) => (i === 1 ? { ...p, buttons: 1 } : p)) }, lang)),
           mustFail("one live update per thumbnail", () => expectLive([...Array(10).fill(lang === "en" ? "Checking page 1 of 10" : "Revisando la página 1 de 10"), ...said], lang, 2)),
           mustFail("a manual choice overwritten by the sensitivity", () => expectManual([[manual[0][0], { ...manual[0][1], state: "auto-remove", checked: true }]])),
-          mustFail("saving with every page marked", () => expectBlocked({ ...all, saveError: "" }, 1)),
+          mustFail("saving with every page marked", () => expectBlocked({ ...all, saveDisabled: false }, 1)),
+          mustFail("Save enabled with nothing marked", () => expectSaveState({ ...none, saveDisabled: false }, lang, "none")),
+          mustFail("the reason not shown", () => expectSaveState({ ...all, saveNoteShown: false }, lang, "all")),
+          mustFail("the reason not read with the button", () => expectSaveState({ ...none, saveDescribed: false }, lang, "none")),
+          mustFail("Save left disabled when it can save", () => expectSaveState({ ...some, saveDisabled: true }, lang, "ok")),
           mustFail("the removed page's text left in the file", () => expectSaved({ ...saved, streams: saved.streams + "Draft header" })),
           mustFail("a page too many", () => expectSaved({ ...saved, pages: saved.pages + 1 }))].join("; ");
     },
@@ -3908,6 +3937,64 @@ const CASES = [
     },
   },
   {
+    name: "Remove Blank Pages (start over)",
+    page: RBP,
+    vendor: [PDFJS, PDFJS_WORKER, PDFLIB],
+    async run(page, lang) {
+      const t = RBP_TEXT[lang];
+      await page.evaluate(() => {
+        window.__urls = { made: 0, freed: 0 };
+        const make = URL.createObjectURL, free = URL.revokeObjectURL;
+        URL.createObjectURL = (b) => { window.__urls.made++; return make(b); };
+        URL.revokeObjectURL = (u) => { window.__urls.freed++; return free(u); };
+      });
+      const empty = await rbpState(page);
+      const expectEmpty = (st, when) => expect(st.startOver === null && !st.pages.length && !st.actions && !st.signed && !st.progress && st.error === "" && st.live === "" &&
+        st.sensitivity === "conservative" && st.dropzone === empty.dropzone && st.saveNote === "", `${when}: ${JSON.stringify({ ...st, pages: st.pages.length })}`);
+      expect(empty.startOver === null, "Start over is shown before any PDF");
+      // While checking a long PDF: Start over is there, and it stops the checking and empties the page.
+      await page.selectOption("#sensitivity", "balanced");
+      await rbpLoad(page, "long", "long.pdf", 240);
+      await page.waitForFunction(() => document.querySelectorAll("#pageList > li").length >= 3, null, { timeout: 30000 });
+      const checking = await rbpState(page);
+      expect(checking.startOver === t.startOver && checking.startOverType === "button" && checking.progress && checking.saveDisabled,
+        `while checking: Start over "${checking.startOver}" (type ${checking.startOverType}), progress ${checking.progress}, Save disabled ${checking.saveDisabled}`);
+      await page.click("#startOverBtn");
+      await page.waitForTimeout(800);
+      const stopped = { ...(await rbpState(page)), urls: await page.evaluate(() => window.__urls) };
+      expectEmpty(stopped, "after Start over while checking");
+      expect(stopped.focus === "fileInput" && stopped.urls.made === stopped.urls.freed, `after Start over: focus on ${stopped.focus}, preview URLs made ${stopped.urls.made}, freed ${stopped.urls.freed}`);
+      // A finished run with choices: change the sensitivity, choose by hand, start over, load the same file: like a fresh load.
+      await rbpLoad(page);
+      await rbpDone(page);
+      const fresh = await rbpState(page);
+      await page.selectOption("#sensitivity", "aggressive");
+      await page.click("#pageCheck1");
+      await page.click("#pageCheck2");
+      await page.click("#startOverBtn");
+      const after = await rbpState(page);
+      expectEmpty(after, "after Start over with choices");
+      await rbpLoad(page);
+      await rbpDone(page);
+      const again = await rbpState(page);
+      const comparable = (st) => JSON.stringify({ pages: st.pages.map((p) => [p.state, p.checked, p.note]), signed: st.signed, sensitivity: st.sensitivity, live: st.live, save: [st.saveDisabled, st.saveNote], notes: st.notes });
+      const expectSame = (a, b) => expect(comparable(a) === comparable(b), `the second load differs from a fresh one: ${comparable(b)} vs ${comparable(a)}`);
+      expectSame(fresh, again);
+      // Another file after Start over: no warning or note from the first one is left.
+      await page.click("#startOverBtn");
+      await rbpLoad(page, "unsigned", "other.pdf");
+      await rbpDone(page);
+      const other = await rbpState(page);
+      expect(!other.signed && other.dropzone.includes("other.pdf") && !other.dropzone.includes("report.pdf"), `another file after Start over: signed ${other.signed}, "${other.dropzone}"`);
+      return `Start over hidden with no PDF; there while checking (a real button, Save disabled until done); it stops the checking, empties the page, puts the sensitivity back to ${t.sens[0]}, ` +
+        `focuses the file picker and frees every preview URL; after manual choices and a sensitivity change, loading the same file again is identical to a fresh load; another file carries nothing over; ` +
+        [mustFail("Start over shown with no PDF", () => expectEmpty({ ...after, startOver: t.startOver }, "test")),
+          mustFail("the sensitivity not reset", () => expectEmpty({ ...after, sensitivity: "aggressive" }, "test")),
+          mustFail("a page left after Start over", () => expectEmpty({ ...after, pages: [{}] }, "test")),
+          mustFail("a manual choice surviving Start over", () => expectSame(fresh, { ...again, pages: again.pages.map((p, i) => (i === 0 ? { ...p, state: "manual-remove", checked: true } : p)) }))].join("; ");
+    },
+  },
+  {
     name: "Remove Blank Pages (layout and structure)",
     page: RBP,
     vendor: [PDFJS, PDFJS_WORKER, PDFLIB],
@@ -3958,7 +4045,8 @@ const CASES = [
           mustFail("the list with role=grid", () => expectRbpStructure({ ...s, listRole: "grid" }, lang)),
           mustFail("the guide link inside the block", () => expectRbpStructure({ ...s, guideInDetails: true }, lang)),
           mustFail("no overflow-anchor rule", () => expectRbpStructure({ ...s, anchorOff: false }, lang)),
-          mustFail("a 400px element at 320 px", () => expectNoOverflow(80, "test"))].join("; ");
+          mustFail("a 400px element at 320 px", () => expectNoOverflow(80, "test")),
+          mustFail("Keep all still on the page", () => expectRbpStructure({ ...s, html: s.html + `<button>${RBP_TEXT[lang].removedKeepAll}</button>` }, lang))].join("; ");
     },
   },
   {
