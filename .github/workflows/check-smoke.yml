@@ -6,7 +6,8 @@ name: Verify pages and tools in a browser
 # - page-load: scripts/check_page_load.js loads every page in sitemap.xml (plus
 #   the 404 page in EN and ES) and fails on any uncaught exception, console error
 #   or warning, blocked or failed request, or 4xx/5xx response. No retries.
-# - smoke: scripts/test_vendor_smoke.js runs one real operation per tool library,
+# - smoke: first the Node unit tests in scripts/tests/ (pure page logic, no browser), then
+#   scripts/test_vendor_smoke.js, which runs one real operation per tool library,
 #   EN and ES. A failed case is retried once; one that passes on the retry is a
 #   warning ("flaky"), one that fails twice fails the job.
 # Both report failures as annotations and a table in the job summary.
@@ -72,6 +73,11 @@ jobs:
 
       - name: Install CI tooling dependencies
         run: npm install
+
+      # Node unit tests for pure page logic (no browser): each test cuts its block out of the page that ships it
+      # (e.g. Remove Blank Pages' detection, between // BEGIN detection and // END detection) and runs that text.
+      - name: Unit tests for page logic
+        run: node --test "scripts/tests/*.test.mjs"
 
       - name: Cache Chromium for Playwright
         uses: actions/cache@v6
