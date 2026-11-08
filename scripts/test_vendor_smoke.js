@@ -1266,7 +1266,7 @@ const RBP_TEXT = {
     noneSelected: "No pages are marked for removal. Mark at least one page, or keep the original PDF.",
     password: "This PDF is password-protected. Remove the password in a trusted PDF application, then try again.",
     signed: "This PDF has a digital signature. Removing pages changes the downloaded copy, so the signature may no longer be valid.",
-    notPdf: "Please select a valid PDF file.", replace: "Replace the current PDF? Your Keep and Remove choices will be lost.",
+    notPdf: "Please select a valid PDF file.", replace: "Replace the current PDF? Your page selections will be lost.",
     sensLabel: "Sensitivity", sens: ["Conservative", "Balanced", "More aggressive"], startOver: "Start over", removedKeepAll: "Keep all", save: "Remove pages and download", suffix: "-blank-pages-removed.pdf",
     summary: "Help and details", guide: "/blog/remove-blank-pages-from-pdf/", cards: ["/delete-pdf-pages/", "/pdf-page-organizer/", "/compress-pdf/"] },
   es: { url: "https://orisod.com/es/remove-blank-pages/", title: "Eliminar páginas en blanco de PDF",
@@ -1278,7 +1278,7 @@ const RBP_TEXT = {
     noneSelected: "Ninguna página está marcada para eliminar. Marca al menos una página o conserva el PDF original.",
     password: "Este PDF está protegido con contraseña. Quita la contraseña en una aplicación de PDF de confianza y vuelve a intentarlo.",
     signed: "Este PDF tiene una firma digital. Eliminar páginas cambia la copia descargada, así que la firma podría dejar de ser válida.",
-    notPdf: "Selecciona un archivo PDF válido.", replace: "¿Reemplazar el PDF actual? Se perderán tus elecciones de Conservar y Eliminar.",
+    notPdf: "Selecciona un archivo PDF válido.", replace: "¿Reemplazar el PDF actual? Se perderán las selecciones que hiciste en sus páginas.",
     sensLabel: "Sensibilidad", sens: ["Conservadora", "Equilibrada", "Más estricta"], startOver: "Empezar de nuevo", removedKeepAll: "Conservar todas", save: "Eliminar páginas y descargar", suffix: "-sin-paginas-en-blanco.pdf",
     summary: "Ayuda y detalles", guide: "/es/blog/remove-blank-pages-from-pdf/", cards: ["/es/delete-pdf-pages/", "/es/pdf-page-organizer/", "/es/compress-pdf/"] },
 };
@@ -4114,10 +4114,22 @@ const CASES = [
       const want = lang === "en" ? "Diagram showing a PDF being checked for blank pages, the user reviewing the suggested removals, and a new PDF saved with the selected pages removed."
         : "Diagrama que muestra un PDF revisado para detectar páginas en blanco, al usuario comprobando las eliminaciones sugeridas y un nuevo PDF guardado sin las páginas seleccionadas.";
       expect(label === want, `the diagram's aria-label is "${label}"`);
-      // It shows a person's choice: both Keep and Remove controls appear in the review stage.
-      const words = await page.evaluate(() => [...document.querySelectorAll("figure.rbp-flow svg.rbp-flow-wide text")].map((x) => x.textContent));
-      const keep = lang === "en" ? "Keep" : "Conservar", remove = lang === "en" ? "Remove" : "Eliminar";
-      expect(words.filter((w) => w === keep).length === 2 && words.filter((w) => w === remove).length === 2, `the review stage shows ${words.join(" / ")}`);
+      // It shows a person's choice the way the tool does: one "Remove page" checkbox per suggested page,
+      // unticked on the page kept and ticked on the page removed, and no Keep/Remove pair.
+      const expectReview = (svgReview) => {
+        for (const r of svgReview) {
+          expect(r.labels.length === 2 && r.labels.every((w) => w === (lang === "en" ? "Remove page" : "Eliminar página")), `the review stage labels are ${r.labels.join(" / ")} in ${r.cls}`);
+          expect(!r.words.some((w) => /^(Keep|Remove|Conservar|Eliminar)$/.test(w)), `the old Keep/Remove labels are still there in ${r.cls}`);
+          expect(r.boxes.join(",") === "false,true", `the checkboxes are ${r.boxes.join(",")} in ${r.cls} (want unticked, then ticked)`);
+        }
+      };
+      const review = await page.evaluate(() => [...document.querySelectorAll("figure.rbp-flow svg")].map((svg) => {
+        const boxes = [...svg.querySelectorAll("rect[width='13'][height='13']")];
+        return { cls: svg.getAttribute("class"), words: [...svg.querySelectorAll("text")].map((x) => x.textContent),
+          labels: boxes.map((b) => { const t = b.nextElementSibling?.tagName === "path" ? b.nextElementSibling.nextElementSibling : b.nextElementSibling; return t ? t.textContent : ""; }),
+          boxes: boxes.map((b) => b.getAttribute("fill") !== "none" && b.nextElementSibling?.tagName === "path") };
+      }));
+      expectReview(review);
       const tiny = await page.evaluate(() => [...document.querySelectorAll("figure.rbp-flow svg text")].filter((x) => Number(x.getAttribute("font-size")) < 12).length);
       expect(!tiny, `${tiny} diagram labels under 12px`);
       // Every label stays inside its panel, in the wide and the stacked version (the longest ES note included).
@@ -4144,9 +4156,11 @@ const CASES = [
       }));
       const expectNote = (got) => expect(got.length === 2 && got.every((x) => x === NOTE[lang]), `the stage 2 note reads ${JSON.stringify(got)}, not "${NOTE[lang]}"`);
       expectNote(notes);
-      return `exactly one diagram exposed (${seen.join(", ")}), the approved aria-label, Keep and Remove shown for both suggested pages, no label under 12px, every label inside its panel (wide and stacked), the stage 2 note one complete sentence in both versions, no sideways scroll at 320px; ` +
+      return `exactly one diagram exposed (${seen.join(", ")}), the approved aria-label, one Remove page checkbox per suggested page (unticked, then ticked), no label under 12px, every label inside its panel (wide and stacked), the stage 2 note one complete sentence in both versions, no sideways scroll at 320px; ` +
         [mustFail("both diagrams exposed", () => expectOneDiagram(last.svgs.map((x) => ({ ...x, shown: true, hidden: false })), 2, last.width, "rbp-flow")),
           mustFail("a label past its panel", () => expectFit([...overflow, { text: "x", over: 3, where: "test" }])),
+          mustFail("the old Keep/Remove pair", () => expectReview(review.map((r) => ({ ...r, words: [...r.words, lang === "en" ? "Keep" : "Conservar"] })))),
+          mustFail("both boxes ticked", () => expectReview(review.map((r) => ({ ...r, boxes: [true, true] })))),
           mustFail("the old half-sentence note", () => expectNote(lang === "es" ? ["Dos páginas parecen Tú eliges en cada una", "Dos páginas parecen Tú eliges en cada una"] : ["Two pages look Tú eliges", "x"])),
           mustFail("the wrong version at 320px", () => expectOneDiagram(last.svgs, last.imgs, 320, "rbp-flow"))].join("; ");
     },
