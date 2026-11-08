@@ -1266,7 +1266,7 @@ const RBP_TEXT = {
     noneSelected: "No pages are marked for removal. Mark at least one page, or keep the original PDF.",
     password: "This PDF is password-protected. Remove the password in a trusted PDF application, then try again.",
     signed: "This PDF has a digital signature. Removing pages changes the downloaded copy, so the signature may no longer be valid.",
-    notPdf: "Please select a valid PDF file.", replace: "Replace the current PDF? Your Keep and Remove choices will be lost.",
+    notPdf: "Please select a valid PDF file.", replace: "Replace the current PDF? Your page selections will be lost.",
     sensLabel: "Sensitivity", sens: ["Conservative", "Balanced", "More aggressive"], startOver: "Start over", removedKeepAll: "Keep all", save: "Remove pages and download", suffix: "-blank-pages-removed.pdf",
     summary: "Help and details", guide: "/blog/remove-blank-pages-from-pdf/", cards: ["/delete-pdf-pages/", "/pdf-page-organizer/", "/compress-pdf/"] },
   es: { url: "https://orisod.com/es/remove-blank-pages/", title: "Eliminar páginas en blanco de PDF",
@@ -1278,7 +1278,7 @@ const RBP_TEXT = {
     noneSelected: "Ninguna página está marcada para eliminar. Marca al menos una página o conserva el PDF original.",
     password: "Este PDF está protegido con contraseña. Quita la contraseña en una aplicación de PDF de confianza y vuelve a intentarlo.",
     signed: "Este PDF tiene una firma digital. Eliminar páginas cambia la copia descargada, así que la firma podría dejar de ser válida.",
-    notPdf: "Selecciona un archivo PDF válido.", replace: "¿Reemplazar el PDF actual? Se perderán tus elecciones de Conservar y Eliminar.",
+    notPdf: "Selecciona un archivo PDF válido.", replace: "¿Reemplazar el PDF actual? Se perderán las selecciones que hiciste en sus páginas.",
     sensLabel: "Sensibilidad", sens: ["Conservadora", "Equilibrada", "Más estricta"], startOver: "Empezar de nuevo", removedKeepAll: "Conservar todas", save: "Eliminar páginas y descargar", suffix: "-sin-paginas-en-blanco.pdf",
     summary: "Ayuda y detalles", guide: "/es/blog/remove-blank-pages-from-pdf/", cards: ["/es/delete-pdf-pages/", "/es/pdf-page-organizer/", "/es/compress-pdf/"] },
 };
