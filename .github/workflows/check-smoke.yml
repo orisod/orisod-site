@@ -14,10 +14,10 @@ name: Verify pages and tools in a browser
 
 on:
   push:
-    branches: [main]
+    branches: [main, orisod-2]
     paths-ignore: ["**/*.md", "docs/**", "audit/**", ".claude/**"]
   pull_request:
-    branches: [main]
+    branches: [main, orisod-2]
     paths-ignore: ["**/*.md", "docs/**", "audit/**", ".claude/**"]
 
 permissions:

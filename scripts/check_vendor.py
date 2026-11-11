@@ -44,6 +44,10 @@ Rules, for every page (every .html outside the folders below, including 404.html
   country code) declares const FLAG_DIR = "/assets/vendor/circle-flags/<version>/"
   and const FLAG_CODES = "<code> <code> ...", and every <FLAG_DIR><code>.svg is a
   library file in the manifest, so no flag the page can ask for is missing
+- every /assets/vendor/ path in a stylesheet (an inline <style>, or the shared
+  assets/css/*.css that sync_styles.py copies into pages), such as an @font-face
+  src, is a library file in the manifest; those files may not @import or load
+  url(http...) from another host either
 - an English page and its /es/ twin load the same vendor and CDN scripts, in the
   same order
 And for assets/vendor:
@@ -153,6 +157,8 @@ WRITTEN_BY_NOT_ALLOWED = re.compile(r"\.(?:m?js|cjs|wasm|html?|css|json)$", re.I
 ARCHIVE = re.compile(r"\.(?:tar\.gz|tar\.xz|zip)$")
 # A /assets/vendor/ path in a script string ("..." '...' `...`, optionally after ${location.origin} or the site's URL).
 VENDOR_PATH = re.compile(r"""["'`](?:\$\{location\.origin\}|https://(?:www\.)?orisod\.com)?(/assets/vendor/[^"'`$?#\s]*)""")
+# A /assets/vendor/ path in a stylesheet: url(...), quoted or not, optionally after the site's URL.
+CSS_VENDOR_PATH = re.compile(r"""url\(\s*["']?(?:https://(?:www\.)?orisod\.com)?(/assets/vendor/[^"')?#\s]*)""", re.I)
 VENDOR_LINK = re.compile(r"""<a\b[^>]*\bhref\s*=\s*["'](?:https://(?:www\.)?orisod\.com)?(/assets/vendor/[^"'#?]*)["']""", re.I)
 # The circle-flags folder and the codes a page may append to it (img.src = FLAG_DIR + code + ".svg").
 FLAG_FOLDER_USE = re.compile(r"/assets/vendor/circle-flags/")
@@ -351,6 +357,16 @@ def check_vendor_path(rel, path, vendor_files, problems):
                         f"fetch() and other loaders may only get vendored files listed there")
 
 
+def check_css_vendor_paths(rel, css, vendor_files, problems):
+    """Every /assets/vendor/ file a stylesheet points at must be a library file in the manifest. Returns the count."""
+    found = 0
+    for cm in CSS_VENDOR_PATH.finditer(css):
+        found += 1
+        if cm.group(1) not in vendor_files:
+            problems.append(f"{rel}: a stylesheet points at {cm.group(1)}, which isn't a library file in {MANIFEST}")
+    return found
+
+
 def check_flags(rel, body, vendor_files, problems):
     """A script picking circle-flags by code must name the folder and every code, each a flag in the manifest."""
     dirs, codes = FLAG_DIR.findall(body), FLAG_CODES.findall(body)
@@ -386,6 +402,7 @@ def main() -> int:
     worker_srcs = {}  # page -> every workerSrc string its inline scripts set
     vendor_refs = 0
     vendor_paths = 0
+    css_paths = 0
     for rel in pages(root):
         text = (root / rel).read_text(encoding="utf-8")
         head_end = text.find("</head>")
@@ -459,9 +476,18 @@ def main() -> int:
         for sm in STYLE.finditer(text):
             if STYLE_EXTERNAL.search(sm.group(1)):
                 problems.append(f"{rel}: an inline <style> imports or loads something from another host")
+            css_paths += check_css_vendor_paths(rel, sm.group(1), vendor_scripts, problems)
         for am in VENDOR_LINK.finditer(text):
             vendor_links += 1
             check_vendor_link(rel, am.group(1), vendor_kinds, problems)
+
+    css_dir = root / "assets" / "css"
+    for f in sorted(css_dir.glob("*.css")) if css_dir.is_dir() else []:
+        rel = f.relative_to(root).as_posix()
+        css = f.read_text(encoding="utf-8")
+        if STYLE_EXTERNAL.search(css):
+            problems.append(f"{rel}: imports or loads something from another host")
+        css_paths += check_css_vendor_paths(rel, css, vendor_scripts, problems)
 
     for f in sorted((root / "assets").rglob("*.js")):
         rel = f.relative_to(root).as_posix()
@@ -498,7 +524,7 @@ def main() -> int:
         print(f"\n{len(problems)} problem(s)")
         return 1
     print(f"OK: {len(loads)} pages checked. {vendor_refs} script tags load {len(vendor_scripts)} self-hosted files, "
-          f"all matching {MANIFEST}; {vendor_paths} vendor paths in scripts name files in it; {vendor_links} links to its license, notice and source files open as text or an archive. "
+          f"all matching {MANIFEST}; {vendor_paths} vendor paths in scripts and {css_paths} in stylesheets name files in it; {vendor_links} links to its license, notice and source files open as text or an archive. "
           + (f"{sum(cdn_uses.values())} CDN references remain, all in REMAINING_CDN ({len(REMAINING_CDN)} URLs)."
              if REMAINING_CDN else "No page or site script uses a CDN or any other outside host."))
     return 0

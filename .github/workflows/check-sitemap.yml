@@ -2,9 +2,9 @@ name: Verify sitemap completeness
 
 on:
   push:
-    branches: [main]
+    branches: [main, orisod-2]
   pull_request:
-    branches: [main]
+    branches: [main, orisod-2]
 
 permissions:
   contents: read

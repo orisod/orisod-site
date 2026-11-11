@@ -1,0 +1,22 @@
+name: Verify shared stylesheet copies
+
+on:
+  push:
+    branches: [main, orisod-2]
+  pull_request:
+    branches: [main, orisod-2]
+
+permissions:
+  contents: read
+
+jobs:
+  check-styles:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Check every page's copy of assets/css/orisod.css matches the source
+        run: python3 scripts/check_styles.py
+
+      - name: Check the stylesheet check still fails when it should
+        run: python3 scripts/test_check_styles.py

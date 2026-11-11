@@ -104,6 +104,99 @@
 }
 </script>
 <style>
+/* orisod.css: start. Generated from assets/css/orisod.css by scripts/sync_styles.py; edit that file, not this region. */
+/* Orisod 2.0 shared design tokens.
+   This file is the single source. scripts/sync_styles.py copies it, byte for byte, into the marked region of each
+   adopting page's inline <style>; scripts/check_styles.py (CI: check-styles) fails when a page's copy differs.
+   Edit it here, then run: python scripts/sync_styles.py --write
+   Tokens only: nothing here draws anything until a page uses a variable. Names start with --o- so they never
+   collide with the variables the current pages define (--bg, --text, --accent, ...). Dark is the default theme;
+   light is :root[data-theme="light"], set by the theme toggle. */
+
+/* Inter 4.001, variable weight 100 to 900, latin and latin-ext only (assets/vendor/inter/5.3.0, OFL-1.1).
+   Unicode ranges as published with the files by @fontsource-variable/inter 5.3.0. */
+@font-face{
+  font-family:"Inter";
+  font-style:normal;
+  font-weight:100 900;
+  font-display:swap;
+  src:url("/assets/vendor/inter/5.3.0/inter-latin-ext-wght-normal.woff2") format("woff2");
+  unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+}
+@font-face{
+  font-family:"Inter";
+  font-style:normal;
+  font-weight:100 900;
+  font-display:swap;
+  src:url("/assets/vendor/inter/5.3.0/inter-latin-wght-normal.woff2") format("woff2");
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+
+:root{
+  /* Type: one font for headings and body. */
+  --o-font-sans:"Inter", Arial, Helvetica, sans-serif;
+
+  /* Colours, dark theme (default). */
+  --o-bg:#0b0f1a;
+  --o-card:#1a2236;
+  --o-elevated:#222c46;
+  --o-border:#2c3856;
+  --o-text:#e6ebf5;
+  --o-muted:#a3b0c8;
+  --o-link:#7aa7ff;
+  --o-accent:#2563eb;
+  --o-accent-hover:#1d4ed8;
+  --o-cat-pdf:#fb923c;
+  --o-cat-image:#60a5fa;
+  --o-cat-utility:#a78bfa;
+  --o-success:#4ade80;
+  --o-warning:#fbbf24;
+  --o-error:#f87171;
+
+  /* Spacing scale (px). */
+  --o-space-1:4px;
+  --o-space-2:8px;
+  --o-space-3:12px;
+  --o-space-4:16px;
+  --o-space-5:24px;
+  --o-space-6:32px;
+  --o-space-7:48px;
+  --o-space-8:64px;
+
+  /* Motion: animate only opacity and transform (and the tool frame height). */
+  --o-duration-fast:120ms;
+  --o-duration-base:200ms;
+  --o-duration-slow:320ms;
+  --o-ease:cubic-bezier(.2,.8,.2,1);
+}
+
+:root[data-theme="light"]{
+  --o-bg:#f5f7fb;
+  --o-card:#ffffff;
+  --o-elevated:#f1f5fb;
+  --o-border:#d7dfee;
+  --o-text:#0f172a;
+  --o-muted:#475569;
+  --o-link:#1d4ed8;
+  --o-accent:#2563eb;
+  --o-accent-hover:#1d4ed8;
+  --o-cat-pdf:#c2410c;
+  --o-cat-image:#1d4ed8;
+  --o-cat-utility:#6d28d9;
+  --o-success:#15803d;
+  --o-warning:#b45309;
+  --o-error:#b91c1c;
+}
+
+/* Reduced motion: every duration becomes instant. */
+@media (prefers-reduced-motion: reduce){
+  :root{
+    --o-duration-fast:0ms;
+    --o-duration-base:0ms;
+    --o-duration-slow:0ms;
+  }
+}
+/* orisod.css: end */
 :root{
   --bg:#0b0f1a;
   --text:#ffffff;
@@ -135,7 +228,7 @@
 .theme-toggle{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;height:30px;margin:0;padding:0 9px;background:var(--card-bg);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:15px;line-height:1;}
 .theme-toggle:hover{border-color:var(--accent);}
 main{padding:40px 20px 60px 20px;}
-body{margin:0;font-family:Arial, Helvetica, sans-serif;background-color:var(--bg);background-image:linear-gradient(rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px),linear-gradient(90deg, rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px);background-size:42px 42px;color:var(--text);text-align:center;transition:background-color 0.2s, color 0.2s;}
+body{margin:0;font-family:var(--o-font-sans);background-color:var(--bg);background-image:linear-gradient(rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px),linear-gradient(90deg, rgba(148,163,184,var(--grid-alpha)) 1px, transparent 1px);background-size:42px 42px;color:var(--text);text-align:center;transition:background-color 0.2s, color 0.2s;}
 .container{max-width:800px;margin:0 auto;}
 h1{font-size:48px;margin-bottom:10px;}
 p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
