@@ -34,7 +34,9 @@ This check is the guardrail that keeps every copy consistent:
    page builds flyouts at runtime or keeps a hand-made copy. A page that hasn't
    been moved to the generated menu yet has no flyouts; while
    NAV_ROLLOUT_COMPLETE is False such pages are allowed (and counted), once it's
-   True every page must carry the generated menu.
+   True (since the rollout, 2026-11-11) every page must carry the generated
+   menu. The one exception to the flyouts is 404.html (NO_FLYOUT_PAGES): its
+   generated menu has none, and a flyout there fails.
 7. /tools: each category section has id="image|pdf|utility" (what the menu's
    /tools/#category links jump to), and its cards are sorted by name, since
    the flyouts list them in page order.
@@ -70,8 +72,11 @@ ICONS = ['class="nav-icon-btn support"', 'id="navSearchBtn"', 'id="themeToggle"'
 HOME_PAGES = {("index.html",), ("es", "index.html")}
 # Set to True once every page carries the generated menu (scripts/sync_nav.py --add); from then on a page
 # without it fails.
-NAV_ROLLOUT_COMPLETE = False
+NAV_ROLLOUT_COMPLETE = True
 FLYOUT_CATS = ("image", "pdf", "utility")
+# The one exception to "every generated menu has its flyouts" (an owner decision, 2026-11-11): the 404 page,
+# one English file that translates itself on /es/ URLs, gets the generated menu with plain category links.
+NO_FLYOUT_PAGES = {"404.html"}
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from sync_nav import find_regions  # noqa: E402
@@ -99,6 +104,11 @@ def check_flyouts(rel, text, header, problems):
         if NAV_ROLLOUT_COMPLETE:
             problems.append(f"{rel}: doesn't carry the generated site menu; run python scripts/sync_nav.py --write --add {rel.as_posix()}")
         return False
+    if rel.as_posix() in NO_FLYOUT_PAGES:
+        if "menu-flyout" in header or "data-flyout=" in header:
+            problems.append(f"{rel}: the 404 page's menu has no flyouts (its category links stay plain links to "
+                            f"/tools/#category); sync_nav.py generates it that way, so run python scripts/sync_nav.py --write")
+        return True
     for cat in FLYOUT_CATS:
         fid = f"menuFlyout-{cat}"
         link = re.search(rf'<a class="menu-item" href="[^"]*/tools/#{cat}"[^>]*>', header)
@@ -230,7 +240,7 @@ def main() -> int:
     pending = len(pages) - generated
     print(f"OK: all {len(pages)} pages use the minimal nav (sticky, menu links and language row present, "
           f"aria-current only on the blog index and /tools, nav search wired up). {generated} carry the generated "
-          f"menu with its three category flyouts" + (f"; {pending} not moved to it yet (no flyouts)." if pending else "."))
+          f"menu" + (" (the 404 page without flyouts, every other page with its three category flyouts)" if (root / "404.html").exists() else " with its three category flyouts") + (f"; {pending} not moved to it yet (no flyouts)." if pending else "."))
     return 0
 
 

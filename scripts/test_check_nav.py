@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Negative tests for check_nav.py's flyout rule (rule 6, Orisod 2.0).
 
-Copies a few real pages into a temporary folder (the WhatsApp link generator and
-/tools, which carry the generated menu, and Compress Image, which doesn't yet),
-checks that check_nav.py passes on them, then breaks one page at a time and checks
+Copies a few real pages into a temporary folder (the WhatsApp link generator,
+/tools, Compress Image and the 404 page, which has the generated menu without
+flyouts), checks that check_nav.py passes on them, then breaks one page at a time and checks
 that it fails with the expected message. Run after changing check_nav.py:
 
   python scripts/test_check_nav.py   (CI: check-nav)
@@ -20,9 +20,11 @@ REPO = HERE.parent
 CHECK = HERE / "check_nav.py"
 NL = chr(10)
 PAGES = ["whatsapp-link-generator/index.html", "es/whatsapp-link-generator/index.html", "tools/index.html",
-         "es/tools/index.html", "compress-image/index.html", "es/compress-image/index.html"]
+         "es/tools/index.html", "compress-image/index.html", "es/compress-image/index.html", "404.html"]
 WA = "whatsapp-link-generator/index.html"
 PLAIN = "compress-image/index.html"
+NOT_FOUND = "404.html"
+FLYOUT = '<div class="menu-flyout" id="menuFlyout-image" role="group" aria-label="Image Tools" hidden><p class="menu-flyout-label">Image Tools</p><ul><li><a href="/compress-image/">Compress Image</a></li></ul></div>'
 
 
 def sub(pattern, repl, count=1):
@@ -66,6 +68,17 @@ CASES = [
      "has menu-flyout outside the generated site-nav regions"),
     ("a page with only some of the regions", {WA: sub(r"<!-- site-nav\.js: start\..*?<!-- site-nav\.js: end -->\n?", "")},
      "has only the css, html site-nav region(s)"),
+    ("a page without the generated menu (rollout complete)",
+     # only the six marker lines go: the nav stays, but it's no longer the generated menu
+     {PLAIN: sub(r"(?:<!-- site-nav(?:\.js)?: (?:start\.[^\n]*?|end) -->|/\* site-nav\.css: (?:start\.[^\n]*?|end) \*/)\r?\n", "", count=0)},
+     "doesn't carry the generated site menu"),
+    ("the 404 page with a flyout", {NOT_FOUND: sub(r'(href="/tools/#image"[^\n]*</a>)', r"\1" + NL + "    " + FLYOUT)},
+     "the 404 page's menu has no flyouts"),
+    ("the 404 page with a link naming a flyout", {NOT_FOUND: sub(r'(href="/tools/#pdf")', r'\1 data-flyout="menuFlyout-pdf"')},
+     "the 404 page's menu has no flyouts"),
+    ("a tool page whose menu lost every flyout, like the 404 page's",
+     {WA: lambda t: sub(r' data-flyout="menuFlyout-\w+"', "", count=0)(sub(r'\n    <div class="menu-flyout".*?</div>', "", count=0)(t))},
+     "the menu has no image flyout"),
 ]
 
 

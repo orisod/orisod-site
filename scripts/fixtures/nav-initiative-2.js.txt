@@ -1,0 +1,86 @@
+<script>
+// Minimal nav (Initiative 2): the Menu panel and the Search icon.
+// Button labels come from data attributes, so the same script works in every
+// language. The Search icon opens a small search box under the nav; only
+// submitting it leaves the page (to /tools/?search=...). On a page that has
+// its own search box, the icon's data-search-target names it and the icon
+// just scrolls to it and focuses it instead.
+(function(){
+  var menuBtn = document.getElementById('navMenuBtn');
+  var menu = document.getElementById('navMenu');
+  var searchBtn = document.getElementById('navSearchBtn');
+  var form = document.getElementById('navSearch');
+  var input = form && form.querySelector('input');
+  if(!menuBtn || !menu || !searchBtn) return;
+
+  function openMenu(){
+    closeSearch(false);
+    menu.hidden = false;
+    menuBtn.setAttribute('aria-expanded', 'true');
+    menuBtn.setAttribute('aria-label', menuBtn.getAttribute('data-label-close'));
+    var first = menu.querySelector('a'); if(first) first.focus();
+  }
+  function closeMenu(returnFocus){
+    if(menu.hidden) return;
+    menu.hidden = true;
+    menuBtn.setAttribute('aria-expanded', 'false');
+    menuBtn.setAttribute('aria-label', menuBtn.getAttribute('data-label-open'));
+    if(returnFocus) menuBtn.focus();
+  }
+  menuBtn.addEventListener('click', function(){
+    if(menu.hidden) openMenu(); else closeMenu(true);
+  });
+  // Picking a link closes the menu (matters where a link acts in place, like /tools filters).
+  menu.addEventListener('click', function(e){
+    if(e.target.closest('a')) closeMenu(false);
+  });
+  // Tabbing past the last menu link closes the menu.
+  menu.addEventListener('focusout', function(e){
+    if(e.relatedTarget && !menu.contains(e.relatedTarget) && e.relatedTarget !== menuBtn) closeMenu(false);
+  });
+
+  function openSearch(){
+    closeMenu(false);
+    form.hidden = false;
+    searchBtn.setAttribute('aria-expanded', 'true');
+    input.focus();
+  }
+  function closeSearch(returnFocus){
+    if(!form || form.hidden) return;
+    form.hidden = true;
+    input.value = '';
+    searchBtn.setAttribute('aria-expanded', 'false');
+    if(returnFocus) searchBtn.focus();
+  }
+  searchBtn.addEventListener('click', function(){
+    var target = document.getElementById(searchBtn.getAttribute('data-search-target'));
+    if(target){
+      closeMenu(false);
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      target.scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block: 'center'});
+      target.focus({preventScroll: true});
+      return;
+    }
+    if(!form) return;
+    if(form.hidden) openSearch(); else closeSearch(true);
+  });
+  if(form){
+    // An empty search goes nowhere; the box just stays open.
+    form.addEventListener('submit', function(e){
+      if(!input.value.trim()){ e.preventDefault(); input.focus(); }
+    });
+    form.addEventListener('focusout', function(e){
+      if(e.relatedTarget && !form.contains(e.relatedTarget) && e.relatedTarget !== searchBtn) closeSearch(false);
+    });
+  }
+
+  document.addEventListener('click', function(e){
+    if(!menu.contains(e.target) && !menuBtn.contains(e.target)) closeMenu(false);
+    if(form && !form.contains(e.target) && !searchBtn.contains(e.target)) closeSearch(false);
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key !== 'Escape') return;
+    if(form && !form.hidden) closeSearch(true); else closeMenu(true);
+  });
+})();
+</script>
