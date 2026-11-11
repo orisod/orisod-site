@@ -71,6 +71,10 @@ REVEAL = ["#navSearchBtn.search-reveal-hidden{", "classList.toggle('search-revea
 # The original logo files (868 KB / 652 KB) are only for structured data; pages show small copies.
 BIG_LOGO = re.compile(r'<img[^>]*orisod-(?:icon-detailed|logo-full)\.png')
 ICONS = ['class="nav-icon-btn support"', 'id="navSearchBtn"', 'id="themeToggle"', 'id="navMenuBtn"']
+# The theme button (Orisod 2.0 step 3): two Lucide icons, the one shown picked by CSS from data-theme. No script
+# draws it, so no emoji and no textContent on the button.
+THEME_BUTTON = re.compile(r'<button class="theme-toggle" id="themeToggle"[^>]*>(.*?)</button>', re.S)
+THEME_EMOJI = re.compile("[\u2600\U0001F311-\U0001F31C\U0001F319]")
 
 HOME_PAGES = {("index.html",), ("es", "index.html")}
 # Set to True once every page carries the generated menu (scripts/sync_nav.py --add); from then on a page
@@ -181,6 +185,14 @@ def check_page(rel, text, problems):
     for icon in ICONS:
         if icon not in header:
             problems.append(f"{rel}: nav is missing {icon}")
+    theme = THEME_BUTTON.search(header)
+    if theme and not (theme.group(1).startswith('<svg class="theme-icon-moon"') and '<svg class="theme-icon-sun"' in theme.group(1)
+                      and not THEME_EMOJI.search(theme.group(1))):
+        problems.append(f"{rel}: the theme button must hold the moon and sun icons (theme-icon-moon, theme-icon-sun), "
+                        f"no emoji; run python scripts/sync_nav.py --write")
+    if re.search(r"btn\.textContent\s*=\s*document\.documentElement\.getAttribute\('data-theme'\)", text):
+        problems.append(f"{rel}: a script still writes the theme button's emoji (updateIcon); the icon is CSS now, "
+                        f"so remove those lines (sync_nav.py --add does it for a page from main)")
 
     menu = MENU_BLOCK.search(header)
     if not menu:

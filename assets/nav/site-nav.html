@@ -4,37 +4,40 @@
      script works out from the page (its URLs, its language switch, the current item, its search box). The category
      flyouts ({{flyout_image}} and the others) are listed from the /tools cards (/es/tools/ for Spanish pages), in
      page order, so a tool added to /tools reaches every menu with: python scripts/sync_nav.py --write
-     Each section starts at its "@name" line. -->
+     {{icon:name}} (or {{icon:name class}}) is a Lucide icon, written inline from the vendored file
+     assets/vendor/lucide/<version>/icons/<name>.svg (the version in assets/vendor/manifest.json); an icon not
+     vendored yet needs vendoring first. Each section starts at its "@name" line. -->
 <!-- @header -->
+<!-- Icons: Lucide {{lucide_version}} (ISC; the icons from Feather also MIT): /assets/vendor/lucide/{{lucide_version}}/LICENSE -->
 <header class="site-nav">
   <a class="site-nav-logo" href="{{home_url}}"><img src="/assets/orisod-icon-nav.png" alt="" width="26" height="26">Orisod</a>
   <div class="nav-icons">
-    <a class="nav-icon-btn support" href="{{support_url}}" aria-label="{{support}}" title="{{support}}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg></a>
+    <a class="nav-icon-btn support" href="{{support_url}}" aria-label="{{support}}" title="{{support}}">{{icon:heart}}</a>
 {{search}}
-    <button class="theme-toggle" id="themeToggle" aria-label="{{theme}}">🌙</button>
-    <button class="nav-icon-btn" id="navMenuBtn" type="button" aria-label="{{menu}}" title="{{menu}}" aria-expanded="false" aria-controls="navMenu" data-label-open="{{menu}}" data-label-close="{{close_menu}}"><svg class="menu-icon-open" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><svg class="menu-icon-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <button class="theme-toggle" id="themeToggle" aria-label="{{theme}}">{{icon:moon theme-icon-moon}}{{icon:sun theme-icon-sun}}</button>
+    <button class="nav-icon-btn" id="navMenuBtn" type="button" aria-label="{{menu}}" title="{{menu}}" aria-expanded="false" aria-controls="navMenu" data-label-open="{{menu}}" data-label-close="{{close_menu}}">{{icon:menu menu-icon-open}}{{icon:x menu-icon-close}}</button>
   </div>
   <nav class="nav-menu" id="navMenu" aria-label="{{site_menu}}" hidden>
     <p class="nav-menu-label">{{tools_label}}</p>
-    <a class="menu-item" href="{{tools_url}}"{{current_tools}}><span class="icon-box cat-all"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>{{all_tools}}</a>
-    <a class="menu-item" href="{{tools_url}}#image" data-flyout="menuFlyout-image"><span class="icon-box cat-image"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 2 18 17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="14" height="13" rx="1.5"/><circle cx="6" cy="8" r="1.2"/><path d="M2 15l3.5-3.5 2.5 2.5 3.5-4 3 3"/></svg></span>{{cat_image}}</a>
+    <a class="menu-item" href="{{tools_url}}"{{current_tools}}><span class="icon-box cat-all">{{icon:layout-grid}}</span>{{all_tools}}</a>
+    <a class="menu-item" href="{{tools_url}}#image" data-flyout="menuFlyout-image"><span class="icon-box cat-image">{{icon:image}}</span>{{cat_image}}</a>
 {{flyout_image}}
-    <a class="menu-item" href="{{tools_url}}#pdf" data-flyout="menuFlyout-pdf"><span class="icon-box cat-pdf"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/></svg></span>{{cat_pdf}}</a>
+    <a class="menu-item" href="{{tools_url}}#pdf" data-flyout="menuFlyout-pdf"><span class="icon-box cat-pdf">{{icon:file-text}}</span>{{cat_pdf}}</a>
 {{flyout_pdf}}
-    <a class="menu-item" href="{{tools_url}}#utility" data-flyout="menuFlyout-utility"><span class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3L5 8L11 8L11 3"/><path d="M8 8L17 19"/><path d="M15.5 20.5L18.5 17.5"/></svg></span>{{cat_utility}}</a>
+    <a class="menu-item" href="{{tools_url}}#utility" data-flyout="menuFlyout-utility"><span class="icon-box cat-utility">{{icon:wrench}}</span>{{cat_utility}}</a>
 {{flyout_utility}}
     <hr>
-    <a class="menu-item" href="{{blog_url}}"{{current_blog}}><span class="icon-box cat-all"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span>{{blog}}</a>
+    <a class="menu-item" href="{{blog_url}}"{{current_blog}}><span class="icon-box cat-all">{{icon:notebook-text}}</span>{{blog}}</a>
     <hr>
     <div class="menu-lang"><span class="menu-lang-label">{{language}}</span>{{lang_switch}}</div>
   </nav>
 </header>
 <script>(function(){var n=document.querySelector('.site-nav');if(!n)return;var r=document.documentElement;function s(){r.style.setProperty('--site-nav-h',n.offsetHeight+'px');}s();if(window.ResizeObserver){new ResizeObserver(s).observe(n);}else{window.addEventListener('resize',s);}})();</script>
 <!-- @search-form -->
-    <button class="nav-icon-btn" id="navSearchBtn" type="button" aria-expanded="false" aria-controls="navSearch" aria-label="{{search}}" title="{{search}}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
-    <form class="nav-search" id="navSearch" role="search" action="{{tools_url}}" method="get" hidden><label class="nav-search-label" for="navSearchInput">{{search}}</label><input type="search" id="navSearchInput" name="search" placeholder="{{search_placeholder}}" autocomplete="off" enterkeyhint="search"><button class="nav-icon-btn" type="submit" aria-label="{{search_submit}}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button></form>
+    <button class="nav-icon-btn" id="navSearchBtn" type="button" aria-expanded="false" aria-controls="navSearch" aria-label="{{search}}" title="{{search}}">{{icon:search}}</button>
+    <form class="nav-search" id="navSearch" role="search" action="{{tools_url}}" method="get" hidden><label class="nav-search-label" for="navSearchInput">{{search}}</label><input type="search" id="navSearchInput" name="search" placeholder="{{search_placeholder}}" autocomplete="off" enterkeyhint="search"><button class="nav-icon-btn" type="submit" aria-label="{{search_submit}}">{{icon:search}}</button></form>
 <!-- @search-target -->
-    <button class="nav-icon-btn" id="navSearchBtn" type="button" data-search-target="{{search_target}}"{{search_watch}} aria-label="{{search}}" title="{{search}}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
+    <button class="nav-icon-btn" id="navSearchBtn" type="button" data-search-target="{{search_target}}"{{search_watch}} aria-label="{{search}}" title="{{search}}">{{icon:search}}</button>
 <!-- @flyout -->
     <div class="menu-flyout" id="menuFlyout-{{cat}}" role="group" aria-label="{{label}}" hidden><p class="menu-flyout-label">{{label}}</p><ul>{{items}}</ul></div>
 <!-- @flyouts-translated -->
