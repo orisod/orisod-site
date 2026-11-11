@@ -102,7 +102,9 @@ const OPEN_STATES = [
   // Orisod 2.0: the generated menu also gives a tool page, its guide and a blog post the same flyouts.
   ...["/", "/es/", "/tools/", "/es/tools/", "/whatsapp-link-generator/", "/es/whatsapp-link-generator/",
     "/blog/send-whatsapp-without-saving-contact/", "/es/blog/send-whatsapp-without-saving-contact/",
-    "/blog/what-is-exif-data/", "/es/blog/what-is-exif-data/"].map((path) => ({ path, open: "flyout" })),
+    "/blog/what-is-exif-data/", "/es/blog/what-is-exif-data/",
+    // The 404 page too, English and on a broken /es/ URL (where its script swaps in the Spanish lists).
+    "/404.html", "/es/a11y-check-missing-page/"].map((path) => ({ path, open: "flyout" })),
   // The minimal tool layout (WhatsApp link generator, the pilot): its collapsed "Help and details"
   // block opened, the country list opened, and the form filled in so the number notes, the "Add the 9"
   // button and the formatted preview show; its emoji picker opened on each of its six categories; and its

@@ -3167,36 +3167,112 @@ const CASES = [
     },
   },
   {
-    // The 404 page (one English file, translated in place on /es/ URLs) has the generated menu without flyouts:
-    // hovering or focusing a category at desktop width opens nothing, and the links go to /tools/#category.
-    name: "Site menu on the 404 page (no flyouts)",
+    // The 404 page (one English file, translated in place on /es/ URLs) has the same flyouts as every other page:
+    // the English lists in the menu and the Spanish ones in an inert <template>, which its script swaps in on /es/
+    // URLs, so only the page's language is ever in the document. Desktop hover and keyboard open them; a phone gets none.
+    name: "Site menu on the 404 page (flyouts in the page's language)",
     page: "/ci-smoke-missing-page/",
     missing: true, // the page itself answers 404, like GitHub Pages; the browser's 404 line for it is expected
     vendor: [],
     async run(page, lang) {
+      const pre = lang === "es" ? "/es" : "";
+      const t = lang === "es" ? { label: "Menú del sitio", image: "Herramientas de imagen", pdf: "Herramientas PDF" }
+        : { label: "Site menu", image: "Image Tools", pdf: "PDF Tools" };
+      const read = () => page.evaluate(() => {
+        const menu = document.getElementById("navMenu"), mr = menu.getBoundingClientRect();
+        return {
+          menuLabel: menu.getAttribute("aria-label"),
+          items: [...document.querySelectorAll("#navMenu > a.menu-item")].map((a) => [a.getAttribute("href"), a.textContent.trim(), a.getAttribute("data-flyout")]),
+          // every flyout in the document (a <template>'s content isn't): exactly the three, once each
+          all: [...document.querySelectorAll(".menu-flyout")].map((f) => f.id),
+          flyouts: [...document.querySelectorAll("#navMenu .menu-flyout")].map((f) => ({ id: f.id, label: f.getAttribute("aria-label"),
+            items: [...f.querySelectorAll("li a")].map((a) => [a.getAttribute("href"), a.textContent]) })),
+          open: [...document.querySelectorAll(".menu-flyout")].filter((f) => !f.hidden && getComputedStyle(f).display !== "none")
+            .map((f) => ({ id: f.id, leftOfMenu: f.getBoundingClientRect().right <= mr.left + 1, width: f.getBoundingClientRect().width })),
+          expanded: [...document.querySelectorAll("#navMenu a.menu-item[data-flyout]")].map((a) => a.getAttribute("aria-expanded")),
+          controls: [...document.querySelectorAll("#navMenu a.menu-item[data-flyout]")].filter((a) => a.hasAttribute("aria-controls")).length,
+        };
+      });
+      const where = () => page.evaluate(() => {
+        const a = document.activeElement, fly = a && a.closest(".menu-flyout");
+        return { id: a && a.id, text: a ? a.textContent.trim() : "", href: a ? a.getAttribute("href") : null, flyout: a ? a.getAttribute("data-flyout") : null,
+          inFlyout: fly ? fly.id : null, open: [...document.querySelectorAll(".menu-flyout")].filter((f) => !f.hidden).map((f) => f.id),
+          menuOpen: !document.getElementById("navMenu").hidden };
+      });
+
+      // Desktop, mouse: hover Image Tools, then PDF Tools.
       await page.setViewportSize({ width: 1280, height: 900 });
       await page.click("#navMenuBtn");
-      await page.hover('#navMenu a.menu-item[href$="#image"]');
-      await page.focus('#navMenu a.menu-item[href$="#pdf"]');
-      await page.waitForTimeout(400);
-      const m = await page.evaluate(() => ({
-        flyouts: document.querySelectorAll(".menu-flyout, [data-flyout]").length,
-        expanded: document.querySelectorAll("#navMenu [aria-expanded]").length,
-        cats: [...document.querySelectorAll("#navMenu > a.menu-item")].map((a) => [a.getAttribute("href"), a.textContent.trim()]),
-        menuLabel: document.getElementById("navMenu").getAttribute("aria-label"),
-        heading: document.querySelector("h1").textContent.trim(),
+      const closed = await read();
+      await page.hover('#navMenu a.menu-item[data-flyout="menuFlyout-image"]');
+      const image = await read();
+      await page.hover('#navMenu a.menu-item[data-flyout="menuFlyout-pdf"]');
+      await page.waitForTimeout(250);
+      const pdf = await read();
+
+      // Desktop, keyboard: the same steps as on a blog post (the pointer out of the way, so it opens nothing).
+      await page.mouse.move(5, 880);
+      await page.reload({ waitUntil: "load" });
+      await page.focus("#navMenuBtn");
+      await page.keyboard.press("Enter");
+      const steps = [await where()];
+      for (const key of ["Tab", "Tab", "Escape", "Escape"]) {
+        await page.keyboard.press(key);
+        await page.waitForTimeout(50);
+        steps.push(await where());
+      }
+
+      // Phone: no panels.
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.reload({ waitUntil: "load" });
+      await page.click("#navMenuBtn");
+      await page.hover('#navMenu a.menu-item[data-flyout="menuFlyout-image"]');
+      await page.focus('#navMenu a.menu-item[data-flyout="menuFlyout-pdf"]');
+      await page.waitForTimeout(300);
+      const phone = await read();
+
+      // The same menu as the homepage of the page's language.
+      await page.setViewportSize({ width: 1280, height: 900 });
+      await page.goto(SITE + pre + "/", { waitUntil: "load" });
+      const home = await page.evaluate(() => ({
+        items: [...document.querySelectorAll("#navMenu > a.menu-item")].map((a) => [a.getAttribute("href"), a.textContent.trim(), a.getAttribute("data-flyout")]),
+        flyouts: [...document.querySelectorAll("#navMenu .menu-flyout")].map((f) => ({ id: f.id, label: f.getAttribute("aria-label"),
+          items: [...f.querySelectorAll("li a")].map((a) => [a.getAttribute("href"), a.textContent]) })),
       }));
-      const t = lang === "es" ? { pre: "/es", label: "Menú del sitio", image: "Herramientas de imagen" } : { pre: "", label: "Site menu", image: "Image Tools" };
-      const expectPlain = (m) => {
-        expect(!m.flyouts && !m.expanded, `the 404 menu has ${m.flyouts} flyout element(s) and ${m.expanded} aria-expanded item(s)`);
-        for (const cat of ["image", "pdf", "utility"])
-          expect(m.cats.some(([h]) => h === `${t.pre}/tools/#${cat}`), `no ${t.pre}/tools/#${cat} link in the 404 menu: ${JSON.stringify(m.cats)}`);
-        expect(m.menuLabel === t.label && m.cats.some(([, x]) => x === t.image), `the 404 menu isn't in the page's language: ${m.menuLabel}, ${JSON.stringify(m.cats)}`);
+
+      const ids = ["menuFlyout-image", "menuFlyout-pdf", "menuFlyout-utility"];
+      const expectAll = (s) => {
+        const { closed, image, pdf, steps, phone, home } = s;
+        expect(closed.menuLabel === t.label, `the 404 menu isn't in the page's language: ${closed.menuLabel}`);
+        expect(JSON.stringify(closed.all) === JSON.stringify(ids), `the document holds these flyouts: ${JSON.stringify(closed.all)}`);
+        expect(closed.flyouts.length === 3 && closed.flyouts.every((f) => f.items.length), `the 404 menu has ${closed.flyouts.length} flyouts`);
+        for (const f of closed.flyouts)
+          for (const [h] of f.items)
+            expect(lang === "es" ? h.startsWith("/es/") : !h.startsWith("/es/"), `the ${f.id} list links to ${h} on a ${lang === "es" ? "Spanish" : "English"} address`);
+        expect(JSON.stringify({ items: closed.items, flyouts: closed.flyouts }) === JSON.stringify(home),
+          `the 404 menu differs from the ${pre}/ homepage's (links and flyout lists)`);
+        expect(!closed.open.length, `a flyout is open before any hover: ${JSON.stringify(closed.open)}`);
+        expect(image.open.length === 1 && image.open[0].id === "menuFlyout-image" && image.open[0].leftOfMenu, `hovering ${t.image}: ${JSON.stringify(image.open)}`);
+        expect(image.expanded.join() === "true,false,false", `hovering ${t.image}: aria-expanded ${image.expanded.join()}`);
+        expect(pdf.open.length === 1 && pdf.open[0].id === "menuFlyout-pdf", `hovering ${t.pdf}: ${JSON.stringify(pdf.open)}`);
+        const [opened, toImage, intoPanel, esc1, esc2] = steps;
+        expect(opened.menuOpen && !opened.flyout && !opened.open.length, `opening the menu: ${JSON.stringify(opened)}`);
+        expect(toImage.flyout === "menuFlyout-image" && toImage.open.join() === "menuFlyout-image", `Tab to ${t.image}: ${JSON.stringify(toImage)}`);
+        expect(intoPanel.inFlyout === "menuFlyout-image" && intoPanel.text && intoPanel.href.startsWith(pre + "/"), `Tab into the panel: ${JSON.stringify(intoPanel)}`);
+        expect(esc1.flyout === "menuFlyout-image" && !esc1.open.length && esc1.menuOpen, `first Escape: ${JSON.stringify(esc1)}`);
+        expect(esc2.id === "navMenuBtn" && !esc2.menuOpen, `second Escape: ${JSON.stringify(esc2)}`);
+        expect(!phone.open.length && !phone.controls && phone.expanded.every((x) => x === null), `at 390 px: ${JSON.stringify({ open: phone.open, controls: phone.controls, expanded: phone.expanded })}`);
       };
-      expectPlain(m);
-      return `"${m.heading}": the menu is the generated one without flyouts (hover and focus open nothing), its categories link to ${t.pre}/tools/#category, labels in ${lang === "es" ? "Spanish" : "English"}; ` +
-        [mustFail("a flyout on the 404 page", () => expectPlain({ ...m, flyouts: 1 })),
-          mustFail("an untranslated menu", () => expectPlain({ ...m, menuLabel: lang === "es" ? "Site menu" : "Menú del sitio" }))].join("; ");
+      const s = { closed, image, pdf, steps, phone, home };
+      expectAll(s);
+      const other = (f) => ({ ...f, items: f.items.map(([h, n]) => [lang === "es" ? h.slice(3) : "/es" + h, n]) });
+      return `on ${pre}/ci-smoke-missing-page/ the menu equals the ${pre}/ homepage's (${closed.flyouts.map((f) => `${f.label} ${f.items.length}`).join(", ")}), only the ${lang === "es" ? "Spanish" : "English"} lists are in the document; ` +
+        `at 1280 px hover opens ${t.image} then ${t.pdf}, Tab reaches ${steps[2].text} in the panel and Escape twice closes it and the menu; at 390 px no panel; ` +
+        [mustFail("the other language's lists", () => expectAll({ ...s, closed: { ...closed, flyouts: closed.flyouts.map(other) } })),
+          mustFail("both languages in the document", () => expectAll({ ...s, closed: { ...closed, all: [...ids, ...ids] } })),
+          mustFail("a panel that didn't open", () => expectAll({ ...s, image: { ...image, open: [] } })),
+          mustFail("Tab skipping the panel", () => expectAll({ ...s, steps: steps.map((x, i) => (i === 2 ? { ...x, inFlyout: null } : x)) })),
+          mustFail("a panel on a phone", () => expectAll({ ...s, phone: { ...phone, open: [{ id: "menuFlyout-pdf" }] } }))].join("; ");
     },
   },
   {

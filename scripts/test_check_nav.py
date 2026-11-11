@@ -2,8 +2,8 @@
 """Negative tests for check_nav.py's flyout rule (rule 6, Orisod 2.0).
 
 Copies a few real pages into a temporary folder (the WhatsApp link generator,
-/tools, Compress Image and the 404 page, which has the generated menu without
-flyouts), checks that check_nav.py passes on them, then breaks one page at a time and checks
+/tools, Compress Image and the 404 page, which has the English flyouts plus the
+Spanish ones in a <template>), checks that check_nav.py passes on them, then breaks one page at a time and checks
 that it fails with the expected message. Run after changing check_nav.py:
 
   python scripts/test_check_nav.py   (CI: check-nav)
@@ -24,7 +24,7 @@ PAGES = ["whatsapp-link-generator/index.html", "es/whatsapp-link-generator/index
 WA = "whatsapp-link-generator/index.html"
 PLAIN = "compress-image/index.html"
 NOT_FOUND = "404.html"
-FLYOUT = '<div class="menu-flyout" id="menuFlyout-image" role="group" aria-label="Image Tools" hidden><p class="menu-flyout-label">Image Tools</p><ul><li><a href="/compress-image/">Compress Image</a></li></ul></div>'
+TEMPLATE = r'<template id="menuFlyouts-es">.*?</template>'
 
 
 def sub(pattern, repl, count=1):
@@ -72,10 +72,26 @@ CASES = [
      # only the six marker lines go: the nav stays, but it's no longer the generated menu
      {PLAIN: sub(r"(?:<!-- site-nav(?:\.js)?: (?:start\.[^\n]*?|end) -->|/\* site-nav\.css: (?:start\.[^\n]*?|end) \*/)\r?\n", "", count=0)},
      "doesn't carry the generated site menu"),
-    ("the 404 page with a flyout", {NOT_FOUND: sub(r'(href="/tools/#image"[^\n]*</a>)', r"\1" + NL + "    " + FLYOUT)},
-     "the 404 page's menu has no flyouts"),
-    ("the 404 page with a link naming a flyout", {NOT_FOUND: sub(r'(href="/tools/#pdf")', r'\1 data-flyout="menuFlyout-pdf"')},
-     "the 404 page's menu has no flyouts"),
+    ("the 404 page without its flyouts (the old exception)",
+     {NOT_FOUND: lambda t: sub(r' data-flyout="menuFlyout-\w+"', "", count=0)(sub(r'\n    <div class="menu-flyout".*?</div>', "", count=0)(t))},
+     "404.html: the image menu link doesn't name its flyout"),
+    ("the 404 page without its English PDF flyout",
+     {NOT_FOUND: sub(r'(</a>)\r?\n    <div class="menu-flyout" id="menuFlyout-pdf".*?</div>', r"\1")},
+     "404.html: the menu has no pdf flyout (#menuFlyout-pdf)"),
+    ("the 404 page without its Spanish flyouts", {NOT_FOUND: sub(r"\r?\n  " + TEMPLATE, "")},
+     "404.html: the menu needs the es flyouts too"),
+    ("the 404 page's Spanish template missing its utility flyout",
+     {NOT_FOUND: sub(r'(<template id="menuFlyouts-es">.*?)\r?\n    <div class="menu-flyout" id="menuFlyout-utility".*?</div>', r"\1")},
+     "404.html: the es menu has no utility flyout"),
+    ("the 404 page's Spanish template linking to an English page",
+     {NOT_FOUND: sub(r'(<template id="menuFlyouts-es">.*?<li><a href=")/es/', r"\1/")},
+     "404.html: the es image flyout links to a page outside /es/"),
+    ("the 404 page's Spanish panel not hidden",
+     {NOT_FOUND: sub(r'(<template id="menuFlyouts-es">.*?id="menuFlyout-pdf" role="group" aria-label="[^"]*") hidden>', r"\1>")},
+     "404.html: the es pdf flyout must be a hidden role=\"group\" panel"),
+    ("a tool page with a translated flyouts template",
+     {WA: sub(r"(\r?\n</header>)", lambda m: "\n  " + __import__("re").search(TEMPLATE, (REPO / NOT_FOUND).read_bytes().decode("utf-8"), __import__("re").S).group(0) + m.group(1))},
+     "has a translated flyouts <template>; only 404.html carries one"),
     ("a tool page whose menu lost every flyout, like the 404 page's",
      {WA: lambda t: sub(r' data-flyout="menuFlyout-\w+"', "", count=0)(sub(r'\n    <div class="menu-flyout".*?</div>', "", count=0)(t))},
      "the menu has no image flyout"),

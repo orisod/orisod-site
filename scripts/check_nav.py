@@ -35,8 +35,11 @@ This check is the guardrail that keeps every copy consistent:
    been moved to the generated menu yet has no flyouts; while
    NAV_ROLLOUT_COMPLETE is False such pages are allowed (and counted), once it's
    True (since the rollout, 2026-11-11) every page must carry the generated
-   menu. The one exception to the flyouts is 404.html (NO_FLYOUT_PAGES): its
-   generated menu has none, and a flyout there fails.
+   menu. The 404 page (one English file that translates itself on /es/ URLs)
+   is checked the same way and also needs the Spanish flyouts, all three, in
+   <template id="menuFlyouts-es"> (TRANSLATED_FLYOUT_PAGES), linking to /es/
+   pages; its script swaps them in on /es/ URLs. No other page has that
+   template.
 7. /tools: each category section has id="image|pdf|utility" (what the menu's
    /tools/#category links jump to), and its cards are sorted by name, since
    the flyouts list them in page order.
@@ -74,9 +77,10 @@ HOME_PAGES = {("index.html",), ("es", "index.html")}
 # without it fails.
 NAV_ROLLOUT_COMPLETE = True
 FLYOUT_CATS = ("image", "pdf", "utility")
-# The one exception to "every generated menu has its flyouts" (an owner decision, 2026-11-11): the 404 page,
-# one English file that translates itself on /es/ URLs, gets the generated menu with plain category links.
-NO_FLYOUT_PAGES = {"404.html"}
+# Pages that also carry the other language's flyouts in an inert <template>: the 404 page, one English file whose
+# script translates it on /es/ URLs and swaps these in (owner decision, 2026-11-11: flyouts like every other page).
+TRANSLATED_FLYOUT_PAGES = {"404.html": "es"}
+FLYOUT_TEMPLATE = re.compile(r'<template id="menuFlyouts-([a-z]+)">(.*?)</template>', re.S)
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from sync_nav import find_regions  # noqa: E402
@@ -104,28 +108,48 @@ def check_flyouts(rel, text, header, problems):
         if NAV_ROLLOUT_COMPLETE:
             problems.append(f"{rel}: doesn't carry the generated site menu; run python scripts/sync_nav.py --write --add {rel.as_posix()}")
         return False
-    if rel.as_posix() in NO_FLYOUT_PAGES:
-        if "menu-flyout" in header or "data-flyout=" in header:
-            problems.append(f"{rel}: the 404 page's menu has no flyouts (its category links stay plain links to "
-                            f"/tools/#category); sync_nav.py generates it that way, so run python scripts/sync_nav.py --write")
-        return True
+    templates = FLYOUT_TEMPLATE.findall(header)
+    check_panels(rel, FLYOUT_TEMPLATE.sub("", header), problems)
+    other = TRANSLATED_FLYOUT_PAGES.get(rel.as_posix())
+    if other:
+        found = dict(templates)
+        if len(templates) != 1 or other not in found:
+            problems.append(f"{rel}: the menu needs the {other} flyouts too, in one <template id=\"menuFlyouts-{other}\"> "
+                            f"(its script swaps them in on /{other}/ URLs); run python scripts/sync_nav.py --write")
+        else:
+            check_panels(rel, found[other], problems, where=f" {other}", prefix=f"/{other}/")
+    elif templates:
+        problems.append(f"{rel}: has a translated flyouts <template>; only {', '.join(sorted(TRANSLATED_FLYOUT_PAGES))} carries one")
+    return True
+
+
+def check_panels(rel, html, problems, where="", prefix=None):
+    """The three flyout panels in html. In the menu (prefix None) each must follow the category link naming it;
+    in a translated <template> (where=" es") there are no links, and every tool link must start with prefix."""
     for cat in FLYOUT_CATS:
         fid = f"menuFlyout-{cat}"
-        link = re.search(rf'<a class="menu-item" href="[^"]*/tools/#{cat}"[^>]*>', header)
-        if not link or f'data-flyout="{fid}"' not in link.group(0):
-            problems.append(f"{rel}: the {cat} menu link doesn't name its flyout (data-flyout=\"{fid}\")")
-        panel = re.search(rf'<div class="menu-flyout" id="{fid}"([^>]*)>(.*?)</div>', header, re.S)
+        link = None
+        if prefix is None:
+            link = re.search(rf'<a class="menu-item" href="[^"]*/tools/#{cat}"[^>]*>', html)
+            if not link or f'data-flyout="{fid}"' not in link.group(0):
+                problems.append(f"{rel}: the {cat} menu link doesn't name its flyout (data-flyout=\"{fid}\")")
+        panels = re.findall(rf'<div class="menu-flyout" id="{fid}"[^>]*>', html)
+        panel = re.search(rf'<div class="menu-flyout" id="{fid}"([^>]*)>(.*?)</div>', html, re.S)
         if not panel:
-            problems.append(f"{rel}: the menu has no {cat} flyout (#{fid})")
+            problems.append(f"{rel}: the{where} menu has no {cat} flyout (#{fid})")
             continue
+        if len(panels) > 1:
+            problems.append(f"{rel}: the{where} menu has {len(panels)} {cat} flyouts (#{fid})")
         attrs, body = panel.groups()
         if 'role="group"' not in attrs or not re.search(r"(?:^|[ ])hidden(?=[ ]|$)", attrs):
-            problems.append(f"{rel}: the {cat} flyout must be a hidden role=\"group\" panel")
-        if not re.search(r'<li><a href="/[^"]+">[^<]+</a></li>', body):
-            problems.append(f"{rel}: the {cat} flyout lists no tools")
-        if link and not header[link.end():panel.start()].strip().endswith("</a>"):
+            problems.append(f"{rel}: the{where} {cat} flyout must be a hidden role=\"group\" panel")
+        tools = re.findall(r'<li><a href="(/[^"]+)">[^<]+</a></li>', body)
+        if not tools:
+            problems.append(f"{rel}: the{where} {cat} flyout lists no tools")
+        if prefix and any(not h.startswith(prefix) for h in tools):
+            problems.append(f"{rel}: the{where} {cat} flyout links to a page outside {prefix}")
+        if link and not html[link.end():panel.start()].strip().endswith("</a>"):
             problems.append(f"{rel}: the {cat} flyout isn't right after its menu link")
-    return True
 
 
 def check_page(rel, text, problems):
@@ -240,7 +264,7 @@ def main() -> int:
     pending = len(pages) - generated
     print(f"OK: all {len(pages)} pages use the minimal nav (sticky, menu links and language row present, "
           f"aria-current only on the blog index and /tools, nav search wired up). {generated} carry the generated "
-          f"menu" + (" (the 404 page without flyouts, every other page with its three category flyouts)" if (root / "404.html").exists() else " with its three category flyouts") + (f"; {pending} not moved to it yet (no flyouts)." if pending else "."))
+          f"menu with its three category flyouts" + (" (the 404 page in English and Spanish)" if (root / "404.html").exists() else "") + (f"; {pending} not moved to it yet (no flyouts)." if pending else "."))
     return 0
 
 

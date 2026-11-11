@@ -7,8 +7,9 @@ regions, checks that check_nav_sync.py passes on it, then breaks it one way at a
 time and checks that it fails with the expected message. Then it checks that
 sync_nav.py --write repairs stale regions without touching a byte outside them
 (CRLF kept) and leaves pages without markers alone, and that --add, given real
-pages (Compress Image, a Spanish page with the old theme label, the 404 page)
-turned back into their hand-copied nav (scripts/fixtures/nav-initiative-2.*),
+pages (Compress Image, a Spanish page with the old theme label, the 404 page,
+whose generated menu then has the English flyouts and the Spanish ones in a
+<template>) turned back into their hand-copied nav (scripts/fixtures/nav-initiative-2.*),
 gives back exactly the pages in this checkout, and refuses a page whose header
 isn't the standard copy. Run after changing either script:
 
@@ -242,8 +243,15 @@ def write_mode_checks():
             bad.append("check_nav_sync failed right after --add")
         nf = real["404.html"]
         nf_header = nf[nf.index(sn.HTML_START):nf.index(sn.HTML_END)]
-        if "menu-flyout" in nf_header or "data-flyout" in nf_header or 'href="/tools/#image"' not in nf_header:
-            bad.append("the 404 page's generated menu has flyouts")
+        tpl_at = nf_header.find('<template id="menuFlyouts-es">')
+        menu_part, tpl_part = nf_header[:tpl_at], nf_header[tpl_at:]
+        for cat in ("image", "pdf", "utility"):
+            if (f'href="/tools/#{cat}" data-flyout="menuFlyout-{cat}"' not in menu_part
+                    or f'<div class="menu-flyout" id="menuFlyout-{cat}"' not in menu_part
+                    or f'<div class="menu-flyout" id="menuFlyout-{cat}"' not in tpl_part):
+                bad.append(f"the 404 page's generated menu lacks its English or Spanish {cat} flyout")
+        if tpl_at < 0 or 'href="/es/' not in tpl_part or 'href="/es/' in menu_part.split('<nav class="nav-menu"')[1].split('class="menu-lang"')[0]:
+            bad.append("the 404 page's menu should list English tools, and Spanish ones only in its <template>")
         # A page whose header isn't the standard copy is refused, and left alone.
         odd = sn.lf((root / "compress-image/index.html").read_bytes().decode("utf-8"))
         a, b = odd.index(sn.HTML_START), odd.index(sn.HTML_END) + len(sn.HTML_END)

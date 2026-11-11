@@ -37,6 +37,10 @@
     <button class="nav-icon-btn" id="navSearchBtn" type="button" data-search-target="{{search_target}}"{{search_watch}} aria-label="{{search}}" title="{{search}}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
 <!-- @flyout -->
     <div class="menu-flyout" id="menuFlyout-{{cat}}" role="group" aria-label="{{label}}" hidden><p class="menu-flyout-label">{{label}}</p><ul>{{items}}</ul></div>
+<!-- @flyouts-translated -->
+  <template id="menuFlyouts-{{lang}}">
+{{flyouts}}
+  </template>
 <!-- @flyout-item -->
 <li><a href="{{href}}">{{name}}</a></li>
 <!-- @lang-en -->
