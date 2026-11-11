@@ -17,7 +17,8 @@ regions of each adopting page (see scripts/sync_nav.py for the markers). This ch
 - a source that would break pages: </style> in the CSS, </script> or <!-- in the
   script, a marker in either, a template section missing, or strings.json without
   the same keys in both languages
-- a generated menu on 404.html (not supported yet)
+- an es/404.html (the 404 page is one root file that translates itself, Spanish
+  flyouts included, on /es/ URLs)
 
 Pages without the regions aren't checked here (check_nav.py counts them until the
 rollout is complete).

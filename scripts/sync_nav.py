@@ -36,7 +36,9 @@ What the script works out per page:
     cards on /tools in page order (sorted by name there, see check_nav.py). A tool
     reaches every menu by being added to /tools, then running --write.
   - the 404 page (one English file; its own script translates the page, nav included,
-    on /es/ URLs): no flyouts, and its language switch goes to /es/
+    on /es/ URLs): its language switch goes to /es/, and besides its English flyouts it
+    carries the Spanish ones in a <template id="menuFlyouts-es"> (inert, so never
+    reachable), which that script swaps in for the English ones on /es/ URLs
 
 The copies leave out the sources' comments (the CSS's /* */ comments and the script's
 whole-line // comments), which keeps every page about 5 KB lighter; the sources keep
@@ -85,9 +87,9 @@ PAGE_SETTINGS = {
     "tools/index.html": {"search_target": "toolSearch", "current": "tools"},
     "blog/index.html": {"current": "blog"},
     # One English file for both languages (its script translates the page, nav included, on /es/ URLs), so its
-    # language switch goes to the Spanish homepage, and it has no flyouts (an owner decision, 2026-11-11): the
-    # category links stay plain links to /tools/#category. check_nav.py allows that only here.
-    "404.html": {"other_url": "/es/", "flyouts": False},
+    # language switch goes to the Spanish homepage, and it carries the Spanish flyouts too, in a <template> its
+    # script swaps in on /es/ URLs (owner decision, 2026-11-11: the same flyouts as every other page).
+    "404.html": {"other_url": "/es/", "translated_flyouts": "es"},
 }
 # Pages --add won't adopt (their old nav was special); they were migrated by hand.
 NOT_ADOPTABLE = {"index.html", "tools/index.html"}
@@ -187,7 +189,7 @@ class Source:
         template = lf(read(root / TEMPLATE))
         parts = SECTION.split(template)
         self.sections = {parts[i]: parts[i + 1].rstrip("\n") for i in range(1, len(parts) - 1, 2)}
-        for name in ("header", "search-form", "search-target", "flyout", "flyout-item", "lang-en", "lang-es"):
+        for name in ("header", "search-form", "search-target", "flyout", "flyout-item", "flyouts-translated", "lang-en", "lang-es"):
             if name not in self.sections:
                 self.problems.append(f"{TEMPLATE} has no @{name} section")
         self.strings = json.loads(read(root / STRINGS))
@@ -212,11 +214,10 @@ class Source:
         return PLACEHOLDER.sub(sub, self.sections[name])
 
     def header(self, rel, flyouts=True):
-        """The generated header region content (LF) for a page (never with flyouts where PAGE_SETTINGS says so)."""
+        """The generated header region content (LF) for a page (flyouts=False: the hand-copied header --add expects)."""
         lang, key = lang_of(rel), page_key(rel)
         t = dict(self.strings[lang])
         settings = PAGE_SETTINGS.get(key, {})
-        flyouts = flyouts and settings.get("flyouts", True)
         tools_url = url_of("tools/index.html", lang)
         values = {**t, "home_url": url_of("index.html", lang), "support_url": url_of("support/index.html", lang),
                   "tools_url": tools_url, "blog_url": url_of("blog/index.html", lang),
@@ -229,15 +230,26 @@ class Source:
         other_url = settings.get("other_url") or url_of(key, "en" if lang == "es" else "es")
         values["lang_switch"] = self.fill("lang-" + lang, {"other_url": other_url})
         for cat in CATS:
-            label = t["cat_" + cat]
-            items = "".join(self.fill("flyout-item", {"href": h, "name": n.strip()}) for h, n in self.catalog[lang][cat])
-            values["flyout_" + cat] = self.fill("flyout", {"cat": cat, "label": label, "items": items})
+            values["flyout_" + cat] = self.flyout(lang, cat)
         # the search snippets use {{search}} as a string too: fill the header once the snippet is in
         out = self.fill("header", {**values, "search": "\x00SEARCH\x00"}).replace("\x00SEARCH\x00", values["search"])
         if not flyouts:
             out = "\n".join(line for line in out.split("\n") if 'class="menu-flyout"' not in line)
             out = re.sub(r' data-flyout="menuFlyout-\w+"', "", out)
+        elif settings.get("translated_flyouts"):
+            # The other language's flyouts, inert in a <template> before </header> (the 404 page's script swaps them in).
+            other = settings["translated_flyouts"]
+            panels = "\n".join(self.flyout(other, cat) for cat in CATS)
+            template = self.fill("flyouts-translated", {"lang": other, "flyouts": panels})
+            end = "\n  </nav>\n</header>\n"
+            assert out.count(end) == 1, "the header template no longer ends with </nav></header>"
+            out = out.replace(end, "\n  </nav>\n" + template + "\n</header>\n")
         return out + "\n"
+
+    def flyout(self, lang, cat):
+        """One category's flyout panel, listing the /tools cards of that language."""
+        items = "".join(self.fill("flyout-item", {"href": h, "name": n.strip()}) for h, n in self.catalog[lang][cat])
+        return self.fill("flyout", {"cat": cat, "label": self.strings[lang]["cat_" + cat], "items": items})
 
     def region(self, kind, rel):
         if kind == "css":
