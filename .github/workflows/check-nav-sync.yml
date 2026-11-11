@@ -1,0 +1,22 @@
+name: Verify generated site menu
+
+on:
+  push:
+    branches: [main, orisod-2]
+  pull_request:
+    branches: [main, orisod-2]
+
+permissions:
+  contents: read
+
+jobs:
+  check-nav-sync:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Check every generated menu matches assets/nav and the /tools cards
+        run: python3 scripts/check_nav_sync.py
+
+      - name: Check the menu check still fails when it should
+        run: python3 scripts/test_check_nav_sync.py
