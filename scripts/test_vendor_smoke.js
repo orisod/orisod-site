@@ -1591,6 +1591,78 @@ function expectOneDiagram(svgs, snapImgs, width, prefix = "wa-flow") {
   expect(shown[0].cls === (width < 640 ? `${prefix}-stacked` : `${prefix}-wide`), `at ${width}px the ${shown[0].cls} diagram is shown`);
 }
 
+// Orisod 2.0 step 3: the nav's Lucide icons and the theme button. The button holds a moon and a sun, and CSS shows
+// the moon in dark theme and the sun in light (as the emoji did); clicking switches the theme and saves it in
+// localStorage. Reads the state, clicks twice with a reload in between, and checks the sizes and icon contrast.
+async function themeToggleCheck(page, lang) {
+  const label = lang === "es" ? "Cambiar entre tema claro y oscuro" : "Toggle light/dark theme";
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.evaluate(() => { try { localStorage.removeItem("orisod-theme"); } catch (e) {} });
+  await page.reload({ waitUntil: "load" });
+  const read = () => page.evaluate(() => {
+    const btn = document.getElementById("themeToggle");
+    const shown = (sel) => { const s = btn.querySelector(sel); if (!s) return null; const r = s.getBoundingClientRect(); return getComputedStyle(s).display !== "none" && r.width > 0 ? [Math.round(r.width), Math.round(r.height)] : false; };
+    let saved = null;
+    try { saved = localStorage.getItem("orisod-theme"); } catch (e) {}
+    const parse = (s) => { const m = s.match(/rgba?\(([^)]+)\)/); const p = m[1].split(/[ ,/]+/).filter(Boolean).map(Number); return { r: p[0], g: p[1], b: p[2], a: p.length > 3 ? p[3] : 1 }; };
+    const over = (t, b) => ({ r: t.r * t.a + b.r * (1 - t.a), g: t.g * t.a + b.g * (1 - t.a), b: t.b * t.a + b.b * (1 - t.a), a: 1 });
+    const bgOf = (el) => { const layers = []; for (let e = el; e; e = e.parentElement) { const c = parse(getComputedStyle(e).backgroundColor); if (c.a > 0) { layers.push(c); if (c.a >= 1) break; } } let acc = { r: 255, g: 255, b: 255, a: 1 }; for (const l of layers.reverse()) acc = over(l, acc); return acc; };
+    const lum = (c) => { const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }; return 0.2126 * f(c.r) + 0.7152 * f(c.g) + 0.0722 * f(c.b); };
+    const ratio = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
+    // the icon-only buttons in the bar: every visible icon, its size, its button's size and its contrast
+    const icons = [...document.querySelectorAll(".site-nav > .nav-icons svg")].filter((s) => s.getBoundingClientRect().width > 0).map((s) => {
+      const host = s.closest("a, button"), r = s.getBoundingClientRect(), h = host.getBoundingClientRect(), bg = bgOf(host);
+      return { host: host.id || host.className, size: [Math.round(r.width), Math.round(r.height)], box: [Math.round(h.width), Math.round(h.height)],
+        contrast: Math.round(ratio(over(parse(getComputedStyle(s).color), bg), bg) * 100) / 100, lucide: s.getAttribute("aria-hidden") === "true" && s.getAttribute("viewBox") === "0 0 24 24" };
+    });
+    return { theme: document.documentElement.getAttribute("data-theme") || "dark", saved, moon: shown(".theme-icon-moon"), sun: shown(".theme-icon-sun"),
+      text: btn.textContent.trim(), label: btn.getAttribute("aria-label"), icons, navHeight: Math.round(document.querySelector(".site-nav").getBoundingClientRect().height) };
+  });
+  const start = await read();
+  await page.click("#themeToggle");
+  await page.waitForTimeout(400); // the nav's colour transitions (0.2 s) end before measuring
+  const light = await read();
+  await page.reload({ waitUntil: "load" });
+  const reloaded = await read();
+  await page.click("#themeToggle");
+  await page.waitForTimeout(400); // the nav's colour transitions (0.2 s) end before measuring
+  const dark = await read();
+  await page.click("#navMenuBtn");
+  const menuIcons = await page.evaluate(() => [...document.querySelectorAll("#navMenu > a.menu-item .icon-box svg")].map((s) => {
+    const r = s.getBoundingClientRect(), b = s.parentElement.getBoundingClientRect();
+    return [Math.round(r.width), Math.round(r.height), Math.round(b.width), Math.round(b.height)];
+  }));
+  const expectTheme = (s) => {
+    const { start, light, reloaded, dark, menuIcons } = s;
+    expect(start.theme === "dark" && start.moon && start.sun === false, `dark theme shows the moon only: ${JSON.stringify({ moon: start.moon, sun: start.sun })}`);
+    expect(light.theme === "light" && light.saved === "light" && light.sun && light.moon === false, `after a click, light theme shows the sun only and is saved: ${JSON.stringify(light)}`);
+    expect(reloaded.theme === "light" && reloaded.sun && reloaded.moon === false, `light theme kept after a reload: ${JSON.stringify(reloaded)}`);
+    expect(dark.theme === "dark" && dark.saved === "dark" && dark.moon && dark.sun === false, `a second click goes back to dark: ${JSON.stringify(dark)}`);
+    for (const st of [start, light, reloaded, dark]) {
+      expect(st.label === label, `the theme button's aria-label is "${st.label}"`);
+      expect(st.text === "", `the theme button has text "${st.text}" (an emoji?)`);
+      expect([st.moon, st.sun].some((x) => x && x[0] === 18 && x[1] === 18), `the theme icon isn't 18x18 px: ${JSON.stringify([st.moon, st.sun])}`);
+      for (const i of st.icons) {
+        expect(i.lucide && i.size.join() === "18,18" && i.box.join() === "36,36", `${i.host}: icon ${i.size} in a ${i.box} button (want 18x18 in 36x36)`);
+        expect(i.contrast >= 3, `${i.host}: icon contrast ${i.contrast}:1 in ${st.theme} theme (want 3:1 or more)`);
+      }
+      expect(st.icons.length === 4, `${st.icons.length} icons shown in the nav bar (want 4: support, search, theme, menu)`);
+      expect(st.navHeight === 65, `the nav bar is ${st.navHeight} px tall at 1280 px (want 65)`);
+    }
+    expect(menuIcons.length === 5 && menuIcons.every((m) => m.join() === "16,16,30,30"), `menu icons: ${JSON.stringify(menuIcons)} (want 16x16 in 30x30 boxes)`);
+  };
+  const s = { start, light, reloaded, dark, menuIcons };
+  expectTheme(s);
+  const lo = Math.min(...[start, light].flatMap((x) => x.icons.map((i) => i.contrast)));
+  return `dark shows the moon, a click gives light with the sun (saved, kept after a reload), a second click dark again; aria-label "${label}" throughout, no emoji; ` +
+    `the 4 nav icons are Lucide, 18 px in 36 px buttons, contrast ${lo}:1 or more in both themes; the menu's 5 icons 16 px in their boxes; ` +
+    [mustFail("both icons shown", () => expectTheme({ ...s, start: { ...start, sun: [18, 18] } })),
+      mustFail("the theme not kept", () => expectTheme({ ...s, reloaded: { ...reloaded, theme: "dark" } })),
+      mustFail("an emoji back in the button", () => expectTheme({ ...s, dark: { ...dark, text: "\u{1F319}" } })),
+      mustFail("a bigger icon", () => expectTheme({ ...s, light: { ...light, icons: light.icons.map((i, n) => (n ? i : { ...i, size: [24, 24] })) } })),
+      mustFail("a faint icon", () => expectTheme({ ...s, light: { ...light, icons: light.icons.map((i, n) => (n ? i : { ...i, contrast: 2.1 })) } }))].join("; ");
+}
+
 const CASES = [
   {
     name: "spark-md5",
@@ -3165,6 +3237,20 @@ const CASES = [
         [mustFail("a page with a stale list", () => expectSame(home, [...others, ["x", { ...home, flyouts: home.flyouts.slice(0, 2) }]], cards)),
           mustFail("a list out of /tools order", () => expectSame(home, others, cards.map((c) => [...c].reverse())))].join("; ");
     },
+  },
+  {
+    // Orisod 2.0 step 3: Lucide icons in the nav and the theme button's moon and sun (themeToggleCheck).
+    name: "Site menu icons and theme button (Lucide)",
+    page: "/compress-image/",
+    vendor: [],
+    run: (page, lang) => themeToggleCheck(page, lang),
+  },
+  {
+    name: "Site menu icons and theme button on the 404 page (Lucide)",
+    page: "/ci-smoke-missing-page/",
+    missing: true, // the page itself answers 404, like GitHub Pages; the browser's 404 line for it is expected
+    vendor: [],
+    run: (page, lang) => themeToggleCheck(page, lang),
   },
   {
     // The 404 page (one English file, translated in place on /es/ URLs) has the same flyouts as every other page:
