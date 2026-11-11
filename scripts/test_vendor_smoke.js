@@ -3026,6 +3026,146 @@ const CASES = [
     },
   },
   {
+    // Orisod 2.0 generated menu (scripts/sync_nav.py): a tool page now has the homepage's category flyouts, as
+    // static HTML from the /tools cards. On a desktop, hovering a category opens its panel to the left of the menu.
+    name: "Site menu flyouts (hover on a tool page, desktop)",
+    page: WA,
+    vendor: [LIBPHONE, QRJS],
+    async run(page) {
+      await page.setViewportSize({ width: 1280, height: 900 });
+      await page.click("#navMenuBtn");
+      const state = () => page.evaluate(() => {
+        const menu = document.getElementById("navMenu").getBoundingClientRect();
+        return ["image", "pdf", "utility"].map((cat) => {
+          const fly = document.getElementById("menuFlyout-" + cat), item = document.querySelector(`#navMenu a.menu-item[data-flyout="menuFlyout-${cat}"]`);
+          const r = fly.getBoundingClientRect();
+          return { cat, open: !fly.hidden && getComputedStyle(fly).display !== "none", expanded: item.getAttribute("aria-expanded"),
+            links: fly.querySelectorAll("li a").length, leftOfMenu: r.right <= menu.left + 1, twoCol: fly.classList.contains("two-col") };
+        });
+      });
+      await page.hover('#navMenu a.menu-item[data-flyout="menuFlyout-image"]');
+      const image = await state();
+      await page.hover('#navMenu a.menu-item[data-flyout="menuFlyout-pdf"]');
+      await page.waitForTimeout(250); // switching waits 150 ms, so a diagonal move toward the open panel doesn't switch it
+      const pdf = await state();
+      const box = await page.locator("#menuFlyout-pdf li a").first().boundingBox();
+      await page.mouse.move(box.x + 5, box.y + 5, { steps: 4 });
+      await page.waitForTimeout(300);
+      const inside = await state();
+      await page.mouse.move(5, 880, { steps: 4 });
+      await page.waitForTimeout(400); // closes 200 ms after the pointer leaves both
+      const away = await state();
+      const expectOnly = (s, cat, label) => {
+        for (const f of s) {
+          expect(f.open === (f.cat === cat), `${label}: the ${f.cat} flyout is ${f.open ? "open" : "closed"}`);
+          expect(f.expanded === String(f.cat === cat), `${label}: the ${f.cat} link has aria-expanded=${f.expanded}`);
+        }
+        const o = s.find((f) => f.cat === cat);
+        if (o) expect(o.links > 0 && o.leftOfMenu, `${label}: the ${cat} panel lists ${o.links} tools, left of the menu: ${o.leftOfMenu}`);
+      };
+      expectOnly(image, "image", "hovering Image Tools");
+      expectOnly(pdf, "pdf", "hovering PDF Tools");
+      expectOnly(inside, "pdf", "moving into the PDF panel");
+      expectOnly(away, null, "moving away");
+      return `hovering Image Tools opens its panel (${image[0].links} tools, left of the menu${image[0].twoCol ? ", two columns" : ""}), PDF Tools switches to its own, the panel stays open while the pointer is in it and closes after it leaves; ` +
+        mustFail("a panel that didn't open", () => expectOnly(image.map((f) => ({ ...f, open: false })), "image", "test"));
+    },
+  },
+  {
+    // Below 600 px there are no panels: the categories stay plain links to /tools/#category.
+    name: "Site menu flyouts (none on a phone)",
+    page: WA,
+    vendor: [LIBPHONE, QRJS],
+    async run(page) {
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.reload({ waitUntil: "load" });
+      await page.click("#navMenuBtn");
+      await page.hover('#navMenu a.menu-item[data-flyout="menuFlyout-image"]');
+      await page.focus('#navMenu a.menu-item[data-flyout="menuFlyout-pdf"]');
+      await page.waitForTimeout(300);
+      const s = await page.evaluate(() => ["image", "pdf", "utility"].map((cat) => {
+        const fly = document.getElementById("menuFlyout-" + cat), item = document.querySelector(`#navMenu a.menu-item[data-flyout="menuFlyout-${cat}"]`);
+        return { cat, visible: getComputedStyle(fly).display !== "none" && fly.getBoundingClientRect().width > 0,
+          aria: item.hasAttribute("aria-expanded") || item.hasAttribute("aria-controls"), href: item.getAttribute("href") };
+      }));
+      const expectNone = (s) => {
+        for (const f of s) {
+          expect(!f.visible, `the ${f.cat} panel shows at 390 px`);
+          expect(!f.aria, `the ${f.cat} link carries aria-expanded or aria-controls at 390 px`);
+          expect(f.href.endsWith("/tools/#" + f.cat), `the ${f.cat} link goes to ${f.href}`);
+        }
+      };
+      expectNone(s);
+      return "at 390 px hovering or focusing a category opens no panel, the links have no aria-expanded/aria-controls and go to /tools/#category; " +
+        mustFail("a panel showing on a phone", () => expectNone(s.map((f, i) => ({ ...f, visible: i === 1 }))));
+    },
+  },
+  {
+    // Keyboard: focusing a category opens its panel, Tab reaches its links, Escape closes the panel, then the menu.
+    name: "Site menu flyouts (keyboard)",
+    page: "/blog/what-is-exif-data/",
+    vendor: [],
+    async run(page) {
+      await page.setViewportSize({ width: 1280, height: 900 });
+      await page.focus("#navMenuBtn");
+      await page.keyboard.press("Enter");
+      const where = () => page.evaluate(() => {
+        const a = document.activeElement, fly = a && a.closest(".menu-flyout");
+        return { id: a && a.id, text: a ? a.textContent.trim() : "", flyout: a ? a.getAttribute("data-flyout") : null, inFlyout: fly ? fly.id : null,
+          open: [...document.querySelectorAll(".menu-flyout")].filter((f) => !f.hidden).map((f) => f.id), menuOpen: !document.getElementById("navMenu").hidden };
+      });
+      const steps = [["opened", await where()]];
+      for (const key of ["Tab", "Tab", "Escape", "Escape"]) {
+        await page.keyboard.press(key);
+        await page.waitForTimeout(50);
+        steps.push([key, await where()]);
+      }
+      const expectSteps = (st) => {
+        const [opened, toImage, intoPanel, esc1, esc2] = st.map((x) => x[1]);
+        expect(opened.menuOpen && !opened.flyout && !opened.open.length, `opening the menu: ${JSON.stringify(opened)}`);
+        expect(toImage.flyout === "menuFlyout-image" && toImage.open.join() === "menuFlyout-image", `Tab to Image Tools: ${JSON.stringify(toImage)}`);
+        expect(intoPanel.inFlyout === "menuFlyout-image" && intoPanel.text, `Tab into the panel: ${JSON.stringify(intoPanel)}`);
+        expect(esc1.flyout === "menuFlyout-image" && !esc1.open.length && esc1.menuOpen, `first Escape: ${JSON.stringify(esc1)}`);
+        expect(esc2.id === "navMenuBtn" && !esc2.menuOpen, `second Escape: ${JSON.stringify(esc2)}`);
+      };
+      expectSteps(steps);
+      return `on a blog post, Tab from All Tools opens the Image Tools panel, the next Tab reaches its first link (${steps[2][1].text}), Escape closes the panel back to its category and a second Escape closes the menu; ` +
+        mustFail("Tab skipping the panel", () => expectSteps(steps.map(([k, s], i) => [k, i === 2 ? { ...s, inFlyout: null } : s])));
+    },
+  },
+  {
+    // One source: every pilot page's menu (links and flyout lists) equals the homepage's, and the lists equal the
+    // /tools cards in page order.
+    name: "Site menu matches the homepage menu (pilot pages)",
+    page: "/",
+    vendor: [],
+    async run(page, lang) {
+      const pre = lang === "es" ? "/es" : "";
+      const read = () => page.evaluate(() => ({
+        items: [...document.querySelectorAll("#navMenu > a.menu-item")].map((a) => [a.getAttribute("href"), a.textContent.trim(), a.getAttribute("data-flyout")]),
+        flyouts: [...document.querySelectorAll("#navMenu .menu-flyout")].map((f) => ({ id: f.id, label: f.getAttribute("aria-label"),
+          items: [...f.querySelectorAll("li a")].map((a) => [a.getAttribute("href"), a.textContent]) })),
+      }));
+      const home = await read();
+      const others = [];
+      for (const p of ["/whatsapp-link-generator/", "/blog/send-whatsapp-without-saving-contact/", "/blog/what-is-exif-data/", "/tools/"]) {
+        await page.goto(SITE + pre + p, { waitUntil: "load" });
+        others.push([pre + p, await read()]);
+      }
+      const cards = await page.evaluate(() => ["image", "pdf", "utility"].map((cat) =>
+        [...document.querySelectorAll(`#${cat} a.tool-card`)].map((a) => [a.getAttribute("href"), a.querySelector(".tool-card-title").textContent])));
+      const expectSame = (home, others, cards) => {
+        expect(home.flyouts.length === 3 && home.flyouts.every((f) => f.items.length), `the homepage has ${home.flyouts.length} flyouts`);
+        for (const [p, m] of others) expect(JSON.stringify(m) === JSON.stringify(home), `${p}'s menu differs from the homepage's`);
+        home.flyouts.forEach((f, i) => expect(JSON.stringify(f.items) === JSON.stringify(cards[i]), `the ${f.id} list isn't the /tools cards in order`));
+      };
+      expectSame(home, others, cards);
+      return `the menu links and the ${home.flyouts.map((f) => `${f.label} (${f.items.length})`).join(", ")} flyouts are the same on the homepage, the tool page, its guide, a blog post and /tools, and equal the /tools cards in order; ` +
+        [mustFail("a page with a stale list", () => expectSame(home, [...others, ["x", { ...home, flyouts: home.flyouts.slice(0, 2) }]], cards)),
+          mustFail("a list out of /tools order", () => expectSame(home, others, cards.map((c) => [...c].reverse())))].join("; ");
+    },
+  },
+  {
     name: "WhatsApp link generator (minimal layout, collapsed block)",
     page: WA,
     vendor: [LIBPHONE, QRJS],
@@ -3348,9 +3488,12 @@ const CASES = [
       await page.waitForTimeout(WA_HOVER_CLOSE + 200);
       const between = await waMenu(page);
       expectMenu(between, true, "pointer moved between the summary and the icons");
+      // Measure the way back first: waMouseTo()'s own round trips (scroll into view, measure) after the leave
+      // used to stretch the 50 ms leave past the 150 ms close delay on a busy machine, closing the list.
+      const back = await waCentre(page, '#shareList a[data-share="x"]');
       await page.mouse.move(5, 5);
       await page.waitForTimeout(WA_HOVER_CLOSE / 3);
-      await waMouseTo(page, '#shareList a[data-share="x"]');
+      await page.mouse.move(back[0], back[1], { steps: 3 });
       await page.waitForTimeout(WA_HOVER_CLOSE + 200);
       const shortLeave = await waMenu(page);
       expectMenu(shortLeave, true, `a ${Math.round(WA_HOVER_CLOSE / 3)} ms leave, back on an icon`);
