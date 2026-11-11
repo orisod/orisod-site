@@ -6,9 +6,11 @@ tiny /tools catalogs (EN and ES) and a few pages that carry the three site-nav
 regions, checks that check_nav_sync.py passes on it, then breaks it one way at a
 time and checks that it fails with the expected message. Then it checks that
 sync_nav.py --write repairs stale regions without touching a byte outside them
-(CRLF kept) and leaves pages without markers alone, and that --add adopts a real
-hand-copied page (compress-image) changing nothing but its nav, and refuses one
-whose header isn't the standard copy. Run after changing either script:
+(CRLF kept) and leaves pages without markers alone, and that --add, given real
+pages (Compress Image, a Spanish page with the old theme label, the 404 page)
+turned back into their hand-copied nav (scripts/fixtures/nav-initiative-2.*),
+gives back exactly the pages in this checkout, and refuses a page whose header
+isn't the standard copy. Run after changing either script:
 
   python scripts/test_check_nav_sync.py   (CI: check-nav-sync)
 """
@@ -125,8 +127,14 @@ CASES = [
      "out of date: a-tool/index.html"),
     ("the CSS source edited without syncing", {"broken_sources": {"assets/nav/site-nav.css": SRC_CSS + ".new{}" + NL}},
      "2 out of date"),
-    ("the script source edited without syncing", {"broken_sources": {"assets/nav/site-nav.js": SRC_JS + "// new" + NL}},
+    ("the script source edited without syncing", {"broken_sources": {"assets/nav/site-nav.js": SRC_JS + "var added = 1;" + NL}},
      "2 out of date"),
+    # Comments stay in the sources and are stripped from the copies, so editing one changes no page.
+    ("only a comment edited in the sources", {"broken_sources": {"assets/nav/site-nav.js": SRC_JS + "// a new note" + NL,
+                                                                "assets/nav/site-nav.css": SRC_CSS + "/* a new note */" + NL}},
+     None),
+    ("a script comment after code", {"broken_sources": {"assets/nav/site-nav.js": SRC_JS + "var added = 1; // why" + NL}},
+     "has a comment after code"),
     ("a page with only the header and script regions", {"pages": {"x/index.html": page(css=False)}},
      "x/index.html: has only the html, js site-nav region(s)"),
     ("a page with two header regions", {"pages": {"x/index.html": page(body="<main>t</main>" + NL + sn.HTML_START + NL + sn.HTML_END)}},
@@ -152,8 +160,10 @@ CASES = [
      "no tool cards found in the image section"),
     ("a homepage whose search box isn't on the page", {"pages": {"index.html": page()}},
      "index.html: its search icon targets #homeSearch, which isn't on the page"),
-    ("the generated menu on 404.html", {"pages": {"404.html": page()}},
-     "404.html can't carry the generated menu yet"),
+    ("a 404 page whose menu was given flyouts by hand", {"pages": {"404.html": lambda path: (path.parent / "a-tool/index.html").read_bytes().decode("utf-8")}},
+     "out of date: 404.html"),
+    ("a Spanish copy of the 404 page", {"pages": {"es/404.html": page()}},
+     "there is no es/404.html"),
 ]
 
 
@@ -195,33 +205,53 @@ def write_mode_checks():
             bad.append("--write didn't keep the CRLF page's line endings")
         if (root / "plain/index.html").read_bytes().decode("utf-8") != before["plain/index.html"]:
             bad.append("--write touched a page without markers")
-        # --add on a real hand-copied page: only its nav may change.
-        real = (REPO / "compress-image/index.html").read_bytes().decode("utf-8")
-        if sn.HTML_START in real:
-            return bad  # already adopted in this checkout: nothing left to prove on it
-        (root / "compress-image").mkdir()
-        (root / "compress-image/index.html").write_bytes(real.encode("utf-8"))
-        r = sync(root, "--write", "--add", "compress-image/index.html")
-        now = (root / "compress-image/index.html").read_bytes().decode("utf-8")
-        if r.returncode != 0 or sn.HTML_START not in now:
-            bad.append("--add didn't adopt compress-image: " + r.stdout)
-        else:
-            t = sn.lf(real)
-            i = t.find(sn.OLD_CSS_BANNER)
-            a = t.rfind("/* ====", 0, i)
-            b = min(x for x in (t.find("/* Breadcrumbs (Initiative 2)", a), t.find("</style>", a)) if x > 0)
-            hs = t.find('<header class="site-nav">')
-            he = sn.HEIGHT_SCRIPT.match(t, t.find("</header>", hs) + len("</header>") + 1).end() + 1
-            js = sn.OLD_JS.search(t)
-            old = t
-            for s, e in sorted([(a, b), (hs, he), (js.start(), js.end() + 1)], reverse=True):
-                old = old[:s] + old[e:]
-            if strip_regions(sn.lf(now)) != old:
-                bad.append("--add changed compress-image outside the three nav pieces it replaces")
-            if subprocess.run([sys.executable, str(CHECK), "--root", d], capture_output=True).returncode != 0:
-                bad.append("check_nav_sync failed right after --add")
+        # --add on real pages turned back into their hand-copied nav (the "Minimal nav (Initiative 2)" CSS block and
+        # script saved in scripts/fixtures, and the header without flyouts): adopting them must give back exactly
+        # the page in this checkout, so nothing but the nav changes. The Spanish page gets the old theme label,
+        # which --add accepts and replaces (OLD_STRINGS).
+        legacy_css = sn.lf((HERE / "fixtures/nav-initiative-2.css").read_bytes().decode("utf-8"))
+        legacy_js = sn.lf((HERE / "fixtures/nav-initiative-2.js.txt").read_bytes().decode("utf-8"))
+        if sn.sha(legacy_css) != sn.ADOPT_CSS_SHA256 or sn.sha(legacy_js.rstrip(NL)) != sn.ADOPT_JS_SHA256:
+            bad.append("scripts/fixtures/nav-initiative-2.* no longer match ADOPT_CSS_SHA256 / ADOPT_JS_SHA256")
+        source = sn.Source(REPO)
+    with tempfile.TemporaryDirectory() as d:
+        root = Path(d)
+        for rel in SOURCES + tuple(sn.CATALOG.values()):
+            (root / rel).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(REPO / rel, root / rel)
+        real = {}
+        for rel in ("compress-image/index.html", "es/json-formatter/index.html", "404.html"):
+            current = (REPO / rel).read_bytes().decode("utf-8")
+            real[rel] = current
+            t = sn.lf(current)
+            header = source.header(rel, flyouts=False)
+            if rel.startswith("es/"):
+                header = header.replace('aria-label="' + source.strings["es"]["theme"] + '"', 'aria-label="Cambiar tema claro/oscuro"')
+            for (kind, start, end), old in zip(sn.REGIONS, (legacy_css, header, legacy_js)):
+                a, b = t.index(start), t.index(end) + len(end) + 1
+                t = t[:a] + old + t[b:]
+            (root / rel).parent.mkdir(parents=True, exist_ok=True)
+            (root / rel).write_bytes(t.replace(NL, sn.newline_of(current)).encode("utf-8"))
+        r = sync(root, "--write", "--add", *real)
+        for rel, current in real.items():
+            if (root / rel).read_bytes().decode("utf-8") != current:
+                bad.append(f"--add of {rel}'s hand-copied nav didn't give back exactly the page in this checkout: " + r.stdout[-500:])
+        if r.returncode != 0:
+            bad.append("--add failed: " + r.stdout[-500:])
+        elif subprocess.run([sys.executable, str(CHECK), "--root", d], capture_output=True).returncode != 0:
+            bad.append("check_nav_sync failed right after --add")
+        nf = real["404.html"]
+        nf_header = nf[nf.index(sn.HTML_START):nf.index(sn.HTML_END)]
+        if "menu-flyout" in nf_header or "data-flyout" in nf_header or 'href="/tools/#image"' not in nf_header:
+            bad.append("the 404 page's generated menu has flyouts")
         # A page whose header isn't the standard copy is refused, and left alone.
-        odd = real.replace('aria-label="Toggle light/dark theme"', 'aria-label="Switch theme"')
+        odd = sn.lf((root / "compress-image/index.html").read_bytes().decode("utf-8"))
+        a, b = odd.index(sn.HTML_START), odd.index(sn.HTML_END) + len(sn.HTML_END)
+        odd = odd[:a] + source.header("odd/index.html", flyouts=False).replace('aria-label="Toggle light/dark theme"', 'aria-label="Switch theme"').rstrip(NL) + odd[b:]
+        a, b = odd.index(sn.CSS_START), odd.index(sn.CSS_END) + len(sn.CSS_END) + 1
+        odd = odd[:a] + legacy_css + odd[b:]
+        a, b = odd.index(sn.JS_START), odd.index(sn.JS_END) + len(sn.JS_END) + 1
+        odd = odd[:a] + legacy_js + odd[b:]
         (root / "odd").mkdir()
         (root / "odd/index.html").write_bytes(odd.encode("utf-8"))
         r = sync(root, "--write", "--add", "odd/index.html")

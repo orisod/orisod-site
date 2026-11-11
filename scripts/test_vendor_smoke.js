@@ -3134,9 +3134,9 @@ const CASES = [
     },
   },
   {
-    // One source: every pilot page's menu (links and flyout lists) equals the homepage's, and the lists equal the
-    // /tools cards in page order.
-    name: "Site menu matches the homepage menu (pilot pages)",
+    // One source: the menu (links and flyout lists) of a page of every kind equals the homepage's, and the lists
+    // equal the /tools cards in page order.
+    name: "Site menu matches the homepage menu (every kind of page)",
     page: "/",
     vendor: [],
     async run(page, lang) {
@@ -3148,7 +3148,8 @@ const CASES = [
       }));
       const home = await read();
       const others = [];
-      for (const p of ["/whatsapp-link-generator/", "/blog/send-whatsapp-without-saving-contact/", "/blog/what-is-exif-data/", "/tools/"]) {
+      for (const p of ["/whatsapp-link-generator/", "/blog/send-whatsapp-without-saving-contact/", "/blog/what-is-exif-data/",
+        "/compress-image/", "/json-formatter/", "/blog/format-json/", "/blog/", "/about/", "/privacy/", "/support/", "/tools/"]) {
         await page.goto(SITE + pre + p, { waitUntil: "load" });
         others.push([pre + p, await read()]);
       }
@@ -3160,9 +3161,42 @@ const CASES = [
         home.flyouts.forEach((f, i) => expect(JSON.stringify(f.items) === JSON.stringify(cards[i]), `the ${f.id} list isn't the /tools cards in order`));
       };
       expectSame(home, others, cards);
-      return `the menu links and the ${home.flyouts.map((f) => `${f.label} (${f.items.length})`).join(", ")} flyouts are the same on the homepage, the tool page, its guide, a blog post and /tools, and equal the /tools cards in order; ` +
+      return `the menu links and the ${home.flyouts.map((f) => `${f.label} (${f.items.length})`).join(", ")} flyouts are the same on the homepage and ${others.length} other pages (tool pages, guides and posts, /tools, the blog index, About, Privacy, Support), and equal the /tools cards in order; ` +
         [mustFail("a page with a stale list", () => expectSame(home, [...others, ["x", { ...home, flyouts: home.flyouts.slice(0, 2) }]], cards)),
           mustFail("a list out of /tools order", () => expectSame(home, others, cards.map((c) => [...c].reverse())))].join("; ");
+    },
+  },
+  {
+    // The 404 page (one English file, translated in place on /es/ URLs) has the generated menu without flyouts:
+    // hovering or focusing a category at desktop width opens nothing, and the links go to /tools/#category.
+    name: "Site menu on the 404 page (no flyouts)",
+    page: "/ci-smoke-missing-page/",
+    missing: true, // the page itself answers 404, like GitHub Pages; the browser's 404 line for it is expected
+    vendor: [],
+    async run(page, lang) {
+      await page.setViewportSize({ width: 1280, height: 900 });
+      await page.click("#navMenuBtn");
+      await page.hover('#navMenu a.menu-item[href$="#image"]');
+      await page.focus('#navMenu a.menu-item[href$="#pdf"]');
+      await page.waitForTimeout(400);
+      const m = await page.evaluate(() => ({
+        flyouts: document.querySelectorAll(".menu-flyout, [data-flyout]").length,
+        expanded: document.querySelectorAll("#navMenu [aria-expanded]").length,
+        cats: [...document.querySelectorAll("#navMenu > a.menu-item")].map((a) => [a.getAttribute("href"), a.textContent.trim()]),
+        menuLabel: document.getElementById("navMenu").getAttribute("aria-label"),
+        heading: document.querySelector("h1").textContent.trim(),
+      }));
+      const t = lang === "es" ? { pre: "/es", label: "Menú del sitio", image: "Herramientas de imagen" } : { pre: "", label: "Site menu", image: "Image Tools" };
+      const expectPlain = (m) => {
+        expect(!m.flyouts && !m.expanded, `the 404 menu has ${m.flyouts} flyout element(s) and ${m.expanded} aria-expanded item(s)`);
+        for (const cat of ["image", "pdf", "utility"])
+          expect(m.cats.some(([h]) => h === `${t.pre}/tools/#${cat}`), `no ${t.pre}/tools/#${cat} link in the 404 menu: ${JSON.stringify(m.cats)}`);
+        expect(m.menuLabel === t.label && m.cats.some(([, x]) => x === t.image), `the 404 menu isn't in the page's language: ${m.menuLabel}, ${JSON.stringify(m.cats)}`);
+      };
+      expectPlain(m);
+      return `"${m.heading}": the menu is the generated one without flyouts (hover and focus open nothing), its categories link to ${t.pre}/tools/#category, labels in ${lang === "es" ? "Spanish" : "English"}; ` +
+        [mustFail("a flyout on the 404 page", () => expectPlain({ ...m, flyouts: 1 })),
+          mustFail("an untranslated menu", () => expectPlain({ ...m, menuLabel: lang === "es" ? "Site menu" : "Menú del sitio" }))].join("; ");
     },
   },
   {
@@ -4447,6 +4481,7 @@ async function runCase(browser, c, lang) {
     if (m.type() === "warning") return seen.warnings.push(m.text() + where(src));
     // The browser's own line for the file a case answers with a 404 on purpose.
     if (c.broken && loc.url === SITE + c.broken(lang).path && /\b404\b/.test(m.text())) return;
+    if (c.missing && loc.url === SITE + path && /\b404\b/.test(m.text())) return;
     // A resource that failed to load is named, at the line of the page that asked for it.
     const named = !src && loc.url ? ` (${loc.url})` : "";
     seen.errors.push({ message: "console error: " + m.text() + named, src: named ? referenceIn(REPO_ROOT, SITE + path, loc.url) : src });

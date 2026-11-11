@@ -35,14 +35,20 @@ What the script works out per page:
   - the flyouts: one per category (image, pdf, utility), listing that section's
     cards on /tools in page order (sorted by name there, see check_nav.py). A tool
     reaches every menu by being added to /tools, then running --write.
+  - the 404 page (one English file; its own script translates the page, nav included,
+    on /es/ URLs): no flyouts, and its language switch goes to /es/
+
+The copies leave out the sources' comments (the CSS's /* */ comments and the script's
+whole-line // comments), which keeps every page about 5 KB lighter; the sources keep
+them. A script comment after code on the same line is refused, since it would be copied.
 
 --add adopts a page whose nav is the standard hand-copied one (the "Minimal nav
 (Initiative 2)" CSS block, the header plus its height script, and the "Minimal nav
-(Initiative 2)" script): it refuses unless each piece is exactly the known copy (the
-header must equal this script's own output for that page without flyouts), so an
-adoption never changes anything but the nav. The homepages and /tools were adopted
-by hand, since their old nav built the flyouts at runtime. 404.html isn't supported
-yet (its script translates the nav for /es/ URLs at runtime).
+(Initiative 2)" script), for instance a page that arrives from main: it refuses unless
+each piece is exactly the known copy (the header must equal this script's own output
+for that page without flyouts, older wordings in OLD_STRINGS aside), so an adoption
+never changes anything but the nav. The homepages and /tools were adopted by hand,
+since their old nav built the flyouts at runtime.
 
 check_nav_sync.py (CI: check-nav-sync) runs the --check comparison; --root DIR works
 on a copy of the site.
@@ -78,9 +84,16 @@ PAGE_SETTINGS = {
     "index.html": {"search_target": "homeSearch", "search_watch": ".search-box"},
     "tools/index.html": {"search_target": "toolSearch", "current": "tools"},
     "blog/index.html": {"current": "blog"},
+    # One English file for both languages (its script translates the page, nav included, on /es/ URLs), so its
+    # language switch goes to the Spanish homepage, and it has no flyouts (an owner decision, 2026-11-11): the
+    # category links stay plain links to /tools/#category. check_nav.py allows that only here.
+    "404.html": {"other_url": "/es/", "flyouts": False},
 }
 # Pages --add won't adopt (their old nav was special); they were migrated by hand.
-NOT_ADOPTABLE = {"index.html", "tools/index.html", "404.html"}
+NOT_ADOPTABLE = {"index.html", "tools/index.html"}
+# Older wordings of a string that --add accepts in a page's old header and replaces with the current one
+# (strings.json). The theme button's Spanish label was settled on 2026-11-11.
+OLD_STRINGS = {"es": {"theme": ["Cambiar tema claro/oscuro"]}}
 
 # The standard hand-copied pieces --add replaces (LF line endings), by sha256.
 ADOPT_CSS_SHA256 = "9ca7e1a03690bd5ddf3773b99a09e7c51d0e4e9da8928d4b19efe1d1a815b6f5"
@@ -114,6 +127,17 @@ def lf(text):
 
 def sha(text):
     return hashlib.sha256(lf(text).encode("utf-8")).hexdigest()
+
+
+def strip_css(text):
+    """The CSS as copied into pages: the source without its comments (they stay in the source file)."""
+    text = re.sub(r"/\*.*?\*/", "", text, flags=re.S)
+    return "".join(line.rstrip() + "\n" for line in text.split("\n") if line.strip())
+
+
+def strip_js(text):
+    """The script as copied into pages: the source without its whole-line // comments."""
+    return "".join(line.rstrip() + "\n" for line in text.split("\n") if line.strip() and not line.strip().startswith("//"))
 
 
 def newline_of(text):
@@ -155,6 +179,11 @@ class Source:
         for src, text in ((CSS_SOURCE, self.css), (JS_SOURCE, self.js)):
             if any(m in text for _, a, b in REGIONS for m in (a, b)):
                 self.problems.append(f"{src} contains a region marker itself")
+        if re.search(r"[^\s]\s*//|/\*", strip_js(self.js)):
+            self.problems.append(f"{JS_SOURCE} has a comment after code or a /* */ comment; only whole-line // comments "
+                                 "are stripped from the copies, so put comments on their own line")
+        # Pages get the sources without their comments (smaller pages); the source files keep them.
+        self.css, self.js = strip_css(self.css), strip_js(self.js)
         template = lf(read(root / TEMPLATE))
         parts = SECTION.split(template)
         self.sections = {parts[i]: parts[i + 1].rstrip("\n") for i in range(1, len(parts) - 1, 2)}
@@ -183,10 +212,11 @@ class Source:
         return PLACEHOLDER.sub(sub, self.sections[name])
 
     def header(self, rel, flyouts=True):
-        """The generated header region content (LF) for a page."""
+        """The generated header region content (LF) for a page (never with flyouts where PAGE_SETTINGS says so)."""
         lang, key = lang_of(rel), page_key(rel)
         t = dict(self.strings[lang])
         settings = PAGE_SETTINGS.get(key, {})
+        flyouts = flyouts and settings.get("flyouts", True)
         tools_url = url_of("tools/index.html", lang)
         values = {**t, "home_url": url_of("index.html", lang), "support_url": url_of("support/index.html", lang),
                   "tools_url": tools_url, "blog_url": url_of("blog/index.html", lang),
@@ -196,7 +226,8 @@ class Source:
                   "search_watch": f' data-search-watch="{settings["search_watch"]}"' if settings.get("search_watch") else ""}
         values["search"] = self.fill("search-target" if settings.get("search_target") else "search-form", values)
         values["search"] = values["search"].replace("{{search}}", t["search"])
-        values["lang_switch"] = self.fill("lang-" + lang, {"other_url": url_of(key, "en" if lang == "es" else "es")})
+        other_url = settings.get("other_url") or url_of(key, "en" if lang == "es" else "es")
+        values["lang_switch"] = self.fill("lang-" + lang, {"other_url": other_url})
         for cat in CATS:
             label = t["cat_" + cat]
             items = "".join(self.fill("flyout-item", {"href": h, "name": n.strip()}) for h, n in self.catalog[lang][cat])
@@ -275,8 +306,8 @@ def sync_text(text, rel, source):
         return None, problems, True
     if not found:
         return None, [], False
-    if rel == "404.html" or page_key(rel) == "404.html":
-        return None, ["404.html can't carry the generated menu yet (its script translates the nav for /es/ URLs)"], True
+    if rel.startswith("es/") and page_key(rel) == "404.html":
+        return None, ["the 404 page is one English file at the site root (it translates itself on /es/ URLs); there is no es/404.html"], True
     target = PAGE_SETTINGS.get(page_key(rel), {}).get("search_target")
     if target and f'id="{target}"' not in text:
         problems.append(f"its search icon targets #{target}, which isn't on the page")
@@ -315,6 +346,9 @@ def adopt(text, rel, source):
     if not sm:
         return None, "has no --site-nav-h script right after its header"
     old_header = header + sm.group(0) + "\n"
+    for key_name, olds in OLD_STRINGS.get(lang_of(rel), {}).items():
+        for old in olds:
+            old_header = old_header.replace(f'"{old}"', f'"{source.strings[lang_of(rel)][key_name]}"')
     if old_header != source.header(rel, flyouts=False):
         return None, "has a header that differs from the generated one (without flyouts); fix it or migrate it by hand"
     # 3. the nav script
