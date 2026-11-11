@@ -820,6 +820,8 @@ const XLSX_SQUARE = '□';
 const WA = "/whatsapp-link-generator/";
 const LIBPHONE = "/assets/vendor/libphonenumber-js/1.13.15/libphonenumber-max.js";
 const QRJS = "/assets/vendor/qrcodejs/1.0.0/qrcode.min.js";
+// Orisod 2.0: Inter's latin subset, loaded through the @font-face rules in assets/css/orisod.css.
+const INTER_LATIN = "/assets/vendor/inter/5.3.0/inter-latin-wght-normal.woff2";
 const FLAG = (code) => `/assets/vendor/circle-flags/2.8.3/${code}.svg`;
 const WA_QR_MAX = 2328;
 const WA_TEXT = {
@@ -2939,6 +2941,88 @@ const CASES = [
       expectNoneElsewhere(others);
       return `the United States shows "${WA_US_FALLBACK}" (wa.me/12025550123 when typed), the UK, Mexico, Argentina and Canada (also +1) show none; ` +
         mustFail("a US example under Canada", () => expectNoneElsewhere([...others, ["CA", WA_US_FALLBACK]]));
+    },
+  },
+  {
+    // Orisod 2.0 pilot: assets/css/orisod.css is copied into this page's <style> (scripts/sync_styles.py), and the
+    // page draws its text with Inter from assets/vendor through the --o-font-sans token.
+    name: "WhatsApp link generator (shared tokens, Inter)",
+    page: WA,
+    vendor: [LIBPHONE, QRJS, INTER_LATIN],
+    async run(page) {
+      await page.evaluate(() => document.fonts.ready);
+      const read = () => page.evaluate(() => {
+        const css = (el) => getComputedStyle(el).fontFamily;
+        const root = getComputedStyle(document.documentElement);
+        // The same text drawn with the token and with Arial: equal widths mean Inter never drew anything.
+        const probe = (family) => {
+          const s = document.createElement("span");
+          s.textContent = "Orisod WhatsApp link generator 0123456789";
+          s.style.cssText = `position:absolute;visibility:hidden;white-space:nowrap;font-size:32px;font-weight:700;font-family:${family}`;
+          document.body.append(s);
+          const w = s.getBoundingClientRect().width;
+          s.remove();
+          return w;
+        };
+        return {
+          fonts: { body: css(document.body), h1: css(document.querySelector("h1")), textarea: css(document.querySelector("textarea")),
+            button: css(document.querySelector("main button")) },
+          loaded: [...document.fonts].some((f) => f.family.replace(/"/g, "") === "Inter" && f.status === "loaded"),
+          width: { inter: probe("var(--o-font-sans)"), arial: probe("Arial") },
+          tokens: { bg: root.getPropertyValue("--o-bg").trim(), link: root.getPropertyValue("--o-link").trim(),
+            space: root.getPropertyValue("--o-space-5").trim(), base: root.getPropertyValue("--o-duration-base").trim(),
+            ease: root.getPropertyValue("--o-ease").trim() },
+          // The page's own variables are still its own (the tokens are additive for now).
+          own: { bg: root.getPropertyValue("--bg").trim(), card: root.getPropertyValue("--card-bg").trim() },
+        };
+      });
+      const dark = await read();
+      await page.evaluate(() => document.documentElement.setAttribute("data-theme", "light"));
+      const light = await read();
+      await page.evaluate(() => document.documentElement.removeAttribute("data-theme"));
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      const reduced = await read();
+      await page.emulateMedia({ reducedMotion: "no-preference" });
+      const expectInter = (s) => {
+        for (const [el, f] of Object.entries(s.fonts)) expect(/^"?Inter"?,/.test(f), `the ${el} font is ${f}, not Inter first`);
+        expect(s.loaded, "no Inter font face finished loading");
+        expect(Math.abs(s.width.inter - s.width.arial) > 4, `Inter and Arial draw the probe text at the same width (${s.width.inter} px), so Inter isn't drawing`);
+      };
+      const expectTokens = (d, l, r) => {
+        expect(d.tokens.bg === "#0b0f1a" && d.tokens.link === "#7aa7ff", `dark tokens are ${JSON.stringify(d.tokens)}`);
+        expect(l.tokens.bg === "#f5f7fb" && l.tokens.link === "#1d4ed8", `light tokens are ${JSON.stringify(l.tokens)}`);
+        expect(d.tokens.space === "24px" && d.tokens.base === "200ms" && d.tokens.ease === "cubic-bezier(.2,.8,.2,1)", `spacing and motion tokens are ${JSON.stringify(d.tokens)}`);
+        expect(r.tokens.base === "0ms", `under reduced motion --o-duration-base is ${r.tokens.base}, not 0ms`);
+        expect(d.own.bg === "#0b0f1a" && d.own.card === "#111827", `the page's own --bg/--card-bg changed to ${JSON.stringify(d.own)}`);
+      };
+      expectInter(dark);
+      expectInter(light);
+      expectTokens(dark, light, reduced);
+      return `body, H1, message box and buttons draw with Inter (loaded from /assets/vendor, ${Math.round(dark.width.inter)} px against Arial's ${Math.round(dark.width.arial)} px for the probe); ` +
+        `--o- tokens for dark, light and reduced motion, the page's own colour variables unchanged; ` +
+        [mustFail("an Arial body", () => expectInter({ ...dark, fonts: { ...dark.fonts, body: "Arial, Helvetica, sans-serif" } })),
+          mustFail("Inter never drawing", () => expectInter({ ...dark, width: { inter: 500, arial: 500 } })),
+          mustFail("light theme left on dark tokens", () => expectTokens(dark, dark, reduced)),
+          mustFail("motion not instant under reduced motion", () => expectTokens(dark, light, dark))].join("; ");
+    },
+  },
+  {
+    // Every page that hasn't adopted the shared stylesheet stays exactly as it was: no Inter request, no --o- tokens.
+    name: "Pages without the shared stylesheet (no Inter, no tokens)",
+    page: "/compress-image/",
+    vendor: [],
+    async run(page, lang, ctl) {
+      await page.waitForLoadState("networkidle");
+      const s = await page.evaluate(() => ({ font: getComputedStyle(document.body).fontFamily,
+        token: getComputedStyle(document.documentElement).getPropertyValue("--o-bg").trim() }));
+      const expectUntouched = (s, requests) => {
+        expect(!requests.some((u) => u.includes("/assets/vendor/inter/")), `Inter was requested: ${requests.filter((u) => u.includes("/inter/")).join(", ")}`);
+        expect(/^Arial,/.test(s.font), `the body font is ${s.font}`);
+        expect(!s.token, `--o-bg is set to ${s.token}`);
+      };
+      expectUntouched(s, ctl.requests);
+      return `Arial as before, no Inter request, no --o- tokens; ` +
+        mustFail("an Inter request", () => expectUntouched(s, [...ctl.requests, SITE + INTER_LATIN]));
     },
   },
   {
