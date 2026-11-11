@@ -1,0 +1,36 @@
+{
+  "en": {
+    "support": "Support Orisod",
+    "search": "Search tools",
+    "search_placeholder": "Search tools…",
+    "search_submit": "Search",
+    "theme": "Toggle light/dark theme",
+    "menu": "Menu",
+    "close_menu": "Close menu",
+    "site_menu": "Site menu",
+    "tools_label": "Tools",
+    "all_tools": "All Tools",
+    "cat_image": "Image Tools",
+    "cat_pdf": "PDF Tools",
+    "cat_utility": "Utility Tools",
+    "blog": "Blog",
+    "language": "Language"
+  },
+  "es": {
+    "support": "Apoyar a Orisod",
+    "search": "Buscar herramientas",
+    "search_placeholder": "Buscar herramientas…",
+    "search_submit": "Buscar",
+    "theme": "Cambiar entre tema claro y oscuro",
+    "menu": "Menú",
+    "close_menu": "Cerrar menú",
+    "site_menu": "Menú del sitio",
+    "tools_label": "Herramientas",
+    "all_tools": "Todas las herramientas",
+    "cat_image": "Herramientas de imagen",
+    "cat_pdf": "Herramientas PDF",
+    "cat_utility": "Utilidades",
+    "blog": "Blog",
+    "language": "Idioma"
+  }
+}

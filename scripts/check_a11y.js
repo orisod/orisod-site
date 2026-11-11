@@ -99,7 +99,10 @@ const OPEN_STATES = [
   ...MENU_OPEN_PATHS.map((path) => ({ path, open: "menu" })),
   ...MENU_OPEN_PATHS.filter((p) => !["/", "/es/", "/tools/", "/es/tools/"].includes(p)).map((path) => ({ path, open: "search" })),
   // The desktop category flyouts (homepages and /tools), opened with the PDF one showing.
-  ...["/", "/es/", "/tools/", "/es/tools/"].map((path) => ({ path, open: "flyout" })),
+  // Orisod 2.0: the generated menu also gives a tool page, its guide and a blog post the same flyouts.
+  ...["/", "/es/", "/tools/", "/es/tools/", "/whatsapp-link-generator/", "/es/whatsapp-link-generator/",
+    "/blog/send-whatsapp-without-saving-contact/", "/es/blog/send-whatsapp-without-saving-contact/",
+    "/blog/what-is-exif-data/", "/es/blog/what-is-exif-data/"].map((path) => ({ path, open: "flyout" })),
   // The minimal tool layout (WhatsApp link generator, the pilot): its collapsed "Help and details"
   // block opened, the country list opened, and the form filled in so the number notes, the "Add the 9"
   // button and the formatted preview show; its emoji picker opened on each of its six categories; and its

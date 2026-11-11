@@ -29,7 +29,7 @@ Page checks (on the selected pages):
                  scripts/sync_guide_links.py --write fixes it
   catalog        a new tool is on /tools and in the homepage TOOLS list; a new post is on the blog index
 Site checks: check_sitemap, check_jsonld, check_breadcrumbs, check_nav, check_copy, check_social,
-check_analytics, check_styles, and content_dates (fails if a sitemap or post date still needs `content_dates.py --write`).
+check_analytics, check_styles, check_nav_sync, and content_dates (fails if a sitemap or post date still needs `content_dates.py --write`).
 """
 
 import argparse
@@ -45,7 +45,7 @@ from sync_related_cards import card_diffs, catalog as sync_catalog  # noqa: E402
 from sync_guide_links import link_diffs  # noqa: E402
 
 SITE_CHECKS = ["check_sitemap.py", "check_jsonld.py", "check_breadcrumbs.py", "check_nav.py",
-               "check_copy.py", "check_social.py", "check_analytics.py", "check_styles.py"]
+               "check_copy.py", "check_social.py", "check_analytics.py", "check_styles.py", "check_nav_sync.py"]
 GUIDE_LINK = re.compile(r"(?:📖[^<]*)?(Read our guide:|Lee nuestra guía:)[^<]*<a href=\"([^\"]+)\"")
 WHY = re.compile(r"<h[23][^>]*>\s*(why (use )?orisod|por qu[ée] (usar )?orisod)", re.I)
 
