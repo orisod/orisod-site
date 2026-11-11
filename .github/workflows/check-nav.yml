@@ -17,3 +17,6 @@ jobs:
 
       - name: Check every page's nav is sticky and highlights correctly
         run: python3 scripts/check_nav.py
+
+      - name: Check the flyout rule still fails when it should
+        run: python3 scripts/test_check_nav.py
