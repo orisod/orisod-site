@@ -9,7 +9,8 @@ self-contained. A page that carries the generated menu has three marked regions:
   - in its <body>:           <!-- site-nav: start. ... --> ... <!-- site-nav: end -->
     the <header class="site-nav"> built from assets/nav/site-nav.html and
     assets/nav/strings.json, with the category flyouts listed from the /tools cards,
-    plus the one-line script that keeps --site-nav-h in step
+    plus the one-line script that keeps --site-nav-h in step; its icons are Lucide's,
+    written inline from the vendored SVGs (see ICONS below)
   - near the end of <body>:  <!-- site-nav.js: start. ... --> ... <!-- site-nav.js: end -->
     a <script> holding a copy of assets/nav/site-nav.js
 
@@ -52,6 +53,18 @@ for that page without flyouts, older wordings in OLD_STRINGS aside), so an adopt
 never changes anything but the nav. The homepages and /tools were adopted by hand,
 since their old nav built the flyouts at runtime.
 
+Icons (Orisod 2.0 step 3): the template names each icon as {{icon:NAME}} or
+{{icon:NAME CLASS}}, and this script writes it inline from the vendored Lucide file
+assets/vendor/lucide/<version>/icons/NAME.svg, the version being the "lucide" entry of
+assets/vendor/manifest.json. It drops the file's license comment, its class, width and
+height (the nav CSS sizes every icon), adds the class given and aria-hidden="true", and
+writes the shapes on one line. To change an icon, vendor it (check_vendor.py) and name it
+in the template; to update Lucide, vendor the new version's files and point the manifest
+entry at them. The theme button holds a moon and a sun, and site-nav.css shows the moon
+in dark theme and the sun in light, so no script draws it. --add still accepts the old
+hand-drawn icons and emoji (LEGACY_ICONS) and removes the old updateIcon() lines from
+the page's theme script (THEME_ICON_LINES).
+
 check_nav_sync.py (CI: check-nav-sync) runs the --check comparison; --root DIR works
 on a copy of the site.
 """
@@ -68,6 +81,9 @@ CSS_SOURCE = "assets/nav/site-nav.css"
 JS_SOURCE = "assets/nav/site-nav.js"
 TEMPLATE = "assets/nav/site-nav.html"
 STRINGS = "assets/nav/strings.json"
+MANIFEST = "assets/vendor/manifest.json"
+ICON_LIBRARY = "lucide"
+ICON_ATTRS = ("xmlns", "viewBox", "fill", "stroke", "stroke-width", "stroke-linecap", "stroke-linejoin")
 CATALOG = {"en": "tools/index.html", "es": "es/tools/index.html"}
 CATS = ("image", "pdf", "utility")
 NOT_PAGES = {".git", ".github", ".claude", "assets", "docs", "scripts", "audit", "node_modules", "prototypes", "claude"}
@@ -97,6 +113,39 @@ NOT_ADOPTABLE = {"index.html", "tools/index.html"}
 # (strings.json). The theme button's Spanish label was settled on 2026-11-11.
 OLD_STRINGS = {"es": {"theme": ["Cambiar tema claro/oscuro"]}}
 
+# The icons of the hand-copied nav --add replaces (before Lucide, 2026-11-11): each template placeholder and the
+# markup the old header had in its place.
+LEGACY_ICONS = {
+    '{{icon:heart}}':
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg>',
+    '{{icon:menu menu-icon-open}}':
+        '<svg class="menu-icon-open" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',
+    '{{icon:x menu-icon-close}}':
+        '<svg class="menu-icon-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+    '{{icon:layout-grid}}':
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>',
+    '{{icon:image}}':
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 2 18 17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="14" height="13" rx="1.5"/><circle cx="6" cy="8" r="1.2"/><path d="M2 15l3.5-3.5 2.5 2.5 3.5-4 3 3"/></svg>',
+    '{{icon:file-text}}':
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2h8l5 5v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M14 2v5h5"/></svg>',
+    '{{icon:wrench}}':
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3L5 8L11 8L11 3"/><path d="M8 8L17 19"/><path d="M15.5 20.5L18.5 17.5"/></svg>',
+    '{{icon:notebook-text}}':
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>',
+    '{{icon:search}}':
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>',
+    '{{icon:moon theme-icon-moon}}{{icon:sun theme-icon-sun}}':
+        '🌙',
+}
+# The page's own theme script drew the theme button's emoji; --add removes these lines (the button's icon is CSS now).
+THEME_ICON_LINES = [
+    "  function updateIcon(){",
+    "    btn.textContent = document.documentElement.getAttribute('data-theme')==='light' ? '\u2600\ufe0f' : '\U0001F319';",
+    "  }",
+    "  updateIcon();",
+    "    updateIcon();",
+]
+
 # The standard hand-copied pieces --add replaces (LF line endings), by sha256.
 ADOPT_CSS_SHA256 = "9ca7e1a03690bd5ddf3773b99a09e7c51d0e4e9da8928d4b19efe1d1a815b6f5"
 ADOPT_JS_SHA256 = "9170bdae9da592e762ac7c91730890f557380382d013f4266518aa29b3a17f19"
@@ -107,6 +156,8 @@ SCRIPT_OPEN = re.compile(r"<script\b[^>]*>", re.I)
 SCRIPT_CLOSE = re.compile(r"</script\s*>", re.I)
 SECTION = re.compile(r"^<!-- @([a-z-]+) -->\n", re.M)
 PLACEHOLDER = re.compile(r"\{\{([a-z_]+)\}\}")
+ICON = re.compile(r"\{\{icon:([a-z0-9-]+)(?: ([a-z-]+))?\}\}")
+ICONS_NOTICE = "<!-- Icons: Lucide "
 CARD = re.compile(r'<a class="card tool-card" href="([^"]+)">.*?<div class="name tool-card-title">(.*?)</div>', re.S)
 HEIGHT_SCRIPT = re.compile(r"<script>\(function\(\)\{var n=document\.querySelector\('\.site-nav'\);[^\n]*?</script>")
 OLD_CSS_BANNER = "Minimal nav (Initiative 2): logo left"
@@ -189,6 +240,23 @@ class Source:
         template = lf(read(root / TEMPLATE))
         parts = SECTION.split(template)
         self.sections = {parts[i]: parts[i + 1].rstrip("\n") for i in range(1, len(parts) - 1, 2)}
+        self.icons, self.lucide_version = {}, ""
+        try:
+            libs = json.loads(read(root / MANIFEST))["libraries"]
+            lib = [x for x in libs if x["name"] == ICON_LIBRARY]
+            self.lucide_version = lib[0]["version"] if len(lib) == 1 else ""
+        except (OSError, ValueError, KeyError):
+            pass
+        if not self.lucide_version:
+            self.problems.append(f"{MANIFEST} has no single \"{ICON_LIBRARY}\" library, so the nav icons can't be written")
+        for name in sorted({m.group(1) for s in self.sections.values() for m in ICON.finditer(s)}):
+            path = root / f"assets/vendor/{ICON_LIBRARY}/{self.lucide_version}/icons/{name}.svg"
+            try:
+                self.icons[name] = inline_svg(read(path))
+            except OSError:
+                self.problems.append(f"{TEMPLATE} uses the icon {name}, but {path.relative_to(root).as_posix()} isn't vendored")
+            except ValueError as e:
+                self.problems.append(f"{path.relative_to(root).as_posix()}: {e}")
         for name in ("header", "search-form", "search-target", "flyout", "flyout-item", "flyouts-translated", "lang-en", "lang-es"):
             if name not in self.sections:
                 self.problems.append(f"{TEMPLATE} has no @{name} section")
@@ -206,12 +274,24 @@ class Source:
                     self.problems.append(f"{rel}: no tool cards found in the {cat} section, so the {cat} flyout would be empty")
                 self.catalog[lang][cat] = cards
 
-    def fill(self, name, values):
+    def fill(self, name, values, legacy=False):
         def sub(m):
             if m.group(1) not in values:
                 raise KeyError(f"{TEMPLATE} @{name}: no value for {{{{{m.group(1)}}}}}")
             return values[m.group(1)]
-        return PLACEHOLDER.sub(sub, self.sections[name])
+        section = self.sections[name]
+        if legacy:
+            # the hand-copied nav --add replaces: its old icons, no Lucide notice
+            section = "\n".join(x for x in section.split("\n") if not x.startswith(ICONS_NOTICE))
+            section = ICON.sub(lambda m: LEGACY_ICONS[m.group(0)], section.replace(
+                "{{icon:moon theme-icon-moon}}{{icon:sun theme-icon-sun}}", LEGACY_ICONS["{{icon:moon theme-icon-moon}}{{icon:sun theme-icon-sun}}"]))
+        else:
+            section = ICON.sub(lambda m: self.icon(m.group(1), m.group(2)), section)
+        return PLACEHOLDER.sub(sub, section)
+
+    def icon(self, name, cls):
+        svg = self.icons.get(name, "<svg></svg>")
+        return svg.replace("<svg ", f'<svg class="{cls}" ', 1) if cls else svg
 
     def header(self, rel, flyouts=True):
         """The generated header region content (LF) for a page (flyouts=False: the hand-copied header --add expects)."""
@@ -219,20 +299,21 @@ class Source:
         t = dict(self.strings[lang])
         settings = PAGE_SETTINGS.get(key, {})
         tools_url = url_of("tools/index.html", lang)
-        values = {**t, "home_url": url_of("index.html", lang), "support_url": url_of("support/index.html", lang),
+        legacy = not flyouts
+        values = {**t, "lucide_version": self.lucide_version, "home_url": url_of("index.html", lang), "support_url": url_of("support/index.html", lang),
                   "tools_url": tools_url, "blog_url": url_of("blog/index.html", lang),
                   "current_tools": ' aria-current="page"' if settings.get("current") == "tools" else "",
                   "current_blog": ' aria-current="page"' if settings.get("current") == "blog" else "",
                   "search_target": settings.get("search_target", ""),
                   "search_watch": f' data-search-watch="{settings["search_watch"]}"' if settings.get("search_watch") else ""}
-        values["search"] = self.fill("search-target" if settings.get("search_target") else "search-form", values)
+        values["search"] = self.fill("search-target" if settings.get("search_target") else "search-form", values, legacy)
         values["search"] = values["search"].replace("{{search}}", t["search"])
         other_url = settings.get("other_url") or url_of(key, "en" if lang == "es" else "es")
         values["lang_switch"] = self.fill("lang-" + lang, {"other_url": other_url})
         for cat in CATS:
             values["flyout_" + cat] = self.flyout(lang, cat)
         # the search snippets use {{search}} as a string too: fill the header once the snippet is in
-        out = self.fill("header", {**values, "search": "\x00SEARCH\x00"}).replace("\x00SEARCH\x00", values["search"])
+        out = self.fill("header", {**values, "search": "\x00SEARCH\x00"}, legacy).replace("\x00SEARCH\x00", values["search"])
         if not flyouts:
             out = "\n".join(line for line in out.split("\n") if 'class="menu-flyout"' not in line)
             out = re.sub(r' data-flyout="menuFlyout-\w+"', "", out)
@@ -257,6 +338,34 @@ class Source:
         if kind == "js":
             return "<script>\n" + self.js + "</script>\n"
         return self.header(rel)
+
+
+def inline_svg(text):
+    """A vendored Lucide SVG as one inline line: no license comment, class, width or height; aria-hidden added."""
+    body = re.sub(r"^\s*<!--.*?-->\s*", "", lf(text), count=1, flags=re.S)
+    m = re.fullmatch(r"<svg\s+([^>]*)>\s*(.*?)\s*</svg>\s*", body, re.S)
+    if not m or "<svg" in m.group(2) or "<script" in m.group(2).lower() or "<!--" in m.group(2):
+        raise ValueError("isn't a single plain Lucide <svg>")
+    attrs = dict(re.findall(r'([a-zA-Z:-]+)="([^"]*)"', m.group(1)))
+    expect = {"xmlns": "http://www.w3.org/2000/svg", "viewBox": "0 0 24 24", "fill": "none", "stroke": "currentColor"}
+    if any(attrs.get(k) != v for k, v in expect.items()) or any(k not in attrs for k in ICON_ATTRS):
+        raise ValueError(f"has unexpected <svg> attributes ({m.group(1).split()})")
+    shapes = "".join(re.sub(r"\s+", " ", x.strip()).replace(" />", "/>") for x in m.group(2).split("\n") if x.strip())
+    return "<svg " + " ".join(f'{k}="{attrs[k]}"' for k in ICON_ATTRS) + ' aria-hidden="true">' + shapes + "</svg>"
+
+
+def migrate_theme_script(t):
+    """Remove the old theme script's updateIcon() lines (LF text). (new text, problem or None)."""
+    lines = t.split("\n")
+    if not any(x == THEME_ICON_LINES[1] for x in lines):
+        return t, None
+    i = lines.index(THEME_ICON_LINES[1])
+    if lines.count(THEME_ICON_LINES[1]) != 1 or lines[i - 1] != THEME_ICON_LINES[0] or lines[i + 1] != THEME_ICON_LINES[2] \
+            or lines.count(THEME_ICON_LINES[3]) != 1 or lines.count(THEME_ICON_LINES[4]) != 1:
+        return None, "has a theme script that isn't the standard copy (its updateIcon() lines); migrate it by hand"
+    del lines[i - 1:i + 2]
+    lines = [x for x in lines if x not in (THEME_ICON_LINES[3], THEME_ICON_LINES[4])]
+    return "\n".join(lines), None
 
 
 def fill_values_check(source):
@@ -373,6 +482,10 @@ def adopt(text, rel, source):
               (jm[0].start(), end_of_js, JS_START + "\n" + JS_END + "\n")]
     for s, e, repl in sorted(pieces, reverse=True):
         t = t[:s] + repl + t[e:]
+    # 4. the page's theme script no longer draws the button's emoji
+    t, problem = migrate_theme_script(t)
+    if problem:
+        return None, problem
     return t.replace("\n", nl), None
 
 

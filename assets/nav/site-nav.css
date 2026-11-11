@@ -43,6 +43,11 @@
 :root[data-theme="light"] .site-nav .nav-icon-btn.support{color:#be185d;}
 /* same 36px box as the icon buttons so the row lines up */
 .site-nav .nav-icons .theme-toggle{width:36px;height:36px;padding:0;border-radius:8px;filter:none;}
+/* The theme button shows the current theme with a Lucide icon: the moon in dark theme, the sun in light.
+   CSS picks it from data-theme, which the inline script in <head> sets before the first paint. */
+.site-nav .theme-toggle svg{width:18px;height:18px;display:block;}
+.site-nav .theme-toggle .theme-icon-sun, :root[data-theme="light"] .site-nav .theme-toggle .theme-icon-moon{display:none;}
+:root[data-theme="light"] .site-nav .theme-toggle .theme-icon-sun{display:block;}
 .site-nav .nav-icon-btn[aria-expanded="true"]{border-color:var(--accent);background:rgba(37,99,235,.14);}
 .site-nav .nav-icon-btn .menu-icon-close{display:none;}
 .site-nav .nav-icon-btn[aria-expanded="true"] .menu-icon-open{display:none;}

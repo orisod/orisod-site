@@ -29,7 +29,19 @@ sys.path.insert(0, str(HERE))
 import sync_nav as sn  # noqa: E402
 
 NL = chr(10)
-SOURCES = ("assets/nav/site-nav.css", "assets/nav/site-nav.js", "assets/nav/site-nav.html", "assets/nav/strings.json")
+# The nav sources, plus the manifest and the vendored Lucide icons sync_nav.py writes inline.
+SOURCES = ("assets/nav/site-nav.css", "assets/nav/site-nav.js", "assets/nav/site-nav.html", "assets/nav/strings.json",
+           sn.MANIFEST) + tuple(sorted(p.relative_to(REPO).as_posix() for p in (REPO / "assets/vendor/lucide").rglob("*.svg")))
+
+
+def with_theme_emoji(text):
+    """A page's theme script as it was before Lucide: the updateIcon() lines that drew the emoji put back (LF)."""
+    btn = "  var btn = document.getElementById('themeToggle');" + NL
+    i = text.index(btn) + len(btn)
+    text = text[:i] + NL.join(sn.THEME_ICON_LINES[:4]) + NL + text[i:]
+    end = "  });" + NL + "})();"
+    j = text.index(end, i)
+    return text[:j] + sn.THEME_ICON_LINES[4] + NL + text[j:]
 
 
 def catalog(cards):
@@ -155,6 +167,12 @@ CASES = [
      "must hold the same keys for en and es"),
     ("a template without its flyout section", {"broken_sources": {"assets/nav/site-nav.html": SRC_TEMPLATE.replace("<!-- @flyout -->", "<!-- @flyouts -->")}},
      "has no @flyout section"),
+    ("a template naming an icon that isn't vendored", {"broken_sources": {"assets/nav/site-nav.html": SRC_TEMPLATE.replace("{{icon:wrench}}", "{{icon:hammer}}")}},
+     "uses the icon hammer, but assets/vendor/lucide/"),
+    ("a vendored icon that isn't a plain Lucide SVG", {"broken_sources": {next(s for s in SOURCES if s.endswith("/wrench.svg")): '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><script>x</script></svg>'}},
+     "isn't a single plain Lucide <svg>"),
+    ("an icon file edited without syncing", {"broken_sources": {next(s for s in SOURCES if s.endswith("/wrench.svg")): (REPO / next(s for s in SOURCES if s.endswith("/wrench.svg"))).read_text(encoding="utf-8").replace("<path ", '<circle cx="1" cy="1" r="1" />' + NL + "  <path ", 1)}},
+     "out of date: a-tool/index.html"),
     ("a template placeholder with no value", {"broken_sources": {"assets/nav/site-nav.html": SRC_TEMPLATE.replace("{{site_menu}}", "{{site_menus}}")}},
      "no value for {{site_menus}}"),
     ("a category on /tools with no cards", {"en_cards": {**EN_CARDS, "image": []}},
@@ -231,6 +249,10 @@ def write_mode_checks():
             for (kind, start, end), old in zip(sn.REGIONS, (legacy_css, header, legacy_js)):
                 a, b = t.index(start), t.index(end) + len(end) + 1
                 t = t[:a] + old + t[b:]
+            # and its theme script with the old emoji lines, which --add removes
+            t = with_theme_emoji(t)
+            if sn.THEME_ICON_LINES[1] not in t or "\U0001F319" not in header:
+                bad.append(f"{rel}: the hand-copied nav built for the test has no old theme emoji")
             (root / rel).parent.mkdir(parents=True, exist_ok=True)
             (root / rel).write_bytes(t.replace(NL, sn.newline_of(current)).encode("utf-8"))
         r = sync(root, "--write", "--add", *real)
@@ -265,6 +287,17 @@ def write_mode_checks():
         r = sync(root, "--write", "--add", "odd/index.html")
         if r.returncode == 0 or "differs from the generated one" not in r.stdout or (root / "odd/index.html").read_bytes().decode("utf-8") != odd:
             bad.append("--add adopted (or changed) a page whose header isn't the standard copy")
+        # A page whose theme script isn't the standard copy (one updateIcon() call missing) is refused too.
+        odd2 = sn.lf((root / "compress-image/index.html").read_bytes().decode("utf-8"))
+        legacy_page = with_theme_emoji(odd2).replace(sn.THEME_ICON_LINES[4] + NL, "", 1)
+        for (kind, start, end), old in zip(sn.REGIONS, (legacy_css, source.header("odd2/index.html", flyouts=False), legacy_js)):
+            a, b = legacy_page.index(start), legacy_page.index(end) + len(end) + 1
+            legacy_page = legacy_page[:a] + old + legacy_page[b:]
+        (root / "odd2").mkdir()
+        (root / "odd2/index.html").write_bytes(legacy_page.encode("utf-8"))
+        r = sync(root, "--write", "--add", "odd2/index.html")
+        if r.returncode == 0 or "theme script that isn't the standard copy" not in r.stdout or (root / "odd2/index.html").read_bytes().decode("utf-8") != legacy_page:
+            bad.append("--add adopted (or changed) a page whose theme script isn't the standard copy: " + r.stdout[-300:])
     return bad
 
 
