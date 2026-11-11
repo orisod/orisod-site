@@ -2249,6 +2249,89 @@
         "sha256": "3b0a5fca3d17942cde889069889dedbbbd075e9b599968c82a95f4d944e9b345",
         "bytes": 4477
       }
+    },
+    {
+      "name": "lucide",
+      "version": "1.72.0",
+      "license": "ISC AND MIT",
+      "license_note": "Lucide icons as published in the npm package lucide-static 1.72.0 (the jsDelivr files, identical to the package's; tarball checked against npm's sha512 integrity). Lucide is ISC; the icons derived from Feather (of these: moon, search, x) are also under Feather's MIT license, and the package's LICENSE, vendored unchanged, holds both notices. Only the icons the site uses are vendored. scripts/sync_nav.py reads them and writes them inline into the site menu of every page (Orisod 2.0), so no page loads these files.",
+      "used_by": [
+        "assets/nav"
+      ],
+      "files": [
+        {
+          "path": "assets/vendor/lucide/1.72.0/icons/file-text.svg",
+          "source": "https://cdn.jsdelivr.net/npm/lucide-static@1.72.0/icons/file-text.svg",
+          "sha256": "853bf47f5cc0fb20ba7d7ce08c41cf3a128375cb9e6b97ed467e7f52f4b0ca36",
+          "bytes": 524
+        },
+        {
+          "path": "assets/vendor/lucide/1.72.0/icons/heart.svg",
+          "source": "https://cdn.jsdelivr.net/npm/lucide-static@1.72.0/icons/heart.svg",
+          "sha256": "db73d7b45800e12991744f2eb26cb3620c3314e2c528f4b7a695f00ae3a80d45",
+          "bytes": 449
+        },
+        {
+          "path": "assets/vendor/lucide/1.72.0/icons/image.svg",
+          "source": "https://cdn.jsdelivr.net/npm/lucide-static@1.72.0/icons/image.svg",
+          "sha256": "120e2f141244aead1b4442507a9a7f0d0906b2e32eeef948c4d8d0cdeb2b2d25",
+          "bytes": 434
+        },
+        {
+          "path": "assets/vendor/lucide/1.72.0/icons/layout-grid.svg",
+          "source": "https://cdn.jsdelivr.net/npm/lucide-static@1.72.0/icons/layout-grid.svg",
+          "sha256": "d933c880229174f1fc73615513cd6c245ddf6fbd5bb349a72bc1c12a8019b003",
+          "bytes": 498
+        },
+        {
+          "path": "assets/vendor/lucide/1.72.0/icons/menu.svg",
+          "source": "https://cdn.jsdelivr.net/npm/lucide-static@1.72.0/icons/menu.svg",
+          "sha256": "07bb596b5350636142ee0c764c242eea3503c5f771ca3891848b0e8cf74d0b26",
+          "bytes": 354
+        },
+        {
+          "path": "assets/vendor/lucide/1.72.0/icons/moon.svg",
+          "source": "https://cdn.jsdelivr.net/npm/lucide-static@1.72.0/icons/moon.svg",
+          "sha256": "b55cdefff8a64ab9f4524704af084a0b52a24b9e5828f06fab073887e3853e68",
+          "bytes": 409
+        },
+        {
+          "path": "assets/vendor/lucide/1.72.0/icons/notebook-text.svg",
+          "source": "https://cdn.jsdelivr.net/npm/lucide-static@1.72.0/icons/notebook-text.svg",
+          "sha256": "100898d91c5c4fe959367d1f5b04caf3511382761ee187f8f48b489d80e650ac",
+          "bytes": 512
+        },
+        {
+          "path": "assets/vendor/lucide/1.72.0/icons/search.svg",
+          "source": "https://cdn.jsdelivr.net/npm/lucide-static@1.72.0/icons/search.svg",
+          "sha256": "1ff753c98ac717eec224fb93b2a4c9194396f681bf8f10be17d030d9d2d5a0db",
+          "bytes": 352
+        },
+        {
+          "path": "assets/vendor/lucide/1.72.0/icons/sun.svg",
+          "source": "https://cdn.jsdelivr.net/npm/lucide-static@1.72.0/icons/sun.svg",
+          "sha256": "a63cdb7b46fb68d9fa2b37c971f44b0b4137df8044284c8cc1522f9b67cbbf6d",
+          "bytes": 559
+        },
+        {
+          "path": "assets/vendor/lucide/1.72.0/icons/wrench.svg",
+          "source": "https://cdn.jsdelivr.net/npm/lucide-static@1.72.0/icons/wrench.svg",
+          "sha256": "a22006718503f7910c4337a06e971e6031501d1e2207cf14d34146a298657a09",
+          "bytes": 494
+        },
+        {
+          "path": "assets/vendor/lucide/1.72.0/icons/x.svg",
+          "source": "https://cdn.jsdelivr.net/npm/lucide-static@1.72.0/icons/x.svg",
+          "sha256": "5cb5cd86cb379d279707deb374dd2689e7bc1433dd2d329bcbc366fb3fb03da4",
+          "bytes": 332
+        }
+      ],
+      "license_file": {
+        "path": "assets/vendor/lucide/1.72.0/LICENSE",
+        "source": "https://cdn.jsdelivr.net/npm/lucide-static@1.72.0/LICENSE",
+        "sha256": "b495047bd93a9b06913511076f504daba17d5bbeb3e0650f3bb53a4220329c57",
+        "bytes": 3208
+      }
     }
   ]
 }
