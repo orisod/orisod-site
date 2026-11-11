@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Negative tests for check_vendor.py's tarball-member, vendor-path, flag-folder, wa.me and share-link rules (both share pages).
+"""Negative tests for check_vendor.py's tarball-member, vendor-path, stylesheet-path, flag-folder, wa.me and share-link rules (both share pages).
 
 Builds a tiny site in a temporary folder (one page, one vendored "font" taken from
-a release tarball, its LICENSE, two circle-flags images and theirs, and a
-WhatsApp link generator page), checks that check_vendor.py passes on it, then
+a release tarball, its LICENSE, two circle-flags images and theirs, a
+WhatsApp link generator page and a shared stylesheet in assets/css), checks that check_vendor.py passes on it, then
 breaks it one way at a time and checks that check_vendor.py fails with the
 expected message. Run after changing either rule:
 
@@ -43,7 +43,7 @@ MANIFEST = {"about": "test", "libraries": [{
     "license_file": {"path": FLAGS + "LICENSE", "source": "https://example.org/LICENSE",
                      "sha256": hashlib.sha256(LICENSE).hexdigest(), "bytes": len(LICENSE)},
 }]}
-PAGE = """<!doctype html><html><head><title>t</title></head><body><main>t</main>
+PAGE = """<!doctype html><html><head><title>t</title><style>@font-face{font-family:"Demo";src:url("/assets/vendor/demo-font/1.0/Demo-Regular.ttf")}</style></head><body><main>t</main>
 <script>
 const FONT_FILES = ["/assets/vendor/demo-font/1.0/Demo-Regular.ttf"];
 fetch(FONT_FILES[0]);
@@ -69,7 +69,11 @@ const SHARE = ["https://wa.me/?text=" + enc(t), "https://t.me/share/url?url=" + 
 """
 
 
-def build(root, manifest=MANIFEST, page=PAGE, site_js=None, wa_page=WA_PAGE, rbp_page=RBP_PAGE):
+# The shared stylesheet (assets/css/orisod.css in the real site) points at the vendored font too.
+SITE_CSS = "@font-face{font-family:Demo;src:url(/assets/vendor/demo-font/1.0/Demo-Regular.ttf) format(\"truetype\")}" + chr(10)
+
+
+def build(root, manifest=MANIFEST, page=PAGE, site_js=None, wa_page=WA_PAGE, rbp_page=RBP_PAGE, site_css=SITE_CSS):
     (root / FOLDER).mkdir(parents=True)
     (root / FOLDER / "Demo-Regular.ttf").write_bytes(FONT)
     (root / FOLDER / "LICENSE").write_bytes(LICENSE)
@@ -84,6 +88,8 @@ def build(root, manifest=MANIFEST, page=PAGE, site_js=None, wa_page=WA_PAGE, rbp
     (root / "assets/vendor/manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
     (root / ".gitattributes").write_text("assets/vendor/** -text\n", encoding="utf-8")
     (root / "index.html").write_text(page, encoding="utf-8")
+    (root / "assets/css").mkdir(parents=True)
+    (root / "assets/css/site.css").write_text(site_css, encoding="utf-8")
     if site_js is not None:
         (root / "assets/js").mkdir(parents=True)
         (root / "assets/js/site.js").write_text(site_js, encoding="utf-8")
@@ -127,6 +133,14 @@ CASES = [
      "names /assets/vendor/demo-font/1.0/Gone.ttf"),
     ("the site's own JS naming a missing vendor file", {"site_js": 'fetch("/assets/vendor/demo-font/2.0/Demo-Regular.ttf");\n'},
      "assets/js/site.js: a script names /assets/vendor/demo-font/2.0/Demo-Regular.ttf"),
+    ("an inline <style> pointing at a vendor file not in the manifest", {"page": PAGE.replace("1.0/Demo-Regular.ttf\")}", "1.0/Demo-Bold.woff2\")}")},
+     "index.html: a stylesheet points at /assets/vendor/demo-font/1.0/Demo-Bold.woff2, which isn't a library file"),
+    ("an inline <style> pointing at the license file", {"page": PAGE.replace("1.0/Demo-Regular.ttf\")}", "1.0/LICENSE\")}")},
+     "index.html: a stylesheet points at /assets/vendor/demo-font/1.0/LICENSE"),
+    ("the shared stylesheet pointing at a missing vendor file", {"site_css": SITE_CSS.replace("demo-font/1.0/", "demo-font/2.0/")},
+     "assets/css/site.css: a stylesheet points at /assets/vendor/demo-font/2.0/Demo-Regular.ttf"),
+    ("the shared stylesheet importing from another host", {"site_css": "@import url(https://fonts.example.org/demo.css);" + chr(10) + SITE_CSS},
+     "assets/css/site.css: imports or loads something from another host"),
     ("FLAG_CODES naming a flag that isn't vendored", {"wa_page": WA_PAGE.replace('"ar mx"', '"ar mx br"')},
      "FLAG_CODES names flags that aren't library files in assets/vendor/manifest.json under /assets/vendor/circle-flags/9.9/: br"),
     ("FLAG_DIR pointing at another version", {"wa_page": WA_PAGE.replace("circle-flags/9.9/", "circle-flags/9.8/")},
