@@ -2,9 +2,9 @@ name: Verify accessibility (axe-core)
 
 on:
   push:
-    branches: [main]
+    branches: [main, orisod-2]
   pull_request:
-    branches: [main]
+    branches: [main, orisod-2]
 
 permissions:
   contents: read
