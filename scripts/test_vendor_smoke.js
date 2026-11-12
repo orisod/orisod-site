@@ -593,7 +593,7 @@ async function convertDeck(page, name, slides, { expectPdf = true } = {}) {
   await page.locator("#convertBtn").waitFor({ state: "visible", timeout: 30000 });
   await page.click("#convertBtn");
   if (!expectPdf) return null;
-  const link = page.locator(`#result a[download="${name}.pdf"]`);
+  const link = page.locator(`#result a[download="${name}-orisod.pdf"]`);
   await link.waitFor({ timeout: 60000 });
   const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
   return readFile(await download.path());
@@ -792,7 +792,7 @@ async function convertWorkbook(page, name, rows, sheet, { expectPdf = true } = {
   await page.locator("#convertBtn").waitFor({ state: "visible", timeout: 30000 });
   await page.click("#convertBtn");
   if (!expectPdf) return null;
-  const link = page.locator(`#result a[download="${name}.pdf"]`);
+  const link = page.locator(`#result a[download="${name}-orisod.pdf"]`);
   await link.waitFor({ timeout: 60000 });
   const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
   return readFile(await download.path());
@@ -1288,7 +1288,7 @@ const RBP_TEXT = {
     password: "This PDF is password-protected. Remove the password in a trusted PDF application, then try again.",
     signed: "This PDF has a digital signature. Removing pages changes the downloaded copy, so the signature may no longer be valid.",
     notPdf: "Please select a valid PDF file.", replace: "Replace the current PDF? Your page selections will be lost.",
-    sensLabel: "Sensitivity", sens: ["Conservative", "Balanced", "More aggressive"], startOver: "Start over", removedKeepAll: "Keep all", save: "Remove pages and download", suffix: "-blank-pages-removed.pdf",
+    sensLabel: "Sensitivity", sens: ["Conservative", "Balanced", "More aggressive"], startOver: "Start over", removedKeepAll: "Keep all", save: "Remove pages and download", suffix: "-blanks-removed-orisod.pdf",
     summary: "Help and details", guide: "/blog/remove-blank-pages-from-pdf/", cards: ["/delete-pdf-pages/", "/pdf-page-organizer/", "/compress-pdf/"] },
   es: { url: "https://orisod.com/es/remove-blank-pages/", title: "Eliminar páginas en blanco de PDF",
     doneMany: "Revisión completada. {n} páginas están marcadas para eliminar.", totalMany: "Se eliminarán {n} páginas.", totalOne: "Se eliminará 1 página.", totalNone: "No se eliminará ninguna página.",
@@ -1300,7 +1300,7 @@ const RBP_TEXT = {
     password: "Este PDF está protegido con contraseña. Quita la contraseña en una aplicación de PDF de confianza y vuelve a intentarlo.",
     signed: "Este PDF tiene una firma digital. Eliminar páginas cambia la copia descargada, así que la firma podría dejar de ser válida.",
     notPdf: "Selecciona un archivo PDF válido.", replace: "¿Reemplazar el PDF actual? Se perderán las selecciones que hiciste en sus páginas.",
-    sensLabel: "Sensibilidad", sens: ["Conservadora", "Equilibrada", "Más estricta"], startOver: "Empezar de nuevo", removedKeepAll: "Conservar todas", save: "Eliminar páginas y descargar", suffix: "-sin-paginas-en-blanco.pdf",
+    sensLabel: "Sensibilidad", sens: ["Conservadora", "Equilibrada", "Más estricta"], startOver: "Empezar de nuevo", removedKeepAll: "Conservar todas", save: "Eliminar páginas y descargar", suffix: "-sin-blancas-orisod.pdf",
     summary: "Ayuda y detalles", guide: "/es/blog/remove-blank-pages-from-pdf/", cards: ["/es/delete-pdf-pages/", "/es/pdf-page-organizer/", "/es/compress-pdf/"] },
 };
 const rbpFill = (text, n) => text.replace("{n}", n);
@@ -1610,6 +1610,114 @@ function expectOneDiagram(svgs, snapImgs, width, prefix = "wa-flow") {
   expect(shown[0].cls === (width < 640 ? `${prefix}-stacked` : `${prefix}-wide`), `at ${width}px the ${shown[0].cls} diagram is shown`);
 }
 
+// Download file names, PR 2: the single-file PDF tools. One table row per tool: its page, the file it's given,
+// how to get its download, and its word (EN, ES; null for the format converters, which add none). Each case uploads
+// FILE_NAME_INPUT with the row's extension, checks the saved name, the link's download attribute and the name
+// shown in the result card, and for a PDF-in, PDF-out tool feeds the output name back and must get the same name.
+const XLSX_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+const PPTX_TYPE = "application/vnd.openxmlformats-officedocument.presentationml.presentation";
+const DOCX_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+// A one-page PDF with a filled-in text field, built by the page's own pdf-lib (fill and flatten need a form).
+const formPdf = async (page) => Buffer.from(await page.evaluate(async () => {
+  const doc = await PDFLib.PDFDocument.create();
+  const p = doc.addPage([612, 792]);
+  doc.getForm().createTextField("name").addToPage(p, { x: 72, y: 600, width: 200, height: 24 });
+  return doc.saveAsBase64();
+}), "base64");
+const PDF_TWO = () => fixturePdf("Name test", ["page 1", "page 2"]);
+// Clicks `button` (again while the tool is still getting ready) until the result link appears.
+async function resultLink(page, button) {
+  const link = page.locator("#result a[download]");
+  for (let i = 0; i < 60 && !(await link.count()); i++) {
+    await page.locator(button).click({ timeout: 5000 }).catch(() => {});
+    await page.waitForTimeout(250);
+  }
+  return link;
+}
+const viaLink = (button, before) => async (page) => {
+  if (before) await before(page);
+  return fileNameResult(page, await resultLink(page, button), "#result .result-filename, #result [data-file-name]");
+};
+const viaClick = (prepare, button) => async (page) => {
+  await prepare(page);
+  const [download] = await Promise.all([page.waitForEvent("download", { timeout: 60000 }), page.click(button)]);
+  return { name: download.suggestedFilename(), bytes: await readFile(await download.path()) };
+};
+const FILE_NAME_TOOLS = [
+  { tool: "add-page-numbers", words: ["numbered", "numerado"], get: viaLink("#addNumbersBtn") },
+  { tool: "add-stamps", words: ["stamped", "sellado"], get: viaLink("#downloadBtn") },
+  { tool: "crop-pdf-pages", words: ["cropped", "recortado"], get: viaLink("#saveBtn") },
+  { tool: "delete-pdf-pages", words: ["pages-deleted", "paginas-eliminadas"], get: viaLink("#saveBtn", (page) => page.fill("#rangeField", "2")) },
+  { tool: "edit-pdf-metadata", words: ["metadata", "metadatos"], get: viaLink("#saveBtn") },
+  { tool: "fill-pdf-forms", input: "form", words: ["filled", "rellenado"], get: viaLink("#downloadBtn") },
+  { tool: "flatten-pdf", input: "form", words: ["flattened", "aplanado"], get: async (page) => {
+      // Flatten PDF works as soon as the file is chosen: no button.
+      const link = page.locator("#result a[download]");
+      await link.waitFor({ timeout: 60000 }).catch(async () => {
+        throw new Error(`no result link; the page says "${await page.textContent("#infoMsg")}" / "${await page.textContent("#errorMsg")}"`);
+      });
+      return fileNameResult(page, link, "#result .result-filename");
+    } },
+  { tool: "n-up-pdf", words: ["2up", "2up"], get: viaLink("#combineBtn") },
+  { tool: "pdf-booklet-maker", words: ["booklet", "folleto"], get: viaLink("#createBtn") },
+  { tool: "pdf-color-filters", words: ["filtered", "filtrado"], get: viaLink("#applyBtn", (page) => page.locator('[data-filter="grayscale"]').click({ timeout: 30000 })) },
+  { tool: "pdf-editor", words: ["edited", "editado"], get: viaLink("#downloadBtn") },
+  { tool: "pdf-header-footer", words: ["header-footer", "encabezado-pie"], get: viaLink("#applyBtn") },
+  { tool: "pdf-page-organizer", words: ["organized", "organizado"], get: viaLink("#saveBtn") },
+  { tool: "remove-blank-pages", input: "blank", words: ["blanks-removed", "sin-blancas"],
+    get: viaClick((page) => page.locator("#saveBtn:not([disabled])").waitFor({ timeout: 60000 }), "#saveBtn") },
+  { tool: "repair-pdf", words: ["repaired", "reparado"], get: viaLink("#repairBtn") },
+  { tool: "resize-pdf-pages", words: ["resized", "redimensionado"], get: viaLink("#saveBtn") },
+  { tool: "watermark-pdf", words: ["watermarked", "marca-de-agua"], get: viaLink("#downloadBtn") },
+  { tool: "extract-pdf-text", words: ["text", "texto"], ext: "txt",
+    get: viaClick(async (page) => {
+      await page.click("#extractBtn", { timeout: 30000 });
+      await page.locator("#downloadBtn").waitFor({ state: "visible", timeout: 60000 });
+    }, "#downloadBtn") },
+  { tool: "excel-to-pdf", input: "xlsx", words: [null, null], get: viaLink("#convertBtn") },
+  { tool: "powerpoint-to-pdf", input: "pptx", words: [null, null], get: viaLink("#convertBtn") },
+  { tool: "word-to-pdf", input: "docx", words: [null, null], get: viaLink("#convertBtn") },
+  { tool: "pdf-to-word", words: [null, null], ext: "docx", get: viaLink("#convertBtn") },
+];
+async function fileNameInput(page, row, name) {
+  if (row.input === "xlsx") return { name: name + ".XLSX", mimeType: XLSX_TYPE, buffer: fixtureXlsx([["Item", "Qty"], ["Apple", 3]]) };
+  if (row.input === "pptx") return { name: name + ".PPTX", mimeType: PPTX_TYPE, buffer: fixturePptx([["Name test", "One point"]]) };
+  if (row.input === "docx") return { name: name + ".DOCX", mimeType: DOCX_TYPE, buffer: fixtureDocx(["Name test"]) };
+  if (row.input === "form") return { name: name + ".PDF", mimeType: "application/pdf", buffer: await formPdf(page) };
+  if (row.input === "blank") return { name: name + ".PDF", mimeType: "application/pdf", buffer: Buffer.from(await page.evaluate(RBP_MAKE, ["report", 0]), "base64") };
+  return { name: name + ".PDF", mimeType: "application/pdf", buffer: PDF_TWO() };
+}
+const FILE_NAME_CASES = FILE_NAME_TOOLS.map((row) => ({
+  name: `Download file names (${row.tool})`,
+  page: `/${row.tool}/`,
+  vendor: [],
+  async run(page, lang) {
+    const word = row.words[lang === "es" ? 1 : 0];
+    const ext = row.ext || "pdf";
+    const want = `${FILE_NAME_INPUT}${word ? "-" + word : ""}-orisod.${ext}`;
+    const once = async (stem) => {
+      // Empty the result first, so a link left from the first run can't stand in for the second one.
+      await page.evaluate(() => { const r = document.getElementById("result"); if (r) r.replaceChildren(); });
+      await page.setInputFiles("#fileInput", await fileNameInput(page, row, stem));
+      return row.get(page);
+    };
+    const first = await once(FILE_NAME_INPUT);
+    expectFileName(first, want, row.tool);
+    const magic = { pdf: "%PDF-", txt: null, docx: "PK" }[ext];
+    if (magic) expect(first.bytes.subarray(0, magic.length).toString() === magic, `${first.name} isn't a .${ext} file`);
+    let again = "";
+    if (!row.input || row.input === "form" || row.input === "blank") {
+      if (ext === "pdf") {
+        const second = await once(want.slice(0, -".PDF".length));
+        expectFileName(second, want, `${row.tool}, the output name fed back`);
+        again = `; fed back it stays ${second.name}`;
+      }
+    }
+    const old = mustFail("the old name", () => expectFileName({ ...first, name: `${FILE_NAME_INPUT}${word ? "-" + word : ""}.${ext}` }, want, "test"));
+    return `${FILE_NAME_INPUT}.${row.input ? row.input.replace(/form|blank/, "pdf").toUpperCase() : "PDF"} became ${first.name}${first.shown !== undefined ? " (shown as text in the result)" : ""}${again}; ${old}`;
+  },
+}));
+
 const CASES = [
   {
     name: "spark-md5",
@@ -1766,7 +1874,7 @@ const CASES = [
     page: "/pdf-page-organizer/",
     vendor: [PDFJS, PDFJS_WORKER, "/assets/vendor/pdf-lib/1.17.1/pdf-lib.min.js"],
     worker: PDFJS_WORKER,
-    async run(page) {
+    async run(page, lang) {
       const pdf = fixturePdf("Fixture", ["page 1", "page 2", "page 3"]);
       await page.setInputFiles("#fileInput", { name: "three.pdf", mimeType: "application/pdf", buffer: pdf });
       await page.locator("#saveBtn").waitFor({ state: "visible", timeout: 30000 });
@@ -1789,7 +1897,7 @@ const CASES = [
       expect(thumbs.every((d) => d > 5), `a thumbnail is blank (dark pixels: ${thumbs.join(", ")})`);
       await page.locator("#pagesGrid .page-card").nth(1).locator(".delete-btn").click();
       await page.click("#saveBtn");
-      const link = page.locator('#result a[download="three-organized.pdf"]');
+      const link = page.locator(`#result a[download="three-${lang === "es" ? "organizado" : "organized"}-orisod.pdf"]`);
       await link.waitFor({ timeout: 30000 });
       const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
       const bytes = await readFile(await download.path());
@@ -2032,6 +2140,7 @@ const CASES = [
         mustFail("the old fixed name", () => expectFileName({ ...first, name: lang === "es" ? "recortada.jpg" : "cropped.jpg" }, want, "test"));
     },
   },
+  ...FILE_NAME_CASES,
   {
     name: "PDF.js + jsPDF (PDF color filters)",
     page: "/pdf-color-filters/",
@@ -2044,7 +2153,7 @@ const CASES = [
       await page.click('[data-filter="grayscale"]');
       await page.locator("#applyBtn:not([disabled])").waitFor({ timeout: 30000 });
       await page.click("#applyBtn");
-      const name = lang === "es" ? "red-filtrado.pdf" : "red-filtered.pdf";
+      const name = lang === "es" ? "red-filtrado-orisod.pdf" : "red-filtered-orisod.pdf";
       const link = page.locator(`#result a[download="${name}"]`);
       await link.waitFor({ timeout: 60000 });
       const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
@@ -2079,7 +2188,7 @@ const CASES = [
       await page.setInputFiles("#fileInput", { name: "deck.pptx", mimeType: "application/vnd.openxmlformats-officedocument.presentationml.presentation", buffer: pptx });
       await page.locator("#convertBtn").waitFor({ state: "visible", timeout: 30000 });
       await page.click("#convertBtn");
-      const link = page.locator('#result a[download="deck.pdf"]');
+      const link = page.locator('#result a[download="deck-orisod.pdf"]');
       await link.waitFor({ timeout: 30000 });
       const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
       const bytes = await readFile(await download.path());
@@ -2103,7 +2212,7 @@ const CASES = [
       ];
       // Windows-1252 only: no font file is fetched and the PDF is exactly what main produced.
       const noFont = (requests) => expect(!requests.some((u) => u.includes("/assets/vendor/liberation-sans/")), `the page fetched Liberation Sans for a Windows-1252 deck: ${requests.filter((u) => u.includes("liberation")).join(", ")}`);
-      const sameAsMain = (b) => expect(stableSha(b) === LATIN_DECK_SHA[lang], `deck.pdf (stamp and date removed) has sha256 ${stableSha(b)}, not main's ${LATIN_DECK_SHA[lang]}`);
+      const sameAsMain = (b) => expect(stableSha(b) === LATIN_DECK_SHA[lang], `deck-orisod.pdf (stamp and date removed) has sha256 ${stableSha(b)}, not main's ${LATIN_DECK_SHA[lang]}`);
       noFont(ctl.requests);
       sameAsMain(bytes);
       expect((await warnState(page)).text === null, "a Windows-1252 deck shows the unsupported-characters warning");
@@ -2111,7 +2220,7 @@ const CASES = [
         mustFail("a font request", () => noFont([...ctl.requests, SITE + FONT_REGULAR])),
         mustFail("a PDF one byte off main's", () => sameAsMain(tamper(bytes, "Smoke deck", "Smoke deck".replace("S", "Z")))),
       );
-      return `deck.pdf: 2 Letter pages, "Canci\\xf3n de ma\\xf1ana" and "5 \\x80" in WinAnsi, the long bullet wrapped into ${wrappedLines} lines, "${slide} 1/2" footers; no font fetched, identical to main's PDF apart from stamp and date; ${negatives.join("; ")}`;
+      return `deck-orisod.pdf: 2 Letter pages, "Canci\\xf3n de ma\\xf1ana" and "5 \\x80" in WinAnsi, the long bullet wrapped into ${wrappedLines} lines, "${slide} 1/2" footers; no font fetched, identical to main's PDF apart from stamp and date; ${negatives.join("; ")}`;
     },
   },
   {
@@ -2448,7 +2557,7 @@ const CASES = [
       await page.setInputFiles("#fileInput", { name: "fruit.xlsx", mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", buffer: fixtureXlsx(rows) });
       await page.locator("#convertBtn").waitFor({ state: "visible", timeout: 30000 });
       await page.click("#convertBtn");
-      const link = page.locator('#result a[download="fruit.pdf"]');
+      const link = page.locator('#result a[download="fruit-orisod.pdf"]');
       await link.waitFor({ timeout: 30000 });
       const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
       const bytes = await readFile(await download.path());
@@ -2456,8 +2565,8 @@ const CASES = [
       // autotable draws each cell as its own text, so the rows read in order, cell by cell.
       const text = pdfText(bytes).split("\n").map((s) => s.trim()).filter(Boolean).join(" ");
       const want = rows.flat().join(" ");
-      expect(text.includes(want), `fruit.pdf text is "${text}", without "${want}"`);
-      return `fruit.pdf: ${pdfPageCount(bytes)} page, table text "${want}"`;
+      expect(text.includes(want), `fruit-orisod.pdf text is "${text}", without "${want}"`);
+      return `fruit-orisod.pdf: ${pdfPageCount(bytes)} page, table text "${want}"`;
     },
   },
   {
@@ -2472,7 +2581,7 @@ const CASES = [
       await page.setInputFiles("#fileInput", { name: "long.xlsx", mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", buffer: fixtureXlsx([head, ...rows]) });
       await page.locator("#convertBtn").waitFor({ state: "visible", timeout: 30000 });
       await page.click("#convertBtn");
-      const link = page.locator('#result a[download="long.pdf"]');
+      const link = page.locator('#result a[download="long-orisod.pdf"]');
       await link.waitFor({ timeout: 30000 });
       const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
       const bytes = await readFile(await download.path());
@@ -2497,7 +2606,7 @@ const CASES = [
         mustFail("the last page cut off", () => check(pages.slice(0, -1))),
         mustFail("a page without the header row", () => check(pages.map((p, i) => (i === 1 ? { ...p, blocks: p.blocks.filter((b) => !b.includes("Region")) } : p)))),
       ];
-      return `long.pdf: 120 rows over ${pages.length} landscape pages, header repeated on each, Row 1 to Row 120 in order, "Last row" on the last page; ${negatives.join("; ")}`;
+      return `long-orisod.pdf: 120 rows over ${pages.length} landscape pages, header repeated on each, Row 1 to Row 120 in order, "Last row" on the last page; ${negatives.join("; ")}`;
     },
   },
   {
@@ -2673,7 +2782,7 @@ const CASES = [
       await page.setInputFiles("#fileInput", { name: "smoke.docx", mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document", buffer: docx });
       await page.locator("#convertBtn").waitFor({ state: "visible", timeout: 30000 });
       await page.click("#convertBtn");
-      const link = page.locator('#result a[download="smoke.pdf"]');
+      const link = page.locator('#result a[download="smoke-orisod.pdf"]');
       await link.waitFor({ timeout: 60000 });
       const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
       const bytes = await readFile(await download.path());
@@ -2681,13 +2790,13 @@ const CASES = [
       const html = await page.$eval("#renderTarget .docx-content", (el) => el.innerHTML);
       expect(html.includes("<p>Fixture paragraph two</p>"), `mammoth's HTML was: ${html.slice(0, 200)}`);
       const pages = pdfPageCount(bytes);
-      expect(pages === 1, `smoke.pdf has ${pages} pages, not 1`);
+      expect(pages === 1, `smoke-orisod.pdf has ${pages} pages, not 1`);
       const jpegs = pdfJpegs(bytes);
-      expect(jpegs.length === 1, `smoke.pdf has ${jpegs.length} images, not 1`);
+      expect(jpegs.length === 1, `smoke-orisod.pdf has ${jpegs.length} images, not 1`);
       const size = jpegSize(jpegs[0]);
       const { dark } = await darkPixels(page, jpegs[0]);
       expect(dark > 1000, `the rendered page has only ${dark} dark pixels; mammoth's text isn't on it`);
-      return `smoke.pdf: 1 page; mammoth turned the 3 paragraphs into <p>s, drawn as a ${size.w}x${size.h} page image (${dark} dark pixels)`;
+      return `smoke-orisod.pdf: 1 page; mammoth turned the 3 paragraphs into <p>s, drawn as a ${size.w}x${size.h} page image (${dark} dark pixels)`;
     },
   },
   {
@@ -2700,17 +2809,17 @@ const CASES = [
       await page.setInputFiles("#fileInput", { name: "words.pdf", mimeType: "application/pdf", buffer: pdf });
       await page.locator("#convertBtn").waitFor({ state: "visible", timeout: 30000 });
       await page.click("#convertBtn");
-      const link = page.locator('#result a[download="words.docx"]');
+      const link = page.locator('#result a[download="words-orisod.docx"]');
       await link.waitFor({ timeout: 60000 });
       const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
       const files = zipEntries(await readFile(await download.path()));
       const names = files.map((f) => f.name);
       for (const part of ["[Content_Types].xml", "_rels/.rels", "word/document.xml"])
-        expect(names.includes(part), `words.docx has no ${part} (files: ${names.join(", ")})`);
+        expect(names.includes(part), `words-orisod.docx has no ${part} (files: ${names.join(", ")})`);
       const xml = files.find((f) => f.name === "word/document.xml").data.toString("utf-8");
       const found = ["Fixture alpha", "Fixture bravo"].map((s) => xml.indexOf(s));
       expect(found[0] >= 0 && found[1] > found[0], `word/document.xml doesn't have "Fixture alpha" then "Fixture bravo"`);
-      return `words.docx: a valid Word file (${files.length} parts) whose document.xml has "Fixture alpha" and "Fixture bravo" in order`;
+      return `words-orisod.docx: a valid Word file (${files.length} parts) whose document.xml has "Fixture alpha" and "Fixture bravo" in order`;
     },
   },
   {
