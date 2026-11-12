@@ -2254,16 +2254,42 @@
       "name": "lucide",
       "version": "1.72.0",
       "license": "ISC AND MIT",
-      "license_note": "Lucide icons as published in the npm package lucide-static 1.72.0 (the jsDelivr files, identical to the package's; tarball checked against npm's sha512 integrity). Lucide is ISC; the icons derived from Feather (of these: moon, search, x) are also under Feather's MIT license, and the package's LICENSE, vendored unchanged, holds both notices. Only the icons the site uses are vendored. scripts/sync_nav.py reads them and writes them inline into the site menu of every page (Orisod 2.0), so no page loads these files.",
+      "license_note": "Lucide icons as published in the npm package lucide-static 1.72.0 (the jsDelivr files, identical to the package's; tarball checked against npm's sha512 integrity). Lucide is ISC; the icons derived from Feather (of these: moon, search, x) are also under Feather's MIT license, and the package's LICENSE, vendored unchanged, holds both notices. Only the icons the site uses are vendored. scripts/sync_nav.py writes them inline into the site menu of every page, and scripts/sync_icons.py into the pages that use them in their content (the Orisod 2.0 pilot), so no page loads these files.",
       "used_by": [
-        "assets/nav"
+        "assets/nav",
+        "merge-pdf",
+        "whatsapp-link-generator"
       ],
       "files": [
+        {
+          "path": "assets/vendor/lucide/1.72.0/icons/chevron-down.svg",
+          "source": "https://cdn.jsdelivr.net/npm/lucide-static@1.72.0/icons/chevron-down.svg",
+          "sha256": "31b3d353db851b6d78e9495ffd9491f9221c2af95b060e38bc5ae226e58a2fd8",
+          "bytes": 319
+        },
+        {
+          "path": "assets/vendor/lucide/1.72.0/icons/chevron-up.svg",
+          "source": "https://cdn.jsdelivr.net/npm/lucide-static@1.72.0/icons/chevron-up.svg",
+          "sha256": "f4dd9db163e7dff5ec7c5bba447b1f27c9dfd37ed1fbf95cb4886bfaed902bb0",
+          "bytes": 319
+        },
         {
           "path": "assets/vendor/lucide/1.72.0/icons/file-text.svg",
           "source": "https://cdn.jsdelivr.net/npm/lucide-static@1.72.0/icons/file-text.svg",
           "sha256": "853bf47f5cc0fb20ba7d7ce08c41cf3a128375cb9e6b97ed467e7f52f4b0ca36",
           "bytes": 524
+        },
+        {
+          "path": "assets/vendor/lucide/1.72.0/icons/folder-open.svg",
+          "source": "https://cdn.jsdelivr.net/npm/lucide-static@1.72.0/icons/folder-open.svg",
+          "sha256": "4410a524b6341242dc3a14ab7805f85c963e8b30f5dd5cc2944aa0c9a7ae3fba",
+          "bytes": 483
+        },
+        {
+          "path": "assets/vendor/lucide/1.72.0/icons/grip-vertical.svg",
+          "source": "https://cdn.jsdelivr.net/npm/lucide-static@1.72.0/icons/grip-vertical.svg",
+          "sha256": "c4d0580d55bb37ff605ab515a4069eebc6149e156ffe2c1e6cff55a86199deec",
+          "bytes": 497
         },
         {
           "path": "assets/vendor/lucide/1.72.0/icons/heart.svg",
@@ -2284,6 +2310,12 @@
           "bytes": 498
         },
         {
+          "path": "assets/vendor/lucide/1.72.0/icons/lock.svg",
+          "source": "https://cdn.jsdelivr.net/npm/lucide-static@1.72.0/icons/lock.svg",
+          "sha256": "a8d55aa76de69f5258b605347d3420b8ae35b31a96e01f0891c9334e82bbe4c2",
+          "bytes": 384
+        },
+        {
           "path": "assets/vendor/lucide/1.72.0/icons/menu.svg",
           "source": "https://cdn.jsdelivr.net/npm/lucide-static@1.72.0/icons/menu.svg",
           "sha256": "07bb596b5350636142ee0c764c242eea3503c5f771ca3891848b0e8cf74d0b26",
@@ -2302,10 +2334,22 @@
           "bytes": 512
         },
         {
+          "path": "assets/vendor/lucide/1.72.0/icons/plus.svg",
+          "source": "https://cdn.jsdelivr.net/npm/lucide-static@1.72.0/icons/plus.svg",
+          "sha256": "1585dd57f160247db9ddd1d5b7fe90e3697fb2dc3057ff1f377914be8fe74099",
+          "bytes": 331
+        },
+        {
           "path": "assets/vendor/lucide/1.72.0/icons/search.svg",
           "source": "https://cdn.jsdelivr.net/npm/lucide-static@1.72.0/icons/search.svg",
           "sha256": "1ff753c98ac717eec224fb93b2a4c9194396f681bf8f10be17d030d9d2d5a0db",
           "bytes": 352
+        },
+        {
+          "path": "assets/vendor/lucide/1.72.0/icons/smile.svg",
+          "source": "https://cdn.jsdelivr.net/npm/lucide-static@1.72.0/icons/smile.svg",
+          "sha256": "c49b6749c14c269c84d9cbd33e6e74d28e350f4124b75892a0c799ffee0ddbd0",
+          "bytes": 410
         },
         {
           "path": "assets/vendor/lucide/1.72.0/icons/sun.svg",
