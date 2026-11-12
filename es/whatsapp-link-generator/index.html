@@ -372,7 +372,11 @@ a.o-btn:not([href]){cursor:default;}
 .reason{font-size:14px;margin:8px 0 0 0;opacity:1;max-width:none;}
 .reason:empty, .copy-status:empty{display:none;}
 .copy-status{display:block;font-size:14px;font-weight:bold;margin:8px 0 0 0;}
-.qr-preview{margin:12px 0 0 0;}
+/* The QR code: "Generate QR code" shows it here with its own download button; any change to the form clears both. */
+.qr-box{display:flex;flex-direction:column;align-items:flex-start;gap:12px;margin:12px 0 0 0;}
+.qr-box[hidden]{display:none;}
+.qr-preview{margin:0;}
+.sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;}
 .qr-preview img{display:block;width:200px;max-width:100%;height:auto;border-radius:6px;}
 .tool .error{margin:8px 0 0 0;}
 .tool .error:empty{display:none;}
@@ -787,13 +791,17 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
       <button type="button" class="o-btn o-btn-primary" id="openDisabled" disabled aria-describedby="openReason">Abrir en WhatsApp</button>
       <button type="button" class="o-btn o-btn-secondary" id="copyBtn" disabled>Copiar link</button>
       <button type="button" class="o-btn o-btn-secondary" id="shareBtn" disabled>Compartir</button>
-      <button type="button" class="o-btn o-btn-secondary" id="qrBtn" disabled aria-describedby="qrNote">Descargar código QR</button>
+      <button type="button" class="o-btn o-btn-secondary" id="qrBtn" disabled aria-describedby="qrNote">Generar código QR</button>
     </div>
     <p class="reason" id="openReason">Escribe un número de teléfono para abrir el chat.</p>
     <span class="copy-status" id="copyStatus" aria-live="polite"></span>
     <div class="error" id="actionError" role="alert"></div>
     <p class="hint" id="qrNote" hidden>El código QR contiene el link completo, incluidos el número y el mensaje. Un lector de códigos QR puede leer ambos.</p>
-    <div class="qr-preview" id="qrPreview"></div>
+    <div class="qr-box" id="qrBox" hidden>
+      <div class="qr-preview" id="qrPreview"></div>
+      <button type="button" class="o-btn o-btn-secondary" id="qrDownload">Descargar código QR</button>
+    </div>
+    <span class="sr-only" id="qrStatus" aria-live="polite"></span>
   </div>
   </div></div>
 
@@ -855,7 +863,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
       <ol>
         <li>Elige el país y escribe el número como lo marcarías allí, o pégalo con su código de país.</li>
         <li>Agrega un mensaje si quieres. Aparece escrito en el chat y tú decides si lo envías.</li>
-        <li>Abre el chat, copia el link, compártelo o descárgalo como código QR.</li>
+        <li>Abre el chat, copia el link, compártelo o genera un código QR para escanearlo o descargarlo.</li>
       </ol>
       <ul>
         <li id="countryHint">Elige el país del número. Puedes buscar por nombre o por código de país.</li>
@@ -1032,6 +1040,7 @@ const T = {
   "qrTooLong": "Este link es demasiado largo para un código QR ({n} de {max} caracteres). Acorta el mensaje para crearlo.",
   "qrFail": "No se pudo crear el código QR. Prueba con un mensaje más corto.",
   "qrAlt": "Código QR de tu link de WhatsApp",
+  "qrGenerated": "Código QR generado",
   "fmtCross": "Selecciona texto que no se superponga con otro formato, o selecciona todo el texto con formato para quitar ese formato.",
   "fmtMono": "El monoespaciado no se puede combinar con negrita, cursiva ni tachado.",
   "emojiEmpty": "No hay emojis en esta categoría",
@@ -1057,6 +1066,16 @@ const phoneInput = $("phoneInput"), phoneStatus = $("phoneStatus"), phoneError =
 const messageInput = $("messageInput"), bubble = $("bubble"), linkOutput = $("linkOutput");
 const openLink = $("openLink"), openDisabled = $("openDisabled"), openReason = $("openReason");
 const copyBtn = $("copyBtn"), shareBtn = $("shareBtn"), qrBtn = $("qrBtn"), qrNote = $("qrNote"), qrPreview = $("qrPreview");
+const qrBox = $("qrBox"), qrDownload = $("qrDownload"), qrStatus = $("qrStatus");
+// The generated QR code (a PNG data URL), kept for the download button until the form changes.
+let qrUrl = "", qrStatusTimer = 0;
+function clearQr() {
+  clearTimeout(qrStatusTimer);
+  qrPreview.replaceChildren();
+  qrBox.hidden = true;
+  qrUrl = "";
+  qrStatus.textContent = "";
+}
 const copyStatus = $("copyStatus"), actionError = $("actionError");
 
 const fold = (s) => s.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
@@ -1820,7 +1839,7 @@ function update(statusNow) {
   copyBtn.disabled = shareBtn.disabled = !ready;
   copyStatus.textContent = "";
   actionError.textContent = "";
-  qrPreview.replaceChildren();
+  clearQr();
   qrBtn.disabled = !ready || link.length > QR_MAX;
   qrNote.hidden = !ready;
   qrNote.textContent = ready && link.length > QR_MAX
@@ -1876,9 +1895,10 @@ shareBtn.addEventListener("click", async () => {
   try { await navigator.share({ url: link }); }
   catch (e) { if (e && e.name !== "AbortError") actionError.textContent = T.shareFail; }
 });
+// Generate shows the QR code and its download button; it downloads nothing.
 qrBtn.addEventListener("click", () => {
   actionError.textContent = "";
-  qrPreview.replaceChildren();
+  clearQr();
   if (!link || link.length > QR_MAX) return;
   try {
     const holder = document.createElement("div");
@@ -1897,16 +1917,23 @@ qrBtn.addEventListener("click", () => {
     img.src = url;
     img.alt = T.qrAlt;
     qrPreview.append(img);
-    if (window.oFrameReveal) oFrameReveal(qrPreview);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = T.qrFile;
-    document.body.append(a);
-    a.click();
-    a.remove();
+    qrUrl = url;
+    qrBox.hidden = false;
+    // Announced once, politely; focus stays on the Generate button, and Tab reaches Download next.
+    qrStatusTimer = setTimeout(() => { qrStatus.textContent = T.qrGenerated; }, 50);
+    if (window.oFrameReveal) oFrameReveal(qrBox);
   } catch (e) {
     actionError.textContent = T.qrFail;
   }
+});
+qrDownload.addEventListener("click", () => {
+  if (!qrUrl) return;
+  const a = document.createElement("a");
+  a.href = qrUrl;
+  a.download = T.qrFile;
+  document.body.append(a);
+  a.click();
+  a.remove();
 });
 
 const start = initialCountry();

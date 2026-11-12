@@ -111,10 +111,11 @@ const OPEN_STATES = [
   // "Share this tool" list opened, with a tooltip shown and with an item lit by hover.
   ...["/whatsapp-link-generator/", "/es/whatsapp-link-generator/"].flatMap((path) =>
     ["details", "country list", "filled form", ...WA_EMOJI_CATEGORIES.map((c) => "emoji picker: " + c),
-      "share list", "share tooltip", "share lit"].map((open) => ({ path, open }))),
+      "share list", "share tooltip", "share lit", "qr shown"].map((open) => ({ path, open }))),
   // Remove Blank Pages from PDF: a generated PDF checked (pages marked, one with the hidden-content note), then with
   // nothing marked (Save disabled, its reason shown), the collapsed block open, and the share list open.
-  ...["/remove-blank-pages/", "/es/remove-blank-pages/"].flatMap((path) => ["blank pages checked", "blank pages nothing to save", "details", "share list"].map((open) => ({ path, open }))),  // Merge PDF in the Orisod 2.0 page frame: two PDFs loaded (the file list with thumbnails, arrows and remove buttons,
+  ...["/remove-blank-pages/", "/es/remove-blank-pages/"].flatMap((path) => ["blank pages checked", "blank pages nothing to save", "details", "share list"].map((open) => ({ path, open }))),
+  // Merge PDF in the Orisod 2.0 page frame: two PDFs loaded (the file list with thumbnails, arrows and remove buttons,
   // the actions), and the "Help and details" block open.
   ...["/merge-pdf/", "/es/merge-pdf/"].flatMap((path) => ["merge files", "details"].map((open) => ({ path, open }))),
 ];
@@ -171,6 +172,14 @@ const TOOL_STATES = {
     return "#saveNote";
   },
   "country list": async (page) => { await page.focus("#countryInput"); await page.keyboard.press("ArrowDown"); return "#countryList:not([hidden])"; },
+  // The QR code generated: the code and its Download button shown, the polite message announced.
+  "qr shown": async (page) => {
+    await page.fill("#phoneInput", "+44 7400 123456");
+    await page.locator("#phoneInput").blur();
+    await page.click("#qrBtn");
+    await page.locator("#qrDownload").waitFor({ state: "visible" });
+    return "#qrBox";
+  },
   "filled form": async (page) => {
     await page.fill("#countryInput", "Argentina");
     await page.keyboard.press("Enter");
@@ -332,7 +341,7 @@ async function main() {
     process.exit(1);
   }
 
-  console.log(`OK: all ${results.length} pages passed axe-core in dark and light themes (${AXE_TAGS.join(", ")}), including ${OPEN_STATES.length} scans with the nav menu, search box or a category flyout open, or a tool state shown (the WhatsApp link generator's collapsed block, country list, filled form, emoji picker on each category and Share this tool list, tooltip and lit state; Remove Blank Pages with pages checked, with nothing to save, its block and its share list; Merge PDF with files loaded and its block); every error line is announced (role="alert").`);
+  console.log(`OK: all ${results.length} pages passed axe-core in dark and light themes (${AXE_TAGS.join(", ")}), including ${OPEN_STATES.length} scans with the nav menu, search box or a category flyout open, or a tool state shown (the WhatsApp link generator's collapsed block, country list, filled form, emoji picker on each category, Share this tool list, tooltip and lit state, and generated QR code; Remove Blank Pages with pages checked, with nothing to save, its block and its share list; Merge PDF with files loaded and its block); every error line is announced (role="alert").`);
   process.exit(0);
 }
 
