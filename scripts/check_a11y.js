@@ -114,7 +114,9 @@ const OPEN_STATES = [
       "share list", "share tooltip", "share lit"].map((open) => ({ path, open }))),
   // Remove Blank Pages from PDF: a generated PDF checked (pages marked, one with the hidden-content note), then with
   // nothing marked (Save disabled, its reason shown), the collapsed block open, and the share list open.
-  ...["/remove-blank-pages/", "/es/remove-blank-pages/"].flatMap((path) => ["blank pages checked", "blank pages nothing to save", "details", "share list"].map((open) => ({ path, open }))),
+  ...["/remove-blank-pages/", "/es/remove-blank-pages/"].flatMap((path) => ["blank pages checked", "blank pages nothing to save", "details", "share list"].map((open) => ({ path, open }))),  // Merge PDF in the Orisod 2.0 page frame: two PDFs loaded (the file list with thumbnails, arrows and remove buttons,
+  // the actions), and the "Help and details" block open.
+  ...["/merge-pdf/", "/es/merge-pdf/"].flatMap((path) => ["merge files", "details"].map((open) => ({ path, open }))),
 ];
 // How to reach each tool state above (the nav states click a nav button instead).
 const TOOL_STATES = {
@@ -131,6 +133,20 @@ const TOOL_STATES = {
     await page.click("#shareMenu > summary");
     await page.hover('#shareList a[data-share="reddit"]');
     return '#shareList a[data-share="reddit"] .share-tip';
+  },
+  "merge files": async (page) => {
+    const b64 = await page.evaluate(async () => {
+      const { PDFDocument, StandardFonts } = PDFLib;
+      const doc = await PDFDocument.create();
+      const font = await doc.embedFont(StandardFonts.Helvetica);
+      doc.addPage([612, 792]).drawText("A page with text", { x: 72, y: 700, size: 24, font });
+      let s = ""; for (const b of await doc.save()) s += String.fromCharCode(b); return btoa(s);
+    });
+    const file = (name) => ({ name, mimeType: "application/pdf", buffer: Buffer.from(b64, "base64") });
+    await page.setInputFiles("#fileInput", [file("first.pdf"), file("second.pdf")]);
+    await page.waitForFunction(() => document.querySelectorAll("#fileList .file-thumb img").length === 2, null, { timeout: 20000 });
+    await page.waitForTimeout(800);
+    return "#fileList";
   },
   "blank pages checked": async (page) => {
     const b64 = await page.evaluate(async () => {
@@ -316,7 +332,7 @@ async function main() {
     process.exit(1);
   }
 
-  console.log(`OK: all ${results.length} pages passed axe-core in dark and light themes (${AXE_TAGS.join(", ")}), including ${OPEN_STATES.length} scans with the nav menu, search box or a category flyout open, or a tool state shown (the WhatsApp link generator's collapsed block, country list, filled form, emoji picker on each category and Share this tool list, tooltip and lit state; Remove Blank Pages with pages checked, with nothing to save, its block and its share list); every error line is announced (role="alert").`);
+  console.log(`OK: all ${results.length} pages passed axe-core in dark and light themes (${AXE_TAGS.join(", ")}), including ${OPEN_STATES.length} scans with the nav menu, search box or a category flyout open, or a tool state shown (the WhatsApp link generator's collapsed block, country list, filled form, emoji picker on each category and Share this tool list, tooltip and lit state; Remove Blank Pages with pages checked, with nothing to save, its block and its share list; Merge PDF with files loaded and its block); every error line is announced (role="alert").`);
   process.exit(0);
 }
 
