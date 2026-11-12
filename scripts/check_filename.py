@@ -116,10 +116,11 @@ def name_ok(code, expr):
 
 
 def helper_vars(code):
+    """Variables that hold a file name: made by the helper, or taken from a `.name` (currentFileName = file.name)."""
     names = set()
     for m in re.finditer(r"(?<![\w.$])([A-Za-z_$][\w$]*)\s*=(?![=>])", code):
         value = code[m.end():statement_end(code, m.end())]
-        if any(h in value for h in HELPERS):
+        if any(h in value for h in HELPERS) or re.search(r"\.name\b", value):
             names.add(m.group(1))
     return names
 
@@ -192,7 +193,9 @@ def check_page(rel, text, source, errors):
         code = text[s:e]
         if s <= r[0] and r[1] <= e:
             code = text[s:r[0]] + "\n" * text.count("\n", r[0], r[1]) + text[r[1]:e]
-        at = lambda off: f"{rel}:{line_of(text, s + off)}"  # noqa: E731
+        # The block is blanked out with the same number of line breaks, so lines are counted in `code` itself.
+        first = text.count("\n", 0, s)
+        at = lambda off: f"{rel}:{first + code.count(chr(10), 0, off) + 1}"  # noqa: E731
         for m in re.finditer(r"\.download\s*=(?![=>])\s*", code):
             expr = code[m.end():statement_end(code, m.end())]
             if not name_ok(code, expr):

@@ -60,6 +60,7 @@ BREAKS = [
     ("a helper name in a template", "<div class=\"result-filename\"></div>", "<div class=\"result-filename\">${outName}</div>", "(outName) is written into HTML"),
     ("a file .name in a template", "<div class=\"result-filename\"></div>", "<div class=\"result-filename\">${selectedFile.name}</div>", "(.name) is written into HTML"),
     ("a file name concatenated into HTML", "  card.querySelector('.result-filename').textContent = outName;", "  card.innerHTML += '<b>' + outName + '</b>';", "(outName) is written into HTML"),
+    ("a variable taken from .name in HTML", "  const kept = blob.size === 0;", "  const label = selectedFile.name;\n  card.innerHTML += `<b>${label}</b>`;\n  const kept = blob.size === 0;", "(label) is written into HTML"),
     ("insertAdjacentHTML with a name", "  card.querySelector('.result-filename').textContent = outName;", "  card.insertAdjacentHTML('beforeend', `<b>${keptName}</b>`);", "(keptName) is written into HTML"),
 ]
 
@@ -108,6 +109,15 @@ def main():
                 failures.append(f"{label}: expected a failure with \"{want}\", got {code}: {out.strip()}")
             else:
                 print(f"ok   {label} fails as it should")
+        # The reported line is the page's own line, also for code after the block.
+        broken = good.replace("link.download = outName;", "link.download = 'signed.pdf';")
+        page.write_text(broken, encoding="utf-8", newline="\n")
+        code, out = run(CHECK, tmp)
+        want_line = broken[:broken.index("link.download = 'signed.pdf'")].count("\n") + 1
+        if f"tool/index.html:{want_line}:" not in out:
+            failures.append(f"the failure isn't reported at line {want_line}: {out.strip()}")
+        else:
+            print(f"ok   the failure is reported at the page's line {want_line}")
         page.write_text(good.replace("const ORISOD_NAME_BYTES = 120;", "const ORISOD_NAME_BYTES = 9;"), encoding="utf-8", newline="\n")
         code, out = run(SYNC, tmp, "--check")
         if code == 0:
