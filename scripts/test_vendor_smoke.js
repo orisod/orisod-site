@@ -889,6 +889,9 @@ function expectCopied(c, link, word) {
   expect(c.copied === link, `the clipboard got ${c.copied}, not ${link}`);
   expect(c.status === word && c.live === "polite", `the copy status says "${c.status}" (aria-live ${c.live}), not "${word}"`);
 }
+// The QR code buttons and the polite message announced when the code appears.
+const WA_QR_TEXT = { en: { gen: "Generate QR code", dl: "Download QR code", done: "QR code generated" },
+  es: { gen: "Generar código QR", dl: "Descargar código QR", done: "Código QR generado" } };
 function expectQrBlocked(q, lang) {
   expect(q.disabled, "the QR button is enabled for a link too long for a QR code");
   expect(q.note.includes((WA_QR_MAX + 1).toLocaleString(lang)) && q.note.includes(WA_QR_MAX.toLocaleString(lang)), `the QR note doesn't give the length and the limit: ${q.note}`);
@@ -897,8 +900,17 @@ function pngSize(buf) {
   expect(buf.subarray(1, 4).toString("latin1") === "PNG", "the QR download isn't a PNG");
   return [buf.readUInt32BE(16), buf.readUInt32BE(20)];
 }
+// "Generate QR code" shows the QR code and its download button and downloads nothing; "Download QR code" saves it.
 async function qrDownload(page) {
-  const [download] = await Promise.all([page.waitForEvent("download", { timeout: 10000 }), page.click("#qrBtn")]);
+  let early = 0;
+  const count = () => { early++; };
+  page.on("download", count);
+  await page.click("#qrBtn");
+  await page.locator("#qrDownload").waitFor({ state: "visible", timeout: 10000 });
+  await page.waitForTimeout(500);
+  page.off("download", count);
+  expect(early === 0, `"Generate QR code" downloaded ${early} file(s)`);
+  const [download] = await Promise.all([page.waitForEvent("download", { timeout: 10000 }), page.click("#qrDownload")]);
   const png = await readFile(await download.path());
   const pixels = await page.evaluate(async () => {
     const img = document.querySelector("#qrPreview img");
@@ -3011,6 +3023,109 @@ const CASES = [
     },
   },
   {
+    name: "WhatsApp link generator (QR code: generate, then download)",
+    page: WA,
+    vendor: [LIBPHONE, QRJS],
+    async run(page, lang) {
+      const t = WA_QR_TEXT[lang];
+      const downloads = [];
+      page.on("download", (d) => downloads.push(d));
+      const read = () => page.evaluate(() => {
+        const $ = (id) => document.getElementById(id);
+        const shown = (el) => !!el && !el.closest("[hidden]") && el.getClientRects().length > 0;
+        return { img: !!document.querySelector("#qrPreview img"), imgShown: shown(document.querySelector("#qrPreview img")),
+          download: shown($("qrDownload")), status: $("qrStatus").textContent, live: $("qrStatus").getAttribute("aria-live"),
+          genText: $("qrBtn").textContent.trim(), genLabel: $("qrBtn").getAttribute("aria-label"), genDisabled: $("qrBtn").disabled,
+          focus: document.activeElement?.id || "" };
+      });
+      const expectEmpty = (s, when) => expect(!s.img && !s.download && !s.status, `${when}: QR ${s.img}, Download shown ${s.download}, status "${s.status}"`);
+      // Before Generate: no QR code and no Download button, also once there's a link.
+      expectEmpty(await read(), "on load");
+      await waCountry(page, "GB");
+      await waNumber(page, "07400 123456");
+      await page.fill("#messageInput", "Hello");
+      const ready = await read();
+      expectEmpty(ready, "with a link, before Generate");
+      expect(ready.genText === t.gen && ready.genLabel === null && !ready.genDisabled, `the generate button reads "${ready.genText}" (aria-label ${ready.genLabel}, disabled ${ready.genDisabled})`);
+      expect(await page.getByRole("button", { name: t.gen, exact: true }).count() === 1, `no button is named "${t.gen}"`);
+      // Keyboard: Enter on Generate shows the QR code, announces it, keeps focus there and downloads nothing; Tab reaches Download.
+      await page.focus("#qrBtn");
+      await page.keyboard.press("Enter");
+      await page.locator("#qrDownload").waitFor({ state: "visible", timeout: 10000 });
+      await page.waitForTimeout(600);
+      const shown = await read();
+      const expectShown = (s) => {
+        expect(s.imgShown && s.download, `after Generate: QR shown ${s.imgShown}, Download shown ${s.download}`);
+        expect(s.status === t.done && s.live === "polite", `after Generate the live region says "${s.status}" (aria-live ${s.live}), not "${t.done}"`);
+        expect(s.focus === "qrBtn", `focus moved to "${s.focus}" when the QR code appeared`);
+      };
+      expectShown(shown);
+      expect(downloads.length === 0, `Generate downloaded ${downloads.length} file(s)`);
+      const dlName = await page.textContent("#qrDownload");
+      expect(dlName.trim() === t.dl, `the download button reads "${dlName.trim()}"`);
+      await page.keyboard.press("Tab");
+      const tabbed = await page.evaluate(() => document.activeElement?.id);
+      expect(tabbed === "qrDownload", `Tab after Generate went to "${tabbed}", not the download button`);
+      const [download] = await Promise.all([page.waitForEvent("download", { timeout: 10000 }), page.keyboard.press("Enter")]);
+      const bytes = await readFile(await download.path());
+      const shownPng = await page.evaluate(() => document.querySelector("#qrPreview img").src);
+      const samePng = bytes.equals(Buffer.from(shownPng.split(",")[1], "base64"));
+      expect(download.suggestedFilename() === WA_TEXT[lang].qrFile && samePng, `Download saved ${download.suggestedFilename()} (${bytes.length} bytes, the shown image: ${samePng})`);
+      const size = pngSize(bytes);
+      expect(size[0] === 592 && size[1] === 592, `the QR PNG is ${size.join("x")}`);
+      // Any change to the form clears the QR code and hides Download: message, number, country and send-to mode.
+      const edits = [["message", () => page.fill("#messageInput", "Hello again")], ["number", () => waNumber(page, "07400 123457")],
+        ["country", () => waCountry(page, "IE")], ["send-to mode", () => page.click(".mode button >> nth=1")]];
+      for (const [what, change] of edits) {
+        await page.click("#qrBtn");
+        await page.locator("#qrDownload").waitFor({ state: "visible", timeout: 10000 });
+        await change();
+        await page.waitForTimeout(100);
+        expectEmpty(await read(), `after changing the ${what}`);
+      }
+      // Too long for a QR code: Generate stays disabled with the length message and no Download button.
+      await page.click(".mode button >> nth=0");
+      await waCountry(page, "GB");
+      await waNumber(page, "07400 123456");
+      await page.fill("#messageInput", "a".repeat(WA_QR_MAX + 1 - "https://wa.me/447400123456?text=".length));
+      const over = await page.evaluate(() => ({ disabled: document.getElementById("qrBtn").disabled, note: document.getElementById("qrNote").textContent }));
+      expectQrBlocked(over, lang);
+      expectEmpty(await read(), "with a link too long for a QR code");
+      // Both themes at 1280 and 390 px: the QR code and its button inside the frame, 48 px, readable, no sideways scroll.
+      await page.fill("#messageInput", "Hello");
+      const layouts = [];
+      for (const width of [1280, 390]) for (const theme of ["dark", "light"]) {
+        await page.setViewportSize({ width, height: 900 });
+        await page.evaluate((th) => th === "light" ? document.documentElement.setAttribute("data-theme", "light") : document.documentElement.removeAttribute("data-theme"), theme);
+        await page.click("#qrBtn");
+        await page.locator("#qrDownload").waitFor({ state: "visible", timeout: 10000 });
+        await page.waitForTimeout(500);
+        layouts.push(await page.evaluate(([w, th]) => {
+          const box = (el) => el.getBoundingClientRect();
+          const tool = box(document.querySelector(".o-frame-top")), img = box(document.querySelector("#qrPreview img")), btn = document.getElementById("qrDownload");
+          const cs = getComputedStyle(btn), card = getComputedStyle(document.querySelector(".o-frame-top")).backgroundColor;
+          return { at: `${w} px ${th}`, inside: img.left >= tool.left && img.right <= tool.right && box(btn).right <= tool.right, imgW: img.width, btnH: box(btn).height,
+            overflow: document.documentElement.scrollWidth - window.innerWidth, text: cs.color, bg: cs.backgroundColor, card };
+        }, [width, theme]));
+      }
+      const expectLayout = (l) => {
+        const c = frameContrast(frameRgba(l.text), frameOver(frameRgba(l.bg), frameRgba(l.card)));
+        expect(l.inside && l.overflow <= 0 && l.btnH === 48 && l.imgW === 200 && c >= 4.5, `${l.at}: ${JSON.stringify(l)}, button text ${c.toFixed(2)}:1`);
+      };
+      layouts.forEach(expectLayout);
+      await page.evaluate(() => document.documentElement.removeAttribute("data-theme"));
+      return `no QR code or Download button before Generate; Enter on "${t.gen}" shows the QR code, announces "${t.done}" politely, keeps focus and downloads nothing; ` +
+        `Tab reaches "${t.dl}", which saves ${download.suggestedFilename()} (592x592, the image shown); changing the message, number, country or send-to mode clears both; ` +
+        `a ${WA_QR_MAX + 1}-character link keeps Generate disabled ("${over.note}"); inside the frame at 1280 and 390 px in both themes; ` + [
+        mustFail("a QR code before Generate", () => expectEmpty({ ...ready, img: true }, "test")),
+        mustFail("focus lost when the QR code appears", () => expectShown({ ...shown, focus: "" })),
+        mustFail("no announcement", () => expectShown({ ...shown, status: "" })),
+        mustFail("Download left after an edit", () => expectEmpty({ ...ready, download: true }, "test")),
+        mustFail("a button outside the frame at 390 px", () => expectLayout({ ...layouts[2], inside: false })),
+      ].join("; ");
+    },
+  },
+  {
     name: "circle-flags (WhatsApp link generator, country picker)",
     page: WA,
     vendor: [LIBPHONE, QRJS, FLAG("pe")],
@@ -3600,7 +3715,7 @@ const CASES = [
       const nowOpen = await plain.evaluate(() => ({ open: document.querySelector("details.more").open, faq: document.querySelectorAll("details.more .faq-item").length }));
       await noJs.close();
       expect(!wasOpen && nowOpen.open && nowOpen.faq === 4, `without JavaScript the block was open ${wasOpen}, opened ${nowOpen.open}, ${nowOpen.faq} FAQ items`);
-      return `footer last; How it works with 3 steps and the guide link under them, 3 Related tools cards, one block with its summary first; ` +
+      return `footer last; How it works with 3 steps and the guide link under them, 4 Related tools tiles, one block with its summary first; ` +
         `the field notes in the block's 6 sections, the QR note only once there's a link; closed on load with its text in the page; "${closed.label}" ${Math.round(closed.height)}px; ` +
         `Enter opens, Space closes, the arrow turns, focus ring shown; FAQ equals the FAQPage JSON-LD; no sideways scroll at 320 px (${widths.map((w) => w[0]).join(", ")}); works without JavaScript; ` +
         [mustFail("the block moved after the footer", () => expectStructure(moved)),
@@ -4793,7 +4908,6 @@ const CASES = [
       expectFrameMotion(animated, "QR code");
       expectFrameInstant(instant, "QR code, reduced motion");
       out.push(`idle, then active with a number; the QR code grows the frame from ${Math.round(animated.before.h)} to ${Math.round(animated.after.h)} px through ${Math.round(animated.mid.h)} px (${animated.mid.frames} frames mid-change); instant under reduced motion`);
-      // (A fresh page: in headless Chromium a link click doesn't navigate after the QR download, on orisod-2 too.)
       await page.reload();
       out.push(await frameGuideLink(page));
       return out.join("; ") + "; " + [
