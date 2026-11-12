@@ -49,7 +49,7 @@ BLOGPOSTING = re.compile(r'<script type="application/ld\+json">\s*\{\s*"@context
 def article_text(src):
     """The page's content text (see the module docstring), or None if it can't be read."""
     src = re.sub(r"<(script|style)\b.*?</\1>", "", src, flags=re.S)
-    src = re.sub(r'<aside class="related-aside".*?</aside>', "", src, flags=re.S)
+    src = re.sub(r'<aside class="related-aside[^"]*".*?</aside>', "", src, flags=re.S)
     m = re.search(r"<main\b", src)
     start = src.find("<h1", m.end() if m else 0)
     if start < 0:

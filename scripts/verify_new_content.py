@@ -41,7 +41,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from audit_extract import NOT_PAGES, REPO_ROOT, changed_pages, extract_file, page_info, plain, read  # noqa: E402
-from sync_related_cards import card_diffs, catalog as sync_catalog  # noqa: E402
+from sync_related_cards import card_diffs, frame_problems, catalog as sync_catalog  # noqa: E402
 from sync_guide_links import link_diffs  # noqa: E402
 
 SITE_CHECKS = ["check_sitemap.py", "check_jsonld.py", "check_breadcrumbs.py", "check_nav.py",
@@ -232,9 +232,12 @@ def check_page(rel, base, res, names, new_pages, catalogs):
     tcards, bcards = catalogs[info["lang"]]
     for href, diffs in card_diffs(text, catalogs["sync"][info["lang"]]):
         for field, (_, _, live, want) in (diffs or {}).items():
-            shown = "" if field == "icon" else f": \"{live}\", /tools has \"{want}\""
-            res.fail("card-sync", rel, f"related card {href} {field} differs from /tools{shown} "
+            shown = "" if field in ("icon", "markup") else f": \"{live}\", /tools has \"{want}\""
+            what = "is a card where this page frame shows a tile" if field == "markup" else f"{field} differs from /tools{shown}"
+            res.fail("card-sync", rel, f"related card {href} {what} "
                                        "(fix: python scripts/sync_related_cards.py --write)")
+    for problem in frame_problems(text):
+        res.fail("card-sync", rel, problem)
 
     # guide-sync
     for href, _, _, live, want in link_diffs(text):

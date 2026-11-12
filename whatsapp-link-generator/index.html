@@ -105,12 +105,13 @@
 </script>
 <style>
 /* orisod.css: start. Generated from assets/css/orisod.css by scripts/sync_styles.py; edit that file, not this region. */
-/* Orisod 2.0 shared design tokens.
+/* Orisod 2.0 shared design tokens and page frame.
    This file is the single source. scripts/sync_styles.py copies it, byte for byte, into the marked region of each
    adopting page's inline <style>; scripts/check_styles.py (CI: check-styles) fails when a page's copy differs.
    Edit it here, then run: python scripts/sync_styles.py --write
-   Tokens only: nothing here draws anything until a page uses a variable. Names start with --o- so they never
-   collide with the variables the current pages define (--bg, --text, --accent, ...). Dark is the default theme;
+   First the tokens, which draw nothing until a page uses a variable; their names start with --o- so they never
+   collide with the variables the current pages define (--bg, --text, --accent, ...). Then the page frame blocks
+   (step 4), which only apply on a page whose <body> has the o-frame class. Dark is the default theme;
    light is :root[data-theme="light"], set by the theme toggle. */
 
 /* Inter 4.001, variable weight 100 to 900, latin and latin-ext only (assets/vendor/inter/5.3.0, OFL-1.1).
@@ -196,6 +197,97 @@
     --o-duration-slow:0ms;
   }
 }
+
+/* ===== Page frame (Orisod 2.0 step 4, pilot) =====
+   A page opts in with <body class="o-frame">. These blocks style the parts every tool page shares: the tool's frame,
+   the "How it works" steps, the Related tools tiles, the buttons and the Help and details panel. A tool's own styles
+   stay in its page. Nothing below draws anything on a page without the o-frame class. */
+
+/* Frame page: the new palette and Inter for the whole page. The page's older variables (--bg, --text, --card-bg,
+   --border, --muted-text), which its own CSS and the site menu use, take the --o- values, in both themes. */
+.o-frame{
+  --bg:var(--o-bg);
+  --text:var(--o-text);
+  --card-bg:var(--o-card);
+  --border:var(--o-border);
+  --muted-text:var(--o-muted);
+  font-family:var(--o-font-sans);
+}
+.o-frame .container{max-width:960px;}
+.o-icon{display:block;flex:none;width:20px;height:20px;}
+
+/* Frame: the tool itself, full content width, on the card surface. data-state="idle" before use (low: a form or an
+   upload zone), "active" in use (it grows). Its content sits in one .o-frame-body wrapper, which the script measures. Children marked o-when-idle / o-when-active show in one state only; the
+   active ones fade in and rise 8px after the height has moved. The page's frame script animates the height. */
+.o-frame-top{position:relative;margin:var(--o-space-6) 0 0 0;padding:28px;background:var(--o-card);border:1px solid var(--o-border);border-radius:16px;text-align:left;}
+@media (max-width:599px){.o-frame-top{padding:18px;}}
+.o-frame-body{display:flow-root;}
+.o-frame-top.o-resizing{overflow:hidden;transition:height var(--o-duration-slow) var(--o-ease);}
+.o-frame-narrow{max-width:680px;margin-left:auto;margin-right:auto;}
+.o-frame-top[data-state="idle"] .o-when-active, .o-frame-top[data-state="active"] .o-when-idle{display:none;}
+.o-frame-top[data-state="active"] .o-when-active{animation:o-rise var(--o-duration-slow) var(--o-ease) var(--o-duration-slow) both;}
+@keyframes o-rise{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+/* Bottom row: "How it works" and "Related tools", half and half, as wide as the frame together; stacked on phones. */
+.o-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--o-space-5);margin:var(--o-space-5) 0 0 0;text-align:left;}
+@media (max-width:599px){.o-row{grid-template-columns:minmax(0,1fr);}}
+.o-panel{min-width:0;padding:var(--o-space-5);background:var(--o-card);border:1px solid var(--o-border);border-radius:16px;}
+@media (max-width:599px){.o-panel{padding:18px;}}
+.o-panel > h2{margin:0 0 var(--o-space-5) 0;font-size:18px;line-height:1.3;}
+
+/* Steps: numbered 36px circles joined by a 2px line, then a divider and the guide link. */
+.o-steps{list-style:none;margin:0;padding:0;counter-reset:o-step;}
+.o-steps > li{position:relative;counter-increment:o-step;min-height:36px;margin:0;padding:7px 0 var(--o-space-5) 52px;font-size:15px;line-height:1.5;color:var(--o-text);}
+.o-steps > li:last-child{padding-bottom:0;}
+.o-steps > li::before{content:counter(o-step) / "";position:absolute;left:0;top:0;display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:var(--o-accent);color:#ffffff;font-size:15px;font-weight:700;line-height:1;}
+.o-steps > li:not(:last-child)::after{content:"";position:absolute;left:17px;top:36px;bottom:0;width:2px;background:var(--o-border);}
+.o-guide{display:flex;align-items:flex-start;gap:10px;max-width:none;margin:var(--o-space-5) 0 0 0;padding:var(--o-space-5) 0 0 0;border-top:1px solid var(--o-border);font-size:14px;line-height:1.5;color:var(--o-muted);text-align:left;opacity:1;}
+.o-guide .o-icon{width:18px;height:18px;margin-top:2px;color:var(--o-link);}
+.o-guide a{color:var(--o-link);text-decoration:underline;text-underline-offset:2px;}
+.o-guide a:focus-visible{outline:2px solid var(--o-accent);outline-offset:2px;border-radius:3px;}
+
+/* Related tools tiles: always four, 2 x 2, the category icon on top and the tool's name below. The tint and the hover
+   border take the category colour. The markup comes from scripts/sync_related_cards.py. */
+.o-tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--o-space-3);}
+.o-tile{--o-cat:var(--o-accent);display:flex;flex-direction:column;align-items:flex-start;gap:var(--o-space-3);min-height:128px;padding:var(--o-space-4);background:var(--o-elevated);border:1px solid var(--o-border);border-radius:14px;color:var(--o-text);text-decoration:none;transition:transform var(--o-duration-base) var(--o-ease), border-color var(--o-duration-base) var(--o-ease);}
+.o-tile:has(> .cat-pdf){--o-cat:var(--o-cat-pdf);}
+.o-tile:has(> .cat-image){--o-cat:var(--o-cat-image);}
+.o-tile:has(> .cat-utility){--o-cat:var(--o-cat-utility);}
+.o-tile:hover{transform:translateY(-3px);border-color:var(--o-cat);}
+.o-tile:focus-visible{outline:2px solid var(--o-accent);outline-offset:2px;}
+.o-tiles .o-tile .icon-box{display:flex;align-items:center;justify-content:center;flex:none;width:46px;height:46px;margin:0;border:0;border-radius:12px;background:color-mix(in srgb, var(--o-cat) 16%, transparent);color:var(--o-cat);}
+.o-tiles .o-tile .icon-box svg{display:block;width:24px;height:24px;}
+.o-tile-name{font-size:15px;font-weight:600;line-height:1.35;}
+
+/* Buttons: 48px, radius 12. Primary (accent, white text), secondary (outlined), ghost; disabled; a visible focus
+   ring; pressing scales to 0.97. */
+.o-btn{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;gap:var(--o-space-2);min-height:48px;margin:0;padding:0 20px;border:1px solid transparent;border-radius:12px;background:transparent;color:var(--o-text);font-family:inherit;font-size:15px;font-weight:600;line-height:1.2;text-align:center;text-decoration:none;cursor:pointer;filter:none;opacity:1;transition:transform var(--o-duration-fast) var(--o-ease), background-color var(--o-duration-base) var(--o-ease), border-color var(--o-duration-base) var(--o-ease);}
+.o-btn .o-icon{width:18px;height:18px;}
+.o-btn-primary{background:var(--o-accent);border-color:var(--o-accent);color:#ffffff;}
+.o-btn-primary:hover:not(:disabled){background:var(--o-accent-hover);border-color:var(--o-accent-hover);}
+.o-btn-secondary{border-color:color-mix(in srgb, var(--o-muted) 55%, transparent);}
+.o-btn-secondary:hover:not(:disabled){border-color:var(--o-accent);}
+.o-btn-ghost{color:var(--o-link);}
+.o-btn-ghost:hover:not(:disabled){background:color-mix(in srgb, var(--o-accent) 12%, transparent);}
+.o-btn:active:not(:disabled){transform:scale(.97);}
+.o-btn:disabled{opacity:.45;cursor:not-allowed;}
+.o-btn:focus-visible{outline:2px solid var(--o-accent);outline-offset:2px;}
+.o-btn[hidden]{display:none;}
+
+/* Help and details: full width under the row, a native <details> closed by default, its text in the HTML for search
+   engines and for readers without JavaScript. The arrow is drawn with borders and turns when it opens. */
+.o-help{margin:var(--o-space-5) 0 0 0;background:var(--o-card);border:1px solid var(--o-border);border-radius:16px;text-align:left;}
+.o-help > summary{display:flex;align-items:center;gap:var(--o-space-3);min-height:56px;padding:var(--o-space-4) var(--o-space-5);border-radius:16px;font-size:16px;font-weight:600;line-height:1.3;list-style:none;cursor:pointer;}
+.o-help > summary::-webkit-details-marker{display:none;}
+.o-help > summary::before{content:"";order:2;flex:none;width:8px;height:8px;margin:0 4px 4px auto;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);transition:transform var(--o-duration-slow) var(--o-ease);}
+.o-help[open] > summary::before{transform:rotate(-135deg);}
+.o-help > summary:hover{color:var(--o-link);}
+.o-help > summary:focus-visible{outline:2px solid var(--o-accent);outline-offset:2px;}
+.o-help-body{max-width:none;margin:0;padding:0 var(--o-space-5) var(--o-space-4) var(--o-space-5);text-align:left;}
+.o-help-body h2{margin:var(--o-space-6) 0 var(--o-space-3) 0;font-size:18px;}
+.o-help-body h2:first-child{margin-top:var(--o-space-2);}
+.o-help-body p, .o-help-body ul, .o-help-body ol{max-width:none;margin:0 0 var(--o-space-4) 0;font-size:15px;line-height:1.65;color:var(--o-text);opacity:1;}
+.o-help-body a{color:var(--o-link);}
 /* orisod.css: end */
 :root{
   --bg:#0b0f1a;
@@ -232,23 +324,23 @@ body{margin:0;font-family:var(--o-font-sans);background-color:var(--bg);backgrou
 .container{max-width:800px;margin:0 auto;}
 h1{font-size:48px;margin-bottom:10px;}
 p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-height:1.6;}
-.box{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:30px 20px;margin-top:30px;}
 /* WhatsApp link generator: the tool, "How it works" beside Related tools, and the collapsed block. */
 .lead{margin:0 auto 6px auto;}
 .affil{font-size:13px;color:var(--muted-text);opacity:1;margin:0 auto;}
-.tool{text-align:left;max-width:680px;margin-left:auto;margin-right:auto;padding:26px 22px;}
+.tool{text-align:left;}
 .tool .field{margin:0 0 20px 0;}
 .tool label, .tool .field-label{display:block;font-size:15px;font-weight:bold;line-height:1.4;margin:0 0 6px 0;opacity:1;max-width:none;}
 .tool .hint{font-size:13px;color:var(--muted-text);line-height:1.5;margin:6px 0 0 0;opacity:1;max-width:none;}
-.tool input[type="text"], .tool input[type="tel"], .tool textarea{display:block;width:100%;margin:0;padding:12px;border-radius:8px;border:1px solid var(--dropzone-border);background:var(--bg);color:var(--text);font-family:inherit;font-size:16px;line-height:1.4;}
+.tool input[type="text"], .tool input[type="tel"], .tool textarea{display:block;width:100%;margin:0;padding:12px;border-radius:10px;border:1px solid var(--dropzone-border);background:var(--bg);color:var(--text);font-family:inherit;font-size:16px;line-height:1.4;}
 .tool textarea{min-height:110px;resize:vertical;}
 .tool input::placeholder, .tool textarea::placeholder{color:var(--muted-text);opacity:1;}
 .tool input:focus, .tool textarea:focus{outline:2px solid var(--accent);outline-offset:1px;}
 .tool input[readonly]{font-size:14px;}
 /* Option buttons are real <button>s: same look as before, plus the focus ring. */
 .mode{display:flex;flex-wrap:wrap;gap:8px;margin:0;}
-.mode button{margin:0;font-family:inherit;line-height:inherit;font-size:14px;padding:9px 14px;min-height:44px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer;}
-.mode button[aria-pressed="true"]{border-color:#8b5cf6;box-shadow:inset 0 0 0 1px #8b5cf6;font-weight:bold;}
+.mode button{flex:1 1 auto;margin:0;font-family:inherit;line-height:1.3;font-size:14px;white-space:nowrap;padding:8px 12px;min-height:48px;border-radius:12px;border:1px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer;transition:transform var(--o-duration-fast) var(--o-ease), border-color var(--o-duration-base) var(--o-ease);}
+.mode button:active{transform:scale(.97);}
+.mode button[aria-pressed="true"]{border-color:var(--o-accent);box-shadow:inset 0 0 0 1px var(--o-accent);background:color-mix(in srgb, var(--o-accent) 14%, var(--bg));font-weight:bold;}
 .mode button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
 .combo{position:relative;}
 .combo-flag{position:absolute;left:12px;top:50%;width:22px;height:22px;margin-top:-11px;pointer-events:none;}
@@ -276,13 +368,7 @@ p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-heigh
 .bubble code{font-family:Consolas, "Courier New", monospace;font-size:14px;padding:0 3px;border-radius:4px;background:rgba(148,163,184,.22);}
 .bubble code.mono{padding:0;background:none;}
 .actions{display:flex;flex-wrap:wrap;gap:10px;margin:0;}
-.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;margin:0;padding:10px 16px;border-radius:8px;border:1px solid var(--accent);background:var(--card-bg);color:var(--text);font-family:inherit;font-size:15px;line-height:1.3;text-decoration:none;cursor:pointer;}
-.btn.primary{background:var(--accent);color:#ffffff;}
-.btn[hidden]{display:none;}
-a.btn:not([href]){cursor:default;}
-.btn:disabled{opacity:.45;cursor:not-allowed;}
-.btn:hover:not(:disabled){filter:brightness(1.08);}
-.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+a.o-btn:not([href]){cursor:default;}
 .reason{font-size:14px;margin:8px 0 0 0;opacity:1;max-width:none;}
 .reason:empty, .copy-status:empty{display:none;}
 .copy-status{display:block;font-size:14px;font-weight:bold;margin:8px 0 0 0;}
@@ -304,7 +390,7 @@ a.btn:not([href]){cursor:default;}
 /* Emoji picker: a panel in the page flow under the message box, as wide as the field, never over other
    controls. Category tabs, then a grid of 44px buttons (5 columns, 8 from 480px) that scrolls on its own. */
 .fmt-btn[aria-expanded="true"]{border-color:var(--accent);background:rgba(37,99,235,.14);}
-.fmt-btn .g-e{font-family:"Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;font-size:20px;}
+.fmt-btn .g-e{width:20px;height:20px;}
 .emoji-picker{position:relative;margin:10px 0 0 0;padding:8px 6px 6px 6px;border:1px solid var(--border);border-radius:10px;background:var(--card-bg);}
 .emoji-picker[hidden]{display:none;}
 .tool .emoji-title{font-size:14px;font-weight:bold;line-height:1.4;margin:4px 52px 10px 4px;opacity:1;max-width:none;}
@@ -322,28 +408,6 @@ a.btn:not([href]){cursor:default;}
 @media (min-width:480px){.emoji-row{grid-template-columns:repeat(8,minmax(44px,1fr));}}
 .emoji-btn{display:flex;align-items:center;justify-content:center;width:100%;height:44px;margin:0;padding:0;border-radius:8px;border:1px solid transparent;background:none;color:var(--text);font-family:"Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;font-size:24px;line-height:1;cursor:pointer;}
 .emoji-btn:hover{border-color:var(--accent);background:rgba(37,99,235,.10);}
-.how-grid{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:28px;margin:44px 0 0 0;text-align:left;align-items:start;}
-@media (max-width:639px){.how-grid{grid-template-columns:minmax(0,1fr);gap:8px;}}
-.how-grid h2{margin:0 0 14px 0;}
-.how ol{margin:0;padding:0 0 0 22px;font-size:15px;line-height:1.6;opacity:.85;}
-.how ol li{margin:0 0 8px 0;}
-@media (max-width:639px){.related-aside h2{margin-top:30px;}}
-.related-aside .related-grid{grid-template-columns:minmax(0,1fr);}
-.guide-link{max-width:none;margin:14px 0 0 0;text-align:left;font-size:14px;opacity:.85;}
-.guide-link a{color:var(--accent);text-decoration:none;}
-:root[data-theme="light"] .guide-link a{color:#1d4ed8;}
-/* The collapsed block: native <details>, closed by default, its text in the HTML from the start. */
-.more{margin:28px 0 0 0;text-align:left;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;}
-.more > summary{display:flex;align-items:center;gap:12px;min-height:48px;padding:12px 16px;font-size:16px;font-weight:bold;line-height:1.3;cursor:pointer;list-style:none;border-radius:10px;}
-.more > summary::-webkit-details-marker{display:none;}
-.more > summary::before{content:"";flex:none;width:8px;height:8px;margin:0 2px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg);transition:transform .2s;}
-.more[open] > summary::before{transform:rotate(45deg);}
-.more > summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
-.more > summary:hover{text-decoration:underline;}
-.more .seo-content{max-width:none;padding:0 18px 10px 18px;}
-.more .seo-content h2:first-child{margin-top:10px;}
-.more .seo-content ol{font-size:15px;opacity:0.85;line-height:1.7;}
-@media (prefers-reduced-motion:reduce){.more > summary::before{transition:none;}}
 /* Scroll anchoring off: opening the share list by hover makes the page taller, and Chrome's scroll anchoring
    can then move the page so the button leaves the pointer (see CLAUDE.md). */
 html{overflow-anchor:none;}
@@ -353,17 +417,16 @@ html{overflow-anchor:none;}
 .share-tool{margin:32px 0 0 0;text-align:center;}
 .share-menu{display:block;margin:0;container-type:inline-size;}
 .share-menu[hidden], .share-toggle[hidden]{display:none;}
-.share-toggle, .share-item{position:relative;box-sizing:border-box;display:flex;align-items:center;justify-content:center;margin:0;padding:0;border:0;border-radius:50%;background:#2563eb;color:#ffffff;font-family:inherit;font-size:15px;line-height:1;text-decoration:none;cursor:pointer;opacity:1;}
+.share-toggle, .share-item{position:relative;box-sizing:border-box;display:flex;align-items:center;justify-content:center;margin:0;padding:0;border:0;border-radius:50%;background:var(--o-accent);color:#ffffff;font-family:inherit;font-size:15px;line-height:1;text-decoration:none;cursor:pointer;opacity:1;}
 .share-toggle{width:48px;height:48px;margin:0 auto;list-style:none;}
 .share-toggle::-webkit-details-marker{display:none;}
 .share-item{position:static;width:44px;height:44px;}
-.share-toggle:focus-visible, .share-item:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
+.share-toggle:focus-visible, .share-item:focus-visible{outline:2px solid var(--o-accent);outline-offset:3px;}
 /* Lit state: on hover (pointer devices only) and keyboard focus each circle turns a lighter blue with a soft halo.
    The solid focus ring above stays the focus indicator; the halo is decoration only. */
-.share-toggle, .share-item{transition:background-color .18s ease, box-shadow .18s ease;}
+.share-toggle, .share-item{transition:background-color var(--o-duration-slow) var(--o-ease), box-shadow var(--o-duration-slow) var(--o-ease);}
 @media (hover:hover){.share-toggle:hover, .share-item:hover{background:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.22), 0 0 16px 3px rgba(96,165,250,.55);}}
 .share-toggle:focus-visible, .share-item:focus-visible{background:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.22), 0 0 16px 3px rgba(96,165,250,.55);}
-@media (prefers-reduced-motion:reduce){.share-toggle, .share-item{transition:none;}}
 .share-ico{display:block;width:22px;height:22px;}
 .share-toggle .ico-close{display:none;}
 .share-menu[open] > .share-toggle .ico-share{display:none;}
@@ -381,7 +444,7 @@ html{overflow-anchor:none;}
 .share-tool:not(.js-tips) .share-item:focus-visible > .share-tip, .share-item.tip-on > .share-tip{display:block;}
 .share-tool.tips-off .share-tip{display:none;}
 .share-status{margin:10px 0 0 0;font-size:14px;font-weight:bold;max-width:none;opacity:1;}
-@media (max-width:600px){h1{font-size:36px;}.tool{padding:20px 14px;}}
+@media (max-width:600px){h1{font-size:36px;}}
 .site-footer{
   margin-top:40px;
   padding:40px 24px 30px 24px;
@@ -400,26 +463,8 @@ html{overflow-anchor:none;}
 .footer-col a:hover{opacity:1;color:var(--accent);}
 .error{color:#f87171;font-size:14px;margin-top:10px;}
 h2{margin-top:50px;font-size:22px;}
-.seo-content{max-width:700px;margin:0 auto;text-align:left;}
-.seo-content p{font-size:15px;opacity:0.85;line-height:1.6;}
-.seo-content ul{font-size:15px;opacity:0.85;line-height:1.7;}
 .faq-item{margin-bottom:18px;}
 .faq-item .q{font-weight:bold;margin-bottom:4px;}
-.related-grid{display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:12px;}
-@media (max-width:600px){.related-grid{grid-template-columns:minmax(0,1fr);}}
-.related-card{display:flex;align-items:center;gap:14px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;color:var(--text);transition:0.2s;}
-.related-card:hover{border-color:var(--accent);transform:translateY(-2px);}
-.related-card:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
-.related-card .icon-box{flex:none;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px;border:2px solid transparent;}
-.related-card .icon-box.cat-image{background:rgba(37,99,235,var(--icon-alpha));border-color:#2563eb;color:#2563eb;}
-.related-card .icon-box.cat-pdf{background:rgba(245,158,11,var(--icon-alpha));border-color:#f59e0b;color:#f59e0b;}
-.related-card .icon-box.cat-utility{background:rgba(139,92,246,var(--icon-alpha));border-color:#8b5cf6;color:#8b5cf6;}
-.related-card .icon-box svg{width:22px;height:22px;display:block;}
-.related-card .body{flex:1 1 auto;min-width:0;}
-.related-card .title{font-size:14px;font-weight:bold;margin-bottom:2px;}
-.related-card .desc{font-size:12px;color:var(--muted-text);line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.related-card .arrow{flex:none;font-size:16px;color:var(--muted-text);transition:0.2s;}
-.related-card:hover .arrow{color:var(--accent);transform:translateX(2px);}
 .trust-strip{font-size:12px;color:var(--muted-text);margin-top:12px;line-height:1.5;}
 .footer-support-text{font-size:13px;color:var(--muted-text);line-height:1.5;margin:0 0 10px 0;}
 .footer-support-btn{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:8px 14px;border-radius:999px;font-size:13px;font-weight:bold;}
@@ -634,7 +679,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://orisod.com/"}, {"@type": "ListItem", "position": 2, "name": "Utility Tools", "item": "https://orisod.com/tools/#utility"}, {"@type": "ListItem", "position": 3, "name": "WhatsApp Link Generator", "item": "https://orisod.com/whatsapp-link-generator/"}]}
 </script>
 </head>
-<body>
+<body class="o-frame">
 
 <!-- site-nav: start. Generated by scripts/sync_nav.py from assets/nav/site-nav.html, assets/nav/strings.json and the /tools cards; edit those, not this region. -->
 <!-- Icons: Lucide 1.72.0 (ISC; the icons from Feather also MIT): /assets/vendor/lucide/1.72.0/LICENSE -->
@@ -678,7 +723,8 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
   <p class="lead">Create a link that opens a WhatsApp chat with any number without saving it as a contact, with an optional message ready to send.</p>
   <p class="affil">Not affiliated with WhatsApp or Meta.</p>
 
-  <div class="box tool">
+  <div class="o-frame-top" id="toolFrame" data-state="idle"><div class="o-frame-body">
+  <div class="tool o-frame-narrow">
     <div class="field">
       <p class="field-label" id="modeLabel">Send to</p>
       <div class="mode" role="group" aria-labelledby="modeLabel">
@@ -714,14 +760,14 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
         <button type="button" class="fmt-btn" data-format="italic" aria-label="Italic" title="Italic" aria-keyshortcuts="Control+I Meta+I"><span class="g-i" aria-hidden="true">I</span></button>
         <button type="button" class="fmt-btn" data-format="strike" aria-label="Strikethrough" title="Strikethrough"><span class="g-s" aria-hidden="true">S</span></button>
         <button type="button" class="fmt-btn" data-format="mono" aria-label="Monospace" title="Monospace"><span class="g-m" aria-hidden="true">&lt;/&gt;</span></button>
-        <button type="button" class="fmt-btn" id="emojiBtn" aria-label="Insert emoji" title="Insert emoji" aria-expanded="false" aria-controls="emojiPicker"><span class="g-e" aria-hidden="true">🙂</span></button>
+        <button type="button" class="fmt-btn" id="emojiBtn" aria-label="Insert emoji" title="Insert emoji" aria-expanded="false" aria-controls="emojiPicker"><svg class="o-icon g-e" data-lucide="smile" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 10V9"/><path d="M16.472 15a6 6 0 01-8.943 0"/><path d="M9 10V9"/><circle cx="12" cy="12" r="10"/></svg></button>
       </div>
       <textarea id="messageInput" rows="4" aria-describedby="messageHint fmtHelp fmtStatus" placeholder="Hello, I have a question"></textarea>
       <div class="emoji-picker" id="emojiPicker" role="group" aria-labelledby="emojiTitle" hidden>
         <p class="emoji-title" id="emojiTitle">Choose an emoji</p>
         <div class="emoji-tabs" id="emojiTabs" role="tablist" aria-labelledby="emojiTitle"></div>
         <div id="emojiPanels"></div>
-        <button type="button" class="fmt-btn emoji-close" id="emojiClose" aria-label="Close emoji picker" title="Close emoji picker"><span aria-hidden="true">✕</span></button>
+        <button type="button" class="fmt-btn emoji-close" id="emojiClose" aria-label="Close emoji picker" title="Close emoji picker"><svg class="o-icon" data-lucide="x" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
       </div>
       <p class="hint fmt-status" id="fmtStatus" aria-live="polite"></p>
     </div>
@@ -737,11 +783,11 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
     </div>
 
     <div class="actions">
-      <a class="btn primary" id="openLink" target="_blank" rel="noopener noreferrer" hidden>Open in WhatsApp</a>
-      <button type="button" class="btn primary" id="openDisabled" disabled aria-describedby="openReason">Open in WhatsApp</button>
-      <button type="button" class="btn" id="copyBtn" disabled>Copy link</button>
-      <button type="button" class="btn" id="shareBtn" disabled>Share</button>
-      <button type="button" class="btn" id="qrBtn" disabled aria-describedby="qrNote">Download QR code</button>
+      <a class="o-btn o-btn-primary" id="openLink" target="_blank" rel="noopener noreferrer" hidden>Open in WhatsApp</a>
+      <button type="button" class="o-btn o-btn-primary" id="openDisabled" disabled aria-describedby="openReason">Open in WhatsApp</button>
+      <button type="button" class="o-btn o-btn-secondary" id="copyBtn" disabled>Copy link</button>
+      <button type="button" class="o-btn o-btn-secondary" id="shareBtn" disabled>Share</button>
+      <button type="button" class="o-btn o-btn-secondary" id="qrBtn" disabled aria-describedby="qrNote">Download QR code</button>
     </div>
     <p class="reason" id="openReason">Enter a phone number to open the chat.</p>
     <span class="copy-status" id="copyStatus" aria-live="polite"></span>
@@ -749,43 +795,36 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
     <p class="hint" id="qrNote" hidden>The QR code contains the whole link, including the number and message. A QR scanner can read both.</p>
     <div class="qr-preview" id="qrPreview"></div>
   </div>
+  </div></div>
 
-  <div class="how-grid">
-    <section class="how" aria-labelledby="howTitle">
+  <div class="how-grid o-row">
+    <section class="how o-panel" aria-labelledby="howTitle">
       <h2 id="howTitle">How it works</h2>
-      <ol>
+      <ol class="o-steps">
         <li>Choose the country and enter the phone number.</li>
         <li>Add a message if you like.</li>
         <li>Open the chat, copy the link or scan the QR code.</li>
       </ol>
-      <p class="guide-link">Want the full picture? Read our guide: <a href="/blog/send-whatsapp-without-saving-contact/">How to send a WhatsApp message without saving the contact</a></p>
+      <p class="guide-link o-guide"><svg class="o-icon" data-lucide="file-text" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span>Want the full picture? Read our guide: <a href="/blog/send-whatsapp-without-saving-contact/">How to send a WhatsApp message without saving the contact</a></span></p>
     </section>
-    <aside class="related-aside" aria-labelledby="relatedTitle">
+    <aside class="related-aside o-panel" aria-labelledby="relatedTitle">
       <h2 id="relatedTitle">Related tools</h2>
-      <div class="related-grid">
-      <a class="related-card" href="/qr-code-generator/">
+      <div class="o-tiles">
+      <a class="o-tile" href="/qr-code-generator/">
         <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="3" height="3"/><rect x="18" y="18" width="3" height="3"/></svg></div>
-        <div class="body">
-          <div class="title">QR Code Generator</div>
-          <div class="desc">Turn a link or text into a QR code.</div>
-        </div>
-        <div class="arrow">→</div>
+        <div class="o-tile-name">QR Code Generator</div>
       </a>
-      <a class="related-card" href="/word-character-counter/">
+      <a class="o-tile" href="/word-character-counter/">
         <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4" cy="6" r="1.3"/><circle cx="4" cy="12" r="1.3"/><circle cx="4" cy="18" r="1.3"/></svg></div>
-        <div class="body">
-          <div class="title">Word & Character Counter</div>
-          <div class="desc">Count words, characters, and reading time.</div>
-        </div>
-        <div class="arrow">→</div>
+        <div class="o-tile-name">Word & Character Counter</div>
       </a>
-      <a class="related-card" href="/case-converter/">
+      <a class="o-tile" href="/case-converter/">
         <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 16l4-11 4 11M4.5 12h5"/><path d="M14 10a3 3 0 1 1 0 6 3 3 0 0 1 0-6zM20 10v6"/></svg></div>
-        <div class="body">
-          <div class="title">Case Converter</div>
-          <div class="desc">Convert text between case styles.</div>
-        </div>
-        <div class="arrow">→</div>
+        <div class="o-tile-name">Case Converter</div>
+      </a>
+      <a class="o-tile" href="/exif-remover/">
+        <div class="icon-box cat-utility"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
+        <div class="o-tile-name">EXIF Remover</div>
       </a>
       </div>
     </aside>
@@ -809,9 +848,9 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
     <p class="share-status" id="shareToolStatus" aria-live="polite"></p>
   </div>
 
-  <details class="more" id="more">
+  <details class="more o-help" id="more">
     <summary>Help and details</summary>
-    <div class="seo-content">
+    <div class="seo-content o-help-body">
       <h2>Help and common issues</h2>
       <ol>
         <li>Choose the country and type the phone number the way you'd dial it there, or paste it with its country code.</li>
@@ -917,6 +956,49 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 </script>
 
 <!-- Tool libraries load here, after the page content, so they don't hold up the first paint. -->
+<script>
+// Orisod frame: start. The same block, byte for byte, on every page with the page frame (body.o-frame); the smoke
+// test compares the copies. It animates the tool frame's height when its content grows or shrinks (320 ms, the
+// motion easing; instant under reduced motion), and gives the tool two helpers: oFrameState("idle" | "active")
+// and oFrameReveal(element), which scrolls a result into view once the frame has grown, if it landed off screen.
+(function () {
+  var frame = document.querySelector(".o-frame-top"), body = frame && frame.querySelector(".o-frame-body");
+  if (!frame || !body) return;
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+  var MIN_CHANGE = 24; // px: smaller changes (a hint line, a textarea being resized) just happen
+  var shown = frame.offsetHeight, resizedAt = -1e9;
+  function slow() { return reduce.matches ? 0 : parseFloat(getComputedStyle(frame).getPropertyValue("--o-duration-slow")) || 0; }
+  function edges() {
+    var s = getComputedStyle(frame);
+    return parseFloat(s.paddingTop) + parseFloat(s.paddingBottom) + parseFloat(s.borderTopWidth) + parseFloat(s.borderBottomWidth);
+  }
+  function settle() { frame.classList.remove("o-resizing"); frame.style.height = ""; }
+  frame.addEventListener("transitionend", function (e) { if (e.target === frame && e.propertyName === "height") settle(); });
+  function resized() {
+    var target = body.offsetHeight + edges();
+    var from = frame.classList.contains("o-resizing") ? frame.getBoundingClientRect().height : shown;
+    var windowResized = performance.now() - resizedAt < 250; // the window changed size: the page reflows, nothing to animate
+    shown = target;
+    if (!slow() || windowResized || Math.abs(target - from) < MIN_CHANGE) { settle(); return; }
+    frame.classList.remove("o-resizing");
+    frame.style.height = from + "px";
+    void frame.offsetHeight;
+    frame.classList.add("o-resizing");
+    frame.style.height = target + "px";
+  }
+  window.addEventListener("resize", function () { resizedAt = performance.now(); });
+  if (window.ResizeObserver) new ResizeObserver(resized).observe(body);
+  window.oFrameState = function (state) { frame.setAttribute("data-state", state); };
+  window.oFrameReveal = function (el) {
+    setTimeout(function () {
+      if (!el || !el.getClientRects().length) return;
+      var r = el.getBoundingClientRect(), top = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--site-nav-h")) || 0;
+      if (r.top < top || r.bottom > window.innerHeight) el.scrollIntoView({ block: "nearest", behavior: reduce.matches ? "auto" : "smooth" });
+    }, slow() * 2 + 20);
+  };
+})();
+// Orisod frame: end
+</script>
 <script src="/assets/vendor/libphonenumber-js/1.13.15/libphonenumber-max.js"></script>
 <script src="/assets/vendor/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
@@ -1709,6 +1791,7 @@ function phoneExample() {
 
 function update(statusNow) {
   phoneInput.placeholder = phoneExample();
+  if (window.oFrameState) oFrameState(phoneInput.value.trim() || messageInput.value.trim() ? "active" : "idle");
   const noNumber = modeBtns[1].getAttribute("aria-pressed") === "true";
   const message = messageInput.value;
   const hasMessage = message.trim() !== "";
@@ -1814,6 +1897,7 @@ qrBtn.addEventListener("click", () => {
     img.src = url;
     img.alt = T.qrAlt;
     qrPreview.append(img);
+    if (window.oFrameReveal) oFrameReveal(qrPreview);
     const a = document.createElement("a");
     a.href = url;
     a.download = T.qrFile;

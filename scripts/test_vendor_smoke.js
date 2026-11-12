@@ -49,6 +49,7 @@
  */
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
+import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { crc32, inflateRawSync, inflateSync } from "node:zlib";
@@ -934,11 +935,11 @@ const WA_STRUCTURE = () => {
     detailsAfterGuide: !!(guide.compareDocumentPosition(details) & Node.DOCUMENT_POSITION_FOLLOWING),
     detailsBeforeFooter: !!(details.compareDocumentPosition(footer) & Node.DOCUMENT_POSITION_FOLLOWING), inOrder,
     // How it works: three steps in an <ol>, the guide line right under them (a real link, outside the block);
-    // Related tools: three cards; one <details>, its <summary> the first child, with no role and no control inside.
+    // Related tools: four tiles (the page frame); one <details>, its <summary> the first child, with no role and no control inside.
     steps: document.querySelectorAll(".how-grid .how > ol > li").length,
     guideAfterSteps: !!guide && guide.previousElementSibling === q(".how-grid .how > ol"),
     guideHref: guide?.querySelector("a[href]")?.getAttribute("href") || "", guideInDetails: !!guide && details.contains(guide),
-    cards: document.querySelectorAll(".how-grid .related-aside .related-card").length,
+    cards: document.querySelectorAll(".how-grid .related-aside .o-tile").length,
     detailsCount: document.querySelectorAll("details.more").length,
     summaryFirst: details.firstElementChild?.tagName === "SUMMARY", summaryRole: details.querySelector("summary").getAttribute("role"),
     // "Share this tool": exactly one, right after the row and before the block, with one control shown.
@@ -954,7 +955,7 @@ function expectStructure(s) {
   expect(s.steps === 3, `${s.steps} steps in How it works, not 3`);
   expect(s.guideAfterSteps && /\/blog\/send-whatsapp-without-saving-contact\/$/.test(s.guideHref) && !s.guideInDetails,
     `the guide link isn't right under the steps, outside the collapsed block (href "${s.guideHref}")`);
-  expect(s.cards === 3, `${s.cards} Related tools cards, not 3`);
+  expect(s.cards === 4, `${s.cards} Related tools tiles, not 4`);
   expect(s.detailsCount === 1 && s.summaryFirst && s.summaryRole === null, `${s.detailsCount} <details>, summary first ${s.summaryFirst}, role ${s.summaryRole}`);
 }
 function expectNotes(n) {
@@ -1663,6 +1664,168 @@ async function themeToggleCheck(page, lang) {
       mustFail("a faint icon", () => expectTheme({ ...s, light: { ...light, icons: light.icons.map((i, n) => (n ? i : { ...i, contrast: 2.1 })) } }))].join("; ");
 }
 
+// The Orisod 2.0 page frame (step 4 pilot: the WhatsApp link generator and Merge PDF, EN and ES). These helpers
+// measure the frame itself; the tools' own cases above still prove that the tools behave as before.
+const FRAME_PAGES = ["/whatsapp-link-generator/", "/es/whatsapp-link-generator/", "/merge-pdf/", "/es/merge-pdf/"];
+// Any CSS colour the browser computes (rgb(), rgba(), color(srgb ...)) as [r, g, b, alpha] in 0-255.
+const frameRgba = (c) => {
+  const srgb = /^color\(srgb ([\d.]+) ([\d.]+) ([\d.]+)(?: \/ ([\d.]+))?\)$/.exec(c);
+  if (srgb) return [+srgb[1] * 255, +srgb[2] * 255, +srgb[3] * 255, srgb[4] === undefined ? 1 : +srgb[4]];
+  const n = (c.match(/[\d.]+/g) || []).map(Number);
+  return [n[0], n[1], n[2], n.length > 3 ? n[3] : 1];
+};
+const frameOver = (top, under) => top.slice(0, 3).map((v, i) => v * top[3] + under[i] * (1 - top[3]));
+const frameContrast = (a, b) => waContrast(a.slice(0, 3), b.slice(0, 3));
+// The frame's height while it changes, sampled on every animation frame for 1.2 s after the trigger: before, a frame
+// in the middle of the change (or the first one after it, when there's none), and settled; plus the state and the
+// in-use content's opacity. "mid.resizing" is true when any frame was mid-animation.
+async function frameMotion(page, trigger, contentSel) {
+  const read = () => page.evaluate((sel) => {
+    const f = document.querySelector(".o-frame-top"), c = sel && document.querySelector(sel);
+    return { h: f.getBoundingClientRect().height, resizing: f.classList.contains("o-resizing"), state: f.getAttribute("data-state"),
+      opacity: c ? +getComputedStyle(c).opacity : null };
+  }, contentSel);
+  const before = await read();
+  await page.evaluate((sel) => {
+    const f = document.querySelector(".o-frame-top"), c = sel && document.querySelector(sel), start = performance.now();
+    window.__frameSamples = [];
+    const tick = () => {
+      window.__frameSamples.push({ t: performance.now() - start, h: f.getBoundingClientRect().height, resizing: f.classList.contains("o-resizing"),
+        state: f.getAttribute("data-state"), opacity: c ? +getComputedStyle(c).opacity : null });
+      if (performance.now() - start < 1200) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }, contentSel);
+  await trigger();
+  await page.waitForTimeout(1300);
+  const after = await read();
+  const samples = (await page.evaluate(() => window.__frameSamples)).filter((s) => s.state === "active");
+  const moving = samples.filter((s) => s.resizing && s.h > before.h + 1 && s.h < after.h - 1);
+  const mid = moving.length ? { ...moving[Math.floor(moving.length / 2)] } : { ...(samples[0] || after) };
+  mid.resizing = samples.some((s) => s.resizing);
+  mid.frames = moving.length;
+  return { before, mid, after };
+}
+function expectFrameMotion(m, what) {
+  expect(m.before.state === "idle" && m.after.state === "active", `${what}: the frame went from "${m.before.state}" to "${m.after.state}", not idle to active`);
+  expect(m.after.h > m.before.h + 24, `${what}: the frame didn't grow (${m.before.h} to ${m.after.h} px)`);
+  expect(m.mid.resizing && m.mid.h > m.before.h + 1 && m.mid.h < m.after.h - 1,
+    `${what}: the height didn't animate (${m.before.h} px, ${m.mid.h} px mid-change${m.mid.resizing ? "" : " without o-resizing"}, ${m.after.h} px)`);
+  if (m.mid.opacity !== null) expect(m.mid.opacity < 0.5 && m.after.opacity === 1, `${what}: the content didn't fade in after the height (opacity ${m.mid.opacity} mid-change, ${m.after.opacity} settled)`);
+}
+function expectFrameInstant(m, what) {
+  expect(m.after.state === "active" && !m.mid.resizing && Math.abs(m.mid.h - m.after.h) < 1 && (m.mid.opacity === null || m.mid.opacity === 1),
+    `${what}: under reduced motion the frame should be at its final height at once (${m.mid.h} px on the first frame, ${m.after.h} px settled, opacity ${m.mid.opacity})`);
+}
+// Layout: the frame, the two panels and the help block, their widths and order, and sideways scrolling.
+const frameLayout = (page) => page.evaluate(() => {
+  const box = (s) => { const el = document.querySelector(s); if (!el) return null; const r = el.getBoundingClientRect(); return { l: r.left, r: r.right, t: r.top, b: r.bottom, w: r.width }; };
+  const row = document.querySelector(".o-row");
+  return { frame: box(".o-frame-top"), row: box(".o-row"), how: box(".o-row > .how"), related: box(".o-row > .related-aside"), help: box("details.o-help"),
+    gap: parseFloat(getComputedStyle(row).columnGap), cols: getComputedStyle(row).gridTemplateColumns.split(" ").length,
+    overflow: document.documentElement.scrollWidth - window.innerWidth, frameCount: document.querySelectorAll(".o-frame-top").length,
+    bodyClass: document.body.className, font: getComputedStyle(document.body).fontFamily };
+});
+function expectWideLayout(s, what) {
+  expect(s.frameCount === 1 && /\bo-frame\b/.test(s.bodyClass), `${what}: ${s.frameCount} frames, body class "${s.bodyClass}"`);
+  expect(s.cols === 2 && Math.abs(s.how.w - s.related.w) <= 1, `${what}: the bottom row is ${s.cols} columns, ${s.how.w} and ${s.related.w} px wide`);
+  expect(Math.abs(s.how.w + s.related.w + s.gap - s.frame.w) <= 1 && s.gap === 24 && Math.abs(s.how.l - s.frame.l) <= 1 && Math.abs(s.related.r - s.frame.r) <= 1,
+    `${what}: the two panels (${s.how.w} + ${s.gap} + ${s.related.w} px) don't line up with the frame (${s.frame.w} px)`);
+  expect(Math.abs(s.how.t - s.related.t) <= 1 && s.how.t > s.frame.b && s.help.t > Math.max(s.how.b, s.related.b) && Math.abs(s.help.w - s.frame.w) <= 1,
+    `${what}: not frame, then the two panels side by side, then the full-width help block`);
+  expect(s.overflow <= 0, `${what}: the page scrolls sideways by ${s.overflow} px`);
+}
+function expectNarrowLayout(s, what) {
+  expect(s.cols === 1, `${what}: the bottom row has ${s.cols} columns at phone width, not 1`);
+  const order = [s.frame, s.how, s.related, s.help];
+  expect(order.every((b, i) => i === 0 || b.t >= order[i - 1].b) && order.every((b) => Math.abs(b.w - s.frame.w) <= 1),
+    `${what}: not stacked as tool, How it works, Related tools, Help and details at full width`);
+  expect(s.overflow <= 0, `${what}: the page scrolls sideways by ${s.overflow} px`);
+}
+// The four tiles: icon and name only, linking to existing tools in this language.
+const frameTiles = (page) => page.evaluate(() => [...document.querySelectorAll(".o-row .related-aside .o-tile")].map((a) => ({
+  href: a.getAttribute("href"), name: a.querySelector(".o-tile-name")?.textContent.trim() || "", icon: !!a.querySelector(".icon-box svg"),
+  desc: !!a.querySelector(".desc"), h: a.getBoundingClientRect().height, radius: getComputedStyle(a).borderTopLeftRadius,
+  cat: (a.querySelector(".icon-box").className.match(/cat-(\w+)/) || [])[1] })));
+function expectTiles(tiles, lang, what) {
+  expect(tiles.length === 4, `${what}: ${tiles.length} Related tools tiles, not 4`);
+  for (const t of tiles) {
+    expect(t.name && t.icon && !t.desc && t.h >= 128 && t.radius === "14px", `${what}: tile ${t.href} (name "${t.name}", icon ${t.icon}, description ${t.desc}, ${t.h} px, radius ${t.radius})`);
+    expect((lang === "es") === t.href.startsWith("/es/") && existsSync(`${REPO_ROOT}${t.href}index.html`), `${what}: tile ${t.href} isn't a tool page in this language`);
+  }
+}
+// Text and icon contrast in the frame, the row and the help block, in the current theme.
+const frameColours = (page) => page.evaluate(() => {
+  const cs = (el, p) => getComputedStyle(el, p);
+  const q = (s) => document.querySelector(s);
+  const tile = q(".o-tile"), box = tile.querySelector(".icon-box");
+  const step = q(".o-steps > li");
+  return {
+    card: cs(q(".o-frame-top")).backgroundColor, panel: cs(q(".o-panel")).backgroundColor,
+    heading: cs(q(".o-panel > h2")).color, stepText: cs(step).color,
+    stepNum: cs(step, "::before").color, stepCircle: cs(step, "::before").backgroundColor,
+    guideText: cs(q(".o-guide")).color, guideLink: cs(q(".o-guide a")).color, guideIcon: cs(q(".o-guide .o-icon")).color,
+    tileBg: cs(tile).backgroundColor, tileName: cs(tile).color, tileIconBg: cs(box).backgroundColor, tileIcon: cs(box).color,
+    help: cs(q(".o-help > summary")).color, label: cs(q(".tool label, .tool .dropzone")).color,
+    primaryText: cs(q(".o-btn-primary")).color, primaryBg: cs(q(".o-btn-primary")).backgroundColor,
+  };
+});
+function expectFrameContrast(c, what) {
+  const p = (k) => frameRgba(c[k]);
+  const card = p("card"), panel = p("panel"), tileBg = frameOver(p("tileBg"), panel), tint = frameOver(p("tileIconBg"), tileBg);
+  const pairs = [["heading", p("heading"), panel, 4.5], ["step text", p("stepText"), panel, 4.5], ["step number", p("stepNum"), p("stepCircle"), 4.5],
+    ["step circle", p("stepCircle"), panel, 3], ["guide text", p("guideText"), panel, 4.5], ["guide link", p("guideLink"), panel, 4.5],
+    ["guide icon", p("guideIcon"), panel, 3], ["tile name", p("tileName"), tileBg, 4.5], ["tile icon", p("tileIcon"), tint, 3],
+    ["help summary", p("help"), card, 4.5], ["tool label", p("label"), card, 4.5], ["primary button", p("primaryText"), p("primaryBg"), 4.5]];
+  const low = pairs.map(([n, a, b, min]) => [n, frameContrast(a, b), min]).filter(([, r, min]) => r < min);
+  expect(!low.length, `${what}: low contrast: ${low.map(([n, r, min]) => `${n} ${r.toFixed(2)}:1 (needs ${min})`).join(", ")}`);
+  return Math.min(...pairs.map(([, a, b]) => frameContrast(a, b)));
+}
+// The checks every frame page shares: layout at 1280 and 390 px, the four tiles, colours in both themes, the guide link.
+async function frameCommon(page, lang) {
+  const out = [];
+  await page.setViewportSize({ width: 1280, height: 900 });
+  const wide = await frameLayout(page);
+  expectWideLayout(wide, "1280 px");
+  expect(/^"?Inter"?,/.test(wide.font), `the page draws with ${wide.font}, not Inter`);
+  out.push(`1280 px: frame ${wide.frame.w} px, two ${wide.how.w} px panels with a ${wide.gap} px gap, help block full width`);
+  const tiles = await frameTiles(page);
+  expectTiles(tiles, lang, "tiles");
+  out.push(`4 tiles (${tiles.map((t) => t.name).join(", ")})`);
+  // hover: the tile rises 3 px and its border takes the category colour
+  await page.hover(".o-tile");
+  await page.waitForTimeout(400);
+  const hover = await page.evaluate(() => { const t = document.querySelector(".o-tile"); const s = getComputedStyle(t);
+    return { y: new DOMMatrix(s.transform).m42, border: s.borderTopColor, cat: getComputedStyle(t.querySelector(".icon-box")).color }; });
+  expect(Math.abs(hover.y + 3) < 0.01 && hover.border === hover.cat, `tile hover: moved ${hover.y} px, border ${hover.border}, category colour ${hover.cat}`);
+  await page.mouse.move(0, 0);
+  const still = await page.addStyleTag({ content: "*{transition:none !important;animation:none !important}" });
+  const dark = expectFrameContrast(await frameColours(page), "dark");
+  await page.evaluate(() => document.documentElement.setAttribute("data-theme", "light"));
+  const light = expectFrameContrast(await frameColours(page), "light");
+  await page.evaluate(() => document.documentElement.removeAttribute("data-theme"));
+  await still.evaluate((el) => el.remove());
+  out.push(`text and icons at ${dark.toFixed(2)}:1 or more in dark, ${light.toFixed(2)}:1 or more in light`);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.waitForTimeout(100);
+  expectNarrowLayout(await frameLayout(page), "390 px");
+  out.push("390 px: stacked tool, How it works, Related tools, Help and details, no sideways scroll");
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.waitForTimeout(400); // the frame doesn't animate a change that comes with a window resize
+  return out;
+}
+async function frameGuideLink(page) {
+  const link = page.locator(".o-guide a");
+  const [href, text] = [await link.getAttribute("href"), (await link.textContent()).trim()];
+  // a real click inside the link's first line box (the link wraps, so its bounding box also covers the lead-in text)
+  const at = await link.evaluate((a) => { a.scrollIntoView({ block: "center" }); const r = a.getClientRects()[0]; return { x: r.left + 4, y: r.top + r.height / 2 }; });
+  await Promise.all([page.waitForURL("**" + href, { waitUntil: "commit" }), page.mouse.click(at.x, at.y)]);
+  await page.waitForSelector("main h1");
+  const h1 = (await page.textContent("main h1")).trim();
+  expect(h1 === text, `the guide link "${text}" opened a page whose H1 is "${h1}"`);
+  return `the guide link opens ${href} ("${h1}")`;
+}
+
 const CASES = [
   {
     name: "spark-md5",
@@ -1739,7 +1902,8 @@ const CASES = [
   {
     name: "pdf-lib (Merge PDF)",
     page: "/merge-pdf/",
-    vendor: ["/assets/vendor/pdf-lib/1.17.1/pdf-lib.min.js"],
+    // PDF.js draws the file list's thumbnails (checked, with its worker, in "Page frame (Merge PDF)").
+    vendor: ["/assets/vendor/pdf-lib/1.17.1/pdf-lib.min.js", PDFJS],
     async run(page) {
       const a = { name: "a.pdf", mimeType: "application/pdf", buffer: fixturePdf("Fixture A", ["page 1", "page 2"]) };
       const b = { name: "b.pdf", mimeType: "application/pdf", buffer: fixturePdf("Fixture B", ["page 1", "page 2", "page 3"]) };
@@ -3442,7 +3606,7 @@ const CASES = [
         [mustFail("the block moved after the footer", () => expectStructure(moved)),
           mustFail("a fourth step", () => expectStructure({ ...structure, steps: 4 })),
           mustFail("the guide link inside the block", () => expectStructure({ ...structure, guideInDetails: true })),
-          mustFail("two Related tools cards", () => expectStructure({ ...structure, cards: 2 })),
+          mustFail("three Related tools tiles", () => expectStructure({ ...structure, cards: 3 })),
           mustFail("a summary with role=button", () => expectStructure({ ...structure, summaryRole: "button" })),
           mustFail("a hint left in the tool", () => expectNotes({ ...notes, moved: 5 })),
           mustFail("the QR note shown with no link", () => expectNotes({ ...notes, qrHidden: false })),
@@ -3531,13 +3695,13 @@ const CASES = [
       const atCopy = waOutside(ctl.requests);
       for (const [when, urls] of [["at load", atLoad], ["on opening the list", atOpen], ["on copying", atCopy]]) expectOutsideRequests(urls, when);
       await page.mouse.move(0, 0);
-      // The lit state: 180 ms normally, none under reduced motion.
+      // The lit state: 320 ms (the page frame's motion token) normally, none under reduced motion.
       const telegram = '#shareList a[data-share="telegram"]';
       const normalMotion = (await waShareColours(page, telegram)).transition;
       await page.emulateMedia({ reducedMotion: "reduce" });
       const reducedMotion = (await waShareColours(page, telegram)).transition;
       await page.emulateMedia({ reducedMotion: "no-preference" });
-      const expectMotion = (normal, reduced) => expect(/^0\.18s/.test(normal) && reduced.split(",").every((d) => parseFloat(d) === 0), `transition ${normal}, under reduced motion ${reduced}`);
+      const expectMotion = (normal, reduced) => expect(/^0\.32s/.test(normal) && reduced.split(",").every((d) => parseFloat(d) === 0), `transition ${normal}, under reduced motion ${reduced}`);
       expectMotion(normalMotion, reducedMotion);
       // Both themes, measured without the halo: plain, hovered (lit), focused (lit, with the unchanged solid ring).
       await page.addStyleTag({ content: "*{transition:none !important}" });
@@ -3651,7 +3815,7 @@ const CASES = [
           mustFail("a faint lit icon", () => expectShareColours({ ...litDark, icon: [150, 180, 250] }, "test", WA_SHARE_LIT)),
           mustFail("a lit circle too close to the page", () => expectShareColours({ ...litDark, page: [70, 110, 200] }, "test", WA_SHARE_LIT)),
           mustFail("a changed focus ring", () => expectShareRing({ ...litDark, ring: { ...WA_SHARE_RING, style: "dotted" } }, "test")),
-          mustFail("a transition under reduced motion", () => expectMotion(normalMotion, "0.18s, 0.18s")),
+          mustFail("a transition under reduced motion", () => expectMotion(normalMotion, "0.32s, 0.32s")),
           mustFail("a hover style under (hover: none)", () => expectNoHoverStyle({ ...noHover, fill: WA_SHARE_LIT }))].join("; ");
     },
   },
@@ -4586,6 +4750,151 @@ const CASES = [
           mustFail("both boxes ticked", () => expectReview(review.map((r) => ({ ...r, boxes: [true, true] })))),
           mustFail("the old half-sentence note", () => expectNote(lang === "es" ? ["Dos páginas parecen Tú eliges en cada una", "Dos páginas parecen Tú eliges en cada una"] : ["Two pages look Tú eliges", "x"])),
           mustFail("the wrong version at 320px", () => expectOneDiagram(last.svgs, last.imgs, 320, "rbp-flow"))].join("; ");
+    },
+  },
+  {
+    name: "Page frame (WhatsApp link generator)",
+    page: WA,
+    vendor: [LIBPHONE, QRJS, INTER_LATIN],
+    async run(page, lang) {
+      // The frame script is one block, byte for byte the same on the four pilot pages.
+      const blocks = await Promise.all(FRAME_PAGES.map(async (p) => { const h = await readFile(`${REPO_ROOT}${p}index.html`, "utf-8");
+        const a = h.indexOf("// Orisod frame: start"), b = h.indexOf("// Orisod frame: end"); return a > 0 && b > a ? h.slice(a, b) : ""; }));
+      const expectSameFrame = (b) => expect(b[0] && b.every((x) => x === b[0]), "the frame script differs between the pilot pages");
+      expectSameFrame(blocks);
+      const out = await frameCommon(page, lang);
+      // Send to: at 390 px both options fit without a wrapped label or sideways scroll.
+      await page.setViewportSize({ width: 390, height: 844 });
+      const mode = await page.evaluate(() => [...document.querySelectorAll(".mode button")].map((b) => {
+        const r = b.getBoundingClientRect(), range = document.createRange(); range.selectNodeContents(b);
+        return { lines: range.getClientRects().length, w: r.width, right: r.right, height: r.height, frame: b.closest(".tool").getBoundingClientRect().right };
+      }));
+      const expectMode = (m) => expect(m.every((b) => b.lines === 1 && b.right <= b.frame + 0.5 && b.height >= 48), `Send to at 390 px: ${JSON.stringify(m)}`);
+      expectMode(mode);
+      out.push(`Send to at 390 px: ${mode.length} options, each label on one line inside the frame, ${Math.round(mode[0].height)} px high`);
+      await page.setViewportSize({ width: 1280, height: 900 });
+      // Two states: idle until something is typed; the QR code makes the frame grow (animated), and reduced motion is instant.
+      await page.reload();
+      await page.evaluate(() => document.getElementById("country-US").click());
+      const idle = await page.getAttribute(".o-frame-top", "data-state");
+      await page.fill("#phoneInput", "2025550123");
+      await page.dispatchEvent("#phoneInput", "blur");
+      const typed = await page.getAttribute(".o-frame-top", "data-state");
+      expect(idle === "idle" && typed === "active", `the frame is "${idle}" before use and "${typed}" with a number, not idle then active`);
+      const grow = async (reduce) => {
+        await page.emulateMedia({ reducedMotion: reduce ? "reduce" : "no-preference" });
+        await page.evaluate(() => { document.getElementById("qrPreview").replaceChildren(); });
+        await page.waitForTimeout(500);
+        await page.evaluate(() => document.querySelector(".o-frame-top").setAttribute("data-state", "idle"));
+        return frameMotion(page, () => page.evaluate(() => { document.getElementById("qrBtn").click(); window.oFrameState("active"); }), null);
+      };
+      const animated = await grow(false), instant = await grow(true);
+      await page.emulateMedia({ reducedMotion: "no-preference" });
+      expectFrameMotion(animated, "QR code");
+      expectFrameInstant(instant, "QR code, reduced motion");
+      out.push(`idle, then active with a number; the QR code grows the frame from ${Math.round(animated.before.h)} to ${Math.round(animated.after.h)} px through ${Math.round(animated.mid.h)} px (${animated.mid.frames} frames mid-change); instant under reduced motion`);
+      // (A fresh page: in headless Chromium a link click doesn't navigate after the QR download, on orisod-2 too.)
+      await page.reload();
+      out.push(await frameGuideLink(page));
+      return out.join("; ") + "; " + [
+        mustFail("a frame script that differs", () => expectSameFrame([...blocks.slice(0, 3), blocks[3] + " "])),
+        mustFail("three tiles", () => expectTiles([{ href: "/x/", name: "x", icon: true, desc: false, h: 130, radius: "14px" }], lang, "test")),
+        mustFail("a wrapped Send to label", () => expectMode([{ ...mode[0], lines: 2 }])),
+        mustFail("a height that jumps", () => expectFrameMotion({ ...animated, mid: { ...animated.after, resizing: false } }, "test")),
+        mustFail("an animation under reduced motion", () => expectFrameInstant(animated, "test")),
+        mustFail("stacked panels at 1280 px", () => expectWideLayout({ ...instant, frameCount: 1, bodyClass: "o-frame", cols: 1, how: { w: 1 }, related: { w: 2 } }, "test")),
+        mustFail("a faint tile icon", () => expectFrameContrast({ card: "rgb(26, 34, 54)", panel: "rgb(26, 34, 54)", heading: "rgb(255, 255, 255)", stepText: "rgb(255, 255, 255)",
+          stepNum: "rgb(255, 255, 255)", stepCircle: "rgb(37, 99, 235)", guideText: "rgb(255, 255, 255)", guideLink: "rgb(255, 255, 255)", guideIcon: "rgb(255, 255, 255)",
+          tileBg: "rgb(34, 44, 70)", tileName: "rgb(255, 255, 255)", tileIconBg: "rgb(34, 44, 70)", tileIcon: "rgb(60, 70, 100)", help: "rgb(255, 255, 255)",
+          label: "rgb(255, 255, 255)", primaryText: "rgb(255, 255, 255)", primaryBg: "rgb(37, 99, 235)" }, "test")),
+      ].join("; ");
+    },
+  },
+  {
+    name: "Page frame (Merge PDF)",
+    page: "/merge-pdf/",
+    vendor: ["/assets/vendor/pdf-lib/1.17.1/pdf-lib.min.js", PDFJS, PDFJS_WORKER, INTER_LATIN],
+    worker: PDFJS_WORKER,
+    async run(page, lang) {
+      const out = await frameCommon(page, lang);
+      const files = [
+        { name: "a.pdf", mimeType: "application/pdf", buffer: fixturePdf("Fixture A", ["page 1", "page 2"]) },
+        { name: "b.pdf", mimeType: "application/pdf", buffer: fixturePdf("Fixture B", ["page 1", "page 2", "page 3"]) },
+        { name: "c.pdf", mimeType: "application/pdf", buffer: fixturePdf("Fixture C", ["page 1"]) }];
+      // Idle: the drop zone, the related row visible on a laptop screen; in use: the file list grows the frame, animated.
+      const idle = await page.evaluate(() => ({ drop: !!document.getElementById("dropzone").getClientRects().length,
+        list: !!document.getElementById("fileList").getClientRects().length, rowTop: document.querySelector(".o-row").getBoundingClientRect().top }));
+      expect(idle.drop && !idle.list && idle.rowTop < 900, `before use: drop zone ${idle.drop}, file list ${idle.list}, bottom row at ${idle.rowTop} px`);
+      const animated = await frameMotion(page, () => page.setInputFiles("#fileInput", files), ".o-frame-top .o-when-active");
+      expectFrameMotion(animated, "adding files");
+      out.push(`before use only the drop zone (bottom row at ${Math.round(idle.rowTop)} px); adding 3 PDFs grows the frame from ${Math.round(animated.before.h)} to ${Math.round(animated.after.h)} px through ${Math.round(animated.mid.h)} px (${animated.mid.frames} frames mid-change), the list fading in after`);
+      // Each row: order number, handle, thumbnail, name, pages and size, arrows and remove; then the actions.
+      await page.waitForFunction(() => document.querySelectorAll(".file-thumb img").length === 3, null, { timeout: 15000 });
+      const t = lang === "es" ? { pages: ["2 páginas", "3 páginas", "1 página"], add: "Añadir más archivos", start: "Empezar de nuevo", remove: "Eliminar: a.pdf" }
+        : { pages: ["2 pages", "3 pages", "1 page"], add: "Add more files", start: "Start over", remove: "Remove: a.pdf" };
+      const rows = await page.evaluate(() => [...document.querySelectorAll("#fileList > li")].map((li) => ({ num: li.querySelector(".file-num").textContent,
+        grip: !!li.querySelector(".file-grip svg"), thumb: li.querySelector(".file-thumb img")?.naturalWidth || 0, name: li.querySelector(".name").textContent,
+        meta: li.querySelector(".file-meta").textContent, buttons: [...li.querySelectorAll("button")].map((b) => b.getAttribute("aria-label")) })));
+      const expectRows = (r) => {
+        expect(r.length === 3 && r.every((x, i) => x.num === String(i + 1) && x.grip && x.thumb > 0 && x.meta.startsWith(t.pages[i] + " · ") && / KB$/.test(x.meta) && x.buttons.length === 3),
+          `file rows: ${JSON.stringify(r)}`);
+        expect(r[0].buttons[2] === t.remove, `the remove button is named "${r[0].buttons[2]}"`);
+      };
+      expectRows(rows);
+      const actions = await page.evaluate(() => ["addMoreBtn", "startOverBtn", "mergeBtn"].map((id) => { const b = document.getElementById(id);
+        return { text: b.textContent.trim(), h: b.getBoundingClientRect().height, radius: getComputedStyle(b).borderTopLeftRadius }; }));
+      expect(actions[0].text === t.add && actions[1].text === t.start && actions.every((a) => a.h === 48 && a.radius === "12px"), `actions: ${JSON.stringify(actions)}`);
+      out.push(`rows ${rows.map((r) => `${r.num}. ${r.name} (${r.meta})`).join(", ")}, each with handle, thumbnail, arrows and remove; "${t.add}", "${t.start}" and Merge, 48 px with radius 12`);
+      // Reorder: c to the top with the arrows, then a below b by dragging its handle; the merged PDF follows the list.
+      await page.click('#fileList > li:nth-child(3) .move-up');
+      await page.click('#fileList > li:nth-child(2) .move-up');
+      await page.dragAndDrop('#fileList > li:nth-child(2) .file-grip', '#fileList > li:nth-child(3)', { targetPosition: { x: 20, y: 40 } });
+      const order = await page.evaluate(() => [...document.querySelectorAll("#fileList .name")].map((n) => n.textContent));
+      expect(order.join() === "c.pdf,b.pdf,a.pdf", `after the arrows and a drag the list reads ${order.join(", ")}`);
+      await page.click("#mergeBtn");
+      const link = page.locator('#result a[download="merged.pdf"]');
+      await link.waitFor({ timeout: 30000 });
+      const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
+      const merged = pdfText(await readFile(await download.path())).trim().split("\n");
+      const want = ["Fixture C page 1", "Fixture B page 1", "Fixture B page 2", "Fixture B page 3", "Fixture A page 1", "Fixture A page 2"];
+      expect(merged.join("|") === want.join("|"), `merged pages read ${JSON.stringify(merged)}`);
+      out.push("arrows and a drag put c, b, a in order and the merged PDF follows it");
+      // Remove, then Start over: back to the drop zone, focus on the file picker, nothing left.
+      await page.click('#fileList > li:nth-child(1) button[aria-label$="c.pdf"]:last-child');
+      const afterRemove = await page.evaluate(() => [...document.querySelectorAll("#fileList .name")].map((n) => n.textContent).join());
+      await page.click("#startOverBtn");
+      await page.waitForTimeout(800);
+      const reset = await page.evaluate(() => ({ state: document.querySelector(".o-frame-top").getAttribute("data-state"), rows: document.querySelectorAll("#fileList > li").length,
+        result: document.getElementById("result").children.length, focus: document.activeElement?.id, drop: !!document.getElementById("dropzone").getClientRects().length }));
+      expect(afterRemove === "b.pdf,a.pdf" && reset.state === "idle" && !reset.rows && !reset.result && reset.focus === "fileInput" && reset.drop,
+        `after removing c.pdf the list read "${afterRemove}"; Start over left ${JSON.stringify(reset)}`);
+      out.push("remove takes one file out; Start over empties the tool, shows the drop zone and focuses the file picker");
+      // Reduced motion: the same growth happens at once.
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      const instant = await frameMotion(page, () => page.setInputFiles("#fileInput", files.slice(0, 2)), ".o-frame-top .o-when-active");
+      await page.emulateMedia({ reducedMotion: "no-preference" });
+      expectFrameInstant(instant, "adding files, reduced motion");
+      out.push("instant under reduced motion");
+      out.push(await frameGuideLink(page));
+      return out.join("; ") + "; " + [
+        mustFail("a row without its thumbnail", () => expectRows([{ ...rows[0], thumb: 0 }, rows[1], rows[2]])),
+        mustFail("a frame that doesn't grow", () => expectFrameMotion({ ...animated, after: animated.before }, "test")),
+        mustFail("a list shown before the fade", () => expectFrameMotion({ ...animated, mid: { ...animated.mid, opacity: 1 } }, "test")),
+      ].join("; ");
+    },
+  },
+  {
+    name: "Pages without the page frame (cards, Arial)",
+    page: "/split-pdf/",
+    vendor: ["/assets/vendor/pdf-lib/1.17.1/pdf-lib.min.js"],
+    async run(page) {
+      const s = await page.evaluate(() => ({ frame: document.querySelectorAll(".o-frame-top, .o-tile, .o-row").length, body: document.body.className,
+        cards: document.querySelectorAll(".related-card").length, descs: document.querySelectorAll(".related-card .desc").length,
+        font: getComputedStyle(document.body).fontFamily, bg: getComputedStyle(document.body).backgroundColor }));
+      const expectPlain = (x) => expect(!x.frame && !/o-frame/.test(x.body) && x.cards >= 2 && x.descs === x.cards && /^Arial/.test(x.font) && x.bg === "rgb(11, 15, 26)",
+        `a page without the frame: ${JSON.stringify(x)}`);
+      expectPlain(s);
+      return `no frame, ${s.cards} related cards with descriptions, ${s.font}, the old background; ${mustFail("a tile on a plain page", () => expectPlain({ ...s, frame: 1 }))}`;
     },
   },
 ];
