@@ -890,6 +890,27 @@ function expectQrBlocked(q, lang) {
   expect(q.disabled, "the QR button is enabled for a link too long for a QR code");
   expect(q.note.includes((WA_QR_MAX + 1).toLocaleString(lang)) && q.note.includes(WA_QR_MAX.toLocaleString(lang)), `the QR note doesn't give the length and the limit: ${q.note}`);
 }
+// Download file names (the "Orisod file name" block): the input name every pilot case uses, and each
+// pilot tool's word in the page's language.
+const FILE_NAME_INPUT = "Contrato año 2026 ☕";
+const FILE_NAME_WORDS = {
+  en: { signed: "signed", rotated: "rotated", compressed: "compressed", cropped: "cropped" },
+  es: { signed: "firmado", rotated: "girado", compressed: "comprimido", cropped: "recortada" },
+};
+// Clicks a result link and returns the saved name, the link's download attribute, the name shown in the
+// result (read as text) and the file's bytes.
+async function fileNameResult(page, link, shownSelector) {
+  const attr = await link.getAttribute("download");
+  const shown = shownSelector ? await page.locator(shownSelector).textContent() : undefined;
+  const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
+  return { name: download.suggestedFilename(), attr, shown, bytes: await readFile(await download.path()) };
+}
+function expectFileName(r, want, what) {
+  expect(r.name === want, `${what}: the download is called ${JSON.stringify(r.name)}, not ${JSON.stringify(want)}`);
+  if (r.attr !== undefined) expect(r.attr === want, `${what}: the link's download attribute is ${JSON.stringify(r.attr)}`);
+  if (r.shown !== undefined) expect(r.shown === want, `${what}: the result shows ${JSON.stringify(r.shown)}, not the file name as text`);
+}
+
 function pngSize(buf) {
   expect(buf.subarray(1, 4).toString("latin1") === "PNG", "the QR download isn't a PNG");
   return [buf.readUInt32BE(16), buf.readUInt32BE(20)];
@@ -1866,17 +1887,18 @@ const CASES = [
     page: "/compress-pdf/",
     vendor: [PDFJS, PDFJS_WORKER, JSPDF],
     worker: PDFJS_WORKER,
-    async run(page) {
+    async run(page, lang) {
       const pdf = fixtureImagePdf(RASTER_PAGES, [0, 0, 0]);
+      const name = `scan-${FILE_NAME_WORDS[lang].compressed}-orisod.pdf`;
       await page.setInputFiles("#fileInput", { name: "scan.pdf", mimeType: "application/pdf", buffer: pdf });
       await page.check('input[name="compressMode"][value="strong"]', { force: true });
       await page.locator("#compressBtn:not([disabled])").waitFor({ timeout: 30000 });
       await page.click("#compressBtn");
-      const link = page.locator('#result a[download="scan-compressed.pdf"]');
+      const link = page.locator(`#result a[download="${name}"]`);
       await link.waitFor({ timeout: 60000 });
       const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
       const bytes = await readFile(await download.path());
-      expect(bytes.length < pdf.length, `scan-compressed.pdf is ${bytes.length} bytes, not smaller than the ${pdf.length}-byte original`);
+      expect(bytes.length < pdf.length, `${name} is ${bytes.length} bytes, not smaller than the ${pdf.length}-byte original`);
       const want = RASTER_SHOWN.map(([pw, ph]) => ({ pw, ph, w: pw * 1.5, h: ph * 1.5 }));
       const pages = jspdfPages(bytes);
       expectRasterPages(pages, want);
@@ -1888,7 +1910,126 @@ const CASES = [
         mustFail("a page without its image", () => expectRasterPages(jspdfPages(tamper(bytes, "/I1 Do", "/I1 Dx")), want)),
         mustFail("pages at the 1.5x render size", () => expectRasterPages(pages.map((p) => ({ ...p, w: p.w * 1.5, h: p.h * 1.5 })), want)),
       ];
-      return `3-page scan (${pdf.length} bytes) became scan-compressed.pdf (${bytes.length} bytes): pages 612x792, 792x612 and the /Rotate 90 page 792x612 pt like the original, each one 1.5x JPEG, half dark; ${negatives.join("; ")}`;
+      return `3-page scan (${pdf.length} bytes) became ${name} (${bytes.length} bytes): pages 612x792, 792x612 and the /Rotate 90 page 792x612 pt like the original, each one 1.5x JPEG, half dark; ${negatives.join("; ")}`;
+    },
+  },
+  // Download file names (pilot of orisodFileName(), the "Orisod file name" block): a tricky name in, the
+  // name the browser saves under checked exactly, then that output name fed back in must give the same name.
+  {
+    name: "Download file names (Sign PDF)",
+    page: "/sign-pdf/",
+    vendor: [PDFJS, PDFLIB],
+    async run(page, lang) {
+      const t = FILE_NAME_WORDS[lang];
+      const sign = async (fileName) => {
+        await page.setInputFiles("#fileInput", { name: fileName, mimeType: "application/pdf", buffer: fixturePdf("Sign me", ["page 1"]) });
+        await page.waitForFunction((n) => document.getElementById("dropzoneText").textContent.includes(n), fileName, { timeout: 30000 });
+        await page.locator("#sigCanvas").scrollIntoViewIfNeeded();
+        const box = await page.locator("#sigCanvas").boundingBox();
+        await page.mouse.move(box.x + 40, box.y + 100);
+        await page.mouse.down();
+        await page.mouse.move(box.x + 200, box.y + 60, { steps: 8 });
+        await page.mouse.move(box.x + 360, box.y + 140, { steps: 8 });
+        await page.mouse.up();
+        // The signature is placed once the page has been drawn; until then Sign asks for a page.
+        const link = page.locator("#result a[download]");
+        for (let i = 0; i < 40 && !(await link.count()); i++) {
+          await page.click("#downloadBtn");
+          await page.waitForTimeout(250);
+        }
+        return fileNameResult(page, link, "#result .result-filename");
+      };
+      const first = await sign(FILE_NAME_INPUT + ".PDF");
+      const want = `${FILE_NAME_INPUT}-${t.signed}-orisod.pdf`;
+      expectFileName(first, want, "signed");
+      expect(first.bytes.subarray(0, 5).toString() === "%PDF-", "the signed download isn't a PDF");
+      const again = await sign(want);
+      expectFileName(again, want, "signed again (the output name fed back)");
+      return `${FILE_NAME_INPUT}.PDF became ${first.name}, shown as text in the result; fed back it stays ${again.name}; ` +
+        mustFail("another name", () => expectFileName({ ...first, name: `${FILE_NAME_INPUT}-signed.pdf` }, want, "test"));
+    },
+  },
+  {
+    name: "Download file names (Rotate PDF)",
+    page: "/rotate-pdf/",
+    vendor: [PDFJS, PDFLIB],
+    async run(page, lang) {
+      const t = FILE_NAME_WORDS[lang];
+      const rotate = async (fileName) => {
+        await page.setInputFiles("#fileInput", { name: fileName, mimeType: "application/pdf", buffer: fixturePdf("Rotate me", ["page 1", "page 2"]) });
+        await page.waitForFunction((n) => document.getElementById("dropzoneText").textContent.includes(n), fileName, { timeout: 30000 });
+        await page.locator("#editor").waitFor({ state: "visible", timeout: 30000 });
+        const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), page.click("#rotateBtn")]);
+        return { name: download.suggestedFilename(), bytes: await readFile(await download.path()) };
+      };
+      const first = await rotate(FILE_NAME_INPUT + ".PDF");
+      const want = `${FILE_NAME_INPUT}-${t.rotated}-orisod.pdf`;
+      expectFileName(first, want, "rotated");
+      expect(pdfPageCount(first.bytes) === 2, "the rotated download doesn't have its 2 pages");
+      const again = await rotate(want);
+      expectFileName(again, want, "rotated again (the output name fed back)");
+      return `${FILE_NAME_INPUT}.PDF became ${first.name}; fed back it stays ${again.name}; ` +
+        mustFail("the old English word on the ES page", () => expectFileName({ ...first, name: `${FILE_NAME_INPUT}-rotated.pdf` }, `${FILE_NAME_INPUT}-girado-orisod.pdf`, "test"));
+    },
+  },
+  {
+    name: "Download file names (Compress PDF, and no gain keeps the original name)",
+    page: "/compress-pdf/",
+    vendor: [PDFJS, PDFJS_WORKER, JSPDF, PDFLIB],
+    async run(page, lang) {
+      const t = FILE_NAME_WORDS[lang];
+      const compress = async (fileName, buffer) => {
+        await page.setInputFiles("#fileInput", { name: fileName, mimeType: "application/pdf", buffer });
+        await page.check('input[name="compressMode"][value="strong"]', { force: true });
+        await page.locator("#compressBtn:not([disabled])").waitFor({ timeout: 30000 });
+        await page.click("#compressBtn");
+        const link = page.locator("#result a[download]");
+        await link.waitFor({ timeout: 60000 });
+        return fileNameResult(page, link, "#result .result-filename");
+      };
+      const scan = fixtureImagePdf(RASTER_PAGES, [0, 0, 0]);
+      const first = await compress(FILE_NAME_INPUT + ".PDF", scan);
+      const want = `${FILE_NAME_INPUT}-${t.compressed}-orisod.pdf`;
+      expectFileName(first, want, "compressed");
+      expect(first.bytes.length < scan.length, `${first.name} isn't smaller than the original`);
+      const again = await compress(want, scan);
+      expectFileName(again, want, "compressed again (the output name fed back)");
+      // Strong compression of a small text PDF would make it bigger, so the page offers the original back.
+      const text = fixturePdf("Plain text", ["page 1"]);
+      const kept = await compress(FILE_NAME_INPUT + ".PDF", text);
+      expectFileName(kept, FILE_NAME_INPUT + ".PDF", "no size gain");
+      expect(kept.bytes.equals(text), "with no gain the download isn't the original file");
+      return `${FILE_NAME_INPUT}.PDF became ${first.name}; fed back it stays ${again.name}; with no gain the original comes back untouched as ${kept.name}; ` +
+        mustFail("an Orisod name with no gain", () => expectFileName({ ...kept, name: want, shown: want }, FILE_NAME_INPUT + ".PDF", "test"));
+    },
+  },
+  {
+    name: "Download file names (Crop Image)",
+    page: "/crop-image/",
+    vendor: [],
+    async run(page, lang) {
+      const t = FILE_NAME_WORDS[lang];
+      const png = await fixtureImage(page, 400, 300, "image/png");
+      const crop = async (fileName) => {
+        await page.setInputFiles("#fileInput", { name: fileName, mimeType: "image/png", buffer: png });
+        await page.waitForFunction((n) => document.getElementById("dropzoneText").textContent.includes(n), fileName, { timeout: 30000 });
+        await page.locator("#sourceCanvas").scrollIntoViewIfNeeded();
+        const box = await page.locator("#sourceCanvas").boundingBox();
+        await page.mouse.move(box.x + 10, box.y + 10);
+        await page.mouse.down();
+        await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2, { steps: 8 });
+        await page.mouse.up();
+        const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), page.click("#cropBtn")]);
+        return { name: download.suggestedFilename(), bytes: await readFile(await download.path()) };
+      };
+      const first = await crop(FILE_NAME_INPUT + ".PNG");
+      const want = `${FILE_NAME_INPUT}-${t.cropped}-orisod.jpg`;
+      expectFileName(first, want, "cropped");
+      expect(first.bytes.subarray(0, 2).toString("hex") === "ffd8", "the cropped download isn't a JPEG");
+      const again = await crop(want);
+      expectFileName(again, want, "cropped again (the output name fed back)");
+      return `${FILE_NAME_INPUT}.PNG became ${first.name} (a JPEG); fed back it stays ${again.name}; ` +
+        mustFail("the old fixed name", () => expectFileName({ ...first, name: lang === "es" ? "recortada.jpg" : "cropped.jpg" }, want, "test"));
     },
   },
   {
