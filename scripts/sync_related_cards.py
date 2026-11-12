@@ -16,6 +16,14 @@ generator, which is deliberately unlisted) is reported and left alone.
 To change a card's wording, change the /tools entry (and the homepage TOOLS
 list in index.html / es/index.html), then run this with --write.
 verify_new_content.py's card-sync check uses the same comparison.
+
+Pages with the Orisod 2.0 page frame (their <body> has the o-frame class) show
+Related tools as tiles instead: the icon-box and the tool's name, no
+description, always four. On those pages this script turns any related-card
+into a tile (<a class="o-tile">, the icon-box, <div class="o-tile-name">) and
+keeps each tile's icon and name equal to /tools; a frame page without exactly
+four is reported, and the script exits 1. Every other page is handled as
+before, byte for byte.
 """
 
 import argparse
@@ -32,6 +40,12 @@ TOOLS_CARD = re.compile(r'<a class="card tool-card" href="([^"]+)">\s*(<div clas
 RELATED_CARD = re.compile(r'<a class="related-card" href="([^"]+)">\s*(<div class="icon-box[^"]*">.*?</div>)\s*'
                           r'<div class="body">\s*<div class="title">(.*?)</div>\s*<div class="desc">(.*?)</div>', re.S)
 FIELDS = ("icon", "title", "desc")
+# Frame pages (Orisod 2.0): the opt-in marker, the tile markup and the number of tiles.
+FRAME_PAGE = re.compile(r'<body\b[^>]*\bclass="(?:[^"]*\s)?o-frame(?:\s[^"]*)?"')
+TILE = re.compile(r'<a class="o-tile" href="([^"]+)">\s*(<div class="icon-box[^"]*">.*?</div>)\s*'
+                  r'<div class="o-tile-name">(.*?)</div>\s*</a>', re.S)
+WHOLE_CARD = re.compile(r'<a class="related-card" href="([^"]+)">.*?</a>', re.S)
+TILES = 4
 
 
 def catalog(lang):
@@ -45,9 +59,57 @@ def pages():
     return sorted(p for p in found if p.split("/")[0] not in NOT_PAGES and p not in TOOLS_PAGES.values())
 
 
+def is_frame_page(text):
+    return bool(FRAME_PAGE.search(text))
+
+
+def tile_html(href, want, indent, nl):
+    return (f'<a class="o-tile" href="{href}">{nl}{indent}  {want["icon"]}{nl}'
+            f'{indent}  <div class="o-tile-name">{want["title"]}</div>{nl}{indent}</a>')
+
+
+def frame_problems(text):
+    """A frame page must show exactly four Related tools (tiles, or cards this script turns into tiles)."""
+    if not is_frame_page(text):
+        return []
+    n = len(TILE.findall(text)) + len(WHOLE_CARD.findall(text))
+    return [] if n == TILES else [f"has {n} Related tools; a page with the page frame needs exactly {TILES}"]
+
+
+def frame_diffs(text, cards):
+    """card_diffs for a frame page: a card is replaced whole by its tile ("markup"); a tile's icon and name are synced."""
+    out = []
+    nl = "\r\n" if "\r\n" in text else "\n"
+    for m in WHOLE_CARD.finditer(text):
+        want = cards.get(m.group(1))
+        if want is None:
+            out.append((m.start(), m.group(1), None))
+            continue
+        indent = text[text.rfind("\n", 0, m.start()) + 1:m.start()]
+        indent = "" if indent.strip() else indent
+        out.append((m.start(), m.group(1), {"markup": (m.start(), m.end(), m.group(0), tile_html(m.group(1), want, indent, nl))}))
+    for m in TILE.finditer(text):
+        want = cards.get(m.group(1))
+        if want is None:
+            out.append((m.start(), m.group(1), None))
+            continue
+        diffs = {}
+        for i, field in ((2, "icon"), (3, "title")):
+            live, s, e = m.group(i), m.start(i), m.end(i)
+            if field == "title":  # compared and written without its surrounding whitespace
+                s, e = s + len(live) - len(live.lstrip()), e - (len(live) - len(live.rstrip()))
+                live = live.strip()
+            if live != want[field]:
+                diffs[field] = (s, e, live, want[field])
+        out.append((m.start(), m.group(1), diffs))
+    return [(href, d) for _, href, d in sorted(out, key=lambda x: x[0])]
+
+
 def card_diffs(text, cards):
     """For each related card on a page: (href, {field: (start, end, live, want)} for fields that differ), or
-    (href, None) when /tools has no entry for it."""
+    (href, None) when /tools has no entry for it. On a frame page, see frame_diffs."""
+    if is_frame_page(text):
+        return frame_diffs(text, cards)
     out = []
     for m in RELATED_CARD.finditer(text):
         want = cards.get(m.group(1))
@@ -78,10 +140,11 @@ def main():
         sys.stdout.reconfigure(encoding="utf-8")
 
     cards = {lang: catalog(lang) for lang in TOOLS_PAGES}
-    counts = {"cards": 0, "in sync": 0, "unlisted": 0, **{f: 0 for f in FIELDS}}
-    changed_files = 0
+    counts = {"cards": 0, "in sync": 0, "unlisted": 0, "markup": 0, **{f: 0 for f in FIELDS}}
+    changed_files, problems = 0, []
     for rel in args.files or pages():
         text = read(rel)
+        problems += [f"{rel}: {p}" for p in frame_problems(text)]
         edits = []
         for href, diffs in card_diffs(text, cards["es" if rel.startswith("es/") else "en"]):
             counts["cards"] += 1
@@ -95,7 +158,9 @@ def main():
             for field, (s, e, live, want) in diffs.items():
                 counts[field] += 1
                 edits.append((s, e, want))
-                if field != "icon":
+                if field == "markup":
+                    print(f"  tile  {rel} -> {href} (a card turned into a tile)")
+                elif field != "icon":
                     print(f"  {field:<5} {rel} -> {href}\n        was: {live}\n        now: {want}")
                 else:
                     print(f"  icon  {rel} -> {href}")
@@ -107,13 +172,15 @@ def main():
                 with open(REPO_ROOT / rel, "w", encoding="utf-8", newline="") as fh:
                     fh.write(text)
     print("{cards} cards: {in sync} in sync, {unlisted} not on /tools; out of sync: "
-          "{title} title(s), {desc} description(s), {icon} icon(s)".format(**counts)
+          "{title} title(s), {desc} description(s), {icon} icon(s), {markup} card(s) to turn into tiles".format(**counts)
           + f", in {changed_files} file(s)")
+    for p in problems:
+        print(f"  - {p}")
     if not args.write:
         print("Dry run: nothing written." + (" Run again with --write to apply." if changed_files else ""))
     else:
         print(f"Wrote {changed_files} file(s). Next: python scripts/content_dates.py, then verify_new_content.py")
-    return 0
+    return 1 if problems else 0
 
 
 if __name__ == "__main__":

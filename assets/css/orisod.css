@@ -1,9 +1,10 @@
-/* Orisod 2.0 shared design tokens.
+/* Orisod 2.0 shared design tokens and page frame.
    This file is the single source. scripts/sync_styles.py copies it, byte for byte, into the marked region of each
    adopting page's inline <style>; scripts/check_styles.py (CI: check-styles) fails when a page's copy differs.
    Edit it here, then run: python scripts/sync_styles.py --write
-   Tokens only: nothing here draws anything until a page uses a variable. Names start with --o- so they never
-   collide with the variables the current pages define (--bg, --text, --accent, ...). Dark is the default theme;
+   First the tokens, which draw nothing until a page uses a variable; their names start with --o- so they never
+   collide with the variables the current pages define (--bg, --text, --accent, ...). Then the page frame blocks
+   (step 4), which only apply on a page whose <body> has the o-frame class. Dark is the default theme;
    light is :root[data-theme="light"], set by the theme toggle. */
 
 /* Inter 4.001, variable weight 100 to 900, latin and latin-ext only (assets/vendor/inter/5.3.0, OFL-1.1).
@@ -89,3 +90,94 @@
     --o-duration-slow:0ms;
   }
 }
+
+/* ===== Page frame (Orisod 2.0 step 4, pilot) =====
+   A page opts in with <body class="o-frame">. These blocks style the parts every tool page shares: the tool's frame,
+   the "How it works" steps, the Related tools tiles, the buttons and the Help and details panel. A tool's own styles
+   stay in its page. Nothing below draws anything on a page without the o-frame class. */
+
+/* Frame page: the new palette and Inter for the whole page. The page's older variables (--bg, --text, --card-bg,
+   --border, --muted-text), which its own CSS and the site menu use, take the --o- values, in both themes. */
+.o-frame{
+  --bg:var(--o-bg);
+  --text:var(--o-text);
+  --card-bg:var(--o-card);
+  --border:var(--o-border);
+  --muted-text:var(--o-muted);
+  font-family:var(--o-font-sans);
+}
+.o-frame .container{max-width:960px;}
+.o-icon{display:block;flex:none;width:20px;height:20px;}
+
+/* Frame: the tool itself, full content width, on the card surface. data-state="idle" before use (low: a form or an
+   upload zone), "active" in use (it grows). Its content sits in one .o-frame-body wrapper, which the script measures. Children marked o-when-idle / o-when-active show in one state only; the
+   active ones fade in and rise 8px after the height has moved. The page's frame script animates the height. */
+.o-frame-top{position:relative;margin:var(--o-space-6) 0 0 0;padding:28px;background:var(--o-card);border:1px solid var(--o-border);border-radius:16px;text-align:left;}
+@media (max-width:599px){.o-frame-top{padding:18px;}}
+.o-frame-body{display:flow-root;}
+.o-frame-top.o-resizing{overflow:hidden;transition:height var(--o-duration-slow) var(--o-ease);}
+.o-frame-narrow{max-width:680px;margin-left:auto;margin-right:auto;}
+.o-frame-top[data-state="idle"] .o-when-active, .o-frame-top[data-state="active"] .o-when-idle{display:none;}
+.o-frame-top[data-state="active"] .o-when-active{animation:o-rise var(--o-duration-slow) var(--o-ease) var(--o-duration-slow) both;}
+@keyframes o-rise{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+/* Bottom row: "How it works" and "Related tools", half and half, as wide as the frame together; stacked on phones. */
+.o-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--o-space-5);margin:var(--o-space-5) 0 0 0;text-align:left;}
+@media (max-width:599px){.o-row{grid-template-columns:minmax(0,1fr);}}
+.o-panel{min-width:0;padding:var(--o-space-5);background:var(--o-card);border:1px solid var(--o-border);border-radius:16px;}
+@media (max-width:599px){.o-panel{padding:18px;}}
+.o-panel > h2{margin:0 0 var(--o-space-5) 0;font-size:18px;line-height:1.3;}
+
+/* Steps: numbered 36px circles joined by a 2px line, then a divider and the guide link. */
+.o-steps{list-style:none;margin:0;padding:0;counter-reset:o-step;}
+.o-steps > li{position:relative;counter-increment:o-step;min-height:36px;margin:0;padding:7px 0 var(--o-space-5) 52px;font-size:15px;line-height:1.5;color:var(--o-text);}
+.o-steps > li:last-child{padding-bottom:0;}
+.o-steps > li::before{content:counter(o-step) / "";position:absolute;left:0;top:0;display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:var(--o-accent);color:#ffffff;font-size:15px;font-weight:700;line-height:1;}
+.o-steps > li:not(:last-child)::after{content:"";position:absolute;left:17px;top:36px;bottom:0;width:2px;background:var(--o-border);}
+.o-guide{display:flex;align-items:flex-start;gap:10px;max-width:none;margin:var(--o-space-5) 0 0 0;padding:var(--o-space-5) 0 0 0;border-top:1px solid var(--o-border);font-size:14px;line-height:1.5;color:var(--o-muted);text-align:left;opacity:1;}
+.o-guide .o-icon{width:18px;height:18px;margin-top:2px;color:var(--o-link);}
+.o-guide a{color:var(--o-link);text-decoration:underline;text-underline-offset:2px;}
+.o-guide a:focus-visible{outline:2px solid var(--o-accent);outline-offset:2px;border-radius:3px;}
+
+/* Related tools tiles: always four, 2 x 2, the category icon on top and the tool's name below. The tint and the hover
+   border take the category colour. The markup comes from scripts/sync_related_cards.py. */
+.o-tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--o-space-3);}
+.o-tile{--o-cat:var(--o-accent);display:flex;flex-direction:column;align-items:flex-start;gap:var(--o-space-3);min-height:128px;padding:var(--o-space-4);background:var(--o-elevated);border:1px solid var(--o-border);border-radius:14px;color:var(--o-text);text-decoration:none;transition:transform var(--o-duration-base) var(--o-ease), border-color var(--o-duration-base) var(--o-ease);}
+.o-tile:has(> .cat-pdf){--o-cat:var(--o-cat-pdf);}
+.o-tile:has(> .cat-image){--o-cat:var(--o-cat-image);}
+.o-tile:has(> .cat-utility){--o-cat:var(--o-cat-utility);}
+.o-tile:hover{transform:translateY(-3px);border-color:var(--o-cat);}
+.o-tile:focus-visible{outline:2px solid var(--o-accent);outline-offset:2px;}
+.o-tiles .o-tile .icon-box{display:flex;align-items:center;justify-content:center;flex:none;width:46px;height:46px;margin:0;border:0;border-radius:12px;background:color-mix(in srgb, var(--o-cat) 16%, transparent);color:var(--o-cat);}
+.o-tiles .o-tile .icon-box svg{display:block;width:24px;height:24px;}
+.o-tile-name{font-size:15px;font-weight:600;line-height:1.35;}
+
+/* Buttons: 48px, radius 12. Primary (accent, white text), secondary (outlined), ghost; disabled; a visible focus
+   ring; pressing scales to 0.97. */
+.o-btn{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;gap:var(--o-space-2);min-height:48px;margin:0;padding:0 20px;border:1px solid transparent;border-radius:12px;background:transparent;color:var(--o-text);font-family:inherit;font-size:15px;font-weight:600;line-height:1.2;text-align:center;text-decoration:none;cursor:pointer;filter:none;opacity:1;transition:transform var(--o-duration-fast) var(--o-ease), background-color var(--o-duration-base) var(--o-ease), border-color var(--o-duration-base) var(--o-ease);}
+.o-btn .o-icon{width:18px;height:18px;}
+.o-btn-primary{background:var(--o-accent);border-color:var(--o-accent);color:#ffffff;}
+.o-btn-primary:hover:not(:disabled){background:var(--o-accent-hover);border-color:var(--o-accent-hover);}
+.o-btn-secondary{border-color:color-mix(in srgb, var(--o-muted) 55%, transparent);}
+.o-btn-secondary:hover:not(:disabled){border-color:var(--o-accent);}
+.o-btn-ghost{color:var(--o-link);}
+.o-btn-ghost:hover:not(:disabled){background:color-mix(in srgb, var(--o-accent) 12%, transparent);}
+.o-btn:active:not(:disabled){transform:scale(.97);}
+.o-btn:disabled{opacity:.45;cursor:not-allowed;}
+.o-btn:focus-visible{outline:2px solid var(--o-accent);outline-offset:2px;}
+.o-btn[hidden]{display:none;}
+
+/* Help and details: full width under the row, a native <details> closed by default, its text in the HTML for search
+   engines and for readers without JavaScript. The arrow is drawn with borders and turns when it opens. */
+.o-help{margin:var(--o-space-5) 0 0 0;background:var(--o-card);border:1px solid var(--o-border);border-radius:16px;text-align:left;}
+.o-help > summary{display:flex;align-items:center;gap:var(--o-space-3);min-height:56px;padding:var(--o-space-4) var(--o-space-5);border-radius:16px;font-size:16px;font-weight:600;line-height:1.3;list-style:none;cursor:pointer;}
+.o-help > summary::-webkit-details-marker{display:none;}
+.o-help > summary::before{content:"";order:2;flex:none;width:8px;height:8px;margin:0 4px 4px auto;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);transition:transform var(--o-duration-slow) var(--o-ease);}
+.o-help[open] > summary::before{transform:rotate(-135deg);}
+.o-help > summary:hover{color:var(--o-link);}
+.o-help > summary:focus-visible{outline:2px solid var(--o-accent);outline-offset:2px;}
+.o-help-body{max-width:none;margin:0;padding:0 var(--o-space-5) var(--o-space-4) var(--o-space-5);text-align:left;}
+.o-help-body h2{margin:var(--o-space-6) 0 var(--o-space-3) 0;font-size:18px;}
+.o-help-body h2:first-child{margin-top:var(--o-space-2);}
+.o-help-body p, .o-help-body ul, .o-help-body ol{max-width:none;margin:0 0 var(--o-space-4) 0;font-size:15px;line-height:1.65;color:var(--o-text);opacity:1;}
+.o-help-body a{color:var(--o-link);}
