@@ -1718,6 +1718,158 @@ const FILE_NAME_CASES = FILE_NAME_TOOLS.map((row) => ({
   },
 }));
 
+// Download file names, PR 3: the image tools, one table row per tool, EN and ES, with FILE_NAME_IMAGE_INPUT and the
+// row's extension. Editors (and EXIF Remover) get a picture they accept and feed the output name back (the output is
+// a type they accept, so the name must stay the same); format converters add no word. A batch case checks every
+// name Download All saves.
+const FILE_NAME_IMAGE_INPUT = "Foto año 2026 ☕";
+// A 16x12 picture, black left half, made once with Pillow 12.3.0 (no browser can encode AVIF): 310 bytes of AVIF, 84 of GIF.
+const AVIF_FIXTURE = Buffer.from("AAAAIGZ0eXBhdmlmAAAAAGF2aWZtaWYxbWlhZk1BMUIAAADrbWV0YQAAAAAAAAAhaGRscgAAAAAAAAAAcGljdAAAAAAAAAAAAAAAAAAAAAAOcGl0bQAAAAAAAQAAAB5pbG9jAAAAAEQAAAEAAQAAAAEAAAETAAAAIwAAAChpaW5mAAAAAAABAAAAGmluZmUCAAAAAAEAAGF2MDFDb2xvcgAAAABqaXBycAAAAEtpcGNvAAAAFGlzcGUAAAAAAAAAEAAAAAwAAAAQcGl4aQAAAAADCAgIAAAADGF2MUOBAAwAAAAAE2NvbHJuY2x4AAEADQAGgAAAABdpcG1hAAAAAAAAAAEAAQQBAoMEAAAAK21kYXQSAAoJGAz+2iAhoNCAMhRGUeHhiGHnnnmgACB1hl753vH7bQ==", "base64");
+const GIF_FIXTURE = Buffer.from("R0lGODdhEAAMAIEAAP///wAAAAAAAAAAACwAAAAAEAAMAAAILQADCBwoEIDBgwYJEkSIUOFAhgcdFoQIQGIAihUlYrS4USNFjh89QgQ5UiTDgAA7", "base64");
+// A 16x12 24-bit BMP, black left half.
+function fixtureBmp(w = 16, h = 12) {
+  const row = Math.ceil((w * 3) / 4) * 4, size = 54 + row * h, b = Buffer.alloc(size);
+  b.write("BM", 0); b.writeUInt32LE(size, 2); b.writeUInt32LE(54, 10); b.writeUInt32LE(40, 14);
+  b.writeInt32LE(w, 18); b.writeInt32LE(h, 22); b.writeUInt16LE(1, 26); b.writeUInt16LE(24, 28); b.writeUInt32LE(row * h, 34);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) b.fill(x < w / 2 ? 0 : 255, 54 + y * row + x * 3, 54 + y * row + x * 3 + 3);
+  return b;
+}
+const SVG_FIXTURE = Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="12"><rect width="8" height="12"/></svg>');
+async function imageInput(page, type, stem) {
+  if (type === "avif") return { name: stem + ".AVIF", mimeType: "image/avif", buffer: AVIF_FIXTURE };
+  if (type === "gif") return { name: stem + ".GIF", mimeType: "image/gif", buffer: GIF_FIXTURE };
+  if (type === "bmp") return { name: stem + ".BMP", mimeType: "image/bmp", buffer: fixtureBmp() };
+  if (type === "heic") return { name: stem + ".HEIC", mimeType: "image/heic", buffer: HEIC_FIXTURE };
+  // SVG is accepted by type, so the name here has no extension at all.
+  if (type === "svg") return { name: stem, mimeType: "image/svg+xml", buffer: SVG_FIXTURE };
+  if (type === "webp") return { name: stem + ".WEBP", mimeType: "image/webp", buffer: await fixtureImage(page, 120, 90, "image/webp") };
+  if (type === "jpg") return { name: stem + ".JPG", mimeType: "image/jpeg", buffer: await fixtureImage(page, 120, 90, "image/jpeg") };
+  return { name: stem + ".PNG", mimeType: "image/png", buffer: await fixtureImage(page, 120, 90, "image/png") };
+}
+const imageExt = { avif: "AVIF", gif: "GIF", bmp: "BMP", heic: "HEIC", svg: "", webp: "WEBP", jpg: "JPG", png: "PNG" };
+// Drags a selection on the tool's canvas (Blur Area Tool, Social Media Crop).
+async function dragOnCanvas(page) {
+  const canvas = page.locator("#sourceCanvas");
+  await canvas.scrollIntoViewIfNeeded();
+  const b = await canvas.boundingBox();
+  await page.mouse.move(b.x + 5, b.y + 5);
+  await page.mouse.down();
+  await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2, { steps: 8 });
+  await page.mouse.up();
+}
+// "auto": the button itself saves the file. "link": the button makes a result link (in #result or #results), clicked here.
+async function imageDownload(page, row) {
+  if (row.prep) await row.prep(page);
+  if (row.mode === "auto") {
+    const [d] = await Promise.all([page.waitForEvent("download", { timeout: 60000 }), page.click(row.button)]);
+    return { name: d.suggestedFilename(), bytes: await readFile(await d.path()) };
+  }
+  const link = page.locator("#result a[download], #results a[download]");
+  for (let i = 0; i < 60 && !(await link.count()); i++) {
+    await page.locator(row.button).click({ timeout: 5000 }).catch(() => {});
+    await page.waitForTimeout(250);
+  }
+  const label = page.locator("#result .result-filename, #results .result-filename, #results .result-item-name");
+  return fileNameResult(page, link.first(), (await label.count()) ? "#result .result-filename, #results .result-filename, #results .result-item-name" : null);
+}
+const IMAGE_EDITORS = [
+  { tool: "add-border-to-image", words: ["bordered", "con-borde"], ext: "png", mode: "auto", button: "#downloadBtn" },
+  { tool: "blur-area-tool", words: ["blurred", "difuminada"], ext: "jpg", mode: "auto", button: "#applyBtn", prep: dragOnCanvas },
+  { tool: "compress-image", words: ["compressed", "comprimida"], ext: "jpg", mode: "link", button: "#compressBtn", showsInput: true },
+  { tool: "image-color-filters", words: ["filtered", "filtrada"], ext: "jpg", mode: "auto", button: "#downloadBtn" },
+  { tool: "resize-image", words: ["resized", "redimensionada"], ext: "jpg", mode: "link", button: "#resizeBtn", showsInput: true },
+  { tool: "rotate-image", words: ["rotated", "girada"], ext: "png", mode: "auto", button: "#downloadBtn" },
+  { tool: "round-image-corners", words: ["rounded", "redondeada"], ext: "png", mode: "auto", button: "#downloadBtn",
+    also: { words: ["circle", "circulo"], prep: (page) => page.click("#circleBtn") } },
+  { tool: "watermark-adder", words: ["watermarked", "marca-de-agua"], ext: "jpg", mode: "auto", button: "#downloadBtn" },
+  { tool: "social-media-crop", words: ["instagram-post", "publicacion-de-instagram"], ext: "jpg", mode: "auto", button: "#cropBtn", prep: dragOnCanvas },
+  { tool: "exif-remover", words: ["no-exif", "sin-exif"], ext: "png", mode: "link", button: "#removeBtn" },
+];
+const IMAGE_CONVERTERS = [
+  { tool: "avif-to-jpg-png", input: "avif", ext: "jpg", mode: "link", button: "#convertBtn" },
+  { tool: "bmp-to-jpg-png", input: "bmp", ext: "jpg", mode: "link", button: "#convertBtn" },
+  { tool: "heic-to-jpg", input: "heic", ext: "jpg", mode: "link", button: "#convertBtn" },
+  { tool: "png-to-jpg", input: "png", ext: "jpg", mode: "link", button: "#convertBtn" },
+  { tool: "png-to-webp", input: "png", ext: "webp", mode: "link", button: "#convertBtn" },
+  { tool: "jpg-to-webp", input: "jpg", ext: "webp", mode: "link", button: "#convertBtn" },
+  { tool: "webp-to-jpg", input: "webp", ext: "jpg", mode: "link", button: "#convertBtn" },
+  { tool: "webp-to-png", input: "webp", ext: "png", mode: "link", button: "#convertBtn" },
+  { tool: "gif-to-jpg-png", input: "gif", ext: "jpg", mode: "link", button: "#convertBtn" },
+  { tool: "svg-to-png", input: "svg", ext: "png", mode: "link", button: "#convertBtn" },
+];
+const FILE_NAME_IMAGE_CASES = [...IMAGE_EDITORS, ...IMAGE_CONVERTERS].map((row) => ({
+  name: `Download file names (${row.tool})`,
+  page: `/${row.tool}/`,
+  vendor: [],
+  async run(page, lang) {
+    const type = row.input || "png";
+    const word = row.words ? row.words[lang === "es" ? 1 : 0] : null;
+    const want = (w) => `${FILE_NAME_IMAGE_INPUT}${w ? "-" + w : ""}-orisod.${row.ext}`;
+    const once = async (stem, extra) => {
+      await page.evaluate(() => { for (const id of ["result", "results"]) document.getElementById(id)?.replaceChildren(); });
+      const file = await imageInput(page, type, stem);
+      await page.setInputFiles("#fileInput", file);
+      // Editors say "<name> loaded" once the picture is ready (that's when they keep its name).
+      if (!row.input) await page.waitForFunction((n) => document.getElementById("dropzoneText").textContent.includes(n), file.name, { timeout: 30000 });
+      return imageDownload(page, extra ? { ...row, ...extra } : row);
+    };
+    const first = await once(FILE_NAME_IMAGE_INPUT);
+    // Compress and Resize Image show the picture's own name in their result card (unchanged), not the download's.
+    const shownInput = row.showsInput ? first.shown : undefined;
+    if (row.showsInput) {
+      expect(first.shown === FILE_NAME_IMAGE_INPUT + ".PNG", `${row.tool}: the result shows "${first.shown}", not the picture's own name`);
+      delete first.shown;
+    }
+    expectFileName(first, want(word), row.tool);
+    const magic = { jpg: "ffd8", png: "89504e47", webp: "52494646" }[row.ext];
+    expect(first.bytes.subarray(0, magic.length / 2).toString("hex") === magic, `${first.name} isn't a .${row.ext} file`);
+    const notes = [];
+    if (!row.input) {
+      // The output is a type the editor accepts: its name fed back must stay the same.
+      const again = await once(want(word).slice(0, -(row.ext.length + 1)) + "." + row.ext.toUpperCase());
+      if (row.showsInput) delete again.shown;
+      expectFileName(again, want(word), `${row.tool}, the output name fed back`);
+      notes.push(`fed back it stays ${again.name}`);
+    }
+    if (row.also) {
+      const w2 = row.also.words[lang === "es" ? 1 : 0];
+      const other = await once(FILE_NAME_IMAGE_INPUT, { prep: row.also.prep });
+      expectFileName(other, want(w2), `${row.tool}, ${w2}`);
+      notes.push(`the other shape gives ${other.name}`);
+    }
+    const old = mustFail("the old name", () => expectFileName({ ...first, name: `${FILE_NAME_IMAGE_INPUT}.${row.ext}` }, want(word), "test"));
+    return `${FILE_NAME_IMAGE_INPUT}${imageExt[type] ? "." + imageExt[type] : " (no extension)"} became ${first.name}` +
+      `${first.shown !== undefined ? " (shown as text in the result)" : shownInput ? ` (the result shows the picture's name, ${shownInput}, as text)` : ""}${notes.length ? "; " + notes.join("; ") : ""}; ${old}`;
+  },
+}));
+// Download All on a batch converter: two inputs with different names, one file per input, each named from its own.
+FILE_NAME_IMAGE_CASES.push({
+  name: "Download file names (WEBP to JPG, Download All)",
+  page: "/webp-to-jpg/",
+  vendor: [],
+  async run(page) {
+    const a = await imageInput(page, "webp", FILE_NAME_IMAGE_INPUT);
+    const b = { ...(await imageInput(page, "webp", "Second photo.v2")), name: "Second photo.v2.webp" };
+    await page.setInputFiles("#fileInput", [a, b]);
+    await page.click("#convertBtn");
+    await page.locator("#results a[download]").nth(1).waitFor({ timeout: 30000 });
+    const rows = await page.$$eval("#results a[download]", (links) => links.map((l) => l.getAttribute("download")));
+    const shown = await page.$$eval("#results .result-filename", (els) => els.map((e) => e.textContent));
+    await page.locator("#downloadAllBtn").waitFor({ state: "visible", timeout: 10000 });
+    const saved = [];
+    page.on("download", (d) => saved.push(d.suggestedFilename()));
+    await page.click("#downloadAllBtn");
+    for (let i = 0; i < 40 && saved.length < 2; i++) await page.waitForTimeout(250);
+    const want = [`${FILE_NAME_IMAGE_INPUT}-orisod.jpg`, "Second photo.v2-orisod.jpg"];
+    const expectAll = (got, what) => expect(JSON.stringify(got) === JSON.stringify(want), `${what}: ${JSON.stringify(got)}, not ${JSON.stringify(want)}`);
+    expectAll(rows, "the row links");
+    expectAll(shown, "the names shown in the rows");
+    expectAll(saved, "Download All saved");
+    return `Download All saved ${saved.join(" and ")} (the rows show and link the same names); ` +
+      mustFail("one name for both", () => expectAll([want[0], want[0]], "test"));
+  },
+});
+
 const CASES = [
   {
     name: "spark-md5",
@@ -2141,6 +2293,7 @@ const CASES = [
     },
   },
   ...FILE_NAME_CASES,
+  ...FILE_NAME_IMAGE_CASES,
   {
     name: "PDF.js + jsPDF (PDF color filters)",
     page: "/pdf-color-filters/",
@@ -2833,13 +2986,13 @@ const CASES = [
       await page.setInputFiles("#fileInput", { name: "smoke.heic", mimeType: "image/heic", buffer: HEIC_FIXTURE });
       await page.locator("#convertBtn:not([disabled])").waitFor({ timeout: 30000 });
       await page.click("#convertBtn");
-      const link = page.locator('#results a[download="smoke.jpg"]');
+      const link = page.locator('#results a[download="smoke-orisod.jpg"]');
       await link.waitFor({ timeout: 60000 });
       const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
       const bytes = await readFile(await download.path());
       const size = jpegSize(bytes);
-      expect(size, "smoke.jpg isn't a JPEG");
-      expect(size.w === 64 && size.h === 48, `smoke.jpg is ${size.w}x${size.h}, not 64x48`);
+      expect(size, "smoke-orisod.jpg isn't a JPEG");
+      expect(size.w === 64 && size.h === 48, `smoke-orisod.jpg is ${size.w}x${size.h}, not 64x48`);
       // libheif's decoded picture: the left half must come out black and the right half white.
       const halves = await page.evaluate(async (b64) => {
         const img = new Image();
@@ -2852,8 +3005,8 @@ const CASES = [
         const mean = (x, w) => { const d = ctx.getImageData(x, 0, w, c.height).data; let t = 0; for (let i = 0; i < d.length; i += 4) t += d[i] + d[i + 1] + d[i + 2]; return t / (d.length / 4) / 3; };
         return [mean(0, 28), mean(36, 28)];
       }, bytes.toString("base64"));
-      expect(halves[0] < 40 && halves[1] > 215, `smoke.jpg halves average ${halves.map(Math.round).join(" and ")}, not black and white`);
-      return `smoke.jpg: a 64x48 JPEG, left half black and right half white (averages ${halves.map(Math.round).join(" / ")}), decoded by heic2any's libheif`;
+      expect(halves[0] < 40 && halves[1] > 215, `smoke-orisod.jpg halves average ${halves.map(Math.round).join(" and ")}, not black and white`);
+      return `smoke-orisod.jpg: a 64x48 JPEG, left half black and right half white (averages ${halves.map(Math.round).join(" / ")}), decoded by heic2any's libheif`;
     },
   },
   {
