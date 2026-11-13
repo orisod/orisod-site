@@ -17,3 +17,6 @@ jobs:
 
       - name: Check every PDF.js getDocument() call disables eval (CVE-2024-4367)
         run: python3 scripts/check_pdfjs.py
+
+      - name: Prove each PDF.js rule fails on a broken copy
+        run: python3 scripts/test_check_pdfjs.py

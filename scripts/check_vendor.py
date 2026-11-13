@@ -34,6 +34,16 @@ Rules, for every page (every .html outside the folders below, including 404.html
 - every /assets/vendor/ script a page loads is a file listed in the manifest, and
   no vendor script is in <head> (libraries load after the content, before the
   tool's own script)
+- a script loaded on demand (lazily, like Merge PDF's PDF.js, which loads when the
+  first PDF is added) comes only from a <script> element an inline script or the
+  site's own JS creates as `x = document.createElement("script")` and points at a
+  vendored script with `x.src = "/assets/vendor/..."` or `x.src = NAME`, NAME being a
+  const declared once as that string; the file must be a library .js file in the
+  manifest (so its sha256 is checked like a tag's). Anything else fails: a CDN or any
+  other path, a template literal or a built-up string, setAttribute("src"), code
+  written into the element, or a created script element the check can't follow.
+  Lazily loaded scripts count as the page's loads for the rules below (PDF.js's
+  workerSrc, the same libraries on the EN and ES pages)
 - every /assets/vendor/ file path written in an inline script or the site's own JS
   (what fetch(), workerSrc and the like are given, directly or through a constant)
   is a library file in the manifest, not a license or notice and not a missing
@@ -165,6 +175,10 @@ FLAG_FOLDER_USE = re.compile(r"/assets/vendor/circle-flags/")
 FLAG_DIR = re.compile(r"""\bconst FLAG_DIR = ["'](/assets/vendor/circle-flags/[^"'/]+/)["']""")
 FLAG_CODES = re.compile(r"""\bconst FLAG_CODES = ["']([^"']*)["']""")
 SPDX = re.compile(r"^[A-Za-z0-9.+-]+(?: (?:OR|AND|WITH) [A-Za-z0-9.+-]+)*$")
+# A <script> element made by a script (a lazy load), and the variable it's assigned to.
+CREATE_SCRIPT = re.compile(r"""\bcreateElement\(\s*["'`]script["'`]\s*\)""", re.I)
+CREATE_SCRIPT_VAR = re.compile(r"""\b([A-Za-z_$][\w$]*)\s*=\s*document\.createElement\(\s*["']script["']\s*\)""")
+QUOTED = r"""(?:"([^"\\]*)"|'([^'\\]*)')"""
 
 
 def external(url):
@@ -367,6 +381,46 @@ def check_css_vendor_paths(rel, css, vendor_files, problems):
     return found
 
 
+def check_lazy_scripts(rel, body, vendor_files, problems):
+    """Every <script> element a script creates must get its src from a vendored library script, written as a
+    string or a const declared once as one. Returns the paths it loads, in order."""
+    created = CREATE_SCRIPT_VAR.findall(body)
+    if len(created) != len(CREATE_SCRIPT.findall(body)):
+        problems.append(f"{rel}: a script creates a <script> element that isn't assigned to a variable "
+                        f"(x = document.createElement(\"script\")), so what it loads can't be checked")
+    found = []
+    for var in dict.fromkeys(created):
+        v = re.escape(var)
+        if re.search(rf"""\b{v}\s*\.\s*setAttribute\s*\(\s*["'`]src""", body) or \
+                re.search(rf"\b{v}\s*\.\s*(?:text|textContent|innerText|innerHTML)\s*=", body):
+            problems.append(f"{rel}: a script sets the src of the <script> it creates ({var}) with setAttribute, or writes "
+                            f"code into it; only {var}.src = a vendored file is allowed")
+        srcs = re.findall(rf"\b{v}\s*\.\s*src\s*=\s*([^;\n]+)", body)
+        if not srcs:
+            problems.append(f"{rel}: a script creates a <script> element ({var}) without pointing its src at a vendored file")
+        for rhs in (s.strip() for s in srcs):
+            m = re.fullmatch(QUOTED, rhs)
+            if m:
+                path = m.group(1) if m.group(1) is not None else m.group(2)
+            elif re.fullmatch(r"[A-Za-z_$][\w$]*", rhs):
+                decl = re.findall(rf"\bconst\s+{re.escape(rhs)}\s*=\s*{QUOTED}\s*;", body)
+                if len(decl) != 1 or re.search(rf"\b(?:let|var)\s+{re.escape(rhs)}\b", body) or \
+                        len(re.findall(rf"(?<![\w$.])\b{re.escape(rhs)}\s*=(?!=)", body)) != 1:
+                    problems.append(f"{rel}: {var}.src is set to {rhs}, which must be a const declared once as a vendored file path")
+                    continue
+                path = decl[0][0] or decl[0][1]
+            else:
+                problems.append(f"{rel}: {var}.src is set to {rhs}; a <script> a page creates must load a vendored file, "
+                                f"written as a string or a const holding one")
+                continue
+            if not path.startswith("/assets/vendor/") or not path.endswith(".js") or path not in vendor_files:
+                problems.append(f"{rel}: a script loads {path or '(empty)'} on demand; only library scripts in {MANIFEST} "
+                                f"may be loaded that way")
+                continue
+            found.append(path)
+    return found
+
+
 def check_flags(rel, body, vendor_files, problems):
     """A script picking circle-flags by code must name the folder and every code, each a flag in the manifest."""
     dirs, codes = FLAG_DIR.findall(body), FLAG_CODES.findall(body)
@@ -401,6 +455,7 @@ def main() -> int:
     loads = {}  # page -> list of vendor/CDN script srcs, in order
     worker_srcs = {}  # page -> every workerSrc string its inline scripts set
     vendor_refs = 0
+    lazy_refs = 0
     vendor_paths = 0
     css_paths = 0
     for rel in pages(root):
@@ -451,6 +506,10 @@ def main() -> int:
             for vm in VENDOR_PATH.finditer(body):
                 vendor_paths += 1
                 check_vendor_path(rel, vm.group(1), vendor_scripts, problems)
+            if CREATE_SCRIPT.search(body):
+                lazy = check_lazy_scripts(rel, body, vendor_scripts, problems)
+                lazy_refs += len(lazy)
+                loads[rel] += lazy
             if "Tesseract.createWorker(" in body:
                 check_tesseract(rel, body, loads[rel], vendor_scripts, problems)
             if FLAG_FOLDER_USE.search(body):
@@ -497,6 +556,8 @@ def main() -> int:
         for vm in VENDOR_PATH.finditer(js):
             vendor_paths += 1
             check_vendor_path(rel, vm.group(1), vendor_scripts, problems)
+        if CREATE_SCRIPT.search(js):
+            lazy_refs += len(check_lazy_scripts(rel, js, vendor_scripts, problems))
         for um in URL.finditer(js):
             url = um.group(0)
             if CDN_HOSTS.search(url):
@@ -523,7 +584,7 @@ def main() -> int:
             print(f"  - {p}")
         print(f"\n{len(problems)} problem(s)")
         return 1
-    print(f"OK: {len(loads)} pages checked. {vendor_refs} script tags load {len(vendor_scripts)} self-hosted files, "
+    print(f"OK: {len(loads)} pages checked. {vendor_refs} script tags and {lazy_refs} on-demand loads use {len(vendor_scripts)} self-hosted files, "
           f"all matching {MANIFEST}; {vendor_paths} vendor paths in scripts and {css_paths} in stylesheets name files in it; {vendor_links} links to its license, notice and source files open as text or an archive. "
           + (f"{sum(cdn_uses.values())} CDN references remain, all in REMAINING_CDN ({len(REMAINING_CDN)} URLs)."
              if REMAINING_CDN else "No page or site script uses a CDN or any other outside host."))

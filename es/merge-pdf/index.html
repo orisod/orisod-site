@@ -843,7 +843,6 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 // Orisod frame: end
 </script>
 <script src="/assets/vendor/pdf-lib/1.17.1/pdf-lib.min.js"></script>
-<script src="/assets/vendor/pdfjs/3.11.174/pdf.min.js"></script>
 <script>
 // Orisod file name: start. Generated from assets/js/orisod-filename.js by scripts/sync_filename.py; edit that file, not this block.
 // Download file names (see CLAUDE.md, "Download file names"):
@@ -894,7 +893,53 @@ function orisodZipName(options) {
   return orisodFileName({ ...options, ext: "zip" });
 }
 // Orisod file name: end
-pdfjsLib.GlobalWorkerOptions.workerSrc = "/assets/vendor/pdfjs/3.11.174/pdf.worker.min.js";
+// PDF.js only draws the file list's thumbnails, so it loads when the first PDF is added, not with the page.
+// Every file added shares one load and one worker. If it fails (offline, blocked, or nothing after
+// PDFJS_TIMEOUT_MS), the error line says so, merging (pdf-lib) still works without thumbnails, and the
+// next file added tries again.
+const PDFJS_SRC = "/assets/vendor/pdfjs/3.11.174/pdf.min.js";
+const PDFJS_TIMEOUT_MS = 60000;
+let pdfjsReady = null, pdfjsLoaded = false;
+function loadPdfjs() {
+  if (pdfjsReady) return pdfjsReady;
+  pdfjsReady = new Promise((resolve, reject) => {
+    let script = null, webWorker = null, done = false;
+    const fail = (err) => {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      if (script) script.remove();
+      if (webWorker) webWorker.terminate();
+      reject(err);
+    };
+    const timer = setTimeout(() => fail(new Error('PDF.js took too long to load')), PDFJS_TIMEOUT_MS);
+    // The worker is started here and handed to PDF.js as its port once it has said it's ready, so a worker that
+    // can't load is an error like the library's. Left to itself, PDF.js would switch to its main-thread fallback
+    // for the rest of the page's life after one failed worker, and a retry could never start a real one.
+    const start = () => {
+      if (done) return;
+      pdfjsLib.GlobalWorkerOptions.workerSrc = "/assets/vendor/pdfjs/3.11.174/pdf.worker.min.js";
+      webWorker = new Worker(pdfjsLib.GlobalWorkerOptions.workerSrc);
+      webWorker.addEventListener('error', () => fail(new Error('The PDF.js worker could not load')), { once: true });
+      webWorker.addEventListener('message', () => {
+        if (done) return;
+        done = true;
+        clearTimeout(timer);
+        pdfjsLoaded = true;
+        resolve(new pdfjsLib.PDFWorker({ port: webWorker }));
+      }, { once: true });
+    };
+    // A load that timed out may still have run PDF.js; then only the worker is started again.
+    if (window.pdfjsLib) return start();
+    script = document.createElement('script');
+    script.src = PDFJS_SRC;
+    script.onload = () => (window.pdfjsLib ? start() : fail(new Error('PDF.js did not start')));
+    script.onerror = () => fail(new Error('PDF.js could not load'));
+    document.body.appendChild(script);
+  });
+  pdfjsReady.catch(() => { pdfjsReady = null; });
+  return pdfjsReady;
+}
 const T = {
   "invalid": "Selecciona archivos PDF válidos.",
   "dropMore": "Haz clic para añadir más PDF ({n} seleccionados)",
@@ -910,7 +955,9 @@ const T = {
   "resultStat": "{files} archivos unidos · {pages} página{s}",
   "download": "Descargar PDF unido",
   "mergeFail": "No se pudieron unir estos PDF. Asegúrate de que ninguno esté protegido con contraseña o dañado.",
-  "merge": "Unir PDF"
+  "merge": "Unir PDF",
+  "loadingPreviews": "Cargando vistas previas...",
+  "previewsFail": "No se pudieron cargar las vistas previas. Puedes unir los archivos igualmente. Revisa tu conexión y añade un archivo para intentarlo de nuevo."
 };
 const fill = (s, v) => s.replace(/\{(\w+)\}/g, (_, k) => v[k]);
 const fileInput = document.getElementById('fileInput');
@@ -962,22 +1009,43 @@ function addFiles(fileList) {
     errorMsg.textContent = T.invalid;
     return;
   }
-  const added = valid.map((file) => ({ id: nextId++, file, pages: null, thumb: '' }));
+  const added = valid.map((file) => ({ id: nextId++, file, pages: null, thumb: '', waiting: false }));
+  // Files whose previews couldn't load last time are read again with the new ones.
+  const toRead = selectedFiles.filter((entry) => entry.waiting).concat(added);
+  toRead.forEach((entry) => { entry.waiting = false; });
   selectedFiles = selectedFiles.concat(added);
   clearResult();
   renderFileList();
   // Read them once the frame has grown, so PDF.js doesn't hold up the animation.
   const myRun = run;
-  setTimeout(() => added.forEach((entry) => readDetails(entry, myRun)), matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 360);
+  setTimeout(() => readAll(toRead, myRun), matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 360);
+}
+
+async function readAll(entries, myRun) {
+  if (!pdfjsLoaded) progressMsg.textContent = T.loadingPreviews;
+  let worker;
+  try {
+    worker = await loadPdfjs();
+  } catch (e) {
+    worker = null;
+  }
+  if (progressMsg.textContent === T.loadingPreviews) progressMsg.textContent = '';
+  if (myRun !== run) return;
+  if (!worker) {
+    entries.forEach((entry) => { if (selectedFiles.includes(entry)) entry.waiting = true; });
+    errorMsg.textContent = T.previewsFail;
+    return;
+  }
+  entries.forEach((entry) => readDetails(entry, worker, myRun));
 }
 
 // Page count and a small picture of the first page, with PDF.js. A file it can't read (password-protected,
 // damaged) keeps the file icon and shows only its size; merging reports the problem as before.
-async function readDetails(entry, myRun) {
+async function readDetails(entry, worker, myRun) {
   let pdf = null;
   try {
     const data = await entry.file.arrayBuffer();
-    pdf = await pdfjsLib.getDocument({ data, isEvalSupported: false }).promise;
+    pdf = await pdfjsLib.getDocument({ data, worker, isEvalSupported: false }).promise;
     if (myRun !== run) return;
     entry.pages = pdf.numPages;
     const page = await pdf.getPage(1);

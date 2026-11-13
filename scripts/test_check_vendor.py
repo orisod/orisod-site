@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Negative tests for check_vendor.py's tarball-member, vendor-path, stylesheet-path, flag-folder, wa.me and share-link rules (both share pages).
+"""Negative tests for check_vendor.py's tarball-member, vendor-path, stylesheet-path, flag-folder, wa.me, share-link and on-demand script rules.
 
 Builds a tiny site in a temporary folder (one page, one vendored "font" taken from
 a release tarball, its LICENSE, two circle-flags images and theirs, a
-WhatsApp link generator page and a shared stylesheet in assets/css), checks that check_vendor.py passes on it, then
+WhatsApp link generator page, a shared stylesheet in assets/css, and a Merge PDF page
+and its /es/ twin that load a vendored "PDF.js" on demand), checks that check_vendor.py passes on it, then
 breaks it one way at a time and checks that check_vendor.py fails with the
 expected message. Run after changing either rule:
 
@@ -24,6 +25,9 @@ FONT = b"not really a font, only bytes to hash"
 LICENSE = b"Demo license text\n"
 FLAGS = "assets/vendor/circle-flags/9.9/"
 FLAG_SVG = b"<svg xmlns='http://www.w3.org/2000/svg'/>"
+PDFJS = "assets/vendor/pdfjs/9.9/"
+PDFJS_JS = b"window.pdfjsLib = {};"
+PDFJS_WORKER_JS = b"self.onmessage = null;"
 
 
 def entry(name, data):
@@ -41,6 +45,12 @@ MANIFEST = {"about": "test", "libraries": [{
     "files": [{"path": FLAGS + c + ".svg", "source": "https://example.org/flags/" + c + ".svg",
                "sha256": hashlib.sha256(FLAG_SVG).hexdigest(), "bytes": len(FLAG_SVG)} for c in ("ar", "mx")],
     "license_file": {"path": FLAGS + "LICENSE", "source": "https://example.org/LICENSE",
+                     "sha256": hashlib.sha256(LICENSE).hexdigest(), "bytes": len(LICENSE)},
+}, {
+    "name": "pdfjs", "version": "9.9", "license": "Apache-2.0", "used_by": ["merge-pdf"],
+    "files": [{"path": PDFJS + n, "source": "https://example.org/pdfjs/" + n, "sha256": hashlib.sha256(b).hexdigest(), "bytes": len(b)}
+              for n, b in (("pdf.min.js", PDFJS_JS), ("pdf.worker.min.js", PDFJS_WORKER_JS))],
+    "license_file": {"path": PDFJS + "LICENSE", "source": "https://example.org/LICENSE",
                      "sha256": hashlib.sha256(LICENSE).hexdigest(), "bytes": len(LICENSE)},
 }]}
 PAGE = """<!doctype html><html><head><title>t</title><style>@font-face{font-family:"Demo";src:url("/assets/vendor/demo-font/1.0/Demo-Regular.ttf")}</style></head><body><main>t</main>
@@ -69,11 +79,28 @@ const SHARE = ["https://wa.me/?text=" + enc(t), "https://t.me/share/url?url=" + 
 """
 
 
+# Merge PDF loads PDF.js when the first PDF is added: a <script> it creates, pointed at the vendored file through a const.
+LAZY_PAGE = """<!doctype html><html><head><title>m</title></head><body><main>m</main>
+<script>
+const PDFJS_SRC = "/assets/vendor/pdfjs/9.9/pdf.min.js";
+let script = null;
+function load() {
+  script = document.createElement('script');
+  script.src = PDFJS_SRC;
+  script.onload = () => { pdfjsLib.GlobalWorkerOptions.workerSrc = "/assets/vendor/pdfjs/9.9/pdf.worker.min.js"; };
+  document.body.appendChild(script);
+  const img = document.createElement('img');
+  img.src = thumbUrl;
+}
+</script></body></html>
+"""
+
+
 # The shared stylesheet (assets/css/orisod.css in the real site) points at the vendored font too.
 SITE_CSS = "@font-face{font-family:Demo;src:url(/assets/vendor/demo-font/1.0/Demo-Regular.ttf) format(\"truetype\")}" + chr(10)
 
 
-def build(root, manifest=MANIFEST, page=PAGE, site_js=None, wa_page=WA_PAGE, rbp_page=RBP_PAGE, site_css=SITE_CSS):
+def build(root, manifest=MANIFEST, page=PAGE, site_js=None, wa_page=WA_PAGE, rbp_page=RBP_PAGE, site_css=SITE_CSS, lazy_page=LAZY_PAGE, lazy_es=None):
     (root / FOLDER).mkdir(parents=True)
     (root / FOLDER / "Demo-Regular.ttf").write_bytes(FONT)
     (root / FOLDER / "LICENSE").write_bytes(LICENSE)
@@ -85,6 +112,13 @@ def build(root, manifest=MANIFEST, page=PAGE, site_js=None, wa_page=WA_PAGE, rbp
     (root / "whatsapp-link-generator/index.html").write_text(wa_page, encoding="utf-8")
     (root / "remove-blank-pages").mkdir()
     (root / "remove-blank-pages/index.html").write_text(rbp_page, encoding="utf-8")
+    (root / PDFJS).mkdir(parents=True)
+    (root / PDFJS / "pdf.min.js").write_bytes(PDFJS_JS)
+    (root / PDFJS / "pdf.worker.min.js").write_bytes(PDFJS_WORKER_JS)
+    (root / PDFJS / "LICENSE").write_bytes(LICENSE)
+    for folder, html in (("merge-pdf", lazy_page), ("es/merge-pdf", LAZY_PAGE if lazy_es is None else lazy_es)):
+        (root / folder).mkdir(parents=True)
+        (root / folder / "index.html").write_text(html, encoding="utf-8")
     (root / "assets/vendor/manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
     (root / ".gitattributes").write_text("assets/vendor/** -text\n", encoding="utf-8")
     (root / "index.html").write_text(page, encoding="utf-8")
@@ -159,6 +193,41 @@ CASES = [
      "remove-blank-pages/index.html: inline script refers to https://www.reddit.com/r/all?url= on another host"),
     ("another address on a share host", {"wa_page": WA_PAGE.replace("t.me/share/url?url=", "t.me/joinchat?url=")},
      "inline script refers to https://t.me/joinchat?url= on another host"),
+    # On-demand (lazy) scripts: only a vendored library file, through a string or a const declared once.
+    ("a lazy script written as a string", {"lazy_page": LAZY_PAGE.replace("script.src = PDFJS_SRC;", 'script.src = "/assets/vendor/pdfjs/9.9/pdf.min.js";'),
+                                            "lazy_es": LAZY_PAGE.replace("script.src = PDFJS_SRC;", 'script.src = "/assets/vendor/pdfjs/9.9/pdf.min.js";')}, None),
+    ("a lazy script from a CDN", {"lazy_page": LAZY_PAGE.replace('"/assets/vendor/pdfjs/9.9/pdf.min.js"', '"https://cdn.jsdelivr.net/npm/pdfjs-dist@9.9/pdf.min.js"')},
+     "merge-pdf/index.html: a script loads https://cdn.jsdelivr.net/npm/pdfjs-dist@9.9/pdf.min.js on demand; only library scripts"),
+    ("a lazy script from another host", {"lazy_page": LAZY_PAGE.replace('"/assets/vendor/pdfjs/9.9/pdf.min.js"', '"https://example.org/pdf.min.js"')},
+     "merge-pdf/index.html: a script loads https://example.org/pdf.min.js on demand"),
+    ("a lazy script from the site but outside assets/vendor", {"lazy_page": LAZY_PAGE.replace('"/assets/vendor/pdfjs/9.9/pdf.min.js"', '"/assets/js/pdf.min.js"')},
+     "merge-pdf/index.html: a script loads /assets/js/pdf.min.js on demand"),
+    ("a lazy script that isn't in the manifest", {"lazy_page": LAZY_PAGE.replace('"/assets/vendor/pdfjs/9.9/pdf.min.js"', '"/assets/vendor/pdfjs/9.8/pdf.min.js"')},
+     "merge-pdf/index.html: a script loads /assets/vendor/pdfjs/9.8/pdf.min.js on demand"),
+    ("a lazy load of a license file", {"lazy_page": LAZY_PAGE.replace('"/assets/vendor/pdfjs/9.9/pdf.min.js"', '"/assets/vendor/pdfjs/9.9/LICENSE"')},
+     "merge-pdf/index.html: a script loads /assets/vendor/pdfjs/9.9/LICENSE on demand"),
+    ("a lazy script built from a template literal", {"lazy_page": LAZY_PAGE.replace("script.src = PDFJS_SRC;", "script.src = `/assets/vendor/pdfjs/${v}/pdf.min.js`;")},
+     "script.src is set to `/assets/vendor/pdfjs/${v}/pdf.min.js`; a <script> a page creates must load a vendored file"),
+    ("a lazy script built by concatenation", {"lazy_page": LAZY_PAGE.replace("script.src = PDFJS_SRC;", 'script.src = DIR + "pdf.min.js";')},
+     'script.src is set to DIR + "pdf.min.js"'),
+    ("a lazy script through a let", {"lazy_page": LAZY_PAGE.replace("const PDFJS_SRC =", "let PDFJS_SRC =")},
+     "script.src is set to PDFJS_SRC, which must be a const declared once as a vendored file path"),
+    ("a lazy script whose const is reassigned", {"lazy_page": LAZY_PAGE.replace("function load() {", 'function load() {\n  PDFJS_SRC = "https://example.org/x.js";')},
+     "script.src is set to PDFJS_SRC, which must be a const declared once"),
+    ("a lazy script's src set with setAttribute", {"lazy_page": LAZY_PAGE.replace("script.src = PDFJS_SRC;", "script.setAttribute('src', PDFJS_SRC);")},
+     "sets the src of the <script> it creates (script) with setAttribute"),
+    ("a created script with code written into it", {"lazy_page": LAZY_PAGE.replace("script.src = PDFJS_SRC;", "script.src = PDFJS_SRC;\n  script.textContent = code;")},
+     "writes code into it"),
+    ("a created script that isn't assigned to a variable", {"lazy_page": LAZY_PAGE.replace("document.body.appendChild(script);", "document.body.appendChild(document.createElement('script'));")},
+     "creates a <script> element that isn't assigned to a variable"),
+    ("a lazy PDF.js without its workerSrc", {"lazy_page": LAZY_PAGE.replace('pdfjsLib.GlobalWorkerOptions.workerSrc = "/assets/vendor/pdfjs/9.9/pdf.worker.min.js";', "")},
+     "merge-pdf/index.html: loads /assets/vendor/pdfjs/9.9/pdf.min.js but doesn't set pdfjsLib.GlobalWorkerOptions.workerSrc"),
+    ("a lazy PDF.js with a worker that isn't vendored", {"lazy_page": LAZY_PAGE.replace("9.9/pdf.worker.min.js", "9.8/pdf.worker.min.js")},
+     "workerSrc is /assets/vendor/pdfjs/9.8/pdf.worker.min.js, which isn't a library file"),
+    ("EN loading PDF.js on demand and ES not at all", {"lazy_es": LAZY_PAGE.replace("script.src = PDFJS_SRC;", "").replace("script = document.createElement('script');", "")},
+     "es/merge-pdf/index.html: loads [], but merge-pdf/index.html loads ['/assets/vendor/pdfjs/9.9/pdf.min.js']"),
+    ("the site's own JS loading a script that isn't vendored", {"site_js": "const s = document.createElement('script');\ns.src = '/assets/js/extra.js';\n"},
+     "assets/js/site.js: a script loads /assets/js/extra.js on demand"),
 ]
 
 
