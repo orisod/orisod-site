@@ -7,7 +7,10 @@
  * locally too after adding or updating a library in assets/vendor, or after
  * changing how a page loads one:
  *
- *   node scripts/test_vendor_smoke.js [--root DIR] [case name ...]
+ *   node scripts/test_vendor_smoke.js [--root DIR] [--group file-names|rest] [case name ...]
+ *
+ * --group file-names runs only the "Download file names (...)" cases, --group rest the others (CI runs them as
+ * two parallel jobs).
  *
  * How it works: a headless Chromium loads each tool page as https://orisod.com/...,
  * and every orisod.com request is answered from the local files, so root-absolute
@@ -827,9 +830,9 @@ const FLAG = (code) => `/assets/vendor/circle-flags/2.8.3/${code}.svg`;
 const WA_QR_MAX = 2328;
 const WA_TEXT = {
   en: { copied: "Copied", reason: "Enter a phone number to open the chat.", reasonMessage: "Write a message first. WhatsApp will ask you who to send it to.",
-    add9: "Add the 9", mx1: "The 1 after +52 was removed", summary: "Help and details", qrFile: "whatsapp-link-qr.png" },
+    add9: "Add the 9", mx1: "The 1 after +52 was removed", summary: "Help and details", qrFile: "whatsapp-qr-orisod.png" },
   es: { copied: "Copiado", reason: "Escribe un número de teléfono para abrir el chat.", reasonMessage: "Escribe un mensaje primero. WhatsApp te preguntará a quién enviarlo.",
-    add9: "Agregar el 9", mx1: "Se quitó el 1 después de +52", summary: "Ayuda y detalles", qrFile: "link-whatsapp-qr.png" },
+    add9: "Agregar el 9", mx1: "Se quitó el 1 después de +52", summary: "Ayuda y detalles", qrFile: "whatsapp-qr-orisod.png" },
 };
 const regionName = (page, code) => page.evaluate((c) => new Intl.DisplayNames([document.documentElement.lang], { type: "region" }).of(c), code);
 // Pick a country the way a visitor does: type its name in the combobox and press Enter.
@@ -2552,6 +2555,63 @@ const FILE_NAME_GEN_CASES = [
   },
 ];
 
+// Download file names, PR 6 (orisod-2): Merge PDF is named after the first PDF in the final order (after reordering
+// and after removing the first one); the WhatsApp QR download has a fixed name that never carries what was typed.
+const FILE_NAME_PR6_CASES = [
+  {
+    name: "Download file names (Merge PDF)",
+    page: "/merge-pdf/",
+    vendor: [],
+    async run(page, lang) {
+      const word = lang === "es" ? "unido" : "merged";
+      const pdf = (name, label) => ({ name, mimeType: "application/pdf", buffer: fixturePdf(label, ["1"]) });
+      const merge = async () => {
+        await page.click("#mergeBtn");
+        const link = page.locator("#result a[download]");
+        await link.waitFor({ timeout: 30000 });
+        const name = await savedName(page, () => link.click());
+        expect(await page.textContent("#result .result-filename") === name, "the result doesn't show the download's name");
+        return name;
+      };
+      const rows = () => page.$$eval("#fileList .name", (ns) => ns.map((n) => n.textContent));
+      await page.setInputFiles("#fileInput", [pdf("Tercera.pdf", "C"), pdf(FILE_NAME_INPUT + ".PDF", "A"), pdf("Segunda.pdf", "B")]);
+      await page.locator("#fileList > li").nth(2).waitFor();
+      const first = await merge();
+      await page.locator("#fileList > li").nth(1).locator(".move-up").click();
+      const reordered = await rows();
+      const afterMove = await merge();
+      await page.locator("#fileList > li").first().locator(".file-btn").nth(2).click();
+      const removed = await rows();
+      const afterRemove = await merge();
+      expectNames(reordered, [FILE_NAME_INPUT + ".PDF", "Tercera.pdf", "Segunda.pdf"], "after moving it up, the list");
+      expectNames(removed, ["Tercera.pdf", "Segunda.pdf"], "after removing the first, the list");
+      expect(first === `Tercera-${word}-orisod.pdf`, `with Tercera.pdf first the PDF is ${first}`);
+      expect(afterMove === `${FILE_NAME_INPUT}-${word}-orisod.pdf`, `after moving ${FILE_NAME_INPUT}.PDF to the top the PDF is ${afterMove}`);
+      expect(afterRemove === `Tercera-${word}-orisod.pdf`, `after removing it the PDF is ${afterRemove}`);
+      return `${first}; moved to the top: ${afterMove}; first removed: ${afterRemove}`;
+    },
+  },
+  {
+    name: "Download file names (WhatsApp link generator)",
+    page: "/whatsapp-link-generator/",
+    vendor: [],
+    async run(page) {
+      await waCountry(page, "GB");
+      await waNumber(page, "07400 123456");
+      await page.fill("#messageInput", FILE_NAME_INPUT);
+      const { name } = await qrDownload(page);
+      const typed = ["7400", "123456", "447400", "Contrato", "2026", "☕", "año"];
+      const check = (n) => {
+        expect(n === "whatsapp-qr-orisod.png", `the QR code is called ${n}`);
+        for (const s of typed) expect(!n.includes(s), `the QR name ${n} contains "${s}"`);
+      };
+      check(name);
+      return `with +44 7400 123456 and "${FILE_NAME_INPUT}" typed in, the QR code saved as ${name}; ` +
+        mustFail("a name with the number", () => check("whatsapp-qr-447400123456-orisod.png"));
+    },
+  },
+];
+
 const CASES = [
   {
     name: "spark-md5",
@@ -2630,20 +2690,20 @@ const CASES = [
     page: "/merge-pdf/",
     // PDF.js draws the file list's thumbnails (checked, with its worker, in "Page frame (Merge PDF)").
     vendor: ["/assets/vendor/pdf-lib/1.17.1/pdf-lib.min.js", PDFJS],
-    async run(page) {
+    async run(page, lang) {
       const a = { name: "a.pdf", mimeType: "application/pdf", buffer: fixturePdf("Fixture A", ["page 1", "page 2"]) };
       const b = { name: "b.pdf", mimeType: "application/pdf", buffer: fixturePdf("Fixture B", ["page 1", "page 2", "page 3"]) };
       const want = pdfPageCount(a.buffer) + pdfPageCount(b.buffer);
       expect(want === 5, `the fixtures have ${want} pages, not 2 + 3`);
       await page.setInputFiles("#fileInput", [a, b]);
       await page.click("#mergeBtn");
-      const link = page.locator('#result a[download="merged.pdf"]');
+      const link = page.locator(`#result a[download="a-${lang === "es" ? "unido" : "merged"}-orisod.pdf"]`);
       await link.waitFor({ timeout: 30000 });
       const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
       const bytes = await readFile(await download.path());
       expect(bytes.subarray(0, 5).toString() === "%PDF-", "the download isn't a PDF");
       const pages = pdfPageCount(bytes);
-      expect(pages === want, `merged.pdf has ${pages} pages, not ${want}`);
+      expect(pages === want, `the merged PDF has ${pages} pages, not ${want}`);
       const order = pdfText(bytes).trim().split("\n");
       const wantOrder = ["Fixture A page 1", "Fixture A page 2", "Fixture B page 1", "Fixture B page 2", "Fixture B page 3"];
       expect(order.join("|") === wantOrder.join("|"), `merged pages read ${JSON.stringify(order)}`);
@@ -2979,6 +3039,7 @@ const CASES = [
   ...FILE_NAME_IMAGE_CASES,
   ...FILE_NAME_ZIP_CASES,
   ...FILE_NAME_GEN_CASES,
+  ...FILE_NAME_PR6_CASES,
   {
     name: "PDF.js + jsPDF (PDF color filters)",
     page: "/pdf-color-filters/",
@@ -5806,7 +5867,7 @@ const CASES = [
       const order = await page.evaluate(() => [...document.querySelectorAll("#fileList .name")].map((n) => n.textContent));
       expect(order.join() === "c.pdf,b.pdf,a.pdf", `after the arrows and a drag the list reads ${order.join(", ")}`);
       await page.click("#mergeBtn");
-      const link = page.locator('#result a[download="merged.pdf"]');
+      const link = page.locator(`#result a[download="c-${lang === "es" ? "unido" : "merged"}-orisod.pdf"]`);
       await link.waitFor({ timeout: 30000 });
       const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
       const merged = pdfText(await readFile(await download.path())).trim().split("\n");
@@ -5962,8 +6023,18 @@ async function runCase(browser, c, lang) {
   return { path, detail, failure, src, warnings: seen.warnings, cdn: [...new Set(seen.cdn)] };
 }
 
+// --group file-names runs only the "Download file names (...)" cases and --group rest every other case: CI runs the
+// two groups as parallel jobs (check-smoke.yml). With neither, every case runs; case names narrow it further.
+const groupAt = process.argv.indexOf("--group");
+const group = groupAt > -1 ? process.argv.splice(groupAt, 2)[1] : null;
+if (group !== null && group !== "file-names" && group !== "rest") {
+  console.error(`--group must be file-names or rest, not ${group}`);
+  process.exit(2);
+}
+const isFileNameCase = (c) => c.name.startsWith("Download file names");
+const pool = group ? CASES.filter((c) => isFileNameCase(c) === (group === "file-names")) : CASES;
 const only = process.argv.slice(2);
-const cases = only.length ? CASES.filter((c) => only.includes(c.name)) : CASES;
+const cases = only.length ? pool.filter((c) => only.includes(c.name)) : pool;
 if (!cases.length) {
   console.error(`No such case. Cases: ${CASES.map((c) => c.name).join(", ")}`);
   process.exit(2);
@@ -6001,7 +6072,7 @@ for (const c of cases) {
 await browser.close();
 const seconds = ((Date.now() - t0) / 1000).toFixed(0);
 summary([
-  `### Smoke tests: ${cases.length * 2} pages in ${seconds} s, ${failed} failed, ${flaky.length} flaky`,
+  `### Smoke tests${group ? ` (${group})` : ""}: ${cases.length * 2} pages in ${seconds} s, ${failed} failed, ${flaky.length} flaky`,
   "",
   "| Case | Page | Result | Time | Failure |",
   "|---|---|---|---|---|",

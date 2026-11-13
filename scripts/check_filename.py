@@ -13,8 +13,8 @@ Fails when:
   - a file name written into HTML: an innerHTML/outerHTML assignment or insertAdjacentHTML() that uses a
     helper-made variable or any `.name` property (use textContent)
 - any page that offers a download (an `X.download = ...`, `setAttribute("download", ...)`, `zip.file(` or an `<a download>`)
-  without the block, except the pages in PENDING_PAGES (Merge PDF and the WhatsApp link generator, EN and ES, which get
-  the helper on orisod-2 in PR 6); a listed page that carries the block or has no download any more fails too
+  without the block, except the pages in PENDING_PAGES (empty since PR 6: every page with a download carries the
+  block); a listed page that carries the block or has no download any more fails too
 - the one exception, STANDARD_ZIP_ENTRIES: Favicon Generator's zip entries keep their standard names
   (favicon.ico, favicon-16x16.png...), because browsers look for those exact names and the HTML snippet in the
   same zip links to them. Its zip.file() names must be one of those literals, or the `name` of its size list,
@@ -37,14 +37,10 @@ HELPERS = ("orisodFileName(", "orisodZipName(")
 FAVICON_ENTRIES = {"favicon.ico", "favicon-16x16.png", "favicon-32x32.png", "apple-touch-icon.png",
                    "android-chrome-192x192.png", "android-chrome-512x512.png", "favicon-html-snippet.txt"}
 STANDARD_ZIP_ENTRIES = {"favicon-generator/index.html": FAVICON_ENTRIES, "es/favicon-generator/index.html": FAVICON_ENTRIES}
-# The only pages allowed to offer a download without the helper. Each must still have a download and no block, so
-# an entry can't outlive its reason (remove it when the page adopts the helper).
-PENDING_PAGES = {
-    "merge-pdf/index.html": "Merge PDF: its script was rewritten on orisod-2; it gets the helper in PR 6 there",
-    "es/merge-pdf/index.html": "Merge PDF (ES): its script was rewritten on orisod-2; it gets the helper in PR 6 there",
-    "whatsapp-link-generator/index.html": "WhatsApp link generator: its script was rewritten on orisod-2; it gets the helper in PR 6 there",
-    "es/whatsapp-link-generator/index.html": "WhatsApp link generator (ES): its script was rewritten on orisod-2; it gets the helper in PR 6 there",
-}
+# Pages allowed to offer a download without the helper, as {page: reason}. Empty since PR 6 (Merge PDF and the
+# WhatsApp link generator adopted it): every page with a download must carry the block. An entry must still have a
+# download and no block, so it can't outlive its reason.
+PENDING_PAGES = {}
 # Anything that names a download: a .download assignment, setAttribute("download", ...), a zip entry, or an <a download>
 # in the markup.
 DOWNLOAD_RE = re.compile(r"\.download\s*=(?![=>])|\.setAttribute\(\s*['\"]download['\"]|\bzip\.file\(|<a\b[^>]*\sdownload(?=[\s=>])", re.I)

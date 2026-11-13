@@ -174,27 +174,42 @@ def main():
             else:
                 print(f"ok   no block, {label} fails as it should")
         shutil.rmtree(plain.parent)
+        # PENDING_PAGES is empty: the pages it used to list (Merge PDF, the WhatsApp link generator) fail like any other.
         pending = tmp / "merge-pdf" / "index.html"
         pending.parent.mkdir()
         pending.write_text("<script>\nlink.download = 'merged.pdf';\n</script>\n", encoding="utf-8", newline="\n")
         code, out = run(CHECK, tmp)
+        if code == 0 or "merge-pdf/index.html:2: offers a download" not in out:
+            failures.append(f"merge-pdf with a download and no block passed with the list empty: {out.strip()}")
+        else:
+            print("ok   with PENDING_PAGES empty, merge-pdf with a download and no block fails")
+        # The list's own rules, on a copy of the check with one entry: it keeps its old download for now, and a stale
+        # entry (no download any more, or the block added) fails.
+        listed = tmp / "check_listed.py"
+        src = CHECK.read_text(encoding="utf-8")
+        assert src.count("PENDING_PAGES = {}") == 1
+        listed.write_text(src.replace("PENDING_PAGES = {}", 'PENDING_PAGES = {"merge-pdf/index.html": "test entry"}'), encoding="utf-8")
+        shutil.copy(SYNC, tmp / "sync_filename.py")
+        code, out = run(listed, tmp)
         if code != 0:
             failures.append(f"a PENDING_PAGES page with its old download failed: {out.strip()}")
         else:
-            print("ok   a PENDING_PAGES page (merge-pdf) keeps its old download for now")
+            print("ok   a PENDING_PAGES page keeps its old download while listed")
         pending.write_text("<script>\nconst x = 1;\n</script>\n", encoding="utf-8", newline="\n")
-        code, out = run(CHECK, tmp)
+        code, out = run(listed, tmp)
         if code == 0 or "listed in PENDING_PAGES but offers no download" not in out:
             failures.append(f"a PENDING_PAGES page with no download passed: {out.strip()}")
         else:
             print("ok   a PENDING_PAGES page with no download fails (stale entry)")
         pending.write_bytes(fav.read_bytes())
-        code, out = run(CHECK, tmp)
+        code, out = run(listed, tmp)
         if code == 0 or "listed in PENDING_PAGES but carries the block" not in out:
             failures.append(f"a PENDING_PAGES page carrying the block passed: {out.strip()}")
         else:
             print("ok   a PENDING_PAGES page carrying the block fails (stale entry)")
         shutil.rmtree(pending.parent)
+        listed.unlink()
+        (tmp / "sync_filename.py").unlink()
         fav.write_text(fav_good.replace("<body>\n", "<body>\n<a href=\"/x.zip\" download>Get</a>\n", 1), encoding="utf-8", newline="\n")
         code, out = run(CHECK, tmp)
         if code == 0 or "favicon-generator/index.html:4: an <a download> in the markup" not in out:
@@ -240,7 +255,7 @@ def main():
         print(f"FAIL {f}")
     if failures:
         return 1
-    print(f"All check_filename.py tests passed ({len(BREAKS) + len(FAVICON_BREAKS) + len(NO_BLOCK_DOWNLOADS) + 6} broken copies fail, --add and --write touch only the block).")
+    print(f"All check_filename.py tests passed ({len(BREAKS) + len(FAVICON_BREAKS) + len(NO_BLOCK_DOWNLOADS) + 7} broken copies fail, --add and --write touch only the block).")
     return 0
 
 
