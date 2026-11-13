@@ -675,7 +675,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
         <button type="button" class="o-btn o-btn-primary" id="mergeBtn" disabled>Merge PDFs</button>
       </div>
       <div class="note">Files are combined in the order shown above. Use the arrows to reorder them.</div>
-      <div class="progress" id="progressMsg"></div>
+      <div class="progress" id="progressMsg" role="status"></div>
     </div>
 
     <div class="error" id="errorMsg" role="alert"></div>
@@ -842,7 +842,6 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 })();
 // Orisod frame: end
 </script>
-<script src="/assets/vendor/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <script>
 // Orisod file name: start. Generated from assets/js/orisod-filename.js by scripts/sync_filename.py; edit that file, not this block.
 // Download file names (see CLAUDE.md, "Download file names"):
@@ -895,8 +894,8 @@ function orisodZipName(options) {
 // Orisod file name: end
 // PDF.js only draws the file list's thumbnails, so it loads when the first PDF is added, not with the page.
 // Every file added shares one load and one worker. If it fails (offline, blocked, or nothing after
-// PDFJS_TIMEOUT_MS), the error line says so, merging (pdf-lib) still works without thumbnails, and the
-// next file added tries again.
+// PDFJS_TIMEOUT_MS), the error line says so, merging (pdf-lib, loaded on its own) still works without
+// thumbnails, and the next file added tries again.
 const PDFJS_SRC = "/assets/vendor/pdfjs/3.11.174/pdf.min.js";
 const PDFJS_TIMEOUT_MS = 60000;
 let pdfjsReady = null, pdfjsLoaded = false;
@@ -940,6 +939,36 @@ function loadPdfjs() {
   pdfjsReady.catch(() => { pdfjsReady = null; });
   return pdfjsReady;
 }
+// pdf-lib does the merging, so it loads with PDF.js when the first PDF is added, and the Merge button waits for
+// that same load. If it fails (offline, blocked, or nothing after PDFLIB_TIMEOUT_MS), Merge shows the error,
+// the files and their previews stay, and the next Merge click or file added tries again.
+const PDFLIB_SRC = "/assets/vendor/pdf-lib/1.17.1/pdf-lib.min.js";
+const PDFLIB_TIMEOUT_MS = 60000;
+let pdflibReady = null;
+function loadPdfLib() {
+  if (pdflibReady) return pdflibReady;
+  pdflibReady = new Promise((resolve, reject) => {
+    // A load that timed out may still have run pdf-lib; then it's used as is.
+    if (window.PDFLib) return resolve(window.PDFLib);
+    const script = document.createElement('script');
+    let done = false;
+    const finish = (err) => {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      if (!err) return resolve(window.PDFLib);
+      script.remove();
+      reject(err);
+    };
+    const timer = setTimeout(() => finish(new Error('pdf-lib took too long to load')), PDFLIB_TIMEOUT_MS);
+    script.src = PDFLIB_SRC;
+    script.onload = () => finish(window.PDFLib ? null : new Error('pdf-lib did not start'));
+    script.onerror = () => finish(new Error('pdf-lib could not load'));
+    document.body.appendChild(script);
+  });
+  pdflibReady.catch(() => { pdflibReady = null; });
+  return pdflibReady;
+}
 const T = {
   "invalid": "Please select valid PDF files.",
   "dropMore": "Click to add more PDFs ({n} selected)",
@@ -957,7 +986,8 @@ const T = {
   "mergeFail": "Could not merge these PDFs. Make sure none of them are password-protected or corrupted.",
   "merge": "Merge PDFs",
   "loadingPreviews": "Loading previews...",
-  "previewsFail": "Previews could not load. You can still merge the files. Check your connection and add a file to try again."
+  "previewsFail": "Previews could not load. You can still merge the files. Check your connection and add a file to try again.",
+  "mergeLoadFail": "The merge tool could not load. Check your connection and try again."
 };
 const fill = (s, v) => s.replace(/\{(\w+)\}/g, (_, k) => v[k]);
 const fileInput = document.getElementById('fileInput');
@@ -976,7 +1006,7 @@ const icon = (name) => icons.querySelector(`[data-lucide="${name}"]`).cloneNode(
 
 // Each entry: the file, its page count and its first-page thumbnail (an object URL), filled in once read.
 let selectedFiles = [];
-let nextId = 1, run = 0, resultUrl = '';
+let nextId = 1, run = 0, resultUrl = '', merging = false;
 let dragId = null, dragFromGrip = false;
 
 fileInput.addEventListener('change', (e) => { addFiles(e.target.files); fileInput.value = ''; });
@@ -1022,7 +1052,10 @@ function addFiles(fileList) {
 }
 
 async function readAll(entries, myRun) {
-  if (!pdfjsLoaded) progressMsg.textContent = T.loadingPreviews;
+  // pdf-lib loads alongside PDF.js; the Merge button waits for it and reports a failure.
+  loadPdfLib().catch(() => {});
+  // The status line is a live region: the loading text is written once, not again for each file added.
+  if (!pdfjsLoaded && progressMsg.textContent !== T.loadingPreviews) progressMsg.textContent = T.loadingPreviews;
   let worker;
   try {
     worker = await loadPdfjs();
@@ -1160,7 +1193,7 @@ function renderFileList() {
     fileListEl.appendChild(row);
     updateRow(entry);
   });
-  mergeBtn.disabled = selectedFiles.length < 2;
+  mergeBtn.disabled = merging || selectedFiles.length < 2;
 }
 
 function remove(index) {
@@ -1176,7 +1209,8 @@ function remove(index) {
 
 function clearResult() {
   resultEl.replaceChildren();
-  progressMsg.textContent = '';
+  // A loading status stays until PDF.js has loaded, so adding or reordering files doesn't announce it again.
+  if (progressMsg.textContent !== T.loadingPreviews) progressMsg.textContent = '';
   if (resultUrl) URL.revokeObjectURL(resultUrl);
   resultUrl = '';
 }
@@ -1223,16 +1257,34 @@ fileListEl.addEventListener('dragend', () => {
 });
 
 mergeBtn.addEventListener('click', async () => {
-  if (selectedFiles.length < 2) return;
+  if (merging || selectedFiles.length < 2) return;
+  merging = true;
   mergeBtn.disabled = true;
   mergeBtn.textContent = T.merging;
   errorMsg.textContent = '';
   clearResult();
 
+  const myRun = run;
+  let pdfLib = null;
   try {
-    const { PDFDocument } = PDFLib;
+    pdfLib = await loadPdfLib();
+  } catch (e) {
+    pdfLib = null;
+  }
+  if (!pdfLib || myRun !== run || selectedFiles.length < 2) {
+    // pdf-lib couldn't load (the files stay; the next click or file added tries again), or Start over or
+    // removing files while it loaded left nothing to merge.
+    if (!pdfLib && myRun === run) errorMsg.textContent = T.mergeLoadFail;
+    endMerge();
+    return;
+  }
+
+  try {
+    const { PDFDocument } = pdfLib;
     const mergedPdf = await PDFDocument.create();
 
+    // Each file's name is shown as it's read, but only "Done" is announced (aria-busy on the live region).
+    progressMsg.setAttribute('aria-busy', 'true');
     for (let i = 0; i < selectedFiles.length; i++) {
       progressMsg.textContent = fill(T.processing, { name: selectedFiles[i].file.name, i: i + 1, n: selectedFiles.length });
       const arrayBuffer = await selectedFiles[i].file.arrayBuffer();
@@ -1249,6 +1301,7 @@ mergeBtn.addEventListener('click', async () => {
     // Named after the first PDF in the list as merged (after any reordering or removal).
     const outName = orisodFileName({ name: selectedFiles[0].file.name, accept: ['pdf'], action: 'merged', ext: 'pdf', fallback: 'document' });
 
+    progressMsg.removeAttribute('aria-busy');
     progressMsg.textContent = T.done;
 
     const card = document.createElement('div');
@@ -1274,10 +1327,15 @@ mergeBtn.addEventListener('click', async () => {
     errorMsg.textContent = T.mergeFail;
     progressMsg.textContent = '';
   }
+  endMerge();
+});
 
+function endMerge() {
+  merging = false;
+  progressMsg.removeAttribute('aria-busy');
   mergeBtn.disabled = selectedFiles.length < 2;
   mergeBtn.textContent = T.merge;
-});
+}
 </script>
 <!-- site-nav.js: start. Generated by scripts/sync_nav.py from assets/nav/site-nav.js; edit that file, not this region. -->
 <script>

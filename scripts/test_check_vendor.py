@@ -28,6 +28,8 @@ FLAG_SVG = b"<svg xmlns='http://www.w3.org/2000/svg'/>"
 PDFJS = "assets/vendor/pdfjs/9.9/"
 PDFJS_JS = b"window.pdfjsLib = {};"
 PDFJS_WORKER_JS = b"self.onmessage = null;"
+PDFLIB = "assets/vendor/pdf-lib/9.9/"
+PDFLIB_JS = b"window.PDFLib = {};"
 
 
 def entry(name, data):
@@ -51,6 +53,12 @@ MANIFEST = {"about": "test", "libraries": [{
     "files": [{"path": PDFJS + n, "source": "https://example.org/pdfjs/" + n, "sha256": hashlib.sha256(b).hexdigest(), "bytes": len(b)}
               for n, b in (("pdf.min.js", PDFJS_JS), ("pdf.worker.min.js", PDFJS_WORKER_JS))],
     "license_file": {"path": PDFJS + "LICENSE", "source": "https://example.org/LICENSE",
+                     "sha256": hashlib.sha256(LICENSE).hexdigest(), "bytes": len(LICENSE)},
+}, {
+    "name": "pdf-lib", "version": "9.9", "license": "MIT", "used_by": ["merge-pdf"],
+    "files": [{"path": PDFLIB + "pdf-lib.min.js", "source": "https://example.org/pdf-lib.min.js",
+               "sha256": hashlib.sha256(PDFLIB_JS).hexdigest(), "bytes": len(PDFLIB_JS)}],
+    "license_file": {"path": PDFLIB + "LICENSE", "source": "https://example.org/LICENSE",
                      "sha256": hashlib.sha256(LICENSE).hexdigest(), "bytes": len(LICENSE)},
 }]}
 PAGE = """<!doctype html><html><head><title>t</title><style>@font-face{font-family:"Demo";src:url("/assets/vendor/demo-font/1.0/Demo-Regular.ttf")}</style></head><body><main>t</main>
@@ -79,11 +87,18 @@ const SHARE = ["https://wa.me/?text=" + enc(t), "https://t.me/share/url?url=" + 
 """
 
 
-# Merge PDF loads PDF.js when the first PDF is added: a <script> it creates, pointed at the vendored file through a const.
+# Merge PDF loads PDF.js and pdf-lib when the first PDF is added: <script>s it creates, pointed at the vendored
+# files through consts.
 LAZY_PAGE = """<!doctype html><html><head><title>m</title></head><body><main>m</main>
 <script>
 const PDFJS_SRC = "/assets/vendor/pdfjs/9.9/pdf.min.js";
+const PDFLIB_SRC = "/assets/vendor/pdf-lib/9.9/pdf-lib.min.js";
 let script = null;
+function loadPdfLib() {
+  const lib = document.createElement('script');
+  lib.src = PDFLIB_SRC;
+  document.body.appendChild(lib);
+}
 function load() {
   script = document.createElement('script');
   script.src = PDFJS_SRC;
@@ -100,7 +115,8 @@ function load() {
 SITE_CSS = "@font-face{font-family:Demo;src:url(/assets/vendor/demo-font/1.0/Demo-Regular.ttf) format(\"truetype\")}" + chr(10)
 
 
-def build(root, manifest=MANIFEST, page=PAGE, site_js=None, wa_page=WA_PAGE, rbp_page=RBP_PAGE, site_css=SITE_CSS, lazy_page=LAZY_PAGE, lazy_es=None):
+def build(root, manifest=MANIFEST, page=PAGE, site_js=None, wa_page=WA_PAGE, rbp_page=RBP_PAGE, site_css=SITE_CSS, lazy_page=LAZY_PAGE, lazy_es=None,
+          pdflib_js=PDFLIB_JS):
     (root / FOLDER).mkdir(parents=True)
     (root / FOLDER / "Demo-Regular.ttf").write_bytes(FONT)
     (root / FOLDER / "LICENSE").write_bytes(LICENSE)
@@ -116,6 +132,9 @@ def build(root, manifest=MANIFEST, page=PAGE, site_js=None, wa_page=WA_PAGE, rbp
     (root / PDFJS / "pdf.min.js").write_bytes(PDFJS_JS)
     (root / PDFJS / "pdf.worker.min.js").write_bytes(PDFJS_WORKER_JS)
     (root / PDFJS / "LICENSE").write_bytes(LICENSE)
+    (root / PDFLIB).mkdir(parents=True)
+    (root / PDFLIB / "pdf-lib.min.js").write_bytes(pdflib_js)
+    (root / PDFLIB / "LICENSE").write_bytes(LICENSE)
     for folder, html in (("merge-pdf", lazy_page), ("es/merge-pdf", LAZY_PAGE if lazy_es is None else lazy_es)):
         (root / folder).mkdir(parents=True)
         (root / folder / "index.html").write_text(html, encoding="utf-8")
@@ -225,7 +244,26 @@ CASES = [
     ("a lazy PDF.js with a worker that isn't vendored", {"lazy_page": LAZY_PAGE.replace("9.9/pdf.worker.min.js", "9.8/pdf.worker.min.js")},
      "workerSrc is /assets/vendor/pdfjs/9.8/pdf.worker.min.js, which isn't a library file"),
     ("EN loading PDF.js on demand and ES not at all", {"lazy_es": LAZY_PAGE.replace("script.src = PDFJS_SRC;", "").replace("script = document.createElement('script');", "")},
-     "es/merge-pdf/index.html: loads [], but merge-pdf/index.html loads ['/assets/vendor/pdfjs/9.9/pdf.min.js']"),
+     "es/merge-pdf/index.html: loads ['/assets/vendor/pdf-lib/9.9/pdf-lib.min.js'], but merge-pdf/index.html loads"),
+    # pdf-lib on demand (Merge PDF, with PDF.js): the same rules, its bytes checked, loaded once, on EN and ES alike.
+    ("pdf-lib on demand from a CDN", {"lazy_page": LAZY_PAGE.replace('"/assets/vendor/pdf-lib/9.9/pdf-lib.min.js"', '"https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/9.9/pdf-lib.min.js"')},
+     "merge-pdf/index.html: inline script refers to the CDN address https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/9.9/pdf-lib.min.js"),
+    ("pdf-lib on demand at a version that isn't vendored", {"lazy_page": LAZY_PAGE.replace("pdf-lib/9.9/pdf-lib.min.js", "pdf-lib/9.8/pdf-lib.min.js")},
+     "merge-pdf/index.html: a script loads /assets/vendor/pdf-lib/9.8/pdf-lib.min.js on demand"),
+    ("pdf-lib on demand from the site but outside assets/vendor", {"lazy_page": LAZY_PAGE.replace('"/assets/vendor/pdf-lib/9.9/pdf-lib.min.js"', '"/merge-pdf/pdf-lib.min.js"')},
+     "merge-pdf/index.html: a script loads /merge-pdf/pdf-lib.min.js on demand"),
+    ("pdf-lib on demand whose file isn't the reviewed copy", {"pdflib_js": b"window.PDFLib = {}; fetch('/x');"},
+     "assets/vendor/pdf-lib/9.9/pdf-lib.min.js isn't the reviewed copy"),
+    ("pdf-lib on demand through a template literal", {"lazy_page": LAZY_PAGE.replace("lib.src = PDFLIB_SRC;", "lib.src = `${DIR}/pdf-lib.min.js`;")},
+     "merge-pdf/index.html: lib.src is set to `${DIR}/pdf-lib.min.js`"),
+    ("pdf-lib with a <script> tag and on demand", {"lazy_page": LAZY_PAGE.replace("<main>m</main>", '<main>m</main>\n<script src="/assets/vendor/pdf-lib/9.9/pdf-lib.min.js"></script>'),
+                                                   "lazy_es": LAZY_PAGE.replace("<main>m</main>", '<main>m</main>\n<script src="/assets/vendor/pdf-lib/9.9/pdf-lib.min.js"></script>')},
+     "merge-pdf/index.html: loads /assets/vendor/pdf-lib/9.9/pdf-lib.min.js more than once"),
+    ("pdf-lib loaded on demand twice", {"lazy_page": LAZY_PAGE.replace("lib.src = PDFLIB_SRC;", "lib.src = PDFLIB_SRC;\n  lib.src = PDFLIB_SRC;"),
+                                        "lazy_es": LAZY_PAGE.replace("lib.src = PDFLIB_SRC;", "lib.src = PDFLIB_SRC;\n  lib.src = PDFLIB_SRC;")},
+     "merge-pdf/index.html: loads /assets/vendor/pdf-lib/9.9/pdf-lib.min.js more than once"),
+    ("EN loading pdf-lib on demand and ES not at all", {"lazy_es": LAZY_PAGE.replace("lib.src = PDFLIB_SRC;", "").replace("const lib = document.createElement('script');", "")},
+     "es/merge-pdf/index.html: loads ['/assets/vendor/pdfjs/9.9/pdf.min.js'], but merge-pdf/index.html loads"),
     ("the site's own JS loading a script that isn't vendored", {"site_js": "const s = document.createElement('script');\ns.src = '/assets/js/extra.js';\n"},
      "assets/js/site.js: a script loads /assets/js/extra.js on demand"),
 ]

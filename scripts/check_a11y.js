@@ -136,6 +136,8 @@ const TOOL_STATES = {
     return '#shareList a[data-share="reddit"] .share-tip';
   },
   "merge files": async (page) => {
+    // Merge PDF loads pdf-lib only once a file is added, so the fixture is built with the same vendored copy loaded here.
+    if (!(await page.evaluate(() => !!window.PDFLib))) await page.addScriptTag({ url: "/assets/vendor/pdf-lib/1.17.1/pdf-lib.min.js" });
     const b64 = await page.evaluate(async () => {
       const { PDFDocument, StandardFonts } = PDFLib;
       const doc = await PDFDocument.create();

@@ -34,8 +34,8 @@ Rules, for every page (every .html outside the folders below, including 404.html
 - every /assets/vendor/ script a page loads is a file listed in the manifest, and
   no vendor script is in <head> (libraries load after the content, before the
   tool's own script)
-- a script loaded on demand (lazily, like Merge PDF's PDF.js, which loads when the
-  first PDF is added) comes only from a <script> element an inline script or the
+- a script loaded on demand (lazily, like Merge PDF's PDF.js and pdf-lib, which load
+  when the first PDF is added) comes only from a <script> element an inline script or the
   site's own JS creates as `x = document.createElement("script")` and points at a
   vendored script with `x.src = "/assets/vendor/..."` or `x.src = NAME`, NAME being a
   const declared once as that string; the file must be a library .js file in the
@@ -43,7 +43,8 @@ Rules, for every page (every .html outside the folders below, including 404.html
   other path, a template literal or a built-up string, setAttribute("src"), code
   written into the element, or a created script element the check can't follow.
   Lazily loaded scripts count as the page's loads for the rules below (PDF.js's
-  workerSrc, the same libraries on the EN and ES pages)
+  workerSrc, the same libraries on the EN and ES pages), and a page loads each
+  vendored script once: never with a tag and on demand, or twice either way
 - every /assets/vendor/ file path written in an inline script or the site's own JS
   (what fetch(), workerSrc and the like are given, directly or through a constant)
   is a library file in the manifest, not a license or notice and not a missing
@@ -519,6 +520,10 @@ def main() -> int:
                 worker_srcs[rel].append(worker)
                 if not external(worker) and worker not in vendor_scripts:
                     problems.append(f"{rel}: workerSrc is {worker or '(empty)'}, which isn't a library file in {MANIFEST}")
+        twice = sorted(u for u, n in Counter(loads[rel]).items() if n > 1)
+        if twice:
+            problems.append(f"{rel}: loads {', '.join(twice)} more than once (with a <script> tag and on demand, or twice); "
+                            f"load each library one way")
         for url in loads[rel]:
             pm = PDFJS_SCRIPT.match(url)
             want = f"/assets/vendor/pdfjs/{pm.group(1)}/pdf.worker.min.js" if pm else None

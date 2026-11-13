@@ -2,8 +2,8 @@
 """Negative tests for check_pdfjs.py: the eval setting, the one way a page loads PDF.js, and <head>.
 
 Builds a tiny site in a temporary folder (a page that loads the vendored PDF.js with a
-<script> tag, and Merge PDF and its /es/ twin, which load it on demand when the first
-PDF is added), checks that check_pdfjs.py passes on it, then breaks it one way at a
+<script> tag, and Merge PDF and its /es/ twin, which load it and pdf-lib on demand when
+the first PDF is added), checks that check_pdfjs.py passes on it, then breaks it one way at a
 time and checks that check_pdfjs.py fails with the expected message. Run after
 changing the check:
 
@@ -26,6 +26,12 @@ const pdf = await pdfjsLib.getDocument({{ data, isEvalSupported: false }}).promi
 LAZY_PAGE = """<!doctype html><html><head><title>m</title></head><body><main>m</main>
 <script>
 const PDFJS_SRC = "/assets/vendor/pdfjs/3.11.174/pdf.min.js";
+const PDFLIB_SRC = "/assets/vendor/pdf-lib/1.17.1/pdf-lib.min.js";
+function loadPdfLib() {
+  const lib = document.createElement('script');
+  lib.src = PDFLIB_SRC;
+  document.body.appendChild(lib);
+}
 function loadPdfjs() {
   script = document.createElement('script');
   script.src = PDFJS_SRC;
@@ -64,10 +70,14 @@ CASES = [
      "split-pdf/index.html: opens PDFs but loads the vendored PDF.js 0 time(s) with a <script> tag and 0 time(s) on demand"),
     ("a page that loads PDF.js with a tag and on demand", {"lazy_page": LAZY_PAGE.replace("<script>\n", TAG + "\n<script>\n", 1)},
      "merge-pdf/index.html: opens PDFs but loads the vendored PDF.js 1 time(s) with a <script> tag and 1 time(s) on demand"),
+    ("PDF.js loaded on demand twice", {"lazy_page": LAZY_PAGE.replace("script.src = PDFJS_SRC;", 'script.src = PDFJS_SRC; script.src = "/assets/vendor/pdfjs/3.11.174/pdf.min.js";')},
+     "merge-pdf/index.html: opens PDFs but loads the vendored PDF.js 0 time(s) with a <script> tag and 2 time(s) on demand"),
     ("PDF.js loaded on demand from a CDN", {"lazy_page": LAZY_PAGE.replace('"/assets/vendor/pdfjs/3.11.174/pdf.min.js"', '"https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"')},
      "merge-pdf/index.html: opens PDFs but loads the vendored PDF.js 0 time(s) with a <script> tag and 0 time(s) on demand"),
     ("PDF.js from a CDN tag", {"tag_page": TAG_PAGE.replace('"/assets/vendor/pdfjs/3.11.174/pdf.min.js"', '"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"')},
      "split-pdf/index.html: opens PDFs but loads the vendored PDF.js 0 time(s)"),
+    ("a CDN pdf-lib in <head>", {"lazy_page": LAZY_PAGE.replace("</title>", '</title><script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>')},
+     "merge-pdf/index.html: a library <script> is in <head>"),
     ("a CDN library in <head>", {"tag_page": TAG_PAGE.replace("</title>", '</title><script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>')},
      "split-pdf/index.html: a library <script> is in <head>"),
 ]
