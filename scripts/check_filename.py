@@ -12,6 +12,10 @@ Fails when:
     passes and `kept ? "x.pdf" : orisodFileName(...)` doesn't
   - a file name written into HTML: an innerHTML/outerHTML assignment or insertAdjacentHTML() that uses a
     helper-made variable or any `.name` property (use textContent)
+- the one exception, STANDARD_ZIP_ENTRIES: Favicon Generator's zip entries keep their standard names
+  (favicon.ico, favicon-16x16.png...), because browsers look for those exact names and the HTML snippet in the
+  same zip links to them. Its zip.file() names must be one of those literals, or the `name` of its size list,
+  whose every `name: '...'` must be one of them too. The zip itself is named by the helper like any other.
 
     python scripts/check_filename.py [--root DIR]
 """
@@ -24,6 +28,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import sync_filename as sf  # noqa: E402
 
 HELPERS = ("orisodFileName(", "orisodZipName(")
+# Files inside a zip whose names must not change, by page. Favicon Generator's package: browsers request
+# /favicon.ico and the other icons by these exact names, and favicon-html-snippet.txt links to them, so they keep
+# their standard names (no input name, no -orisod). Only the zip's own name comes from the helper.
+FAVICON_ENTRIES = {"favicon.ico", "favicon-16x16.png", "favicon-32x32.png", "apple-touch-icon.png",
+                   "android-chrome-192x192.png", "android-chrome-512x512.png", "favicon-html-snippet.txt"}
+STANDARD_ZIP_ENTRIES = {"favicon-generator/index.html": FAVICON_ENTRIES, "es/favicon-generator/index.html": FAVICON_ENTRIES}
 SCRIPT_RE = re.compile(r"<script\b([^>]*)>(.*?)</script>", re.S | re.I)
 
 
@@ -167,6 +177,19 @@ def line_of(text, offset):
     return text.count("\n", 0, offset) + 1
 
 
+def standard_entry(code, expr, allowed):
+    """A zip entry name on a STANDARD_ZIP_ENTRIES page: an allowed literal, or `name` from a list whose every
+    `name: '...'` is allowed."""
+    expr = expr.strip()
+    m = re.fullmatch(r"'([^'\\]*)'|\"([^\"\\]*)\"", expr)
+    if m:
+        return (m.group(1) or m.group(2)) in allowed
+    if expr == "name":
+        listed = re.findall(r"\bname:\s*['\"]([^'\"]*)['\"]", code)
+        return bool(listed) and all(n in allowed for n in listed)
+    return False
+
+
 def check_page(rel, text, source, errors):
     try:
         r = sf.region(text)
@@ -204,9 +227,10 @@ def check_page(rel, text, source, errors):
             expr = code[m.end():statement_end(code, m.end())]
             if not name_ok(code, expr):
                 errors.append(f"{at(m.start())}: setAttribute(\"download\", {expr.strip()[:80]}) doesn't come from orisodFileName()")
+        allowed = STANDARD_ZIP_ENTRIES.get(rel, set())
         for m in re.finditer(r"\bzip\.file\(", code):
             expr = code[m.end():statement_end(code, m.end())]
-            if not name_ok(code, expr):
+            if not name_ok(code, expr) and not standard_entry(code, expr, allowed):
                 errors.append(f"{at(m.start())}: zip.file({expr.strip()[:80]}, ...) doesn't come from orisodFileName()/orisodZipName()")
         names = helper_vars(code)
         for off, expr in html_sinks(code):

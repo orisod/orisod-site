@@ -142,7 +142,10 @@ test("the code point fallback when Intl.Segmenter is missing", () => {
 test("parts, zero-padded, and zip names", () => {
   assert.equal(name({ name: "Report.pdf", accept: ["pdf"], action: "page", part: 7, total: 12, ext: "pdf" }), "Report-page-07-orisod.pdf");
   assert.equal(name({ name: "Report.pdf", accept: ["pdf"], action: "pagina", part: 3, total: 120, ext: "jpg" }), "Report-pagina-003-orisod.jpg");
-  assert.equal(name({ name: "Report.pdf", accept: ["pdf"], part: 2, ext: "png" }), "Report-2-orisod.png");
+  assert.equal(name({ name: "Report.pdf", accept: ["pdf"], part: 2, ext: "png" }), "Report-02-orisod.png");
+  // At least 2 digits, so a 3-page split sorts like a 12-page one.
+  assert.equal(name({ name: "Report.pdf", accept: ["pdf"], action: "page", part: 1, total: 3, ext: "pdf" }), "Report-page-01-orisod.pdf");
+  assert.equal(name({ name: "Report.pdf", accept: ["pdf"], action: "page", part: 10, total: 12, ext: "pdf" }), "Report-page-10-orisod.pdf");
   assert.equal(zipName({ name: "Report.PDF", accept: ["pdf"], action: "split" }), "Report-split-orisod.zip");
   assert.equal(zipName({ name: "", action: "imagenes", fallback: "documento" }), "documento-imagenes-orisod.zip");
 });

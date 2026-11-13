@@ -676,7 +676,7 @@ async function ocrUpload(page, lang) {
 async function ocrRun(page, lang) {
   const words = OCR_WORDS[lang];
   await page.click("#ocrBtn");
-  const link = page.locator('#result a[download="words-ocr.txt"]');
+  const link = page.locator('#result a[download="words-ocr-orisod.txt"]');
   try {
     await link.waitFor({ timeout: 120000 });
   } catch (e) {
@@ -685,8 +685,8 @@ async function ocrRun(page, lang) {
   const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
   const text = await readFile(await download.path(), "utf-8");
   const at = words.map((w) => text.indexOf(w));
-  expect(at.every((i) => i >= 0) && at[0] < at[1], `words-ocr.txt doesn't have ${words.map((w) => `"${w}"`).join(" then ")}: ${JSON.stringify(text.slice(0, 200))}`);
-  return `words-ocr.txt has ${words.map((w) => `"${w}"`).join(" and ")} on pages 1 and 2, read with the ${lang === "es" ? "Spanish" : "English"} data`;
+  expect(at.every((i) => i >= 0) && at[0] < at[1], `words-ocr-orisod.txt doesn't have ${words.map((w) => `"${w}"`).join(" then ")}: ${JSON.stringify(text.slice(0, 200))}`);
+  return `words-ocr-orisod.txt has ${words.map((w) => `"${w}"`).join(" and ")} on pages 1 and 2, read with the ${lang === "es" ? "Spanish" : "English"} data`;
 }
 // The message OCR PDF shows when its engine or language data can't load, and the loading text it replaces.
 const OCR_ENGINE_ERROR = {
@@ -1870,6 +1870,169 @@ FILE_NAME_IMAGE_CASES.push({
   },
 });
 
+// Download file names, PR 4: tools that make zips or several files. Every zip is read back with the page's own
+// JSZip, and its name and every entry name are checked; page and image numbers are padded to at least 2 digits and
+// to the total's width, so a 12-page PDF gives page-01 to page-12, in order when sorted.
+const FILE_NAME_ZIP_INPUT = "Contrato año 2026 ☕";
+// The entry names of a zip, in its own order, read with the vendored JSZip the page loaded; `text` reads one entry.
+async function jszipRead(page, bytes, text) {
+  return page.evaluate(async ([b64, text]) => {
+    const zip = await JSZip.loadAsync(b64, { base64: true });
+    return { names: Object.keys(zip.files), text: text ? await zip.file(text).async("string") : null };
+  }, [bytes.toString("base64"), text || null]);
+}
+async function savedFrom(page, click) {
+  const [d] = await Promise.all([page.waitForEvent("download", { timeout: 60000 }), click()]);
+  return { name: d.suggestedFilename(), bytes: await readFile(await d.path()) };
+}
+function expectNames(got, want, what) {
+  expect(JSON.stringify(got) === JSON.stringify(want), `${what}: ${JSON.stringify(got)}, not ${JSON.stringify(want)}`);
+}
+const twelvePages = () => fixturePdf("Page", Array.from({ length: 12 }, (_, i) => String(i + 1)));
+const pdfInput = (stem, buffer) => ({ name: stem + ".PDF", mimeType: "application/pdf", buffer });
+const numbered = (word, ext, nums) => nums.map((n) => `${FILE_NAME_ZIP_INPUT}-${word}-${String(n).padStart(2, "0")}-orisod.${ext}`);
+const sortedNote = (names) => mustFail("unpadded numbers", () => expectNames([...names].map((n) => n.replace(/-0(\d)-/, "-$1-")).sort(), [...names].map((n) => n.replace(/-0(\d)-/, "-$1-")), "test"));
+const FILE_NAME_ZIP_CASES = [
+  {
+    name: "Download file names (Split PDF)",
+    page: "/split-pdf/",
+    vendor: [],
+    async run(page, lang) {
+      const es = lang === "es";
+      await page.setInputFiles("#fileInput", pdfInput(FILE_NAME_ZIP_INPUT, twelvePages()));
+      await page.locator("#splitAllBtn").waitFor({ state: "visible", timeout: 30000 });
+      await page.click("#splitAllBtn");
+      const link = page.locator("#result a[download]");
+      await link.waitFor({ timeout: 60000 });
+      const zipName = `${FILE_NAME_ZIP_INPUT}-${es ? "dividido" : "split"}-orisod.zip`;
+      expect(await link.getAttribute("download") === zipName, `the link's download attribute is ${await link.getAttribute("download")}`);
+      expect(await page.textContent("#result .result-filename") === zipName, "the result doesn't show the zip's name as text");
+      const zip = await savedFrom(page, () => link.click());
+      expect(zip.name === zipName, `the ZIP is called ${zip.name}, not ${zipName}`);
+      const { names } = await jszipRead(page, zip.bytes);
+      const want = numbered(es ? "pagina" : "page", "pdf", Array.from({ length: 12 }, (_, i) => i + 1));
+      expectNames(names, want, `${zipName} holds`);
+      expectNames([...names].sort(), want, "sorted by name, the entries");
+      // One range, one file.
+      await page.fill("#rangeInput", "2-3");
+      await page.click("#extractBtn");
+      const one = page.locator("#result a[download]");
+      await one.waitFor({ timeout: 30000 });
+      const extracted = `${FILE_NAME_ZIP_INPUT}-${es ? "extraido" : "extracted"}-orisod.pdf`;
+      const got = await savedFrom(page, () => one.click());
+      expect(got.name === extracted && await page.textContent("#result .result-filename") === extracted, `the extracted PDF is called ${got.name}`);
+      return `${zipName} holds ${want[0]} to ${want[11]} (in order when sorted); pages 2-3 gave ${got.name}; ${sortedNote(want)}`;
+    },
+  },
+  {
+    name: "Download file names (PDF to JPG)",
+    page: "/pdf-to-jpg/",
+    vendor: [],
+    async run(page, lang) {
+      const es = lang === "es", word = es ? "pagina" : "page";
+      const convert = async (file, n) => {
+        await page.setInputFiles("#fileInput", file);
+        await page.locator("#convertBtn:not([disabled])").waitFor({ timeout: 30000 });
+        await page.click("#convertBtn");
+        await page.waitForFunction((n) => document.querySelectorAll("#resultsGrid .result-item a[download]").length === n && !document.getElementById("convertBtn").disabled, n, { timeout: 90000 });
+      };
+      await convert(pdfInput(FILE_NAME_ZIP_INPUT, twelvePages()), 12);
+      const all = numbered(word, "jpg", Array.from({ length: 12 }, (_, i) => i + 1));
+      const shown = await page.$$eval("#resultsGrid .result-item > div", (els) => els.map((e) => e.textContent));
+      expectNames(shown, all, "the names shown under the pages");
+      const zip = await savedFrom(page, () => page.click("#downloadAllBtn"));
+      const zipName = `${FILE_NAME_ZIP_INPUT}-${es ? "paginas" : "pages"}-orisod.zip`;
+      expect(zip.name === zipName, `the ZIP is called ${zip.name}, not ${zipName}`);
+      const { names } = await jszipRead(page, zip.bytes);
+      expectNames(names, all, `${zipName} holds`);
+      expectNames([...names].sort(), all, "sorted by name, the entries");
+      // One page's own JPG.
+      const seventh = page.locator("#resultsGrid .result-item a[download]").nth(6);
+      const single = await savedFrom(page, () => seventh.click());
+      expect(single.name === all[6] && await seventh.getAttribute("download") === all[6], `page 7 saves as ${single.name}`);
+      // The selected pages.
+      await page.fill("#rangeInput", "7, 10");
+      await page.click("#applyRangeBtn");
+      const sel = await savedFrom(page, () => page.click("#downloadSelectedBtn"));
+      const selName = `${FILE_NAME_ZIP_INPUT}-${es ? "paginas-seleccionadas" : "pages-selected"}-orisod.zip`;
+      expect(sel.name === selName, `the selected pages' ZIP is called ${sel.name}, not ${selName}`);
+      expectNames((await jszipRead(page, sel.bytes)).names, [all[6], all[9]], `${selName} holds`);
+      // A one-page PDF: no word, no number. A name that is only ".PDF": the fallback word.
+      await convert(pdfInput(FILE_NAME_ZIP_INPUT, fixturePdf("Page", ["1"])), 1);
+      const onePage = await savedFrom(page, () => page.locator("#resultsGrid .result-item a[download]").click());
+      expect(onePage.name === `${FILE_NAME_ZIP_INPUT}-orisod.jpg`, `a one-page PDF gives ${onePage.name}`);
+      await convert(pdfInput("", fixturePdf("Page", ["1"])), 1);
+      const noName = await savedFrom(page, () => page.locator("#resultsGrid .result-item a[download]").click());
+      expect(noName.name === `${es ? "documento" : "document"}-orisod.jpg`, `a file called .PDF gives ${noName.name}`);
+      return `${zipName} holds ${all[0]} to ${all[11]}; page 7 alone is ${single.name}; ${selName} holds ${all[6]} and ${all[9]}; ` +
+        `a one-page PDF gives ${onePage.name} and a file called .PDF ${noName.name}; ${sortedNote(all)}`;
+    },
+  },
+  {
+    name: "Download file names (Extract Images from PDF)",
+    page: "/extract-images-from-pdf/",
+    vendor: [],
+    async run(page, lang) {
+      const es = lang === "es";
+      const pdf = fixtureImagePdf([{ w: 200, h: 150, iw: 40, ih: 30 }, { w: 200, h: 150, iw: 30, ih: 40 }], [0, 0, 0]);
+      await page.setInputFiles("#fileInput", pdfInput(FILE_NAME_ZIP_INPUT, pdf));
+      await page.locator("#extractBtn").waitFor({ state: "visible", timeout: 30000 });
+      await page.click("#extractBtn");
+      await page.locator("#resultsGrid .img-card").nth(1).waitFor({ timeout: 60000 });
+      const want = numbered(es ? "imagen" : "image", "png", [1, 2]);
+      const zip = await savedFrom(page, () => page.click("#downloadAllBtn"));
+      const zipName = `${FILE_NAME_ZIP_INPUT}-${es ? "imagenes" : "images"}-orisod.zip`;
+      expect(zip.name === zipName, `the ZIP is called ${zip.name}, not ${zipName}`);
+      expectNames((await jszipRead(page, zip.bytes)).names, want, `${zipName} holds`);
+      const second = await savedFrom(page, () => page.locator("#resultsGrid .img-card button").nth(1).click());
+      expect(second.name === want[1], `the second image saves as ${second.name}, not ${want[1]}`);
+      expect(second.bytes.subarray(1, 4).toString("latin1") === "PNG", `${second.name} isn't a PNG`);
+      return `${zipName} holds ${want.join(" and ")}; the second image alone is ${second.name}; ` +
+        mustFail("an unpadded entry", () => expectNames([want[0], want[1].replace("-02-", "-2-")], want, "test"));
+    },
+  },
+  {
+    name: "Download file names (OCR PDF)",
+    page: "/ocr-pdf/",
+    vendor: [],
+    async run(page, lang) {
+      await page.setInputFiles("#fileInput", pdfInput(FILE_NAME_ZIP_INPUT, fixturePdf("", OCR_WORDS[lang], { size: 40, winAnsi: true })));
+      await page.locator("#ocrBtn").waitFor({ state: "visible", timeout: 30000 });
+      await page.click("#ocrBtn");
+      const links = page.locator("#result a[download]");
+      await links.nth(1).waitFor({ timeout: 120000 });
+      const want = [`${FILE_NAME_ZIP_INPUT}-ocr-orisod.pdf`, `${FILE_NAME_ZIP_INPUT}-ocr-orisod.txt`];
+      expectNames(await links.evaluateAll((ls) => ls.map((l) => l.getAttribute("download"))), want, "the two links");
+      expect(await page.textContent("#result .result-filename") === want[0], "the result doesn't show the PDF's name as text");
+      const pdf = await savedFrom(page, () => links.nth(0).click());
+      const txt = await savedFrom(page, () => links.nth(1).click());
+      expectNames([pdf.name, txt.name], want, "the two downloads");
+      expect(pdf.bytes.subarray(0, 5).toString("latin1") === "%PDF-" && txt.bytes.toString("utf-8").includes(OCR_WORDS[lang][0]), "the files aren't the PDF and the text");
+      return `saved ${pdf.name} and ${txt.name}; ` + mustFail("the old name", () => expectNames([pdf.name, txt.name.replace("-orisod", "")], want, "test"));
+    },
+  },
+  {
+    name: "Download file names (Favicon Generator)",
+    page: "/favicon-generator/",
+    vendor: [],
+    async run(page, lang) {
+      await page.setInputFiles("#fileInput", { name: FILE_NAME_ZIP_INPUT + ".PNG", mimeType: "image/png", buffer: await fixtureImage(page, 64, 64, "image/png") });
+      await page.locator("#generateBtn:not([disabled])").waitFor({ timeout: 30000 });
+      const zip = await savedFrom(page, () => page.click("#generateBtn"));
+      const zipName = lang === "es" ? "paquete-favicon-orisod.zip" : "favicon-package-orisod.zip";
+      expect(zip.name === zipName, `the ZIP is called ${zip.name}, not ${zipName}`);
+      // The entries keep their standard names: browsers look for them, and the snippet links to them.
+      const icons = ["favicon.ico", "favicon-16x16.png", "favicon-32x32.png", "apple-touch-icon.png", "android-chrome-192x192.png", "android-chrome-512x512.png"];
+      const { names, text } = await jszipRead(page, zip.bytes, "favicon-html-snippet.txt");
+      expectNames(names, [...icons, "favicon-html-snippet.txt"], `${zipName} holds`);
+      const hrefs = [...text.matchAll(/href="([^"]*)"/g)].map((m) => m[1]);
+      expectNames(hrefs, icons.map((n) => "/" + n), "the HTML snippet links");
+      return `${zipName} holds ${names.join(", ")}; the snippet links /${icons.join(", /")}; ` +
+        mustFail("a renamed icon", () => expectNames(hrefs, icons.map((n) => "/" + n.replace("favicon.ico", "favicon-orisod.ico")), "test"));
+    },
+  },
+];
+
 const CASES = [
   {
     name: "spark-md5",
@@ -2294,6 +2457,7 @@ const CASES = [
   },
   ...FILE_NAME_CASES,
   ...FILE_NAME_IMAGE_CASES,
+  ...FILE_NAME_ZIP_CASES,
   {
     name: "PDF.js + jsPDF (PDF color filters)",
     page: "/pdf-color-filters/",
@@ -2663,14 +2827,15 @@ const CASES = [
     page: "/pdf-to-jpg/",
     vendor: [PDFJS, PDFJS_WORKER, JSZIP],
     worker: PDFJS_WORKER,
-    async run(page) {
+    async run(page, lang) {
+      const zipName = lang === "es" ? "three-paginas-orisod.zip" : "three-pages-orisod.zip";
       const pdf = fixturePdf("Fixture", ["page 1", "page 2", "page 3"]);
       await page.setInputFiles("#fileInput", { name: "three.pdf", mimeType: "application/pdf", buffer: pdf });
       await page.locator("#convertBtn:not([disabled])").waitFor({ timeout: 30000 });
       await page.click("#convertBtn");
       await page.locator("#downloadAllWrap").waitFor({ state: "visible", timeout: 60000 });
       const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), page.click("#downloadAllBtn")]);
-      expect(download.suggestedFilename() === "three.zip", `the ZIP is called ${download.suggestedFilename()}`);
+      expect(download.suggestedFilename() === zipName, `the ZIP is called ${download.suggestedFilename()}`);
       const files = zipEntries(await readFile(await download.path()));
       expect(files.length === 3, `the ZIP has ${files.length} files, not 3`);
       for (const f of files) {
@@ -2679,26 +2844,27 @@ const CASES = [
         const { dark } = await darkPixels(page, f.data);
         expect(dark > 50, `${f.name} is blank (${dark} dark pixels)`);
       }
-      return `three.zip: ${files.map((f) => f.name).join(", ")}, each a 1224x1584 JPEG with its page's text`;
+      return `${zipName}: ${files.map((f) => f.name).join(", ")}, each a 1224x1584 JPEG with its page's text`;
     },
   },
   {
     name: "pdf-lib + JSZip (Split PDF)",
     page: "/split-pdf/",
     vendor: ["/assets/vendor/pdf-lib/1.17.1/pdf-lib.min.js", JSZIP],
-    async run(page) {
+    async run(page, lang) {
+      const [zipName, word] = lang === "es" ? ["three-dividido-orisod.zip", "pagina"] : ["three-split-orisod.zip", "page"];
       const pdf = fixturePdf("Fixture", ["page 1", "page 2", "page 3"]);
       await page.setInputFiles("#fileInput", { name: "three.pdf", mimeType: "application/pdf", buffer: pdf });
       await page.locator("#splitAllBtn").waitFor({ state: "visible", timeout: 30000 });
       await page.click("#splitAllBtn");
-      const link = page.locator('#result a[download="three-split.zip"]');
+      const link = page.locator(`#result a[download="${zipName}"]`);
       await link.waitFor({ timeout: 30000 });
       const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
       const files = zipEntries(await readFile(await download.path()));
       const got = files.map((f) => `${f.name}: ${pdfPageCount(f.data)} page, ${pdfText(f.data).trim()}`);
-      const want = [1, 2, 3].map((n) => `three-page-${n}.pdf: 1 page, Fixture page ${n}`);
-      expect(got.join("|") === want.join("|"), `three-split.zip holds ${JSON.stringify(got)}`);
-      return `three-split.zip: three-page-1.pdf to three-page-3.pdf, one page each, with the right text`;
+      const want = [1, 2, 3].map((n) => `three-${word}-0${n}-orisod.pdf: 1 page, Fixture page ${n}`);
+      expect(got.join("|") === want.join("|"), `${zipName} holds ${JSON.stringify(got)}`);
+      return `${zipName}: three-${word}-01-orisod.pdf to three-${word}-03-orisod.pdf, one page each, with the right text`;
     },
   },
   {
