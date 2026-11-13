@@ -7,7 +7,10 @@
  * locally too after adding or updating a library in assets/vendor, or after
  * changing how a page loads one:
  *
- *   node scripts/test_vendor_smoke.js [--root DIR] [case name ...]
+ *   node scripts/test_vendor_smoke.js [--root DIR] [--group file-names|rest] [case name ...]
+ *
+ * --group file-names runs only the "Download file names (...)" cases, --group rest the others (CI runs them as
+ * two parallel jobs).
  *
  * How it works: a headless Chromium loads each tool page as https://orisod.com/...,
  * and every orisod.com request is answered from the local files, so root-absolute
@@ -6020,8 +6023,18 @@ async function runCase(browser, c, lang) {
   return { path, detail, failure, src, warnings: seen.warnings, cdn: [...new Set(seen.cdn)] };
 }
 
+// --group file-names runs only the "Download file names (...)" cases and --group rest every other case: CI runs the
+// two groups as parallel jobs (check-smoke.yml). With neither, every case runs; case names narrow it further.
+const groupAt = process.argv.indexOf("--group");
+const group = groupAt > -1 ? process.argv.splice(groupAt, 2)[1] : null;
+if (group !== null && group !== "file-names" && group !== "rest") {
+  console.error(`--group must be file-names or rest, not ${group}`);
+  process.exit(2);
+}
+const isFileNameCase = (c) => c.name.startsWith("Download file names");
+const pool = group ? CASES.filter((c) => isFileNameCase(c) === (group === "file-names")) : CASES;
 const only = process.argv.slice(2);
-const cases = only.length ? CASES.filter((c) => only.includes(c.name)) : CASES;
+const cases = only.length ? pool.filter((c) => only.includes(c.name)) : pool;
 if (!cases.length) {
   console.error(`No such case. Cases: ${CASES.map((c) => c.name).join(", ")}`);
   process.exit(2);
@@ -6059,7 +6072,7 @@ for (const c of cases) {
 await browser.close();
 const seconds = ((Date.now() - t0) / 1000).toFixed(0);
 summary([
-  `### Smoke tests: ${cases.length * 2} pages in ${seconds} s, ${failed} failed, ${flaky.length} flaky`,
+  `### Smoke tests${group ? ` (${group})` : ""}: ${cases.length * 2} pages in ${seconds} s, ${failed} failed, ${flaky.length} flaky`,
   "",
   "| Case | Page | Result | Time | Failure |",
   "|---|---|---|---|---|",

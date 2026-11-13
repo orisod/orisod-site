@@ -1,6 +1,6 @@
 name: Verify pages and tools in a browser
 
-# Two jobs side by side, both in headless Chromium with the site answered from
+# Three jobs side by side, all in headless Chromium with the site answered from
 # the checkout as https://orisod.com, GoatCounter answered locally and every
 # other host blocked:
 # - page-load: scripts/check_page_load.js loads every page in sitemap.xml (plus
@@ -9,8 +9,11 @@ name: Verify pages and tools in a browser
 # - smoke: first the Node unit tests in scripts/tests/ (pure page logic, no browser), then
 #   scripts/test_vendor_smoke.js, which runs one real operation per tool library,
 #   EN and ES. A failed case is retried once; one that passes on the retry is a
-#   warning ("flaky"), one that fails twice fails the job.
-# Both report failures as annotations and a table in the job summary.
+#   warning ("flaky"), one that fails twice fails the job. It runs every case except
+#   the download file name cases (--group rest).
+# - smoke-file-names: the "Download file names (...)" cases of the same script
+#   (--group file-names), split off when the single smoke job neared 6 minutes.
+# All report failures as annotations and a table in the job summary.
 
 on:
   push:
@@ -91,5 +94,34 @@ jobs:
       - name: Install Chromium's system libraries if they're missing
         run: node -e "require('playwright').chromium.launch().then((b) => b.close())" || npx playwright install-deps chromium
 
-      - name: Run every tool library smoke test (EN and ES)
-        run: node scripts/test_vendor_smoke.js
+      - name: Run the tool library smoke tests (EN and ES), except the file name cases
+        run: node scripts/test_vendor_smoke.js --group rest
+
+  smoke-file-names:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install CI tooling dependencies
+        run: npm install
+
+      - name: Cache Chromium for Playwright
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Chromium for Playwright
+        run: npx playwright install chromium
+
+      - name: Install Chromium's system libraries if they're missing
+        run: node -e "require('playwright').chromium.launch().then((b) => b.close())" || npx playwright install-deps chromium
+
+      - name: Run the download file name smoke tests (EN and ES)
+        run: node scripts/test_vendor_smoke.js --group file-names
