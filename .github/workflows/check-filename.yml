@@ -1,0 +1,22 @@
+name: Verify download file names
+
+on:
+  push:
+    branches: [main, orisod-2]
+  pull_request:
+    branches: [main, orisod-2]
+
+permissions:
+  contents: read
+
+jobs:
+  check-filename:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Check the file name helper copies and the download names on the pages that use it
+        run: python3 scripts/check_filename.py
+
+      - name: Check check_filename.py still catches broken copies and names
+        run: python3 scripts/test_check_filename.py
