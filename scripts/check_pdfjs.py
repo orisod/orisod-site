@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Fail if any page opens a PDF with PDF.js without turning off its eval path,
-or loads a tool library in its <head>.
+doesn't load PDF.js from assets/vendor in exactly one way, or loads a tool
+library in its <head>.
 
 The site loads PDF.js 3.11.174, which is affected by CVE-2024-4367: with the
 default isEvalSupported: true, a crafted PDF can make PDF.js run arbitrary
@@ -16,8 +17,19 @@ mobile. Every tool page (PDF ones since 2026-10-21, the rest since 2026-10-22)
 loads its library <script>s from the CDNs right before the tool's own script,
 after the content, so no CDN library may sit in any page's <head>.
 
-Run in CI on every push/PR to main, same as check_sitemap.py.
+A page that calls getDocument() loads the vendored PDF.js
+(/assets/vendor/pdfjs/<version>/pdf.min.js) either with a <script src> tag or on
+demand (Merge PDF, since 2026-11-13: a <script> its inline script creates when the
+first PDF is added, pointed at that path written as a string), never both and never
+neither. check_vendor.py checks that an on-demand load is a vendored file in the
+manifest, and that the page sets workerSrc to the worker next to it.
+
+Run in CI on every push/PR to main and orisod-2 (check-pdfjs, with
+test_check_pdfjs.py proving each rule fails).
+
+Usage: python scripts/check_pdfjs.py [--root DIR]
 """
+import argparse
 import re
 import sys
 from pathlib import Path
@@ -28,13 +40,20 @@ EXCLUDE_TOP_LEVEL = {".git", ".github", ".claude", "assets", "docs", "scripts", 
 # The argument of each getDocument(...) call, up to the closing "})".
 HEAD_LIB = re.compile(r'<script[^>]*src="https://(?:cdnjs\.cloudflare\.com|cdn\.jsdelivr\.net|cdn\.sheetjs\.com)/[^"]*"')
 CALL = re.compile(r"getDocument\((.*?)\)\s*\.promise", re.S)
+PDFJS_TAG = re.compile(r"""<script[^>]*\bsrc\s*=\s*["'](/assets/vendor/pdfjs/[^/"']+/pdf\.min\.js)["']""", re.I)
+PDFJS_PATH = re.compile(r"""["'](/assets/vendor/pdfjs/[^/"']+/pdf\.min\.js)["']""")
+INLINE = re.compile(r"<script\b(?![^>]*\bsrc\s*=)[^>]*>(.*?)</script>", re.S | re.I)
+CREATE_SCRIPT = re.compile(r"""createElement\(\s*["'`]script["'`]\s*\)""", re.I)
 
 
 def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
+    ap.add_argument("--root", default=str(REPO_ROOT), help="site folder to check")
+    root = Path(ap.parse_args().root)
     problems = []
-    pages = calls = 0
-    for f in sorted(REPO_ROOT.rglob("*.html")):
-        rel = f.relative_to(REPO_ROOT)
+    pages = calls = lazy = 0
+    for f in sorted(root.rglob("*.html")):
+        rel = f.relative_to(root)
         if rel.parts[0] in EXCLUDE_TOP_LEVEL:
             continue
         text = f.read_text(encoding="utf-8")
@@ -44,6 +63,12 @@ def main() -> int:
         if "getDocument(" not in text:
             continue
         pages += 1
+        tags = PDFJS_TAG.findall(text)
+        on_demand = [m for body in INLINE.findall(text) if CREATE_SCRIPT.search(body) for m in PDFJS_PATH.findall(body)]
+        lazy += bool(on_demand)
+        if len(tags) + len(on_demand) != 1:
+            problems.append(f"{rel}: opens PDFs but loads the vendored PDF.js {len(tags)} time(s) with a <script> tag and "
+                            f"{len(on_demand)} time(s) on demand; it must load /assets/vendor/pdfjs/<version>/pdf.min.js exactly once, one way or the other")
         found = CALL.findall(text)
         if len(found) != text.count("getDocument("):
             problems.append(f"{rel}: a getDocument() call isn't in the form getDocument({{...}}).promise, so it can't be checked")
@@ -58,7 +83,8 @@ def main() -> int:
             print(f"  - {p}")
         print(f"\n{len(problems)} problem(s); {pages} pages open PDFs with PDF.js")
         return 1
-    print(f"OK: all {calls} PDF.js getDocument() calls on {pages} pages pass isEvalSupported: false, and no page loads a tool library in its <head>.")
+    print(f"OK: all {calls} PDF.js getDocument() calls on {pages} pages pass isEvalSupported: false; each page loads the vendored PDF.js once "
+          f"({pages - lazy} with a script tag, {lazy} on demand), and no page loads a tool library in its <head>.")
     return 0
 
 
