@@ -12,6 +12,9 @@ Fails when:
     passes and `kept ? "x.pdf" : orisodFileName(...)` doesn't
   - a file name written into HTML: an innerHTML/outerHTML assignment or insertAdjacentHTML() that uses a
     helper-made variable or any `.name` property (use textContent)
+- any page that offers a download (an `X.download = ...`, `setAttribute("download", ...)`, `zip.file(` or an `<a download>`)
+  without the block, except the pages in PENDING_PAGES (Merge PDF and the WhatsApp link generator, EN and ES, which get
+  the helper on orisod-2 in PR 6); a listed page that carries the block or has no download any more fails too
 - the one exception, STANDARD_ZIP_ENTRIES: Favicon Generator's zip entries keep their standard names
   (favicon.ico, favicon-16x16.png...), because browsers look for those exact names and the HTML snippet in the
   same zip links to them. Its zip.file() names must be one of those literals, or the `name` of its size list,
@@ -34,6 +37,17 @@ HELPERS = ("orisodFileName(", "orisodZipName(")
 FAVICON_ENTRIES = {"favicon.ico", "favicon-16x16.png", "favicon-32x32.png", "apple-touch-icon.png",
                    "android-chrome-192x192.png", "android-chrome-512x512.png", "favicon-html-snippet.txt"}
 STANDARD_ZIP_ENTRIES = {"favicon-generator/index.html": FAVICON_ENTRIES, "es/favicon-generator/index.html": FAVICON_ENTRIES}
+# The only pages allowed to offer a download without the helper. Each must still have a download and no block, so
+# an entry can't outlive its reason (remove it when the page adopts the helper).
+PENDING_PAGES = {
+    "merge-pdf/index.html": "Merge PDF: its script was rewritten on orisod-2; it gets the helper in PR 6 there",
+    "es/merge-pdf/index.html": "Merge PDF (ES): its script was rewritten on orisod-2; it gets the helper in PR 6 there",
+    "whatsapp-link-generator/index.html": "WhatsApp link generator: its script was rewritten on orisod-2; it gets the helper in PR 6 there",
+    "es/whatsapp-link-generator/index.html": "WhatsApp link generator (ES): its script was rewritten on orisod-2; it gets the helper in PR 6 there",
+}
+# Anything that names a download: a .download assignment, setAttribute("download", ...), a zip entry, or an <a download>
+# in the markup.
+DOWNLOAD_RE = re.compile(r"\.download\s*=(?![=>])|\.setAttribute\(\s*['\"]download['\"]|\bzip\.file\(|<a\b[^>]*\sdownload(?=[\s=>])", re.I)
 SCRIPT_RE = re.compile(r"<script\b([^>]*)>(.*?)</script>", re.S | re.I)
 
 
@@ -197,9 +211,17 @@ def check_page(rel, text, source, errors):
         errors.append(f"{rel}: {e}")
         return
     calls = any(h in text for h in HELPERS)
+    download = DOWNLOAD_RE.search(text)
+    if rel in PENDING_PAGES and (r is not None or not download):
+        errors.append(f"{rel}: listed in PENDING_PAGES but {'carries the block' if r is not None else 'offers no download'}; "
+                      "remove it from the list")
     if r is None:
         if calls:
             errors.append(f"{rel}: calls orisodFileName()/orisodZipName() without the \"Orisod file name\" block "
+                          f"(python scripts/sync_filename.py --write --add {rel})")
+        elif download and rel not in PENDING_PAGES:
+            errors.append(f"{rel}:{line_of(text, download.start())}: offers a download ({download.group(0).strip()[:40]}) "
+                          f"without the \"Orisod file name\" block; name it with orisodFileName() "
                           f"(python scripts/sync_filename.py --write --add {rel})")
         return
     scripts = [(m.start(2), m.end(2), m.group(1)) for m in SCRIPT_RE.finditer(text)]
@@ -207,6 +229,10 @@ def check_page(rel, text, source, errors):
     if not holder or holder[0][2].strip():
         errors.append(f"{rel}: the \"Orisod file name\" block isn't inside a single inline <script>")
         return
+    # Scripts are blanked out with the same number of line breaks, so the line is counted in `markup` itself.
+    markup = SCRIPT_RE.sub(lambda s: "\n" * s.group(0).count("\n"), text)
+    for m in re.finditer(r"<a\b[^>]*\sdownload(?=[\s=>])", markup, re.I):
+        errors.append(f"{rel}:{line_of(markup, m.start())}: an <a download> in the markup; set its name with orisodFileName() in the script")
     if text[r[0]:r[1]] != sf.block(source):
         errors.append(f"{rel}:{line_of(text, r[0])}: the \"Orisod file name\" block differs from {sf.SOURCE.as_posix()} "
                       f"(python scripts/sync_filename.py --write)")

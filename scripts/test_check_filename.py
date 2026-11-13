@@ -91,6 +91,15 @@ BREAKS = [
     ("insertAdjacentHTML with a name", "  card.querySelector('.result-filename').textContent = outName;", "  card.insertAdjacentHTML('beforeend', `<b>${keptName}</b>`);", "(keptName) is written into HTML"),
 ]
 
+# (label, line 3 of a page without the block, part of the expected message): each must fail.
+NO_BLOCK_DOWNLOADS = [
+    ("a.download", "<script>a.download = 'calendar.pdf';</script>", ".download ="),
+    ("link.download from a variable", "<script>link.download = outName;</script>", ".download ="),
+    ("setAttribute", "<script>link.setAttribute('download', 'x.png');</script>", "setAttribute('download'"),
+    ("zip.file", "<script>zip.file('page-1.pdf', bytes);</script>", "zip.file("),
+    ("an <a download> in the markup", "<a href=\"/report.pdf\" download=\"report.pdf\">Get</a>", "<a href=\"/report.pdf\" download"),
+]
+
 
 def run(script, root, *args):
     r = subprocess.run([sys.executable, str(script), "--root", str(root), *args], capture_output=True, text=True, encoding="utf-8")
@@ -154,6 +163,45 @@ def main():
             print("ok   the standard favicon names fail on any other page")
         shutil.rmtree(other.parent)
         fav.write_text(fav_good, encoding="utf-8", newline="\n")
+        # A page that offers a download without the block fails, in every form, unless it's in PENDING_PAGES.
+        plain = tmp / "plain-tool" / "index.html"
+        plain.parent.mkdir()
+        for label, body, want in NO_BLOCK_DOWNLOADS:
+            plain.write_text(f"<html><body>\n<div></div>\n{body}\n</body></html>\n", encoding="utf-8", newline="\n")
+            code, out = run(CHECK, tmp)
+            if code == 0 or "plain-tool/index.html:3: offers a download" not in out or want not in out:
+                failures.append(f"no block, {label}: expected a failure at line 3 naming \"{want}\", got {code}: {out.strip()}")
+            else:
+                print(f"ok   no block, {label} fails as it should")
+        shutil.rmtree(plain.parent)
+        pending = tmp / "merge-pdf" / "index.html"
+        pending.parent.mkdir()
+        pending.write_text("<script>\nlink.download = 'merged.pdf';\n</script>\n", encoding="utf-8", newline="\n")
+        code, out = run(CHECK, tmp)
+        if code != 0:
+            failures.append(f"a PENDING_PAGES page with its old download failed: {out.strip()}")
+        else:
+            print("ok   a PENDING_PAGES page (merge-pdf) keeps its old download for now")
+        pending.write_text("<script>\nconst x = 1;\n</script>\n", encoding="utf-8", newline="\n")
+        code, out = run(CHECK, tmp)
+        if code == 0 or "listed in PENDING_PAGES but offers no download" not in out:
+            failures.append(f"a PENDING_PAGES page with no download passed: {out.strip()}")
+        else:
+            print("ok   a PENDING_PAGES page with no download fails (stale entry)")
+        pending.write_bytes(fav.read_bytes())
+        code, out = run(CHECK, tmp)
+        if code == 0 or "listed in PENDING_PAGES but carries the block" not in out:
+            failures.append(f"a PENDING_PAGES page carrying the block passed: {out.strip()}")
+        else:
+            print("ok   a PENDING_PAGES page carrying the block fails (stale entry)")
+        shutil.rmtree(pending.parent)
+        fav.write_text(fav_good.replace("<body>\n", "<body>\n<a href=\"/x.zip\" download>Get</a>\n", 1), encoding="utf-8", newline="\n")
+        code, out = run(CHECK, tmp)
+        if code == 0 or "favicon-generator/index.html:4: an <a download> in the markup" not in out:
+            failures.append(f"an <a download> in a block page's markup passed: {out.strip()}")
+        else:
+            print("ok   an <a download> in the markup of a page with the block fails, at its line")
+        fav.write_text(fav_good, encoding="utf-8", newline="\n")
         good = page.read_bytes().decode("utf-8").replace("\r\n", "\n")
         for label, old, new, want in BREAKS:
             if good.count(old) != 1:
@@ -192,7 +240,7 @@ def main():
         print(f"FAIL {f}")
     if failures:
         return 1
-    print(f"All check_filename.py tests passed ({len(BREAKS) + len(FAVICON_BREAKS) + 3} broken copies fail, --add and --write touch only the block).")
+    print(f"All check_filename.py tests passed ({len(BREAKS) + len(FAVICON_BREAKS) + len(NO_BLOCK_DOWNLOADS) + 6} broken copies fail, --add and --write touch only the block).")
     return 0
 
 
