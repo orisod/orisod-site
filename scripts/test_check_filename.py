@@ -46,6 +46,33 @@ function done(selectedFile, blob) {
 </body></html>
 """
 
+# Favicon Generator keeps the standard names of its zip's entries (STANDARD_ZIP_ENTRIES); only the zip is named by the helper.
+FAVICON = """<!DOCTYPE html>
+<html lang="en"><head><title>Favicon</title></head>
+<body>
+<script>
+async function build(zip, ico, buf, snippet) {
+  zip.file('favicon.ico', ico);
+  const namedSizes = [
+    { size: 16, name: 'favicon-16x16.png' },
+    { size: 512, name: 'android-chrome-512x512.png' }
+  ];
+  for (const { size, name } of namedSizes) zip.file(name, buf);
+  zip.file('favicon-html-snippet.txt', snippet);
+  const a = document.createElement('a');
+  a.download = orisodZipName({ fallback: 'favicon-package' });
+}
+</script>
+</body></html>
+"""
+# (label, old, new, expected message part) on the favicon page, and the same entries on another page.
+FAVICON_BREAKS = [
+    ("a non-standard entry name", "zip.file('favicon.ico', ico);", "zip.file('icon.ico', ico);", "zip.file('icon.ico'"),
+    ("a non-standard name in the size list", "name: 'android-chrome-512x512.png'", "name: 'icon-512.png'", "zip.file(name"),
+    ("a template entry name", "zip.file('favicon.ico', ico);", "zip.file(`${base}.ico`, ico);", "zip.file(`${base}.ico`"),
+    ("a literal zip name", "a.download = orisodZipName({ fallback: 'favicon-package' });", "a.download = 'favicon-package.zip';", ".download = 'favicon-package.zip'"),
+]
+
 # (label, old, new, expected message part); each break is applied to the synced page.
 BREAKS = [
     ("an edited block", "const ORISOD_NAME_BYTES = 120;", "const ORISOD_NAME_BYTES = 200;", "differs from"),
@@ -98,6 +125,35 @@ def main():
         code, out = run(CHECK, tmp)
         if code != 0:
             failures.append(f"the synced page failed: {out}")
+        # The favicon page: its standard entry names pass there, and fail anywhere else.
+        fav = tmp / "favicon-generator" / "index.html"
+        fav.parent.mkdir()
+        fav.write_bytes(FAVICON.replace("\n", "\r\n").encode("utf-8"))
+        run(SYNC, tmp, "--write", "--add", "favicon-generator/index.html")
+        code, out = run(CHECK, tmp)
+        if code != 0:
+            failures.append(f"the favicon page's standard entry names failed: {out}")
+        fav_good = fav.read_bytes().decode("utf-8").replace("\r\n", "\n")
+        for label, old, new, want in FAVICON_BREAKS:
+            if fav_good.count(old) != 1:
+                failures.append(f"favicon, {label}: the test text isn't in the page once")
+                continue
+            fav.write_text(fav_good.replace(old, new), encoding="utf-8", newline="\n")
+            code, out = run(CHECK, tmp)
+            if code == 0 or want not in out:
+                failures.append(f"favicon, {label}: expected a failure with \"{want}\", got {code}: {out.strip()}")
+            else:
+                print(f"ok   favicon, {label} fails as it should")
+        other = tmp / "other-tool" / "index.html"
+        other.parent.mkdir()
+        other.write_text(fav_good, encoding="utf-8", newline="\n")
+        code, out = run(CHECK, tmp)
+        if code == 0 or "other-tool/index.html" not in out or "zip.file('favicon.ico'" not in out:
+            failures.append(f"the standard favicon names passed on another page: {out.strip()}")
+        else:
+            print("ok   the standard favicon names fail on any other page")
+        shutil.rmtree(other.parent)
+        fav.write_text(fav_good, encoding="utf-8", newline="\n")
         good = page.read_bytes().decode("utf-8").replace("\r\n", "\n")
         for label, old, new, want in BREAKS:
             if good.count(old) != 1:
@@ -136,7 +192,7 @@ def main():
         print(f"FAIL {f}")
     if failures:
         return 1
-    print(f"All check_filename.py tests passed ({len(BREAKS) + 2} broken copies fail, --add and --write touch only the block).")
+    print(f"All check_filename.py tests passed ({len(BREAKS) + len(FAVICON_BREAKS) + 3} broken copies fail, --add and --write touch only the block).")
     return 0
 
 
