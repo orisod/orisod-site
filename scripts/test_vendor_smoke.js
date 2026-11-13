@@ -2555,6 +2555,16 @@ const FILE_NAME_GEN_CASES = [
   },
 ];
 
+// Merge PDF scrolls a new result into view, smoothly, a moment after it appears (oFrameReveal). Since pdf-lib loads
+// on demand, a merge clicked right after adding finishes later, about when that scroll starts, and a click on the
+// download link while the page scrolls can land where the link was (no download). So wait for the link, then
+// until the page has stopped scrolling.
+async function settledMergeLink(page, link) {
+  await link.waitFor({ timeout: 30000 });
+  await page.waitForTimeout(900);
+  await page.waitForFunction(() => new Promise((done) => { const y = scrollY; setTimeout(() => done(scrollY === y), 200); }), null, { timeout: 10000 });
+}
+
 // Download file names, PR 6 (orisod-2): Merge PDF is named after the first PDF in the final order (after reordering
 // and after removing the first one); the WhatsApp QR download has a fixed name that never carries what was typed.
 const FILE_NAME_PR6_CASES = [
@@ -2568,7 +2578,7 @@ const FILE_NAME_PR6_CASES = [
       const merge = async () => {
         await page.click("#mergeBtn");
         const link = page.locator("#result a[download]");
-        await link.waitFor({ timeout: 30000 });
+        await settledMergeLink(page, link);
         const name = await savedName(page, () => link.click());
         expect(await page.textContent("#result .result-filename") === name, "the result doesn't show the download's name");
         return name;
@@ -2612,30 +2622,53 @@ const FILE_NAME_PR6_CASES = [
   },
 ];
 
-// Merge PDF's lazy PDF.js: its status and error strings, its timeout, and helpers for the "Lazy PDF.js" cases.
+// Merge PDF's lazy PDF.js and pdf-lib: their status and error strings, their timeout, and helpers for the
+// "Lazy PDF.js" and "Lazy pdf-lib" cases.
 const LAZY_TEXT = {
   en: { mergeFail: "Could not merge these PDFs. Make sure none of them are password-protected or corrupted.",
-    loading: "Loading previews...", fail: "Previews could not load. You can still merge the files. Check your connection and add a file to try again." },
+    loading: "Loading previews...", fail: "Previews could not load. You can still merge the files. Check your connection and add a file to try again.",
+    libFail: "The merge tool could not load. Check your connection and try again.", merge: "Merge PDFs", merging: "Merging...", done: "Done. Ready to download." },
   es: { mergeFail: "No se pudieron unir estos PDF. Asegúrate de que ninguno esté protegido con contraseña o dañado.",
-    loading: "Cargando vistas previas...", fail: "No se pudieron cargar las vistas previas. Puedes unir los archivos igualmente. Revisa tu conexión y añade un archivo para intentarlo de nuevo." },
+    loading: "Cargando vistas previas...", fail: "No se pudieron cargar las vistas previas. Puedes unir los archivos igualmente. Revisa tu conexión y añade un archivo para intentarlo de nuevo.",
+    libFail: "No se pudo cargar la herramienta para unir los PDF. Revisa tu conexión e inténtalo de nuevo.", merge: "Unir PDF", merging: "Uniendo...", done: "Listo para descargar." },
 };
 const LAZY_TIMEOUT_MS = 60000;
 const lazyPdf = (stem, pages) => ({ name: stem + ".pdf", mimeType: "application/pdf", buffer: fixturePdf(stem, Array.from({ length: pages }, (_, i) => String(i + 1))) });
 function lazyCounts(requests) {
   const n = (p) => requests.filter((u) => u === SITE + p).length;
-  return { pdfjs: n(PDFJS), worker: n(PDFJS_WORKER) };
+  return { pdfjs: n(PDFJS), worker: n(PDFJS_WORKER), pdflib: n(PDFLIB) };
 }
-// Records every text the status line shows, so a short "Loading previews..." isn't missed.
+// Records every text the status line shows (with its aria-busy then), so a short "Loading previews..." isn't missed.
 async function lazyWatchStatus(page) {
   await page.evaluate(() => {
     const el = document.getElementById("progressMsg");
     window.__lazySaid = [];
-    new MutationObserver(() => window.__lazySaid.push(el.textContent)).observe(el, { childList: true, characterData: true, subtree: true });
+    window.__lazyBusy = [];
+    new MutationObserver(() => {
+      window.__lazySaid.push(el.textContent);
+      window.__lazyBusy.push([el.textContent, el.getAttribute("aria-busy")]);
+    }).observe(el, { childList: true, characterData: true, subtree: true });
   });
 }
+// The status line is a polite live region (role="status", nothing assertive) that says "Loading previews..." once
+// however many files are added while PDF.js loads, and only "Done" of a merge is announced: each file's
+// "Processing ..." line is written while the region is aria-busy.
+function expectLiveStatus(s, lang) {
+  expect(s.role === "status" && s.live === null && s.atomic === null, `the status line has role ${s.role}, aria-live ${s.live}, aria-atomic ${s.atomic}`);
+  const loading = s.said.filter((x) => x === LAZY_TEXT[lang].loading).length;
+  expect(loading === 1, `"${LAZY_TEXT[lang].loading}" was written ${loading} times (${JSON.stringify(s.said)})`);
+  const processing = s.busy.filter(([x]) => x.startsWith(lang === "es" ? "Procesando " : "Processing "));
+  expect(processing.length > 0 && processing.every(([, b]) => b === "true"), `"Processing" lines not under aria-busy: ${JSON.stringify(s.busy)}`);
+  const done = s.busy.filter(([x]) => x === LAZY_TEXT[lang].done);
+  expect(done.length === 1 && done[0][1] === null, `"${LAZY_TEXT[lang].done}" written as ${JSON.stringify(done)}`);
+}
 function lazyState(page) {
-  return page.evaluate(() => ({ said: window.__lazySaid || [], progress: document.getElementById("progressMsg").textContent,
-    error: document.getElementById("errorMsg").textContent, role: document.getElementById("errorMsg").getAttribute("role"),
+  return page.evaluate(() => ({ said: window.__lazySaid || [], busy: window.__lazyBusy || [], progress: document.getElementById("progressMsg").textContent,
+    role: document.getElementById("progressMsg").getAttribute("role"), live: document.getElementById("progressMsg").getAttribute("aria-live"),
+    atomic: document.getElementById("progressMsg").getAttribute("aria-atomic"), lib: typeof window.PDFLib,
+    rows: document.querySelectorAll("#fileList > li").length, results: document.querySelectorAll("#result a[download]").length,
+    button: document.getElementById("mergeBtn").textContent,
+    error: document.getElementById("errorMsg").textContent, errorRole: document.getElementById("errorMsg").getAttribute("role"),
     imgs: document.querySelectorAll(".file-thumb img").length, icons: document.querySelectorAll(".file-thumb svg").length,
     metas: [...document.querySelectorAll("#fileList .file-meta")].map((m) => m.textContent), merge: !document.getElementById("mergeBtn").disabled }));
 }
@@ -2653,7 +2686,7 @@ async function lazyExpectFailed(page, lang) {
     throw new Error(`no previews error (state: ${JSON.stringify(await lazyState(page))})`);
   }
   const st = await lazyState(page);
-  expect(st.role === "alert", `the error line has role="${st.role}", not "alert"`);
+  expect(st.errorRole === "alert", `the error line has role="${st.errorRole}", not "alert"`);
   expect(st.progress !== LAZY_TEXT[lang].loading, "the status still says it's loading next to the error");
   expect(st.imgs === 0 && st.icons === st.metas.length && st.metas.every((m) => / KB$/.test(m) && !m.includes("·")), `rows after the failure: ${JSON.stringify(st)}`);
   expect(st.merge, "Merge isn't available without the previews");
@@ -2663,7 +2696,7 @@ async function lazyMerge(page, lang, first, want) {
   await page.click("#mergeBtn");
   const name = `${first}-${lang === "es" ? "unido" : "merged"}-orisod.pdf`;
   const link = page.locator(`#result a[download="${name}"]`);
-  await link.waitFor({ timeout: 30000 });
+  await settledMergeLink(page, link);
   const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
   const text = pdfText(await readFile(await download.path())).trim().split("\n");
   expect(text.join("|") === want.map((w) => w).join("|"), `merged pages read ${JSON.stringify(text)}`);
@@ -2750,15 +2783,18 @@ const CASES = [
     // PDF.js draws the file list's thumbnails and loads only once a PDF is added, so it may not have loaded by the
     // time this merge is done (checked, with its worker, in "Lazy PDF.js (Merge PDF)" and "Page frame (Merge PDF)").
     vendor: ["/assets/vendor/pdf-lib/1.17.1/pdf-lib.min.js"],
-    async run(page, lang) {
+    async run(page, lang, ctl) {
       const a = { name: "a.pdf", mimeType: "application/pdf", buffer: fixturePdf("Fixture A", ["page 1", "page 2"]) };
       const b = { name: "b.pdf", mimeType: "application/pdf", buffer: fixturePdf("Fixture B", ["page 1", "page 2", "page 3"]) };
       const want = pdfPageCount(a.buffer) + pdfPageCount(b.buffer);
       expect(want === 5, `the fixtures have ${want} pages, not 2 + 3`);
+      // Merge is clicked right after adding, before pdf-lib (which loads on demand) or the thumbnails have loaded:
+      // the click waits for the same load, and pdf-lib is requested once.
+      const before = await page.evaluate(() => typeof window.PDFLib);
       await page.setInputFiles("#fileInput", [a, b]);
       await page.click("#mergeBtn");
       const link = page.locator(`#result a[download="a-${lang === "es" ? "unido" : "merged"}-orisod.pdf"]`);
-      await link.waitFor({ timeout: 30000 });
+      await settledMergeLink(page, link);
       const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
       const bytes = await readFile(await download.path());
       expect(bytes.subarray(0, 5).toString() === "%PDF-", "the download isn't a PDF");
@@ -2767,7 +2803,9 @@ const CASES = [
       const order = pdfText(bytes).trim().split("\n");
       const wantOrder = ["Fixture A page 1", "Fixture A page 2", "Fixture B page 1", "Fixture B page 2", "Fixture B page 3"];
       expect(order.join("|") === wantOrder.join("|"), `merged pages read ${JSON.stringify(order)}`);
-      return `2-page + 3-page PDF merged into ${pages} pages, in order (${bytes.length} bytes)`;
+      const counts = lazyCounts(ctl.requests);
+      expect(before === "undefined" && counts.pdflib === 1, `pdf-lib before adding: ${before}; requested ${counts.pdflib} times`);
+      return `Merge clicked right after adding: 2-page + 3-page PDF merged into ${pages} pages, in order (${bytes.length} bytes), pdf-lib requested once`;
     },
   },
   // Merge PDF loads PDF.js only when the first PDF is added (the lazy-loading pilot): nothing on page load, one
@@ -2782,10 +2820,11 @@ const CASES = [
     async run(page, lang, ctl) {
       const out = [];
       await page.waitForTimeout(1500);
-      const atLoad = { lib: await page.evaluate(() => typeof window.pdfjsLib), ...lazyCounts(ctl.requests) };
-      const expectNothingAtLoad = (s) => expect(s.lib === "undefined" && s.pdfjs === 0 && s.worker === 0, `on page load: ${JSON.stringify(s)}`);
+      const atLoad = { lib: await page.evaluate(() => typeof window.pdfjsLib), pdfLib: await page.evaluate(() => typeof window.PDFLib), ...lazyCounts(ctl.requests) };
+      const expectNothingAtLoad = (s) => expect(s.lib === "undefined" && s.pdfLib === "undefined" && s.pdfjs === 0 && s.worker === 0 && s.pdflib === 0,
+        `on page load: ${JSON.stringify(s)}`);
       expectNothingAtLoad(atLoad);
-      out.push("on page load no request for pdf.min.js or its worker and no pdfjsLib");
+      out.push("on page load no request for pdf.min.js, its worker or pdf-lib, and no pdfjsLib or PDFLib");
       await lazyWatchStatus(page);
       // Two quick adds (reduced motion, so each is read at once, while the first load is still running), then a third.
       await page.emulateMedia({ reducedMotion: "reduce" });
@@ -2796,15 +2835,21 @@ const CASES = [
       await page.setInputFiles("#fileInput", lazyPdf("c", 1));
       await lazyThumbs(page, 3);
       const three = lazyCounts(ctl.requests);
-      const expectOnce = (s, when) => expect(s.pdfjs === 1 && s.worker === 1, `${when}: pdf.min.js requested ${s.pdfjs} times, the worker ${s.worker} times`);
+      const expectOnce = (s, when) => expect(s.pdfjs === 1 && s.worker === 1 && s.pdflib === 1,
+        `${when}: pdf.min.js requested ${s.pdfjs} times, the worker ${s.worker} times, pdf-lib ${s.pdflib} times`);
       expectOnce(two, "after two quick adds");
       expectOnce(three, "after a third file");
+      await page.waitForFunction(() => window.PDFLib, null, { timeout: 30000 });
       const st = await lazyState(page);
       expect(st.said.includes(LAZY_TEXT[lang].loading), `the status never said "${LAZY_TEXT[lang].loading}" (it said ${JSON.stringify(st.said)})`);
       expect(st.progress === "" && st.error === "", `after loading the status says "${st.progress}" and the error line "${st.error}"`);
       expect(st.metas[0].startsWith(lang === "es" ? "2 páginas · " : "2 pages · "), `file rows: ${st.metas.join(" | ")}`);
-      out.push(`two quick adds and a third: pdf.min.js and the worker requested once each, 3 thumbnails, "${LAZY_TEXT[lang].loading}" shown while loading`);
+      out.push(`two quick adds and a third: pdf.min.js, the worker and pdf-lib requested once each, 3 thumbnails, "${LAZY_TEXT[lang].loading}" shown while loading`);
       out.push(await lazyMerge(page, lang, "a", ["a 1", "a 2", "b 1", "b 2", "b 3", "c 1"]));
+      expectOnce(lazyCounts(ctl.requests), "after merging");
+      const live = await lazyState(page);
+      expectLiveStatus(live, lang);
+      out.push(`the status line is role="status" and said "${LAZY_TEXT[lang].loading}" once for three files; each "Processing" line was aria-busy and "Done" was not`);
       // A password-protected PDF (made by jsPDF in the page) keeps its file icon and shows only its size, as before
       // the lazy load, with no new request; merging it reports the merge error.
       await page.addScriptTag({ url: SITE + JSPDF });
@@ -2829,6 +2874,12 @@ const CASES = [
         mustFail("a thumbnail for the locked file", () => expectLocked({ ...pw, imgs: 4, icons: 0 })),
         mustFail("pdf.min.js requested on load", () => expectNothingAtLoad({ ...atLoad, pdfjs: 1 })),
         mustFail("a second worker request", () => expectOnce({ ...three, worker: 2 }, "test")),
+        mustFail("pdf-lib requested on load", () => expectNothingAtLoad({ ...atLoad, pdflib: 1 })),
+        mustFail("a second pdf-lib request", () => expectOnce({ ...three, pdflib: 2 }, "test")),
+        mustFail("the loading status written twice", () => expectLiveStatus({ ...live, said: [...live.said, "", LAZY_TEXT[lang].loading] }, lang)),
+        mustFail("no role on the status line", () => expectLiveStatus({ ...live, role: null }, lang)),
+        mustFail("an assertive status line", () => expectLiveStatus({ ...live, live: "assertive" }, lang)),
+        mustFail("a Processing line announced", () => expectLiveStatus({ ...live, busy: live.busy.map(([x, b]) => [x, x.startsWith("Pro") ? null : b]) }, lang)),
       ].join("; ");
     },
   },
@@ -2842,13 +2893,15 @@ const CASES = [
       await lazyExpectFailed(page, lang);
       const merged = await lazyMerge(page, lang, "a", ["a 1", "a 2", "b 1"]);
       const failed = lazyCounts(ctl.requests);
+      expect(failed.pdflib === 1, `pdf-lib requested ${failed.pdflib} times while PDF.js failed`);
       ctl.repair();
       await page.setInputFiles("#fileInput", lazyPdf("c", 1));
       await lazyThumbs(page, 3);
       const st = await lazyState(page);
       expect(st.error === "", `after the retry the error line still says "${st.error}"`);
       const now = lazyCounts(ctl.requests);
-      return `${file.split("/").pop()} answered 404: the alert shows, the rows keep their file icon, and ${merged}; ` +
+      expect(now.pdflib === 1, `pdf-lib requested ${now.pdflib} times after the retry`);
+      return `${file.split("/").pop()} answered 404: the alert shows, the rows keep their file icon, and ${merged} (pdf-lib requested once); ` +
         `the next file added loads PDF.js and draws all 3 thumbnails (pdf.min.js requested ${failed.pdfjs} then ${now.pdfjs} times, the worker ${failed.worker} then ${now.worker})`;
     },
   })),
@@ -2874,6 +2927,78 @@ const CASES = [
       const now = lazyCounts(ctl.requests);
       return `pdf.min.js never answered: "${LAZY_TEXT[lang].loading}" shown, ${merged} meanwhile, and after ${LAZY_TIMEOUT_MS / 1000} s the alert; ` +
         `the next file added draws all 3 thumbnails (pdf.min.js requested ${now.pdfjs} times, the worker ${now.worker})`;
+    },
+  },
+  // Merge PDF loads pdf-lib with PDF.js when the first PDF is added, and Merge waits for that load. If pdf-lib fails
+  // or never answers, Merge shows its alert, the files and their thumbnails stay, and the next Merge click (or file
+  // added) loads it and merges.
+  {
+    name: "Lazy pdf-lib (Merge PDF, 404)",
+    page: "/merge-pdf/",
+    vendor: [PDFLIB, PDFJS, PDFJS_WORKER],
+    worker: PDFJS_WORKER,
+    broken: () => ({ path: PDFLIB, mode: "404" }),
+    async run(page, lang, ctl) {
+      await page.setInputFiles("#fileInput", [lazyPdf("a", 2), lazyPdf("b", 1)]);
+      await lazyThumbs(page, 2);
+      const failMerge = async (when) => {
+        await page.click("#mergeBtn");
+        await page.waitForFunction((t) => document.getElementById("errorMsg").textContent === t, LAZY_TEXT[lang].libFail, { timeout: 30000 });
+        await page.waitForFunction((t) => document.getElementById("mergeBtn").textContent === t, LAZY_TEXT[lang].merge, { timeout: 10000 });
+        const s = await lazyState(page);
+        expectLibFailed(s, when);
+        return s;
+      };
+      const expectLibFailed = (s, when) => expect(s.errorRole === "alert" && s.rows === 2 && s.imgs === 2 && s.results === 0 && s.merge &&
+        s.button === LAZY_TEXT[lang].merge && s.lib === "undefined", `${when}: ${JSON.stringify(s)}`);
+      const first = await failMerge("after the first Merge click");
+      const once = lazyCounts(ctl.requests);
+      await failMerge("after a second Merge click");
+      const twice = lazyCounts(ctl.requests);
+      expect(twice.pdflib === once.pdflib + 1, `the second click requested pdf-lib ${twice.pdflib - once.pdflib} times`);
+      ctl.repair();
+      const merged = await lazyMerge(page, lang, "a", ["a 1", "a 2", "b 1"]);
+      const st = await lazyState(page);
+      expect(st.error === "" && st.lib === "object", `after the retry: ${JSON.stringify(st)}`);
+      const now = lazyCounts(ctl.requests);
+      expect(now.pdfjs === 1 && now.worker === 1, `PDF.js requested ${now.pdfjs} times, its worker ${now.worker}`);
+      return `pdf-lib answered 404: the first and a second Merge click show "${LAZY_TEXT[lang].libFail}" (role="alert"), the 2 files and their thumbnails stay, ` +
+        `the button is back; the next click loads it and ${merged} (pdf-lib requested ${once.pdflib}, ${twice.pdflib}, then ${now.pdflib} times; PDF.js once); ` +
+        [mustFail("a file dropped", () => expectLibFailed({ ...first, rows: 1 }, "test")),
+          mustFail("the thumbnails lost", () => expectLibFailed({ ...first, imgs: 0 }, "test")),
+          mustFail("no alert role", () => expectLibFailed({ ...first, errorRole: null }, "test"))].join("; ");
+    },
+  },
+  {
+    name: "Lazy pdf-lib (Merge PDF, stalls)",
+    page: "/merge-pdf/",
+    vendor: [PDFLIB, PDFJS, PDFJS_WORKER],
+    worker: PDFJS_WORKER,
+    broken: () => ({ path: PDFLIB, mode: "stall" }),
+    async run(page, lang, ctl) {
+      await page.setInputFiles("#fileInput", [lazyPdf("a", 2), lazyPdf("b", 1)]);
+      // Merge right away: it waits for the stalled pdf-lib, with the button busy, while the thumbnails are drawn.
+      await page.click("#mergeBtn");
+      await ctl.held;
+      await lazyThumbs(page, 2);
+      const waiting = await lazyState(page);
+      expect(!waiting.merge && waiting.button === LAZY_TEXT[lang].merging && waiting.error === "" && waiting.results === 0,
+        `while pdf-lib loads: ${JSON.stringify(waiting)}`);
+      await page.clock.runFor(LAZY_TIMEOUT_MS + 1000);
+      await page.waitForFunction((t) => document.getElementById("errorMsg").textContent === t, LAZY_TEXT[lang].libFail, { timeout: 30000 });
+      const failed = await lazyState(page);
+      expect(failed.errorRole === "alert" && failed.rows === 2 && failed.imgs === 2 && failed.merge && failed.button === LAZY_TEXT[lang].merge,
+        `after ${LAZY_TIMEOUT_MS / 1000} s: ${JSON.stringify(failed)}`);
+      // The next file added loads pdf-lib again (the stalled request is answered late, too), and Merge works.
+      ctl.repair();
+      await page.setInputFiles("#fileInput", lazyPdf("c", 1));
+      await page.waitForFunction(() => window.PDFLib, null, { timeout: 30000 });
+      await lazyThumbs(page, 3);
+      const merged = await lazyMerge(page, lang, "a", ["a 1", "a 2", "b 1", "c 1"]);
+      const now = lazyCounts(ctl.requests);
+      expect((await lazyState(page)).error === "", "the error line wasn't cleared");
+      return `pdf-lib never answered: Merge clicked right after adding waited ("${LAZY_TEXT[lang].merging}", disabled) while 2 thumbnails were drawn, ` +
+        `and after ${LAZY_TIMEOUT_MS / 1000} s showed the alert with the files kept; after the next file added, ${merged} (pdf-lib requested ${now.pdflib} times)`;
     },
   },
   {
@@ -6034,7 +6159,7 @@ const CASES = [
       expect(order.join() === "c.pdf,b.pdf,a.pdf", `after the arrows and a drag the list reads ${order.join(", ")}`);
       await page.click("#mergeBtn");
       const link = page.locator(`#result a[download="c-${lang === "es" ? "unido" : "merged"}-orisod.pdf"]`);
-      await link.waitFor({ timeout: 30000 });
+      await settledMergeLink(page, link);
       const [download] = await Promise.all([page.waitForEvent("download", { timeout: 30000 }), link.click()]);
       const merged = pdfText(await readFile(await download.path())).trim().split("\n");
       const want = ["Fixture C page 1", "Fixture B page 1", "Fixture B page 2", "Fixture B page 3", "Fixture A page 1", "Fixture A page 2"];
