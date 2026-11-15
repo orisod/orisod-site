@@ -917,6 +917,8 @@ applyRangeBtn.addEventListener('click', () => {
   const raw = rangeInput.value.trim();
   errorMsg.textContent = '';
   if (!raw) return;
+  // The last converted page: no checkbox exists past it, so ranges stop there and a huge one can't freeze the tab.
+  const lastPage = convertedImages.reduce((max, img) => Math.max(max, img.page), 0);
 
   const pagesToSelect = new Set();
   const parts = raw.split(',');
@@ -932,7 +934,7 @@ applyRangeBtn.addEventListener('click', () => {
         errorMsg.textContent = `Invalid range: "${trimmed}"`;
         continue;
       }
-      for (let p = start; p <= end; p++) pagesToSelect.add(p);
+      for (let p = start; p <= Math.min(end, lastPage); p++) pagesToSelect.add(p);
     } else {
       const num = parseInt(trimmed, 10);
       if (isNaN(num) || num < 1) {

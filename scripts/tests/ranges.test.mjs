@@ -326,7 +326,7 @@ function oldParsers(prefix) {
   const jpgHtml = read("pdf-to-jpg");
   const a = jpgHtml.indexOf("  const pagesToSelect = new Set();"), b = jpgHtml.indexOf("  convertedImages.forEach(img => {", a);
   assert.ok(a > 0 && b > a, "PDF to JPG's range code not found");
-  const jpgBody = new Function("raw", "errorMsg", jpgHtml.slice(a, b) + "\nreturn pagesToSelect;");
+  const jpgBody = new Function("raw", "errorMsg", "lastPage", jpgHtml.slice(a, b) + "\nreturn pagesToSelect;");
   return {
     // Each returns { accepted, pages } as the page would use them.
     delete(raw, total) {
@@ -345,7 +345,7 @@ function oldParsers(prefix) {
       raw = raw.trim();
       if (!raw) return { accepted: true, pages: [] };
       const errorMsg = { textContent: "" };
-      const set = jpgBody(raw, errorMsg);
+      const set = jpgBody(raw, errorMsg, total);
       return { accepted: !errorMsg.textContent, pages: Array.from(set).filter((p) => p <= total).sort((x, y) => x - y) };
     },
   };
