@@ -1013,7 +1013,26 @@ function expectFaq(f) {
 function expectIndicator(closed, open) {
   expect(closed && open && closed !== open, `the open/closed indicator doesn't change (${closed} / ${open})`);
 }
-const waOverflow = (page) => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+// The page frame (.o-frame-top) animates its height for 320 ms when its content grows or shrinks by 24 px or more, and
+// while it does (class o-resizing) it has overflow hidden, which also clips anything inside it that is too wide. A
+// sideways-scroll reading taken then shows no overflow even when there is some. So wait until the frame has settled:
+// no o-resizing and the same height before and after 100 ms and an animation frame, read in the same tick as the
+// overflow. A page without the frame just waits that long. Fails after 10 s.
+async function frameSettled(page, read = () => null) {
+  const end = Date.now() + 10000;
+  for (;;) {
+    const r = await page.evaluate((fn) => new Promise((done) => {
+      const f = document.querySelector(".o-frame-top"), h = f ? f.getBoundingClientRect().height : 0;
+      setTimeout(() => requestAnimationFrame(() => {
+        if (f && (f.classList.contains("o-resizing") || f.getBoundingClientRect().height !== h)) return done(null);
+        done({ value: (0, eval)("(" + fn + ")")() });
+      }), 100);
+    }), read.toString());
+    if (r) return r.value;
+    if (Date.now() > end) throw new Error("the page frame was still resizing after 10 s");
+  }
+}
+const waOverflow = (page) => frameSettled(page, () => document.documentElement.scrollWidth - document.documentElement.clientWidth);
 function expectNoOverflow(px, when) {
   expect(px <= 0, `the page scrolls sideways by ${px}px at 320 CSS px (${when})`);
 }
@@ -4292,6 +4311,7 @@ const CASES = [
         await page.click("#qrBtn");
         await page.locator("#qrDownload").waitFor({ state: "visible", timeout: 10000 });
         await page.waitForTimeout(500);
+        await frameSettled(page);
         layouts.push(await page.evaluate(([w, th]) => {
           const box = (el) => el.getBoundingClientRect();
           const tool = box(document.querySelector(".o-frame-top")), img = box(document.querySelector("#qrPreview img")), btn = document.getElementById("qrDownload");
@@ -4894,6 +4914,16 @@ const CASES = [
       const moved = await page.evaluate(WA_STRUCTURE);
       await page.evaluate(() => { const d = document.createElement("div"); d.style.width = "400px"; d.style.height = "1px"; document.querySelector(".tool").append(d); });
       const wide = await waOverflow(page);
+      // Why waOverflow waits for the frame: held mid-resize (o-resizing, overflow hidden), the same probe reads as no overflow.
+      const clipped = await page.evaluate(() => {
+        const f = document.querySelector(".o-frame-top"), read = () => document.documentElement.scrollWidth - document.documentElement.clientWidth;
+        f.classList.add("o-resizing");
+        const px = read();
+        f.classList.remove("o-resizing");
+        return { px, after: read() };
+      });
+      expect(wide > 0 && clipped.px <= 0 && clipped.after === wide,
+        `the 400px element reads ${wide}px settled, ${clipped.px}px with the frame mid-resize and ${clipped.after}px after: the settle wait is no longer what makes this check work`);
       // Without JavaScript the block is still there, closed, and opens with a click.
       const noJs = await page.context().browser().newContext({ javaScriptEnabled: false });
       await noJs.route("**/*", async (route) => {
@@ -4909,7 +4939,8 @@ const CASES = [
       expect(!wasOpen && nowOpen.open && nowOpen.faq === 4, `without JavaScript the block was open ${wasOpen}, opened ${nowOpen.open}, ${nowOpen.faq} FAQ items`);
       return `footer last; How it works with 3 steps and the guide link under them, 4 Related tools tiles, one block with its summary first; ` +
         `the field notes in the block's 6 sections, the QR note only once there's a link; closed on load with its text in the page; "${closed.label}" ${Math.round(closed.height)}px; ` +
-        `Enter opens, Space closes, the arrow turns, focus ring shown; FAQ equals the FAQPage JSON-LD; no sideways scroll at 320 px (${widths.map((w) => w[0]).join(", ")}); works without JavaScript; ` +
+        `Enter opens, Space closes, the arrow turns, focus ring shown; FAQ equals the FAQPage JSON-LD; no sideways scroll at 320 px (${widths.map((w) => w[0]).join(", ")}), ` +
+        `each read once the frame has settled (a 400px element reads ${wide}px then, ${clipped.px}px mid-resize); works without JavaScript; ` +
         [mustFail("the block moved after the footer", () => expectStructure(moved)),
           mustFail("a fourth step", () => expectStructure({ ...structure, steps: 4 })),
           mustFail("the guide link inside the block", () => expectStructure({ ...structure, guideInDetails: true })),
@@ -4995,12 +5026,20 @@ const CASES = [
       expectNoSecret([...copied.items.map((i) => i.href), copied.text], "Share this tool");
       await page.evaluate(() => Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText: async () => { throw new DOMException("denied", "NotAllowedError"); } } }));
       await page.click("#shareCopy");
+      const copyClickedAt = Date.now();
       await page.waitForFunction((x) => document.getElementById("shareToolStatus").textContent === x, t.copyFail);
       await page.waitForTimeout(200);
       const failed = await waShareState(page);
       expectCopy(failed, t.copyFail, 2);
       const atCopy = waOutside(ctl.requests);
       for (const [when, urls] of [["at load", atLoad], ["on opening the list", atOpen], ["on copying", atCopy]]) expectOutsideRequests(urls, when);
+      // Each Copy attempt closes the list WA_COPY_CLOSE (1.2 s) later, on a timer nothing cancels. Let both closes
+      // happen now, then open the list again with a click (pinned), so neither lands in the middle of a later step
+      // (the 320px tooltips used to finish only a few ms before the second one).
+      await page.waitForTimeout(Math.max(0, copyClickedAt + WA_COPY_CLOSE + 300 - Date.now()));
+      expect(!(await waShareState(page)).open, "the list is still open 1.5 s after Copy");
+      await page.click("#shareMenu > summary");
+      expect((await waShareState(page)).open, "a click on the summary didn't open the list again");
       await page.mouse.move(0, 0);
       // The lit state: 320 ms (the page frame's motion token) normally, none under reduced motion.
       const telegram = '#shareList a[data-share="telegram"]';
@@ -5613,6 +5652,7 @@ const CASES = [
         await page.setViewportSize({ width, height: 800 });
         await page.click("#emojiBtn");
         await page.click("#emojiTab-work");
+        await frameSettled(page);
         const l = await page.evaluate(() => {
           const p = document.getElementById("emojiPicker"), t = document.getElementById("messageInput"), r = p.getBoundingClientRect();
           const rects = [...p.querySelectorAll(".emoji-panel:not([hidden]) .emoji-btn, .emoji-tab, #emojiClose")].map((b) => b.getBoundingClientRect());
