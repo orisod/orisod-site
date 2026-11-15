@@ -505,6 +505,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
             <input type="text" id="citySearchInput" placeholder="e.g. Jerusalem, New York, Buenos Aires" autocomplete="off">
             <div class="city-suggestions" id="citySuggestions"></div>
           </div>
+          <div class="error" id="cityLoadError" style="display:none;" role="alert">⚠️ The city list could not load. Reload the page to try again, or use your location or latitude and longitude instead.</div>
         </div>
         <div class="field-row" id="locGpsField" style="display:none;">
           <button type="button" class="secondary" id="gpsRequestBtn" style="width:100%;">📍 Use my current location</button>
@@ -813,7 +814,7 @@ var dr2 = fetch('/assets/data/calendar/jewish-full.json').then(function(r){ if(!
 var dr2b = fetch('/assets/data/calendar/jewish-full-il.json').then(function(r){ if(!r.ok) throw new Error('bad'); return r.json(); }).then(function(d){ jewishFullIL = d; }).catch(function(){ jewishFullIL = {}; showDataLoadError(); });
 var dr3 = fetch('/assets/data/calendar/parasha.json').then(function(r){ if(!r.ok) throw new Error('bad'); return r.json(); }).then(function(d){ parashaData = d; }).catch(function(){ parashaData = {}; showDataLoadError(); });
 var dr3b = fetch('/assets/data/calendar/parasha-il.json').then(function(r){ if(!r.ok) throw new Error('bad'); return r.json(); }).then(function(d){ parashaDataIL = d; }).catch(function(){ parashaDataIL = {}; showDataLoadError(); });
-var dr4 = fetch('/assets/data/calendar/cities.json').then(function(r){ if(!r.ok) throw new Error('bad'); return r.json(); }).then(function(d){ cities = d; }).catch(function(){ cities = []; });
+var dr4 = fetch('/assets/data/calendar/cities.json').then(function(r){ if(!r.ok) throw new Error('bad'); return r.json(); }).then(function(d){ cities = d; }).catch(function(){ cities = []; document.getElementById('cityLoadError').style.display = 'block'; }).then(rerunCitySearch);
 var dr5 = fetch('/assets/data/calendar/yomtov-diaspora.json').then(function(r){ if(!r.ok) throw new Error('bad'); return r.json(); }).then(function(d){ yomtovDiaspora = d; }).catch(function(){ yomtovDiaspora = {}; showDataLoadError(); });
 var dr5b = fetch('/assets/data/calendar/yomtov-israel.json').then(function(r){ if(!r.ok) throw new Error('bad'); return r.json(); }).then(function(d){ yomtovIsrael = d; }).catch(function(){ yomtovIsrael = {}; showDataLoadError(); });
 var ALL_DATA_READY = Promise.all([dr1, dr2, dr2b, dr3, dr3b, dr4, dr5, dr5b]);
@@ -1037,7 +1038,7 @@ schemeIsraelBtn.addEventListener('click', function(){ setHolidayScheme('israel')
 // city search
 function stripDiacritics(s){ return s.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
 var citySuggestIndex = -1, citySuggestList = [];
-citySearchInput.addEventListener('input', function(){
+function updateCitySuggestions(){
   var q = stripDiacritics(citySearchInput.value.trim().toLowerCase());
   citySuggestIndex = -1;
   if (!cities || q.length < 2) { citySuggestions.classList.remove('open'); citySuggestions.innerHTML=''; return; }
@@ -1050,7 +1051,12 @@ citySearchInput.addEventListener('input', function(){
   }
   citySuggestList = starts.concat(contains).slice(0, 8);
   renderCitySuggestions();
-});
+}
+citySearchInput.addEventListener('input', updateCitySuggestions);
+// A city typed before cities.json arrived: search it once the list is in.
+function rerunCitySearch(){
+  if (cities.length && document.activeElement === citySearchInput) updateCitySuggestions();
+}
 function renderCitySuggestions(){
   citySuggestions.innerHTML = '';
   if (!citySuggestList.length) { citySuggestions.classList.remove('open'); return; }

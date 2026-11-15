@@ -26,7 +26,8 @@
  * core builds, of which the browser picks one); the result names the one it got.
  * A case can also break one vendor file with broken(lang): { path, mode }, where mode
  * "404" answers it with a 404 and "stall" never answers it (with the page's clock
- * under the test's control, so a timeout can be run forward). Its run() gets a third
+ * under the test's control, so a timeout can be run forward); "hold" never answers it
+ * either, with the page's real clock (the Hebrew calendar's city list). Its run() gets a third
  * argument with repair(), which serves the file normally from then on (and answers a
  * stalled request late), and held, which resolves once a stalled request arrives.
  *
@@ -258,6 +259,33 @@ function tamper(bytes, from, to) {
 
 // A negative check: fn runs a real check on a broken result and must throw. Returns a
 // line for the case's report; fails the case if the check let the broken result pass.
+// The Hebrew calendar's city list, and what its city search shows: the field, the list,
+// focus, the location line and every visible, non-empty error line (role="alert").
+const CITIES_FILE = "/assets/data/calendar/cities.json";
+function citySearchState(page) {
+  return page.evaluate(() => {
+    const list = document.getElementById("citySuggestions");
+    const alerts = [...document.querySelectorAll('[role="alert"]')]
+      .filter((e) => e.offsetParent !== null && e.textContent.trim())
+      .map((e) => e.textContent.trim());
+    return {
+      value: document.getElementById("citySearchInput").value,
+      open: list.classList.contains("open"),
+      rows: [...list.querySelectorAll(".city-suggestion")].map((r) => r.textContent.trim()),
+      focus: document.activeElement && document.activeElement.id,
+      status: document.getElementById("locationStatus").textContent.trim(),
+      errorRole: document.getElementById("cityLoadError")?.getAttribute("role") ?? null,
+      alerts,
+    };
+  });
+}
+// Waits for a promise the test controls, failing the case (rather than hanging) if it never settles.
+function withinCase(promise, message, ms = 15000) {
+  let timer;
+  return Promise.race([promise, new Promise((_, reject) => { timer = setTimeout(() => reject(new Error(message)), ms); })])
+    .finally(() => clearTimeout(timer));
+}
+
 function mustFail(label, fn) {
   try {
     fn();
@@ -2359,6 +2387,71 @@ const CASES = [
       const times = text.match(new RegExp(`${word} \\d{1,2}:\\d{2}`, "g")) || [];
       expect(times.length >= 40, `the PDF has ${times.length} "${word} <time>" lines`);
       return `${chosen}: ${download.suggestedFilename()}, ${bytes.length} bytes, ${times.length} candle-lighting times (e.g. "${times[0]}")`;
+    },
+  },
+  {
+    // A city typed before cities.json arrives. The request is held (never by a timer) until the
+    // city is typed and the empty list is read, then released: the list must open by itself, with
+    // no further keystroke, and keep working by keyboard. ES types the exonym "Jerusalén".
+    name: "Hebrew calendar: city typed before the city list loads",
+    page: "/hebrew-calendar-generator/",
+    vendor: [],
+    noJspdf: true,
+    broken: () => ({ path: CITIES_FILE, mode: "hold" }),
+    async run(page, lang, ctl) {
+      await withinCase(ctl.held, `${CITIES_FILE} was never requested`);
+      const typed = lang === "es" ? "Jerusalén" : "Jerus";
+      await page.click("#citySearchInput");
+      await page.keyboard.type(typed);
+      const before = await citySearchState(page);
+      expect(before.value === typed, `the field reads ${JSON.stringify(before.value)}, not ${JSON.stringify(typed)}`);
+      expect(!before.open && before.rows.length === 0, `the list was already open before ${CITIES_FILE} arrived: ${JSON.stringify(before)}`);
+      ctl.repair();
+      await page.waitForFunction(() => document.querySelector("#citySuggestions.open .city-suggestion"), null, { timeout: 15000 })
+        .catch(async () => { throw new Error(`${CITIES_FILE} arrived but no list opened for "${typed}": ${JSON.stringify(await citySearchState(page))}`); });
+      const after = await citySearchState(page);
+      const expectListed = (s) => {
+        expect(s.value === typed && s.focus === "citySearchInput", `the field changed: ${JSON.stringify(s)}`);
+        expect(s.open && s.rows[0] === "Jerusalem Israel", `after ${CITIES_FILE} arrived the list shows ${JSON.stringify(s.rows)} (open: ${s.open})`);
+        expect(!s.alerts.length, `an error line is showing: ${JSON.stringify(s.alerts)}`);
+      };
+      expectListed(after);
+      await page.keyboard.press("ArrowDown");
+      await page.keyboard.press("Enter");
+      const chosen = await citySearchState(page);
+      expect(chosen.value === "Jerusalem, Israel" && !chosen.open, `ArrowDown and Enter gave ${JSON.stringify(chosen)}`);
+      expect(chosen.status.includes("Jerusalem, Israel") && chosen.status.includes("Asia/Jerusalem"), `the location reads "${chosen.status}"`);
+      return `typed "${typed}" while ${CITIES_FILE} was held: no list; released: the list opened by itself (${after.rows.slice(0, 3).join(", ")}); ArrowDown + Enter chose ${chosen.value}; ` +
+        [mustFail("the old code: no list after the file arrived", () => expectListed({ ...after, open: before.open, rows: before.rows })),
+          mustFail("the city list error shown", () => expectListed({ ...after, alerts: ["x"] }))].join("; ");
+    },
+  },
+  {
+    // cities.json answers 404: the page must say so (role="alert") instead of staying silent,
+    // and the calendar data's own error line must stay hidden.
+    name: "Hebrew calendar: city list fails to load",
+    page: "/hebrew-calendar-generator/",
+    vendor: [],
+    noJspdf: true,
+    broken: () => ({ path: CITIES_FILE, mode: "404" }),
+    async run(page, lang) {
+      const want = lang === "es"
+        ? "⚠️ No se pudo cargar la lista de ciudades. Recarga la página para intentarlo de nuevo, o usa tu ubicación o la latitud y la longitud."
+        : "⚠️ The city list could not load. Reload the page to try again, or use your location or latitude and longitude instead.";
+      await page.click("#citySearchInput");
+      await page.keyboard.type("Jerus");
+      await page.locator("#cityLoadError").waitFor({ state: "visible", timeout: 15000 })
+        .catch(async () => { throw new Error(`${CITIES_FILE} answered 404 but no city list error showed: ${JSON.stringify(await citySearchState(page))}`); });
+      const s = await citySearchState(page);
+      const expectError = (got) => {
+        expect(got.alerts.length === 1 && got.alerts[0] === want, `the error lines showing are ${JSON.stringify(got.alerts)}`);
+        expect(got.errorRole === "alert", `#cityLoadError has role ${JSON.stringify(got.errorRole)}`);
+        expect(!got.open && !got.rows.length, `a list opened: ${JSON.stringify(got.rows)}`);
+      };
+      expectError(s);
+      return `the city list error is shown with role="alert", no list, the calendar data error hidden; ` +
+        [mustFail("silent failure (no error line)", () => expectError({ ...s, alerts: [] })),
+          mustFail("the calendar data error instead", () => expectError({ ...s, alerts: ["⚠️ Calendar data failed to load"] }))].join("; ");
     },
   },
   {
