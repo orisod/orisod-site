@@ -20,7 +20,8 @@ after the content, so no CDN library may sit in any page's <head>.
 A page that calls getDocument() loads the vendored PDF.js
 (/assets/vendor/pdfjs/<version>/pdf.min.js) either with a <script src> tag or on
 demand (Merge PDF, since 2026-11-13: a <script> its inline script creates when the
-first PDF is added, pointed at that path written as a string), never both and never
+first PDF is added, pointed at that path written as a string, since 2026-11-15 the
+"src" of its ORISOD_LIBS entry for the Orisod loader block), never both and never
 neither. check_vendor.py checks that an on-demand load is a vendored file in the
 manifest, and that the page sets workerSrc to the worker next to it.
 

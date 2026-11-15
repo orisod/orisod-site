@@ -42,6 +42,14 @@ Rules, for every page (every .html outside the folders below, including 404.html
   manifest (so its sha256 is checked like a tag's). Anything else fails: a CDN or any
   other path, a template literal or a built-up string, setAttribute("src"), code
   written into the element, or a created script element the check can't follow.
+  The one other way is the Orisod loader block (Merge PDF since 2026-11-15, copied
+  from assets/js/orisod-loader.js by sync_loader.py): the block must equal that source,
+  which may create one <script> and set only script.src = lib.src, and the page declares
+  what it may load once, as const ORISOD_LIBS = {...}; in plain JSON (no variables,
+  template literals or concatenation) that nothing but the block reads. Every src and
+  pdfjsWorker there must be a library .js file in the manifest, a pdfjsWorker only on
+  the vendored PDF.js, and every orisodLoad() call must name a declared library as a
+  string. The declared files count as the page's on-demand loads and PDF.js workers.
   Lazily loaded scripts count as the page's loads for the rules below (PDF.js's
   workerSrc, the same libraries on the EN and ES pages), and a page loads each
   vendored script once: never with a tag and on demand, or twice either way
@@ -422,6 +430,111 @@ def check_lazy_scripts(rel, body, vendor_files, problems):
     return found
 
 
+LOADER_SOURCE = "assets/js/orisod-loader.js"
+LOADER_START = "// Orisod loader: start"
+LOADER_END = "// Orisod loader: end"
+LIBS_DECL = re.compile(r"\bconst ORISOD_LIBS = ")
+LIBS_NAME = re.compile(r"(?<![\w$.])ORISOD_LIBS\b")
+LIB_FIELDS = {"src": str, "global": str, "timeoutMs": int, "blocks": bool, "pdfjsWorker": str}
+LIB_REQUIRED = ("src", "global", "timeoutMs", "blocks")
+LOAD_CALL = re.compile(r"(?<![\w$.])orisodLoad(?:ed)?\s*\(\s*([^)]*?)\s*\)")
+COMMENT_LINE = re.compile(r"^[ \t]*//.*$", re.M)
+
+
+def no_comments(js):
+    """The script with its whole-line // comments blanked (the loader's documentation names example paths)."""
+    return COMMENT_LINE.sub("", js)
+
+
+def check_loader_source(rel, js, problems):
+    """The loader source creates exactly one <script> and points it only at the page's declared lib.src."""
+    code = no_comments(js)
+    created = CREATE_SCRIPT_VAR.findall(code)
+    srcs = re.findall(r"\b([A-Za-z_$][\w$]*)\s*\.\s*src\s*=\s*([^;\n]+)", code)
+    if created != ["script"] or len(CREATE_SCRIPT.findall(code)) != 1 or [(v, s.strip()) for v, s in srcs] != [("script", "lib.src")] or \
+            re.search(r"""\.\s*setAttribute\s*\(\s*["'`]src|\.\s*(?:text|textContent|innerText|innerHTML)\s*=""", code):
+        problems.append(f"{rel}: the loader must create one <script> (script = document.createElement(\"script\")) and set only "
+                        f"script.src = lib.src, the path a page declares in ORISOD_LIBS")
+    return code
+
+
+def check_loader_block(rel, body, source, vendor_files, problems):
+    """A page's Orisod loader block and its ORISOD_LIBS declaration.
+
+    Returns (body, srcs, workers): the script with the block blanked (it equals the source, checked once by
+    check_loader_source), the library scripts the block can load and the PDF.js workers it can start."""
+    has_block = LOADER_START in body or LOADER_END in body
+    uses = bool(LIBS_NAME.search(body) or LOAD_CALL.search(body))
+    if not has_block and not uses:
+        return body, [], []
+    srcs, workers = [], []
+    s, e = body.find(LOADER_START), body.find(LOADER_END)
+    if s < 0 or e < s or body.count(LOADER_START) != 1 or body.count(LOADER_END) != 1:
+        problems.append(f"{rel}: uses orisodLoad() or ORISOD_LIBS without exactly one Orisod loader block "
+                        f"({LOADER_START} ... {LOADER_END}); add it with scripts/sync_loader.py --write --add")
+        return body, srcs, workers
+    inner_start = body.find("\n", s) + 1
+    inner = body[inner_start:body.rfind("\n", 0, e) + 1].replace("\r\n", "\n")
+    if source is None:
+        problems.append(f"{rel}: has an Orisod loader block but {LOADER_SOURCE} is missing")
+    elif inner != source:
+        problems.append(f"{rel}: its Orisod loader block differs from {LOADER_SOURCE}; edit the source and run "
+                        f"python scripts/sync_loader.py --write")
+    rest = body[:s] + body[e + len(LOADER_END):]
+    decls = list(LIBS_DECL.finditer(rest))
+    if len(decls) != 1 or re.search(r"\b(?:let|var)\s+ORISOD_LIBS\b", rest):
+        problems.append(f"{rel}: the Orisod loader needs exactly one const ORISOD_LIBS = {{...}}; declaration (found {len(decls)})")
+        return rest, srcs, workers
+    d = decls[0]
+
+    def no_duplicates(pairs):
+        keys = [k for k, _ in pairs]
+        if len(keys) != len(set(keys)):
+            raise ValueError(f"duplicate key {sorted(k for k in keys if keys.count(k) > 1)[0]!r}")
+        return dict(pairs)
+    try:
+        libs, end = json.JSONDecoder(object_pairs_hook=no_duplicates).raw_decode(rest, d.end())
+        if not re.match(r"\s*;", rest[end:]):
+            raise ValueError("it must end with ; right after the object")
+    except ValueError as err:
+        problems.append(f"{rel}: ORISOD_LIBS must be one plain JSON object of string paths, numbers and true/false "
+                        f"(no variables, template literals or concatenation) followed by ;: {err}")
+        return rest, srcs, workers
+    others = [m.start() for m in LIBS_NAME.finditer(rest) if m.start() != d.start() + len("const ")]
+    if others:
+        problems.append(f"{rel}: ORISOD_LIBS is used outside its declaration; only the Orisod loader block may read it")
+    if not isinstance(libs, dict) or not libs:
+        problems.append(f"{rel}: ORISOD_LIBS must be an object with at least one library")
+        return rest, srcs, workers
+    for name, lib in libs.items():
+        where = f"ORISOD_LIBS.{name}"
+        if not isinstance(lib, dict) or set(lib) - set(LIB_FIELDS) or any(k not in lib for k in LIB_REQUIRED) or \
+                any(not isinstance(v, LIB_FIELDS[k]) or (LIB_FIELDS[k] is int and isinstance(v, bool)) for k, v in lib.items()):
+            problems.append(f"{rel}: {where} must have src, global, timeoutMs and blocks (and, for PDF.js, pdfjsWorker), "
+                            f"as strings, a number and true/false, and nothing else")
+            continue
+        if not re.fullmatch(r"[A-Za-z_$][\w$]*", lib["global"]) or lib["timeoutMs"] <= 0:
+            problems.append(f"{rel}: {where} needs a global that's a plain name and a timeoutMs above 0")
+        for key in ("src", "pdfjsWorker"):
+            path = lib.get(key)
+            if path is None:
+                continue
+            if not path.startswith("/assets/vendor/") or not path.endswith(".js") or path not in vendor_files:
+                problems.append(f"{rel}: {where}.{key} is {path or '(empty)'}; the Orisod loader may only load library "
+                                f"scripts in {MANIFEST}")
+                continue
+            (srcs if key == "src" else workers).append(path)
+        if "pdfjsWorker" in lib and not PDFJS_SCRIPT.match(lib["src"]):
+            problems.append(f"{rel}: {where} has a pdfjsWorker but its src isn't the vendored PDF.js")
+    for m in LOAD_CALL.finditer(no_comments(rest)):
+        arg = m.group(1)
+        q = re.fullmatch(QUOTED, arg)
+        name = (q.group(1) if q.group(1) is not None else q.group(2)) if q else None
+        if name not in libs:
+            problems.append(f"{rel}: orisodLoad({arg}) must name a library declared in ORISOD_LIBS, as a string")
+    return rest, srcs, workers
+
+
 def check_flags(rel, body, vendor_files, problems):
     """A script picking circle-flags by code must name the folder and every code, each a flag in the manifest."""
     dirs, codes = FLAG_DIR.findall(body), FLAG_CODES.findall(body)
@@ -451,6 +564,10 @@ def main() -> int:
     problems = []
     vendor_scripts, vendor_kinds = check_manifest(root, problems)
     vendor_links = 0
+    loader_file = root / LOADER_SOURCE
+    loader_source = loader_file.read_bytes().decode("utf-8").replace("\r\n", "\n") if loader_file.is_file() else None
+    if loader_source is not None and not loader_source.endswith("\n"):
+        loader_source += "\n"
 
     cdn_uses = Counter()
     loads = {}  # page -> list of vendor/CDN script srcs, in order
@@ -484,6 +601,12 @@ def main() -> int:
                         problems.append(f"{rel}: <script src=\"{url}\"> loads a script from another host; self-host it in {VENDOR}")
             if "application/ld+json" in attrs.lower() or not body.strip():
                 continue
+            # The Orisod loader block (checked to equal its source) is blanked: what it can load is the page's
+            # ORISOD_LIBS, which count as the page's on-demand loads and PDF.js workers.
+            body, block_srcs, block_workers = check_loader_block(rel, body, loader_source, vendor_scripts, problems)
+            lazy_refs += len(block_srcs)
+            loads[rel] += block_srcs
+            worker_srcs[rel] += block_workers
             seen = set()
             for lm in LOADER.finditer(body):
                 url = lm.group(1)
@@ -558,10 +681,13 @@ def main() -> int:
         if rel.startswith(VENDOR + "/"):
             continue
         js = f.read_text(encoding="utf-8")
+        loader = rel == LOADER_SOURCE
+        if loader:
+            js = check_loader_source(rel, js, problems)
         for vm in VENDOR_PATH.finditer(js):
             vendor_paths += 1
             check_vendor_path(rel, vm.group(1), vendor_scripts, problems)
-        if CREATE_SCRIPT.search(js):
+        if CREATE_SCRIPT.search(js) and not loader:
             lazy_refs += len(check_lazy_scripts(rel, js, vendor_scripts, problems))
         for um in URL.finditer(js):
             url = um.group(0)

@@ -892,16 +892,30 @@ function orisodZipName(options) {
   return orisodFileName({ ...options, ext: "zip" });
 }
 // Orisod file name: end
-// PDF.js only draws the file list's thumbnails, so it loads when the first PDF is added, not with the page.
-// Every file added shares one load and one worker. If it fails (offline, blocked, or nothing after
-// PDFJS_TIMEOUT_MS), the error line says so, merging (pdf-lib, loaded on its own) still works without
-// thumbnails, and the next file added tries again.
-const PDFJS_SRC = "/assets/vendor/pdfjs/3.11.174/pdf.min.js";
-const PDFJS_TIMEOUT_MS = 60000;
-let pdfjsReady = null, pdfjsLoaded = false;
-function loadPdfjs() {
-  if (pdfjsReady) return pdfjsReady;
-  pdfjsReady = new Promise((resolve, reject) => {
+// Orisod loader: start. Generated from assets/js/orisod-loader.js by scripts/sync_loader.py; edit that file, not this block.
+// Loads a vendored library the first time the page needs it, not with the page. The page declares its
+// libraries in ORISOD_LIBS, written as plain JSON so scripts/check_vendor.py can read every path:
+//   "name": {"src": "/assets/vendor/...js", "global": "nameOnWindow", "timeoutMs": 60000, "blocks": true}
+// and, for PDF.js only, "pdfjsWorker": "/assets/vendor/pdfjs/<version>/pdf.worker.min.js".
+// orisodLoad(name) returns one promise shared by every caller until the library has loaded or failed:
+//   blocks: true   it rejects when the library can't load, so the action that needs it stops;
+//   blocks: false  it resolves null instead, so the page carries on without it.
+// The page reports a failure with its own words in its own status and error lines. A failure (an error,
+// or nothing after timeoutMs) is forgotten, so the next call tries again. orisodLoaded(name) is true once
+// the library has loaded.
+// With pdfjsWorker, the page starts the worker itself and, once the worker has sent its first message,
+// resolves new pdfjsLib.PDFWorker({ port }), which the page passes as the worker for every PDF it opens. Left to
+// itself, PDF.js 3.11 switches to its main-thread fallback for the rest of the page's life after one
+// worker fails to load, so a retry could never start a real worker again.
+const orisodLoads = {};
+function orisodLoaded(name) {
+  return Boolean(orisodLoads[name] && orisodLoads[name].loaded);
+}
+function orisodLoad(name) {
+  const lib = ORISOD_LIBS[name];
+  const state = orisodLoads[name] || (orisodLoads[name] = { ready: null, loaded: false });
+  if (state.ready) return state.ready;
+  const ready = new Promise((resolve, reject) => {
     let script = null, webWorker = null, done = false;
     const fail = (err) => {
       if (done) return;
@@ -911,64 +925,49 @@ function loadPdfjs() {
       if (webWorker) webWorker.terminate();
       reject(err);
     };
-    const timer = setTimeout(() => fail(new Error('PDF.js took too long to load')), PDFJS_TIMEOUT_MS);
-    // The worker is started here and handed to PDF.js as its port once it has said it's ready, so a worker that
-    // can't load is an error like the library's. Left to itself, PDF.js would switch to its main-thread fallback
-    // for the rest of the page's life after one failed worker, and a retry could never start a real one.
-    const start = () => {
-      if (done) return;
-      pdfjsLib.GlobalWorkerOptions.workerSrc = "/assets/vendor/pdfjs/3.11.174/pdf.worker.min.js";
-      webWorker = new Worker(pdfjsLib.GlobalWorkerOptions.workerSrc);
-      webWorker.addEventListener('error', () => fail(new Error('The PDF.js worker could not load')), { once: true });
-      webWorker.addEventListener('message', () => {
-        if (done) return;
-        done = true;
-        clearTimeout(timer);
-        pdfjsLoaded = true;
-        resolve(new pdfjsLib.PDFWorker({ port: webWorker }));
-      }, { once: true });
-    };
-    // A load that timed out may still have run PDF.js; then only the worker is started again.
-    if (window.pdfjsLib) return start();
-    script = document.createElement('script');
-    script.src = PDFJS_SRC;
-    script.onload = () => (window.pdfjsLib ? start() : fail(new Error('PDF.js did not start')));
-    script.onerror = () => fail(new Error('PDF.js could not load'));
-    document.body.appendChild(script);
-  });
-  pdfjsReady.catch(() => { pdfjsReady = null; });
-  return pdfjsReady;
-}
-// pdf-lib does the merging, so it loads with PDF.js when the first PDF is added, and the Merge button waits for
-// that same load. If it fails (offline, blocked, or nothing after PDFLIB_TIMEOUT_MS), Merge shows the error,
-// the files and their previews stay, and the next Merge click or file added tries again.
-const PDFLIB_SRC = "/assets/vendor/pdf-lib/1.17.1/pdf-lib.min.js";
-const PDFLIB_TIMEOUT_MS = 60000;
-let pdflibReady = null;
-function loadPdfLib() {
-  if (pdflibReady) return pdflibReady;
-  pdflibReady = new Promise((resolve, reject) => {
-    // A load that timed out may still have run pdf-lib; then it's used as is.
-    if (window.PDFLib) return resolve(window.PDFLib);
-    const script = document.createElement('script');
-    let done = false;
-    const finish = (err) => {
+    const succeed = (value) => {
       if (done) return;
       done = true;
       clearTimeout(timer);
-      if (!err) return resolve(window.PDFLib);
-      script.remove();
-      reject(err);
+      state.loaded = true;
+      resolve(value);
     };
-    const timer = setTimeout(() => finish(new Error('pdf-lib took too long to load')), PDFLIB_TIMEOUT_MS);
-    script.src = PDFLIB_SRC;
-    script.onload = () => finish(window.PDFLib ? null : new Error('pdf-lib did not start'));
-    script.onerror = () => finish(new Error('pdf-lib could not load'));
+    const timer = setTimeout(() => fail(new Error(name + ' took too long to load')), lib.timeoutMs);
+    const start = () => {
+      if (done) return;
+      const global = window[lib.global];
+      if (!lib.pdfjsWorker) return succeed(global);
+      global.GlobalWorkerOptions.workerSrc = lib.pdfjsWorker;
+      webWorker = new Worker(global.GlobalWorkerOptions.workerSrc);
+      webWorker.addEventListener('error', () => fail(new Error(name + ' worker could not load')), { once: true });
+      webWorker.addEventListener('message', () => succeed(new global.PDFWorker({ port: webWorker })), { once: true });
+    };
+    // A load that timed out may still have run the library; then it's used as is.
+    if (window[lib.global]) return start();
+    script = document.createElement('script');
+    script.src = lib.src;
+    script.onload = () => (window[lib.global] ? start() : fail(new Error(name + ' did not start')));
+    script.onerror = () => fail(new Error(name + ' could not load'));
     document.body.appendChild(script);
   });
-  pdflibReady.catch(() => { pdflibReady = null; });
-  return pdflibReady;
+  state.ready = ready.catch((err) => {
+    state.ready = null;
+    if (lib.blocks) throw err;
+    return null;
+  });
+  return state.ready;
 }
+// Orisod loader: end
+// PDF.js only draws the file list's thumbnails, and pdf-lib does the merging, so both load when the first PDF
+// is added, not with the page, through orisodLoad() (the Orisod loader block above). Every file added shares
+// one load of each and one PDF.js worker. PDF.js doesn't block: if it fails (offline, blocked, or nothing after
+// its timeout), the error line says so, merging still works without thumbnails, and the next file added tries
+// again. pdf-lib blocks the merge: the Merge button waits for the same load, and if it fails Merge shows the
+// error, the files and their previews stay, and the next Merge click or file added tries again.
+const ORISOD_LIBS = {
+  "pdfjs": {"src": "/assets/vendor/pdfjs/3.11.174/pdf.min.js", "global": "pdfjsLib", "pdfjsWorker": "/assets/vendor/pdfjs/3.11.174/pdf.worker.min.js", "timeoutMs": 60000, "blocks": false},
+  "pdflib": {"src": "/assets/vendor/pdf-lib/1.17.1/pdf-lib.min.js", "global": "PDFLib", "timeoutMs": 60000, "blocks": true}
+};
 const T = {
   "invalid": "Please select valid PDF files.",
   "dropMore": "Click to add more PDFs ({n} selected)",
@@ -1053,15 +1052,10 @@ function addFiles(fileList) {
 
 async function readAll(entries, myRun) {
   // pdf-lib loads alongside PDF.js; the Merge button waits for it and reports a failure.
-  loadPdfLib().catch(() => {});
+  orisodLoad("pdflib").catch(() => {});
   // The status line is a live region: the loading text is written once, not again for each file added.
-  if (!pdfjsLoaded && progressMsg.textContent !== T.loadingPreviews) progressMsg.textContent = T.loadingPreviews;
-  let worker;
-  try {
-    worker = await loadPdfjs();
-  } catch (e) {
-    worker = null;
-  }
+  if (!orisodLoaded("pdfjs") && progressMsg.textContent !== T.loadingPreviews) progressMsg.textContent = T.loadingPreviews;
+  const worker = await orisodLoad("pdfjs");
   if (progressMsg.textContent === T.loadingPreviews) progressMsg.textContent = '';
   if (myRun !== run) return;
   if (!worker) {
@@ -1267,7 +1261,7 @@ mergeBtn.addEventListener('click', async () => {
   const myRun = run;
   let pdfLib = null;
   try {
-    pdfLib = await loadPdfLib();
+    pdfLib = await orisodLoad("pdflib");
   } catch (e) {
     pdfLib = null;
   }
