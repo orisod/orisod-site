@@ -111,12 +111,35 @@ function load() {
 """
 
 
+# A page pair that loads PDF.js and pdf-lib through the Orisod loader block (the real source, copied as
+# sync_loader.py does) and declares them in ORISOD_LIBS, as Merge PDF does since 2026-11-15.
+LOADER_JS = (Path(__file__).resolve().parent.parent / "assets/js/orisod-loader.js").read_text(encoding="utf-8").replace(chr(13) + chr(10), chr(10))
+LOADER_START = ("// Orisod loader: start. Generated from assets/js/orisod-loader.js by scripts/sync_loader.py; "
+                "edit that file, not this block.")
+LIBS = ('const ORISOD_LIBS = {\n'
+        '  "pdfjs": {"src": "/assets/vendor/pdfjs/9.9/pdf.min.js", "global": "pdfjsLib", '
+        '"pdfjsWorker": "/assets/vendor/pdfjs/9.9/pdf.worker.min.js", "timeoutMs": 60000, "blocks": false},\n'
+        '  "pdflib": {"src": "/assets/vendor/pdf-lib/9.9/pdf-lib.min.js", "global": "PDFLib", "timeoutMs": 60000, "blocks": true}\n'
+        '};\n')
+BLOCK_PAGE = ("<!doctype html><html><head><title>b</title></head><body><main>b</main>\n<script>\n"
+              + LOADER_START + "\n" + LOADER_JS + "// Orisod loader: end\n" + LIBS
+              + 'async function go() {\n  const worker = await orisodLoad("pdfjs");\n  const lib = await orisodLoad("pdflib");\n'
+              + '  if (!orisodLoaded("pdfjs")) return;\n}\n</script></body></html>\n')
+
+
+def block_both(old, new):
+    """The same change on the EN and ES block pages (so the EN/ES rule doesn't hide the one under test)."""
+    page = BLOCK_PAGE.replace(old, new)
+    assert page != BLOCK_PAGE, old
+    return {"block_page": page, "block_es": page}
+
+
 # The shared stylesheet (assets/css/orisod.css in the real site) points at the vendored font too.
 SITE_CSS = "@font-face{font-family:Demo;src:url(/assets/vendor/demo-font/1.0/Demo-Regular.ttf) format(\"truetype\")}" + chr(10)
 
 
 def build(root, manifest=MANIFEST, page=PAGE, site_js=None, wa_page=WA_PAGE, rbp_page=RBP_PAGE, site_css=SITE_CSS, lazy_page=LAZY_PAGE, lazy_es=None,
-          pdflib_js=PDFLIB_JS):
+          pdflib_js=PDFLIB_JS, block_page=BLOCK_PAGE, block_es=None, loader_js=LOADER_JS):
     (root / FOLDER).mkdir(parents=True)
     (root / FOLDER / "Demo-Regular.ttf").write_bytes(FONT)
     (root / FOLDER / "LICENSE").write_bytes(LICENSE)
@@ -138,13 +161,17 @@ def build(root, manifest=MANIFEST, page=PAGE, site_js=None, wa_page=WA_PAGE, rbp
     for folder, html in (("merge-pdf", lazy_page), ("es/merge-pdf", LAZY_PAGE if lazy_es is None else lazy_es)):
         (root / folder).mkdir(parents=True)
         (root / folder / "index.html").write_text(html, encoding="utf-8")
+    for folder, html in (("pdf-block", block_page), ("es/pdf-block", BLOCK_PAGE if block_es is None else block_es)):
+        (root / folder).mkdir(parents=True)
+        (root / folder / "index.html").write_text(html, encoding="utf-8")
+    (root / "assets/js").mkdir(parents=True)
+    (root / "assets/js/orisod-loader.js").write_text(loader_js, encoding="utf-8")
     (root / "assets/vendor/manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
     (root / ".gitattributes").write_text("assets/vendor/** -text\n", encoding="utf-8")
     (root / "index.html").write_text(page, encoding="utf-8")
     (root / "assets/css").mkdir(parents=True)
     (root / "assets/css/site.css").write_text(site_css, encoding="utf-8")
     if site_js is not None:
-        (root / "assets/js").mkdir(parents=True)
         (root / "assets/js/site.js").write_text(site_js, encoding="utf-8")
 
 
@@ -266,6 +293,59 @@ CASES = [
      "es/merge-pdf/index.html: loads ['/assets/vendor/pdfjs/9.9/pdf.min.js'], but merge-pdf/index.html loads"),
     ("the site's own JS loading a script that isn't vendored", {"site_js": "const s = document.createElement('script');\ns.src = '/assets/js/extra.js';\n"},
      "assets/js/site.js: a script loads /assets/js/extra.js on demand"),
+    # The Orisod loader block: it may load only what the page declares in ORISOD_LIBS, plain JSON whose every path
+    # is a vendored library script in the manifest; the block must equal its source; loads count for the
+    # workerSrc, twice and EN/ES rules like any other.
+    ("loader: a CDN src", block_both('"/assets/vendor/pdf-lib/9.9/pdf-lib.min.js"', '"https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/9.9/pdf-lib.min.js"'),
+     "pdf-block/index.html: ORISOD_LIBS.pdflib.src is https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/9.9/pdf-lib.min.js; the Orisod loader may only load"),
+    ("loader: a src on the site but outside assets/vendor", block_both('"/assets/vendor/pdf-lib/9.9/pdf-lib.min.js"', '"/assets/js/pdf-lib.min.js"'),
+     "pdf-block/index.html: ORISOD_LIBS.pdflib.src is /assets/js/pdf-lib.min.js; the Orisod loader may only load"),
+    ("loader: a src at a version not in the manifest", block_both("pdf-lib/9.9/pdf-lib.min.js", "pdf-lib/9.8/pdf-lib.min.js"),
+     "pdf-block/index.html: ORISOD_LIBS.pdflib.src is /assets/vendor/pdf-lib/9.8/pdf-lib.min.js"),
+    ("loader: a src that's a license file", block_both('"/assets/vendor/pdf-lib/9.9/pdf-lib.min.js"', '"/assets/vendor/pdf-lib/9.9/LICENSE"'),
+     "pdf-block/index.html: ORISOD_LIBS.pdflib.src is /assets/vendor/pdf-lib/9.9/LICENSE"),
+    ("loader: a src whose bytes aren't the manifest's", {"pdflib_js": b"window.PDFLib = {evil: true};"},
+     "assets/vendor/pdf-lib/9.9/pdf-lib.min.js isn't the reviewed copy (sha256"),
+    ("loader: a PDF.js worker that isn't vendored", block_both("pdfjs/9.9/pdf.worker.min.js", "pdfjs/9.8/pdf.worker.min.js"),
+     "pdf-block/index.html: ORISOD_LIBS.pdfjs.pdfjsWorker is /assets/vendor/pdfjs/9.8/pdf.worker.min.js"),
+    ("loader: PDF.js without its pdfjsWorker", block_both('"pdfjsWorker": "/assets/vendor/pdfjs/9.9/pdf.worker.min.js", ', ""),
+     "pdf-block/index.html: loads /assets/vendor/pdfjs/9.9/pdf.min.js but doesn't set pdfjsLib.GlobalWorkerOptions.workerSrc"),
+    ("loader: a pdfjsWorker on a library that isn't PDF.js", block_both('"global": "PDFLib", ', '"global": "PDFLib", "pdfjsWorker": "/assets/vendor/pdfjs/9.9/pdf.worker.min.js", '),
+     "pdf-block/index.html: ORISOD_LIBS.pdflib has a pdfjsWorker but its src isn't the vendored PDF.js"),
+    ("loader: a path built from user input", block_both('"/assets/vendor/pdf-lib/9.9/pdf-lib.min.js"', '"/assets/vendor/pdf-lib/" + input.value'),
+     "pdf-block/index.html: ORISOD_LIBS must be one plain JSON object"),
+    ("loader: a path in a template literal", block_both('"/assets/vendor/pdf-lib/9.9/pdf-lib.min.js"', "`/assets/vendor/pdf-lib/${v}/pdf-lib.min.js`"),
+     "pdf-block/index.html: ORISOD_LIBS must be one plain JSON object"),
+    ("loader: ORISOD_LIBS changed later from user input", block_both("async function go() {", "ORISOD_LIBS.pdflib.src = location.hash.slice(1);\nasync function go() {"),
+     "pdf-block/index.html: ORISOD_LIBS is used outside its declaration"),
+    ("loader: orisodLoad() given user input", block_both('orisodLoad("pdflib")', "orisodLoad(input.value)"),
+     "pdf-block/index.html: orisodLoad(input.value) must name a library declared in ORISOD_LIBS"),
+    ("loader: orisodLoad() naming an undeclared library", block_both('orisodLoad("pdflib")', 'orisodLoad("jspdf")'),
+     "pdf-block/index.html: orisodLoad(\"jspdf\") must name a library declared in ORISOD_LIBS"),
+    ("loader: ORISOD_LIBS declared with let", block_both("const ORISOD_LIBS = {", "let ORISOD_LIBS = {"),
+     "pdf-block/index.html: the Orisod loader needs exactly one const ORISOD_LIBS"),
+    ("loader: ORISOD_LIBS declared twice", block_both("async function go() {", LIBS + "async function go() {"),
+     "pdf-block/index.html: the Orisod loader needs exactly one const ORISOD_LIBS = {...}; declaration (found 2)"),
+    ("loader: a library declared twice under one name", block_both('  "pdflib": {', '  "pdfjs": {"src": "/assets/vendor/pdf-lib/9.9/pdf-lib.min.js", "global": "PDFLib", "timeoutMs": 1, "blocks": true},\n  "pdflib": {'),
+     "duplicate key 'pdfjs'"),
+    ("loader: an unknown field", block_both('"timeoutMs": 60000, "blocks": true}', '"timeoutMs": 60000, "blocks": true, "url": "https://example.org/x.js"}'),
+     "pdf-block/index.html: ORISOD_LIBS.pdflib must have src, global, timeoutMs and blocks"),
+    ("loader: blocks that isn't true or false", block_both('"blocks": true}', '"blocks": "yes"}'),
+     "pdf-block/index.html: ORISOD_LIBS.pdflib must have src, global, timeoutMs and blocks"),
+    ("loader: a block edited in the page", block_both("script.src = lib.src;", "script.src = lib.src || '/assets/js/x.js';"),
+     "pdf-block/index.html: its Orisod loader block differs from assets/js/orisod-loader.js"),
+    ("loader: orisodLoad() used without the block", block_both(LOADER_START + "\n" + LOADER_JS + "// Orisod loader: end\n", ""),
+     "pdf-block/index.html: uses orisodLoad() or ORISOD_LIBS without exactly one Orisod loader block"),
+    ("loader: the source loading something it wasn't given", {"loader_js": LOADER_JS.replace("script.src = lib.src;", "script.src = '/assets/js/x.js';"),
+                                                               **block_both("script.src = lib.src;", "script.src = '/assets/js/x.js';")},
+     "assets/js/orisod-loader.js: the loader must create one <script>"),
+    ("loader: a tag plus the block for the same script", block_both("<main>b</main>", '<main>b</main>\n<script src="/assets/vendor/pdf-lib/9.9/pdf-lib.min.js"></script>'),
+     "pdf-block/index.html: loads /assets/vendor/pdf-lib/9.9/pdf-lib.min.js more than once"),
+    ("loader: one script declared under two names", block_both('"timeoutMs": 60000, "blocks": true}\n', '"timeoutMs": 60000, "blocks": true},\n  "pdflib2": {"src": "/assets/vendor/pdf-lib/9.9/pdf-lib.min.js", "global": "PDFLib", "timeoutMs": 60000, "blocks": true}\n'),
+     "pdf-block/index.html: loads /assets/vendor/pdf-lib/9.9/pdf-lib.min.js more than once"),
+    ("loader: EN declaring pdf-lib and ES not", {"block_es": BLOCK_PAGE.replace(',\n  "pdflib": {"src": "/assets/vendor/pdf-lib/9.9/pdf-lib.min.js", "global": "PDFLib", "timeoutMs": 60000, "blocks": true}', "")
+                                                 .replace('  const lib = await orisodLoad("pdflib");\n', "")},
+     "es/pdf-block/index.html: loads ['/assets/vendor/pdfjs/9.9/pdf.min.js'], but pdf-block/index.html loads"),
 ]
 
 
