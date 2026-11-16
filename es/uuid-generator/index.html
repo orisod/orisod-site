@@ -199,13 +199,14 @@ h2{margin-top:50px;font-size:22px;}
 .footer-brand{max-width:280px;}
 .footer-brand-logo{font-size:16px;font-weight:bold;letter-spacing:0.5px;margin-bottom:10px;}
 .footer-brand-desc{font-size:13px;color:var(--muted-text);line-height:1.5;margin-bottom:14px;}
-.footer-copy{font-size:12px;color:var(--muted-text);opacity:0.7;}
+.footer-copy{font-size:12px;color:var(--muted-text);}
 .footer-col h3{font-size:13px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-text);margin:0 0 14px 0;}
 .footer-col a{display:block;font-size:14px;color:var(--text);text-decoration:none;opacity:0.8;margin-bottom:10px;}
 .footer-col a:hover{opacity:1;color:var(--accent);}
-.footer-support-text{font-size:13px;color:var(--muted-text);line-height:1.5;margin:0 0 10px 0;}
+.footer-support-text{font-size:13px;color:var(--muted-text);line-height:1.5;margin:0 0 10px 0;opacity:1;}
 .footer-support-btn{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:8px 14px;border-radius:999px;font-size:13px;font-weight:bold;}
 .footer-support-btn:hover{filter:brightness(1.1);}
+.footer-col a.footer-support-btn{color:#ffffff;opacity:1;}
 /* Sticky nav (Phase 11.5): stays pinned while scrolling. --site-nav-h is kept in sync by the small script right after </header>. */
 html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 @media (max-width:900px){
@@ -357,6 +358,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 /* Phones: tuck the trail into the top padding of <main> (40px on tool pages, 50px on
    posts), so it doesn't push the tool's dropzone further down the screen. */
 @media (max-width:600px){.breadcrumbs{margin:-26px 0 8px 0;}}
+:root[data-theme="light"] a[style*="color:var(--accent)"]{color:#1d4ed8 !important;}
 </style>
 <script type="application/ld+json">
 {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://orisod.com/es/"}, {"@type": "ListItem", "position": 2, "name": "Utilidades", "item": "https://orisod.com/es/tools/#utility"}, {"@type": "ListItem", "position": 3, "name": "Generador de UUID", "item": "https://orisod.com/es/uuid-generator/"}]}
