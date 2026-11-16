@@ -101,15 +101,20 @@ label:has(+ input[type="file"]:focus-visible), label:has(input[type="file"]:focu
 .text-output{margin-top:20px;text-align:left;display:none;}
 .diff-summary{font-size:15px;margin-bottom:14px;}
 .added-count{color:#4ade80;font-weight:bold;}
+:root[data-theme="light"] .added-count{color:#166534;}
 .removed-count{color:#f87171;font-weight:bold;}
+:root[data-theme="light"] .removed-count{color:#b91c1c;}
 .diff-lines{max-height:480px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;background:var(--card-bg);font-family:"Courier New", monospace;font-size:13px;line-height:1.6;}
 .diff-line{padding:2px 12px;white-space:pre-wrap;word-break:break-word;text-align:left;}
 .diff-line.add{background:rgba(74,222,128,.12);color:#4ade80;}
+:root[data-theme="light"] .diff-line.add{color:#166534;}
 .diff-line.remove{background:rgba(248,113,113,.12);color:#f87171;}
+:root[data-theme="light"] .diff-line.remove{color:#b91c1c;}
 .diff-line.same{opacity:0.55;}
 .diff-line.page-marker{color:var(--accent);font-weight:bold;opacity:0.85;background:transparent;padding-top:10px;}
 .output-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;}
 .warn-note{color:#f87171;font-size:14px;margin-top:12px;text-align:left;}
+:root[data-theme="light"] .warn-note{color:#b91c1c;}
 button, .back{display:inline-block;margin-top:16px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
 button.secondary{background:var(--card-bg);border:1px solid var(--border);color:var(--text);}
 button.secondary:hover:not(:disabled){border-color:var(--accent);filter:none;}
@@ -133,6 +138,7 @@ button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
 .footer-col a{display:block;font-size:14px;color:var(--text);text-decoration:none;opacity:0.8;margin-bottom:10px;}
 .footer-col a:hover{opacity:1;color:var(--accent);}
 .error{color:#f87171;font-size:14px;margin-top:10px;}
+:root[data-theme="light"] .error{color:#b91c1c;}
 .progress{font-size:14px;opacity:0.7;margin-top:10px;}
 h2{margin-top:50px;font-size:22px;}
 .seo-content{max-width:700px;margin:0 auto;text-align:left;}
