@@ -443,7 +443,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
       <strong>What this actually is:</strong> Read Aloud uses your browser's own built-in text-to-speech engine to read your text out loud, live, right on this page. It cannot generate or export a downloadable audio file (an MP3, for example): the browser's underlying Web Speech API only supports live playback, not audio export. Which voices are available depends entirely on your device and browser, not on Orisod: a phone, a Mac, and a Windows PC will typically offer different voices, and we can't add, guarantee, or improve any specific voice or language that isn't already installed on your system.
     </div>
 
-    <div class="unsupported-banner" id="unsupportedNotice">
+    <div class="unsupported-banner" id="unsupportedNotice" role="status">
       <strong>Not supported in this browser.</strong> Read Aloud needs the Web Speech API, which this browser doesn't provide. Try a recent version of Chrome, Edge, Safari, or Firefox.
     </div>
   </div>
@@ -588,7 +588,8 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
   });
 
   if (!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === 'undefined') {
-    unsupportedNotice.style.display = '';
+    unsupportedNotice.style.display = 'block';
+    playBtn.setAttribute('aria-describedby', 'unsupportedNotice');
     playBtn.disabled = true;
     pauseBtn.disabled = true;
     stopBtn.disabled = true;
