@@ -1,0 +1,22 @@
+name: Verify page range helper copies
+
+on:
+  push:
+    branches: [main, orisod-2]
+  pull_request:
+    branches: [main, orisod-2]
+
+permissions:
+  contents: read
+
+jobs:
+  check-ranges:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Check the page range helper copies on the pages that opted in
+        run: python3 scripts/check_ranges.py
+
+      - name: Check check_ranges.py and sync_ranges.py still catch broken copies
+        run: python3 scripts/test_check_ranges.py
