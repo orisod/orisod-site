@@ -863,7 +863,6 @@ dropzone.addEventListener('drop', (e) => {
 const RANGE_OPTIONS = { outOfRange: 'clip' };
 
 // Words for the helper's error codes: an item with a dash is a range, anything else a page number.
-// The too_many message is PROVISIONAL (not yet audited).
 const RANGE_DASH = /[-\u2010-\u2015\u2212\uFE58\uFE63\uFF0D]/;
 function rangeErrorText(error) {
   if (error.code === 'too_many') return 'This selection has too many pages. Try a shorter range.';
