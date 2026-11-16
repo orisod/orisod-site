@@ -3,14 +3,16 @@
 // Run: node --test "scripts/tests/*.test.mjs"   (CI: the "smoke" job of check-smoke, before the browser tests)
 //
 // They run the source, assets/js/orisod-ranges.js, with no DOM, and check that every page carrying the
-// "Orisod page ranges" block (none yet) carries it byte for byte. The differential tests at the end cut the
-// four existing parsers out of their pages (Delete PDF Pages, Split PDF, Rotate PDF and PDF to JPG, EN and
-// ES) without running the pages, feed them the same inputs as the helper, and check that the helper accepts
-// everything they accept with the same pages, apart from the differences listed in DIFFERENCES.
+// "Orisod page ranges" block carries it byte for byte. The differential tests at the end take the four
+// tools' own parsers (Split PDF and Rotate PDF cut out of their EN and ES pages without running them; Delete
+// PDF Pages and PDF to JPG, which now use the helper, from the frozen copies in old_range_parsers.mjs), feed
+// them the same inputs as the helper, and check that the helper accepts everything they accept with the same
+// pages, apart from the differences listed in DIFFERENCES.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import { oldDeleteSet, oldJpgSelection } from "./old_range_parsers.mjs";
 
 const ROOT = fileURLToPath(new URL("../../", import.meta.url));
 const START = "// Orisod page ranges: start", END = "// Orisod page ranges: end";
@@ -32,8 +34,10 @@ function pagesWithBlock(dir = "", out = []) {
   return out;
 }
 
-test("every page that carries the block carries the source byte for byte (none opted in yet)", () => {
-  for (const rel of pagesWithBlock()) {
+test("every page that carries the block carries the source byte for byte", () => {
+  const pages = pagesWithBlock();
+  assert.ok(pages.length >= 4, `only ${pages.length} pages carry the block`);
+  for (const rel of pages) {
     const html = readFileSync(ROOT + rel, "utf-8").replace(/\r\n/g, "\n");
     const s = html.indexOf(START), e = html.indexOf(END);
     assert.equal(html.slice(html.indexOf("\n", s) + 1, e), SOURCE.endsWith("\n") ? SOURCE : SOURCE + "\n", rel);
@@ -271,7 +275,8 @@ for (const [label, input, total, options] of PERF) {
 }
 
 // ---------------------------------------------------------------------------------------------------------
-// Differential tests against the parsers the pages use today.
+// Differential tests against the tools' own parsers (Delete PDF Pages' and PDF to JPG's from before they
+// adopted the helper).
 //
 // "Accepted" by an old parser means: Split PDF and Rotate PDF don't throw (and Split's caller had a
 // non-empty input), PDF to JPG writes no error, and Delete PDF Pages, which ignores what it can't read,
@@ -320,19 +325,14 @@ function cutFunction(html, start) {
 }
 function oldParsers(prefix) {
   const read = (tool) => readFileSync(ROOT + prefix + tool + "/index.html", "utf-8").replace(/\r\n/g, "\n");
-  const del = new Function(cutFunction(read("delete-pdf-pages"), "function parsePageRanges(") + "\nreturn parsePageRanges;")();
   const split = new Function(cutFunction(read("split-pdf"), "function parseRanges(") + "\nreturn parseRanges;")();
   const rotate = new Function(cutFunction(read("rotate-pdf"), "function parsePageSelection(") + "\nreturn parsePageSelection;")();
-  const jpgHtml = read("pdf-to-jpg");
-  const a = jpgHtml.indexOf("  const pagesToSelect = new Set();"), b = jpgHtml.indexOf("  convertedImages.forEach(img => {", a);
-  assert.ok(a > 0 && b > a, "PDF to JPG's range code not found");
-  const jpgBody = new Function("raw", "errorMsg", "lastPage", jpgHtml.slice(a, b) + "\nreturn pagesToSelect;");
   return {
     // Each returns { accepted, pages } as the page would use them.
     delete(raw, total) {
       const parts = raw.split(",").map((p) => p.trim()).filter(Boolean);
       const accepted = parts.every((p) => /^\d+$/.test(p) || /^(\d+)\s*-\s*(\d+)$/.test(p));
-      return { accepted, pages: Array.from(del(raw, total)).map((i) => i + 1).sort((x, y) => x - y) };
+      return { accepted, pages: Array.from(oldDeleteSet(raw, total)).map((i) => i + 1).sort((x, y) => x - y) };
     },
     split(raw, total) {
       if (!raw.trim()) return { accepted: false };
@@ -344,9 +344,8 @@ function oldParsers(prefix) {
     jpg(raw, total) {
       raw = raw.trim();
       if (!raw) return { accepted: true, pages: [] };
-      const errorMsg = { textContent: "" };
-      const set = jpgBody(raw, errorMsg, total);
-      return { accepted: !errorMsg.textContent, pages: Array.from(set).filter((p) => p <= total).sort((x, y) => x - y) };
+      const { pages: set, error } = oldJpgSelection(raw, total, "en");
+      return { accepted: !error, pages: Array.from(set).filter((p) => p <= total).sort((x, y) => x - y) };
     },
   };
 }
@@ -374,7 +373,7 @@ function fuzzInputs(seed, n) {
     let s = "";
     const len = 1 + Math.floor(rand() * 8);
     for (let i = 0; i < len; i++) s += PIECES[Math.floor(rand() * PIECES.length)];
-    if (!/\d{5,}/.test(s)) out.push(s); // Delete PDF Pages and PDF to JPG loop over every number in a range
+    if (!/\d{5,}/.test(s)) out.push(s); // keeps the old parsers' loops short
   }
   return out;
 }

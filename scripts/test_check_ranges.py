@@ -3,12 +3,13 @@
 
 Builds a tiny synthetic site in a temporary folder (the real helper source, a Split PDF page and its /es/ twin
 with a file name block), checks that it passes with no page opted in and with both opted in, then breaks it
-one way at a time and checks that each copy fails with the expected message. OPTED_IN_PAGES is empty in the
-real check, so the opted-in cases run a copy of the check with the list filled in. It also checks that
+one way at a time and checks that each copy fails with the expected message. Every case runs a copy of the check
+with OPTED_IN_PAGES set for the synthetic site (empty, or the cases' own list). It also checks that
 sync_ranges.py --check, --write and --add touch only the block and keep each page's line endings.
 
     python scripts/test_check_ranges.py
 """
+import re
 import shutil
 import subprocess
 import sys
@@ -46,9 +47,10 @@ def build(d, pages, source=SOURCE, opted_in=None):
     (root / "scripts").mkdir(exist_ok=True)
     shutil.copy(ROOT / "scripts/sync_ranges.py", root / "scripts/sync_ranges.py")
     check = (ROOT / "scripts/check_ranges.py").read_text(encoding="utf-8")
-    if opted_in is not None:
-        assert "OPTED_IN_PAGES = set()" in check
-        check = check.replace("OPTED_IN_PAGES = set()", "OPTED_IN_PAGES = " + opted_in)
+    # The real list names the site's pages; the synthetic site has its own (or none).
+    check, n = re.subn(r"^OPTED_IN_PAGES = (?:set\(\)|\{.*?^\})$", "OPTED_IN_PAGES = " + (opted_in or "set()"),
+                       check, count=1, flags=re.M | re.S)
+    assert n == 1
     (root / "scripts/check_ranges.py").write_text(check, encoding="utf-8")
     for rel, text in pages.items():
         (root / rel).parent.mkdir(parents=True, exist_ok=True)

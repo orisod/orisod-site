@@ -7,8 +7,8 @@ Fails when:
   <script>) or differs from the source (line endings aside); fix with python scripts/sync_ranges.py --write
 - a page uses orisodParseRanges(), orisodFormatRanges() or ORISOD_RANGE_KEYWORDS without the block, or
   defines one of the helper's names again outside it
-- a page carries the block but isn't in OPTED_IN_PAGES, or is listed but doesn't carry it (the list starts
-  empty: adopting the helper is a deliberate change, page by page), or is listed without its EN or ES twin
+- a page carries the block but isn't in OPTED_IN_PAGES, or is listed but doesn't carry it (adopting the
+  helper is a deliberate change, page by page), or is listed without its EN or ES twin
 
     python scripts/check_ranges.py [--root DIR]
 """
@@ -20,8 +20,11 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import sync_ranges as sr  # noqa: E402
 
-# Pages that use the helper, EN and ES together. Empty until a tool adopts it.
-OPTED_IN_PAGES = set()
+# Pages that use the helper, EN and ES together.
+OPTED_IN_PAGES = {
+    "delete-pdf-pages/index.html", "es/delete-pdf-pages/index.html",
+    "pdf-to-jpg/index.html", "es/pdf-to-jpg/index.html",
+}
 USES = ("orisodParseRanges(", "orisodFormatRanges(", "ORISOD_RANGE_KEYWORDS")
 NAMES = ("orisodParseRanges", "orisodFormatRanges", "orisodRangeChar", "ORISOD_RANGE_KEYWORDS", "ORISOD_RANGE_DEFAULTS")
 DEFINES = re.compile(r"\b(?:function\s*\*?\s*|(?:const|let|var)\s+)(" + "|".join(NAMES) + r")\b")
