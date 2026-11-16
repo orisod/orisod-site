@@ -588,7 +588,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
   });
 
   if (!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === 'undefined') {
-    unsupportedNotice.style.display = '';
+    unsupportedNotice.style.display = 'block';
     playBtn.disabled = true;
     pauseBtn.disabled = true;
     stopBtn.disabled = true;

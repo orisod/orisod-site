@@ -2818,6 +2818,53 @@ const CASES = [
         mustFail("the old fixed name", () => expectFileName({ ...first, name: lang === "es" ? "recortada.jpg" : "cropped.jpg" }, want, "test"));
     },
   },
+  {
+    // The "Not supported" banner used to stay hidden: the script cleared its inline display with '', which left the
+    // stylesheet's .unsupported-banner{display:none} in force. With speechSynthesis removed before the page script runs,
+    // the banner must show and the controls be off; with it present (Chromium has it), the banner stays hidden.
+    name: "Read Aloud unsupported banner",
+    page: "/read-aloud/",
+    vendor: [],
+    async run(page, lang) {
+      const strong = lang === "es" ? "No compatible con este navegador." : "Not supported in this browser.";
+      const state = (p) => p.evaluate(() => {
+        const b = document.getElementById("unsupportedNotice"), r = b.getBoundingClientRect();
+        return { speech: "speechSynthesis" in window, display: getComputedStyle(b).display, width: r.width, height: r.height,
+          right: r.right, viewport: document.documentElement.clientWidth, strong: b.querySelector("strong").textContent.trim(),
+          disabled: ["playBtn", "pauseBtn", "stopBtn", "voiceSelect", "rateSlider", "pitchSlider"].filter((id) => document.getElementById(id).disabled) };
+      });
+      const expectShown = (s, when) => {
+        expect(!s.speech, `${when}: speechSynthesis is still in window`);
+        expect(s.display !== "none" && s.width > 0 && s.height > 0, `${when}: the banner is hidden (display ${s.display}, ${s.width}x${s.height})`);
+        expect(s.right <= s.viewport, `${when}: the banner runs past the page (right ${s.right}, page ${s.viewport})`);
+        expect(s.strong === strong, `${when}: the banner says "${s.strong}"`);
+        expect(s.disabled.length === 6, `${when}: only ${s.disabled.join(", ") || "nothing"} is disabled`);
+      };
+      const present = await state(page);
+      expect(present.speech, "this Chromium has no speechSynthesis, so the supported side can't be checked");
+      expect(present.display === "none" && present.height === 0, `with speechSynthesis the banner shows (display ${present.display})`);
+      expect(!present.disabled.includes("playBtn"), "with speechSynthesis Play is disabled");
+      const removeSpeech = () => { delete Window.prototype.speechSynthesis; delete window.speechSynthesis; delete window.SpeechSynthesisUtterance; };
+      const shown = [];
+      for (const width of [1280, 390]) {
+        const own = await waShareContext(page.context().browser(), lang, { viewport: { width, height: 900 } }, removeSpeech, "/read-aloud/");
+        try {
+          const s = await state(own.page);
+          expectShown(s, `without speechSynthesis at ${width}px`);
+          expect(!own.errors.length, `without speechSynthesis the page logged: ${own.errors.join(" / ")}`);
+          shown.push(`${width}px ${Math.round(s.width)}x${Math.round(s.height)}`);
+          if (width === 390) {
+            // The old reveal (style.display = '') must fail this check.
+            await own.page.evaluate(() => { document.getElementById("unsupportedNotice").style.display = ""; });
+            const old = await state(own.page);
+            shown.push(mustFail("the banner revealed with style.display = ''", () => expectShown(old, "old reveal")));
+          }
+        } finally { await own.context.close(); }
+      }
+      return `with speechSynthesis the banner is hidden and Play is on; without it the banner shows (${shown.slice(0, 2).join(", ")}) ` +
+        `with all 6 controls off; ${shown[2]}; ` + mustFail("a banner shown with speechSynthesis present", () => expectShown(present, "test"));
+    },
+  },
   ...FILE_NAME_CASES,
   ...FILE_NAME_IMAGE_CASES,
   ...FILE_NAME_ZIP_CASES,
