@@ -444,7 +444,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
       <strong>Qué es realmente esto:</strong> Leer en voz alta usa el motor de texto a voz integrado de tu propio navegador para leer tu texto en voz alta, en vivo, aquí mismo en esta página. No puede generar ni exportar un archivo de audio descargable (un MP3, por ejemplo): la API Web Speech en la que se basa el navegador solo admite reproducción en vivo, no exportación de audio. Las voces disponibles dependen totalmente de tu dispositivo y navegador, no de Orisod: un teléfono, una Mac y una PC con Windows normalmente ofrecerán voces distintas, y no podemos añadir, garantizar ni mejorar ninguna voz o idioma concreto que no esté ya instalado en tu sistema.
     </div>
 
-    <div class="unsupported-banner" id="unsupportedNotice">
+    <div class="unsupported-banner" id="unsupportedNotice" role="status">
       <strong>No compatible con este navegador.</strong> Leer en voz alta necesita la API Web Speech, que este navegador no ofrece. Prueba con una versión reciente de Chrome, Edge, Safari o Firefox.
     </div>
   </div>
@@ -591,6 +591,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 
   if (!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === 'undefined') {
     unsupportedNotice.style.display = 'block';
+    playBtn.setAttribute('aria-describedby', 'unsupportedNotice');
     playBtn.disabled = true;
     pauseBtn.disabled = true;
     stopBtn.disabled = true;
