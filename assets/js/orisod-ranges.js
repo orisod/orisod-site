@@ -1,33 +1,16 @@
 // Page ranges: orisodParseRanges() reads the pages a visitor types ("1-3, 5, 8-") and orisodFormatRanges()
-// writes a selection back the same way ("1-3, 5, 8-9"). Pure functions: no DOM and no text for the visitor.
-// The page turns each error code into its own words, which go through the text audit like any other copy.
+// writes a selection back ("1-3, 5, 8-9"). Pure functions with no DOM and no visible text: each page turns
+// the error codes into its own words.
 //
-// orisodParseRanges(input, totalPages, options) returns { ok, pages, errors }:
-//   pages   1-based page numbers from every item that parsed (sorted and unique unless preserveOrder);
-//           empty when the result would pass maxItems (too_many)
-//   errors  { code, token, start, end } per problem, in input order: token is the item as typed, start and
-//           end its offsets in input (end not included); too_many in sorted mode covers the whole input
-//   ok      true when there are no errors
-//   codes   empty, invalid_token, out_of_range, reversed_range, too_many, zero_or_negative
-// Syntax: items separated by commas, semicolons or spaces. An item is a page ("5"), a range ("2-4"; a dash
-// joins the numbers on both sides, spaces or not, so "2 - 4" and "2 -4" are 2-4) or open-ended ("8-" to the
-// last page, "-3" from page 1). Leading zeros are fine. Full-width forms count as ASCII, and the hyphen, en
-// dash, em dash and minus sign as the range dash; other digits (Arabic-Indic, superscript) are invalid tokens.
-// Options (default first):
-//   preserveOrder  false: sorted and unique. true: in typed order, a reversed range counting down
-//   unique         true: with preserveOrder, each page once, where it first appears. false keeps repeats
-//   allowOpenEnded true. false: "8-" is invalid_token and "-3" zero_or_negative
-//   reversed       "accept": "5-2" is pages 2 to 5. "error": reversed_range
-//   outOfRange     "error": out_of_range. "clip": ranges are cut to 1..totalPages, and pages outside it
-//                  (page 0 included) are dropped with no error
-//   allowKeywords  false: words are invalid tokens. true: the words in keywords mean odd, even and last
-//                  pages ("odd", "3-last")
-//   keywords       ORISOD_RANGE_KEYWORDS
-//   maxItems       100000: a result with more pages than this is too_many
-// A totalPages that isn't a whole number from 0, or an unknown option, throws a TypeError.
-//
-// orisodFormatRanges(pages, { preserveOrder }) gives "1-3, 5, 8-9": sorted and unique by default, or in the
-// given order with runs going up or down ("5-3, 9"), which orisodParseRanges reads back with the same order.
+// orisodParseRanges(input, totalPages, options) returns { ok, pages, errors }: 1-based pages (sorted and
+// unique unless preserveOrder; empty on too_many) and one { code, token, start, end } per problem, in input
+// order. Codes: empty, invalid_token, out_of_range, reversed_range, too_many, zero_or_negative.
+// Items are separated by commas, semicolons or spaces: "5", "2-4" (a dash joins the numbers beside it), "8-"
+// and "-3". Full-width forms read as ASCII, and the hyphen, en dash, em dash and minus sign as the dash.
+// Options, default first: preserveOrder false, unique true, allowOpenEnded true, reversed "accept" or "error",
+// outOfRange "error" or "clip" (drops pages outside 1..totalPages, page 0 included), allowKeywords false,
+// keywords ORISOD_RANGE_KEYWORDS (odd, even, last), maxItems 100000. A bad totalPages or an unknown option
+// throws a TypeError. orisodParseRanges reads orisodFormatRanges(pages, { preserveOrder }) back unchanged.
 
 const ORISOD_RANGE_KEYWORDS = {
   odd: ["odd", "impar", "impares"],
