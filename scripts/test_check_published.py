@@ -67,6 +67,7 @@ def main():
 
         cases = [
             ("clean site", None, 0, "OK:"),
+            ("CNAME copied by the builder", lambda s: write(s, "CNAME", "orisod.com\n"), 0, "OK:"),
             ("_config.yml without an exclude", "config", 1, "_config.yml doesn't exclude scripts"),
             ("CLAUDE.md published", lambda s: write(s, "CLAUDE.md", "internal\n"), 1, "published although excluded: CLAUDE.md"),
             ("page rendered from an excluded .md", lambda s: write(s, "audit/notes.html", "<p>x</p>"), 1, "published although excluded: audit/notes.html"),

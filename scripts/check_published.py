@@ -34,8 +34,9 @@ REQUIRED_EXCLUDES = [
     "audit", "scripts", "claude", "assets/js", "assets/icons/README.md",
 ]
 # Files at the site root that belong to the site (besides page folders, which hold an index.html).
+# CNAME is copied by actions/jekyll-build-pages (the deployed artifact may leave it out; it's never required).
 ROOT_FILES = {
-    "index.html", "404.html", "sitemap.xml", "robots.txt", "site.webmanifest", "favicon.ico", "favicon.svg",
+    "CNAME", "index.html", "404.html", "sitemap.xml", "robots.txt", "site.webmanifest", "favicon.ico", "favicon.svg",
     "favicon-16x16.png", "favicon-32x32.png", "icon-192.png", "icon-512.png", "apple-touch-icon.png",
 }
 # Files the Pages build writes that aren't tracked: the theme stylesheet and the pages rendered from the vendored
