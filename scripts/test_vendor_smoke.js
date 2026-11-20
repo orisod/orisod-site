@@ -1327,7 +1327,7 @@ const RBP_TEXT = {
     noneSelected: "Ninguna página está marcada para eliminar. Marca al menos una página o conserva el PDF original.",
     password: "Este PDF está protegido con contraseña. Quita la contraseña en una aplicación de PDF de confianza y vuelve a intentarlo.",
     signed: "Este PDF tiene una firma digital. Eliminar páginas cambia la copia descargada, así que la firma podría dejar de ser válida.",
-    notPdf: "Selecciona un archivo PDF válido.", replace: "¿Reemplazar el PDF actual? Se perderán las selecciones que hiciste en sus páginas.",
+    notPdf: "Selecciona un archivo PDF válido.", replace: "¿Reemplazar el PDF actual? Se perderán las selecciones de páginas que hiciste.",
     sensLabel: "Sensibilidad", sens: ["Conservadora", "Equilibrada", "Más estricta"], startOver: "Empezar de nuevo", removedKeepAll: "Conservar todas", save: "Eliminar páginas y descargar", suffix: "-sin-blancas-orisod.pdf",
     summary: "Ayuda y detalles", guide: "/es/blog/remove-blank-pages-from-pdf/", cards: ["/es/delete-pdf-pages/", "/es/pdf-page-organizer/", "/es/compress-pdf/"] },
 };
@@ -2436,8 +2436,8 @@ const CASES = [
     broken: () => ({ path: CITIES_FILE, mode: "404" }),
     async run(page, lang) {
       const want = lang === "es"
-        ? "⚠️ No se pudo cargar la lista de ciudades. Recarga la página para intentarlo de nuevo, o usa tu ubicación o la latitud y la longitud."
-        : "⚠️ The city list could not load. Reload the page to try again, or use your location or latitude and longitude instead.";
+        ? "No se pudo cargar la lista de ciudades. Recarga la página para intentarlo de nuevo, o usa tu ubicación o la latitud y la longitud."
+        : "The city list could not load. Reload the page to try again, or use your location or latitude and longitude instead.";
       await page.click("#citySearchInput");
       await page.keyboard.type("Jerus");
       await page.locator("#cityLoadError").waitFor({ state: "visible", timeout: 15000 })
