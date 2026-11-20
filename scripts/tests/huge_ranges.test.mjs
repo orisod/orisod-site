@@ -6,7 +6,9 @@
 // helper block out of its page (range_pages.mjs) and runs that exact text: the huge inputs run in a worker that
 // is stopped after TIME_LIMIT_MS, so a regression fails here instead of hanging the job, and normal inputs must
 // give exactly what the code did before (old_range_parsers.mjs). The inputs whose result changed when the
-// tools adopted the helper are listed, before and after, in range_adoption.test.mjs.
+// tools adopted the helper are listed, before and after, in range_adoption.test.mjs. Since 2026-11-20 the
+// messages put the item in typographic quotes (U+201C and U+201D) where the old code used straight ones, so
+// the old messages are compared with requote() applied.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { Worker } from "node:worker_threads";
@@ -19,6 +21,8 @@ const PAGE_COUNTS = [0, 1, 12];
 const NORMAL = ["1-3, 5", "1-12", "5-50", "0", "0-3", "13", "13-20", "12-12", "3-3, 3", " 1 - 3 ", "007", "01-03",
   "1,1", ",", "6-6, 6, 13-20", "0, 2", "2, 4, 7-9"];
 const sorted = (set) => Array.from(set).sort((a, b) => a - b);
+const LQ = String.fromCharCode(0x201C), RQ = String.fromCharCode(0x201D);
+const requote = (s) => s.replace(/^([^"]*: )"(.*)"$/, `$1${LQ}$2${RQ}`);
 
 // Runs src's run(input, total) in a worker; resolves with its result and time, or rejects once the limit passes.
 function timed(src, input, total) {
@@ -85,10 +89,10 @@ for (const prefix of ["", "es/"]) {
     const ticked = (r, total) => ({ ticked: sorted(r.pages).filter((p) => p <= total), error: r.error });
     for (const input of NORMAL) for (const total of PAGE_COUNTS) {
       const raw = input.trim();
-      assert.deepEqual(ticked(run(raw, total), total), ticked(oldJpgSelection(raw, total, lang), total), `${JSON.stringify(input)} on ${total} pages`);
+      assert.deepEqual(ticked(run(raw, total), total), (({ ticked: pages, error }) => ({ ticked: pages, error: requote(error) }))(ticked(oldJpgSelection(raw, total, lang), total)), `${JSON.stringify(input)} on ${total} pages`);
     }
     assert.deepEqual(ticked(run("1-3, 5", 12), 12), { ticked: [1, 2, 3, 5], error: "" });
     assert.deepEqual(ticked(run("0", 12), 12).ticked, []);
-    assert.notEqual(run("0", 12).error, "");
+    assert.equal(run("0", 12).error, lang === "es" ? `Número de página no válido: ${LQ}0${RQ}` : `Invalid page number: ${LQ}0${RQ}`);
   });
 }
