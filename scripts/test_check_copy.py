@@ -60,6 +60,23 @@ CASES = [
     ("dark bad: inline accent link without the dark rule", page(body='<p><a href="/x/" style="color:var(--accent);text-decoration:none;">x</a></p>'), False, "need the dark rule"),
     ("dark bad: inline accent on another element", page(body='<span style="color:#2563eb">x</span>'), False, "inline or script text color #2563eb is too faint in dark theme"),
     ("dark bad: script sets the accent", page(body="<script>el.style.color = 'var(--accent)';</script>"), False, "inline or script text color var(--accent)"),
+    # Light-theme leftovers from #244/#245: diagram labels, placeholders, accent on a tint or below full opacity
+    ("leftover good: amber label with its light fill rule", page(L + 'svg text[fill="#f59e0b"]{fill:#92400e;}', '<svg><text fill="#f59e0b">1</text></svg>'), True, ""),
+    ("leftover good: green label, rule scoped to the figure", page(L + '.theme-figure text[fill="#4ade80"]{fill:#166534;}', '<svg><text fill="#4ade80">ok</text></svg>'), True, ""),
+    ("leftover good: label in a palette color", page(body='<svg><text fill="#92400e">1</text><text fill="var(--text)">2</text></svg>'), True, ""),
+    ("leftover good: amber shape, not text", page(body='<svg><rect fill="#f59e0b"/><circle fill="#f87171"/></svg>'), True, ""),
+    ("leftover good: placeholders in #475569", page("main input::placeholder{color:var(--muted-text);opacity:1;}" + L + "main input::placeholder{color:#475569;opacity:1;}"), True, ""),
+    ("leftover good: no placeholder rule at all", page(body='<main><input placeholder="Name"></main>'), True, ""),
+    ("leftover good: tinted accent text with #1d4ed8", page(".case-btn.active{color:#60a5fa;}" + L + ".case-btn.active{color:#1d4ed8;}"), True, ""),
+    ("leftover good: accent labels at full opacity", page('.theme-figure text[fill="var(--accent)"]{fill:#60a5fa;}' + L + '.theme-figure text[fill="var(--accent)"]{fill:var(--accent);}'), True, ""),
+    ("leftover good: accent labels at 0.85 with #1d4ed8", page(L + '.theme-figure text[fill="var(--accent)"]{fill:#1d4ed8;}' + L + '.theme-figure text[fill="var(--accent)"][opacity="0.85"]{opacity:0.85;}'), True, ""),
+    ("leftover bad: amber label with no light rule", page(body='<svg><text x="1" fill="#f59e0b">1</text></svg>'), False, 'diagram labels with fill="#f59e0b" have no light-theme rule'),
+    ("leftover bad: label rule for another color", page(L + 'svg text[fill="#4ade80"]{fill:#166534;}', '<svg><text fill="#f87171">x</text></svg>'), False, 'fill="#f87171"'),
+    ("leftover bad: label rule that is still pale", page(L + 'svg text[fill="#f59e0b"]{fill:#fbbf24;}', '<svg><text fill="#f59e0b">1</text></svg>'), False, 'fill="#f59e0b"'),
+    ("leftover bad: placeholder reverted in light", page("main textarea::placeholder{color:var(--muted-text);opacity:1;}" + L + "main textarea::placeholder{color:revert;opacity:revert;}"), False, "{color:revert} gives placeholders the browser default"),
+    ("leftover bad: case button active in the accent", page(".case-btn.active{color:#60a5fa;}" + L + ".case-btn.active{color:var(--accent);}"), False, ".case-btn.active needs a light-theme color that isn't the accent"),
+    ("leftover bad: page marker without a light rule", page(".diff-line.page-marker{color:#60a5fa;opacity:0.85;}"), False, ".diff-line.page-marker needs a light-theme color"),
+    ("leftover bad: accent labels at 0.85 in the accent", page(L + '.theme-figure text[fill="var(--accent)"]{fill:var(--accent);}' + L + '.theme-figure text[fill="var(--accent)"][opacity="0.85"]{opacity:0.85;}'), False, "accent diagram labels drawn at opacity 0.85"),
 ]
 
 
