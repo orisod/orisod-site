@@ -6337,15 +6337,15 @@ const CASES = [
       out.push(`before use only the drop zone (bottom row at ${Math.round(idle.rowTop)} px); adding 3 PDFs grows the frame from ${Math.round(animated.before.h)} to ${Math.round(animated.after.h)} px through ${Math.round(animated.mid.h)} px (${animated.mid.frames} frames mid-change), the list fading in after`);
       // Each row: order number, handle, thumbnail, name, pages and size, arrows and remove; then the actions.
       await page.waitForFunction(() => document.querySelectorAll(".file-thumb img").length === 3, null, { timeout: 15000 });
-      const t = lang === "es" ? { pages: ["2 páginas", "3 páginas", "1 página"], add: "Añadir más archivos", start: "Empezar de nuevo", remove: "Eliminar: a.pdf" }
-        : { pages: ["2 pages", "3 pages", "1 page"], add: "Add more files", start: "Start over", remove: "Remove: a.pdf" };
+      const t = lang === "es" ? { pages: ["2 páginas", "3 páginas", "1 página"], add: "Añadir más archivos", start: "Empezar de nuevo", buttons: ["Subir a.pdf", "Bajar a.pdf", "Eliminar a.pdf"] }
+        : { pages: ["2 pages", "3 pages", "1 page"], add: "Add more files", start: "Start over", buttons: ["Move a.pdf up", "Move a.pdf down", "Remove a.pdf"] };
       const rows = await page.evaluate(() => [...document.querySelectorAll("#fileList > li")].map((li) => ({ num: li.querySelector(".file-num").textContent,
         grip: !!li.querySelector(".file-grip svg"), thumb: li.querySelector(".file-thumb img")?.naturalWidth || 0, name: li.querySelector(".name").textContent,
         meta: li.querySelector(".file-meta").textContent, buttons: [...li.querySelectorAll("button")].map((b) => b.getAttribute("aria-label")) })));
       const expectRows = (r) => {
         expect(r.length === 3 && r.every((x, i) => x.num === String(i + 1) && x.grip && x.thumb > 0 && x.meta.startsWith(t.pages[i] + " · ") && / KB$/.test(x.meta) && x.buttons.length === 3),
           `file rows: ${JSON.stringify(r)}`);
-        expect(r[0].buttons[2] === t.remove, `the remove button is named "${r[0].buttons[2]}"`);
+        expect(JSON.stringify(r[0].buttons) === JSON.stringify(t.buttons), `the first row's buttons are named ${JSON.stringify(r[0].buttons)}`);
       };
       expectRows(rows);
       const actions = await page.evaluate(() => ["addMoreBtn", "startOverBtn", "mergeBtn"].map((id) => { const b = document.getElementById(id);
