@@ -926,7 +926,7 @@ const RANGE_OPTIONS = { outOfRange: 'clip' };
 const RANGE_DASH = /[-\u2010-\u2015\u2212\uFE58\uFE63\uFF0D]/;
 function rangeErrorText(error) {
   if (error.code === 'too_many') return 'Esta selección tiene demasiadas páginas. Prueba con un rango más corto.';
-  return RANGE_DASH.test(error.token) ? `Rango no válido: "${error.token}"` : `Número de página no válido: "${error.token}"`;
+  return RANGE_DASH.test(error.token) ? `Rango no válido: “${error.token}”` : `Número de página no válido: “${error.token}”`;
 }
 
 // 0-based indices of the pages to delete, and the message for the last problem ('' when there is none).

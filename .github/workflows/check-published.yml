@@ -1,0 +1,37 @@
+name: Verify published files
+
+# Builds the site with actions/jekyll-build-pages, the builder GitHub Pages uses, and checks that internal files
+# (CLAUDE.md, README.md, scripts/, audit/... listed in _config.yml) aren't published and every page is published
+# unchanged. No paths-ignore: a change to a .md file is exactly what this has to see.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: check-published-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  check-published:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Build the site as GitHub Pages does
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./
+          destination: ./_site
+
+      - name: Check what would be published
+        run: python3 scripts/check_published.py --site _site
+
+      - name: Check that check_published.py still catches each problem
+        run: python3 scripts/test_check_published.py

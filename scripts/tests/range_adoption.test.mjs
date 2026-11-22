@@ -8,6 +8,8 @@
 // - each tool matches the helper with its options: Delete PDF Pages { outOfRange: "clip" }; PDF to JPG the
 //   default (reversed ranges accepted), with out-of-range items cut to the document instead of refused;
 // - every error code shows the right message in each language.
+// Since 2026-11-20 the messages put the item in typographic quotes (U+201C and U+201D) where the frozen old code
+// used straight ones, so old results are compared with requote() applied; nothing else about them changed.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { oldDeleteSet, oldJpgSelection, deleteOutcome, jpgOutcome, OLD_MESSAGES } from "./old_range_parsers.mjs";
@@ -70,8 +72,18 @@ const SAME = ["1-3, 5", "2, 4, 7-9", "1,1", "3, 3-4", "6-6, 6", "1 - 3", "1 -3",
 // Whether a token has a character the helper reads as the range dash ("1" + c + "2" is pages 1 to 2; a token
 // never holds a separator, and spaces are left out).
 const hasDash = (token) => [...token].some((c) => !/\s/.test(c) && parse("1" + c + "2", 2).ok);
-const message = (lang, e) => (e ? OLD_MESSAGES[lang][e[0]](e[1]) : "");
-const deleteText = (lang, text) => (Array.isArray(text) ? message(lang, text) : text);
+const LQ = ch(0x201C), RQ = ch(0x201D);
+const NEW_MESSAGES = {
+  en: { range: (t) => `Invalid range: ${LQ}${t}${RQ}`, page: (t) => `Invalid page number: ${LQ}${t}${RQ}` },
+  es: { range: (t) => `Rango no válido: ${LQ}${t}${RQ}`, page: (t) => `Número de página no válido: ${LQ}${t}${RQ}` },
+};
+// The old message for an item, and the same message as the pages write it now.
+const oldMessage = (lang, e) => (e ? OLD_MESSAGES[lang][e[0]](e[1]) : "");
+const message = (lang, e) => (e ? NEW_MESSAGES[lang][e[0]](e[1]) : "");
+const deleteText = (msg, lang, text) => (Array.isArray(text) ? msg(lang, text) : text);
+// An old message with its straight quotes turned into the new typographic ones (other texts unchanged).
+const requote = (s) => (typeof s === "string" ? s.replace(/^([^"]*: )"([\s\S]*)"$/, `$1${LQ}$2${RQ}`) : s);
+const requoted = (o) => ({ ...o, ...("text" in o ? { text: requote(o.text) } : {}), ...("error" in o ? { error: requote(o.error) } : {}) });
 
 for (const prefix of ["", "es/"]) {
   const lang = prefix ? "es" : "en";
@@ -81,6 +93,8 @@ for (const prefix of ["", "es/"]) {
     delete: (s, total) => deleteOutcome(oldDeleteSet(s, total), "", total),
     jpg: (s, total) => jpgOutcome(s, total, (raw, last) => oldJpgSelection(raw, last, lang)),
   };
+  // The old results as the pages would word them now.
+  const was = { delete: (s, total) => requoted(before.delete(s, total)), jpg: (s, total) => requoted(before.jpg(s, total)) };
   const after = {
     delete: (s, total) => { const { deleteSet, error } = newDelete(s, total); return deleteOutcome(deleteSet, error, total); },
     jpg: (s, total) => jpgOutcome(s, total, newJpg),
@@ -89,12 +103,12 @@ for (const prefix of ["", "es/"]) {
   test(`${LANG}: every listed change, before and after, in both tools`, () => {
     for (const [s, delBefore, delAfter, jpgBefore, jpgAfter] of CHANGES) {
       const label = JSON.stringify(s);
-      assert.deepEqual(before.delete(s, T), { ...delBefore, text: deleteText(lang, delBefore.text) }, `Delete before ${label}`);
-      assert.deepEqual(after.delete(s, T), { ...delAfter, text: deleteText(lang, delAfter.text) }, `Delete after ${label}`);
-      assert.deepEqual(before.jpg(s, T), { ticked: jpgBefore.ticked, error: message(lang, jpgBefore.error) }, `JPG before ${label}`);
+      assert.deepEqual(before.delete(s, T), { ...delBefore, text: deleteText(oldMessage, lang, delBefore.text) }, `Delete before ${label}`);
+      assert.deepEqual(after.delete(s, T), { ...delAfter, text: deleteText(message, lang, delAfter.text) }, `Delete after ${label}`);
+      assert.deepEqual(before.jpg(s, T), { ticked: jpgBefore.ticked, error: oldMessage(lang, jpgBefore.error) }, `JPG before ${label}`);
       assert.deepEqual(after.jpg(s, T), { ticked: jpgAfter.ticked, error: message(lang, jpgAfter.error) }, `JPG after ${label}`);
-      const changed = JSON.stringify(before.delete(s, T)) !== JSON.stringify(after.delete(s, T)) ||
-        JSON.stringify(before.jpg(s, T)) !== JSON.stringify(after.jpg(s, T));
+      const changed = JSON.stringify(was.delete(s, T)) !== JSON.stringify(after.delete(s, T)) ||
+        JSON.stringify(was.jpg(s, T)) !== JSON.stringify(after.jpg(s, T));
       assert.ok(changed, `${label} is listed but changed in neither tool`);
     }
   });
@@ -102,8 +116,8 @@ for (const prefix of ["", "es/"]) {
   test(`${LANG}: the listed unchanged inputs give the same result in both tools`, () => {
     for (const total of [1, 5, T]) {
       for (const s of SAME) {
-        assert.deepEqual(after.delete(s, total), before.delete(s, total), `Delete ${JSON.stringify(s)} on ${total} pages`);
-        assert.deepEqual(after.jpg(s, total), before.jpg(s, total), `JPG ${JSON.stringify(s)} on ${total} pages`);
+        assert.deepEqual(after.delete(s, total), was.delete(s, total), `Delete ${JSON.stringify(s)} on ${total} pages`);
+        assert.deepEqual(after.jpg(s, total), was.jpg(s, total), `JPG ${JSON.stringify(s)} on ${total} pages`);
       }
     }
   });
@@ -118,9 +132,9 @@ for (const prefix of ["", "es/"]) {
       const items = Array.from({ length: 1 + Math.floor(rand() * 4) }, () => (rand() < 0.5 ? num() : num() + (rand() < 0.3 ? " - " : "-") + num()));
       const s = items.join(rand() < 0.5 ? ", " : ",");
       for (const total of [1, 5, T]) {
-        assert.deepEqual(after.delete(s, total), before.delete(s, total), `Delete ${JSON.stringify(s)} on ${total} pages`);
+        assert.deepEqual(after.delete(s, total), was.delete(s, total), `Delete ${JSON.stringify(s)} on ${total} pages`);
         const reversed = items.some((it) => { const m = it.match(/^(\d+)\s*-\s*(\d+)$/); return m && +m[1] > +m[2]; });
-        if (!reversed) assert.deepEqual(after.jpg(s, total), before.jpg(s, total), `JPG ${JSON.stringify(s)} on ${total} pages`);
+        if (!reversed) assert.deepEqual(after.jpg(s, total), was.jpg(s, total), `JPG ${JSON.stringify(s)} on ${total} pages`);
         compared++;
       }
     }
