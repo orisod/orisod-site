@@ -20,8 +20,18 @@ dark-theme fixes): a CSS `color:` set to one of DARK_BAD_TEXT (the accent blue, 
 stamp inks, all under 4.5:1 on the dark page or card) in a rule that applies in dark fails unless it only
 colors an icon or is listed in DARK_ALLOWED with its reason; an inline style or a script's
 style.color/cssText with one of them fails; and a page with links styled inline with the accent must carry
-the dark link rule (DARK_LINK_RULE). Diagram labels (SVG text) aren't checked, because whether one passes
-depends on the shape drawn under it, and neither are placeholders (their failure was the browser default).
+the dark link rule (DARK_LINK_RULE).
+
+And the light-theme leftovers fixed after #244 and #245 (added 2026-11-22, light_leftover_problems):
+- a diagram label drawn with fill="<one of LIGHT_BAD_TEXT>" needs a light rule `... text[fill="<that color>"]`
+  with a good fill (as the green, red and amber labels have). Only the label's own color is checked: whether
+  it passes also depends on the shape drawn under it, which a static check can't see (the browser sweep does).
+- a light rule that sends placeholders back to the browser default (`::placeholder{color:revert}`) fails: that
+  gray is 4.4:1 on the tool boxes (#f8fafc); give them #475569.
+- the selectors in LIGHT_TINTED_ACCENT (accent text drawn on a blue tint or below full opacity) need a light
+  override that isn't the accent (#1d4ed8, or #1e40af for the privacy-note link), and accent diagram labels that a light rule draws below full
+  opacity need a light fill that isn't the accent either.
+Placeholders left at the browser default with no rule at all aren't flagged (4.6:1 on white, fine there).
 
 Run in CI on every push/PR to main, same as check_sitemap.py. --root DIR checks another copy of the site
 (scripts/test_check_copy.py uses it).
@@ -77,6 +87,63 @@ INLINE_ACCENT_LINK = re.compile(r"""<a\s[^>]*style\s*=\s*["'](?:[^"']*[;\s])?col
 INLINE_DARK_BAD = re.compile(r"""<(?!a\s)[a-z][a-z0-9]*\s[^>]*style\s*=\s*["'](?:[^"']*[;\s])?color\s*:\s*(var\(--accent\)|#2563eb|#8b5cf6|#15803d|#374151|#dc2626)(?!\w)"""
                              r"""|\.style\.color\s*=\s*["'](var\(--accent\)|#2563eb|#8b5cf6|#15803d|#374151|#dc2626)(?!\w)"""
                              r"""|cssText[^;\n]*?(?:^|[;"'`\s])color\s*:\s*(var\(--accent\)|#2563eb|#8b5cf6|#15803d|#374151|#dc2626)(?!\w)""", re.I)
+
+
+# Light theme: the accent (#2563eb, 5.17:1 on white) drops under 4.5:1 on a blue tint or below full opacity.
+# These selectors need a light override that isn't the accent family (measured 2026-11-22): (why, what to use).
+ACCENT_FAMILY = re.compile(r"var\(--accent\)|#2563eb\b|#60a5fa\b|#3b82f6\b", re.I)
+LIGHT_TINTED_ACCENT = {
+    ".case-btn.active": ("on its blue tint the accent is 3.67:1", "#1d4ed8"),
+    ".diff-line.page-marker": ("at its 0.85 opacity the accent is 3.97:1", "#1d4ed8"),
+    # Image Metadata Viewer: the note box is at 0.8 opacity, where even #1d4ed8 is only 4.42:1.
+    ".privacy-note a": ("inside the note's 0.8 opacity the accent is 3.62:1", "#1e40af"),
+}
+SVG_TEXT_FILL = re.compile(r"""<text\b[^>]*\bfill\s*=\s*["'](#[0-9a-f]{6})["']""", re.I)
+DECL = lambda prop: re.compile(rf"(?:^|;)\s*{prop}\s*:\s*([^;!]+)", re.I)
+FILL, OPACITY = DECL("fill"), DECL("opacity")
+
+
+def light_leftover_problems(rel, text):
+    """Light-theme leftovers from #244/#245: diagram label colors, placeholder reverts, tinted accent text."""
+    css = re.sub(r"/\*.*?\*/", "", "\n".join(STYLE_BLOCK.findall(text)), flags=re.S)
+    rules = [(norm(s), decls) for sel, decls in RULE.findall(css) for s in sel.split(",") if norm(s)]
+    light = [(LIGHT_PREFIX.sub("", s), d) for s, d in rules if LIGHT_PREFIX.search(s)]
+    base = {s for s, _ in rules if not LIGHT_PREFIX.search(s)}
+    problems = []
+    # 1. Diagram labels with a pale fill need a light fill rule for that color.
+    for color in sorted({c.lower() for c in SVG_TEXT_FILL.findall(without_textareas(text))} & set(LIGHT_BAD_TEXT)):
+        fills = [FILL.search(d) for s, d in light if s.lower().endswith(f'text[fill="{color}"]')]
+        if not any(f and not BAD_COLOR.search(f.group(1)) for f in fills):
+            problems.append(f'{rel}: diagram labels with fill="{color}" have no light-theme rule such as '
+                            f'{L_RULE}svg text[fill="{color}"]{{fill:...}} ({LIGHT_BAD_TEXT[color]}:1 on white)')
+    # 2. Placeholders sent back to the browser default in light theme.
+    for s, d in light:
+        m = TEXT_COLOR.search(d)
+        if "::placeholder" in s and m and m.group(1).strip().lower() == "revert":
+            problems.append(f"{rel}: {L_RULE}{s}{{color:revert}} gives placeholders the browser default "
+                            "(4.4:1 on the tool boxes); use #475569")
+    # 3. Accent text on a tint or below full opacity.
+    for sel, (why, fix) in LIGHT_TINTED_ACCENT.items():
+        if sel not in base:
+            continue
+        colors = [TEXT_COLOR.search(d) for s, d in light if s == sel]
+        colors = [c.group(1) for c in colors if c]
+        if not colors or ACCENT_FAMILY.search(colors[-1]):
+            problems.append(f"{rel}: {sel} needs a light-theme color that isn't the accent ({why}); use {fix}")
+    for s, d in light:
+        op = OPACITY.search(d)
+        m = re.match(r'(.*text\[fill="var\(--accent\)"\])\[opacity[^\]]*\]$', s)
+        if not (m and op and float(op.group(1)) < 1):
+            continue
+        fills = [FILL.search(d2) for s2, d2 in light if s2 == m.group(1)]
+        fills = [f.group(1) for f in fills if f]
+        if not fills or ACCENT_FAMILY.search(fills[-1]):
+            problems.append(f"{rel}: accent diagram labels drawn at opacity {op.group(1).strip()} in light theme need a "
+                            f"light fill that isn't the accent ({L_RULE}{m.group(1)}{{fill:#1d4ed8;}})")
+    return problems
+
+
+L_RULE = ':root[data-theme="light"] '
 
 
 def without_textareas(text):
@@ -161,7 +228,7 @@ def main() -> int:
         if rel.parts[0] in EXCLUDE_TOP_LEVEL:
             continue
         text = f.read_text(encoding="utf-8")
-        color_problems += light_color_problems(rel, text)
+        color_problems += light_color_problems(rel, text) + light_leftover_problems(rel, text)
         dark_problems += dark_color_problems(rel, text)
         if f.name != "index.html":
             continue
@@ -199,8 +266,8 @@ def main() -> int:
     if problems or color_problems or dark_problems:
         return 1
     print(f"OK: no em dashes or \"(s)\" plurals in the script messages of {pages} pages, no pale red, "
-          f"green or amber text color ({', '.join(LIGHT_BAD_TEXT)}) without a light-theme override, and no "
-          f"dark-theme text in {', '.join(DARK_BAD_TEXT)}.")
+          f"green or amber text color ({', '.join(LIGHT_BAD_TEXT)}) or diagram label without a light-theme override, "
+          f"no light placeholder revert or tinted accent text, and no dark-theme text in {', '.join(DARK_BAD_TEXT)}.")
     return 0
 
 
