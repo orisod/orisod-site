@@ -247,7 +247,8 @@ button:hover:not(:disabled), .back:hover{
 .footer-copy{font-size:12px;color:var(--muted-text);}
 .footer-col h3{font-size:13px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-text);margin:0 0 14px 0;}
 .footer-col a{display:block;font-size:14px;color:var(--text);text-decoration:none;opacity:0.8;margin-bottom:10px;}
-.footer-col a:hover{opacity:1;color:var(--accent);}
+.footer-col a:hover{opacity:1;color:#60a5fa;}
+:root[data-theme="light"] .footer-col a:not(.footer-support-btn):hover{color:var(--accent);}
 .error{
   color:#f87171;
   font-size:14px;
@@ -288,7 +289,7 @@ h2{
 .workspace-stage{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px;text-align:left;}
 @media (max-width:760px){.workspace-stage{grid-template-columns:1fr;}}
 .stage-panel{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
-.stage-label{display:inline-block;font-size:12px;font-weight:bold;color:var(--accent);background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:3px 10px;margin-bottom:12px;}
+.stage-label{display:inline-block;font-size:12px;font-weight:bold;color:#60a5fa;background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:3px 10px;margin-bottom:12px;}
 :root[data-theme="light"] .stage-label{color:#1d4ed8;}
 .panel-body{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:160px;text-align:center;}
 #previewCanvas{max-width:100%;border-radius:6px;border:1px solid var(--border);}
@@ -448,6 +449,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 /* Phones: tuck the trail into the top padding of <main> (40px on tool pages, 50px on
    posts), so it doesn't push the tool's dropzone further down the screen. */
 @media (max-width:600px){.breadcrumbs{margin:-26px 0 8px 0;}}
+a[style*="color:var(--accent)"]{color:#60a5fa !important;}
 :root[data-theme="light"] a[style*="color:var(--accent)"]{color:#1d4ed8 !important;}
 </style>
 <script type="application/ld+json">
