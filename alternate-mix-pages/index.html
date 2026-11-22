@@ -81,8 +81,11 @@
 .order-lines{max-height:280px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;background:var(--card-bg);font-family:"Courier New", monospace;font-size:13px;line-height:1.7;}
 .order-line{padding:2px 12px;text-align:left;}
 .order-line .tag-a{color:#60a5fa;font-weight:bold;}
+:root[data-theme="light"] .order-line .tag-a{color:#1d4ed8;}
 .order-line .tag-b{color:#fbbf24;font-weight:bold;}
+:root[data-theme="light"] .order-line .tag-b{color:#92400e;}
 .warn-note{color:#f59e0b;font-size:13px;margin-top:12px;text-align:left;line-height:1.5;}
+:root[data-theme="light"] .warn-note{color:#92400e;}
 button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
 button:disabled{opacity:0.4;cursor:not-allowed;}
 button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
