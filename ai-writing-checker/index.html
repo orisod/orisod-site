@@ -160,7 +160,8 @@ mark.hl-opener{background:rgba(251,191,36,.32);color:inherit;border-radius:3px;p
 mark.hl-emdash{background:rgba(167,139,250,.35);color:inherit;border-radius:3px;padding:0 1px;font-weight:bold;}
 .summary-card{background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:12px;}
 .summary-card h3{margin:0 0 8px 0;font-size:14px;}
-.summary-card .count{font-weight:bold;color:var(--accent);}
+.summary-card .count{font-weight:bold;color:#60a5fa;}
+:root[data-theme="light"] .summary-card .count{color:var(--accent);}
 .summary-card .examples{font-size:13px;color:var(--muted-text);line-height:1.6;margin-top:6px;}
 .summary-card .examples code{background:var(--bg);color:var(--text);border:1px solid var(--border);padding:1px 5px;border-radius:4px;font-size:12px;}
 .total-line{font-size:14px;font-weight:bold;margin-bottom:14px;text-align:left;}
@@ -220,7 +221,8 @@ h2{margin-top:50px;font-size:22px;}
 .footer-copy{font-size:12px;color:var(--muted-text);}
 .footer-col h3{font-size:13px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-text);margin:0 0 14px 0;}
 .footer-col a{display:block;font-size:14px;color:var(--text);text-decoration:none;opacity:0.8;margin-bottom:10px;}
-.footer-col a:hover{opacity:1;color:var(--accent);}
+.footer-col a:hover{opacity:1;color:#60a5fa;}
+:root[data-theme="light"] .footer-col a:not(.footer-support-btn):hover{color:var(--accent);}
 .footer-support-text{font-size:13px;color:var(--muted-text);line-height:1.5;margin:0 0 10px 0;opacity:1;}
 .footer-support-btn{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:8px 14px;border-radius:999px;font-size:13px;font-weight:bold;}
 .footer-support-btn:hover{filter:brightness(1.1);}
@@ -416,6 +418,8 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
   .menu-flyout{display:none !important;}
 }
 /* site-nav.css: end */
+main input::placeholder, main textarea::placeholder{color:var(--muted-text);opacity:1;}
+:root[data-theme="light"] main input::placeholder, :root[data-theme="light"] main textarea::placeholder{color:revert;opacity:revert;}
 /* Breadcrumbs (Initiative 2): Home / Category / Tool on tool pages,
    Home / Blog / short label on blog posts. The separators are drawn with
    CSS, so screen readers don't read out a "/" between levels. */
@@ -430,6 +434,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 /* Phones: tuck the trail into the top padding of <main> (40px on tool pages, 50px on
    posts), so it doesn't push the tool's dropzone further down the screen. */
 @media (max-width:600px){.breadcrumbs{margin:-26px 0 8px 0;}}
+a[style*="color:var(--accent)"]{color:#60a5fa !important;}
 :root[data-theme="light"] a[style*="color:var(--accent)"]{color:#1d4ed8 !important;}
 </style>
 <script type="application/ld+json">
