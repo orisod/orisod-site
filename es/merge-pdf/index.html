@@ -681,7 +681,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
     </div>
 
     <div class="error" id="errorMsg" role="alert"></div>
-    <div class="trust-strip"><svg class="o-icon" data-lucide="lock" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span>Procesamiento local · Archivos siempre en tu dispositivo · Sin cuenta · Sin marca de agua</span></div>
+    <div class="trust-strip"><svg class="o-icon" data-lucide="lock" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span>Los archivos se procesan en tu navegador · Sin cuenta ni anuncios · Gratis, gracias a las donaciones</span></div>
     <div class="result" id="result"></div>
   </div>
   </div></div>
@@ -974,9 +974,9 @@ const T = {
   "invalid": "Selecciona archivos PDF válidos.",
   "dropMore": "Haz clic para añadir más PDF ({n} seleccionados)",
   "dropIdle": "Haz clic para seleccionar archivos PDF o arrástralos y suéltalos aquí",
-  "remove": "Eliminar",
-  "moveUp": "Subir",
-  "moveDown": "Bajar",
+  "remove": "Eliminar {name}",
+  "moveUp": "Subir {name}",
+  "moveDown": "Bajar {name}",
   "onePage": "1 página",
   "pages": "{n} páginas",
   "merging": "Uniendo...",
@@ -986,9 +986,9 @@ const T = {
   "download": "Descargar PDF unido",
   "mergeFail": "No se pudieron unir estos PDF. Asegúrate de que ninguno esté protegido con contraseña o dañado.",
   "merge": "Unir PDF",
-  "loadingPreviews": "Cargando vistas previas...",
-  "previewsFail": "No se pudieron cargar las vistas previas. Puedes unir los archivos igualmente. Revisa tu conexión y añade un archivo para intentarlo de nuevo.",
-  "mergeLoadFail": "No se pudo cargar la herramienta para unir los PDF. Revisa tu conexión e inténtalo de nuevo."
+  "loadingPreviews": "Cargando vistas previas…",
+  "previewsFail": "No se pudieron cargar las vistas previas. Aun así, puedes unir los archivos. Para intentarlo de nuevo, revisa tu conexión y añade otro archivo.",
+  "mergeLoadFail": "No se pudo cargar la herramienta para unir archivos PDF. Revisa tu conexión y vuelve a intentarlo."
 };
 const fill = (s, v) => s.replace(/\{(\w+)\}/g, (_, k) => v[k]);
 const fileInput = document.getElementById('fileInput');
@@ -1179,9 +1179,9 @@ function renderFileList() {
     controls.className = 'controls';
     const name = entry.file.name;
     controls.append(
-      iconButton('chevron-up', `${T.moveUp}: ${name}`, () => move(index, -1, '.move-up'), index === 0),
-      iconButton('chevron-down', `${T.moveDown}: ${name}`, () => move(index, 1, '.move-down'), index === selectedFiles.length - 1),
-      iconButton('x', `${T.remove}: ${name}`, () => remove(index)));
+      iconButton('chevron-up', fill(T.moveUp, { name }), () => move(index, -1, '.move-up'), index === 0),
+      iconButton('chevron-down', fill(T.moveDown, { name }), () => move(index, 1, '.move-down'), index === selectedFiles.length - 1),
+      iconButton('x', fill(T.remove, { name }), () => remove(index)));
     controls.children[0].classList.add('move-up');
     controls.children[1].classList.add('move-down');
 

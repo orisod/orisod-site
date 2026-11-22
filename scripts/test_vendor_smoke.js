@@ -2673,11 +2673,11 @@ const FILE_NAME_PR6_CASES = [
 // "Lazy PDF.js" and "Lazy pdf-lib" cases.
 const LAZY_TEXT = {
   en: { mergeFail: "Could not merge these PDFs. Make sure none of them are password-protected or corrupted.",
-    loading: "Loading previews...", fail: "Previews could not load. You can still merge the files. Check your connection and add a file to try again.",
-    libFail: "The merge tool could not load. Check your connection and try again.", merge: "Merge PDFs", merging: "Merging...", done: "Done. Ready to download." },
+    loading: "Loading previews\u2026", fail: "Previews could not be loaded. You can still merge the files. To try again, check your connection and add another file.",
+    libFail: "The tool for merging PDFs could not load. Check your connection and try again.", merge: "Merge PDFs", merging: "Merging...", done: "Done. Ready to download." },
   es: { mergeFail: "No se pudieron unir estos PDF. Asegúrate de que ninguno esté protegido con contraseña o dañado.",
-    loading: "Cargando vistas previas...", fail: "No se pudieron cargar las vistas previas. Puedes unir los archivos igualmente. Revisa tu conexión y añade un archivo para intentarlo de nuevo.",
-    libFail: "No se pudo cargar la herramienta para unir los PDF. Revisa tu conexión e inténtalo de nuevo.", merge: "Unir PDF", merging: "Uniendo...", done: "Listo para descargar." },
+    loading: "Cargando vistas previas\u2026", fail: "No se pudieron cargar las vistas previas. Aun así, puedes unir los archivos. Para intentarlo de nuevo, revisa tu conexión y añade otro archivo.",
+    libFail: "No se pudo cargar la herramienta para unir archivos PDF. Revisa tu conexión y vuelve a intentarlo.", merge: "Unir PDF", merging: "Uniendo...", done: "Listo para descargar." },
 };
 const LAZY_TIMEOUT_MS = 60000;
 const lazyPdf = (stem, pages) => ({ name: stem + ".pdf", mimeType: "application/pdf", buffer: fixturePdf(stem, Array.from({ length: pages }, (_, i) => String(i + 1))) });
