@@ -1205,7 +1205,7 @@ selectNoneBtn.addEventListener('click', () => {
 const RANGE_DASH = /[-\u2010-\u2015\u2212\uFE58\uFE63\uFF0D]/;
 function rangeErrorText(error) {
   if (error.code === 'too_many') return 'Esta selección tiene demasiadas páginas. Prueba con un rango más corto.';
-  return RANGE_DASH.test(error.token) ? `Rango no válido: "${error.token}"` : `Número de página no válido: "${error.token}"`;
+  return RANGE_DASH.test(error.token) ? `Rango no válido: “${error.token}”` : `Número de página no válido: “${error.token}”`;
 }
 
 // The pages to tick, read by the shared page range helper (the block above), and the message for the last

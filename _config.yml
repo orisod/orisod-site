@@ -1,0 +1,17 @@
+# GitHub Pages builds this repository with Jekyll. Every page is a plain HTML file without front matter, so
+# Jekyll copies it unchanged; this file only keeps internal files out of the published site (orisod.com).
+# They stay in the repository. scripts/check_published.py (CI: check-published) builds the site with the same
+# builder as GitHub Pages and fails if any of these paths is published again, or if a page changes.
+exclude:
+  - CLAUDE.md
+  - README.md
+  - LICENSE
+  - package.json
+  - package-lock.json
+  - audit
+  - scripts
+  - claude
+  - assets/js
+  - assets/icons/README.md
+  - assets/nav
+  - assets/css/orisod.css
