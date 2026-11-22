@@ -73,9 +73,11 @@
 .opt-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;font-size:14px;flex-wrap:wrap;justify-content:center;}
 select{padding:7px 10px;border-radius:6px;border:1px solid var(--dropzone-border);background:var(--bg);color:var(--text);font-size:14px;}
 .instructions-box{background:rgba(37,99,235,.08);border:1px solid var(--accent);border-radius:10px;padding:16px 18px;margin-top:16px;text-align:left;font-size:14px;line-height:1.6;}
-.instructions-box strong{color:var(--accent);}
+.instructions-box strong{color:#60a5fa;}
+:root[data-theme="light"] .instructions-box strong{color:var(--accent);}
 .sheet-count{margin-top:12px;font-size:14px;opacity:0.85;}
 .warn-note{color:#f59e0b;font-size:13px;margin-top:10px;line-height:1.5;text-align:left;}
+:root[data-theme="light"] .warn-note{color:#92400e;}
 .preview-row{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:20px;}
 .preview-col{text-align:center;}
 .preview-sheet{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden;width:260px;}
@@ -150,7 +152,8 @@ h2{margin-top:50px;font-size:22px;}
 .footer-copy{font-size:12px;color:var(--muted-text);}
 .footer-col h3{font-size:13px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-text);margin:0 0 14px 0;}
 .footer-col a{display:block;font-size:14px;color:var(--text);text-decoration:none;opacity:0.8;margin-bottom:10px;}
-.footer-col a:hover{opacity:1;color:var(--accent);}
+.footer-col a:hover{opacity:1;color:#60a5fa;}
+:root[data-theme="light"] .footer-col a:not(.footer-support-btn):hover{color:var(--accent);}
 .footer-support-text{font-size:13px;color:var(--muted-text);line-height:1.5;margin:0 0 10px 0;opacity:1;}
 .footer-support-btn{display:inline-block;background:var(--accent);color:#ffffff;text-decoration:none;padding:8px 14px;border-radius:999px;font-size:13px;font-weight:bold;}
 .footer-support-btn:hover{filter:brightness(1.1);}
@@ -360,6 +363,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 /* Phones: tuck the trail into the top padding of <main> (40px on tool pages, 50px on
    posts), so it doesn't push the tool's dropzone further down the screen. */
 @media (max-width:600px){.breadcrumbs{margin:-26px 0 8px 0;}}
+a[style*="color:var(--accent)"]{color:#60a5fa !important;}
 :root[data-theme="light"] a[style*="color:var(--accent)"]{color:#1d4ed8 !important;}
 </style>
 <script type="application/ld+json">

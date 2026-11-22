@@ -123,10 +123,12 @@ label:has(+ input[type="file"]:focus-visible), label:has(input[type="file"]:focu
 .annotation-item .tag{flex:none;font-size:10px;font-weight:bold;text-transform:uppercase;padding:2px 6px;border-radius:4px;background:var(--card-bg);color:var(--muted-text);}
 .annotation-item .desc{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;opacity:0.9;}
 .annotation-item button{margin:0;padding:4px 8px;font-size:12px;background:transparent;border:1px solid var(--border);color:var(--muted-text);border-radius:5px;}
-.annotation-item button:hover{border-color:#dc2626;color:#dc2626;}
+.annotation-item button:hover{border-color:#dc2626;color:#f87171;}
+:root[data-theme="light"] .annotation-item button:hover{color:#dc2626;}
 .no-annotations{font-size:13px;opacity:0.6;}
 .clear-all-btn{margin-top:10px;padding:8px 14px;font-size:13px;background:transparent;border:1px solid var(--border);color:var(--muted-text);}
-.clear-all-btn:hover{border-color:#dc2626;color:#dc2626;}
+.clear-all-btn:hover{border-color:#dc2626;color:#f87171;}
+:root[data-theme="light"] .clear-all-btn:hover{color:#dc2626;}
 button, .back{display:inline-block;margin-top:20px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
 button:disabled{opacity:0.4;cursor:not-allowed;}
 button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
@@ -146,7 +148,8 @@ button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
 .footer-copy{font-size:12px;color:var(--muted-text);}
 .footer-col h3{font-size:13px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-text);margin:0 0 14px 0;}
 .footer-col a{display:block;font-size:14px;color:var(--text);text-decoration:none;opacity:0.8;margin-bottom:10px;}
-.footer-col a:hover{opacity:1;color:var(--accent);}
+.footer-col a:hover{opacity:1;color:#60a5fa;}
+:root[data-theme="light"] .footer-col a:not(.footer-support-btn):hover{color:var(--accent);}
 .error{color:#f87171;font-size:14px;margin-top:10px;}
 :root[data-theme="light"] .error{color:#b91c1c;}
 .progress{font-size:14px;opacity:0.7;margin-top:10px;}
@@ -381,6 +384,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 /* Phones: tuck the trail into the top padding of <main> (40px on tool pages, 50px on
    posts), so it doesn't push the tool's dropzone further down the screen. */
 @media (max-width:600px){.breadcrumbs{margin:-26px 0 8px 0;}}
+a[style*="color:var(--accent)"]{color:#60a5fa !important;}
 :root[data-theme="light"] a[style*="color:var(--accent)"]{color:#1d4ed8 !important;}
 </style>
 <script type="application/ld+json">

@@ -74,7 +74,7 @@
 .dropzone-col{flex:1 1 240px;text-align:left;}
 .slot-label{font-size:13px;font-weight:bold;margin-bottom:8px;opacity:0.85;}
 .stage-panel{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:left;}
-.stage-label{display:inline-block;font-size:12px;font-weight:bold;color:var(--accent);background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:3px 10px;margin-bottom:12px;}
+.stage-label{display:inline-block;font-size:12px;font-weight:bold;color:#60a5fa;background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:3px 10px;margin-bottom:12px;}
 :root[data-theme="light"] .stage-label{color:#1d4ed8;}
 .result-stat{font-size:15px;opacity:0.9;text-align:left;margin-top:20px;}
 .site-nav{position:sticky;top:0;z-index:50;background-color:var(--bg);transition:background-color 0.2s;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
@@ -112,7 +112,8 @@ label:has(+ input[type="file"]:focus-visible), label:has(input[type="file"]:focu
 .diff-line.remove{background:rgba(248,113,113,.12);color:#f87171;}
 :root[data-theme="light"] .diff-line.remove{color:#b91c1c;}
 .diff-line.same{opacity:0.55;}
-.diff-line.page-marker{color:var(--accent);font-weight:bold;opacity:0.85;background:transparent;padding-top:10px;}
+.diff-line.page-marker{color:#60a5fa;font-weight:bold;opacity:0.85;background:transparent;padding-top:10px;}
+:root[data-theme="light"] .diff-line.page-marker{color:var(--accent);}
 .output-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;}
 .warn-note{color:#f87171;font-size:14px;margin-top:12px;text-align:left;}
 :root[data-theme="light"] .warn-note{color:#b91c1c;}
@@ -137,7 +138,8 @@ button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
 .footer-copy{font-size:12px;color:var(--muted-text);}
 .footer-col h3{font-size:13px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-text);margin:0 0 14px 0;}
 .footer-col a{display:block;font-size:14px;color:var(--text);text-decoration:none;opacity:0.8;margin-bottom:10px;}
-.footer-col a:hover{opacity:1;color:var(--accent);}
+.footer-col a:hover{opacity:1;color:#60a5fa;}
+:root[data-theme="light"] .footer-col a:not(.footer-support-btn):hover{color:var(--accent);}
 .error{color:#f87171;font-size:14px;margin-top:10px;}
 :root[data-theme="light"] .error{color:#b91c1c;}
 .progress{font-size:14px;opacity:0.7;margin-top:10px;}
@@ -372,6 +374,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
 /* Phones: tuck the trail into the top padding of <main> (40px on tool pages, 50px on
    posts), so it doesn't push the tool's dropzone further down the screen. */
 @media (max-width:600px){.breadcrumbs{margin:-26px 0 8px 0;}}
+a[style*="color:var(--accent)"]{color:#60a5fa !important;}
 :root[data-theme="light"] a[style*="color:var(--accent)"]{color:#1d4ed8 !important;}
 </style>
 <script type="application/ld+json">

@@ -164,6 +164,8 @@ p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-heigh
 input[type="file"]{position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;opacity:0;}
 label:has(+ input[type="file"]:focus-visible), label:has(input[type="file"]:focus-visible){outline:2px solid var(--accent);outline-offset:2px;}
 .meta-fields{margin-top:20px;text-align:left;}
+.field-hint{font-weight:normal;opacity:0.6;}
+:root[data-theme="light"] .field-hint{opacity:1;color:#475569;}
 .field-row{margin-bottom:14px;}
 .field-row label{display:block;font-size:13px;font-weight:bold;margin-bottom:6px;opacity:0.85;}
 .field-row input[type="text"]{
@@ -171,7 +173,8 @@ label:has(+ input[type="file"]:focus-visible), label:has(input[type="file"]:focu
 }
 .clear-link{display:inline-block;padding:0;border:0;border-radius:0;background:none;font-family:inherit;line-height:inherit;margin-top:2px;font-size:13px;color:var(--muted-text);cursor:pointer;text-decoration:underline;}
 .clear-link:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
-.clear-link:hover{color:var(--accent);}
+.clear-link:hover{color:#60a5fa;}
+:root[data-theme="light"] .clear-link:hover{color:var(--accent);}
 button, .back{display:inline-block;margin-top:16px;padding:14px 20px;border:none;border-radius:8px;background:var(--accent);color:white;text-decoration:none;font-size:16px;cursor:pointer;}
 button:disabled{opacity:0.4;cursor:not-allowed;}
 button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
@@ -191,7 +194,8 @@ button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
 .footer-copy{font-size:12px;color:var(--muted-text);}
 .footer-col h3{font-size:13px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-text);margin:0 0 14px 0;}
 .footer-col a{display:block;font-size:14px;color:var(--text);text-decoration:none;opacity:0.8;margin-bottom:10px;}
-.footer-col a:hover{opacity:1;color:var(--accent);}
+.footer-col a:hover{opacity:1;color:#60a5fa;}
+:root[data-theme="light"] .footer-col a:not(.footer-support-btn):hover{color:var(--accent);}
 .error{color:#f87171;font-size:14px;margin-top:10px;}
 :root[data-theme="light"] .error{color:#b91c1c;}
 .progress{font-size:14px;opacity:0.7;margin-top:10px;}
@@ -340,6 +344,8 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
   border-radius:8px;
 }
 .nav-search input::placeholder{color:var(--muted-text);opacity:1;}
+main input::placeholder, main textarea::placeholder{color:var(--muted-text);opacity:1;}
+:root[data-theme="light"] main input::placeholder, :root[data-theme="light"] main textarea::placeholder{color:revert;opacity:revert;}
 .nav-search input:focus{outline:2px solid var(--accent);outline-offset:0;border-color:var(--accent);}
 .site-nav .nav-search .nav-icon-btn{width:40px;height:40px;flex:none;background:var(--accent);border-color:var(--accent);color:#fff;}
 @media (max-width:600px){
@@ -500,7 +506,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
           <input type="text" id="subjectField" placeholder="(ninguno)">
         </div>
         <div class="field-row">
-          <label for="keywordsField">Palabras clave <span style="font-weight:normal;opacity:0.6;">(separadas por comas)</span></label>
+          <label for="keywordsField">Palabras clave <span class="field-hint">(separadas por comas)</span></label>
           <input type="text" id="keywordsField" placeholder="(ninguna)">
         </div>
         <button type="button" class="clear-link" id="clearLink">Borrar todos los campos</button>

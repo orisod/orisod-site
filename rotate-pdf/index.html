@@ -137,7 +137,7 @@
 .workspace-stage{display:grid;grid-template-columns:1fr 1fr;gap:16px;text-align:left;}
 @media (max-width:760px){.workspace-stage{grid-template-columns:1fr;}}
 .stage-panel{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;}
-.stage-label{display:inline-block;font-size:12px;font-weight:bold;color:var(--accent);background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:3px 10px;margin-bottom:12px;}
+.stage-label{display:inline-block;font-size:12px;font-weight:bold;color:#60a5fa;background:rgba(37,99,235,.14);border:1px solid var(--accent);border-radius:999px;padding:3px 10px;margin-bottom:12px;}
 :root[data-theme="light"] .stage-label{color:#1d4ed8;}
 .panel-body{display:flex;align-items:center;justify-content:center;min-height:200px;}
 .panel-body img{max-width:100%;max-height:220px;border-radius:6px;border:1px solid var(--border);display:block;}
@@ -194,7 +194,8 @@ button:hover:not(:disabled), .back:hover{filter:brightness(1.08);}
 .footer-copy{font-size:12px;color:var(--muted-text);}
 .footer-col h3{font-size:13px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted-text);margin:0 0 14px 0;}
 .footer-col a{display:block;font-size:14px;color:var(--text);text-decoration:none;opacity:0.8;margin-bottom:10px;}
-.footer-col a:hover{opacity:1;color:var(--accent);}
+.footer-col a:hover{opacity:1;color:#60a5fa;}
+:root[data-theme="light"] .footer-col a:not(.footer-support-btn):hover{color:var(--accent);}
 .error{color:#f87171;font-size:14px;margin-top:10px;}
 :root[data-theme="light"] .error{color:#b91c1c;}
 .progress{font-size:14px;opacity:0.7;margin-top:10px;}
@@ -343,6 +344,8 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
   border-radius:8px;
 }
 .nav-search input::placeholder{color:var(--muted-text);opacity:1;}
+main input::placeholder, main textarea::placeholder{color:var(--muted-text);opacity:1;}
+:root[data-theme="light"] main input::placeholder, :root[data-theme="light"] main textarea::placeholder{color:revert;opacity:revert;}
 .nav-search input:focus{outline:2px solid var(--accent);outline-offset:0;border-color:var(--accent);}
 .site-nav .nav-search .nav-icon-btn{width:40px;height:40px;flex:none;background:var(--accent);border-color:var(--accent);color:#fff;}
 @media (max-width:600px){
@@ -433,6 +436,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
    These rules keep them looking as they did before, when they were <div>s. */
 .angle-btn{margin:0;font-family:inherit;line-height:inherit;}
 .angle-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+a[style*="color:var(--accent)"]{color:#60a5fa !important;}
 :root[data-theme="light"] a[style*="color:var(--accent)"]{color:#1d4ed8 !important;}
 </style>
 <script type="application/ld+json">
