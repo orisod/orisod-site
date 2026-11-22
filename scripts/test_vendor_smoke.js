@@ -2673,11 +2673,11 @@ const FILE_NAME_PR6_CASES = [
 // "Lazy PDF.js" and "Lazy pdf-lib" cases.
 const LAZY_TEXT = {
   en: { mergeFail: "Could not merge these PDFs. Make sure none of them are password-protected or corrupted.",
-    loading: "Loading previews...", fail: "Previews could not load. You can still merge the files. Check your connection and add a file to try again.",
-    libFail: "The merge tool could not load. Check your connection and try again.", merge: "Merge PDFs", merging: "Merging...", done: "Done. Ready to download." },
+    loading: "Loading previews\u2026", fail: "Previews could not be loaded. You can still merge the files. To try again, check your connection and add another file.",
+    libFail: "The tool for merging PDFs could not load. Check your connection and try again.", merge: "Merge PDFs", merging: "Merging...", done: "Done. Ready to download." },
   es: { mergeFail: "No se pudieron unir estos PDF. Asegúrate de que ninguno esté protegido con contraseña o dañado.",
-    loading: "Cargando vistas previas...", fail: "No se pudieron cargar las vistas previas. Puedes unir los archivos igualmente. Revisa tu conexión y añade un archivo para intentarlo de nuevo.",
-    libFail: "No se pudo cargar la herramienta para unir los PDF. Revisa tu conexión e inténtalo de nuevo.", merge: "Unir PDF", merging: "Uniendo...", done: "Listo para descargar." },
+    loading: "Cargando vistas previas\u2026", fail: "No se pudieron cargar las vistas previas. Aun así, puedes unir los archivos. Para intentarlo de nuevo, revisa tu conexión y añade otro archivo.",
+    libFail: "No se pudo cargar la herramienta para unir archivos PDF. Revisa tu conexión y vuelve a intentarlo.", merge: "Unir PDF", merging: "Uniendo...", done: "Listo para descargar." },
 };
 const LAZY_TIMEOUT_MS = 60000;
 const lazyPdf = (stem, pages) => ({ name: stem + ".pdf", mimeType: "application/pdf", buffer: fixturePdf(stem, Array.from({ length: pages }, (_, i) => String(i + 1))) });
@@ -6337,15 +6337,15 @@ const CASES = [
       out.push(`before use only the drop zone (bottom row at ${Math.round(idle.rowTop)} px); adding 3 PDFs grows the frame from ${Math.round(animated.before.h)} to ${Math.round(animated.after.h)} px through ${Math.round(animated.mid.h)} px (${animated.mid.frames} frames mid-change), the list fading in after`);
       // Each row: order number, handle, thumbnail, name, pages and size, arrows and remove; then the actions.
       await page.waitForFunction(() => document.querySelectorAll(".file-thumb img").length === 3, null, { timeout: 15000 });
-      const t = lang === "es" ? { pages: ["2 páginas", "3 páginas", "1 página"], add: "Añadir más archivos", start: "Empezar de nuevo", remove: "Eliminar: a.pdf" }
-        : { pages: ["2 pages", "3 pages", "1 page"], add: "Add more files", start: "Start over", remove: "Remove: a.pdf" };
+      const t = lang === "es" ? { pages: ["2 páginas", "3 páginas", "1 página"], add: "Añadir más archivos", start: "Empezar de nuevo", buttons: ["Subir a.pdf", "Bajar a.pdf", "Eliminar a.pdf"] }
+        : { pages: ["2 pages", "3 pages", "1 page"], add: "Add more files", start: "Start over", buttons: ["Move a.pdf up", "Move a.pdf down", "Remove a.pdf"] };
       const rows = await page.evaluate(() => [...document.querySelectorAll("#fileList > li")].map((li) => ({ num: li.querySelector(".file-num").textContent,
         grip: !!li.querySelector(".file-grip svg"), thumb: li.querySelector(".file-thumb img")?.naturalWidth || 0, name: li.querySelector(".name").textContent,
         meta: li.querySelector(".file-meta").textContent, buttons: [...li.querySelectorAll("button")].map((b) => b.getAttribute("aria-label")) })));
       const expectRows = (r) => {
         expect(r.length === 3 && r.every((x, i) => x.num === String(i + 1) && x.grip && x.thumb > 0 && x.meta.startsWith(t.pages[i] + " · ") && / KB$/.test(x.meta) && x.buttons.length === 3),
           `file rows: ${JSON.stringify(r)}`);
-        expect(r[0].buttons[2] === t.remove, `the remove button is named "${r[0].buttons[2]}"`);
+        expect(JSON.stringify(r[0].buttons) === JSON.stringify(t.buttons), `the first row's buttons are named ${JSON.stringify(r[0].buttons)}`);
       };
       expectRows(rows);
       const actions = await page.evaluate(() => ["addMoreBtn", "startOverBtn", "mergeBtn"].map((id) => { const b = document.getElementById(id);
