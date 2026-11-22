@@ -76,6 +76,8 @@ CASES = [
     ("leftover bad: placeholder reverted in light", page("main textarea::placeholder{color:var(--muted-text);opacity:1;}" + L + "main textarea::placeholder{color:revert;opacity:revert;}"), False, "{color:revert} gives placeholders the browser default"),
     ("leftover bad: case button active in the accent", page(".case-btn.active{color:#60a5fa;}" + L + ".case-btn.active{color:var(--accent);}"), False, ".case-btn.active needs a light-theme color that isn't the accent"),
     ("leftover bad: page marker without a light rule", page(".diff-line.page-marker{color:#60a5fa;opacity:0.85;}"), False, ".diff-line.page-marker needs a light-theme color"),
+    ("leftover good: privacy-note link in #1e40af", page(".privacy-note a{color:#60a5fa;}" + L + ".privacy-note a{color:#1e40af;}"), True, ""),
+    ("leftover bad: privacy-note link in the accent", page(".privacy-note a{color:#60a5fa;}" + L + ".privacy-note a{color:var(--accent);}"), False, ".privacy-note a needs a light-theme color that isn't the accent"),
     ("leftover bad: accent labels at 0.85 in the accent", page(L + '.theme-figure text[fill="var(--accent)"]{fill:var(--accent);}' + L + '.theme-figure text[fill="var(--accent)"][opacity="0.85"]{opacity:0.85;}'), False, "accent diagram labels drawn at opacity 0.85"),
 ]
 

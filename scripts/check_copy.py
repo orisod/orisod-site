@@ -29,7 +29,7 @@ And the light-theme leftovers fixed after #244 and #245 (added 2026-11-22, light
 - a light rule that sends placeholders back to the browser default (`::placeholder{color:revert}`) fails: that
   gray is 4.4:1 on the tool boxes (#f8fafc); give them #475569.
 - the selectors in LIGHT_TINTED_ACCENT (accent text drawn on a blue tint or below full opacity) need a light
-  override that isn't the accent (#1d4ed8), and accent diagram labels that a light rule draws below full
+  override that isn't the accent (#1d4ed8, or #1e40af for the privacy-note link), and accent diagram labels that a light rule draws below full
   opacity need a light fill that isn't the accent either.
 Placeholders left at the browser default with no rule at all aren't flagged (4.6:1 on white, fine there).
 
@@ -90,11 +90,13 @@ INLINE_DARK_BAD = re.compile(r"""<(?!a\s)[a-z][a-z0-9]*\s[^>]*style\s*=\s*["'](?
 
 
 # Light theme: the accent (#2563eb, 5.17:1 on white) drops under 4.5:1 on a blue tint or below full opacity.
-# These selectors need a light override that isn't the accent family (measured 2026-11-22, use #1d4ed8).
+# These selectors need a light override that isn't the accent family (measured 2026-11-22): (why, what to use).
 ACCENT_FAMILY = re.compile(r"var\(--accent\)|#2563eb\b|#60a5fa\b|#3b82f6\b", re.I)
 LIGHT_TINTED_ACCENT = {
-    ".case-btn.active": "on its blue tint the accent is 3.67:1",
-    ".diff-line.page-marker": "at its 0.85 opacity the accent is 3.97:1",
+    ".case-btn.active": ("on its blue tint the accent is 3.67:1", "#1d4ed8"),
+    ".diff-line.page-marker": ("at its 0.85 opacity the accent is 3.97:1", "#1d4ed8"),
+    # Image Metadata Viewer: the note box is at 0.8 opacity, where even #1d4ed8 is only 4.42:1.
+    ".privacy-note a": ("inside the note's 0.8 opacity the accent is 3.62:1", "#1e40af"),
 }
 SVG_TEXT_FILL = re.compile(r"""<text\b[^>]*\bfill\s*=\s*["'](#[0-9a-f]{6})["']""", re.I)
 DECL = lambda prop: re.compile(rf"(?:^|;)\s*{prop}\s*:\s*([^;!]+)", re.I)
@@ -121,13 +123,13 @@ def light_leftover_problems(rel, text):
             problems.append(f"{rel}: {L_RULE}{s}{{color:revert}} gives placeholders the browser default "
                             "(4.4:1 on the tool boxes); use #475569")
     # 3. Accent text on a tint or below full opacity.
-    for sel, why in LIGHT_TINTED_ACCENT.items():
+    for sel, (why, fix) in LIGHT_TINTED_ACCENT.items():
         if sel not in base:
             continue
         colors = [TEXT_COLOR.search(d) for s, d in light if s == sel]
         colors = [c.group(1) for c in colors if c]
         if not colors or ACCENT_FAMILY.search(colors[-1]):
-            problems.append(f"{rel}: {sel} needs a light-theme color that isn't the accent ({why}); use #1d4ed8")
+            problems.append(f"{rel}: {sel} needs a light-theme color that isn't the accent ({why}); use {fix}")
     for s, d in light:
         op = OPACITY.search(d)
         m = re.match(r'(.*text\[fill="var\(--accent\)"\])\[opacity[^\]]*\]$', s)
