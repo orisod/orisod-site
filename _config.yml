@@ -13,3 +13,5 @@ exclude:
   - claude
   - assets/js
   - assets/icons/README.md
+  - assets/nav
+  - assets/css/orisod.css

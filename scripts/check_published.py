@@ -32,6 +32,8 @@ REPO = Path(__file__).resolve().parent.parent
 REQUIRED_EXCLUDES = [
     "CLAUDE.md", "README.md", "LICENSE", "package.json", "package-lock.json",
     "audit", "scripts", "claude", "assets/js", "assets/icons/README.md",
+    # Orisod 2.0: sources that sync_nav.py and sync_styles.py copy into the pages; no page loads them.
+    "assets/nav", "assets/css/orisod.css",
 ]
 # Files at the site root that belong to the site (besides page folders, which hold an index.html).
 # CNAME is copied by actions/jekyll-build-pages (the deployed artifact may leave it out; it's never required).

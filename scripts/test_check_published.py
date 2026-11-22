@@ -13,7 +13,7 @@ from pathlib import Path
 CHECKER = Path(__file__).resolve().parent / "check_published.py"
 CONFIG = "exclude:\n" + "".join(f"  - {p}\n" for p in [
     "CLAUDE.md", "README.md", "LICENSE", "package.json", "package-lock.json",
-    "audit", "scripts", "claude", "assets/js", "assets/icons/README.md"])
+    "audit", "scripts", "claude", "assets/js", "assets/icons/README.md", "assets/nav", "assets/css/orisod.css"])
 TRACKED = {
     "_config.yml": CONFIG,
     "index.html": "<!doctype html><title>Home</title>",
@@ -23,6 +23,7 @@ TRACKED = {
     "tool/index.html": "<!doctype html><title>Tool</title>",
     "assets/vendor/lib/1.0/README.md": "license notes\n",
     "assets/js/source.js": "// source of an inline block\n",
+    "assets/nav/site-nav.html": "<header>{{name}}</header>\n",
     "CLAUDE.md": "internal\n",
     "scripts/check.py": "print('x')\n",
     "audit/notes.md": "internal\n",
@@ -73,6 +74,7 @@ def main():
             ("page rendered from an excluded .md", lambda s: write(s, "audit/notes.html", "<p>x</p>"), 1, "published although excluded: audit/notes.html"),
             ("a script published", lambda s: write(s, "scripts/check.py", "print('x')\n"), 1, "published although excluded: scripts/check.py"),
             ("inline block source published", lambda s: write(s, "assets/js/source.js", "// source of an inline block\n"), 1, "published although excluded: assets/js/source.js"),
+            ("nav template published", lambda s: write(s, "assets/nav/site-nav.html", "<header>{{name}}</header>\n"), 1, "published although excluded: assets/nav/site-nav.html"),
             ("new file at the root", lambda s: write(s, "NOTES.txt", "x\n"), 1, "unexpected file at the site root: NOTES.txt"),
             ("internal file type in a folder", lambda s: write(s, "tool/plan.md", "x\n"), 1, "internal file type published: tool/plan.md"),
             ("untracked file in a folder", lambda s: write(s, "tool/extra.js", "x\n"), 1, "built file that isn't tracked or expected: tool/extra.js"),
