@@ -446,7 +446,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
         <h2 class="options-title">Header &amp; footer options</h2>
         <div class="option-card">
           <h3><label class="hf-toggle"><input type="checkbox" id="headerEnable"> Header</label></h3>
-          <div class="hf-body disabled" id="headerBody">
+          <div class="hf-body disabled" id="headerBody" inert>
             <input type="text" class="hf-text-input" id="headerText" placeholder="e.g. Company Name" aria-label="Header text">
             <div class="align-grid">
               <button type="button" class="align-btn" data-target="header" data-align="left" aria-pressed="false">Left</button>
@@ -681,9 +681,11 @@ let footerAlign = 'center';
 
 headerEnable.addEventListener('change', () => {
   headerBody.classList.toggle('disabled', !headerEnable.checked);
+  headerBody.inert = !headerEnable.checked;
 });
 footerEnable.addEventListener('change', () => {
   footerBody.classList.toggle('disabled', !footerEnable.checked);
+  footerBody.inert = !footerEnable.checked;
 });
 
 document.querySelectorAll('.align-btn').forEach((btn) => {

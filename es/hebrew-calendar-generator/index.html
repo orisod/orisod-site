@@ -167,6 +167,10 @@ select, input[type="text"], input[type="date"], input[type="number"]{
   width:100%;padding:10px 11px;border-radius:8px;border:1px solid var(--dropzone-border);background:var(--bg);color:var(--text);font-size:14px;font-family:inherit;
 }
 .two-col{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;}
+/* A select can't wrap its text: on narrow screens a pair of dropdowns stacks so every option shows in full. */
+@media (max-width:640px){.two-col:has(select){grid-template-columns:minmax(0,1fr);}}
+/* Under 360 px the longest options still need a little more room (measured at 320 px). */
+@media (max-width:359px){.panel:has(.two-col select){padding-left:14px;padding-right:14px;}.two-col:has(select) select{padding-left:8px;padding-right:8px;font-size:13px;}}
 
 .mode-tabs{display:flex;gap:8px;margin-bottom:12px;}
 .mode-tabs button{flex:1;padding:9px 6px;font-size:12.5px;background:var(--bg);border:1px solid var(--dropzone-border);color:var(--text);border-radius:6px;cursor:pointer;}

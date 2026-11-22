@@ -164,6 +164,8 @@ p{font-size:18px;opacity:0.85;max-width:700px;margin:0 auto 25px auto;line-heigh
 input[type="file"]{position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;opacity:0;}
 label:has(+ input[type="file"]:focus-visible), label:has(input[type="file"]:focus-visible){outline:2px solid var(--accent);outline-offset:2px;}
 .meta-fields{margin-top:20px;text-align:left;}
+.field-hint{font-weight:normal;opacity:0.6;}
+:root[data-theme="light"] .field-hint{opacity:1;color:#475569;}
 .field-row{margin-bottom:14px;}
 .field-row label{display:block;font-size:13px;font-weight:bold;margin-bottom:6px;opacity:0.85;}
 .field-row input[type="text"]{
@@ -440,7 +442,7 @@ html{scroll-padding-top:calc(var(--site-nav-h, 60px) + 12px);}
           <input type="text" id="subjectField" placeholder="(none)">
         </div>
         <div class="field-row">
-          <label for="keywordsField">Keywords <span style="font-weight:normal;opacity:0.6;">(comma separated)</span></label>
+          <label for="keywordsField">Keywords <span class="field-hint">(comma separated)</span></label>
           <input type="text" id="keywordsField" placeholder="(none)">
         </div>
         <button type="button" class="clear-link" id="clearLink">Clear all fields</button>
