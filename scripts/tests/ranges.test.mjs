@@ -4,15 +4,15 @@
 //
 // They run the source, assets/js/orisod-ranges.js, with no DOM, and check that every page carrying the
 // "Orisod page ranges" block carries it byte for byte. The differential tests at the end take the four
-// tools' own parsers (Rotate PDF cut out of its EN and ES pages without running it; Delete PDF Pages, PDF to
-// JPG and Split PDF, which now use the helper, from the frozen copies in old_range_parsers.mjs), feed
+// tools' own parsers (Delete PDF Pages, PDF to JPG, Split PDF and Rotate PDF, which now all use the helper,
+// from the frozen copies in old_range_parsers.mjs), feed
 // them the same inputs as the helper, and check that the helper accepts everything they accept with the same
 // pages, apart from the differences listed in DIFFERENCES.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { oldDeleteSet, oldJpgSelection, oldSplitRanges } from "./old_range_parsers.mjs";
+import { oldDeleteSet, oldJpgSelection, oldSplitRanges, oldRotateSelection } from "./old_range_parsers.mjs";
 
 const ROOT = fileURLToPath(new URL("../../", import.meta.url));
 const START = "// Orisod page ranges: start", END = "// Orisod page ranges: end";
@@ -306,7 +306,8 @@ for (const [label, input, total, options] of PERF) {
 // would use, must give ok and the same pages:
 //   Delete PDF Pages  { outOfRange: "clip" }: sorted pages (it keeps a set and clips to the document)
 //   Split PDF         SPLIT: typed order, repeats kept (keywords on, at most 10,000 pages)
-//   Rotate PDF        { preserveOrder: true }: typed order, once each
+//   Rotate PDF        { allowKeywords: true, outOfRange: "error" }: sorted, once each (one angle for all of
+//                     them, so the old typed order is compared sorted)
 //   PDF to JPG        { outOfRange: "clip" }: the pages it ticks, which can only be pages of the document
 // except for these intentional differences (each is checked below):
 const DIFFERENCES = {
@@ -335,20 +336,8 @@ const DIFFERENCE_EXAMPLES = [
   ["split", "1-3-5", 10, [1, 2, 3], ["invalid_token"], []],
 ];
 
-function cutFunction(html, start) {
-  const s = html.indexOf(start);
-  assert.ok(s >= 0, `missing ${start}`);
-  let depth = 0;
-  for (let i = html.indexOf("{", s); i < html.length; i++) {
-    if (html[i] === "{") depth++;
-    else if (html[i] === "}" && --depth === 0) return html.slice(s, i + 1);
-  }
-  throw new Error("unbalanced " + start);
-}
 function oldParsers(prefix) {
-  const read = (tool) => readFileSync(ROOT + prefix + tool + "/index.html", "utf-8").replace(/\r\n/g, "\n");
   const lang = prefix ? "es" : "en";
-  const rotate = new Function(cutFunction(read("rotate-pdf"), "function parsePageSelection(") + "\nreturn parsePageSelection;")();
   return {
     // Each returns { accepted, pages } as the page would use them.
     delete(raw, total) {
@@ -361,7 +350,7 @@ function oldParsers(prefix) {
       try { return { accepted: true, pages: oldSplitRanges(raw.trim(), total, lang) }; } catch { return { accepted: false }; }
     },
     rotate(raw, total) {
-      try { return { accepted: true, pages: rotate(raw, total) }; } catch { return { accepted: false }; }
+      try { return { accepted: true, pages: oldRotateSelection(raw, total, lang).sort((x, y) => x - y) }; } catch { return { accepted: false }; }
     },
     jpg(raw, total) {
       raw = raw.trim();
@@ -371,7 +360,7 @@ function oldParsers(prefix) {
     },
   };
 }
-const NEW_OPTIONS = { delete: { outOfRange: "clip" }, split: { preserveOrder: true, unique: false, allowKeywords: true, outOfRange: "error", maxItems: 10000 }, rotate: { preserveOrder: true }, jpg: { outOfRange: "clip" } };
+const NEW_OPTIONS = { delete: { outOfRange: "clip" }, split: { preserveOrder: true, unique: false, allowKeywords: true, outOfRange: "error", maxItems: 10000 }, rotate: { allowKeywords: true, outOfRange: "error" }, jpg: { outOfRange: "clip" } };
 
 // Which listed difference an old-accepted input falls under, or null when the helper must match exactly.
 function difference(raw) {

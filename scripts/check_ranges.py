@@ -25,6 +25,7 @@ OPTED_IN_PAGES = {
     "delete-pdf-pages/index.html", "es/delete-pdf-pages/index.html",
     "pdf-to-jpg/index.html", "es/pdf-to-jpg/index.html",
     "split-pdf/index.html", "es/split-pdf/index.html",
+    "rotate-pdf/index.html", "es/rotate-pdf/index.html",
 }
 USES = ("orisodParseRanges(", "orisodFormatRanges(", "ORISOD_RANGE_KEYWORDS")
 NAMES = ("orisodParseRanges", "orisodFormatRanges", "orisodRangeChar", "ORISOD_RANGE_KEYWORDS", "ORISOD_RANGE_DEFAULTS")
