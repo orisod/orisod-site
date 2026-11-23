@@ -1,7 +1,8 @@
 // Delete PDF Pages' and PDF to JPG's own range code as it was on main at 4e853957 (with the #233 freeze fix),
 // before both tools adopted the shared page range helper. It's frozen here so the tests can show exactly what
-// changed for each input; don't edit it. Not a test file itself: ranges.test.mjs, huge_ranges.test.mjs and
-// range_adoption.test.mjs import it.
+// changed for each input; don't edit it. Split PDF's range code (oldSplitRanges, oldSplitExtract) was added the
+// same way, frozen from main at 002ba100 before Split PDF adopted the helper. Not a test file itself:
+// ranges.test.mjs, huge_ranges.test.mjs, range_adoption.test.mjs and split_range_adoption.test.mjs import it.
 
 export const OLD_MESSAGES = {
   en: { range: (t) => `Invalid range: "${t}"`, page: (t) => `Invalid page number: "${t}"` },
@@ -66,4 +67,41 @@ export function jpgOutcome(raw, total, select) {
   if (!raw) return { unchanged: true };
   const { pages, error } = select(raw, total);
   return { ticked: Array.from({ length: total }, (_, i) => i + 1).filter((p) => pages.has(p)), error };
+}
+
+// Split PDF's parseRanges() (EN and ES differ only in the message words): the pages to copy into the new PDF,
+// in typed order with repeats kept, or a thrown message for the first item it couldn't read.
+export function oldSplitRanges(raw, maxPage, lang) {
+  const m = OLD_MESSAGES[lang];
+  const pages = [];
+  const parts = raw.split(',');
+  for (const part of parts) {
+    const trimmed = part.trim();
+    if (!trimmed) continue;
+    if (trimmed.includes('-')) {
+      const [startStr, endStr] = trimmed.split('-');
+      const start = parseInt(startStr, 10);
+      const end = parseInt(endStr, 10);
+      if (isNaN(start) || isNaN(end) || start < 1 || end > maxPage || end < start) {
+        throw new Error(m.range(trimmed));
+      }
+      for (let p = start; p <= end; p++) pages.push(p);
+    } else {
+      const num = parseInt(trimmed, 10);
+      if (isNaN(num) || num < 1 || num > maxPage) {
+        throw new Error(m.page(trimmed));
+      }
+      pages.push(num);
+    }
+  }
+  return pages;
+}
+
+// What Split PDF's Extract button did with the field: { pages } to copy (possibly none, which built a 0-page
+// PDF) or { error } with the message it showed.
+export const OLD_SPLIT_EMPTY = { en: 'Enter a page range, e.g. "1-3, 5".', es: 'Introduce un rango de páginas, p. ej. "1-3, 5".' };
+export function oldSplitExtract(value, maxPage, lang) {
+  const raw = value.trim();
+  if (!raw) return { error: OLD_SPLIT_EMPTY[lang] };
+  try { return { pages: oldSplitRanges(raw, maxPage, lang) }; } catch (err) { return { error: err.message }; }
 }

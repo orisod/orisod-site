@@ -24,6 +24,7 @@ import sync_ranges as sr  # noqa: E402
 OPTED_IN_PAGES = {
     "delete-pdf-pages/index.html", "es/delete-pdf-pages/index.html",
     "pdf-to-jpg/index.html", "es/pdf-to-jpg/index.html",
+    "split-pdf/index.html", "es/split-pdf/index.html",
 }
 USES = ("orisodParseRanges(", "orisodFormatRanges(", "ORISOD_RANGE_KEYWORDS")
 NAMES = ("orisodParseRanges", "orisodFormatRanges", "orisodRangeChar", "ORISOD_RANGE_KEYWORDS", "ORISOD_RANGE_DEFAULTS")

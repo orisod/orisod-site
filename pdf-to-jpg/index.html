@@ -773,13 +773,14 @@ function orisodZipName(options) {
 // and "-3". Full-width forms read as ASCII, and the hyphen, en dash, em dash and minus sign as the dash.
 // Options, default first: preserveOrder false, unique true, allowOpenEnded true, reversed "accept" or "error",
 // outOfRange "error" or "clip" (drops pages outside 1..totalPages, page 0 included), allowKeywords false,
-// keywords ORISOD_RANGE_KEYWORDS (odd, even, last), maxItems 100000. A bad totalPages or an unknown option
+// keywords ORISOD_RANGE_KEYWORDS (odd, even, last, all), maxItems 100000. A bad totalPages or an unknown option
 // throws a TypeError. orisodParseRanges reads orisodFormatRanges(pages, { preserveOrder }) back unchanged.
 
 const ORISOD_RANGE_KEYWORDS = {
   odd: ["odd", "impar", "impares"],
   even: ["even", "par", "pares"],
-  last: ["last", "ultima", "última"]
+  last: ["last", "ultima", "última"],
+  all: ["all", "todas"]
 };
 const ORISOD_RANGE_DEFAULTS = {
   preserveOrder: false, unique: true, allowOpenEnded: true, reversed: "accept", outOfRange: "error",
@@ -847,7 +848,7 @@ function orisodParseRanges(input, totalPages, options) {
 
   const words = {};
   if (o.allowKeywords) {
-    for (const name of ["odd", "even", "last"]) for (const w of o.keywords[name] || []) words[w.toLowerCase()] = name;
+    for (const name of ["odd", "even", "last", "all"]) for (const w of o.keywords[name] || []) words[w.toLowerCase()] = name;
   }
   // A typed page number, or the keyword "last": { v } (Infinity past what a safe integer holds), or null.
   const term = (l) => {
@@ -869,6 +870,12 @@ function orisodParseRanges(input, totalPages, options) {
     if (parity === "odd" || parity === "even") {
       if (!clip && total < (parity === "odd" ? 1 : 2)) { fail("out_of_range"); continue; }
       parts.push({ parity, start, end });
+      continue;
+    }
+    if (parity === "all") {
+      // Every page, as the span 1 to the last page.
+      if (!clip && total < 1) { fail("out_of_range"); continue; }
+      if (total >= 1) parts.push({ lo: 1, hi: total, down: false, start, end });
       continue;
     }
     if (it.length === 1) a = b = term(it[0]);

@@ -1,4 +1,4 @@
-// Cuts Delete PDF Pages' and PDF to JPG's range code out of their pages (EN or ES), with the shared page range
+// Cuts Delete PDF Pages', PDF to JPG's and Split PDF's range code out of their pages (EN or ES), with the shared page range
 // block it calls, so the tests run exactly the text the pages ship. Not a test file itself.
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -42,5 +42,11 @@ export function jpgSource(prefix) {
   const html = read(prefix + "pdf-to-jpg/index.html");
   return block(html) + between(html, "// Words for the helper's error codes", "function parseSelection(") +
     "\nfunction run(raw, lastPage) { return parseSelection(raw, lastPage); }";
+}
+// Source text defining run(raw, maxPage): Split PDF's parseRanges() ({ pages, error }).
+export function splitSource(prefix) {
+  const html = read(prefix + "split-pdf/index.html");
+  return block(html) + between(html, "// Words for the helper's error codes", "function parseRanges(") +
+    "\nfunction run(raw, maxPage) { return parseRanges(raw, maxPage); }";
 }
 export const load = (src) => new Function(src + "\nreturn run;")();
