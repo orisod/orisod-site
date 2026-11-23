@@ -2759,6 +2759,148 @@ const CASES = [
     },
   },
   {
+    // Rotate PDF Pages reads the typed pages with the shared page range helper: a blank field is every page,
+    // the keywords work in both languages, pages past the end, loose readings and a field of only commas are
+    // refused with no download, and the range error has its own role="alert" line right under the field.
+    name: "Rotate PDF Pages page ranges",
+    page: "/rotate-pdf/",
+    vendor: [PDFJS, PDFLIB],
+    async run(page, lang) {
+      const es = lang === "es";
+      const LQ = String.fromCharCode(0x201C), RQ = String.fromCharCode(0x201D);
+      const MSG = es
+        ? { range: (t) => `Rango no válido: ${LQ}${t}${RQ}`, page: (t) => `Número de página no válido: ${LQ}${t}${RQ}`,
+          empty: "Escribe las páginas que quieres rotar o deja el campo en blanco para rotarlas todas.",
+          hint: `También puedes escribir impares, pares o última, por ejemplo ${LQ}pares${RQ} o ${LQ}5-última${RQ}.` }
+        : { range: (t) => `Invalid range: ${LQ}${t}${RQ}`, page: (t) => `Invalid page number: ${LQ}${t}${RQ}`,
+          empty: "Enter the pages to rotate, or leave the field blank to rotate every page.",
+          hint: `You can also type odd, even, or last, for example ${LQ}even${RQ} or ${LQ}5-last${RQ}.` };
+      const stem = "Giros";
+      const want = `${stem}-${es ? "girado" : "rotated"}-orisod.pdf`;
+      // Ten pages, page n 200 + 10n points wide; page 4 already turned 90 degrees and page 7 270 degrees.
+      const START = { 4: 90, 7: 270 };
+      const bytes = Buffer.from(await page.evaluate(async (start) => {
+        const d = await PDFLib.PDFDocument.create();
+        for (let i = 1; i <= 10; i++) {
+          const p = d.addPage([200 + 10 * i, 400]);
+          if (start[i]) p.setRotation(PDFLib.degrees(start[i]));
+        }
+        return Array.from(await d.save());
+      }, START));
+      await page.setInputFiles("#fileInput", { name: `${stem}.PDF`, mimeType: "application/pdf", buffer: bytes });
+      await page.locator("#editor").waitFor({ state: "visible", timeout: 30000 });
+      await page.waitForFunction(() => document.querySelector('.angle-btn[data-angle="90"]').getAttribute("aria-pressed") === "true", null, { timeout: 30000 });
+      let downloads = 0;
+      page.on("download", () => downloads++);
+      await page.evaluate(() => {
+        window.__alerts = [];
+        new MutationObserver(() => { const t = document.getElementById("rangeError").textContent; if (t) window.__alerts.push(t); })
+          .observe(document.getElementById("rangeError"), { childList: true, characterData: true, subtree: true });
+      });
+      const state = () => page.evaluate(() => {
+        const f = document.getElementById("pagesInput"), e = document.getElementById("rangeError");
+        return { error: e.textContent, invalid: f.getAttribute("aria-invalid"), described: f.getAttribute("aria-describedby"), role: e.getAttribute("role"),
+          fileError: document.getElementById("errorMsg").textContent, progress: document.getElementById("progressMsg").textContent, alerts: window.__alerts.length };
+      });
+      // Each page's rotation in the saved PDF, by page number (read from its width).
+      const rotations = (pdf) => page.evaluate(async (a) => {
+        const d = await PDFLib.PDFDocument.load(new Uint8Array(a));
+        const out = {};
+        for (const p of d.getPages()) out[Math.round((p.getWidth() - 200) / 10)] = ((p.getRotation().angle % 360) + 360) % 360;
+        return out;
+      }, Array.from(pdf));
+      const rotate = async (raw, angle) => {
+        await page.click(`.angle-btn[data-angle="${angle}"]`);
+        await page.fill("#pagesInput", raw);
+        const before = await state();
+        const seen = downloads;
+        const label = JSON.stringify(raw);
+        const dl = page.waitForEvent("download", { timeout: 30000 }).catch(() => null);
+        await page.click("#rotateBtn");
+        await page.waitForFunction(() => document.getElementById("rangeError").textContent || /\d/.test(document.getElementById("progressMsg").textContent), null, { timeout: 30000 });
+        const s = await state();
+        if (s.error) {
+          await page.waitForTimeout(500);
+          expect(downloads === seen, `${label}: a file was downloaded although the range was refused`);
+          expect(s.progress === "", `${label}: the page still says ${JSON.stringify(s.progress)}`);
+          expect(s.alerts === before.alerts + 1, `${label}: the error line was written ${s.alerts - before.alerts} times, not once`);
+          expect(s.invalid === "true" && s.described === "rangeError rangeHint" && s.role === "alert", `${label}: aria ${JSON.stringify(s)}`);
+          expect(s.fileError === "" && !s.error.includes("<item>"), `${label}: ${JSON.stringify(s)}`);
+          return { error: s.error };
+        }
+        const d = await dl;
+        expect(d, `${label}: no download`);
+        expect(d.suggestedFilename() === want, `${label}: saved as ${d.suggestedFilename()}, not ${want}`);
+        expect(s.invalid === null && s.described === "rangeHint", `${label}: after success, aria ${JSON.stringify(s)}`);
+        return { rot: await rotations(await readFile(await d.path())), progress: s.progress };
+      };
+      // The rotation every page should have after turning `pages` by `angle`.
+      const expectedRot = (pages, angle) => {
+        const out = {};
+        for (let n = 1; n <= 10; n++) out[n] = (((START[n] || 0) + (pages.includes(n) ? angle : 0)) % 360 + 360) % 360;
+        return out;
+      };
+      const expectRot = (r, pages, angle, raw) => expect(JSON.stringify(r.rot) === JSON.stringify(expectedRot(pages, angle)),
+        `${JSON.stringify(raw)} at ${angle}: ${JSON.stringify(r.rot || r.error)}, not ${JSON.stringify(expectedRot(pages, angle))}`);
+
+      const hint = await page.textContent("#rangeHint");
+      expect(hint === MSG.hint, `the hint is ${JSON.stringify(hint)}`);
+      const first = await state();
+      expect(first.error === "" && first.invalid === null && first.described === "rangeHint" && first.role === "alert", `on load: ${JSON.stringify(first)}`);
+
+      const done = [];
+      for (const [raw, angle, pages] of [["", 90, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]], ["even", 180, [2, 4, 6, 8, 10]], ["pares", -90, [2, 4, 6, 8, 10]],
+        ["odd", 90, [1, 3, 5, 7, 9]], ["last", 180, [10]], ["5-last", 90, [5, 6, 7, 8, 9, 10]], ["5-2", -90, [2, 3, 4, 5]], ["todas", 180, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]]]) {
+        const r = await rotate(raw, angle);
+        expectRot(r, pages, angle, raw);
+        done.push(`${raw || "blank"} at ${angle}: ${pages.length} pages (${r.progress})`);
+      }
+      const even = await rotate("even", 180);
+      const neg1 = mustFail("the old rotation ignored", () => expect(JSON.stringify(even.rot) === JSON.stringify({ ...expectedRot([2, 4, 6, 8, 10], 180), 4: 180 }), "test"));
+
+      for (const [raw, msg] of [["11", MSG.page("11")], ["8-12", MSG.range("8-12")], [",", MSG.empty], [" , ", MSG.empty], ["0", MSG.page("0")],
+        ["2a", MSG.page("2a")], ["1-3-5", MSG.range("1-3-5")], ["x, 11", MSG.page("x")]]) {
+        const r = await rotate(raw, 90);
+        expect(r.error === msg, `${JSON.stringify(raw)} gave ${JSON.stringify(r.error || r.rot)}, not ${JSON.stringify(msg)}`);
+      }
+      const eleven = await rotate("11", 90);
+      const neg2 = mustFail("straight quotes", () => expect(eleven.error === (es ? 'Número de página no válido: "11"' : 'Invalid page number: "11"'), "test"));
+      // Typing clears the error and aria-invalid.
+      await page.type("#pagesInput", "0");
+      const typed = await state();
+      expect(typed.error === "" && typed.invalid === null && typed.described === "rangeHint", `after typing: ${JSON.stringify(typed)}`);
+
+      // Keyboard only: Tab from the last angle button to the field, type, Tab to Rotate, Enter.
+      await page.fill("#pagesInput", "");
+      await page.focus('.angle-btn[data-angle="180"]');
+      await page.keyboard.press("Tab");
+      expect(await page.evaluate(() => document.activeElement.id) === "pagesInput", "Tab from the last angle button doesn't reach the pages field");
+      await page.keyboard.type("11");
+      await page.keyboard.press("Tab");
+      expect(await page.evaluate(() => document.activeElement.id) === "rotateBtn", "Tab from the pages field doesn't reach Rotate");
+      await page.keyboard.press("Enter");
+      await page.waitForFunction(() => document.getElementById("rangeError").textContent, null, { timeout: 10000 });
+      expect(await page.textContent("#rangeError") === MSG.page("11"), "Enter on Rotate doesn't show the error");
+
+      // At 390 and 320 px the error line sits right under the field, in view, with no sideways scroll.
+      const placed = [];
+      for (const width of [390, 320]) {
+        await page.setViewportSize({ width, height: 700 });
+        await rotate("11", 90);
+        const g = await page.evaluate(() => {
+          const f = document.getElementById("pagesInput").getBoundingClientRect(), e = document.getElementById("rangeError").getBoundingClientRect();
+          return { gap: Math.round(e.top - f.bottom), top: Math.round(e.top), bottom: Math.round(e.bottom), left: Math.round(e.left), right: Math.round(e.right),
+            vw: document.documentElement.clientWidth, vh: innerHeight, sideways: document.documentElement.scrollWidth > document.documentElement.clientWidth };
+        });
+        expect(g.gap >= 0 && g.gap <= 12 && g.top >= 0 && g.bottom <= g.vh && g.left >= 0 && g.right <= g.vw && !g.sideways, `${width} px: ${JSON.stringify(g)}`);
+        placed.push(`${width} px: ${g.gap} px under the field, in view`);
+      }
+      await page.setViewportSize({ width: 1280, height: 900 });
+      return `${done.join("; ")}; refused 11 8-12 , " , " 0 2a 1-3-5 with their messages, written once, no download; keyboard Tab/Enter; ` +
+        `${placed.join(", ")}; saved as ${want}; ${neg1}; ${neg2}`;
+    },
+  },
+  {
     name: "Download file names (Compress PDF, and no gain keeps the original name)",
     page: "/compress-pdf/",
     vendor: [PDFJS, PDFJS_WORKER, JSPDF, PDFLIB],
