@@ -4,15 +4,15 @@
 //
 // They run the source, assets/js/orisod-ranges.js, with no DOM, and check that every page carrying the
 // "Orisod page ranges" block carries it byte for byte. The differential tests at the end take the four
-// tools' own parsers (Split PDF and Rotate PDF cut out of their EN and ES pages without running them; Delete
-// PDF Pages and PDF to JPG, which now use the helper, from the frozen copies in old_range_parsers.mjs), feed
+// tools' own parsers (Delete PDF Pages, PDF to JPG, Split PDF and Rotate PDF, which now all use the helper,
+// from the frozen copies in old_range_parsers.mjs), feed
 // them the same inputs as the helper, and check that the helper accepts everything they accept with the same
 // pages, apart from the differences listed in DIFFERENCES.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { oldDeleteSet, oldJpgSelection } from "./old_range_parsers.mjs";
+import { oldDeleteSet, oldJpgSelection, oldSplitRanges, oldRotateSelection } from "./old_range_parsers.mjs";
 
 const ROOT = fileURLToPath(new URL("../../", import.meta.url));
 const START = "// Orisod page ranges: start", END = "// Orisod page ranges: end";
@@ -23,6 +23,8 @@ const { orisodParseRanges: parse, orisodFormatRanges: format, ORISOD_RANGE_KEYWO
 const ch = (...codes) => String.fromCharCode(...codes);
 const range = (a, b) => Array.from({ length: b - a + 1 }, (_, i) => a + i);
 const codes = (r) => r.errors.map((e) => e.code);
+// Split PDF's options (its page reads them as RANGE_OPTIONS).
+const SPLIT = { preserveOrder: true, unique: false, allowKeywords: true, outOfRange: "error", maxItems: 10000 };
 
 function pagesWithBlock(dir = "", out = []) {
   for (const entry of readdirSync(ROOT + dir)) {
@@ -144,6 +146,25 @@ const CASES = [
   ["odd twice", "odd, odd", 5, { allowKeywords: true, preserveOrder: true, unique: false }, [1, 3, 5, 1, 3, 5], []],
   ["a custom keyword table", "ungerade, odd", 5, { allowKeywords: true, keywords: { odd: ["ungerade"] } }, [1, 3, 5], ["invalid_token"]],
   ["odd is not a range end", "1-odd", 5, { allowKeywords: true }, [], ["invalid_token"]],
+  // all / todas: every page, as the span 1 to the last page
+  ["all off by default", "all", 5, {}, [], ["invalid_token"]],
+  ["all", "all", 5, { allowKeywords: true }, range(1, 5), []],
+  ["upper case ALL and Todas", "ALL, Todas", 5, { allowKeywords: true }, range(1, 5), []],
+  ["full-width all", ch(0xFF41, 0xFF4C, 0xFF4C), 3, { allowKeywords: true }, [1, 2, 3], []],
+  ["todas with an accent is not a keyword", "t" + ch(0xF3) + "das", 3, { allowKeywords: true }, [], ["invalid_token"]],
+  ["all is not a range end", "1-all", 5, { allowKeywords: true }, [], ["invalid_token"]],
+  ["all on a 0-page document", "all", 0, { allowKeywords: true }, [], ["out_of_range"]],
+  ["all on a 0-page document, clipped", "all", 0, { allowKeywords: true, outOfRange: "clip" }, [], []],
+  ["all then a page, typed order with repeats", "all, 2", 3, SPLIT, [1, 2, 3, 2], []],
+  ["all twice, sorted and unique", "all, todas, 2", 4, { allowKeywords: true }, range(1, 4), []],
+  // Keyword combinations, with Split PDF's options
+  ["Split: 1-5, last", "1-5, last", 10, SPLIT, [1, 2, 3, 4, 5, 10], []],
+  ["Split: 5-last", "5-last", 10, SPLIT, range(5, 10), []],
+  ["Split: last-3 counts down", "last-3", 10, SPLIT, [10, 9, 8, 7, 6, 5, 4, 3], []],
+  ["Split: odd even", "odd even", 10, SPLIT, [1, 3, 5, 7, 9, 2, 4, 6, 8, 10], []],
+  ["Split: 1-10 odd is 1-10 plus the odd pages", "1-10 odd", 10, SPLIT, range(1, 10).concat([1, 3, 5, 7, 9]), []],
+  ["Split: 10,000 pages is the limit", "1-5000, 1-5000", 5000, SPLIT, range(1, 5000).concat(range(1, 5000)), []],
+  ["Split: 10,001 pages is too many", "1-5000, 1-5000, 1", 5000, SPLIT, [], ["too_many"]],
   // maxItems
   ["too many pages in typed order", "1-10, 1-10", 20, { preserveOrder: true, unique: false, maxItems: 15 }, [], ["too_many"]],
   ["too many pages sorted", "1-5", 10, { maxItems: 3 }, [], ["too_many"]],
@@ -190,7 +211,8 @@ test("parse: bad arguments throw a TypeError", () => {
 });
 
 test("the keyword table has the English and Spanish words", () => {
-  assert.deepEqual(Object.keys(ORISOD_RANGE_KEYWORDS), ["odd", "even", "last"]);
+  assert.deepEqual(Object.keys(ORISOD_RANGE_KEYWORDS), ["odd", "even", "last", "all"]);
+  assert.deepEqual(ORISOD_RANGE_KEYWORDS.all, ["all", "todas"]);
   for (const words of Object.values(ORISOD_RANGE_KEYWORDS)) assert.ok(words.length >= 2);
 });
 
@@ -283,8 +305,9 @@ for (const [label, input, total, options] of PERF) {
 // matched every item with its own two patterns. For those inputs the helper, with the options that tool
 // would use, must give ok and the same pages:
 //   Delete PDF Pages  { outOfRange: "clip" }: sorted pages (it keeps a set and clips to the document)
-//   Split PDF         { preserveOrder: true, unique: false }: typed order, repeats kept
-//   Rotate PDF        { preserveOrder: true }: typed order, once each
+//   Split PDF         SPLIT: typed order, repeats kept (keywords on, at most 10,000 pages)
+//   Rotate PDF        { allowKeywords: true, outOfRange: "error" }: sorted, once each (one angle for all of
+//                     them, so the old typed order is compared sorted)
 //   PDF to JPG        { outOfRange: "clip" }: the pages it ticks, which can only be pages of the document
 // except for these intentional differences (each is checked below):
 const DIFFERENCES = {
@@ -313,20 +336,8 @@ const DIFFERENCE_EXAMPLES = [
   ["split", "1-3-5", 10, [1, 2, 3], ["invalid_token"], []],
 ];
 
-function cutFunction(html, start) {
-  const s = html.indexOf(start);
-  assert.ok(s >= 0, `missing ${start}`);
-  let depth = 0;
-  for (let i = html.indexOf("{", s); i < html.length; i++) {
-    if (html[i] === "{") depth++;
-    else if (html[i] === "}" && --depth === 0) return html.slice(s, i + 1);
-  }
-  throw new Error("unbalanced " + start);
-}
 function oldParsers(prefix) {
-  const read = (tool) => readFileSync(ROOT + prefix + tool + "/index.html", "utf-8").replace(/\r\n/g, "\n");
-  const split = new Function(cutFunction(read("split-pdf"), "function parseRanges(") + "\nreturn parseRanges;")();
-  const rotate = new Function(cutFunction(read("rotate-pdf"), "function parsePageSelection(") + "\nreturn parsePageSelection;")();
+  const lang = prefix ? "es" : "en";
   return {
     // Each returns { accepted, pages } as the page would use them.
     delete(raw, total) {
@@ -336,10 +347,10 @@ function oldParsers(prefix) {
     },
     split(raw, total) {
       if (!raw.trim()) return { accepted: false };
-      try { return { accepted: true, pages: split(raw.trim(), total) }; } catch { return { accepted: false }; }
+      try { return { accepted: true, pages: oldSplitRanges(raw.trim(), total, lang) }; } catch { return { accepted: false }; }
     },
     rotate(raw, total) {
-      try { return { accepted: true, pages: rotate(raw, total) }; } catch { return { accepted: false }; }
+      try { return { accepted: true, pages: oldRotateSelection(raw, total, lang).sort((x, y) => x - y) }; } catch { return { accepted: false }; }
     },
     jpg(raw, total) {
       raw = raw.trim();
@@ -349,7 +360,7 @@ function oldParsers(prefix) {
     },
   };
 }
-const NEW_OPTIONS = { delete: { outOfRange: "clip" }, split: { preserveOrder: true, unique: false }, rotate: { preserveOrder: true }, jpg: { outOfRange: "clip" } };
+const NEW_OPTIONS = { delete: { outOfRange: "clip" }, split: { preserveOrder: true, unique: false, allowKeywords: true, outOfRange: "error", maxItems: 10000 }, rotate: { allowKeywords: true, outOfRange: "error" }, jpg: { outOfRange: "clip" } };
 
 // Which listed difference an old-accepted input falls under, or null when the helper must match exactly.
 function difference(raw) {
