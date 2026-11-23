@@ -3379,6 +3379,148 @@ const CASES = [
     },
   },
   {
+    // Rotate PDF Pages reads the typed pages with the shared page range helper: a blank field is every page,
+    // the keywords work in both languages, pages past the end, loose readings and a field of only commas are
+    // refused with no download, and the range error has its own role="alert" line right under the field.
+    name: "Rotate PDF Pages page ranges",
+    page: "/rotate-pdf/",
+    vendor: [PDFJS, PDFLIB],
+    async run(page, lang) {
+      const es = lang === "es";
+      const LQ = String.fromCharCode(0x201C), RQ = String.fromCharCode(0x201D);
+      const MSG = es
+        ? { range: (t) => `Rango no válido: ${LQ}${t}${RQ}`, page: (t) => `Número de página no válido: ${LQ}${t}${RQ}`,
+          empty: "Escribe las páginas que quieres rotar o deja el campo en blanco para rotarlas todas.",
+          hint: `También puedes escribir impares, pares o última, por ejemplo ${LQ}pares${RQ} o ${LQ}5-última${RQ}.` }
+        : { range: (t) => `Invalid range: ${LQ}${t}${RQ}`, page: (t) => `Invalid page number: ${LQ}${t}${RQ}`,
+          empty: "Enter the pages to rotate, or leave the field blank to rotate every page.",
+          hint: `You can also type odd, even, or last, for example ${LQ}even${RQ} or ${LQ}5-last${RQ}.` };
+      const stem = "Giros";
+      const want = `${stem}-${es ? "girado" : "rotated"}-orisod.pdf`;
+      // Ten pages, page n 200 + 10n points wide; page 4 already turned 90 degrees and page 7 270 degrees.
+      const START = { 4: 90, 7: 270 };
+      const bytes = Buffer.from(await page.evaluate(async (start) => {
+        const d = await PDFLib.PDFDocument.create();
+        for (let i = 1; i <= 10; i++) {
+          const p = d.addPage([200 + 10 * i, 400]);
+          if (start[i]) p.setRotation(PDFLib.degrees(start[i]));
+        }
+        return Array.from(await d.save());
+      }, START));
+      await page.setInputFiles("#fileInput", { name: `${stem}.PDF`, mimeType: "application/pdf", buffer: bytes });
+      await page.locator("#editor").waitFor({ state: "visible", timeout: 30000 });
+      await page.waitForFunction(() => document.querySelector('.angle-btn[data-angle="90"]').getAttribute("aria-pressed") === "true", null, { timeout: 30000 });
+      let downloads = 0;
+      page.on("download", () => downloads++);
+      await page.evaluate(() => {
+        window.__alerts = [];
+        new MutationObserver(() => { const t = document.getElementById("rangeError").textContent; if (t) window.__alerts.push(t); })
+          .observe(document.getElementById("rangeError"), { childList: true, characterData: true, subtree: true });
+      });
+      const state = () => page.evaluate(() => {
+        const f = document.getElementById("pagesInput"), e = document.getElementById("rangeError");
+        return { error: e.textContent, invalid: f.getAttribute("aria-invalid"), described: f.getAttribute("aria-describedby"), role: e.getAttribute("role"),
+          fileError: document.getElementById("errorMsg").textContent, progress: document.getElementById("progressMsg").textContent, alerts: window.__alerts.length };
+      });
+      // Each page's rotation in the saved PDF, by page number (read from its width).
+      const rotations = (pdf) => page.evaluate(async (a) => {
+        const d = await PDFLib.PDFDocument.load(new Uint8Array(a));
+        const out = {};
+        for (const p of d.getPages()) out[Math.round((p.getWidth() - 200) / 10)] = ((p.getRotation().angle % 360) + 360) % 360;
+        return out;
+      }, Array.from(pdf));
+      const rotate = async (raw, angle) => {
+        await page.click(`.angle-btn[data-angle="${angle}"]`);
+        await page.fill("#pagesInput", raw);
+        const before = await state();
+        const seen = downloads;
+        const label = JSON.stringify(raw);
+        const dl = page.waitForEvent("download", { timeout: 30000 }).catch(() => null);
+        await page.click("#rotateBtn");
+        await page.waitForFunction(() => document.getElementById("rangeError").textContent || /\d/.test(document.getElementById("progressMsg").textContent), null, { timeout: 30000 });
+        const s = await state();
+        if (s.error) {
+          await page.waitForTimeout(500);
+          expect(downloads === seen, `${label}: a file was downloaded although the range was refused`);
+          expect(s.progress === "", `${label}: the page still says ${JSON.stringify(s.progress)}`);
+          expect(s.alerts === before.alerts + 1, `${label}: the error line was written ${s.alerts - before.alerts} times, not once`);
+          expect(s.invalid === "true" && s.described === "rangeError rangeHint" && s.role === "alert", `${label}: aria ${JSON.stringify(s)}`);
+          expect(s.fileError === "" && !s.error.includes("<item>"), `${label}: ${JSON.stringify(s)}`);
+          return { error: s.error };
+        }
+        const d = await dl;
+        expect(d, `${label}: no download`);
+        expect(d.suggestedFilename() === want, `${label}: saved as ${d.suggestedFilename()}, not ${want}`);
+        expect(s.invalid === null && s.described === "rangeHint", `${label}: after success, aria ${JSON.stringify(s)}`);
+        return { rot: await rotations(await readFile(await d.path())), progress: s.progress };
+      };
+      // The rotation every page should have after turning `pages` by `angle`.
+      const expectedRot = (pages, angle) => {
+        const out = {};
+        for (let n = 1; n <= 10; n++) out[n] = (((START[n] || 0) + (pages.includes(n) ? angle : 0)) % 360 + 360) % 360;
+        return out;
+      };
+      const expectRot = (r, pages, angle, raw) => expect(JSON.stringify(r.rot) === JSON.stringify(expectedRot(pages, angle)),
+        `${JSON.stringify(raw)} at ${angle}: ${JSON.stringify(r.rot || r.error)}, not ${JSON.stringify(expectedRot(pages, angle))}`);
+
+      const hint = await page.textContent("#rangeHint");
+      expect(hint === MSG.hint, `the hint is ${JSON.stringify(hint)}`);
+      const first = await state();
+      expect(first.error === "" && first.invalid === null && first.described === "rangeHint" && first.role === "alert", `on load: ${JSON.stringify(first)}`);
+
+      const done = [];
+      for (const [raw, angle, pages] of [["", 90, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]], ["even", 180, [2, 4, 6, 8, 10]], ["pares", -90, [2, 4, 6, 8, 10]],
+        ["odd", 90, [1, 3, 5, 7, 9]], ["last", 180, [10]], ["5-last", 90, [5, 6, 7, 8, 9, 10]], ["5-2", -90, [2, 3, 4, 5]], ["todas", 180, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]]]) {
+        const r = await rotate(raw, angle);
+        expectRot(r, pages, angle, raw);
+        done.push(`${raw || "blank"} at ${angle}: ${pages.length} pages (${r.progress})`);
+      }
+      const even = await rotate("even", 180);
+      const neg1 = mustFail("the old rotation ignored", () => expect(JSON.stringify(even.rot) === JSON.stringify({ ...expectedRot([2, 4, 6, 8, 10], 180), 4: 180 }), "test"));
+
+      for (const [raw, msg] of [["11", MSG.page("11")], ["8-12", MSG.range("8-12")], [",", MSG.empty], [" , ", MSG.empty], ["0", MSG.page("0")],
+        ["2a", MSG.page("2a")], ["1-3-5", MSG.range("1-3-5")], ["x, 11", MSG.page("x")]]) {
+        const r = await rotate(raw, 90);
+        expect(r.error === msg, `${JSON.stringify(raw)} gave ${JSON.stringify(r.error || r.rot)}, not ${JSON.stringify(msg)}`);
+      }
+      const eleven = await rotate("11", 90);
+      const neg2 = mustFail("straight quotes", () => expect(eleven.error === (es ? 'Número de página no válido: "11"' : 'Invalid page number: "11"'), "test"));
+      // Typing clears the error and aria-invalid.
+      await page.type("#pagesInput", "0");
+      const typed = await state();
+      expect(typed.error === "" && typed.invalid === null && typed.described === "rangeHint", `after typing: ${JSON.stringify(typed)}`);
+
+      // Keyboard only: Tab from the last angle button to the field, type, Tab to Rotate, Enter.
+      await page.fill("#pagesInput", "");
+      await page.focus('.angle-btn[data-angle="180"]');
+      await page.keyboard.press("Tab");
+      expect(await page.evaluate(() => document.activeElement.id) === "pagesInput", "Tab from the last angle button doesn't reach the pages field");
+      await page.keyboard.type("11");
+      await page.keyboard.press("Tab");
+      expect(await page.evaluate(() => document.activeElement.id) === "rotateBtn", "Tab from the pages field doesn't reach Rotate");
+      await page.keyboard.press("Enter");
+      await page.waitForFunction(() => document.getElementById("rangeError").textContent, null, { timeout: 10000 });
+      expect(await page.textContent("#rangeError") === MSG.page("11"), "Enter on Rotate doesn't show the error");
+
+      // At 390 and 320 px the error line sits right under the field, in view, with no sideways scroll.
+      const placed = [];
+      for (const width of [390, 320]) {
+        await page.setViewportSize({ width, height: 700 });
+        await rotate("11", 90);
+        const g = await page.evaluate(() => {
+          const f = document.getElementById("pagesInput").getBoundingClientRect(), e = document.getElementById("rangeError").getBoundingClientRect();
+          return { gap: Math.round(e.top - f.bottom), top: Math.round(e.top), bottom: Math.round(e.bottom), left: Math.round(e.left), right: Math.round(e.right),
+            vw: document.documentElement.clientWidth, vh: innerHeight, sideways: document.documentElement.scrollWidth > document.documentElement.clientWidth };
+        });
+        expect(g.gap >= 0 && g.gap <= 12 && g.top >= 0 && g.bottom <= g.vh && g.left >= 0 && g.right <= g.vw && !g.sideways, `${width} px: ${JSON.stringify(g)}`);
+        placed.push(`${width} px: ${g.gap} px under the field, in view`);
+      }
+      await page.setViewportSize({ width: 1280, height: 900 });
+      return `${done.join("; ")}; refused 11 8-12 , " , " 0 2a 1-3-5 with their messages, written once, no download; keyboard Tab/Enter; ` +
+        `${placed.join(", ")}; saved as ${want}; ${neg1}; ${neg2}`;
+    },
+  },
+  {
     name: "Download file names (Compress PDF, and no gain keeps the original name)",
     page: "/compress-pdf/",
     vendor: [PDFJS, PDFJS_WORKER, JSPDF, PDFLIB],
@@ -3918,6 +4060,149 @@ const CASES = [
       const want = [1, 2, 3].map((n) => `three-${word}-0${n}-orisod.pdf: 1 page, Fixture page ${n}`);
       expect(got.join("|") === want.join("|"), `${zipName} holds ${JSON.stringify(got)}`);
       return `${zipName}: three-${word}-01-orisod.pdf to three-${word}-03-orisod.pdf, one page each, with the right text`;
+    },
+  },
+  {
+    // Split PDF reads the typed pages with the shared page range helper: typed order with repeats kept, the
+    // keywords in both languages, pages past the end and loose readings refused, at most 10,000 pages, and the
+    // range error in its own role="alert" line right under the field (never in #errorMsg, never for the ZIP).
+    name: "Split PDF page ranges",
+    page: "/split-pdf/",
+    vendor: ["/assets/vendor/pdf-lib/1.17.1/pdf-lib.min.js"],
+    async run(page, lang) {
+      const es = lang === "es";
+      const LQ = String.fromCharCode(0x201C), RQ = String.fromCharCode(0x201D);
+      const MSG = es
+        ? { range: (t) => `Rango no válido: ${LQ}${t}${RQ}`, page: (t) => `Número de página no válido: ${LQ}${t}${RQ}`,
+          empty: `Escribe un rango de páginas, p. ej. ${LQ}1-3, 5${RQ}.`, many: "Esta selección tiene demasiadas páginas. Prueba con un rango más corto.",
+          hint: `También puedes escribir impares, pares, última o todas, por ejemplo ${LQ}impares${RQ} o ${LQ}5-última${RQ}.` }
+        : { range: (t) => `Invalid range: ${LQ}${t}${RQ}`, page: (t) => `Invalid page number: ${LQ}${t}${RQ}`,
+          empty: `Enter a page range, e.g. ${LQ}1-3, 5${RQ}.`, many: "This selection has too many pages. Try a shorter range.",
+          hint: `You can also type odd, even, last, or all, for example ${LQ}odd${RQ} or ${LQ}5-last${RQ}.` };
+      const stem = "Rangos";
+      const extracted = `${stem}-${es ? "extraido" : "extracted"}-orisod.pdf`;
+      await page.setInputFiles("#fileInput", pdfInput(stem, fixturePdf("Page", Array.from({ length: 10 }, (_, i) => String(i + 1)))));
+      await page.locator("#extractBtn").waitFor({ state: "visible", timeout: 30000 });
+      // Count the copy steps and every text the error line gets.
+      await page.evaluate(() => {
+        window.__copies = 0;
+        const copy = PDFLib.PDFDocument.prototype.copyPages;
+        PDFLib.PDFDocument.prototype.copyPages = function (...a) { window.__copies++; return copy.apply(this, a); };
+        window.__alerts = [];
+        new MutationObserver(() => { const t = document.getElementById("rangeError").textContent; if (t) window.__alerts.push(t); })
+          .observe(document.getElementById("rangeError"), { childList: true, characterData: true, subtree: true });
+      });
+      const state = () => page.evaluate(() => {
+        const f = document.getElementById("rangeInput"), e = document.getElementById("rangeError");
+        return { error: e.textContent, invalid: f.getAttribute("aria-invalid"), described: f.getAttribute("aria-describedby"),
+          role: e.getAttribute("role"), fileError: document.getElementById("errorMsg").textContent, copies: window.__copies,
+          alerts: window.__alerts.length, result: !!document.querySelector("#result a[download]") };
+      });
+      // Extract with the field set to raw: { lines } read from the saved PDF by PDF.js, or { error }.
+      const extract = async (raw) => {
+        await page.fill("#rangeInput", raw);
+        const before = await state();
+        const t = Date.now();
+        await page.click("#extractBtn");
+        await page.waitForFunction(() => document.querySelector("#result a[download]") || document.getElementById("rangeError").textContent, null, { timeout: 30000 });
+        const ms = Date.now() - t;
+        const s = await state();
+        const label = JSON.stringify(raw.length > 30 ? raw.slice(0, 30) + "..." : raw);
+        if (s.error) {
+          expect(s.copies === before.copies && !s.result, `${label}: the copy step ran although the range was refused`);
+          expect(s.alerts === before.alerts + 1, `${label}: the error line was written ${s.alerts - before.alerts} times, not once`);
+          expect(s.invalid === "true" && s.described === "rangeError rangeHint" && s.role === "alert", `${label}: aria ${JSON.stringify(s)}`);
+          expect(s.fileError === "", `${label}: the range error also went to #errorMsg`);
+          expect(!s.error.includes("<item>"), `${label}: the message shows the placeholder`);
+          return { error: s.error, ms };
+        }
+        expect(s.invalid === null && s.described === "rangeHint", `${label}: after success, aria ${JSON.stringify(s)}`);
+        const got = await savedFrom(page, () => page.locator("#result a[download]").click());
+        expect(got.name === extracted, `${label}: saved as ${got.name}, not ${extracted}`);
+        return { lines: await pdfjsLines(page, got.bytes), ms };
+      };
+      const pagesOf = (nums) => nums.map((n) => `Page ${n}`);
+      const expectPages = (r, nums, raw) => expect(JSON.stringify(r.lines) === JSON.stringify(pagesOf(nums)), `${JSON.stringify(raw)} gave ${JSON.stringify(r.lines || r.error)}, not pages ${nums}`);
+      const expectError = (r, msg, raw) => expect(r.error === msg, `${JSON.stringify(raw)} gave ${JSON.stringify(r.error || r.lines)}, not ${JSON.stringify(msg)}`);
+
+      // The hint, the field's description and the empty, silent error line before anything is typed.
+      const hint = await page.textContent("#rangeHint");
+      expect(hint === MSG.hint, `the hint is ${JSON.stringify(hint)}`);
+      const first = await state();
+      expect(first.error === "" && first.invalid === null && first.described === "rangeHint" && first.role === "alert", `on load: ${JSON.stringify(first)}`);
+
+      // Pages in typed order, repeats kept, keywords in both languages.
+      const done = [];
+      for (const [raw, nums] of [["5-2", [5, 4, 3, 2]], ["1-4, 3-6", [1, 2, 3, 4, 3, 4, 5, 6]], ["odd", [1, 3, 5, 7, 9]], ["impares", [1, 3, 5, 7, 9]],
+        ["last", [10]], ["última", [10]], ["1-5, last", [1, 2, 3, 4, 5, 10]], ["8-", [8, 9, 10]], ["all", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]],
+        ["todas", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]], ["2-3", [2, 3]]]) {
+        const r = await extract(raw);
+        expectPages(r, nums, raw);
+        done.push(`${raw} = ${nums.join(",")}`);
+      }
+      const order = await extract("5-2");
+      const neg1 = mustFail("pages in ascending order", () => expectPages(order, [2, 3, 4, 5], "5-2"));
+
+      // Refused inputs: the message, no copy, no 0-page PDF.
+      for (const [raw, msg] of [[",", MSG.empty], ["", MSG.empty], ["11", MSG.page("11")], ["8-12", MSG.range("8-12")], ["0", MSG.page("0")],
+        ["2a", MSG.page("2a")], ["1-3-5", MSG.range("1-3-5")], ["x, 11", MSG.page("x")]]) {
+        expectError(await extract(raw), msg, raw);
+      }
+      const eleven = await extract("11");
+      const neg2 = mustFail("straight quotes", () => expectError(eleven, es ? 'Número de página no válido: "11"' : 'Invalid page number: "11"', "11"));
+      // The same refused input again is announced again (once), and typing clears it and aria-invalid.
+      expectError(await extract("11"), MSG.page("11"), "11 again");
+      await page.type("#rangeInput", "0");
+      const typed = await state();
+      expect(typed.error === "" && typed.invalid === null && typed.described === "rangeHint", `after typing: ${JSON.stringify(typed)}`);
+
+      // More than 10,000 pages: refused at once, nothing copied, the page still answers.
+      const huge = await extract(Array(1001).fill("1-10").join(","));
+      expectError(huge, MSG.many, "1-10 typed 1,001 times");
+      const answer = Date.now();
+      await page.evaluate(() => 1);
+      expect(huge.ms < 5000 && Date.now() - answer < 1000, `too_many took ${huge.ms} ms`);
+      const limit = await extract(Array(1000).fill("1-10").join(","));
+      expect(limit.lines && limit.lines.length === 10000, `exactly 10,000 pages gave ${limit.lines ? limit.lines.length : limit.error}`);
+
+      // The ZIP takes no range: with a bad range in the field it still splits every page, and writes no range error.
+      await page.fill("#rangeInput", "abc");
+      await page.click("#splitAllBtn");
+      const zipLink = page.locator("#result a[download]");
+      await zipLink.waitFor({ timeout: 60000 });
+      const zip = await savedFrom(page, () => zipLink.click());
+      const zipNames = (await jszipRead(page, zip.bytes)).names;
+      const afterZip = await state();
+      expect(zipNames.length === 10 && afterZip.error === "" && afterZip.fileError === "", `ZIP: ${zipNames.length} files, range error ${JSON.stringify(afterZip.error)}`);
+
+      // Keyboard only: Tab from the file picker to the field, type, Tab to Extract, Enter.
+      await page.fill("#rangeInput", "");
+      await page.focus("#fileInput");
+      await page.keyboard.press("Tab");
+      expect(await page.evaluate(() => document.activeElement.id) === "rangeInput", "Tab from the file picker doesn't reach the range field");
+      await page.keyboard.type("11");
+      await page.keyboard.press("Tab");
+      expect(await page.evaluate(() => document.activeElement.id) === "extractBtn", "Tab from the range field doesn't reach Extract");
+      await page.keyboard.press("Enter");
+      await page.waitForFunction(() => document.getElementById("rangeError").textContent, null, { timeout: 10000 });
+      expect(await page.textContent("#rangeError") === MSG.page("11"), "Enter on Extract doesn't show the error");
+
+      // At 390 and 320 px the error line sits right under the field, in view, with no sideways scroll.
+      const placed = [];
+      for (const width of [390, 320]) {
+        await page.setViewportSize({ width, height: 700 });
+        await extract("11");
+        const g = await page.evaluate(() => {
+          const f = document.getElementById("rangeInput").getBoundingClientRect(), e = document.getElementById("rangeError").getBoundingClientRect();
+          return { gap: Math.round(e.top - f.bottom), top: Math.round(e.top), bottom: Math.round(e.bottom), left: Math.round(e.left), right: Math.round(e.right),
+            vw: document.documentElement.clientWidth, vh: innerHeight, sideways: document.documentElement.scrollWidth > document.documentElement.clientWidth };
+        });
+        expect(g.gap >= 0 && g.gap <= 12 && g.top >= 0 && g.bottom <= g.vh && g.left >= 0 && g.right <= g.vw && !g.sideways, `${width} px: ${JSON.stringify(g)}`);
+        placed.push(`${width} px: ${g.gap} px under the field, in view`);
+      }
+      await page.setViewportSize({ width: 1280, height: 900 });
+      return `${done.join("; ")}; refused , empty 11 8-12 0 2a 1-3-5 with their messages, written once, no copy; too_many in ${huge.ms} ms; ` +
+        `10,000 pages extracted; ZIP unaffected (${zipNames.length} files); keyboard Tab/Enter; ${placed.join(", ")}; ${neg1}; ${neg2}`;
     },
   },
   {
