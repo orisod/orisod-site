@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Negative tests for check_vendor.py's tarball-member, vendor-path, flag-folder, wa.me and share-link rules (both share pages).
+"""Negative tests for check_vendor.py's tarball-member, vendor-path, flag-folder, wa.me, share-link (both share pages) and used_by rules.
 
 Builds a tiny site in a temporary folder (one page, one vendored "font" taken from
 a release tarball, its LICENSE, two circle-flags images and theirs, and a
@@ -69,7 +69,7 @@ const SHARE = ["https://wa.me/?text=" + enc(t), "https://t.me/share/url?url=" + 
 """
 
 
-def build(root, manifest=MANIFEST, page=PAGE, site_js=None, wa_page=WA_PAGE, rbp_page=RBP_PAGE):
+def build(root, manifest=MANIFEST, page=PAGE, site_js=None, wa_page=WA_PAGE, rbp_page=RBP_PAGE, more_pages=None):
     (root / FOLDER).mkdir(parents=True)
     (root / FOLDER / "Demo-Regular.ttf").write_bytes(FONT)
     (root / FOLDER / "LICENSE").write_bytes(LICENSE)
@@ -87,6 +87,9 @@ def build(root, manifest=MANIFEST, page=PAGE, site_js=None, wa_page=WA_PAGE, rbp
     if site_js is not None:
         (root / "assets/js").mkdir(parents=True)
         (root / "assets/js/site.js").write_text(site_js, encoding="utf-8")
+    for rel, html in (more_pages or {}).items():
+        (root / rel).parent.mkdir(parents=True, exist_ok=True)
+        (root / rel).write_text(html, encoding="utf-8")
 
 
 def run(**kw):
@@ -96,10 +99,13 @@ def run(**kw):
         return r.returncode, r.stdout + r.stderr
 
 
-def broken(change):
+def broken(change, lib=0):
     m = copy.deepcopy(MANIFEST)
-    change(m["libraries"][0])
+    change(m["libraries"][lib])
     return m
+
+
+FONT_FETCH = 'fetch("/assets/vendor/demo-font/1.0/Demo-Regular.ttf");'
 
 
 CASES = [
@@ -143,6 +149,27 @@ CASES = [
      "remove-blank-pages/index.html: inline script refers to https://wa.me/447400123456?text= on another host"),
     ("another address on a share host, on the second share page", {"rbp_page": RBP_PAGE.replace("reddit.com/submit?url=", "reddit.com/r/all?url=")},
      "remove-blank-pages/index.html: inline script refers to https://www.reddit.com/r/all?url= on another host"),
+    # used_by: exactly the pages that load one of the library's files, named by folder, EN and ES sharing one entry.
+    ("used_by missing a page that fetches the library", {"wa_page": WA_PAGE.replace("</script>", FONT_FETCH + "\n</script>")},
+     'whatsapp-link-generator/index.html: loads demo-font@1.0, but its used_by in assets/vendor/manifest.json doesn\'t list "whatsapp-link-generator"'),
+    ("used_by missing a page that loads it with a <script src>",
+     {"rbp_page": RBP_PAGE.replace("</main>", '</main>\n<script src="/assets/vendor/demo-font/1.0/Demo-Regular.ttf"></script>')},
+     'remove-blank-pages/index.html: loads demo-font@1.0, but its used_by'),
+    ("used_by missing a page that loads it with a <link>",
+     {"rbp_page": RBP_PAGE.replace("<title>r</title>", '<title>r</title><link rel="preload" href="/assets/vendor/demo-font/1.0/Demo-Regular.ttf" as="font">')},
+     'remove-blank-pages/index.html: loads demo-font@1.0, but its used_by'),
+    ("used_by missing a page only the ES twin of which loads it",
+     {"more_pages": {"es/remove-blank-pages/index.html": RBP_PAGE.replace("</script>", FONT_FETCH + "\n</script>")}},
+     'es/remove-blank-pages/index.html: loads demo-font@1.0, but its used_by in assets/vendor/manifest.json doesn\'t list "remove-blank-pages"'),
+    ("an ES twin loading a listed library", {"more_pages": {"es/index.html": PAGE}}, None),
+    ("used_by listing a page that doesn't load it", {"manifest": broken(lambda lib: lib["used_by"].append("remove-blank-pages"))},
+     'library demo-font@1.0: used_by lists "remove-blank-pages", but no page loads a file of it'),
+    ("used_by naming a page by its path, not its folder", {"manifest": broken(lambda lib: lib.update(used_by=["/whatsapp-link-generator/"]), lib=1)},
+     'library circle-flags@9.9: used_by lists "/whatsapp-link-generator/", but no page loads a file of it'),
+    ("a page loading a library without used_by", {"manifest": broken(lambda lib: lib.pop("used_by"))},
+     "library demo-font@1.0: needs a used_by list"),
+    ("used_by listing a page twice", {"manifest": broken(lambda lib: lib["used_by"].append("index"))},
+     'library demo-font@1.0: used_by lists "index" 2 times'),
     ("another address on a share host", {"wa_page": WA_PAGE.replace("t.me/share/url?url=", "t.me/joinchat?url=")},
      "inline script refers to https://t.me/joinchat?url= on another host"),
 ]
