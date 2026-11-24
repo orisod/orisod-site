@@ -29,7 +29,8 @@
       "version": "1.0.0",
       "license": "MIT",
       "used_by": [
-        "qr-code-generator"
+        "qr-code-generator",
+        "whatsapp-link-generator"
       ],
       "files": [
         {
@@ -137,6 +138,7 @@
         "pdf-editor",
         "pdf-header-footer",
         "pdf-page-organizer",
+        "remove-blank-pages",
         "repair-pdf",
         "resize-pdf-pages",
         "rotate-pdf",
@@ -182,6 +184,7 @@
         "pdf-page-organizer",
         "pdf-to-jpg",
         "pdf-to-word",
+        "remove-blank-pages",
         "repair-pdf",
         "resize-pdf-pages",
         "rotate-pdf",
