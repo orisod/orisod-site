@@ -46,6 +46,14 @@ Rules, for every page (every .html outside the folders below, including 404.html
   library file in the manifest, so no flag the page can ask for is missing
 - an English page and its /es/ twin load the same vendor and CDN scripts, in the
   same order
+- every library's used_by in the manifest lists exactly the pages that load one
+  of its files, in both directions: a page that loads it (a <script src>, a path
+  in an inline script such as a fetch(), workerSrc or Tesseract path, or a
+  <link> or inline <style> reference) must be listed, and every listed page must
+  load it. A page is named by its folder without the es/ prefix (merge-pdf for
+  merge-pdf/index.html and es/merge-pdf/index.html; a file at the root by its
+  name without .html), so EN and ES share one entry. <a href> links (About's
+  open-source links) aren't loads
 And for assets/vendor:
 - the manifest is valid and complete: name, version, SPDX license, files and a
   license file for every library, each path inside assets/vendor/<name>/<version>/,
@@ -153,6 +161,7 @@ WRITTEN_BY_NOT_ALLOWED = re.compile(r"\.(?:m?js|cjs|wasm|html?|css|json)$", re.I
 ARCHIVE = re.compile(r"\.(?:tar\.gz|tar\.xz|zip)$")
 # A /assets/vendor/ path in a script string ("..." '...' `...`, optionally after ${location.origin} or the site's URL).
 VENDOR_PATH = re.compile(r"""["'`](?:\$\{location\.origin\}|https://(?:www\.)?orisod\.com)?(/assets/vendor/[^"'`$?#\s]*)""")
+VENDOR_REF = re.compile(r"^(?:https://(?:www\.)?orisod\.com)?(/assets/vendor/[^\"'#?\s]*)")
 VENDOR_LINK = re.compile(r"""<a\b[^>]*\bhref\s*=\s*["'](?:https://(?:www\.)?orisod\.com)?(/assets/vendor/[^"'#?]*)["']""", re.I)
 # The circle-flags folder and the codes a page may append to it (img.src = FLAG_DIR + code + ".svg").
 FLAG_FOLDER_USE = re.compile(r"/assets/vendor/circle-flags/")
@@ -211,6 +220,51 @@ def check_tesseract(rel, body, loads, vendor_files, problems):
         want = f"{lang}/{code}.traineddata.gz"
         if not lang.startswith(folder + "/") or want not in vendor_files:
             problems.append(f"{rel}: langPath is {lang}, which doesn't hold {code}.traineddata.gz next to {folder}/tesseract.min.js in {MANIFEST}")
+
+
+def page_name(rel):
+    """How used_by names a page: its folder without the es/ prefix (a root file: its name without .html)."""
+    name = rel[3:] if rel.startswith("es/") else rel
+    if name.endswith("/index.html"):
+        return name[: -len("/index.html")]
+    return name[:-5] if name.endswith(".html") else name
+
+
+def check_used_by(root, uses, problems):
+    """used_by must list exactly the pages that load a file of the library (uses: {path: {page: rel}})."""
+    try:
+        libs = json.loads((root / MANIFEST).read_text(encoding="utf-8"))["libraries"]
+    except (OSError, ValueError, KeyError, TypeError):
+        return  # check_manifest already reported it
+    folders = {}
+    for lib in libs:
+        if isinstance(lib, dict) and lib.get("name") and lib.get("version"):
+            folders[f"/{VENDOR}/{lib['name']}/{lib['version']}/"] = lib
+    loaded = {}  # folder -> {page name: a page file that loads it, the EN one when both do}
+    for path, by in uses.items():
+        folder = next((f for f in folders if path.startswith(f) or path.rstrip("/") + "/" == f), None)
+        if folder:
+            for name, rel in by.items():
+                seen = loaded.setdefault(folder, {})
+                if name not in seen or seen[name].startswith("es/"):
+                    seen[name] = rel
+    for folder, lib in folders.items():
+        where = f"{MANIFEST}: library {lib['name']}@{lib['version']}"
+        used_by = lib.get("used_by")
+        if not isinstance(used_by, list) or not all(isinstance(s, str) for s in used_by):
+            problems.append(f"{where}: needs a used_by list naming every page that loads it (its folder, like \"merge-pdf\")")
+            used_by = []
+        for s, n in Counter(used_by).items():
+            if n > 1:
+                problems.append(f"{where}: used_by lists \"{s}\" {n} times")
+        pages_loading = loaded.get(folder, {})
+        for name, rel in sorted(pages_loading.items()):
+            if name not in used_by:
+                problems.append(f"{rel}: loads {lib['name']}@{lib['version']}, but its used_by in {MANIFEST} doesn't list "
+                                f"\"{name}\"; add it")
+        for s in sorted(set(used_by) - set(pages_loading)):
+            problems.append(f"{where}: used_by lists \"{s}\", but no page loads a file of it "
+                            f"(neither {s}/index.html nor es/{s}/index.html); remove it, or name the page by its folder")
 
 
 def pages(root):
@@ -382,6 +436,7 @@ def main() -> int:
     vendor_links = 0
 
     cdn_uses = Counter()
+    uses = {}  # vendor path -> {used_by page name: page file}, for check_used_by
     loads = {}  # page -> list of vendor/CDN script srcs, in order
     worker_srcs = {}  # page -> every workerSrc string its inline scripts set
     vendor_refs = 0
@@ -391,6 +446,10 @@ def main() -> int:
         head_end = text.find("</head>")
         loads[rel] = []
         worker_srcs[rel] = []
+        def note_use(path, rel=rel):
+            by = uses.setdefault(path, {})
+            if page_name(rel) not in by or by[page_name(rel)].startswith("es/"):
+                by[page_name(rel)] = rel  # name the EN page in a failure when it loads it too
         for m in SCRIPT.finditer(text):
             attrs, body = m.group(1), m.group(2)
             src = SRC.search(attrs)
@@ -399,6 +458,7 @@ def main() -> int:
                 if url.startswith("/assets/vendor/"):
                     vendor_refs += 1
                     loads[rel].append(url)
+                    note_use(url)
                     if url not in vendor_scripts:
                         problems.append(f"{rel}: loads {url}, which isn't a library file in {MANIFEST}")
                     if 0 <= m.start() < head_end:
@@ -433,6 +493,7 @@ def main() -> int:
                                     f"this site (if nothing loads that address, like a link, add it to NOT_LOADED)")
             for vm in VENDOR_PATH.finditer(body):
                 vendor_paths += 1
+                note_use(vm.group(1))
                 check_vendor_path(rel, vm.group(1), vendor_scripts, problems)
             if "Tesseract.createWorker(" in body:
                 check_tesseract(rel, body, loads[rel], vendor_scripts, problems)
@@ -454,9 +515,13 @@ def main() -> int:
             href = re.search(r"""\bhref\s*=\s*["']([^"']+)["']""", tag, re.I)
             rel_attr = re.search(r"""\brel\s*=\s*["']([^"']+)["']""", tag, re.I)
             kinds = set((rel_attr.group(1) if rel_attr else "").lower().split())
+            if href and VENDOR_REF.match(href.group(1)):
+                note_use(VENDOR_REF.match(href.group(1)).group(1))
             if href and external(href.group(1)) and not kinds <= {"canonical", "alternate"}:
                 problems.append(f"{rel}: <link rel=\"{' '.join(sorted(kinds))}\"> loads {href.group(1)} from another host")
         for sm in STYLE.finditer(text):
+            for vm in VENDOR_PATH.finditer(sm.group(1)):
+                note_use(vm.group(1))
             if STYLE_EXTERNAL.search(sm.group(1)):
                 problems.append(f"{rel}: an inline <style> imports or loads something from another host")
         for am in VENDOR_LINK.finditer(text):
@@ -487,6 +552,8 @@ def main() -> int:
             problems.append(f"{url} appears {used} times, not {allowed}: lower its REMAINING_CDN entry in "
                             f"scripts/check_vendor.py" + (" (remove it)" if used == 0 else ""))
 
+    check_used_by(root, uses, problems)
+
     for rel, srcs in loads.items():
         if rel.startswith("es/") and rel[3:] in loads and loads[rel[3:]] != srcs:
             problems.append(f"{rel}: loads {srcs}, but {rel[3:]} loads {loads[rel[3:]]}; EN and ES must load the same libraries")
@@ -498,7 +565,7 @@ def main() -> int:
         print(f"\n{len(problems)} problem(s)")
         return 1
     print(f"OK: {len(loads)} pages checked. {vendor_refs} script tags load {len(vendor_scripts)} self-hosted files, "
-          f"all matching {MANIFEST}; {vendor_paths} vendor paths in scripts name files in it; {vendor_links} links to its license, notice and source files open as text or an archive. "
+          f"all matching {MANIFEST}, each library's used_by naming exactly the pages that load it; {vendor_paths} vendor paths in scripts name files in it; {vendor_links} links to its license, notice and source files open as text or an archive. "
           + (f"{sum(cdn_uses.values())} CDN references remain, all in REMAINING_CDN ({len(REMAINING_CDN)} URLs)."
              if REMAINING_CDN else "No page or site script uses a CDN or any other outside host."))
     return 0
